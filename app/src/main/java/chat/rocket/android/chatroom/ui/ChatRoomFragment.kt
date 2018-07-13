@@ -24,6 +24,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.text.bold
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +36,7 @@ import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter
 import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
+import chat.rocket.android.chatroom.ui.bottomsheet.MessageActionsBottomSheet
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
@@ -242,6 +244,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             hideKeyboard()
         }
         super.onDestroyView()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        setReactionButtonIcon(R.drawable.ic_reaction_24dp)
+        emojiKeyboardPopup.dismiss()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
@@ -654,22 +662,22 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun showConnectionState(state: State) {
         ui {
-            connection_status_text.fadeIn()
+            text_connection_status.fadeIn()
             handler.removeCallbacks(dismissStatus)
             when (state) {
                 is State.Connected -> {
-                    connection_status_text.text = getString(R.string.status_connected)
+                    text_connection_status.text = getString(R.string.status_connected)
                     handler.postDelayed(dismissStatus, 2000)
                 }
-                is State.Disconnected -> connection_status_text.text =
+                is State.Disconnected -> text_connection_status.text =
                     getString(R.string.status_disconnected)
-                is State.Connecting -> connection_status_text.text =
+                is State.Connecting -> text_connection_status.text =
                     getString(R.string.status_connecting)
-                is State.Authenticating -> connection_status_text.text =
+                is State.Authenticating -> text_connection_status.text =
                     getString(R.string.status_authenticating)
-                is State.Disconnecting -> connection_status_text.text =
+                is State.Disconnecting -> text_connection_status.text =
                     getString(R.string.status_disconnecting)
-                is State.Waiting -> connection_status_text.text =
+                is State.Waiting -> text_connection_status.text =
                     getString(R.string.status_waiting, state.seconds)
             }
         }
@@ -685,7 +693,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private val dismissStatus = {
-        connection_status_text.fadeOut()
+        text_connection_status.fadeOut()
     }
 
     private fun setupRecyclerView() {
@@ -725,7 +733,20 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_send.isVisible = false
             button_show_attachment_options.alpha = 1f
             button_show_attachment_options.isVisible = true
-
+            activity?.supportFragmentManager?.addOnBackStackChangedListener {
+                println("attach")
+            }
+            activity?.supportFragmentManager?.registerFragmentLifecycleCallbacks(
+                object : FragmentManager.FragmentLifecycleCallbacks() {
+                    override fun onFragmentAttached(fm: FragmentManager, f: Fragment, context: Context) {
+                        if (f is MessageActionsBottomSheet) {
+                            setReactionButtonIcon(R.drawable.ic_reaction_24dp)
+                            emojiKeyboardPopup.dismiss()
+                        }
+                    }
+                },
+                true
+            )
             subscribeComposeTextMessage()
             emojiKeyboardPopup =
                 EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))

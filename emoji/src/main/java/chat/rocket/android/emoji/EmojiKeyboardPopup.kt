@@ -1,5 +1,6 @@
 package chat.rocket.android.emoji
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,23 +10,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.annotation.ColorInt
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.content.edit
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.viewpager.widget.ViewPager
+import chat.rocket.android.emoji.internal.EmojiCategory
+import chat.rocket.android.emoji.internal.EmojiPagerAdapter
+import chat.rocket.android.emoji.internal.PREF_EMOJI_SKIN_TONE
 import com.google.android.material.tabs.TabLayout
 
 
-class EmojiKeyboardPopup(
-    context: Context,
-    view: View
-) : OverKeyboardPopupWindow(context, view) {
+class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow(context, view) {
 
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
     private lateinit var searchView: View
     private lateinit var backspaceView: View
     private lateinit var parentContainer: ViewGroup
+    private lateinit var changeColorView: View
+    private lateinit var adapter: EmojiPagerAdapter
     var listener: EmojiKeyboardListener? = null
 
+    @SuppressLint("InflateParams")
     override fun onCreateView(inflater: LayoutInflater): View {
         val view = inflater.inflate(R.layout.emoji_keyboard, null)
         parentContainer = view.findViewById(R.id.emoji_keyboard_container)
@@ -33,6 +43,7 @@ class EmojiKeyboardPopup(
         searchView = view.findViewById(R.id.emoji_search)
         backspaceView = view.findViewById(R.id.emoji_backspace)
         tabLayout = view.findViewById(R.id.tabs)
+        changeColorView = view.findViewById(R.id.color_change_view)
         tabLayout.setupWithViewPager(viewPager)
         return view
     }
@@ -44,10 +55,96 @@ class EmojiKeyboardPopup(
 
     private fun setupBottomBar() {
         searchView.setOnClickListener {
+            //TODO: search not yet implemented
         }
 
         backspaceView.setOnClickListener {
             listener?.onNonEmojiKeyPressed(KeyEvent.KEYCODE_BACK)
+        }
+
+        changeColorView.setOnClickListener {
+            showSkinToneChooser()
+        }
+
+        val sharedPreferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
+        sharedPreferences.getString(PREF_EMOJI_SKIN_TONE, "")?.let {
+            changeSkinTone(Fitzpatrick.valueOf(it))
+        }
+    }
+
+    private fun showSkinToneChooser() {
+        val view = LayoutInflater.from(context).inflate(R.layout.color_select_popup, null)
+        val dialog = AlertDialog.Builder(context, R.style.Dialog)
+            .setView(view)
+            .setTitle(context.getString(R.string.alert_title_default_skin_tone))
+            .setCancelable(true)
+            .create()
+
+        view.findViewById<TextView>(R.id.default_tone_text).also {
+            it.text = EmojiParser.parse(it.text)
+        }.setOnClickListener {
+            dialog.dismiss()
+            changeSkinTone(Fitzpatrick.Default)
+        }
+
+        view.findViewById<TextView>(R.id.light_tone_text).also {
+            it.text = EmojiParser.parse(it.text)
+        }.setOnClickListener {
+            dialog.dismiss()
+            changeSkinTone(Fitzpatrick.LightTone)
+        }
+
+        view.findViewById<TextView>(R.id.medium_light_text).also {
+            it.text = EmojiParser.parse(it.text)
+        }.setOnClickListener {
+            dialog.dismiss()
+            changeSkinTone(Fitzpatrick.MediumLightTone)
+        }
+
+        view.findViewById<TextView>(R.id.medium_tone_text).also {
+            it.text = EmojiParser.parse(it.text)
+        }.setOnClickListener {
+            dialog.dismiss()
+            changeSkinTone(Fitzpatrick.MediumTone)
+        }
+
+        view.findViewById<TextView>(R.id.medium_dark_tone_text).also {
+            it.text = EmojiParser.parse(it.text)
+        }.setOnClickListener {
+            dialog.dismiss()
+            changeSkinTone(Fitzpatrick.MediumDarkTone)
+        }
+
+        view.findViewById<TextView>(R.id.dark_tone_text).also {
+            it.text = EmojiParser.parse(it.text)
+        }.setOnClickListener {
+            dialog.dismiss()
+            changeSkinTone(Fitzpatrick.DarkTone)
+        }
+        dialog.show()
+    }
+
+    private fun changeSkinTone(tone: Fitzpatrick) {
+        val drawable = ContextCompat.getDrawable(context, R.drawable.color_change_circle)!!
+        val wrappedDrawable = DrawableCompat.wrap(drawable)
+        DrawableCompat.setTint(wrappedDrawable, getFitzpatrickColor(tone))
+        (changeColorView as ImageView).setImageDrawable(wrappedDrawable)
+        adapter.setFitzpatrick(tone)
+    }
+
+    @ColorInt
+    private fun getFitzpatrickColor(tone: Fitzpatrick): Int {
+        val sharedPreferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
+        sharedPreferences.edit {
+            putString(PREF_EMOJI_SKIN_TONE, tone.type)
+        }
+        return when (tone) {
+            Fitzpatrick.Default -> ContextCompat.getColor(context, R.color.tone_default)
+            Fitzpatrick.LightTone -> ContextCompat.getColor(context, R.color.tone_light)
+            Fitzpatrick.MediumLightTone -> ContextCompat.getColor(context, R.color.tone_medium_light)
+            Fitzpatrick.MediumTone -> ContextCompat.getColor(context, R.color.tone_medium)
+            Fitzpatrick.MediumDarkTone -> ContextCompat.getColor(context, R.color.tone_medium_dark)
+            Fitzpatrick.DarkTone -> ContextCompat.getColor(context, R.color.tone_dark)
         }
     }
 
@@ -64,12 +161,14 @@ class EmojiKeyboardPopup(
                 }
             }
 
-            viewPager.adapter = CategoryPagerAdapter(object : EmojiKeyboardListener {
+            adapter = EmojiPagerAdapter(object : EmojiKeyboardListener {
                 override fun onEmojiAdded(emoji: Emoji) {
                     EmojiRepository.addToRecents(emoji)
                     callback.onEmojiAdded(emoji)
                 }
             })
+            viewPager.offscreenPageLimit = EmojiCategory.values().size
+            viewPager.adapter = adapter
 
             for (category in EmojiCategory.values()) {
                 val tab = tabLayout.getTabAt(category.ordinal)
@@ -79,14 +178,18 @@ class EmojiKeyboardPopup(
                 textView.setImageResource(category.resourceIcon())
             }
 
-            val currentTab = if (EmojiRepository.getRecents().isEmpty()) EmojiCategory.PEOPLE.ordinal else
+            val currentTab = if (EmojiRepository.getRecents().isEmpty()) {
+                EmojiCategory.PEOPLE.ordinal
+            } else {
                 EmojiCategory.RECENTS.ordinal
+            }
             viewPager.currentItem = currentTab
         }
     }
 
     class EmojiTextWatcher(private val editor: EditText) : TextWatcher {
-        @Volatile private var emojiToRemove = mutableListOf<EmojiTypefaceSpan>()
+        @Volatile
+        private var emojiToRemove = mutableListOf<EmojiTypefaceSpan>()
 
         override fun afterTextChanged(s: Editable) {
             val message = editor.editableText
@@ -127,9 +230,5 @@ class EmojiKeyboardPopup(
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         }
-    }
-
-    companion object {
-        const val PREF_EMOJI_RECENTS = "PREF_EMOJI_RECENTS"
     }
 }

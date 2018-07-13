@@ -3,6 +3,12 @@ package chat.rocket.android.emoji
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
+import android.os.SystemClock
+import chat.rocket.android.emoji.internal.EmojiCategory
+import chat.rocket.android.emoji.internal.PREF_EMOJI_RECENTS
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.experimental.yield
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -10,8 +16,11 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.coroutines.experimental.buildSequence
 
 object EmojiRepository {
+
+    private val FITZPATRICK_REGEX = "(.*)_(tone[0-9]):".toRegex(RegexOption.IGNORE_CASE)
     private val shortNameToUnicode = HashMap<String, String>()
     private val SHORTNAME_PATTERN = Pattern.compile(":([-+\\w]+):")
     private val ALL_EMOJIS = mutableListOf<Emoji>()
@@ -24,9 +33,9 @@ object EmojiRepository {
         cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
         val stream = context.assets.open(path)
         val emojis = loadEmojis(stream)
-        emojis.forEach {
+        emojis.forEach { emoji ->
             val unicodeIntList = mutableListOf<Int>()
-            it.unicode.split("-").forEach {
+            emoji.unicode.split("-").forEach {
                 val value = it.toInt(16)
                 if (value >= 0x10000) {
                     val surrogatePair = calculateSurrogatePairs(value)
@@ -38,12 +47,32 @@ object EmojiRepository {
             }
             val unicodeIntArray = unicodeIntList.toIntArray()
             val unicode = String(unicodeIntArray, 0, unicodeIntArray.size)
-            ALL_EMOJIS.add(it.copy(unicode = unicode))
+            val emojiWithUnicode = emoji.copy(unicode = unicode)
+            if (hasFitzpatrick(emoji.shortname)) {
+                val matchResult = FITZPATRICK_REGEX.find(emoji.shortname)
+                val prefix = matchResult!!.groupValues[1] + ":"
+                val fitzpatrick = Fitzpatrick.valueOf(matchResult.groupValues[2])
+                val defaultEmoji = ALL_EMOJIS.firstOrNull { it.shortname == prefix }
+                val emojiWithFitzpatrick = emojiWithUnicode.copy(fitzpatrick = fitzpatrick)
+                if (defaultEmoji != null) {
+                    defaultEmoji.siblings.add(emojiWithFitzpatrick)
+                } else {
+                    // This emoji doesn't have a default tone, ie. :man_in_business_suit_levitating_tone1:
+                    // In this case, the default emoji becomes the first toned one.
+                    ALL_EMOJIS.add(emojiWithFitzpatrick)
+                }
+            } else {
+                ALL_EMOJIS.add(emojiWithUnicode)
+            }
             shortNameToUnicode.apply {
-                put(it.shortname, unicode)
-                it.shortnameAlternates.forEach { alternate -> put(alternate, unicode) }
+                put(emoji.shortname, unicode)
+                emoji.shortnameAlternates.forEach { alternate -> put(alternate, unicode) }
             }
         }
+    }
+
+    private fun hasFitzpatrick(shortname: String): Boolean {
+        return FITZPATRICK_REGEX matches shortname
     }
 
     /**
@@ -51,7 +80,7 @@ object EmojiRepository {
      *
      * @return All emojis for all categories.
      */
-    fun getAll() = ALL_EMOJIS
+    internal fun getAll() = ALL_EMOJIS
 
     /**
      * Get all emojis for a given category.
@@ -60,8 +89,17 @@ object EmojiRepository {
      *
      * @return All emoji from specified category
      */
-    fun getEmojisByCategory(category: EmojiCategory): List<Emoji> {
+    internal fun getEmojisByCategory(category: EmojiCategory): List<Emoji> {
         return ALL_EMOJIS.filter { it.category.toLowerCase() == category.name.toLowerCase() }
+    }
+
+    internal fun getEmojiSequenceByCategory(category: EmojiCategory): Sequence<Emoji> {
+        val list = ALL_EMOJIS.filter { it.category.toLowerCase() == category.name.toLowerCase() }
+        return buildSequence{
+            list.forEach {
+                yield(it)
+            }
+        }
     }
 
     /**
@@ -71,21 +109,21 @@ object EmojiRepository {
      *
      * @return Emoji given by shortname or null
      */
-    fun getEmojiByShortname(shortname: String) = ALL_EMOJIS.firstOrNull { it.shortname == shortname }
+    internal fun getEmojiByShortname(shortname: String) = ALL_EMOJIS.firstOrNull { it.shortname == shortname }
 
     /**
      * Add an emoji to the Recents category.
      */
-    fun addToRecents(emoji: Emoji) {
+    internal fun addToRecents(emoji: Emoji) {
         val emojiShortname = emoji.shortname
-        val recentsJson = JSONObject(preferences.getString(EmojiKeyboardPopup.PREF_EMOJI_RECENTS, "{}"))
+        val recentsJson = JSONObject(preferences.getString(PREF_EMOJI_RECENTS, "{}"))
         if (recentsJson.has(emojiShortname)) {
             val useCount = recentsJson.getInt(emojiShortname)
             recentsJson.put(emojiShortname, useCount + 1)
         } else {
             recentsJson.put(emojiShortname, 1)
         }
-        preferences.edit().putString(EmojiKeyboardPopup.PREF_EMOJI_RECENTS, recentsJson.toString()).apply()
+        preferences.edit().putString(PREF_EMOJI_RECENTS, recentsJson.toString()).apply()
     }
 
     /**
@@ -93,9 +131,9 @@ object EmojiRepository {
      *
      * @return All recent emojis ordered by usage.
      */
-    fun getRecents(): List<Emoji> {
+    internal fun getRecents(): List<Emoji> {
         val list = mutableListOf<Emoji>()
-        val recentsJson = JSONObject(preferences.getString(EmojiKeyboardPopup.PREF_EMOJI_RECENTS, "{}"))
+        val recentsJson = JSONObject(preferences.getString(PREF_EMOJI_RECENTS, "{}"))
         for (shortname in recentsJson.keys()) {
             val emoji = getEmojiByShortname(shortname)
             emoji?.let {

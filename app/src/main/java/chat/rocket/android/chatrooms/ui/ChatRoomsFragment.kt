@@ -290,25 +290,25 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private fun showConnectionState(state: State) {
         Timber.d("Got new state: $state")
         ui {
-            connection_status_text.fadeIn()
+            text_connection_status.fadeIn()
             handler.removeCallbacks(dismissStatus)
             when (state) {
                 is State.Connected -> {
-                    connection_status_text.text = getString(R.string.status_connected)
+                    text_connection_status.text = getString(R.string.status_connected)
                     handler.postDelayed(dismissStatus, 2000)
                 }
-                is State.Disconnected -> connection_status_text.text = getString(R.string.status_disconnected)
-                is State.Connecting -> connection_status_text.text = getString(R.string.status_connecting)
-                is State.Authenticating -> connection_status_text.text = getString(R.string.status_authenticating)
-                is State.Disconnecting -> connection_status_text.text = getString(R.string.status_disconnecting)
-                is State.Waiting -> connection_status_text.text = getString(R.string.status_waiting, state.seconds)
+                is State.Disconnected -> text_connection_status.text = getString(R.string.status_disconnected)
+                is State.Connecting -> text_connection_status.text = getString(R.string.status_connecting)
+                is State.Authenticating -> text_connection_status.text = getString(R.string.status_authenticating)
+                is State.Disconnecting -> text_connection_status.text = getString(R.string.status_disconnecting)
+                is State.Waiting -> text_connection_status.text = getString(R.string.status_waiting, state.seconds)
             }
         }
     }
 
     private val dismissStatus = {
-        if (connection_status_text != null) {
-            connection_status_text.fadeOut()
+        if (text_connection_status != null) {
+            text_connection_status.fadeOut()
         }
     }
 

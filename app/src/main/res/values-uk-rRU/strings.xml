@@ -243,6 +243,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Нет недавно используемых emoji</string>
+    <string name="alert_title_default_skin_tone">По умолчанию тон кожи</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Сортировать</string>
