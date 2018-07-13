@@ -3,6 +3,7 @@ package chat.rocket.android.main.ui
 import DrawableHelper
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
@@ -268,5 +269,15 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     fun setCheckedNavDrawerItem(@IdRes item: Int) {
         view_navigation.setCheckedItem(item)
+    }
+
+    private var progressDialog : ProgressDialog? = null
+    override fun showProgress() {
+        progressDialog = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.msg_log_out), true, false)
+    }
+
+    override fun hideProgress() {
+        progressDialog?.dismiss()
+        progressDialog = null
     }
 }

@@ -3,7 +3,6 @@ package chat.rocket.android.chatroom.domain
 import android.content.Context
 import android.net.Uri
 import chat.rocket.android.util.extensions.*
-import java.io.File
 import javax.inject.Inject
 
 class UriInteractor @Inject constructor(private val context: Context) {
@@ -34,9 +33,4 @@ class UriInteractor @Inject constructor(private val context: Context) {
      * Note: It should be an image.
      */
     fun getBitmap(uri: Uri) = uri.getBitmpap(context)
-
-    /**
-     * Returns the Uri from the [File].
-     */
-    fun getUri(file: File) = Uri.fromFile(file)
 }

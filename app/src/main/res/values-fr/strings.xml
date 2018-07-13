@@ -287,4 +287,5 @@
     <string name="notif_action_reply_hint">RÉPONDRE</string>
     <string name="notif_error_sending">La réponse a échoué. Veuillez réessayer.</string>
     <string name="notif_success_sending">Message envoyé à %1$s!</string>
+    <string name="msg_log_out">Logging out...</string>
 </resources>

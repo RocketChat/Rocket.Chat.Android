@@ -1,9 +1,7 @@
 package chat.rocket.android.chatroom.presentation
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Environment
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.AutoCompleteType
 import chat.rocket.android.chatroom.adapter.PEOPLE
@@ -33,9 +31,9 @@ import chat.rocket.android.server.domain.uploadMimeTypeFilter
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.state
+import chat.rocket.android.util.extension.compressImageAndGetInputStream
 import chat.rocket.android.util.extensions.avatarUrl
-import chat.rocket.android.util.extensions.getCompressFormat
-import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -77,11 +75,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.threeten.bp.Instant
 import timber.log.Timber
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.io.InputStream
-import java.io.File
-import java.io.FileOutputStream
 import java.util.*
 import javax.inject.Inject
 
@@ -172,10 +166,12 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 if (offset == 0L) {
                     val localMessages = messagesRepository.getByRoomId(chatRoomId)
-                    val oldMessages = mapper.map(localMessages, RoomUiModel(
-                        roles = chatRoles,
-                        isBroadcast = chatIsBroadcast, isRoom = true
-                    ))
+                    val oldMessages = mapper.map(
+                        localMessages, RoomUiModel(
+                            roles = chatRoles,
+                            isBroadcast = chatIsBroadcast, isRoom = true
+                        )
+                    )
                     if (oldMessages.isNotEmpty()) {
                         view.showMessages(oldMessages)
                         loadMissingMessages()
@@ -259,10 +255,9 @@ class ChatRoomPresenter @Inject constructor(
                         messagesRepository.save(newMessage)
                         view.showNewMessage(
                             mapper.map(
-                                newMessage, RoomUiModel(
-                                roles = chatRoles, isBroadcast = chatIsBroadcast
-                            )
-                            )
+                                newMessage, 
+                                RoomUiModel(roles = chatRoles, isBroadcast = chatIsBroadcast)
+                            ), false
                         )
                         client.sendMessage(id, chatRoomId, text)
                     } catch (ex: Exception) {
@@ -317,10 +312,13 @@ class ChatRoomPresenter @Inject constructor(
                             var inputStream: InputStream? = uriInteractor.getInputStream(uri)
 
                             if (mimeType.contains("image")) {
-                                compressImage(uri, mimeType)?.let {
-                                    inputStream = it
+                                uriInteractor.getBitmap(uri)?.let {
+                                    it.compressImageAndGetInputStream(mimeType)?.let {
+                                        inputStream = it
+                                    }
                                 }
                             }
+
                             retryIO("uploadFile($roomId, $fileName, $mimeType") {
                                 client.uploadFile(
                                     roomId,
@@ -347,23 +345,45 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    // Returns an InputStream of a compressed image.
-    private suspend fun compressImage(uri: Uri, mimeType: String): InputStream? {
-        var inputStream: InputStream? = null
+    fun uploadDrawingImage(roomId: String, byteArray: ByteArray, msg: String) {
+        launchUI(strategy) {
+            view.showLoading()
+            try {
+                withContext(DefaultDispatcher) {
+                    val fileName = UUID.randomUUID().toString() + ".png"
+                    val fileSize = byteArray.size
+                    val mimeType = "image/png"
+                    val maxFileSizeAllowed = settings.uploadMaxFileSize()
 
-        uriInteractor.getBitmap(uri)?.let {
-            withContext(DefaultDispatcher) {
-                val byteArrayOutputStream = ByteArrayOutputStream()
-                // TODO: Add an option the the app to the user be able to select the quality of the compressed image
-                val isCompressed =
-                    it.compress(it.getCompressFormat(mimeType), 70, byteArrayOutputStream)
-                if (isCompressed) {
-                    inputStream = ByteArrayInputStream(byteArrayOutputStream.toByteArray())
+                    when {
+                        fileSize > maxFileSizeAllowed -> {
+                            view.showInvalidFileSize(fileSize, maxFileSizeAllowed)
+                        }
+                        else -> {
+                            retryIO("uploadFile($roomId, $fileName, $mimeType") {
+                                client.uploadFile(
+                                    roomId,
+                                    fileName,
+                                    mimeType,
+                                    msg,
+                                    description = fileName
+                                ) {
+                                    byteArray.inputStream()
+                                }
+                            }
+                        }
+                    }
                 }
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error uploading file")
+                when (ex) {
+                    is RocketChatException -> view.showMessage(ex)
+                    else -> view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideLoading()
             }
         }
-
-        return inputStream
     }
 
     fun sendTyping() {
@@ -452,7 +472,7 @@ class ChatRoomPresenter @Inject constructor(
                                 messagesRepository.saveAll(messages.result)
 
                                 launchUI(strategy) {
-                                    view.showNewMessage(models)
+                                    view.showNewMessage(models, true)
                                 }
 
                                 if (messages.result.size == 50) {
@@ -513,7 +533,8 @@ class ChatRoomPresenter @Inject constructor(
                 val id = msg.id
                 val username = msg.sender?.username ?: ""
                 val mention = if (mentionAuthor && currentUsername != username) "@$username" else ""
-                val room = if (roomTypeOf(roomType) is RoomType.DirectMessage) username else roomName
+                val room =
+                    if (roomTypeOf(roomType) is RoomType.DirectMessage) username else roomName
                 val chatRoomType = when (roomTypeOf(roomType)) {
                     is RoomType.DirectMessage -> "direct"
                     is RoomType.PrivateGroup -> "group"
@@ -524,10 +545,12 @@ class ChatRoomPresenter @Inject constructor(
                 view.showReplyingAction(
                     username = getDisplayName(msg.sender),
                     replyMarkdown = "[ ]($currentServer/$chatRoomType/$room?msg=$id) $mention ",
-                    quotedMessage = mapper.map(message, RoomUiModel(
-                        roles = chatRoles,
-                        isBroadcast = chatIsBroadcast
-                    )).last().preview?.message ?: ""
+                    quotedMessage = mapper.map(
+                        message, RoomUiModel(
+                            roles = chatRoles,
+                            isBroadcast = chatIsBroadcast
+                        )
+                    ).last().preview?.message ?: ""
                 )
             }
         }
@@ -903,12 +926,6 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    fun getDrawingImageUri(byteArray: ByteArray): Uri {
-        val bitmap  = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-        val file = saveDrawingImage(bitmap)
-        return uriInteractor.getUri(file)
-    }
-
     private suspend fun subscribeTypingStatus() {
         launch(CommonPool + strategy.jobs) {
             client.subscribeTypingStatus(chatRoomId.toString()) { _, id ->
@@ -957,9 +974,11 @@ class ChatRoomPresenter @Inject constructor(
 
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
-            val viewModelStreamedMessage = mapper.map(streamedMessage, RoomUiModel(
-                roles = chatRoles, isBroadcast = chatIsBroadcast
-            ))
+            val viewModelStreamedMessage = mapper.map(
+                streamedMessage, RoomUiModel(
+                    roles = chatRoles, isBroadcast = chatIsBroadcast
+                )
+            )
 
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
@@ -970,21 +989,8 @@ class ChatRoomPresenter @Inject constructor(
             } else {
                 Timber.d("Adding new message")
                 messagesRepository.save(streamedMessage)
-                view.showNewMessage(viewModelStreamedMessage)
+                view.showNewMessage(viewModelStreamedMessage, true)
             }
         }
-    }
-
-    private fun saveDrawingImage(bitmap: Bitmap): File {
-        val imageDir = "${Environment.DIRECTORY_PICTURES}/Rocket.Chat Images/"
-        val path = Environment.getExternalStoragePublicDirectory(imageDir)
-        val file = File(path, UUID.randomUUID().toString()+".png")
-        path.mkdirs()
-        file.createNewFile()
-        val outputStream = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.PNG,70, outputStream)
-        outputStream.flush()
-        outputStream.close()
-        return file
     }
 }

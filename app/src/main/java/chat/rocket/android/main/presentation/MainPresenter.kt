@@ -1,15 +1,23 @@
 package chat.rocket.android.main.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.uimodel.NavHeaderUiModel
 import chat.rocket.android.main.uimodel.NavHeaderUiModelMapper
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.GetAccountsInteractor
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.RemoveAccountInteractor
+import chat.rocket.android.server.domain.SaveAccountInteractor
+import chat.rocket.android.server.domain.TokenRepository
+import chat.rocket.android.server.domain.favicon
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
-import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.util.retryIO
@@ -23,7 +31,9 @@ import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.unregisterPushToken
 import chat.rocket.core.model.Myself
+import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.channels.Channel
+import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -39,11 +49,13 @@ class MainPresenter @Inject constructor(
         private val getAccountsInteractor: GetAccountsInteractor,
         private val removeAccountInteractor: RemoveAccountInteractor,
         private val factory: RocketChatClientFactory,
+        dbManagerFactory: DatabaseManagerFactory,
         getSettingsInteractor: GetSettingsInteractor,
         managerFactory: ConnectionManagerFactory
 ) : CheckServerPresenter(strategy, factory, view = view) {
     private val currentServer = serverInteractor.get()!!
     private val manager = managerFactory.create(currentServer)
+    private val dbManager = dbManagerFactory.create(currentServer)
     private val client: RocketChatClient = factory.create(currentServer)
     private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
 
@@ -91,6 +103,7 @@ class MainPresenter @Inject constructor(
      */
     fun logout() {
         launchUI(strategy) {
+            view.showProgress()
             try {
                 clearTokens()
                 retryIO("logout") { client.logout() }
@@ -107,10 +120,13 @@ class MainPresenter @Inject constructor(
                 disconnect()
                 removeAccountInteractor.remove(currentServer)
                 tokenRepository.remove(currentServer)
+
+                withContext(CommonPool) { dbManager.logout() }
                 navigator.toNewServer()
             } catch (ex: Exception) {
                 Timber.d(ex, "Error cleaning up the session...")
             }
+            view.hideProgress()
         }
     }
 

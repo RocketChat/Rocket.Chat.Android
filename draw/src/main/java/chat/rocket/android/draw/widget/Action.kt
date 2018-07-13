@@ -6,5 +6,4 @@ import java.io.Serializable
 interface Action : Serializable {
 
     fun perform(path: Path)
-
 }
