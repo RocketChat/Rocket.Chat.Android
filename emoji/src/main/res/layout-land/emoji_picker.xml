@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         app:tabBackground="@color/whitesmoke"
         app:tabGravity="fill"
-        app:tabMaxWidth="48dp"
         app:tabMode="scrollable" />
 
     <androidx.viewpager.widget.ViewPager
