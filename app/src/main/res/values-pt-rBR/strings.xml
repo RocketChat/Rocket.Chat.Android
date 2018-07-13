@@ -155,7 +155,6 @@
     // TODO:Add proper translation.
     <string name="message_credentials_saved_successfully">Credentials saved successfully</string>
 
-
     <!-- Message actions -->
     <string name="action_msg_reply">Responder</string>
     <string name="action_msg_edit">Editar</string>
@@ -175,6 +174,9 @@
     <string name="permission_deleting_not_allowed">Remoção não permitida</string>
     <string name="permission_pinning_not_allowed">Pinagem não permitida</string>
     <string name="permission_starring_not_allowed">Favoritar não permitido</string>
+
+    <!-- Search message -->
+    <string name="title_search_message">Procurar mensagem</string>
 
     <!-- Favorite/Unfavorite chat room -->
     <string name="title_favorite_chat">Favoritar canal</string>
@@ -265,5 +267,5 @@
     <string name="notif_action_reply_hint">RESPONDER</string>
     <string name="notif_error_sending">Falha ao enviar a mensagem.</string>
     <string name="notif_success_sending">Mensagem enviada para %1$s!</string>
-    <string name="msg_log_out">Deslogando...</string>
+    <string name="msg_log_out">Deslogando…</string>
 </resources>
