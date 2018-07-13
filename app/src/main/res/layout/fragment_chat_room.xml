@@ -12,9 +12,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/text_typing_status"
+        app:layout_constraintTop_toBottomOf="@+id/text_connection_status"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <include
             android:id="@+id/layout_message_list"
@@ -117,7 +117,7 @@
         app:layout_constraintBottom_toTopOf="@id/layout_message_composer" />
 
     <TextView
-        android:id="@+id/connection_status_text"
+        android:id="@+id/text_connection_status"
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:alpha="0"
@@ -127,6 +127,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="@color/colorWhite"
         android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
         tools:alpha="1"
         tools:text="connected"
         tools:visibility="visible" />
