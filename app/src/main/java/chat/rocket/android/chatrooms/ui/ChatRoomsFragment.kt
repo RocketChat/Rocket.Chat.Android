@@ -302,30 +302,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             when (state) {
                 is State.Connected -> {
                     connection_status_text.text = getString(R.string.status_connected)
-                    connection_status_text.background = resources.getDrawable(R.color.colorGreen)
                     handler.postDelayed(dismissStatus, 2000)
                 }
-                is State.Disconnected -> {
-                    connection_status_text.text = getString(R.string.status_disconnected)
-                    connection_status_text.background = resources.getDrawable(R.color.colorRed)
-                }
-                is State.Connecting -> {
-                    connection_status_text.text = getString(R.string.status_connecting)
-                    connection_status_text.background = resources.getDrawable(R.color.colorOrange)
-                }
-                is State.Authenticating -> {
-                    connection_status_text.text = getString(R.string.status_authenticating)
-                    connection_status_text.background = resources.getDrawable(R.color.colorGreen)
-                }
-                is State.Disconnecting -> {
-                    connection_status_text.text = getString(R.string.status_disconnecting)
-                    connection_status_text.background = resources.getDrawable(R.color.colorRed)
-                }
-                is State.Waiting -> {
-                    connection_status_text.text = getString(R.string.status_waiting, state.seconds)
-                    connection_status_text.background = resources.getDrawable(R.color.colorOrange)
-
-                }
+                is State.Disconnected -> connection_status_text.text = getString(R.string.status_disconnected)
+                is State.Connecting -> connection_status_text.text = getString(R.string.status_connecting)
+                is State.Authenticating -> connection_status_text.text = getString(R.string.status_authenticating)
+                is State.Disconnecting -> connection_status_text.text = getString(R.string.status_disconnecting)
+                is State.Waiting -> connection_status_text.text = getString(R.string.status_waiting, state.seconds)
             }
         }
     }
