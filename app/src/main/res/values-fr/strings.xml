@@ -193,6 +193,10 @@
     // TODO: Add proper translation.
     <string name="permission_starring_not_allowed">Starring is not allowed</string>
 
+    <!-- Search message -->
+    <!-- TODO Add proper translation-->
+    <string name="title_search_message">Search message</string>
+
     <!-- Favorite/Unfavorite chat room -->
     <!-- TODO Add proper translation-->
     <string name="title_favorite_chat">Favorite chat</string>
@@ -287,5 +291,6 @@
     <string name="notif_action_reply_hint">RÉPONDRE</string>
     <string name="notif_error_sending">La réponse a échoué. Veuillez réessayer.</string>
     <string name="notif_success_sending">Message envoyé à %1$s!</string>
-    <string name="msg_log_out">Logging out...</string>
+    <!-- TODO Add proper translation-->
+    <string name="msg_log_out">Logging out…</string>
 </resources>

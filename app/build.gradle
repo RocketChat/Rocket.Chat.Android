@@ -108,7 +108,6 @@ dependencies {
 
     implementation libraries.timber
     implementation libraries.threeTenABP
-    implementation libraries.rxBinding
 
     implementation libraries.fresco
     api libraries.frescoOkHttp

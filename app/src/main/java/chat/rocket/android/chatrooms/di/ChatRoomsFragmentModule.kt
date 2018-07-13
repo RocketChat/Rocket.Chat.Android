@@ -46,15 +46,19 @@ class ChatRoomsFragmentModule {
 
     @Provides
     @PerFragment
-    fun provideRocketChatClient(factory: RocketChatClientFactory,
-                                @Named("currentServer") currentServer: String): RocketChatClient {
+    fun provideRocketChatClient(
+        factory: RocketChatClientFactory,
+        @Named("currentServer") currentServer: String
+    ): RocketChatClient {
         return factory.create(currentServer)
     }
 
     @Provides
     @PerFragment
-    fun provideDatabaseManager(factory: DatabaseManagerFactory,
-                               @Named("currentServer") currentServer: String): DatabaseManager {
+    fun provideDatabaseManager(
+        factory: DatabaseManagerFactory,
+        @Named("currentServer") currentServer: String
+    ): DatabaseManager {
         return factory.create(currentServer)
     }
 
@@ -64,31 +68,39 @@ class ChatRoomsFragmentModule {
 
     @Provides
     @PerFragment
-    fun provideConnectionManager(factory: ConnectionManagerFactory,
-                                 @Named("currentServer") currentServer: String): ConnectionManager {
+    fun provideConnectionManager(
+        factory: ConnectionManagerFactory,
+        @Named("currentServer") currentServer: String
+    ): ConnectionManager {
         return factory.create(currentServer)
     }
 
     @Provides
     @PerFragment
-    fun provideFetchChatRoomsInteractor(client: RocketChatClient,
-                                        dbManager: DatabaseManager): FetchChatRoomsInteractor {
+    fun provideFetchChatRoomsInteractor(
+        client: RocketChatClient,
+        dbManager: DatabaseManager
+    ): FetchChatRoomsInteractor {
         return FetchChatRoomsInteractor(client, dbManager)
     }
 
     @Provides
     @PerFragment
-    fun providePublicSettings(repository: SettingsRepository,
-                              @Named("currentServer") currentServer: String): PublicSettings {
+    fun providePublicSettings(
+        repository: SettingsRepository,
+        @Named("currentServer") currentServer: String
+    ): PublicSettings {
         return repository.get(currentServer)
     }
 
     @Provides
     @PerFragment
-    fun provideRoomMapper(context: Application,
-                          repository: SettingsRepository,
-                          localRepository: LocalRepository,
-                          @Named("currentServer") serverUrl: String): RoomUiModelMapper {
+    fun provideRoomMapper(
+        context: Application,
+        repository: SettingsRepository,
+        localRepository: LocalRepository,
+        @Named("currentServer") serverUrl: String
+    ): RoomUiModelMapper {
         return RoomUiModelMapper(context, repository.get(serverUrl), localRepository, serverUrl)
     }
 }
