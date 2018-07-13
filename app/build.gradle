@@ -16,6 +16,12 @@ android {
         versionName "2.4.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     signingConfigs {
@@ -63,6 +69,8 @@ dependencies {
     implementation project(':player')
     implementation project(':emoji')
     implementation project(':draw')
+    implementation project(':util')
+    implementation project(':core')
 
     implementation libraries.kotlin
     implementation libraries.coroutines

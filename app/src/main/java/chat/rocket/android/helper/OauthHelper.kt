@@ -84,7 +84,7 @@ object OauthHelper {
      * @return The Facebook Oauth URL.
      */
     fun getFacebookOauthUrl(clientId: String, serverUrl: String, state: String): String {
-        return  "https://facebook.com/v2.9/dialog/oauth" +
+        return "https://facebook.com/v2.9/dialog/oauth" +
                 "?client_id=$clientId" +
                 "&redirect_uri=${serverUrl.removeTrailingSlash()}/_oauth/facebook?close" +
                 "&state=$state" +
@@ -113,12 +113,18 @@ object OauthHelper {
         state: String,
         scope: String
     ): String {
-        return host +
-                authorizePath +
+        (authorizePath +
                 "?client_id=$clientId" +
                 "&redirect_uri=${serverUrl.removeTrailingSlash()}/_oauth/$serviceName" +
                 "&state=$state" +
                 "&scope=$scope" +
                 "&response_type=code"
+                ).let {
+            return if (it.contains(host)) {
+                it
+            } else {
+                host + it
+            }
+        }
     }
 }

@@ -285,4 +285,5 @@
     <string name="notif_action_reply_hint">RESPUESTA</string>
     <string name="notif_error_sending">La respuesta ha fallado. Inténtalo de nuevo.</string>
     <string name="notif_success_sending">Mensaje enviado a %1$s!</string>
+    <string name="msg_log_out">Saliendo de tu cuenta...</string>
 </resources>

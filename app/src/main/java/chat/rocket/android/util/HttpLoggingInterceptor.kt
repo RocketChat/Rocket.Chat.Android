@@ -1,5 +1,6 @@
 package chat.rocket.android.util
 
+import chat.rocket.android.BuildConfig
 import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.MediaType
@@ -27,6 +28,8 @@ class HttpLoggingInterceptor constructor(private val logger: Logger) : Intercept
 
     @Volatile
     internal var level = Level.NONE
+
+    private val isDebug = BuildConfig.DEBUG
 
     enum class Level {
         /** No logs.  */
@@ -140,7 +143,7 @@ class HttpLoggingInterceptor constructor(private val logger: Logger) : Intercept
                 val name = headers.name(i)
                 // Skip headers from the request body as they are explicitly logged above.
                 if (!"Content-Type".equals(name, ignoreCase = true) && !"Content-Length".equals(name, ignoreCase = true)) {
-                    if ("X-Auth-Token".equals(name, ignoreCase = true)) {
+                    if (!isDebug && "X-Auth-Token".equals(name, ignoreCase = true)) {
                         logger.log("$name: ${skipAuthToken(headers.value(i).length)}")
                     } else {
                         logger.log("$name: ${headers.value(i)}")
