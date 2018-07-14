@@ -37,7 +37,6 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
     lateinit var presenter: MessageInfoPresenter
 
     private lateinit var adapter: ReadReceiptAdapter
-    private lateinit var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener
     private lateinit var messageId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,11 +64,6 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         presenter.loadReadReceipts(messageId = messageId)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        receipt_list.removeOnScrollListener(endlessRecyclerViewScrollListener)
     }
 
     private fun setupRecyclerView() {
