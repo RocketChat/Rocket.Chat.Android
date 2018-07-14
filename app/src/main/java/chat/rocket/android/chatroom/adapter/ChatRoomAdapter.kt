@@ -139,6 +139,11 @@ class ChatRoomAdapter(
         }
     }
 
+    fun clearData() {
+        dataSet.clear()
+        notifyDataSetChanged()
+    }
+
     fun appendData(dataSet: List<BaseUiModel<*>>) {
         val previousDataSetSize = this.dataSet.size
         this.dataSet.addAll(dataSet)

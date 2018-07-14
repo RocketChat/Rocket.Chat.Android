@@ -32,6 +32,7 @@ import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
+import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.inflate
@@ -164,15 +165,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         searchView = searchItem?.actionView as? SearchView
         searchView?.setIconifiedByDefault(false)
         searchView?.maxWidth = Integer.MAX_VALUE
-        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return queryChatRoomsByName(query)
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return queryChatRoomsByName(newText)
-            }
-        })
+        searchView?.onQueryTextListener { queryChatRoomsByName(it) }
 
         val expandListener = object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
