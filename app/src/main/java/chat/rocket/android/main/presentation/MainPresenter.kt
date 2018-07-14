@@ -1,15 +1,23 @@
 package chat.rocket.android.main.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.main.viewmodel.NavHeaderViewModel
-import chat.rocket.android.main.viewmodel.NavHeaderViewModelMapper
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.main.uimodel.NavHeaderUiModel
+import chat.rocket.android.main.uimodel.NavHeaderUiModelMapper
+import chat.rocket.android.server.domain.GetAccountsInteractor
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.RemoveAccountInteractor
+import chat.rocket.android.server.domain.SaveAccountInteractor
+import chat.rocket.android.server.domain.TokenRepository
+import chat.rocket.android.server.domain.favicon
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
-import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.util.retryIO
@@ -23,7 +31,9 @@ import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.unregisterPushToken
 import chat.rocket.core.model.Myself
+import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.channels.Channel
+import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -34,16 +44,18 @@ class MainPresenter @Inject constructor(
     private val tokenRepository: TokenRepository,
     private val serverInteractor: GetCurrentServerInteractor,
     private val localRepository: LocalRepository,
-    private val navHeaderMapper: NavHeaderViewModelMapper,
+    private val navHeaderMapper: NavHeaderUiModelMapper,
     private val saveAccountInteractor: SaveAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
     private val removeAccountInteractor: RemoveAccountInteractor,
     private val factory: RocketChatClientFactory,
+    dbManagerFactory: DatabaseManagerFactory,
     getSettingsInteractor: GetSettingsInteractor,
     managerFactory: ConnectionManagerFactory
 ) : CheckServerPresenter(strategy, factory, view = view) {
     private val currentServer = serverInteractor.get()!!
     private val manager = managerFactory.create(currentServer)
+    private val dbManager = dbManagerFactory.create(currentServer)
     private val client: RocketChatClient = factory.create(currentServer)
     private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
 
@@ -55,16 +67,36 @@ class MainPresenter @Inject constructor(
 
     fun toSettings() = navigator.toSettings()
 
+    fun toCreateChannel() = navigator.toCreateChannel()
+
+    fun loadServerAccounts() {
+        launchUI(strategy) {
+            try {
+                view.setupServerAccountList(getAccountsInteractor.get())
+            } catch (ex: Exception) {
+                when (ex) {
+                    is RocketChatAuthException -> logout()
+                    else -> {
+                        Timber.d(ex, "Error loading serve accounts")
+                        ex.message?.let {
+                            view.showMessage(it)
+                        }.ifNull {
+                            view.showGenericErrorMessage()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     fun loadCurrentInfo() {
         checkServerInfo(currentServer)
         launchUI(strategy) {
             try {
-                val me = retryIO("me") {
-                    client.me()
-                }
-                val model = navHeaderMapper.mapToViewModel(me)
+                val me = retryIO("me") { client.me() }
+                val model = navHeaderMapper.mapToUiModel(me)
                 saveAccount(model)
-                view.setupNavHeader(model, getAccountsInteractor.get())
+                view.setupUserAccountInfo(model)
             } catch (ex: Exception) {
                 when (ex) {
                     is RocketChatAuthException -> {
@@ -89,6 +121,7 @@ class MainPresenter @Inject constructor(
      */
     fun logout() {
         launchUI(strategy) {
+            view.showProgress()
             try {
                 clearTokens()
                 retryIO("logout") { client.logout() }
@@ -105,13 +138,13 @@ class MainPresenter @Inject constructor(
                 disconnect()
                 removeAccountInteractor.remove(currentServer)
                 tokenRepository.remove(currentServer)
-                view.disableAutoSignIn()
+
+                withContext(CommonPool) { dbManager.logout() }
                 navigator.toNewServer()
             } catch (ex: Exception) {
                 Timber.d(ex, "Error cleaning up the session...")
             }
-            view.disableAutoSignIn()
-            navigator.toNewServer()
+            view.hideProgress()
         }
     }
 
@@ -158,16 +191,16 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    private suspend fun saveAccount(viewModel: NavHeaderViewModel) {
+    private suspend fun saveAccount(uiModel: NavHeaderUiModel) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }
         val account = Account(
             currentServer,
             icon,
-            viewModel.serverLogo,
-            viewModel.userDisplayName!!,
-            viewModel.userAvatar
+            uiModel.serverLogo,
+            uiModel.userDisplayName!!,
+            uiModel.userAvatar
         )
         saveAccountInteractor.save(account)
     }
@@ -193,8 +226,6 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    private suspend fun updateMyself(myself: Myself) {
-        val model = navHeaderMapper.mapToViewModel(myself)
-        view.setupNavHeader(model, getAccountsInteractor.get())
-    }
+    private fun updateMyself(myself: Myself) =
+        view.setupUserAccountInfo(navHeaderMapper.mapToUiModel(myself))
 }

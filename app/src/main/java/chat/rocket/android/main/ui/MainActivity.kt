@@ -3,20 +3,22 @@ package chat.rocket.android.main.ui
 import DrawableHelper
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Gravity
 import android.view.MenuItem
-import android.view.View
+import androidx.annotation.IdRes
+import androidx.drawerlayout.widget.DrawerLayout
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
-import chat.rocket.android.main.viewmodel.NavHeaderViewModel
+import chat.rocket.android.main.uimodel.NavHeaderUiModel
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.ui.INTENT_CHAT_ROOM_ID
 import chat.rocket.android.util.extensions.fadeIn
@@ -26,8 +28,6 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.common.model.UserStatus
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.common.api.GoogleApiClient
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -41,8 +41,10 @@ import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupportFragmentInjector,
-    GoogleApiClient.ConnectionCallbacks {
+private const val CURRENT_STATE = "current_state"
+
+class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
+    HasSupportFragmentInjector {
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
     @Inject
@@ -51,15 +53,14 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     lateinit var presenter: MainPresenter
     private var isFragmentAdded: Boolean = false
     private var expanded = false
-    private lateinit var googleApiClient: GoogleApiClient
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
     private var chatRoomId: String? = null
+    private var progressDialog : ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        buildGoogleApiClient()
 
         launch(CommonPool) {
             try {
@@ -74,42 +75,20 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
 
         presenter.connect()
+        presenter.loadServerAccounts()
         presenter.loadCurrentInfo()
         setupToolbar()
         setupNavigationView()
     }
 
-    override fun onConnected(bundle: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putBoolean(CURRENT_STATE, isFragmentAdded)
     }
 
-    override fun onConnectionSuspended(errorCode: Int) {
-    }
-
-    private fun buildGoogleApiClient() {
-        googleApiClient = GoogleApiClient.Builder(this)
-            .enableAutoManage(this, {
-                Timber.d("ERROR: connection to client failed")
-            })
-            .addConnectionCallbacks(this)
-            .addApi(Auth.CREDENTIALS_API)
-            .build()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        googleApiClient.let {
-            if (it.isConnected) {
-                Timber.d("Google api client connected successfully")
-            }
-        }
-    }
-
-    override fun disableAutoSignIn() {
-        googleApiClient.let {
-            if (it.isConnected) {
-                Auth.CredentialsApi.disableAutoSignIn(googleApiClient)
-            }
-        }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        isFragmentAdded = savedInstanceState?.getBoolean(CURRENT_STATE) ?: false
     }
 
     override fun onResume() {
@@ -127,6 +106,12 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         }
     }
 
+    override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> =
+        fragmentDispatchingAndroidInjector
+
+
     override fun showUserStatus(userStatus: UserStatus) {
         headerLayout.apply {
             image_user_status.setImageDrawable(
@@ -135,10 +120,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         }
     }
 
-    override fun setupNavHeader(viewModel: NavHeaderViewModel, accounts: List<Account>) {
-        Timber.d("Setting up nav header: $viewModel")
+    override fun setupUserAccountInfo(uiModel: NavHeaderUiModel) {
         with(headerLayout) {
-            with(viewModel) {
+            with(uiModel) {
                 if (userStatus != null) {
                     image_user_status.setImageDrawable(
                         DrawableHelper.getUserStatusDrawable(userStatus, context)
@@ -153,11 +137,44 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
                 if (serverLogo != null) {
                     server_logo.setImageURI(serverLogo)
                 }
-                text_server_url.text = viewModel.serverUrl
+                text_server_url.text = uiModel.serverUrl
             }
-            setupAccountsList(headerLayout, accounts)
         }
     }
+
+    override fun setupServerAccountList(serverAccountList: List<Account>) {
+        accounts_list.layoutManager = LinearLayoutManager(this)
+        accounts_list.adapter = AccountsAdapter(serverAccountList, object : Selector {
+            override fun onStatusSelected(userStatus: UserStatus) {
+                presenter.changeDefaultStatus(userStatus)
+            }
+
+            override fun onAccountSelected(serverUrl: String) {
+                presenter.changeServer(serverUrl)
+            }
+
+            override fun onAddedAccountSelected() {
+                presenter.addNewServer()
+            }
+        })
+
+        headerLayout.account_container.setOnClickListener {
+            it.image_account_expand.rotateBy(180f)
+            if (expanded) {
+                accounts_list.fadeOut()
+            } else {
+                accounts_list.fadeIn()
+            }
+            expanded = !expanded
+        }
+
+        headerLayout.image_avatar.setOnClickListener {
+            view_navigation.menu.findItem(R.id.action_update_profile).isChecked = true
+            presenter.toUserProfile()
+            drawer_layout.closeDrawer(Gravity.START)
+        }
+    }
+
 
     override fun closeServerSelection() {
         view_navigation.getHeaderView(0).account_container.performClick()
@@ -190,43 +207,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
             .show()
     }
 
-    override fun invalidateToken(token: String) {
+    override fun invalidateToken(token: String) =
         FirebaseInstanceId.getInstance().deleteToken(token, FirebaseMessaging.INSTANCE_ID_SCOPE)
-    }
-
-    private fun setupAccountsList(header: View, accounts: List<Account>) {
-        accounts_list.layoutManager = LinearLayoutManager(this)
-        accounts_list.adapter = AccountsAdapter(accounts, object : Selector {
-            override fun onStatusSelected(userStatus: UserStatus) {
-                presenter.changeDefaultStatus(userStatus)
-            }
-
-            override fun onAccountSelected(serverUrl: String) {
-                presenter.changeServer(serverUrl)
-            }
-
-            override fun onAddedAccountSelected() {
-                presenter.addNewServer()
-            }
-        })
-
-        header.account_container.setOnClickListener {
-            header.image_account_expand.rotateBy(180f)
-            if (expanded) {
-                accounts_list.fadeOut()
-            } else {
-                accounts_list.fadeIn()
-            }
-
-            expanded = !expanded
-        }
-
-        header.image_avatar.setOnClickListener {
-            view_navigation.menu.findItem(R.id.action_profile).isChecked = true
-            presenter.toUserProfile()
-            drawer_layout.closeDrawer(Gravity.START)
-        }
-    }
 
     override fun showMessage(resId: Int) = showToast(resId)
 
@@ -234,23 +216,18 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
-    override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> =
-        fragmentDispatchingAndroidInjector
-
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
         toolbar.setNavigationOnClickListener {
-            drawer_layout.openDrawer(Gravity.START)
+            openDrawer()
         }
     }
 
     private fun setupNavigationView() {
         view_navigation.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
-            drawer_layout.closeDrawer(Gravity.START)
+            closeDrawer()
             onNavDrawerItemSelected(menuItem)
             true
         }
@@ -264,6 +241,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
             R.id.action_profile -> {
                 presenter.toUserProfile()
             }
+            R.id.action_channel -> {
+                presenter.toCreateChannel()
+            }
             R.id.action_settings -> {
                 presenter.toSettings()
             }
@@ -271,5 +251,22 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
                 presenter.logout()
             }
         }
+    }
+
+    fun getDrawerLayout(): DrawerLayout = drawer_layout
+
+    fun openDrawer() = drawer_layout.openDrawer(Gravity.START)
+
+    fun closeDrawer() = drawer_layout.closeDrawer(Gravity.START)
+
+    fun setCheckedNavDrawerItem(@IdRes item: Int) = view_navigation.setCheckedItem(item)
+
+    override fun showProgress() {
+        progressDialog = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.msg_log_out), true, false)
+    }
+
+    override fun hideProgress() {
+        progressDialog?.dismiss()
+        progressDialog = null
     }
 }

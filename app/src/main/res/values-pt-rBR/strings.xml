@@ -15,6 +15,7 @@
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
+    <string name="title_create_channel">Criar chat</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
@@ -25,6 +26,8 @@
     <string name="action_search">Pesquisar</string>
     <string name="action_update">Atualizar</string>
     <string name="action_settings">Configurações</string>
+    <string name="action_create_channel">Criar chat</string>
+    <string name="action_create">Criar</string>
     <string name="action_logout">Sair</string>
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
@@ -34,6 +37,7 @@
     <string name="action_away">Ausente</string>
     <string name="action_busy">Ocupado</string>
     <string name="action_invisible">Invisível</string>
+    <string name="action_drawing">Desenhando</string>
     <string name="action_save_to_gallery">Salvar na galeria</string>
 
     <!-- Settings List -->
@@ -113,6 +117,27 @@
     <string name="msg_are_typing">\u0020estão digitando…</string>
     <string name="msg_several_users_are_typing">Vários usuários estão digitando…</string>
     <string name="msg_no_search_found">nenhum resultado encontrado</string>
+    <string name="msg_channel_name">Nome do chat</string>
+    <string name="msg_search">Buscar</string>
+    <string name="msg_message_copied">Mensagem copiada</string>
+    <string name="msg_upload_file">Subir arquivo</string>
+    <string name="msg_file_description">Descrição do arquivo</string>
+    <string name="msg_send">Enviar</string>
+    // TODO: Add proper translation.
+    <string name="msg_delete_message">Delete Message</string>
+    <string name="msg_delete_description">Are you sure you want to delete this message</string>
+
+    <!-- Create channel messages -->
+    <string name="msg_private_channel">Privado</string>
+    <string name="msg_public_channel">Público</string>
+    <string name="msg_private_channel_description">Somente você e membros convidados poderão acessar este chat</string>
+    <string name="msg_public_channel_description">Todos poderão acessar este canal</string>
+    <string name="msg_ready_only_channel">Read only channel</string>
+    <string name="msg_ready_only_channel_description">Somemnte administradores podem escrever mensagens</string>
+    <string name="msg_invite_members">Convidar membros para o chat</string>
+    <string name="msg_member_already_added">Você já selecionou este usuário</string>
+    <string name="msg_member_not_found">Membro não encontrado</string>
+    <string name="msg_channel_created_successfully">Chat criado com sucesso</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
@@ -129,7 +154,6 @@
     <string name="message_role_removed">%1$s não é mais %2$s por %3$s</string>
     // TODO:Add proper translation.
     <string name="message_credentials_saved_successfully">Credentials saved successfully</string>
-
 
     <!-- Message actions -->
     <string name="action_msg_reply">Responder</string>
@@ -152,24 +176,36 @@
     <string name="permission_pinning_not_allowed">Pinagem não permitida</string>
     <string name="permission_starring_not_allowed">Favoritar não permitido</string>
 
+    <!-- Search message -->
+    <string name="title_search_message">Procurar mensagem</string>
+
+    <!-- Favorite/Unfavorite chat room -->
+    <string name="title_favorite_chat">Favoritar canal</string>
+    <string name="title_unfavorite_chat">Desfavoritar canal</string>
+
     <!-- Members List -->
     <string name="title_members_list">Membros</string>
+
+    <!-- Mentions -->
+    <string name="msg_mentions">Menções</string>
+    <string name="msg_no_mention">Nenhuma menção</string>
+    <string name="msg_all_the_mentions_appear_here">Todas menções\naparecerão aqui</string>
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Mensagens Pinadas</string>
     <string name="no_pinned_messages">Nenhuma mensagem pinada</string>
-    <string name="no_pinned_description">Todas as mensagens pinadas\naparecerão aqui</string>
+    <string name="no_pinned_description">Todas mensagens pinadas\naparecerão aqui</string>
 
     <!-- Favorite Messages -->
     <string name="title_favorite_messages">Messagens Favoritas</string>
     <string name="no_favorite_messages">Nenhuma messagem favorita</string>
-    <string name="no_favorite_description">Todas as mensagens favoritas\naparecerão aqui</string>
+    <string name="no_favorite_description">Todas mensagens favoritas\naparecerão aqui</string>
 
     <!-- Files -->
-    <string name="msg_files">Arquivos</string>
+    <string name="title_files">Arquivos</string>
     <string name="title_files_total">Arquivos (%d)</string>
     <string name="msg_no_files">Nenhum arquivo</string>
-    <string name="msg_all_files_appear_here">Todos os arquivos aparecerão aqui</string>
+    <string name="msg_all_files_appear_here">Todos arquivos aparecerão aqui</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">Tamanho de arquivo (%1$d bytes) excedeu tamanho máximo de upload (%2$d bytes)</string>
@@ -211,6 +247,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Nenhum emoji recente</string>
+    <string name="alert_title_default_skin_tone">Tom de pele padrão</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Ordenar</string>
@@ -234,4 +271,5 @@
     <string name="notif_success_sending">Mensagem enviada para %1$s!</string>
     <string name="read_by">Lida por</string>
     <string name="message_information_title">Informações da mensagem</string>
+    <string name="msg_log_out">Deslogando…</string>
 </resources>

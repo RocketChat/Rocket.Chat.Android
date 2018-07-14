@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/member_bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="16dp"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+    app:layout_behavior="	com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_bottom_sheet_avatar"
@@ -85,4 +85,4 @@
         app:layout_constraintTop_toBottomOf="@+id/text_utc"
         tools:text="+01:00" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -40,8 +40,11 @@ fun String.safeUrl(): String {
 
 fun String.serverLogoUrl(favicon: String) = "${removeTrailingSlash()}/$favicon"
 
-fun String.casUrl(serverUrl: String, token: String) =
-    "${removeTrailingSlash()}?service=${serverUrl.removeTrailingSlash()}/_cas/$token"
+fun String.casUrl(serverUrl: String, casToken: String) =
+    "${removeTrailingSlash()}?service=${serverUrl.removeTrailingSlash()}/_cas/$casToken"
+
+fun String.samlUrl(provider: String, samlToken: String) =
+    "${removeTrailingSlash()}/_saml/authorize/$provider/$samlToken"
 
 fun String.termsOfServiceUrl() = "${removeTrailingSlash()}/terms-of-service"
 
@@ -57,4 +60,8 @@ fun String.parseColor(): Int {
         Timber.e(exception)
         Color.parseColor("white")
     }
+}
+
+fun String.userId(userId: String?): String? {
+    return userId?.let { this.replace(it, "") }
 }

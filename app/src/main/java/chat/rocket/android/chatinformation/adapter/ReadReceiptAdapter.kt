@@ -1,8 +1,8 @@
 package chat.rocket.android.chatinformation.adapter
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatinformation.adapter.ReadReceiptAdapter.ReadReceiptViewHolder
 import chat.rocket.android.chatinformation.viewmodel.ReadReceiptViewModel

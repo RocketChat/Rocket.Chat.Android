@@ -1,16 +1,16 @@
 package chat.rocket.android.chatroom.ui
 
 import android.content.Intent
-import android.support.test.espresso.intent.rule.IntentsTestRule
-import android.support.test.filters.LargeTest
+import androidx.test.espresso.intent.rule.IntentsTestRule
+import androidx.test.filters.LargeTest
 import org.junit.Rule
 import org.junit.Test
 import android.app.Activity
 import android.app.Instrumentation.ActivityResult
-import android.support.test.InstrumentationRegistry
-import android.support.test.espresso.intent.Intents.intended
-import android.support.test.espresso.intent.Intents.intending
-import android.support.test.espresso.intent.matcher.IntentMatchers.*
+import androidx.test.InstrumentationRegistry
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.Before

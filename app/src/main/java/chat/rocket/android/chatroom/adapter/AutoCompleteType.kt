@@ -1,6 +1,6 @@
 package chat.rocket.android.chatroom.adapter
 
-import android.support.annotation.IntDef
+import androidx.annotation.IntDef
 
 const val PEOPLE = 0
 const val ROOMS = 1

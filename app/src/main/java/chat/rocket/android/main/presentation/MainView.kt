@@ -2,7 +2,7 @@ package chat.rocket.android.main.presentation
 
 import chat.rocket.android.authentication.server.presentation.VersionCheckView
 import chat.rocket.android.core.behaviours.MessageView
-import chat.rocket.android.main.viewmodel.NavHeaderViewModel
+import chat.rocket.android.main.uimodel.NavHeaderUiModel
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.common.model.UserStatus
 
@@ -16,18 +16,24 @@ interface MainView : MessageView, VersionCheckView {
     fun showUserStatus(userStatus: UserStatus)
 
     /**
-     * Setups the navigation header.
+     * Setups the user account info (displayed in the nav. header)
      *
-     * @param viewModel The [NavHeaderViewModel].
-     * @param accounts The list of accounts.
+     * @param uiModel The [NavHeaderUiModel].
      */
-    fun setupNavHeader(viewModel: NavHeaderViewModel, accounts: List<Account>)
-
-    fun closeServerSelection()
-    fun invalidateToken(token: String)
+    fun setupUserAccountInfo(uiModel: NavHeaderUiModel)
 
     /**
-     * callback to disable auto sign in for google smart lock when the user logs out
+     * Setups the server account list.
+     *
+     * @param serverAccountList The list of server accounts.
      */
-    fun disableAutoSignIn()
+    fun setupServerAccountList(serverAccountList: List<Account>)
+
+    fun closeServerSelection()
+
+    fun invalidateToken(token: String)
+
+    fun showProgress()
+
+    fun hideProgress()
 }

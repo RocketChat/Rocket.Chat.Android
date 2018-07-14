@@ -9,6 +9,8 @@
 
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="windowActionModeOverlay">true</item>
+
+        <item name="searchViewStyle">@style/ChatRoom.SearchView</item>
     </style>
 
     <style name="AuthenticationTheme" parent="Theme.AppCompat.NoActionBar">
@@ -69,6 +71,13 @@
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_marginStart">@dimen/screen_edge_left_and_right_margins</item>
         <item name="android:paddingStart">@dimen/edit_text_margin</item>
+    </style>
+
+    <style name="ChatRoom.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="queryHint">@string/title_search_message</item>
+        <item name="searchIcon">@drawable/ic_search_white_24dp</item>
+        <item name="searchHintIcon">@drawable/ic_search_white_24dp</item>
+        <item name="closeIcon">@drawable/ic_close_white_24dp</item>
     </style>
 
     <style name="ChatRooms.Header" parent="TextAppearance.AppCompat.Headline">

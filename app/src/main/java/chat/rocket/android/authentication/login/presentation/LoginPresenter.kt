@@ -8,6 +8,7 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
@@ -17,7 +18,6 @@ import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.*
-import com.google.android.gms.auth.api.credentials.Credential
 import kotlinx.coroutines.experimental.delay
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -25,8 +25,9 @@ import javax.inject.Inject
 
 private const val TYPE_LOGIN_USER_EMAIL = 0
 private const val TYPE_LOGIN_CAS = 1
-private const val TYPE_LOGIN_OAUTH = 2
-private const val TYPE_LOGIN_DEEP_LINK = 3
+private const val TYPE_LOGIN_SAML = 2
+private const val TYPE_LOGIN_OAUTH = 3
+private const val TYPE_LOGIN_DEEP_LINK = 4
 private const val SERVICE_NAME_FACEBOOK = "facebook"
 private const val SERVICE_NAME_GITHUB = "github"
 private const val SERVICE_NAME_GOOGLE = "google"
@@ -82,14 +83,19 @@ class LoginPresenter @Inject constructor(
         }
     }
 
-    fun authenticateWithCas(token: String) {
-        credentialToken = token
+    fun authenticateWithCas(casToken: String) {
+        credentialToken = casToken
         doAuthentication(TYPE_LOGIN_CAS)
     }
 
-    fun authenticateWithOauth(token: String, secret: String) {
-        credentialToken = token
-        credentialSecret = secret
+    fun authenticateWithSaml(samlToken: String) {
+        credentialToken = samlToken
+        doAuthentication(TYPE_LOGIN_SAML)
+    }
+
+    fun authenticateWithOauth(oauthToken: String, oauthSecret: String) {
+        credentialToken = oauthToken
+        credentialSecret = oauthSecret
         doAuthentication(TYPE_LOGIN_OAUTH)
     }
 
@@ -99,7 +105,6 @@ class LoginPresenter @Inject constructor(
         deepLinkUserId = deepLinkInfo.userId
         deepLinkToken = deepLinkInfo.token
         tokenRepository.save(serverUrl, Token(deepLinkUserId, deepLinkToken))
-
         doAuthentication(TYPE_LOGIN_DEEP_LINK)
     }
 
@@ -125,8 +130,11 @@ class LoginPresenter @Inject constructor(
 
     private fun setupCasView() {
         if (settings.isCasAuthenticationEnabled()) {
-            val token = generateRandomString(17)
-            view.setupCasButtonListener(settings.casLoginUrl().casUrl(currentServer, token), token)
+            val casToken = generateRandomString(17)
+            view.setupCasButtonListener(
+                settings.casLoginUrl().casUrl(currentServer, casToken),
+                casToken
+            )
             view.showCasButton()
         }
     }
@@ -217,7 +225,7 @@ class LoginPresenter @Inject constructor(
 //                        totalSocialAccountsEnabled++
                     }
                     if (settings.isTwitterAuthenticationEnabled()) {
-                        //TODO: Remove until we have this implemented
+                        //TODO: Remove until Twitter provides support to OAuth2
 //                        view.enableLoginByTwitter()
 //                        totalSocialAccountsEnabled++
                     }
@@ -262,8 +270,23 @@ class LoginPresenter @Inject constructor(
                                 customOauthUrl,
                                 state,
                                 serviceName,
-                                getCustomOauthServiceNameColor(service),
-                                getCustomOauthButtonColor(service)
+                                getServiceNameColor(service),
+                                getServiceButtonColor(service)
+                            )
+                            totalSocialAccountsEnabled++
+                        }
+                    }
+
+                    getSamlServices(services).let {
+                        val samlToken = generateRandomString(17)
+
+                        for (service in it) {
+                            view.addSamlServiceButton(
+                                currentServer.samlUrl(getSamlProvider(service), samlToken),
+                                samlToken,
+                                getSamlServiceName(service),
+                                getServiceNameColor(service),
+                                getServiceButtonColor(service)
                             )
                             totalSocialAccountsEnabled++
                         }
@@ -308,6 +331,10 @@ class LoginPresenter @Inject constructor(
                             delay(3, TimeUnit.SECONDS)
                             client.loginWithCas(credentialToken)
                         }
+                        TYPE_LOGIN_SAML -> {
+                            delay(3, TimeUnit.SECONDS)
+                            client.loginWithSaml(credentialToken)
+                        }
                         TYPE_LOGIN_OAUTH -> {
                             client.loginWithOauth(credentialToken, credentialSecret)
                         }
@@ -320,7 +347,7 @@ class LoginPresenter @Inject constructor(
                             }
                         }
                         else -> {
-                            throw IllegalStateException("Expected TYPE_LOGIN_USER_EMAIL, TYPE_LOGIN_CAS, TYPE_LOGIN_OAUTH or TYPE_LOGIN_DEEP_LINK")
+                            throw IllegalStateException("Expected TYPE_LOGIN_USER_EMAIL, TYPE_LOGIN_CAS,TYPE_LOGIN_SAML, TYPE_LOGIN_OAUTH or TYPE_LOGIN_DEEP_LINK")
                         }
                     }
                 }
@@ -364,6 +391,18 @@ class LoginPresenter @Inject constructor(
         }.toString()
     }
 
+    private fun getSamlServices(listMap: List<Map<String, Any>>): List<Map<String, Any>>  {
+        return listMap.filter { map -> map["service"] == "saml" }
+    }
+
+    private fun getSamlServiceName(service: Map<String, Any>): String {
+        return service["buttonLabelText"].toString()
+    }
+
+    private fun getSamlProvider(service: Map<String, Any>): String {
+        return (service["clientConfig"] as Map<*, *>)["provider"].toString()
+    }
+
     private fun getCustomOauthServices(listMap: List<Map<String, Any>>): List<Map<String, Any>> {
         return listMap.filter { map -> map["custom"] == true }
     }
@@ -388,11 +427,11 @@ class LoginPresenter @Inject constructor(
         return service["scope"].toString()
     }
 
-    private fun getCustomOauthButtonColor(service: Map<String, Any>): Int {
+    private fun getServiceButtonColor(service: Map<String, Any>): Int {
         return service["buttonColor"].toString().parseColor()
     }
 
-    private fun getCustomOauthServiceNameColor(service: Map<String, Any>): Int {
+    private fun getServiceNameColor(service: Map<String, Any>): Int {
         return service["buttonLabelColor"].toString().parseColor()
     }
 

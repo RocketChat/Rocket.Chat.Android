@@ -18,15 +18,17 @@ interface LocalRepository {
     fun clearAllFromServer(server: String)
     fun getCurrentUser(url: String): User?
     fun saveCurrentUser(url: String, user: User)
+    fun saveLastChatroomsRefresh(url: String, timestamp: Long)
+    fun getLastChatroomsRefresh(url: String): Long
 
     companion object {
         const val KEY_PUSH_TOKEN = "KEY_PUSH_TOKEN"
-        const val MIGRATION_FINISHED_KEY = "MIGRATION_FINISHED_KEY"
         const val TOKEN_KEY = "token_"
         const val SETTINGS_KEY = "settings_"
         const val PERMISSIONS_KEY = "permissions_"
         const val USER_KEY = "user_"
         const val CURRENT_USERNAME_KEY = "username_"
+        const val LAST_CHATROOMS_REFRESH = "_chatrooms_refresh"
     }
 }
 

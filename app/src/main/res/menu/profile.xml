@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/action_profile"
+        android:id="@+id/action_update_profile"
         android:icon="@drawable/ic_check_white_24dp"
         android:title="@string/action_update" />
 

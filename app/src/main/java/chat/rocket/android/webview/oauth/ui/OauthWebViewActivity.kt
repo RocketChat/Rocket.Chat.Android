@@ -5,7 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.net.toUri
@@ -36,16 +37,18 @@ class OauthWebViewActivity : AppCompatActivity() {
     private lateinit var state: String
     private var isWebViewSetUp: Boolean = false
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_view)
+
         webPageUrl = intent.getStringExtra(INTENT_WEB_PAGE_URL)
         requireNotNull(webPageUrl) { "no web_page_url provided in Intent extras" }
 
         state = intent.getStringExtra(INTENT_STATE)
         requireNotNull(state) { "no state provided in Intent extras" }
 
+        // Ensures that the cookies is always removed when opening the webview.
+        CookieManager.getInstance().removeAllCookies(null)
         setupToolbar()
     }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="chat.rocket.android">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -8,6 +9,7 @@
 
     <application
         android:name=".app.RocketChatApplication"
+        tools:replace="android:name"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_config"
         android:icon="@mipmap/ic_launcher"
@@ -22,13 +24,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/AuthenticationTheme"
             android:windowSoftInputMode="adjustResize">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
-
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -60,7 +62,7 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
-            android:name=".webview.cas.ui.CasWebViewActivity"
+            android:name=".webview.sso.ui.SsoWebViewActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
@@ -82,11 +84,6 @@
         <!-- TODO: Change to fragment-->
         <activity
             android:name=".settings.password.ui.PasswordActivity"
-            android:theme="@style/AppTheme" />
-
-        <!-- TODO: Change to fragment-->
-        <activity
-            android:name=".settings.about.ui.AboutActivity"
             android:theme="@style/AppTheme" />
 
         <receiver
