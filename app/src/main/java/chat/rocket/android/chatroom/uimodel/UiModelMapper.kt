@@ -234,7 +234,8 @@ class UiModelMapper @Inject constructor(
             message = message,
             preview = mapMessagePreview(message),
             rawData = MessageReply(roomName = roomName, permalink = permalink),
-            nextDownStreamMessage = null
+            nextDownStreamMessage = null,
+            unread = message.unread
         )
     }
 
@@ -247,7 +248,7 @@ class UiModelMapper @Inject constructor(
         val description = url.meta?.description
 
         return UrlPreviewUiModel(message, url, message.id, title, hostname, description, thumb,
-            getReactions(message), preview = message.copy(message = url.url))
+            getReactions(message), preview = message.copy(message = url.url), unread = message.unread)
     }
 
     private fun mapAttachment(message: Message, attachment: Attachment): BaseUiModel<*>? {
@@ -326,16 +327,16 @@ class UiModelMapper @Inject constructor(
         return when (attachment) {
             is ImageAttachment -> ImageAttachmentUiModel(message, attachment, message.id,
                 attachmentUrl, attachmentTitle, attachmentText, attachmentDescription, id, getReactions(message),
-                preview = message.copy(message = context.getString(R.string.msg_preview_photo)))
+                preview = message.copy(message = context.getString(R.string.msg_preview_photo)), unread = message.unread)
             is VideoAttachment -> VideoAttachmentUiModel(message, attachment, message.id,
                 attachmentUrl, attachmentTitle, id, getReactions(message),
-                preview = message.copy(message = context.getString(R.string.msg_preview_video)))
+                preview = message.copy(message = context.getString(R.string.msg_preview_video)), unread = message.unread)
             is AudioAttachment -> AudioAttachmentUiModel(message, attachment, message.id,
                 attachmentUrl, attachmentTitle, id, getReactions(message),
-                preview = message.copy(message = context.getString(R.string.msg_preview_audio)))
+                preview = message.copy(message = context.getString(R.string.msg_preview_audio)), unread = message.unread)
             is GenericFileAttachment -> GenericFileAttachmentUiModel(message, attachment,
                 message.id, attachmentUrl, attachmentTitle, id, getReactions(message),
-                preview = message.copy(message = context.getString(R.string.msg_preview_file)))
+                preview = message.copy(message = context.getString(R.string.msg_preview_file)), unread = message.unread)
             else -> null
         }
     }
