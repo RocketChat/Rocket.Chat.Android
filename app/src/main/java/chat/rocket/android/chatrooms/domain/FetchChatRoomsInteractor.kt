@@ -18,7 +18,7 @@ class FetchChatRoomsInteractor(
 
     suspend fun refreshChatRooms() {
         val rooms = retryIO("fetch chatRooms", times = 10,
-                initialDelay = 200, maxDelay = 2000) {
+            initialDelay = 200, maxDelay = 2000) {
             client.chatRooms().update.map { room ->
                 mapChatRoom(room)
             }
@@ -50,27 +50,28 @@ class FetchChatRoomsInteractor(
                 }
             }
             return ChatRoomEntity(
-                    id = id,
-                    subscriptionId = subscriptionId,
-                    type = type.toString(),
-                    name = name,
-                    fullname = fullName,
-                    userId = userId,
-                    ownerId = user?.id,
-                    readonly = readonly,
-                    isDefault = default,
-                    favorite = favorite,
-                    open = open,
-                    alert = alert,
-                    unread = unread,
-                    userMentions = userMentions,
-                    groupMentions = groupMentions,
-                    updatedAt = updatedAt,
-                    timestamp = timestamp,
-                    lastSeen = lastSeen,
-                    lastMessageText = lastMessage?.message,
-                    lastMessageUserId = lastMessage?.sender?.id,
-                    lastMessageTimestamp = lastMessage?.timestamp
+                id = id,
+                subscriptionId = subscriptionId,
+                type = type.toString(),
+                name = name,
+                fullname = fullName,
+                userId = userId,
+                ownerId = user?.id,
+                readonly = readonly,
+                isDefault = default,
+                favorite = favorite,
+                open = open,
+                alert = alert,
+                unread = unread,
+                userMentions = userMentions,
+                groupMentions = groupMentions,
+                updatedAt = updatedAt,
+                timestamp = timestamp,
+                lastSeen = lastSeen,
+                lastMessageText = lastMessage?.message,
+                lastMessageUserId = lastMessage?.sender?.id,
+                lastMessageTimestamp = lastMessage?.timestamp,
+                broadcast = broadcast
             )
         }
     }

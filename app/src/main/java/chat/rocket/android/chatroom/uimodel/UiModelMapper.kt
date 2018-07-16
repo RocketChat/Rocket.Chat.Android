@@ -4,35 +4,35 @@ import DateTimeHelper
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import androidx.core.content.ContextCompat
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import androidx.core.content.ContextCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.core.text.scale
 import chat.rocket.android.R
-import chat.rocket.android.app.RocketChatApplication.Companion.context
 import chat.rocket.android.chatinformation.viewmodel.ReadReceiptViewModel
 import chat.rocket.android.chatroom.domain.MessageReply
 import chat.rocket.android.dagger.scope.PerFragment
+import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.ChatRoomsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.domain.UsersRepository
 import chat.rocket.android.server.domain.baseUrl
 import chat.rocket.android.server.domain.messageReadReceiptEnabled
 import chat.rocket.android.server.domain.messageReadReceiptStoreUsers
 import chat.rocket.android.server.domain.useRealName
+import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
-import chat.rocket.android.emoji.EmojiParser
+import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
@@ -60,17 +60,19 @@ import javax.inject.Inject
 class UiModelMapper @Inject constructor(
     private val context: Context,
     private val parser: MessageParser,
-    private val roomsInteractor: ChatRoomsInteractor,
-    private val usersRepository: UsersRepository,
+    private val dbManager: DatabaseManager,
     private val messageHelper: MessageHelper,
     private val userHelper: UserHelper,
     tokenRepository: TokenRepository,
     serverInteractor: GetCurrentServerInteractor,
     getSettingsInteractor: GetSettingsInteractor,
-    localRepository: LocalRepository
+    localRepository: LocalRepository,
+    factory: ConnectionManagerFactory
 ) {
 
     private val currentServer = serverInteractor.get()!!
+    private val manager = factory.create(currentServer)
+    private val client = manager.client
     private val settings = getSettingsInteractor.get(currentServer)
     private val baseUrl = currentServer
     private val token = tokenRepository.get(currentServer)
@@ -149,7 +151,7 @@ class UiModelMapper @Inject constructor(
             }
 
             if (isBroadcastReplyAvailable(roomUiModel, message)) {
-                roomsInteractor.getById(currentServer, message.roomId)?.let { chatRoom ->
+                getChatRoomAsync(message.roomId)?.let { chatRoom ->
                     val replyUiModel = mapMessageReply(message, chatRoom)
                     list.first().nextDownStreamMessage = replyUiModel
                     list.add(0, replyUiModel)
@@ -158,6 +160,42 @@ class UiModelMapper @Inject constructor(
 
             return@withContext list
         }
+
+    // TODO: move this to new interactor or FetchChatRoomsInteractor?
+    private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(CommonPool) {
+        return@withContext dbManager.chatRoomDao().get(roomId)?.let {
+            with(it.chatRoom) {
+                ChatRoom(
+                    id = id,
+                    subscriptionId = subscriptionId,
+                    type = roomTypeOf(type),
+                    unread = unread,
+                    broadcast = broadcast ?: false,
+                    alert = alert,
+                    fullName = fullname,
+                    name = name ?: "",
+                    favorite = favorite ?: false,
+                    default = isDefault ?: false,
+                    readonly = readonly,
+                    open = open,
+                    lastMessage = null,
+                    archived = false,
+                    status = null,
+                    user = null,
+                    userMentions = userMentions,
+                    client = client,
+                    announcement = null,
+                    description = null,
+                    groupMentions = groupMentions,
+                    roles = null,
+                    topic = null,
+                    lastSeen = this.lastSeen,
+                    timestamp = timestamp,
+                    updatedAt = updatedAt
+                )
+            }
+        }
+    }
 
     private fun mapVisibleActions(viewModel: BaseUiModel<*>) {
         if (!settings.messageReadReceiptStoreUsers()) {
@@ -199,7 +237,7 @@ class UiModelMapper @Inject constructor(
             }
 
             if (isBroadcastReplyAvailable(roomUiModel, message)) {
-                roomsInteractor.getById(currentServer, message.roomId)?.let { chatRoom ->
+                getChatRoomAsync(message.roomId)?.let { chatRoom ->
                     val replyUiModel = mapMessageReply(message, chatRoom)
                     list.first().nextDownStreamMessage = replyUiModel
                     list.add(0, replyUiModel)
@@ -218,8 +256,8 @@ class UiModelMapper @Inject constructor(
     private fun isBroadcastReplyAvailable(roomUiModel: RoomUiModel, message: Message): Boolean {
         val senderUsername = message.sender?.username
         return roomUiModel.isRoom && roomUiModel.isBroadcast &&
-                !message.isSystemMessage() &&
-                senderUsername != currentUsername
+            !message.isSystemMessage() &&
+            senderUsername != currentUsername
     }
 
     private fun mapMessageReply(message: Message, chatRoom: ChatRoom): MessageReplyUiModel {
