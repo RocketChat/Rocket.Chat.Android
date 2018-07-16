@@ -148,6 +148,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private lateinit var actionSnackbar: ActionSnackbar
     internal var citation: String? = null
     private var editingMessageId: String? = null
+    internal var disableMenu: Boolean = false
 
     private val compositeDisposable = CompositeDisposable()
     private var playComposeMessageButtonsAnimation = true
@@ -355,7 +356,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             setupMessageComposer(userCanPost)
             isBroadcastChannel = channelIsBroadcast
-            if (isBroadcastChannel && !userCanMod) activity?.invalidateOptionsMenu()
+            if (isBroadcastChannel && !userCanMod) {
+                disableMenu = true
+                activity?.invalidateOptionsMenu()
+            }
         }
     }
 
