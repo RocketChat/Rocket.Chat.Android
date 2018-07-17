@@ -20,7 +20,7 @@ import chat.rocket.android.createchannel.presentation.CreateChannelView
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.uimodel.MemberUiModel
-import chat.rocket.android.util.extensions.asObservable
+import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
@@ -221,7 +221,6 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
                 LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             recycler_view.addItemDecoration(DividerItemDecoration(it, DividerItemDecoration.HORIZONTAL))
             recycler_view.adapter = adapter
-
         }
     }
 

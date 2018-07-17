@@ -11,7 +11,6 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import kotlin.coroutines.experimental.CoroutineContext
 
-
 class WrappedLiveData<Source, Output>(
     private val runContext: CoroutineContext = CommonPool,
     private val source: LiveData<Source>,

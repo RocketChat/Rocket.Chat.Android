@@ -191,6 +191,10 @@
     // TODO: Add proper translation.
     <string name="permission_starring_not_allowed">Starring is not allowed</string>
 
+    <!-- Search message -->
+    <!-- TODO Add proper translation-->
+    <string name="title_search_message">Search message</string>
+
     <!-- Favorite/Unfavorite chat room -->
     <!-- TODO Add proper translation-->
     <string name="title_favorite_chat">Favorite chat</string>
@@ -263,6 +267,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Sin emojis recientes</string>
+    <string name="alert_title_default_skin_tone">Tono de piel predeterminado</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Ordenar</string>
@@ -284,5 +289,5 @@
     <string name="notif_action_reply_hint">RESPUESTA</string>
     <string name="notif_error_sending">La respuesta ha fallado. Inténtalo de nuevo.</string>
     <string name="notif_success_sending">Mensaje enviado a %1$s!</string>
-    <string name="msg_log_out">Saliendo de tu cuenta...</string>
+    <string name="msg_log_out">Saliendo de tu cuenta…</string>
 </resources>

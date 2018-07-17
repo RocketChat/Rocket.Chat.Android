@@ -1,6 +1,5 @@
 package chat.rocket.android.chatroom.presentation
 
-import android.graphics.BitmapFactory
 import android.net.Uri
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.AutoCompleteType
@@ -64,6 +63,7 @@ import chat.rocket.core.internal.rest.unstarMessage
 import chat.rocket.core.internal.rest.updateMessage
 import chat.rocket.core.internal.rest.uploadFile
 import chat.rocket.core.internal.rest.favorite
+import chat.rocket.core.internal.rest.searchMessages
 import chat.rocket.core.model.ChatRoomRole
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
@@ -158,7 +158,12 @@ class ChatRoomPresenter @Inject constructor(
         } ?: false
     }
 
-    fun loadMessages(chatRoomId: String, chatRoomType: String, offset: Long = 0) {
+    fun loadMessages(
+        chatRoomId: String,
+        chatRoomType: String,
+        offset: Long = 0,
+        clearDataSet: Boolean = false
+    ) {
         this.chatRoomId = chatRoomId
         this.chatRoomType = chatRoomType
         launchUI(strategy) {
@@ -173,13 +178,13 @@ class ChatRoomPresenter @Inject constructor(
                         )
                     )
                     if (oldMessages.isNotEmpty()) {
-                        view.showMessages(oldMessages)
+                        view.showMessages(oldMessages, clearDataSet)
                         loadMissingMessages()
                     } else {
-                        loadAndShowMessages(chatRoomId, chatRoomType, offset)
+                        loadAndShowMessages(chatRoomId, chatRoomType, offset, clearDataSet)
                     }
                 } else {
-                    loadAndShowMessages(chatRoomId, chatRoomType, offset)
+                    loadAndShowMessages(chatRoomId, chatRoomType, offset, clearDataSet)
                 }
 
                 // TODO: For now we are marking the room as read if we can get the messages (I mean, no exception occurs)
@@ -206,19 +211,47 @@ class ChatRoomPresenter @Inject constructor(
     private suspend fun loadAndShowMessages(
         chatRoomId: String,
         chatRoomType: String,
-        offset: Long = 0
+        offset: Long = 0,
+        clearDataSet: Boolean
     ) {
         val messages =
-            retryIO(description = "messages chatRoom: $chatRoomId, type: $chatRoomType, offset: $offset") {
+            retryIO("loadAndShowMessages($chatRoomId, $chatRoomType, $offset") {
                 client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
             }
         messagesRepository.saveAll(messages)
         view.showMessages(
-            mapper.map(messages, RoomUiModel(
-                roles = chatRoles,
-                isBroadcast = chatIsBroadcast, isRoom = true
-            ))
+            mapper.map(
+                messages,
+                RoomUiModel(roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true)
+            ),
+            clearDataSet
         )
+    }
+
+    fun searchMessages(chatRoomId: String, searchText: String) {
+        launchUI(strategy) {
+            try {
+                view.showLoading()
+                val messages = retryIO("searchMessages($chatRoomId, $searchText)") {
+                    client.searchMessages(chatRoomId, searchText).result
+                }
+                view.showSearchedMessages(
+                    mapper.map(
+                        messages,
+                        RoomUiModel(chatRoles, chatIsBroadcast, true)
+                    )
+                )
+            } catch (ex: Exception) {
+                Timber.e(ex)
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideLoading()
+            }
+        }
     }
 
     fun sendMessage(chatRoomId: String, text: String, messageId: String?) {

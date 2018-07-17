@@ -247,6 +247,7 @@ class AppModule {
         val res = context.resources
         return SpannableConfiguration.builder(context)
             .theme(SpannableTheme.builder()
+                .blockMargin(0)
                 .linkColor(res.getColor(R.color.colorAccent))
                 .build())
             .build()
