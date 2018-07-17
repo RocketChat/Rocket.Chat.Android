@@ -1,0 +1,187 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorWhite"
+    tools:context="chat.rocket.android.authentication.onboarding.OnBoardingFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="40dp"
+        android:paddingBottom="40dp">
+        <ImageView
+            android:id="@+id/image_on_boarding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_onboarding"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_onboarding_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold"
+            android:textColor="#2f343d"
+            android:lineSpacingExtra="4sp"
+            android:text="Welcome to Rocket.Chat"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_on_boarding"
+            android:layout_marginTop="32dp" />
+
+        <TextView
+            android:id="@+id/text_onboarding_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#54585e"
+            android:lineSpacingExtra="4sp"
+            android:text="Open Source Communication"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_onboarding_title"
+            android:layout_marginTop="8dp"/>
+
+        <RelativeLayout
+            android:id="@+id/view_connect_server"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_onboarding_description"
+            android:layout_marginTop="48dp"
+            android:background="@drawable/rounded_border"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            >
+            <ImageView
+                android:id="@+id/image_connect_server"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_connect_server_30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
+                android:textColor="#1d74f5"
+                android:letterSpacing="0.04"
+                android:text="Connect with a server"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/image_connect_server" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_chevron_right_black_24dp"
+                android:tint="#CBCED1"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/view_join_community"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_connect_server"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_border"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            >
+            <ImageView
+                android:id="@+id/image_join_community"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_rocket_chat"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="20dp"/>
+
+            <TextView
+                android:id="@+id/text_join_community"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
+                android:textColor="#1d74f5"
+                android:letterSpacing="0.04"
+                android:text="Join in the community"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@id/image_join_community" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="#9ea2a8"
+                android:letterSpacing="0.04"
+                android:text="open.rocket.chat"
+                android:layout_below="@id/text_join_community"
+                android:layout_toEndOf="@id/image_join_community"/>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_chevron_right_black_24dp"
+                android:tint="#CBCED1"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_join_community"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/rounded_color_accent">
+            <ImageView
+                android:id="@+id/image_new_server"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_add_24dp"
+                android:tint="@color/colorWhite"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
+                android:textColor="#fff"
+                android:letterSpacing="0.04"
+                android:text="Connect with a server"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/image_new_server" />
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

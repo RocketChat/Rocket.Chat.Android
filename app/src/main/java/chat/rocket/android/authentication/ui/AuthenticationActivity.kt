@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
+import chat.rocket.android.authentication.onboarding.OnBoardingFragment
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
 import chat.rocket.android.authentication.server.ui.ServerFragment
 import chat.rocket.android.util.extensions.addFragment
@@ -67,7 +68,8 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     fun showServerInput(deepLinkInfo: LoginDeepLinkInfo?) {
         addFragment("ServerFragment", R.id.fragment_container, allowStateLoss = true) {
-            ServerFragment.newInstance(deepLinkInfo)
+//            ServerFragment.newInstance(deepLinkInfo)
+            OnBoardingFragment.newInstance()
         }
     }
 }
