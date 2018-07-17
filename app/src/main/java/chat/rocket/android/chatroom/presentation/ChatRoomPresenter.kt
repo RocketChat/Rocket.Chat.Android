@@ -959,7 +959,7 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    private suspend fun subscribeTypingStatus() {
+    private fun subscribeTypingStatus() {
         launch(CommonPool + strategy.jobs) {
             client.subscribeTypingStatus(chatRoomId.toString()) { _, id ->
                 typingStatusSubscriptionId = id
@@ -972,22 +972,25 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     private fun processTypingStatus(typingStatus: Pair<String, Boolean>) {
-        if (!typingStatusList.any { username -> username == typingStatus.first }) {
-            if (typingStatus.second) {
-                typingStatusList.add(typingStatus.first)
-            }
-        } else {
-            typingStatusList.find { username -> username == typingStatus.first }?.let {
-                typingStatusList.remove(it)
+        if (typingStatus.first != currentLoggedUsername) {
+            if (!typingStatusList.any { username -> username == typingStatus.first }) {
                 if (typingStatus.second) {
                     typingStatusList.add(typingStatus.first)
                 }
+            } else {
+                typingStatusList.find { username -> username == typingStatus.first }?.let {
+                    typingStatusList.remove(it)
+                    if (typingStatus.second) {
+                        typingStatusList.add(typingStatus.first)
+                    }
+                }
             }
-        }
-        if (typingStatusList.isNotEmpty()) {
-            view.showTypingStatus(typingStatusList.toList()) // copy typingStatusList
-        } else {
-            view.hideTypingStatusView()
+
+            if (typingStatusList.isNotEmpty()) {
+                view.showTypingStatus(typingStatusList.toList())
+            } else {
+                view.hideTypingStatusView()
+            }
         }
     }
 
