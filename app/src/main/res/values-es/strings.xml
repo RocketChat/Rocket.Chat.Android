@@ -38,7 +38,6 @@
     <string name="action_invisible">Invisible</string>
     <string name="action_drawing">dibujo</string>
     <string name="action_save_to_gallery">Guardar en la galería</string>
-    <string name="action_share">Compartir</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -275,4 +274,5 @@
     <string name="msg_file_description">Descripción del archivo</string>
     <string name="msg_send">Enviar</string>
     <string name="msg_sent_attachment">Envió un archivo</string>
+
 </resources>
