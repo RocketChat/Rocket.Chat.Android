@@ -251,8 +251,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onPause() {
         super.onPause()
         setReactionButtonIcon(R.drawable.ic_reaction_24dp)
-        emojiKeyboardPopup.dismiss()
+        dismissEmojiKeyboard()
         activity?.invalidateOptionsMenu()
+    }
+
+    private fun dismissEmojiKeyboard() {
+        // Check if the keyboard was ever initialized.
+        // It may be the case when you are looking a not joined room
+        if (::emojiKeyboardPopup.isInitialized) {
+            emojiKeyboardPopup.dismiss()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
