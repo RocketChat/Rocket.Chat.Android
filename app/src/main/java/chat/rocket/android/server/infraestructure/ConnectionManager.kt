@@ -149,7 +149,7 @@ class ConnectionManager(
         launch(parent = connectJob) {
             for (myself in client.userDataChannel) {
                 Timber.d("Got userData")
-                userActor.send(myself.asUser())
+                dbManager.updateSelfUser(myself)
                 for (channel in userDataChannels) {
                     channel.send(myself)
                 }
@@ -258,10 +258,6 @@ class ConnectionManager(
             }
         }
     }
-}
-
-private fun Myself.asUser(): User {
-    return User(id, name, username, status, utcOffset, null, roles)
 }
 
 private fun Long.orZero(): Long {

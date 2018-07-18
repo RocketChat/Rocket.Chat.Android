@@ -1,6 +1,8 @@
 package chat.rocket.android.db
 
 import android.app.Application
+import androidx.room.migration.Migration
+import chat.rocket.android.R
 import chat.rocket.android.db.model.BaseUserEntity
 import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.db.model.UserEntity
@@ -13,7 +15,12 @@ import chat.rocket.common.model.User
 import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.socket.model.StreamMessage
 import chat.rocket.core.internal.realtime.socket.model.Type
+import chat.rocket.core.model.ChatRoom
+import chat.rocket.core.model.Message
+import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
+import chat.rocket.core.model.attachment.Attachment
+import chat.rocket.core.model.userId
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.newSingleThreadContext
 import kotlinx.coroutines.experimental.withContext
@@ -22,8 +29,11 @@ import java.util.HashSet
 
 class DatabaseManager(val context: Application,
                       val serverUrl: String) {
+
     private val database: RCDatabase = androidx.room.Room.databaseBuilder(context,
-            RCDatabase::class.java, serverUrl.databaseName()).fallbackToDestructiveMigration()
+            RCDatabase::class.java, serverUrl.databaseName())
+            .addMigrations(RCDatabase.MIGRATION_4_5)
+            .fallbackToDestructiveMigration()
             .build()
     private val dbContext = newSingleThreadContext("$serverUrl-db-context")
 
@@ -91,6 +101,28 @@ class DatabaseManager(val context: Application,
         }
     }
 
+    fun updateSelfUser(myself: Myself) {
+        launch(dbContext) {
+            val user = userDao().getUser(myself.id)
+            val entity = user?.copy(
+                    name = myself.name ?: user.name,
+                    username = myself.username ?: user.username,
+                    utcOffset = myself.utcOffset ?: user.utcOffset,
+                    status = myself.status?.toString() ?: user.status
+            ) ?: myself.asUser().toEntity()
+
+            Timber.d("UPDATING SELF: $entity")
+            entity?.let { userDao().upsert(entity) }
+        }
+    }
+
+    fun processRooms(rooms: List<ChatRoom>) {
+        launch(dbContext) {
+            val entities = rooms.map { mapChatRoom(it) }
+            chatRoomDao().insertOrReplace(entities)
+        }
+    }
+
     private suspend fun createUpdates(): List<ChatRoomEntity> {
         val list = ArrayList<ChatRoomEntity>()
 
@@ -140,30 +172,24 @@ class DatabaseManager(val context: Application,
         }
     }
 
-    private suspend fun updateChatRoom(data: BaseRoom): ChatRoomEntity? {
-        return when(data) {
-            is Room -> updateRoom(data)
-            is Subscription -> updateSubscription(data)
-            else -> null
-        }
-    }
-
     private suspend fun updateRoom(data: Room): ChatRoomEntity? {
         return chatRoomDao().get(data.id)?.let { current ->
             with(data) {
                 val chatRoom = current.chatRoom
 
                 lastMessage?.sender?.let { user ->
-                    if (findUser(user.id) == null) {
-                        Timber.d("Missing last message user, inserting: ${user.id}")
-                        insert(UserEntity(user.id!!, user.username, user.name))
+                    user.id?.let { id ->
+                        if (findUser(id) == null) {
+                            Timber.d("Missing last message user, inserting: $id")
+                            insert(UserEntity(id, user.username, user.name))
+                        }
                     }
                 }
 
-                user?.let { user ->
-                    if (findUser(user.id) == null) {
-                        Timber.d("Missing owner user, inserting: ${user.id}")
-                        insert(UserEntity(user.id!!, user.username, user.name))
+                user?.id?.let { id ->
+                    if (findUser(id) == null) {
+                        Timber.d("Missing owner user, inserting: $id")
+                        insert(UserEntity(id, user!!.username, user!!.name))
                     }
                 }
 
@@ -173,13 +199,28 @@ class DatabaseManager(val context: Application,
                         ownerId = user?.id ?: chatRoom.ownerId,
                         readonly = readonly,
                         updatedAt = updatedAt ?: chatRoom.updatedAt,
-                        lastMessageText = lastMessage?.message,
+                        lastMessageText = mapLastMessageText(lastMessage),
                         lastMessageUserId = lastMessage?.sender?.id,
                         lastMessageTimestamp = lastMessage?.timestamp
                 )
             }
         }
     }
+
+    private fun mapLastMessageText(message: Message?): String? {
+        return if (message == null) {
+            null
+        } else {
+            return if (message.message.isEmpty() && message.attachments?.isNotEmpty() == true) {
+                mapAttachmentText(message.attachments!![0])
+            } else {
+                message.message
+            }
+        }
+    }
+
+    private fun mapAttachmentText(attachment: Attachment): String =
+        context.getString(R.string.msg_sent_attachment)
 
     private suspend fun updateSubscription(data: Subscription): ChatRoomEntity? {
         return chatRoomDao().get(data.roomId)?.let { current ->
@@ -262,16 +303,20 @@ class DatabaseManager(val context: Application,
         }
 
         room.lastMessage?.sender?.let { user ->
-            if (findUser(user.id) == null) {
-                Timber.d("Missing last message user, inserting: ${user.id}")
-                insert(UserEntity(user.id!!, user.username, user.name))
+            user.id?.let { id ->
+                if (findUser(id) == null) {
+                    Timber.d("Missing last message user, inserting: $id")
+                    insert(UserEntity(id, user.username, user.name))
+                }
             }
         }
 
         room.user?.let { user ->
-            if (findUser(user.id) == null) {
-                Timber.d("Missing owner user, inserting: ${user.id}")
-                insert(UserEntity(user.id!!, user.username, user.name))
+            user.id?.let { id ->
+                if (findUser(id) == null) {
+                    Timber.d("Missing owner user, inserting: $id")
+                    insert(UserEntity(id, user.username, user.name))
+                }
             }
         }
 
@@ -294,11 +339,62 @@ class DatabaseManager(val context: Application,
             updatedAt = subscription.updatedAt,
             timestamp = subscription.timestamp,
             lastSeen = subscription.lastSeen,
-            lastMessageText = room.lastMessage?.message,
+            lastMessageText = mapLastMessageText(room.lastMessage),
             lastMessageUserId = room.lastMessage?.sender?.id,
             lastMessageTimestamp = room.lastMessage?.timestamp,
             broadcast = room.broadcast
         )
+    }
+
+    private suspend fun mapChatRoom(room: ChatRoom): ChatRoomEntity {
+        with(room) {
+            val userId = userId()
+            if (userId != null && findUser(userId) == null) {
+                Timber.d("Missing user, inserting: $userId")
+                insert(UserEntity(userId))
+            }
+
+            lastMessage?.sender?.let { user ->
+                user.id?.let { id ->
+                    if (findUser(id) == null) {
+                        Timber.d("Missing last message user, inserting: $id")
+                        insert(UserEntity(id, user.username, user.name))
+                    }
+                }
+            }
+
+            user?.id?.let { id ->
+                if (findUser(id) == null) {
+                    Timber.d("Missing owner user, inserting: $id")
+                    insert(UserEntity(id, user?.username, user?.name))
+                }
+            }
+
+            return ChatRoomEntity(
+                id = id,
+                subscriptionId = subscriptionId,
+                type = type.toString(),
+                name = name,
+                fullname = fullName,
+                userId = userId,
+                ownerId = user?.id,
+                readonly = readonly,
+                isDefault = default,
+                favorite = favorite,
+                open = open,
+                alert = alert,
+                unread = unread,
+                userMentions = userMentions,
+                groupMentions = groupMentions,
+                updatedAt = updatedAt,
+                timestamp = timestamp,
+                lastSeen = lastSeen,
+                lastMessageText = mapLastMessageText(lastMessage),
+                lastMessageUserId = lastMessage?.sender?.id,
+                lastMessageTimestamp = lastMessage?.timestamp,
+                broadcast = broadcast
+            )
+        }
     }
 
     suspend fun insert(rooms: List<ChatRoomEntity>) {
@@ -313,7 +409,7 @@ class DatabaseManager(val context: Application,
         }
     }
 
-    fun findUser(userId: String?): String? = if (userId != null) userDao().findUser(userId) else null
+    fun findUser(userId: String): String? = userDao().findUser(userId)
 }
 
 fun User.toEntity(): BaseUserEntity? {
@@ -324,6 +420,10 @@ fun User.toEntity(): BaseUserEntity? {
     } else {
         null
     }
+}
+
+private fun Myself.asUser(): User {
+    return User(id, name, username, status, utcOffset, null, roles)
 }
 
 private fun String.databaseName(): String {
