@@ -211,6 +211,9 @@ class ChatRoomAdapter(
         override fun onActionSelected(item: MenuItem, message: Message) {
             message.apply {
                 when (item.itemId) {
+                    R.id.action_message_info -> {
+                        presenter?.messageInfo(id)
+                    }
                     R.id.action_message_reply -> {
                         if (roomName != null && roomType != null) {
                             presenter?.citeMessage(roomName, roomType, id, true)

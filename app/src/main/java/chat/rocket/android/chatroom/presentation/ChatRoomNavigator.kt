@@ -1,6 +1,7 @@
 package chat.rocket.android.chatroom.presentation
 
 import chat.rocket.android.R
+import chat.rocket.android.chatinformation.ui.messageInformationIntent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.ui.chatRoomIntent
 import chat.rocket.android.server.ui.changeServerIntent
@@ -67,6 +68,11 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
                 chatRoomMessage
             )
         )
+        activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
+    }
+
+    fun toMessageInformation(messageId: String) {
+        activity.startActivity(activity.messageInformationIntent(messageId = messageId))
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
     }
 }

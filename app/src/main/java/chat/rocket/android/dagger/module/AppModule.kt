@@ -14,6 +14,8 @@ import chat.rocket.android.authentication.infraestructure.SharedPreferencesToken
 import chat.rocket.android.chatroom.service.MessageService
 import chat.rocket.android.dagger.qualifier.ForAuthentication
 import chat.rocket.android.dagger.qualifier.ForMessages
+import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPreferencesLocalRepository
@@ -68,6 +70,7 @@ import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.spans.SpannableTheme
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -82,7 +85,7 @@ class AppModule {
     @Provides
     @Singleton
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
-        val interceptor = HttpLoggingInterceptor(object  : HttpLoggingInterceptor.Logger {
+        val interceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
             override fun log(message: String) {
                 Timber.d(message)
             }
@@ -254,7 +257,12 @@ class AppModule {
     }
 
     @Provides
-    fun provideMessageParser(context: Application, configuration: SpannableConfiguration, serverInteractor: GetCurrentServerInteractor, settingsInteractor: GetSettingsInteractor): MessageParser {
+    fun provideMessageParser(
+        context: Application,
+        configuration: SpannableConfiguration,
+        serverInteractor: GetCurrentServerInteractor,
+        settingsInteractor: GetSettingsInteractor
+    ): MessageParser {
         val url = serverInteractor.get()!!
         return MessageParser(context, configuration, settingsInteractor.get(url))
     }
@@ -300,5 +308,19 @@ class AppModule {
     @Provides
     fun provideJobSchedulerInteractor(jobScheduler: JobScheduler, jobInfo: JobInfo): JobSchedulerInteractor {
         return JobSchedulerInteractorImpl(jobScheduler, jobInfo)
+    }
+
+    @Provides
+    @Named("currentServer")
+    fun provideCurrentServer(currentServerInteractor: GetCurrentServerInteractor): String {
+        return currentServerInteractor.get()!!
+    }
+
+    @Provides
+    fun provideDatabaseManager(
+        factory: DatabaseManagerFactory,
+        @Named("currentServer") currentServer: String
+    ): DatabaseManager {
+        return factory.create(currentServer)
     }
 }

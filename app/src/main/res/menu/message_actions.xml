@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_message_info"
+        android:icon="@drawable/ic_action_message_info_outline_24dp"
+        android:title="@string/action_msg_info" />
+
+    <item
         android:id="@+id/action_message_reply"
         android:icon="@drawable/ic_action_message_reply_24dp"
         android:title="@string/action_msg_reply" />

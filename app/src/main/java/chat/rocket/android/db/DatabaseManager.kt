@@ -295,7 +295,8 @@ class DatabaseManager(val context: Application,
             lastSeen = subscription.lastSeen,
             lastMessageText = room.lastMessage?.message,
             lastMessageUserId = room.lastMessage?.sender?.id,
-            lastMessageTimestamp = room.lastMessage?.timestamp
+            lastMessageTimestamp = room.lastMessage?.timestamp,
+            broadcast = room.broadcast
         )
     }
 
