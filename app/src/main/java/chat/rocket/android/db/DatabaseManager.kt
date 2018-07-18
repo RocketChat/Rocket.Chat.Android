@@ -154,14 +154,14 @@ class DatabaseManager(val context: Application,
                 val chatRoom = current.chatRoom
 
                 lastMessage?.sender?.let { user ->
-                    if (findUser(user.id!!) == null) {
+                    if (findUser(user.id) == null) {
                         Timber.d("Missing last message user, inserting: ${user.id}")
                         insert(UserEntity(user.id!!, user.username, user.name))
                     }
                 }
 
                 user?.let { user ->
-                    if (findUser(user.id!!) == null) {
+                    if (findUser(user.id) == null) {
                         Timber.d("Missing owner user, inserting: ${user.id}")
                         insert(UserEntity(user.id!!, user.username, user.name))
                     }
@@ -260,15 +260,16 @@ class DatabaseManager(val context: Application,
             Timber.d("Missing user, inserting: $userId")
             insert(UserEntity(userId))
         }
+
         room.lastMessage?.sender?.let { user ->
-            if (findUser(user.id!!) == null) {
+            if (findUser(user.id) == null) {
                 Timber.d("Missing last message user, inserting: ${user.id}")
                 insert(UserEntity(user.id!!, user.username, user.name))
             }
         }
 
         room.user?.let { user ->
-            if (findUser(user.id!!) == null) {
+            if (findUser(user.id) == null) {
                 Timber.d("Missing owner user, inserting: ${user.id}")
                 insert(UserEntity(user.id!!, user.username, user.name))
             }
@@ -312,13 +313,13 @@ class DatabaseManager(val context: Application,
         }
     }
 
-    fun findUser(userId: String): String? = userDao().findUser(userId)
+    fun findUser(userId: String?): String? = if (userId != null) userDao().findUser(userId) else null
 }
 
 fun User.toEntity(): BaseUserEntity? {
     return if (name == null && username == null && utcOffset == null && status != null) {
         UserStatus(id = id, status = status.toString())
-    } else if (username != null){
+    } else if (username != null) {
         UserEntity(id, username, name, status?.toString() ?: "offline", utcOffset)
     } else {
         null
