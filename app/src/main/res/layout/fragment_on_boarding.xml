@@ -51,7 +51,7 @@
             android:layout_marginTop="8dp"/>
 
         <RelativeLayout
-            android:id="@+id/view_connect_server"
+            android:id="@+id/button_connect_server"
             android:layout_width="0dp"
             android:layout_height="60dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -94,12 +94,12 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/view_join_community"
+            android:id="@+id/button_join_community"
             android:layout_width="0dp"
             android:layout_height="60dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_connect_server"
+            app:layout_constraintTop_toBottomOf="@id/button_connect_server"
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_border"
             android:layout_marginStart="16dp"
@@ -154,7 +154,7 @@
             android:layout_height="60dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_join_community"
+            app:layout_constraintTop_toBottomOf="@id/button_join_community"
             android:layout_marginTop="10dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"

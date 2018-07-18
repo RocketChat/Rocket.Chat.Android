@@ -67,7 +67,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     fun showServerInput(deepLinkInfo: LoginDeepLinkInfo?) {
-        addFragment("ServerFragment", R.id.fragment_container, allowStateLoss = true) {
+        addFragment("OnBoardingFragment", R.id.fragment_container, allowStateLoss = true) {
 //            ServerFragment.newInstance(deepLinkInfo)
             OnBoardingFragment.newInstance()
         }

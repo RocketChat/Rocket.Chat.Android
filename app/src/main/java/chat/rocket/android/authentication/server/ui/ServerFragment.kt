@@ -28,7 +28,7 @@ class ServerFragment : Fragment(), ServerView {
     lateinit var presenter: ServerPresenter
     private var deepLinkInfo: LoginDeepLinkInfo? = null
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        text_server_url.isCursorVisible = KeyboardHelper.isSoftKeyboardShown(relative_layout.rootView)
+        text_server_url.isCursorVisible = KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)
     }
 
     companion object {
@@ -56,7 +56,7 @@ class ServerFragment : Fragment(), ServerView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        relative_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+        constraint_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
         setupOnClickListener()
 
         deepLinkInfo?.let {
@@ -66,7 +66,7 @@ class ServerFragment : Fragment(), ServerView {
         }
 
         text_server_protocol.adapter = ArrayAdapter<String>(activity,
-                android.R.layout.simple_dropdown_item_1line, arrayOf("https://", "http://"))
+                R.layout.spinner_list, arrayOf("https://", "http://"))
         text_server_protocol.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 when(position) {
@@ -104,7 +104,7 @@ class ServerFragment : Fragment(), ServerView {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        relative_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+        constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
     }
 
     override fun showInvalidServerUrlMessage() = showMessage(getString(R.string.msg_invalid_server_url))

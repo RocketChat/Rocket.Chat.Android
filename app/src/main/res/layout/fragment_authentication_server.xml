@@ -1,61 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relative_layout"
+    android:id="@+id/constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
+    android:background="@color/colorWhite"
     tools:context=".authentication.server.ui.ServerFragment">
+
+    <ImageView
+        android:id="@+id/image_server"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_server"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="40dp" />
 
     <TextView
         android:id="@+id/text_headline"
-        style="@style/Authentication.Headline.TextView"
-        android:layout_centerHorizontal="true"
-        android:text="@string/title_sign_in_your_server" />
-
-    <EditText
-        android:id="@+id/text_server_url"
-        style="@style/Authentication.EditText"
-        android:layout_below="@id/text_headline"
-        android:layout_marginStart="-6dp"
-        android:layout_marginTop="32dp"
-        android:layout_toEndOf="@id/protocol_container"
-        android:cursorVisible="false"
-        android:hint="@string/default_server"
-        android:imeOptions="actionDone"
-        android:inputType="text|textUri"
-        android:paddingEnd="0dp" />
-
-    <FrameLayout
-        android:id="@+id/protocol_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/style_edit_text_authentication"
-        android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
-        android:layout_below="@id/text_headline"
-        android:layout_marginTop="32dp">
-        <Spinner
-            android:id="@+id/text_server_protocol"
-            android:spinnerMode="dropdown"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@color/actionMenuColor" />
-    </FrameLayout>
+        android:textSize="22sp"
+        android:fontFamily="sans-serif"
+        android:textStyle="bold"
+        android:textColor="#2f343d"
+        android:lineSpacingExtra="6sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_server"
+        android:layout_marginTop="8dp"
+        android:text="@string/title_sign_in_your_server" />
+
+    <RelativeLayout
+        android:id="@+id/view_server"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:background="@drawable/rounded_border"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_headline"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
+        <FrameLayout
+            android:id="@+id/protocol_container"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            >
+            <Spinner
+                android:id="@+id/text_server_protocol"
+                android:spinnerMode="dropdown"
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:backgroundTint="@color/actionMenuColor" />
+        </FrameLayout>
+
+        <EditText
+            android:id="@+id/text_server_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cursorVisible="false"
+            android:hint="@string/default_server"
+            android:imeOptions="actionDone"
+            android:inputType="text|textUri"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_centerVertical="true"
+            android:textSize="17sp"
+            android:textColorHint="#9ea2a8"
+            android:textColor="#9ea2a8"
+            android:layout_toEndOf="@id/protocol_container"
+            android:background="@color/colorWhite" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/button_connect"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_server"
+        android:layout_marginTop="20dp"
+        android:text="@string/action_connect"
+        android:textSize="18sp"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/rounded_color_accent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textAllCaps="false"/>
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"
         app:indicatorName="BallPulseIndicator"
         tools:visibility="visible" />
 
-    <Button
-        android:id="@+id/button_connect"
-        style="@style/Authentication.Button"
-        android:layout_alignParentBottom="true"
-        android:text="@string/action_connect" />
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
