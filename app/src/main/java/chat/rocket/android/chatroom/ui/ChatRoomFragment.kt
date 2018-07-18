@@ -12,6 +12,7 @@ import android.text.SpannableStringBuilder
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -147,6 +148,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private lateinit var actionSnackbar: ActionSnackbar
     internal var citation: String? = null
     private var editingMessageId: String? = null
+    internal var disableMenu: Boolean = false
 
     private val compositeDisposable = CompositeDisposable()
     private var playComposeMessageButtonsAnimation = true
@@ -249,7 +251,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onPause() {
         super.onPause()
         setReactionButtonIcon(R.drawable.ic_reaction_24dp)
-        emojiKeyboardPopup.dismiss()
+        dismissEmojiKeyboard()
+        activity?.invalidateOptionsMenu()
+    }
+
+    private fun dismissEmojiKeyboard() {
+        // Check if the keyboard was ever initialized.
+        // It may be the case when you are looking a not joined room
+        if (::emojiKeyboardPopup.isInitialized) {
+            emojiKeyboardPopup.dismiss()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
@@ -320,6 +331,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }
                 recycler_view.addOnLayoutChangeListener(layoutChangeListener)
                 recycler_view.addOnScrollListener(onScrollListener)
+
+                // Load just once, on the first page...
+                presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
             }
 
             val oldMessagesCount = adapter.itemCount
@@ -350,7 +364,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             setupMessageComposer(userCanPost)
             isBroadcastChannel = channelIsBroadcast
-            if (isBroadcastChannel && !userCanMod) activity?.invalidateOptionsMenu()
+            if (isBroadcastChannel && !userCanMod) {
+                disableMenu = true
+                activity?.invalidateOptionsMenu()
+            }
         }
     }
 

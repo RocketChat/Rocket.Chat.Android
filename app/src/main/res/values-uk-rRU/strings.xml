@@ -153,6 +153,7 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Ответить</string>
+    <string name="action_msg_info">Інформація про повідомлення</string>
     <string name="action_msg_edit">Редактировать</string>
     <string name="action_msg_copy">Копировать</string>
     <string name="action_msg_quote">Цитата</string>

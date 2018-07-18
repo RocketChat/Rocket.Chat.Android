@@ -15,7 +15,9 @@ data class ColorAttachmentUiModel(
         override var reactions: List<ReactionUiModel>,
         override var nextDownStreamMessage: BaseUiModel<*>? = null,
         override var preview: Message? = null,
-        override var isTemporary: Boolean = false
+        override var isTemporary: Boolean = false,
+        override var unread: Boolean?,
+        override var menuItemsToHide: MutableList<Int> = mutableListOf()
 ) : BaseAttachmentUiModel<ColorAttachment> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.COLOR_ATTACHMENT.viewType

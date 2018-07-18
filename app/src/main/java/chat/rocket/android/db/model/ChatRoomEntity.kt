@@ -19,6 +19,7 @@ import androidx.room.PrimaryKey
             ForeignKey(entity = UserEntity::class, parentColumns = ["id"], childColumns = ["lastMessageUserId"])
         ]
 )
+
 data class ChatRoomEntity(
     @PrimaryKey var id: String,
     var subscriptionId: String,
@@ -40,7 +41,8 @@ data class ChatRoomEntity(
     var lastSeen: Long? = -1,
     var lastMessageText: String? = null,
     var lastMessageUserId: String? = null,
-    var lastMessageTimestamp: Long? = null
+    var lastMessageTimestamp: Long? = null,
+    var broadcast: Boolean? = false
 )
 
 data class ChatRoom(

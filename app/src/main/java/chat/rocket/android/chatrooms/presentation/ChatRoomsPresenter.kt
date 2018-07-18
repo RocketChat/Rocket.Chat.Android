@@ -51,7 +51,8 @@ class ChatRoomsPresenter @Inject constructor(
                             id = id,
                             subscriptionId = "",
                             type = type.toString(),
-                            name = name.toString(),
+                            name = username ?: name.toString(),
+                            fullname = name.toString(),
                             open = false
                         )
                         loadChatRoom(entity)

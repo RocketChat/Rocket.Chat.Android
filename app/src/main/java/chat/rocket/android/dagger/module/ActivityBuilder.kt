@@ -8,6 +8,8 @@ import chat.rocket.android.authentication.server.di.ServerFragmentProvider
 import chat.rocket.android.authentication.signup.di.SignupFragmentProvider
 import chat.rocket.android.authentication.twofactor.di.TwoFAFragmentProvider
 import chat.rocket.android.authentication.ui.AuthenticationActivity
+import chat.rocket.android.chatinformation.di.MessageInfoFragmentProvider
+import chat.rocket.android.chatinformation.ui.MessageInfoActivity
 import chat.rocket.android.chatroom.di.ChatRoomFragmentProvider
 import chat.rocket.android.chatroom.di.ChatRoomModule
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
@@ -82,6 +84,8 @@ abstract class ActivityBuilder {
     abstract fun bindChangeServerActivity(): ChangeServerActivity
 
     @PerActivity
+    @ContributesAndroidInjector(modules = [MessageInfoFragmentProvider::class])
+    abstract fun bindMessageInfoActiviy(): MessageInfoActivity
     @ContributesAndroidInjector(modules = [DrawModule::class])
     abstract fun bindDrawingActivity(): DrawingActivity
 }
