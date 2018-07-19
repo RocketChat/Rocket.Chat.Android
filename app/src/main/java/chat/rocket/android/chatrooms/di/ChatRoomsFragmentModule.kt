@@ -87,12 +87,10 @@ class ChatRoomsFragmentModule {
     fun provideRoomMapper(
         context: Application,
         repository: SettingsRepository,
-        localRepository: LocalRepository,
         userInteractor: GetCurrentUserInteractor,
         @Named("currentServer") serverUrl: String
     ): RoomUiModelMapper {
-        return RoomUiModelMapper(context, repository.get(serverUrl), localRepository,
-                userInteractor, serverUrl)
+        return RoomUiModelMapper(context, repository.get(serverUrl), userInteractor, serverUrl)
     }
 
     @Provides

@@ -9,8 +9,8 @@ import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.SettingsRepository
-import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.server.domain.useRealName
+import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.server.infraestructure.ConnectionManager
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryIO
@@ -20,9 +20,12 @@ import chat.rocket.common.model.User
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.createDirectMessage
 import chat.rocket.core.internal.rest.me
+import chat.rocket.core.internal.rest.show
+import kotlinx.coroutines.experimental.withTimeout
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.coroutines.experimental.suspendCoroutine
 
 class ChatRoomsPresenter @Inject constructor(
     private val view: ChatRoomsView,
@@ -44,7 +47,7 @@ class ChatRoomsPresenter @Inject constructor(
             try {
                 val room = dbManager.getRoom(chatRoom.id)
                 if (room != null) {
-                    loadChatRoom(room.chatRoom)
+                    loadChatRoom(room.chatRoom, true)
                 } else {
                     with(chatRoom) {
                         val entity = ChatRoomEntity(
@@ -53,44 +56,57 @@ class ChatRoomsPresenter @Inject constructor(
                             type = type.toString(),
                             name = username ?: name.toString(),
                             fullname = name.toString(),
-                            open = false
+                            open = open
                         )
-                        loadChatRoom(entity)
+                        loadChatRoom(entity, false)
                     }
                 }
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error loading channel")
+                view.showGenericErrorMessage()
             } finally {
                 view.hideLoadingRoom()
             }
         }
     }
 
-    fun loadChatRoom(chatRoom: ChatRoomEntity) {
+    suspend fun loadChatRoom(chatRoom: ChatRoomEntity, local: Boolean = false) {
         with(chatRoom) {
             val isDirectMessage = roomTypeOf(type) is RoomType.DirectMessage
             val roomName = if (settings.useSpecialCharsOnRoom() || (isDirectMessage && settings.useRealName())) {
-                    fullname ?: name
+                fullname ?: name
+            } else {
+                name
+            }
+
+            val myself = getCurrentUser()
+            if (myself?.username == null) {
+                view.showMessage(R.string.msg_generic_error)
+            } else {
+                val id = if (isDirectMessage && !open) {
+                    val fromTo = mutableListOf(myself.id, id).apply {
+                        sort()
+                    }
+                    val roomId = fromTo.joinToString("")
+
+                    if (local) {
+                        retryIO {
+                            client.show(id, roomTypeOf(RoomType.DIRECT_MESSAGE))
+                        }
+                        id
+                    } else {
+                        retryIO("createDirectMessage($name)") {
+                            withTimeout(10000) {
+                                createDirectMessage(name)
+                            }
+                        }
+                        roomId
+                    }
                 } else {
-                    name
+                    id
                 }
 
-            launchUI(strategy) {
-                val myself = getCurrentUser()
-                if (myself?.username == null) {
-                    view.showMessage(R.string.msg_generic_error)
-                } else {
-                    val id = if (isDirectMessage && !open) {
-                        retryIO("createDirectMessage($name)") {
-                            client.createDirectMessage(name)
-                        }
-                        val fromTo = mutableListOf(myself.id, id).apply {
-                            sort()
-                        }
-                        fromTo.joinToString("")
-                    } else {
-                        id
-                    }
-
-                    navigator.toChatRoom(
+                navigator.toChatRoom(
                         chatRoomId = id,
                         chatRoomName = roomName,
                         chatRoomType = type,
@@ -99,8 +115,7 @@ class ChatRoomsPresenter @Inject constructor(
                         isSubscribed = open,
                         isCreator = ownerId == myself.id || isDirectMessage,
                         isFavorite = favorite ?: false
-                    )
-                }
+                )
             }
         }
     }
@@ -125,5 +140,11 @@ class ChatRoomsPresenter @Inject constructor(
             Timber.e(ex)
         }
         return null
+    }
+
+    private suspend fun createDirectMessage(name: String): Boolean = suspendCoroutine { cont ->
+        client.createDirectMessage(name) { success, _ ->
+            cont.resume(success)
+        }
     }
 }

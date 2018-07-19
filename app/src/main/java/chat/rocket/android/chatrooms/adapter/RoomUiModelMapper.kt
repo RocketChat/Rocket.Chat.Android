@@ -28,7 +28,6 @@ import chat.rocket.core.model.SpotlightResult
 class RoomUiModelMapper(
     private val context: Application,
     private val settings: PublicSettings,
-    private val localRepository: LocalRepository,
     private val userInteractor: GetCurrentUserInteractor,
     private val serverUrl: String
 ) {
@@ -117,12 +116,14 @@ class RoomUiModelMapper(
             val lastMessage = mapLastMessage(lastMessageUserId, chatRoom.lastMessageUserName,
                     chatRoom.lastMessageUserFullName, lastMessageText, isUnread,
                     type is RoomType.DirectMessage)
+            val open = open
 
             RoomUiModel(
                 id = id,
                 name = roomName,
                 type = type,
                 avatar = avatar,
+                open = open,
                 date = timestamp,
                 unread = unread,
                 alert = isUnread,

@@ -71,6 +71,7 @@ class ConnectionManager(
                 Timber.d("Changing status to: $status")
                 when (status) {
                     is State.Connected -> {
+                        dbManager.clearUsersStatus()
                         client.subscribeSubscriptions { _, id ->
                             Timber.d("Subscribed to subscriptions: $id")
                             subscriptionId = id

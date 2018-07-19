@@ -45,6 +45,12 @@ class DatabaseManager(val context: Application,
     fun chatRoomDao(): ChatRoomDao = database.chatRoomDao()
     fun userDao(): UserDao = database.userDao()
 
+    fun clearUsersStatus() {
+        launch(dbContext) {
+            userDao().clearStatus()
+        }
+    }
+
     fun logout() {
         database.clearAllTables()
     }
