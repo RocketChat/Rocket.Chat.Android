@@ -16,14 +16,24 @@ interface MainView : MessageView, VersionCheckView {
     fun showUserStatus(userStatus: UserStatus)
 
     /**
-     * Setups the navigation header.
+     * Setups the user account info (displayed in the nav. header)
      *
      * @param uiModel The [NavHeaderUiModel].
-     * @param accounts The list of accounts.
      */
-    fun setupNavHeader(uiModel: NavHeaderUiModel, accounts: List<Account>)
+    fun setupUserAccountInfo(uiModel: NavHeaderUiModel)
+
+    /**
+     * Setups the server account list.
+     *
+     * @param serverAccountList The list of server accounts.
+     */
+    fun setupServerAccountList(serverAccountList: List<Account>)
 
     fun closeServerSelection()
 
     fun invalidateToken(token: String)
+
+    fun showProgress()
+
+    fun hideProgress()
 }

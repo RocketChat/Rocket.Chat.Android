@@ -120,6 +120,7 @@
     <string name="msg_are_typing">\u0020are typing…</string>
     <string name="msg_several_users_are_typing">Several users are typing…</string>
     <string name="msg_no_search_found">No result found</string>
+    <string name="msg_log_out">Logging out...</string>
     <string name="msg_upload_file">Upload file</string>
     <string name="msg_file_description">File description</string>
     <string name="msg_send">Send</string>
@@ -156,6 +157,7 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Reply</string>
+    <string name="action_msg_info">Message info</string>
     <string name="action_msg_edit">Edit</string>
     <string name="action_msg_copy">Copy</string>
     <string name="action_msg_quote">Quote</string>
@@ -173,6 +175,9 @@
     <string name="permission_deleting_not_allowed">Deleting is not allowed</string>
     <string name="permission_pinning_not_allowed">Pinning is not allowed</string>
     <string name="permission_starring_not_allowed">Starring is not allowed</string>
+
+    <!-- Search message -->
+    <string name="title_search_message">Search message</string>
 
     <!-- Favorite/Unfavorite chat room -->
     <string name="title_favorite_chat">Favorite chat</string>
@@ -242,6 +247,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">No recent emojis</string>
+    <string name="alert_title_default_skin_tone">Default skin tone</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Sort</string>
@@ -263,4 +269,6 @@
     <string name="notif_action_reply_hint">REPLY</string>
     <string name="notif_error_sending">Reply has failed. Please try again.</string>
     <string name="notif_success_sending">Message sent to %1$s!</string>
+    <string name="read_by">Read by</string>
+    <string name="message_information_title">Message information</string>
 </resources>

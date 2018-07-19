@@ -12,10 +12,16 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 2030
-        versionName "2.4.0"
+        versionCode 2031
+        versionName "2.5.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     signingConfigs {
@@ -64,6 +70,8 @@ dependencies {
     wearApp project(':wear')
     implementation project(':emoji')
     implementation project(':draw')
+    implementation project(':util')
+    implementation project(':core')
 
     implementation libraries.kotlin
     implementation libraries.coroutines
@@ -104,7 +112,6 @@ dependencies {
 
     implementation libraries.timber
     implementation libraries.threeTenABP
-    implementation libraries.rxBinding
 
     implementation libraries.fresco
     api libraries.frescoOkHttp

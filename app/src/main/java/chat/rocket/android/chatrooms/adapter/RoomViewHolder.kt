@@ -6,12 +6,13 @@ import android.view.View
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import chat.rocket.android.R
+import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.UserStatus
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
-class RoomViewHolder(itemView: View, private val listener: (String) -> Unit) : ViewHolder<RoomItemHolder>(itemView) {
+class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit) : ViewHolder<RoomItemHolder>(itemView) {
 
     private val resources: Resources = itemView.resources
     private val channelUnread: Drawable = resources.getDrawable(R.drawable.ic_hashtag_black_12dp)
@@ -57,7 +58,7 @@ class RoomViewHolder(itemView: View, private val listener: (String) -> Unit) : V
             }
 
             setOnClickListener {
-                listener(room.id)
+                listener(room)
             }
         }
     }

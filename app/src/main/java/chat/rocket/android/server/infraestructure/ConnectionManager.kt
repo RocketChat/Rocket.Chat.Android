@@ -2,6 +2,7 @@ package chat.rocket.android.server.infraestructure
 
 import androidx.lifecycle.MutableLiveData
 import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.User
 import chat.rocket.core.RocketChatClient
@@ -40,10 +41,8 @@ class ConnectionManager(
     private val statusChannel = Channel<State>(Channel.CONFLATED)
     private var connectJob: Job? = null
 
-    private val roomAndSubscriptionChannels = ArrayList<Channel<StreamMessage<BaseRoom>>>()
     private val roomMessagesChannels = LinkedHashMap<String, Channel<Message>>()
     private val userDataChannels = ArrayList<Channel<Myself>>()
-    private val activeUsersChannels = ArrayList<Channel<User>>()
     private val subscriptionIdMap = HashMap<String, String>()
 
     private var subscriptionId: String? = null
@@ -126,9 +125,6 @@ class ConnectionManager(
             for (room in client.roomsChannel) {
                 Timber.d("GOT Room streamed")
                 roomsActor.send(room)
-                for (channel in roomAndSubscriptionChannels) {
-                    channel.send(room)
-                }
             }
         }
 
@@ -137,9 +133,6 @@ class ConnectionManager(
             for (subscription in client.subscriptionsChannel) {
                 Timber.d("GOT Subscription streamed")
                 roomsActor.send(subscription)
-                for (channel in roomAndSubscriptionChannels) {
-                    channel.send(subscription)
-                }
             }
         }
 
@@ -170,9 +163,6 @@ class ConnectionManager(
                 totalUsers++
                 //Timber.d("Got activeUsers: $totalUsers")
                 userActor.send(user)
-                for (channel in activeUsersChannels) {
-                    channel.send(user)
-                }
             }
         }
 
@@ -205,19 +195,9 @@ class ConnectionManager(
 
     fun removeStatusChannel(channel: Channel<State>) = statusChannelList.remove(channel)
 
-    fun addRoomsAndSubscriptionsChannel(channel: Channel<StreamMessage<BaseRoom>>) =
-        roomAndSubscriptionChannels.add(channel)
-
-    fun removeRoomsAndSubscriptionsChannel(channel: Channel<StreamMessage<BaseRoom>>) =
-        roomAndSubscriptionChannels.remove(channel)
-
     fun addUserDataChannel(channel: Channel<Myself>) = userDataChannels.add(channel)
 
     fun removeUserDataChannel(channel: Channel<Myself>) = userDataChannels.remove(channel)
-
-    fun addActiveUserChannel(channel: Channel<User>) = activeUsersChannels.add(channel)
-
-    fun removeActiveUserChannel(channel: Channel<User>) = activeUsersChannels.remove(channel)
 
     fun subscribeRoomMessages(roomId: String, channel: Channel<Message>) {
         val oldSub = roomMessagesChannels.put(roomId, channel)

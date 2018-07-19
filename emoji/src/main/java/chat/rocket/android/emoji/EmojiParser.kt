@@ -1,5 +1,6 @@
 package chat.rocket.android.emoji
 
+import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 
@@ -11,11 +12,12 @@ class EmojiParser {
          * Spannable.
          *
          * @param text The text to parse
+         * @param factory Optional. A [Spannable.Factory] instance to reuse when creating [Spannable].
          * @return A rendered Spannable containing any supported emoji.
          */
-        fun parse(text: CharSequence): CharSequence {
+        fun parse(text: CharSequence, factory: Spannable.Factory? = null): CharSequence {
             val unicodedText = EmojiRepository.shortnameToUnicode(text, true)
-            val spannable = SpannableString.valueOf(unicodedText)
+            val spannable = factory?.newSpannable(unicodedText) ?: SpannableString.valueOf(unicodedText)
             val typeface = EmojiRepository.cachedTypeface
             // Look for groups of emojis, set a EmojiTypefaceSpan with the emojione font.
             val length = spannable.length

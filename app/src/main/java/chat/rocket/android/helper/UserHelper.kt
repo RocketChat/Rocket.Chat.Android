@@ -5,6 +5,7 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.useRealName
+import chat.rocket.common.model.SimpleUser
 import chat.rocket.common.model.User
 import javax.inject.Inject
 
@@ -24,6 +25,10 @@ class UserHelper @Inject constructor(
      */
     fun displayName(user: User): String? {
         return if (settings.useRealName()) user.name ?: user.username else user.username
+    }
+
+    fun displayName(user: SimpleUser): String {
+        return if (settings.useRealName()) user.name ?: user.username ?: "" else user.username ?: ""
     }
 
     /**
