@@ -84,11 +84,7 @@ class ChatRoomsPresenter @Inject constructor(
                 view.showMessage(R.string.msg_generic_error)
             } else {
                 val id = if (isDirectMessage && !open) {
-                    val fromTo = mutableListOf(myself.id, id).apply {
-                        sort()
-                    }
-                    val roomId = fromTo.joinToString("")
-
+                    // If from local database, we already have the roomId, no need to concatenate
                     if (local) {
                         retryIO {
                             client.show(id, roomTypeOf(RoomType.DIRECT_MESSAGE))
@@ -100,7 +96,10 @@ class ChatRoomsPresenter @Inject constructor(
                                 createDirectMessage(name)
                             }
                         }
-                        roomId
+                        val fromTo = mutableListOf(myself.id, id).apply {
+                            sort()
+                        }
+                        fromTo.joinToString("")
                     }
                 } else {
                     id
