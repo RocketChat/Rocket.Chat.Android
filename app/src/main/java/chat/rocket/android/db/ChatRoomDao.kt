@@ -115,10 +115,10 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
 
         const val TYPE_ORDER = """
             CASE
-		        WHEN type = '${RoomType.CHANNEL}' THEN 1
-		        WHEN type = '${RoomType.PRIVATE_GROUP}' THEN 2
-		        WHEN type = '${RoomType.DIRECT_MESSAGE}' THEN 3
-		        WHEN type = '${RoomType.LIVECHAT}' THEN 4
+		        WHEN type = 'c' THEN 1
+		        WHEN type = 'p' THEN 2
+		        WHEN type = 'd' THEN 3
+		        WHEN type = 'l' THEN 4
 		        ELSE 5
 	        END
         """

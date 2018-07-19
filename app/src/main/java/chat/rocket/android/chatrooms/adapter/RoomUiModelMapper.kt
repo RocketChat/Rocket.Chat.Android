@@ -68,13 +68,15 @@ class RoomUiModelMapper(
             val name = mapName(user.username!!, user.name, false)
             val status = user.status
             val avatar = serverUrl.avatarUrl(user.username!!)
+            val username = user.username!!
 
             RoomUiModel(
                 id = user.id,
                 name = name,
                 type = roomTypeOf(RoomType.DIRECT_MESSAGE),
                 avatar = avatar,
-                status = status
+                status = status,
+                username = username
             )
         }
     }
@@ -97,7 +99,7 @@ class RoomUiModelMapper(
             val isUnread = alert || unread > 0
             val type = roomTypeOf(type)
             val status = chatRoom.status?.let { userStatusOf(it) }
-            val roomName = mapName(name, chatRoom.userFullname, isUnread)
+            val roomName = mapName(name, fullname, isUnread)
             val timestamp = mapDate(lastMessageTimestamp ?: updatedAt, isUnread)
             val avatar = if (type is RoomType.DirectMessage) {
                 serverUrl.avatarUrl(name)
@@ -117,7 +119,8 @@ class RoomUiModelMapper(
                 unread = unread,
                 alert = isUnread,
                 lastMessage = lastMessage,
-                status = status
+                status = status,
+                username = if (type is RoomType.DirectMessage) name else null
             )
         }
     }
