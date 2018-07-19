@@ -1,5 +1,6 @@
 package chat.rocket.android.push
 
+import androidx.core.os.bundleOf
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.android.AndroidInjection
@@ -16,6 +17,8 @@ class FirebaseMessagingService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-
+        message.data?.let {
+            pushManager.handle(bundleOf(*(it.map { Pair(it.key, it.value) }).toTypedArray()))
+        }
     }
 }
