@@ -156,6 +156,7 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">जवाब दें</string>
+    <string name="action_msg_info">संदेश जानकारी</string>
     <string name="action_msg_edit">संपादन करें</string>
     <string name="action_msg_copy">कॉपी</string>
     <string name="action_msg_quote">उद्धरण</string>
@@ -173,6 +174,10 @@
     <string name="permission_deleting_not_allowed">हटाने की अनुमति नहीं है</string>
     <string name="permission_pinning_not_allowed">पिनि करने की अनुमति नहीं है</string>
     <string name="permission_starring_not_allowed">तारांकित की अनुमति नहीं है</string>
+
+    <!-- Search message -->
+    <!-- TODO Add proper translation-->
+    <string name="title_search_message">Search message</string>
 
     <!-- Favorite/Unfavorite chat room -->
     <string name="title_favorite_chat">पसंदीदा चैट</string>
@@ -242,6 +247,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji"> कोई नया इमोजी नहीं</string>
+    <string name="alert_title_default_skin_tone">डिफ़ॉल्ट त्वचा टोन</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">क्रम</string>
@@ -263,4 +269,7 @@
     <string name="notif_action_reply_hint">जवाब</string>
     <string name="notif_error_sending">उत्तर विफल हुआ है। कृपया फिर से प्रयास करें।</string>
     <string name="notif_success_sending">संदेश भेजा गया %1$s!</string>
+    <string name="read_by">द्वारा पढ़ें</string>
+    <string name="message_information_title">संदेश की जानकारी</string>
+    <string name="msg_log_out">लॉग आउट कर रहा हूं…</string>
 </resources>

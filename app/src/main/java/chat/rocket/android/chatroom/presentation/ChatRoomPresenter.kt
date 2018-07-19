@@ -1,9 +1,6 @@
 package chat.rocket.android.chatroom.presentation
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Environment
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.AutoCompleteType
 import chat.rocket.android.chatroom.adapter.PEOPLE
@@ -16,10 +13,10 @@ import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
 import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.ChatRoomsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.JobSchedulerInteractor
@@ -33,9 +30,9 @@ import chat.rocket.android.server.domain.uploadMimeTypeFilter
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.state
+import chat.rocket.android.util.extension.compressImageAndGetInputStream
+import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
-import chat.rocket.android.util.extensions.getCompressFormat
-import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -50,6 +47,7 @@ import chat.rocket.core.internal.realtime.unsubscribe
 import chat.rocket.core.internal.rest.chatRoomRoles
 import chat.rocket.core.internal.rest.commands
 import chat.rocket.core.internal.rest.deleteMessage
+import chat.rocket.core.internal.rest.favorite
 import chat.rocket.core.internal.rest.getMembers
 import chat.rocket.core.internal.rest.history
 import chat.rocket.core.internal.rest.joinChat
@@ -57,6 +55,7 @@ import chat.rocket.core.internal.rest.markAsRead
 import chat.rocket.core.internal.rest.messages
 import chat.rocket.core.internal.rest.pinMessage
 import chat.rocket.core.internal.rest.runCommand
+import chat.rocket.core.internal.rest.searchMessages
 import chat.rocket.core.internal.rest.sendMessage
 import chat.rocket.core.internal.rest.spotlight
 import chat.rocket.core.internal.rest.starMessage
@@ -65,7 +64,7 @@ import chat.rocket.core.internal.rest.unpinMessage
 import chat.rocket.core.internal.rest.unstarMessage
 import chat.rocket.core.internal.rest.updateMessage
 import chat.rocket.core.internal.rest.uploadFile
-import chat.rocket.core.internal.rest.favorite
+import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.ChatRoomRole
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
@@ -77,11 +76,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.threeten.bp.Instant
 import timber.log.Timber
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.io.InputStream
-import java.io.File
-import java.io.FileOutputStream
 import java.util.*
 import javax.inject.Inject
 
@@ -89,7 +84,6 @@ class ChatRoomPresenter @Inject constructor(
     private val view: ChatRoomView,
     private val navigator: ChatRoomNavigator,
     private val strategy: CancelStrategy,
-    private val chatRoomsInteractor: ChatRoomsInteractor,
     private val permissions: PermissionsInteractor,
     private val uriInteractor: UriInteractor,
     private val messagesRepository: MessagesRepository,
@@ -100,6 +94,7 @@ class ChatRoomPresenter @Inject constructor(
     private val mapper: UiModelMapper,
     private val jobSchedulerInteractor: JobSchedulerInteractor,
     private val messageHelper: MessageHelper,
+    private val dbManager: DatabaseManager,
     getSettingsInteractor: GetSettingsInteractor,
     serverInteractor: GetCurrentServerInteractor,
     factory: ConnectionManagerFactory
@@ -139,7 +134,7 @@ class ChatRoomPresenter @Inject constructor(
                 val userCanMod = isOwnerOrMod()
                 // Can post anyway if has the 'post-readonly' permission on server.
                 val userCanPost = userCanMod || permissions.canPostToReadOnlyChannels()
-                chatIsBroadcast = chatRoomsInteractor.getById(currentServer, roomId)?.run {
+                chatIsBroadcast = dbManager.getRoom(roomId)?.chatRoom?.run {
                     broadcast
                 } ?: false
                 view.onRoomUpdated(userCanPost, chatIsBroadcast, userCanMod)
@@ -164,7 +159,12 @@ class ChatRoomPresenter @Inject constructor(
         } ?: false
     }
 
-    fun loadMessages(chatRoomId: String, chatRoomType: String, offset: Long = 0) {
+    fun loadMessages(
+        chatRoomId: String,
+        chatRoomType: String,
+        offset: Long = 0,
+        clearDataSet: Boolean = false
+    ) {
         this.chatRoomId = chatRoomId
         this.chatRoomType = chatRoomType
         launchUI(strategy) {
@@ -172,18 +172,21 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 if (offset == 0L) {
                     val localMessages = messagesRepository.getByRoomId(chatRoomId)
-                    val oldMessages = mapper.map(localMessages, RoomUiModel(
-                        roles = chatRoles,
-                        isBroadcast = chatIsBroadcast, isRoom = true
-                    ))
+                    val oldMessages = mapper.map(
+                        localMessages, RoomUiModel(
+                            roles = chatRoles,
+                            // FIXME: Why are we fixing isRoom attribute to true here?
+                            isBroadcast = chatIsBroadcast, isRoom = true
+                        )
+                    )
                     if (oldMessages.isNotEmpty()) {
-                        view.showMessages(oldMessages)
+                        view.showMessages(oldMessages, clearDataSet)
                         loadMissingMessages()
                     } else {
-                        loadAndShowMessages(chatRoomId, chatRoomType, offset)
+                        loadAndShowMessages(chatRoomId, chatRoomType, offset, clearDataSet)
                     }
                 } else {
-                    loadAndShowMessages(chatRoomId, chatRoomType, offset)
+                    loadAndShowMessages(chatRoomId, chatRoomType, offset, clearDataSet)
                 }
 
                 // TODO: For now we are marking the room as read if we can get the messages (I mean, no exception occurs)
@@ -210,19 +213,47 @@ class ChatRoomPresenter @Inject constructor(
     private suspend fun loadAndShowMessages(
         chatRoomId: String,
         chatRoomType: String,
-        offset: Long = 0
+        offset: Long = 0,
+        clearDataSet: Boolean
     ) {
         val messages =
-            retryIO(description = "messages chatRoom: $chatRoomId, type: $chatRoomType, offset: $offset") {
+            retryIO("loadAndShowMessages($chatRoomId, $chatRoomType, $offset") {
                 client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
             }
         messagesRepository.saveAll(messages)
         view.showMessages(
-            mapper.map(messages, RoomUiModel(
-                roles = chatRoles,
-                isBroadcast = chatIsBroadcast, isRoom = true
-            ))
+            mapper.map(
+                messages,
+                RoomUiModel(roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true)
+            ),
+            clearDataSet
         )
+    }
+
+    fun searchMessages(chatRoomId: String, searchText: String) {
+        launchUI(strategy) {
+            try {
+                view.showLoading()
+                val messages = retryIO("searchMessages($chatRoomId, $searchText)") {
+                    client.searchMessages(chatRoomId, searchText).result
+                }
+                view.showSearchedMessages(
+                    mapper.map(
+                        messages,
+                        RoomUiModel(chatRoles, chatIsBroadcast, true)
+                    )
+                )
+            } catch (ex: Exception) {
+                Timber.e(ex)
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideLoading()
+            }
+        }
     }
 
     fun sendMessage(chatRoomId: String, text: String, messageId: String?) {
@@ -253,16 +284,16 @@ class ChatRoomPresenter @Inject constructor(
                         type = null,
                         updatedAt = null,
                         urls = null,
-                        isTemporary = true
+                        isTemporary = true,
+                        unread = true
                     )
                     try {
                         messagesRepository.save(newMessage)
                         view.showNewMessage(
                             mapper.map(
-                                newMessage, RoomUiModel(
-                                roles = chatRoles, isBroadcast = chatIsBroadcast
-                            )
-                            )
+                                newMessage, 
+                                RoomUiModel(roles = chatRoles, isBroadcast = chatIsBroadcast)
+                            ), false
                         )
                         client.sendMessage(id, chatRoomId, text)
                     } catch (ex: Exception) {
@@ -317,10 +348,13 @@ class ChatRoomPresenter @Inject constructor(
                             var inputStream: InputStream? = uriInteractor.getInputStream(uri)
 
                             if (mimeType.contains("image")) {
-                                compressImage(uri, mimeType)?.let {
-                                    inputStream = it
+                                uriInteractor.getBitmap(uri)?.let {
+                                    it.compressImageAndGetInputStream(mimeType)?.let {
+                                        inputStream = it
+                                    }
                                 }
                             }
+
                             retryIO("uploadFile($roomId, $fileName, $mimeType") {
                                 client.uploadFile(
                                     roomId,
@@ -347,23 +381,45 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    // Returns an InputStream of a compressed image.
-    private suspend fun compressImage(uri: Uri, mimeType: String): InputStream? {
-        var inputStream: InputStream? = null
+    fun uploadDrawingImage(roomId: String, byteArray: ByteArray, msg: String) {
+        launchUI(strategy) {
+            view.showLoading()
+            try {
+                withContext(DefaultDispatcher) {
+                    val fileName = UUID.randomUUID().toString() + ".png"
+                    val fileSize = byteArray.size
+                    val mimeType = "image/png"
+                    val maxFileSizeAllowed = settings.uploadMaxFileSize()
 
-        uriInteractor.getBitmap(uri)?.let {
-            withContext(DefaultDispatcher) {
-                val byteArrayOutputStream = ByteArrayOutputStream()
-                // TODO: Add an option the the app to the user be able to select the quality of the compressed image
-                val isCompressed =
-                    it.compress(it.getCompressFormat(mimeType), 70, byteArrayOutputStream)
-                if (isCompressed) {
-                    inputStream = ByteArrayInputStream(byteArrayOutputStream.toByteArray())
+                    when {
+                        fileSize > maxFileSizeAllowed -> {
+                            view.showInvalidFileSize(fileSize, maxFileSizeAllowed)
+                        }
+                        else -> {
+                            retryIO("uploadFile($roomId, $fileName, $mimeType") {
+                                client.uploadFile(
+                                    roomId,
+                                    fileName,
+                                    mimeType,
+                                    msg,
+                                    description = fileName
+                                ) {
+                                    byteArray.inputStream()
+                                }
+                            }
+                        }
+                    }
                 }
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error uploading file")
+                when (ex) {
+                    is RocketChatException -> view.showMessage(ex)
+                    else -> view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideLoading()
             }
         }
-
-        return inputStream
     }
 
     fun sendTyping() {
@@ -447,12 +503,13 @@ class ChatRoomPresenter @Inject constructor(
                                 val models = mapper.map(messages.result, RoomUiModel(
                                     roles = chatRoles,
                                     isBroadcast = chatIsBroadcast,
+                                    // FIXME: Why are we fixing isRoom attribute to true here?
                                     isRoom = true
                                 ))
                                 messagesRepository.saveAll(messages.result)
 
                                 launchUI(strategy) {
-                                    view.showNewMessage(models)
+                                    view.showNewMessage(models, true)
                                 }
 
                                 if (messages.result.size == 50) {
@@ -513,7 +570,8 @@ class ChatRoomPresenter @Inject constructor(
                 val id = msg.id
                 val username = msg.sender?.username ?: ""
                 val mention = if (mentionAuthor && currentUsername != username) "@$username" else ""
-                val room = if (roomTypeOf(roomType) is RoomType.DirectMessage) username else roomName
+                val room =
+                    if (roomTypeOf(roomType) is RoomType.DirectMessage) username else roomName
                 val chatRoomType = when (roomTypeOf(roomType)) {
                     is RoomType.DirectMessage -> "direct"
                     is RoomType.PrivateGroup -> "group"
@@ -524,10 +582,12 @@ class ChatRoomPresenter @Inject constructor(
                 view.showReplyingAction(
                     username = getDisplayName(msg.sender),
                     replyMarkdown = "[ ]($currentServer/$chatRoomType/$room?msg=$id) $mention ",
-                    quotedMessage = mapper.map(message, RoomUiModel(
-                        roles = chatRoles,
-                        isBroadcast = chatIsBroadcast
-                    )).last().preview?.message ?: ""
+                    quotedMessage = mapper.map(
+                        message, RoomUiModel(
+                            roles = chatRoles,
+                            isBroadcast = chatIsBroadcast
+                        )
+                    ).last().preview?.message ?: ""
                 )
             }
         }
@@ -638,7 +698,7 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 val members = retryIO("getMembers($chatRoomId, $chatRoomType, $offset)") {
                     client.getMembers(chatRoomId, roomTypeOf(chatRoomType), offset, 50).result
-                }
+                }.take(50) // Get only 50, the backend is returning 7k+ users
                 usersRepository.saveAll(members)
                 val self = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
                 // Take at most the 100 most recent messages distinguished by user. Can return less.
@@ -766,7 +826,7 @@ class ChatRoomPresenter @Inject constructor(
     fun loadChatRooms() {
         launchUI(strategy) {
             try {
-                val chatRooms = chatRoomsInteractor.getAll(currentServer)
+                val chatRooms = getChatRoomsAsync()
                     .filterNot {
                         it.type is RoomType.DirectMessage || it.type is RoomType.LiveChat
                     }
@@ -787,6 +847,47 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
+    // TODO: move this to new interactor or FetchChatRoomsInteractor?
+    private suspend fun getChatRoomsAsync(name: String? = null): List<ChatRoom> = withContext(CommonPool) {
+        return@withContext dbManager.chatRoomDao().getAllSync().filter {
+            if (name == null) {
+                return@filter true
+            }
+            it.chatRoom.name == name || it.chatRoom.fullname == name
+        }.map {
+            with (it.chatRoom) {
+                ChatRoom(
+                    id = id,
+                    subscriptionId = subscriptionId,
+                    type = roomTypeOf(type),
+                    unread = unread,
+                    broadcast = broadcast ?: false,
+                    alert = alert,
+                    fullName = fullname,
+                    name = name ?: "",
+                    favorite = favorite ?: false,
+                    default = isDefault ?: false,
+                    readonly = readonly,
+                    open = open,
+                    lastMessage = null,
+                    archived = false,
+                    status = null,
+                    user = null,
+                    userMentions = userMentions,
+                    client = client,
+                    announcement = null,
+                    description = null,
+                    groupMentions = groupMentions,
+                    roles = null,
+                    topic = null,
+                    lastSeen = this.lastSeen,
+                    timestamp = timestamp,
+                    updatedAt = updatedAt
+                )
+            }
+        }
+    }
+
     fun joinChat(chatRoomId: String) {
         launchUI(strategy) {
             try {
@@ -802,21 +903,23 @@ class ChatRoomPresenter @Inject constructor(
     fun openDirectMessage(roomName: String, message: String) {
         launchUI(strategy) {
             try {
-                chatRoomsInteractor.getByName(currentServer, roomName)?.let {
-                    if (it.type is RoomType.DirectMessage) {
-                        navigator.toDirectMessage(
-                            chatRoomId = it.id,
-                            chatRoomType = it.type.toString(),
-                            chatRoomLastSeen = it.lastSeen ?: -1,
-                            chatRoomName = roomName,
-                            isChatRoomCreator = false,
-                            isChatRoomFavorite = false,
-                            isChatRoomReadOnly = false,
-                            isChatRoomSubscribed = it.open,
-                            chatRoomMessage = message
-                        )
-                    } else {
-                        throw IllegalStateException("Not a direct-message")
+                getChatRoomsAsync(roomName).let {
+                    if (it.isNotEmpty()) {
+                        if (it.first().type is RoomType.DirectMessage) {
+                            navigator.toDirectMessage(
+                                chatRoomId = it.first().id,
+                                chatRoomType = it.first().type.toString(),
+                                chatRoomLastSeen = it.first().lastSeen ?: -1,
+                                chatRoomName = roomName,
+                                isChatRoomCreator = false,
+                                isChatRoomFavorite = false,
+                                isChatRoomReadOnly = false,
+                                isChatRoomSubscribed = it.first().open,
+                                chatRoomMessage = message
+                            )
+                        } else {
+                            throw IllegalStateException("Not a direct-message")
+                        }
                     }
                 }
             } catch (ex: Exception) {
@@ -903,12 +1006,6 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    fun getDrawingImageUri(byteArray: ByteArray): Uri {
-        val bitmap  = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-        val file = saveDrawingImage(bitmap)
-        return uriInteractor.getUri(file)
-    }
-
     private suspend fun subscribeTypingStatus() {
         launch(CommonPool + strategy.jobs) {
             client.subscribeTypingStatus(chatRoomId.toString()) { _, id ->
@@ -957,9 +1054,11 @@ class ChatRoomPresenter @Inject constructor(
 
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
-            val viewModelStreamedMessage = mapper.map(streamedMessage, RoomUiModel(
-                roles = chatRoles, isBroadcast = chatIsBroadcast
-            ))
+            val viewModelStreamedMessage = mapper.map(
+                streamedMessage, RoomUiModel(
+                    roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
+                )
+            )
 
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
@@ -970,21 +1069,14 @@ class ChatRoomPresenter @Inject constructor(
             } else {
                 Timber.d("Adding new message")
                 messagesRepository.save(streamedMessage)
-                view.showNewMessage(viewModelStreamedMessage)
+                view.showNewMessage(viewModelStreamedMessage, true)
             }
         }
     }
 
-    private fun saveDrawingImage(bitmap: Bitmap): File {
-        val imageDir = "${Environment.DIRECTORY_PICTURES}/Rocket.Chat Images/"
-        val path = Environment.getExternalStoragePublicDirectory(imageDir)
-        val file = File(path, UUID.randomUUID().toString()+".png")
-        path.mkdirs()
-        file.createNewFile()
-        val outputStream = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.PNG,70, outputStream)
-        outputStream.flush()
-        outputStream.close()
-        return file
+    fun messageInfo(messageId: String) {
+        launchUI(strategy) {
+            navigator.toMessageInformation(messageId = messageId)
+        }
     }
 }

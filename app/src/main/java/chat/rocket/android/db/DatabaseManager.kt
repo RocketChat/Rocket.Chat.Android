@@ -35,6 +35,10 @@ class DatabaseManager(val context: Application,
     fun chatRoomDao(): ChatRoomDao = database.chatRoomDao()
     fun userDao(): UserDao = database.userDao()
 
+    fun logout() {
+        database.clearAllTables()
+    }
+
     suspend fun getRoom(id: String) = withContext(dbContext) {
         chatRoomDao().get(id)
     }
@@ -291,13 +295,14 @@ class DatabaseManager(val context: Application,
             lastSeen = subscription.lastSeen,
             lastMessageText = room.lastMessage?.message,
             lastMessageUserId = room.lastMessage?.sender?.id,
-            lastMessageTimestamp = room.lastMessage?.timestamp
+            lastMessageTimestamp = room.lastMessage?.timestamp,
+            broadcast = room.broadcast
         )
     }
 
     suspend fun insert(rooms: List<ChatRoomEntity>) {
         withContext(dbContext) {
-            chatRoomDao().insert(rooms)
+            chatRoomDao().cleanInsert(rooms)
         }
     }
 

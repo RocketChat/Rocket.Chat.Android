@@ -46,6 +46,8 @@ const val SHOW_EDITED_STATUS = "Message_ShowEditedStatus"
 const val ALLOW_MESSAGE_PINNING = "Message_AllowPinning"
 const val ALLOW_MESSAGE_STARRING = "Message_AllowStarring"
 const val STORE_LAST_MESSAGE = "Store_Last_Message"
+const val MESSAGE_READ_RECEIPT_ENABLED = "Message_Read_Receipt_Enabled"
+const val MESSAGE_READ_RECEIPT_STORE_USERS = "Message_Read_Receipt_Store_Users"
 
 /*
  * Extension functions for Public Settings.
@@ -86,6 +88,9 @@ fun PublicSettings.allowedMessageDeleting(): Boolean = this[ALLOW_MESSAGE_DELETI
 
 fun PublicSettings.hasShowLastMessage(): Boolean = this[STORE_LAST_MESSAGE] != null
 fun PublicSettings.showLastMessage(): Boolean = this[STORE_LAST_MESSAGE]?.value == true
+
+fun PublicSettings.messageReadReceiptEnabled(): Boolean = this[MESSAGE_READ_RECEIPT_ENABLED]?.value == true
+fun PublicSettings.messageReadReceiptStoreUsers(): Boolean = this[MESSAGE_READ_RECEIPT_STORE_USERS]?.value == true
 
 fun PublicSettings.uploadMimeTypeFilter(): Array<String>? {
     val values = this[UPLOAD_WHITELIST_MIMETYPES]?.value as String?

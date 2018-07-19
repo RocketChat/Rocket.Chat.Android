@@ -1,10 +1,13 @@
-package chat.rocket.android.emoji
+package chat.rocket.android.emoji.internal
 
 import android.text.SpannableString
 import android.text.Spanned
 import androidx.annotation.DrawableRes
+import chat.rocket.android.emoji.EmojiRepository
+import chat.rocket.android.emoji.EmojiTypefaceSpan
+import chat.rocket.android.emoji.R
 
-enum class EmojiCategory {
+internal enum class EmojiCategory {
     RECENTS {
         override fun resourceIcon() = R.drawable.ic_emoji_recents
 

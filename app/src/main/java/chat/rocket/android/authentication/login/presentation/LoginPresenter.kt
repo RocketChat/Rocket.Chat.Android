@@ -5,19 +5,58 @@ import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.OauthHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.GetAccountsInteractor
+import chat.rocket.android.server.domain.GetConnectingServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.SaveAccountInteractor
+import chat.rocket.android.server.domain.SaveCurrentServerInteractor
+import chat.rocket.android.server.domain.TokenRepository
+import chat.rocket.android.server.domain.casLoginUrl
+import chat.rocket.android.server.domain.favicon
+import chat.rocket.android.server.domain.gitlabUrl
+import chat.rocket.android.server.domain.isCasAuthenticationEnabled
+import chat.rocket.android.server.domain.isFacebookAuthenticationEnabled
+import chat.rocket.android.server.domain.isGithubAuthenticationEnabled
+import chat.rocket.android.server.domain.isGitlabAuthenticationEnabled
+import chat.rocket.android.server.domain.isGoogleAuthenticationEnabled
+import chat.rocket.android.server.domain.isLdapAuthenticationEnabled
+import chat.rocket.android.server.domain.isLinkedinAuthenticationEnabled
+import chat.rocket.android.server.domain.isLoginFormEnabled
+import chat.rocket.android.server.domain.isMeteorAuthenticationEnabled
+import chat.rocket.android.server.domain.isPasswordResetEnabled
+import chat.rocket.android.server.domain.isRegistrationEnabledForNewUsers
+import chat.rocket.android.server.domain.isTwitterAuthenticationEnabled
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.server.domain.wideTile
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.casUrl
+import chat.rocket.android.util.extensions.encodeToBase64
+import chat.rocket.android.util.extensions.generateRandomString
+import chat.rocket.android.util.extensions.isEmail
+import chat.rocket.android.util.extensions.parseColor
+import chat.rocket.android.util.extensions.registerPushToken
+import chat.rocket.android.util.extensions.samlUrl
+import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatTwoFactorException
+import chat.rocket.common.model.Email
 import chat.rocket.common.model.Token
+import chat.rocket.common.model.User
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.rest.*
-import com.google.android.gms.auth.api.credentials.Credential
+import chat.rocket.core.internal.rest.login
+import chat.rocket.core.internal.rest.loginWithCas
+import chat.rocket.core.internal.rest.loginWithEmail
+import chat.rocket.core.internal.rest.loginWithLdap
+import chat.rocket.core.internal.rest.loginWithOauth
+import chat.rocket.core.internal.rest.loginWithSaml
+import chat.rocket.core.internal.rest.me
+import chat.rocket.core.internal.rest.settingsOauth
 import kotlinx.coroutines.experimental.delay
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -351,11 +390,20 @@ class LoginPresenter @Inject constructor(
                         }
                     }
                 }
-                val username = retryIO("me()") { client.me().username }
-                if (username != null) {
-                    localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, username)
+                val myself = retryIO("me()") { client.me() }
+                if (myself.username != null) {
+                    val user = User(
+                        id = myself.id,
+                        roles = myself.roles,
+                        status = myself.status,
+                        name = myself.name,
+                        emails = myself.emails?.map { Email(it.address ?: "", it.verified) },
+                        username = myself.username,
+                        utcOffset = myself.utcOffset
+                    )
+                    localRepository.saveCurrentUser(url = currentServer, user = user)
                     saveCurrentServer.save(currentServer)
-                    saveAccount(username)
+                    saveAccount(myself.username!!)
                     saveToken(token)
                     registerPushToken()
                     //sent tokens to wear app
@@ -394,7 +442,7 @@ class LoginPresenter @Inject constructor(
         }.toString()
     }
 
-    private fun getSamlServices(listMap: List<Map<String, Any>>): List<Map<String, Any>>  {
+    private fun getSamlServices(listMap: List<Map<String, Any>>): List<Map<String, Any>> {
         return listMap.filter { map -> map["service"] == "saml" }
     }
 

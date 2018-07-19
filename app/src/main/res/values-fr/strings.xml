@@ -172,16 +172,15 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Répondre</string>
+    <string name="action_msg_info">Informations sur le message</string>
     <string name="action_msg_edit">Modifier</string>
     <string name="action_msg_copy">Copier</string>
     <string name="action_msg_quote">Citation</string>
     <string name="action_msg_delete">Effacer</string>
     <string name="action_msg_pin">Épingle message</string>
     <string name="action_msg_unpin">Enlever message</string>
-    // TODO: Add proper translation.
-    <string name="action_msg_star">Star message</string>
-    // TODO: Add proper translation.
-    <string name="action_msg_unstar">Unstar Message</string>
+    <string name="action_msg_star">Ajouter aux Favoris</string>
+    <string name="action_msg_unstar">Retirer des favoris</string>
     <string name="action_msg_share">Partager</string>
     <string name="action_title_editing">Modification du message</string>
     <string name="action_msg_add_reaction">Ajouter une réaction</string>
@@ -192,6 +191,10 @@
     <string name="permission_pinning_not_allowed">L\'épinglage n\'est pas autorisé</string>
     // TODO: Add proper translation.
     <string name="permission_starring_not_allowed">Starring is not allowed</string>
+
+    <!-- Search message -->
+    <!-- TODO Add proper translation-->
+    <string name="title_search_message">Search message</string>
 
     <!-- Favorite/Unfavorite chat room -->
     <!-- TODO Add proper translation-->
@@ -265,6 +268,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Aucun emoji récent</string>
+    <string name="alert_title_default_skin_tone">Tonalité de peau par défaut</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Trier</string>
@@ -286,4 +290,7 @@
     <string name="notif_action_reply_hint">RÉPONDRE</string>
     <string name="notif_error_sending">La réponse a échoué. Veuillez réessayer.</string>
     <string name="notif_success_sending">Message envoyé à %1$s!</string>
+    <string name="read_by">Lire par</string>
+    <string name="message_information_title">Informations sur le message</string>
+    <string name="msg_log_out">Déconnecter…</string>
 </resources>

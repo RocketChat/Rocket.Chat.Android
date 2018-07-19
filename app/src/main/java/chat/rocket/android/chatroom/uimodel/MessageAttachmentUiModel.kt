@@ -15,7 +15,9 @@ data class MessageAttachmentUiModel(
         override var nextDownStreamMessage: BaseUiModel<*>? = null,
         var messageLink: String? = null,
         override var preview: Message? = null,
-        override var isTemporary: Boolean = false
+        override var isTemporary: Boolean = false,
+        override var unread: Boolean? = null,
+        override var menuItemsToHide: MutableList<Int> = mutableListOf()
 ) : BaseUiModel<Message> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.MESSAGE_ATTACHMENT.viewType

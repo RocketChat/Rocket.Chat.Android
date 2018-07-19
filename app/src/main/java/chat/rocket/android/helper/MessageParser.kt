@@ -10,6 +10,7 @@ import androidx.core.content.res.ResourcesCompat
 import android.text.Spanned
 import android.text.style.ClickableSpan
 import android.text.style.ReplacementSpan
+import android.text.style.StyleSpan
 import android.util.Patterns
 import android.view.View
 import chat.rocket.android.R
@@ -23,6 +24,10 @@ import chat.rocket.common.model.SimpleUser
 import chat.rocket.core.model.Message
 import org.commonmark.node.AbstractVisitor
 import org.commonmark.node.Document
+import org.commonmark.node.ListItem
+import org.commonmark.node.Node
+import org.commonmark.node.OrderedList
+import org.commonmark.node.Paragraph
 import org.commonmark.node.Text
 import ru.noties.markwon.Markwon
 import ru.noties.markwon.SpannableBuilder
@@ -59,7 +64,7 @@ class MessageParser @Inject constructor(
         val builder = SpannableBuilder()
         val content = EmojiRepository.shortnameToUnicode(text, true)
         val parentNode = parser.parse(toLenientMarkdown(content))
-        parentNode.accept(SpannableMarkdownVisitor(configuration, builder))
+        parentNode.accept(MarkdownVisitor(configuration, builder))
         parentNode.accept(LinkVisitor(builder))
         parentNode.accept(EmojiVisitor(configuration, builder))
         message.mentions?.let {
@@ -134,6 +139,37 @@ class MessageParser @Inject constructor(
                 spans.forEach {
                     builder.setSpan(it, spannable.getSpanStart(it), spannable.getSpanEnd(it), 0)
                 }
+            }
+        }
+    }
+
+    class MarkdownVisitor(
+        configuration: SpannableConfiguration,
+        val builder: SpannableBuilder
+    ) : SpannableMarkdownVisitor(configuration, builder) {
+
+        /**
+         * NOOP
+         */
+        override fun visit(orderedList: OrderedList) {
+            var number = orderedList.startNumber
+            val delimiter = orderedList.delimiter
+            var node: Node? = orderedList.firstChild
+            while (node != null) {
+                if (node is ListItem) {
+                    newLine()
+                    builder.append("$number$delimiter ")
+                    super.visit(node.firstChild as Paragraph)
+                    newLine()
+                }
+                number++
+                node = node.next
+            }
+        }
+
+        private fun newLine() {
+            if (builder.length() > 0 && '\n' != builder.lastChar()) {
+                builder.append('\n')
             }
         }
     }

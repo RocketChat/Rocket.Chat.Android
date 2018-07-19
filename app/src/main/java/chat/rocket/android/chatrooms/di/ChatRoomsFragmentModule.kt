@@ -9,9 +9,7 @@ import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.db.ChatRoomDao
 import chat.rocket.android.db.DatabaseManager
-import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.infraestructure.ConnectionManager
@@ -39,22 +37,10 @@ class ChatRoomsFragmentModule {
 
     @Provides
     @PerFragment
-    @Named("currentServer")
-    fun provideCurrentServer(currentServerInteractor: GetCurrentServerInteractor): String {
-        return currentServerInteractor.get()!!
-    }
-
-    @Provides
-    @PerFragment
-    fun provideRocketChatClient(factory: RocketChatClientFactory,
-                                @Named("currentServer") currentServer: String): RocketChatClient {
-        return factory.create(currentServer)
-    }
-
-    @Provides
-    @PerFragment
-    fun provideDatabaseManager(factory: DatabaseManagerFactory,
-                               @Named("currentServer") currentServer: String): DatabaseManager {
+    fun provideRocketChatClient(
+        factory: RocketChatClientFactory,
+        @Named("currentServer") currentServer: String
+    ): RocketChatClient {
         return factory.create(currentServer)
     }
 
@@ -64,30 +50,39 @@ class ChatRoomsFragmentModule {
 
     @Provides
     @PerFragment
-    fun provideConnectionManager(factory: ConnectionManagerFactory,
-                                 @Named("currentServer") currentServer: String): ConnectionManager {
+    fun provideConnectionManager(
+        factory: ConnectionManagerFactory,
+        @Named("currentServer") currentServer: String
+    ): ConnectionManager {
         return factory.create(currentServer)
     }
 
     @Provides
     @PerFragment
-    fun provideFetchChatRoomsInteractor(client: RocketChatClient, dbManager: DatabaseManager): FetchChatRoomsInteractor {
+    fun provideFetchChatRoomsInteractor(
+        client: RocketChatClient,
+        dbManager: DatabaseManager
+    ): FetchChatRoomsInteractor {
         return FetchChatRoomsInteractor(client, dbManager)
     }
 
     @Provides
     @PerFragment
-    fun providePublicSettings(repository: SettingsRepository,
-                              @Named("currentServer") currentServer: String): PublicSettings {
+    fun providePublicSettings(
+        repository: SettingsRepository,
+        @Named("currentServer") currentServer: String
+    ): PublicSettings {
         return repository.get(currentServer)
     }
 
     @Provides
     @PerFragment
-    fun provideRoomMapper(context: Application,
-                          repository: SettingsRepository,
-                          localRepository: LocalRepository,
-                          @Named("currentServer") serverUrl: String): RoomUiModelMapper {
+    fun provideRoomMapper(
+        context: Application,
+        repository: SettingsRepository,
+        localRepository: LocalRepository,
+        @Named("currentServer") serverUrl: String
+    ): RoomUiModelMapper {
         return RoomUiModelMapper(context, repository.get(serverUrl), localRepository, serverUrl)
     }
 }

@@ -21,6 +21,17 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
     abstract fun get(id: String): ChatRoom?
 
     @Transaction
+    @Query("$BASE_QUERY")
+    abstract fun getAllSync(): List<ChatRoom>
+
+    @Transaction
+    @Query("""$BASE_QUERY WHERE chatrooms.name LIKE '%' || :query || '%' OR  users.name LIKE '%' || :query || '%'""")
+    abstract fun searchSync(query: String): List<ChatRoom>
+
+    @Query("SELECT COUNT(id) FROM chatrooms")
+    abstract fun count(): Long
+
+    @Transaction
     @Query("""
         $BASE_QUERY
         ORDER BY
@@ -62,6 +73,15 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
     @Query("DELETE FROM chatrooms WHERE ID = :id")
     abstract fun delete(id: String)
 
+    @Query("DELETE FROM chatrooms")
+    abstract fun delete()
+
+    @Transaction
+    open fun cleanInsert(chatRooms: List<ChatRoomEntity>) {
+        delete()
+        insert(chatRooms)
+    }
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertOrReplace(chatRooms: List<ChatRoomEntity>)
 
@@ -95,10 +115,10 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
 
         const val TYPE_ORDER = """
             CASE
-		        WHEN type = '${RoomType.CHANNEL}' THEN 1
-		        WHEN type = '${RoomType.PRIVATE_GROUP}' THEN 2
-		        WHEN type = '${RoomType.DIRECT_MESSAGE}' THEN 3
-		        WHEN type = '${RoomType.LIVECHAT}' THEN 4
+		        WHEN type = 'c' THEN 1
+		        WHEN type = 'p' THEN 2
+		        WHEN type = 'd' THEN 3
+		        WHEN type = 'l' THEN 4
 		        ELSE 5
 	        END
         """

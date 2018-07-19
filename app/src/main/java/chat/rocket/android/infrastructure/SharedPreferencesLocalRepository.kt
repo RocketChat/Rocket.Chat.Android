@@ -22,6 +22,13 @@ class SharedPreferencesLocalRepository(
         save("${url}_${LocalRepository.USER_KEY}", userAdapter.toJson(user))
     }
 
+    override fun saveLastChatroomsRefresh(url: String, timestamp: Long) {
+        save("$url${LocalRepository.LAST_CHATROOMS_REFRESH}", timestamp)
+    }
+
+    override fun getLastChatroomsRefresh(url: String) =
+        getLong("$url${LocalRepository.LAST_CHATROOMS_REFRESH}", 0L)
+
     override fun getBoolean(key: String, defValue: Boolean) = preferences.getBoolean(key, defValue)
 
     override fun getFloat(key: String, defValue: Float) = preferences.getFloat(key, defValue)
@@ -45,9 +52,10 @@ class SharedPreferencesLocalRepository(
     override fun clear(key: String) = preferences.edit { remove(key) }
 
     override fun clearAllFromServer(server: String) {
-        clear(LocalRepository.KEY_PUSH_TOKEN)
-        clear(LocalRepository.TOKEN_KEY + server)
-        clear(LocalRepository.SETTINGS_KEY + server)
-        clear(LocalRepository.CURRENT_USERNAME_KEY)
+        preferences.all.keys.forEach { key ->
+            if (key.startsWith(server, ignoreCase = true)) {
+                clear(key)
+            }
+        }
     }
 }

@@ -11,6 +11,7 @@ import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
+import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable

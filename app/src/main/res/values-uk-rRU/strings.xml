@@ -153,6 +153,7 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Ответить</string>
+    <string name="action_msg_info">Інформація про повідомлення</string>
     <string name="action_msg_edit">Редактировать</string>
     <string name="action_msg_copy">Копировать</string>
     <string name="action_msg_quote">Цитата</string>
@@ -170,6 +171,9 @@
     <string name="permission_deleting_not_allowed">Удаление запрещено</string>
     <string name="permission_pinning_not_allowed">Прикрепление запрещено</string>
     <string name="permission_starring_not_allowed">Отмечивание запрещено</string>
+
+    <!-- Search message -->
+    <string name="title_search_message">Поиск сообщения</string>
 
     <!-- Favorite/Unfavorite chat room -->
     <string name="title_favorite_chat">Добавить чат в избранное</string>
@@ -239,6 +243,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Нет недавно используемых emoji</string>
+    <string name="alert_title_default_skin_tone">По умолчанию тон кожи</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Сортировать</string>
@@ -260,4 +265,5 @@
     <string name="notif_action_reply_hint">ОТВЕТИТЬ</string>
     <string name="notif_error_sending">Ошибка ответа. Пожалуйста, попробуйте еще раз.</string>
     <string name="notif_success_sending">Сообщение отправлено %1$s!</string>
+    <string name="msg_log_out">Выход…</string>
 </resources>

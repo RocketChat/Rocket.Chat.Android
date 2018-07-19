@@ -1,7 +1,10 @@
 package chat.rocket.android.chatrooms.presentation
 
 import chat.rocket.android.R
+import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.presentation.MainNavigator
@@ -9,7 +12,7 @@ import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManager
-import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -26,6 +29,7 @@ class ChatRoomsPresenter @Inject constructor(
     private val strategy: CancelStrategy,
     private val navigator: MainNavigator,
     @Named("currentServer") private val currentServer: String,
+    private val dbManager: DatabaseManager,
     manager: ConnectionManager,
     private val localRepository: LocalRepository,
     private val userHelper: UserHelper,
@@ -34,8 +38,34 @@ class ChatRoomsPresenter @Inject constructor(
     private val client = manager.client
     private val settings = settingsRepository.get(currentServer)
 
-    fun loadChatRoom(chatRoom: chat.rocket.android.db.model.ChatRoom) {
-        with(chatRoom.chatRoom) {
+    fun loadChatRoom(chatRoom: RoomUiModel) {
+        launchUI(strategy) {
+            view.showLoadingRoom(chatRoom.name)
+            try {
+                val room = dbManager.getRoom(chatRoom.id)
+                if (room != null) {
+                    loadChatRoom(room.chatRoom)
+                } else {
+                    with(chatRoom) {
+                        val entity = ChatRoomEntity(
+                            id = id,
+                            subscriptionId = "",
+                            type = type.toString(),
+                            name = username ?: name.toString(),
+                            fullname = name.toString(),
+                            open = false
+                        )
+                        loadChatRoom(entity)
+                    }
+                }
+            } finally {
+                view.hideLoadingRoom()
+            }
+        }
+    }
+
+    fun loadChatRoom(chatRoom: ChatRoomEntity) {
+        with(chatRoom) {
             val isDirectMessage = roomTypeOf(type) is RoomType.DirectMessage
             val roomName = if (settings.useSpecialCharsOnRoom() || (isDirectMessage && settings.useRealName())) {
                     fullname ?: name
@@ -61,7 +91,7 @@ class ChatRoomsPresenter @Inject constructor(
                     }
 
                     navigator.toChatRoom(
-                        chatRoomId =  id,
+                        chatRoomId = id,
                         chatRoomName = roomName,
                         chatRoomType = type,
                         isReadOnly = readonly ?: false,
