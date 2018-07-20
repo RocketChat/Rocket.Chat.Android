@@ -9,6 +9,7 @@ import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.RefreshSettingsInteractor
 import chat.rocket.android.server.domain.RemoveAccountInteractor
 import chat.rocket.android.server.domain.SaveAccountInteractor
 import chat.rocket.android.server.domain.TokenRepository
@@ -33,6 +34,7 @@ import chat.rocket.core.internal.rest.unregisterPushToken
 import chat.rocket.core.model.Myself
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.channels.Channel
+import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import javax.inject.Inject
@@ -43,6 +45,7 @@ class MainPresenter @Inject constructor(
     private val navigator: MainNavigator,
     private val tokenRepository: TokenRepository,
     private val serverInteractor: GetCurrentServerInteractor,
+    private val refreshSettingsInteractor: RefreshSettingsInteractor,
     private val localRepository: LocalRepository,
     private val navHeaderMapper: NavHeaderUiModelMapper,
     private val saveAccountInteractor: SaveAccountInteractor,
@@ -149,6 +152,7 @@ class MainPresenter @Inject constructor(
     }
 
     fun connect() {
+        launch { refreshSettingsInteractor.refresh(currentServer) }
         manager.connect()
     }
 
