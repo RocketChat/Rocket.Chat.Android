@@ -121,7 +121,6 @@
     <string name="msg_delete_message">Borrar mensaje</string>
     <string name="msg_delete_description">Seguro que quieres borrar este mensaje</string>
     <string name="msg_no_search_found">No se han encontrado resultados</string>
-    <string name="msg_log_out">Saliendo de tu cuenta…</string>
     <!-- TODO Add translation -->
     <string name="msg_upload_file">Upload file</string>
     <!-- TODO Add translation -->
@@ -273,7 +272,8 @@
     <string name="notif_action_reply_hint">RESPUESTA</string>
     <string name="notif_error_sending">La respuesta ha fallado. Inténtalo de nuevo.</string>
     <string name="notif_success_sending">Mensaje enviado a %1$s!</string>
-
     <string name="read_by">Leído por</string>
     <string name="message_information_title">Información del mensaje</string>
+    <string name="msg_log_out">Saliendo de tu cuenta…</string>
+    <string name="msg_sent_attachment">Envió un archivo</string>
 </resources>
