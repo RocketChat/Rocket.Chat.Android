@@ -78,24 +78,26 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
 
     private val onClickListener = { view: View ->
         if (data?.message?.isSystemMessage() == false) {
-            data?.message?.let {
-                val menuItems = view.context.inflate(R.menu.message_actions).toList()
-                menuItems.find { it.itemId == R.id.action_message_unpin }?.apply {
-                    setTitle(if (it.pinned) R.string.action_msg_unpin else R.string.action_msg_pin)
-                    isChecked = it.pinned
-                }
+            data?.let { vm ->
+                vm.message.let {
+                    val menuItems = view.context.inflate(R.menu.message_actions).toList()
+                    menuItems.find { it.itemId == R.id.action_message_unpin }?.apply {
+                        setTitle(if (it.pinned) R.string.action_msg_unpin else R.string.action_msg_pin)
+                        isChecked = it.pinned
+                    }
 
-                menuItems.find { it.itemId == R.id.action_message_star }?.apply {
-                    val isStarred = it.starred?.isNotEmpty() ?: false
-                    setTitle(if (isStarred) R.string.action_msg_unstar else R.string.action_msg_star)
-                    isChecked = isStarred
-                }
-                view.context?.let {
-                    if (it is ContextThemeWrapper && it.baseContext is AppCompatActivity) {
-                        with(it.baseContext as AppCompatActivity) {
-                            val actionsBottomSheet = MessageActionsBottomSheet()
-                            actionsBottomSheet.addItems(menuItems, this@BaseViewHolder)
-                            actionsBottomSheet.show(supportFragmentManager, null)
+                    menuItems.find { it.itemId == R.id.action_message_star }?.apply {
+                        val isStarred = it.starred?.isNotEmpty() ?: false
+                        setTitle(if (isStarred) R.string.action_msg_unstar else R.string.action_msg_star)
+                        isChecked = isStarred
+                    }
+                    view.context?.let {
+                        if (it is ContextThemeWrapper && it.baseContext is AppCompatActivity) {
+                            with(it.baseContext as AppCompatActivity) {
+                                val actionsBottomSheet = MessageActionsBottomSheet()
+                                actionsBottomSheet.addItems(menuItems, this@BaseViewHolder)
+                                actionsBottomSheet.show(supportFragmentManager, null)
+                            }
                         }
                     }
                 }

@@ -21,19 +21,23 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
     abstract fun get(id: String): ChatRoom?
 
     @Transaction
-    @Query("$BASE_QUERY")
+    @Query("$BASE_QUERY $FILTER_NOT_OPENED")
     abstract fun getAllSync(): List<ChatRoom>
 
     @Transaction
-    @Query("""$BASE_QUERY WHERE chatrooms.name LIKE '%' || :query || '%' OR  users.name LIKE '%' || :query || '%'""")
+    @Query("""$BASE_QUERY
+            WHERE chatrooms.name LIKE '%' || :query || '%'
+            OR  users.name LIKE '%' || :query || '%'
+            """)
     abstract fun searchSync(query: String): List<ChatRoom>
 
-    @Query("SELECT COUNT(id) FROM chatrooms")
+    @Query("SELECT COUNT(id) FROM chatrooms WHERE open = 1")
     abstract fun count(): Long
 
     @Transaction
     @Query("""
         $BASE_QUERY
+        $FILTER_NOT_OPENED
         ORDER BY
 	        CASE
 		        WHEN lastMessageTimeStamp IS NOT NULL THEN lastMessageTimeStamp
@@ -45,6 +49,7 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
     @Transaction
     @Query("""
         $BASE_QUERY
+        $FILTER_NOT_OPENED
         ORDER BY
             $TYPE_ORDER,
 	        CASE
@@ -57,6 +62,7 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
     @Transaction
     @Query("""
         $BASE_QUERY
+        $FILTER_NOT_OPENED
         ORDER BY name
         """)
     abstract fun getAllAlphabetically(): LiveData<List<ChatRoom>>
@@ -64,6 +70,7 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
     @Transaction
     @Query("""
         $BASE_QUERY
+        $FILTER_NOT_OPENED
         ORDER BY
             $TYPE_ORDER,
             name
@@ -113,12 +120,16 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
             LEFT JOIN users AS lmUsers ON chatrooms.lastMessageUserId = lmUsers.id
         """
 
+        const val FILTER_NOT_OPENED = """
+            WHERE chatrooms.open = 1
+        """
+
         const val TYPE_ORDER = """
             CASE
-		        WHEN type = '${RoomType.CHANNEL}' THEN 1
-		        WHEN type = '${RoomType.PRIVATE_GROUP}' THEN 2
-		        WHEN type = '${RoomType.DIRECT_MESSAGE}' THEN 3
-		        WHEN type = '${RoomType.LIVECHAT}' THEN 4
+		        WHEN type = 'c' THEN 1
+		        WHEN type = 'p' THEN 2
+		        WHEN type = 'd' THEN 3
+		        WHEN type = 'l' THEN 4
 		        ELSE 5
 	        END
         """

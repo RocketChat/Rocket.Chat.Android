@@ -32,5 +32,6 @@ interface LocalRepository {
     }
 }
 
+// FIXME - we are saving the user full name here when the server is UI_Use_Real_Name true
 fun LocalRepository.checkIfMyself(username: String) = username() == username
 fun LocalRepository.username() = get(LocalRepository.CURRENT_USERNAME_KEY)

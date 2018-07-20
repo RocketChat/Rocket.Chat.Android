@@ -150,6 +150,7 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Respuesta</string>
+    <string name="action_msg_info">Información del mensaje</string>
     <string name="action_msg_edit">Editar</string>
     <string name="action_msg_copy">Copiar</string>
     <string name="action_msg_quote">Citar</string>
@@ -157,8 +158,7 @@
     <string name="action_msg_pin">Fijar mensaje</string>
     <string name="action_msg_unpin">Soltar mensaje</string>
     <string name="action_msg_star">Star mensaje</string>
-    // TODO: Add proper translation.
-    <string name="action_msg_unstar">Unstar Message</string>
+    <string name="action_msg_unstar">Unstar mensaje</string>
     <string name="action_msg_share">Compartir</string>
     <string name="action_title_editing">Edición de mensaje</string>
     <string name="action_msg_add_reaction">Añadir una reacción</string>
@@ -259,4 +259,8 @@
     <string name="notif_action_reply_hint">RESPUESTA</string>
     <string name="notif_error_sending">La respuesta ha fallado. Inténtalo de nuevo.</string>
     <string name="notif_success_sending">Mensaje enviado a %1$s!</string>
+    <string name="read_by">Leído por</string>
+    <string name="message_information_title">Información del mensaje</string>
+    <string name="msg_log_out">Saliendo de tu cuenta…</string>
+    <string name="msg_sent_attachment">Envió un archivo</string>
 </resources>

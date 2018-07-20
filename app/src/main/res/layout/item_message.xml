@@ -98,12 +98,24 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="4dp"
         android:layout_marginTop="2dp"
-        android:src="@drawable/ic_action_message_star_24dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/text_sender"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/text_edit_indicator"
         app:layout_constraintTop_toTopOf="@+id/text_sender"
+        app:srcCompat="@drawable/ic_action_message_star_24dp"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/read_receipt_view"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/text_sender"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/image_star_indicator"
+        app:layout_constraintTop_toTopOf="@+id/text_sender"
+        app:srcCompat="@drawable/ic_check_unread_24dp"
         tools:visibility="visible" />
 
     <TextView
@@ -112,9 +124,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginBottom="2dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="4dp"
         app:layout_constraintStart_toStartOf="@+id/text_sender"
         app:layout_constraintTop_toBottomOf="@+id/text_sender"
         tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
