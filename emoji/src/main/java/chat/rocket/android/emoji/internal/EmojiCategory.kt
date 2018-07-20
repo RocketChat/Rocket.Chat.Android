@@ -13,6 +13,11 @@ internal enum class EmojiCategory {
 
         override fun textIcon() = getTextIconFor("\uD83D\uDD58")
     },
+    CUSTOM {
+        override fun resourceIcon() = R.drawable.ic_emoji_custom
+
+        override fun textIcon() = getTextIconFor("\uD83D\uDD58")
+    },
     PEOPLE() {
         override fun resourceIcon() = R.drawable.ic_emoji_people
 
