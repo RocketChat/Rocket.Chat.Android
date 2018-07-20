@@ -19,7 +19,6 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.SITE_URL
 import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.emoji.EmojiRepository
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
 import com.facebook.drawee.backends.pipeline.DraweeConfig
@@ -87,7 +86,6 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         context = WeakReference(applicationContext)
 
         AndroidThreeTen.init(this)
-        EmojiRepository.load(this)
 
         setupCrashlytics()
         setupFresco()
@@ -130,8 +128,8 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         Fabric.with(this, Crashlytics.Builder().core(core).build())
 
         installCrashlyticsWrapper(this@RocketChatApplication,
-                getCurrentServerInteractor, settingsInteractor,
-                accountRepository, localRepository)
+            getCurrentServerInteractor, settingsInteractor,
+            accountRepository, localRepository)
     }
 
     private fun setupFresco() {

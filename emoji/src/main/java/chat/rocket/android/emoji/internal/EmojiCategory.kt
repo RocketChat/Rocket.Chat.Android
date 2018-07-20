@@ -7,7 +7,7 @@ import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.emoji.EmojiTypefaceSpan
 import chat.rocket.android.emoji.R
 
-internal enum class EmojiCategory {
+enum class EmojiCategory {
     RECENTS {
         override fun resourceIcon() = R.drawable.ic_emoji_recents
 

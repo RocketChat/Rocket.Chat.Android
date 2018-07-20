@@ -8,5 +8,6 @@ data class Emoji(
     val category: String,
     val count: Int = 0,
     val siblings: MutableCollection<Emoji> = mutableListOf(),
-    val fitzpatrick: Fitzpatrick = Fitzpatrick.Default
+    val fitzpatrick: Fitzpatrick = Fitzpatrick.Default,
+    val url: String? = null // Filled for custom emojis
 )

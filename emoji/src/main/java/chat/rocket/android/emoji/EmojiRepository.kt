@@ -3,12 +3,8 @@ package chat.rocket.android.emoji
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
-import android.os.SystemClock
 import chat.rocket.android.emoji.internal.EmojiCategory
 import chat.rocket.android.emoji.internal.PREF_EMOJI_RECENTS
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.withContext
-import kotlinx.coroutines.experimental.yield
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -16,6 +12,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.collections.ArrayList
 import kotlin.coroutines.experimental.buildSequence
 
 object EmojiRepository {
@@ -27,14 +24,24 @@ object EmojiRepository {
     private lateinit var preferences: SharedPreferences
     internal lateinit var cachedTypeface: Typeface
 
-    fun load(context: Context, path: String = "emoji.json") {
+    fun load(context: Context, customEmojis: List<Emoji> = emptyList(), path: String = "emoji.json") {
         preferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
         ALL_EMOJIS.clear()
         cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
         val stream = context.assets.open(path)
-        val emojis = loadEmojis(stream)
-        emojis.forEach { emoji ->
+        val emojis = loadEmojis(stream).also {
+            it.addAll(customEmojis)
+        }.toList()
+
+        for (emoji in emojis) {
             val unicodeIntList = mutableListOf<Int>()
+
+            // If empty it's a custom emoji.
+            if (emoji.unicode.isEmpty()) {
+                ALL_EMOJIS.add(emoji)
+                continue
+            }
+
             emoji.unicode.split("-").forEach {
                 val value = it.toInt(16)
                 if (value >= 0x10000) {
@@ -95,7 +102,7 @@ object EmojiRepository {
 
     internal fun getEmojiSequenceByCategory(category: EmojiCategory): Sequence<Emoji> {
         val list = ALL_EMOJIS.filter { it.category.toLowerCase() == category.name.toLowerCase() }
-        return buildSequence{
+        return buildSequence {
             list.forEach {
                 yield(it)
             }
@@ -163,7 +170,7 @@ object EmojiRepository {
         return result
     }
 
-    private fun loadEmojis(stream: InputStream): List<Emoji> {
+    private fun loadEmojis(stream: InputStream): MutableList<Emoji> {
         val emojisJSON = JSONArray(inputStreamToString(stream))
         val emojis = ArrayList<Emoji>(emojisJSON.length());
         for (i in 0 until emojisJSON.length()) {
