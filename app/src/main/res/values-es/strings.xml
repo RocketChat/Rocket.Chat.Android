@@ -265,4 +265,5 @@
     <string name="read_by">Leído por</string>
     <string name="message_information_title">Información del mensaje</string>
     <string name="msg_log_out">Saliendo de tu cuenta…</string>
+    <string name="msg_sent_attachment">Envió un archivo</string>
 </resources>

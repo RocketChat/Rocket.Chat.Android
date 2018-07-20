@@ -13,6 +13,12 @@ import timber.log.Timber
 
 @Dao
 abstract class UserDao : BaseDao<UserEntity> {
+
+    @Query("""
+        UPDATE users set STATUS = "offline"
+        """)
+    abstract fun clearStatus()
+
     @Update(onConflict = OnConflictStrategy.IGNORE)
     abstract fun update(user: UserEntity): Int
 
@@ -21,6 +27,9 @@ abstract class UserDao : BaseDao<UserEntity> {
 
     @Query("SELECT id FROM users WHERE ID = :id")
     abstract fun findUser(id: String): String?
+
+    @Query("SELECT * FROM users WHERE ID = :id")
+    abstract fun getUser(id:String): UserEntity?
 
     @Transaction
     open fun upsert(user: BaseUserEntity) {

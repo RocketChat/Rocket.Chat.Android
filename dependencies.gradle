@@ -25,9 +25,9 @@ ext {
             playServices          : '15.0.0',
             exoPlayer             : '2.6.0',
             flexbox               : '0.3.2',
-            material              : '1.0.0-alpha1',
+            material              : '1.0.0-beta01',
 
-            room                  : '2.0.0-alpha1',
+            room                  : '2.0.0-beta01',
             lifecycle             : '2.0.0-beta01',
 
             rxKotlin              : '2.2.0',
