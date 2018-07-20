@@ -14,7 +14,10 @@ import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.emoji.Fitzpatrick
 import chat.rocket.android.emoji.R
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.emoji_category_layout.view.*
+import kotlinx.android.synthetic.main.emoji_image_row_item.view.*
 import kotlinx.android.synthetic.main.emoji_row_item.view.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
@@ -88,12 +91,18 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
         private val listener: EmojiKeyboardListener
     ) : RecyclerView.Adapter<EmojiRowViewHolder>() {
 
+        private val TYPE_CUSTOM = 1
+        private val TYPE_NORMAL = 2
         private val emojis = mutableListOf<Emoji>()
 
         fun addEmojis(emojis: List<Emoji>) {
             this.emojis.clear()
             this.emojis.addAll(emojis)
             notifyDataSetChanged()
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            return if (emojis[position].url != null) TYPE_CUSTOM else TYPE_NORMAL
         }
 
         suspend fun addEmojisFromSequence(emojiSequence: Sequence<Emoji>) {
@@ -120,7 +129,11 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmojiRowViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.emoji_row_item, parent, false)
+            val view = if (viewType == TYPE_CUSTOM) {
+                LayoutInflater.from(parent.context).inflate(R.layout.emoji_image_row_item, parent, false)
+            } else {
+                LayoutInflater.from(parent.context).inflate(R.layout.emoji_row_item, parent, false)
+            }
             return EmojiRowViewHolder(view, listener)
         }
 
@@ -134,16 +147,23 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
 
         fun bind(emoji: Emoji) {
             with(itemView) {
-                val parsedUnicode = unicodeCache[emoji.unicode]
-                emoji_view.setSpannableFactory(spannableFactory)
-                emoji_view.text = if (parsedUnicode == null) {
-                    EmojiParser.parse(emoji.unicode, spannableFactory).let {
-                        unicodeCache[emoji.unicode] = it
-                        it
+                if (emoji.unicode.isNotEmpty()) {
+                    val parsedUnicode = unicodeCache[emoji.unicode]
+                    emoji_view.setSpannableFactory(spannableFactory)
+                    emoji_view.text = if (parsedUnicode == null) {
+                        EmojiParser.parse(emoji.unicode, spannableFactory).let {
+                            unicodeCache[emoji.unicode] = it
+                            it
+                        }
+                    } else {
+                        parsedUnicode
                     }
                 } else {
-                    parsedUnicode
+                    Glide.with(context)
+                        .load(emoji.url)
+                        .into(emoji_image_view)
                 }
+
                 itemView.setOnClickListener {
                     listener.onEmojiAdded(emoji)
                 }

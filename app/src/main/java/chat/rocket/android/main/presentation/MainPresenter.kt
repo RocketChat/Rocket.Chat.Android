@@ -126,7 +126,7 @@ class MainPresenter @Inject constructor(
         launchUI(strategy) {
             val customEmojiList = mutableListOf<Emoji>()
             try {
-                for (customEmoji in client.getCustomEmojis()) {
+                for (customEmoji in retryIO("getCustomEmojis()") { client.getCustomEmojis() }) {
                     customEmojiList.add(Emoji(
                         shortname = ":${customEmoji.name}:",
                         category = EmojiCategory.CUSTOM.name,
@@ -138,7 +138,6 @@ class MainPresenter @Inject constructor(
                         siblings = mutableListOf(),
                         unicode = ""
                     ))
-
                 }
 
                 EmojiRepository.load(view as Context, customEmojis = customEmojiList)
