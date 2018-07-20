@@ -124,6 +124,7 @@
     <string name="msg_upload_file">Upload file</string>
     <string name="msg_file_description">File description</string>
     <string name="msg_send">Send</string>
+    <string name="msg_sent_attachment">Sent an attachment</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Private</string>
