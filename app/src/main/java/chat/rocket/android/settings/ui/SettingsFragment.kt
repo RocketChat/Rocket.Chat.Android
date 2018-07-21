@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import chat.rocket.android.R
 import chat.rocket.android.about.ui.AboutFragment
+import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.util.extensions.addFragmentBackStack
@@ -32,6 +33,14 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupListView()
+    }
+
+    override fun onResume() {
+        // FIXME - gambiarra ahead. will fix when moving to new androidx Navigation
+        (activity as? MainActivity)?.let {
+            it.setupNavigationView()
+        }
+        super.onResume()
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
