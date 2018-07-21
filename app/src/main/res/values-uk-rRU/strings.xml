@@ -64,6 +64,7 @@
     <string name="msg_new_user_agreement">Продолжая, вы соглашаетесь с нашими\n%1$s и %2$s</string>
     <string name="msg_2fa_code">Код 2FA</string>
     <string name="msg_yesterday">Вчера</string>
+    <string name="msg_today">Сьогодні</string>
     <string name="msg_message">Сообщение</string>
     <string name="msg_this_room_is_read_only">Этот канал только для чтения</string>
     <string name="msg_invalid_2fa_code">Неверный код 2FA</string>

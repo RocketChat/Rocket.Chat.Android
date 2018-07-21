@@ -67,6 +67,7 @@
     <string name="msg_2fa_code">2FA Code</string>
     <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
     <string name="msg_yesterday">Yesterday</string>
+    <string name="msg_today">Today</string>
     <string name="msg_message">Message</string>
     <string name="msg_this_room_is_read_only">This room is read only</string>
     <string name="msg_invalid_2fa_code">Invalid 2FA Code</string>
