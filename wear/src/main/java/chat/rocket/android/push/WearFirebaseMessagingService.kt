@@ -6,7 +6,7 @@ import com.google.firebase.messaging.RemoteMessage
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
-class FirebaseMessagingService : FirebaseMessagingService() {
+class WearFirebaseMessagingService : FirebaseMessagingService() {
 
     @Inject
     lateinit var pushManager: PushManager

@@ -1,7 +1,7 @@
 package chat.rocket.android.dagger.module
 
-import chat.rocket.android.push.FirebaseMessagingService
 import chat.rocket.android.push.FirebaseTokenService
+import chat.rocket.android.push.WearFirebaseMessagingService
 import chat.rocket.android.push.di.FirebaseMessagingServiceProvider
 import chat.rocket.android.push.di.FirebaseTokenServiceProvider
 import chat.rocket.android.services.DataLayerListenerService
@@ -18,5 +18,5 @@ abstract class ServiceBuilder {
     abstract fun bindFirebaseTokenService(): FirebaseTokenService
 
     @ContributesAndroidInjector(modules = [FirebaseMessagingServiceProvider::class])
-    abstract fun bindFirebaseMessagingService(): FirebaseMessagingService
+    abstract fun bindFirebaseMessagingService(): WearFirebaseMessagingService
 }

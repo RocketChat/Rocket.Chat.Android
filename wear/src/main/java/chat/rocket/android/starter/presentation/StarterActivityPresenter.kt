@@ -50,7 +50,7 @@ class StarterActivityPresenter @Inject constructor(
     //TODO remove this later on, this is just for testing purposes until data layer interaction feature does not work
     fun saveCredentials() {
         val currentServer = "https://open.rocket.chat"
-        val loginToken = Token("userId", "token")
+        val loginToken = Token("userId", "authToken")
         serverInteractor.save(currentServer)
         tokenRepository.save(currentServer, loginToken)
     }

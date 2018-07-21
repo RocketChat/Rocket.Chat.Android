@@ -3,6 +3,7 @@ package chat.rocket.android.app
 import android.app.Activity
 import android.app.Application
 import android.app.Fragment
+import android.app.Service
 import android.content.SharedPreferences
 import chat.rocket.android.dagger.DaggerAppComponent
 import chat.rocket.android.server.GetCurrentServerInteractor
@@ -12,18 +13,19 @@ import com.facebook.drawee.backends.pipeline.DraweeConfig
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.jakewharton.threetenabp.AndroidThreeTen
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import dagger.android.HasFragmentInjector
+import dagger.android.*
 import javax.inject.Inject
 
-class RocketChatWearApplication : Application(), HasActivityInjector, HasFragmentInjector {
+class RocketChatWearApplication : Application(), HasActivityInjector, HasFragmentInjector,
+    HasServiceInjector {
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 
     @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
+    @Inject
+    lateinit var serviceDispatchingAndroidInjector: DispatchingAndroidInjector<Service>
 
     @Inject
     lateinit var getCurrentServerInteractor: GetCurrentServerInteractor
@@ -58,6 +60,10 @@ class RocketChatWearApplication : Application(), HasActivityInjector, HasFragmen
 
     override fun fragmentInjector(): DispatchingAndroidInjector<Fragment> =
         fragmentDispatchingAndroidInjector
+
+    override fun serviceInjector(): AndroidInjector<Service> {
+        return serviceDispatchingAndroidInjector
+    }
 
     private fun setUpFresco() {
         Fresco.initialize(this, imagePipelineConfig, draweeConfig)

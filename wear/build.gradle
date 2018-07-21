@@ -112,3 +112,5 @@ task compileSdk(type: Exec) {
     }
 }
 preBuild.dependsOn compileSdk
+
+apply plugin: 'com.google.gms.google-services'
