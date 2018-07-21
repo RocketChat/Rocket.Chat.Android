@@ -3,8 +3,7 @@
     <string name="title_sign_in_your_server">Inicia sesión en tu servidor</string>
     <string name="title_log_in">Iniciar sesión</string>
     <string name="title_register_username">Registrar nombre de usuario</string>
-    // TODO: Add proper translation.
-    <string name="title_reset_password">Reset Password</string>
+    <string name="title_reset_password">Restablecer la contraseña</string>
     <string name="title_sign_up">Regístrate</string>
     <string name="title_authentication">Autenticación</string>
     <string name="title_legal_terms">Términos legales</string>
@@ -15,8 +14,7 @@
     <string name="title_password">Cambia la contraseña</string>
     <string name="title_update_profile">Actualización del perfil</string>
     <string name="title_about">Acerca de</string>
-    // TODO: Add proper translation.
-    <string name="title_create_channel">Create Channel</string>
+    <string name="title_create_channel">Crear canal</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
@@ -27,8 +25,7 @@
     <string name="action_search">Buscar</string>
     <string name="action_update">Actualizar</string>
     <string name="action_settings">Configuraciones</string>
-    // TODO: Add proper translation.
-    <string name="action_create_channel">Create channel</string>
+    <string name="action_create_channel">Crear canal</string>
     <string name="action_create">Create</string>
     <string name="action_logout">Cerrar sesión</string>
     <string name="action_files">Archivos</string>
@@ -39,9 +36,9 @@
     <string name="action_away">Ausente</string>
     <string name="action_busy">Ocupado</string>
     <string name="action_invisible">Invisible</string>
-    <string name="action_drawing">Dibujo</string>
-    // TODO: Add proper translation.
-    <string name="action_save_to_gallery">Save to gallery</string>
+    <string name="action_drawing">dibujo</string>
+    <string name="action_save_to_gallery">Guardar en la galería</string>
+    <string name="action_share">Compartir</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -61,17 +58,14 @@
     <string name="msg_avatar_url">URL del avatar</string>
     <string name="msg_or_continue_using_social_accounts">O continuar usando cuentas sociales</string>
     <string name="msg_new_user">Nuevo usuario? %1$s</string>
-    // TODO: Add proper translation.
-    <string name="msg_forgot_password">Forgot password? %1$s</string>
-    // TODO: Add proper translation.
-    <string name="msg_reset">Reset</string>
-    // TODO: Add proper translation.
-    <string name="msg_check_your_email_to_reset_your_password">Email sent! Check your inbox to reset your password.</string>
-    // TODO: Add proper translation.
-    <string name="msg_invalid_email">Please type a valid e-mail</string>
+    <string name="msg_forgot_password">Se te olvidó tu contraseña? %1$s</string>
+    <string name="msg_reset">reiniciar</string>
+    <string name="msg_check_your_email_to_reset_your_password">¡Email enviado! Verifique su bandeja de entrada para restablecer su contraseña.</string>
+    <string name="msg_invalid_email">Por favor escriba un correo electrónico válido</string>
     <string name="msg_new_user_agreement">Al continuar estás aceptando nuestra\n%1$s y %2$s</string>
     <string name="msg_2fa_code">Código 2FA</string>
     <string name="msg_yesterday">Ayer</string>
+    <string name="msg_today">Hoy</string>
     <string name="msg_message">Mensaje</string>
     <string name="msg_this_room_is_read_only">Esta sala es de solo lectura</string>
     <string name="msg_invalid_2fa_code">Código 2FA no válido</string>
@@ -101,8 +95,7 @@
     <string name="msg_version">Versión %1$s</string>
     <string name="msg_build">Build %1$d</string>
     <string name="msg_ok">OK</string>
-    // TODO: Add proper translation.
-    <string name="msg_update_app_version_in_order_to_continue">Out to date server version. Please contact the server admin to update the server version in order to continue.</string>
+    <string name="msg_update_app_version_in_order_to_continue">Versión del servidor actualizada. Póngase en contacto con el administrador del servidor para actualizar la versión del servidor y continuar.</string>
     <string name="msg_ver_not_recommended">
         Parece que la versión de tu servidor está por debajo de la versión recomendada %1$s.\nAún puede iniciar sesión, pero puede experimentar comportamientos inesperados.</string>
     <string name="msg_ver_not_minimum">
@@ -119,39 +112,29 @@
     <string name="msg_no_chat_title">Sin mensajes de chat</string>
     <string name="msg_no_chat_description">Comience a conversar para ver\nsus mensajes aquí.</string>
     <string name="msg_edited">(editado)</string>
-    // TODO: Add proper translation.
-    <string name="msg_and">\u0020and\u0020</string>
-    // TODO: Add proper translation.
-    <string name="msg_is_typing">\u0020is typing…</string>
-    // TODO: Add proper translation.
-    <string name="msg_are_typing">\u0020are typing…</string>
-    // TODO: Add proper translation.
-    <string name="msg_several_users_are_typing">Several users are typing…</string>
+    <string name="msg_and">\u0020y\u0020</string>
+    <string name="msg_is_typing">\u0020esta escribiendo…</string>
+    <string name="msg_are_typing">\u0020están escribiendo…</string>
+    <string name="msg_several_users_are_typing">Varios usuarios están escribiendo…</string>
     <string name="msg_no_search_found">No se han encontrado resultados</string>
-    // TODO: Add proper translation.
-    <string name="msg_channel_name">Channel name</string>
-    // TODO: Add proper translation.
-    <string name="msg_search">Search</string>
+    <string name="msg_channel_name">Nombre del Canal</string>
+    <string name="msg_search">Buscar</string>
     <string name="msg_message_copied">Mensaje copiado</string>
-    <string name="msg_upload_file">Subir archivo</string>
-    <string name="msg_file_description">Descripción del archivo</string>
-    <string name="msg_send">enviar</string>
-    // TODO: Add proper translation.
-    <string name="msg_delete_message">Delete Message</string>
-    <string name="msg_delete_description">Are you sure you want to delete this message</string>
+    <string name="msg_delete_message">Borrar mensaje</string>
+    <string name="msg_delete_description">Seguro que quieres borrar este mensaje</string>
 
     <!-- Create channel messages -->
-    // TODO: Add proper translation.
-    <string name="msg_private_channel">Private</string>
-    <string name="msg_public_channel">Public</string>
-    <string name="msg_private_channel_description">Only you and invited members can access this channel</string>
-    <string name="msg_public_channel_description">Everyone can access this channel</string>
-    <string name="msg_ready_only_channel">Read only channel</string>
-    <string name="msg_ready_only_channel_description">Only admin can write new messages</string>
-    <string name="msg_invite_members">Invite members to channel</string>
-    <string name="msg_member_already_added">You have already selected this user</string>
-    <string name="msg_member_not_found">Member not found</string>
-    <string name="msg_channel_created_successfully">Channel created successfully</string>
+    <string name="msg_private_channel">Privado</string>
+    <string name="msg_public_channel">Público</string>
+    <string name="msg_private_channel_description">Solo tú y los miembros invitados pueden acceder a este canal</string>
+    <string name="msg_public_channel_description">Todos pueden acceder a este canal</string>
+    <string name="msg_ready_only_channel">Canal de solo lectura</string>
+    <string name="msg_ready_only_channel_description">Solo el administrador puede escribir nuevos mensajes</string>
+    <string name="msg_invite_members">Invita a los miembros a canalizar</string>
+    <string name="msg_member_already_added">Ya has seleccionado este usuario</string>
+    <string name="msg_member_not_found">Miembro no encontrado</string>
+    <string name="msg_channel_created_successfully">Canal creado con éxito</string>
+
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nombre de la sala cambiado para: %1$s por %2$s</string>
@@ -166,8 +149,7 @@
     <string name="message_unmuted">Usuario %1$s no silenciado por %2$s</string>
     <string name="message_role_add">%1$s fue establecido %2$s por %3$s</string>
     <string name="message_role_removed">%1$s ya no es %2$s por %3$s</string>
-    // TODO:Add proper translation.
-    <string name="message_credentials_saved_successfully">Credentials saved successfully</string>
+    <string name="message_credentials_saved_successfully">Credenciales guardadas con éxito</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Respuesta</string>
@@ -192,22 +174,19 @@
     <string name="permission_starring_not_allowed">Starring is not allowed</string>
 
     <!-- Search message -->
-    <!-- TODO Add proper translation-->
-    <string name="title_search_message">Search message</string>
+    <string name="title_search_message">Mensaje de búsqueda</string>
 
     <!-- Favorite/Unfavorite chat room -->
-    <!-- TODO Add proper translation-->
-    <string name="title_favorite_chat">Favorite chat</string>
-    <string name="title_unfavorite_chat">Unfavorite chat</string>
+    <string name="title_favorite_chat">Chat favorito</string>
+    <string name="title_unfavorite_chat">Deshacer chat favorito</string>
 
     <!-- Members List -->
     <string name="title_members_list">Miembros</string>
 
     <!-- Mentions -->
-    <!-- TODO Add proper translation-->
-    <string name="msg_mentions">Mentions</string>
-    <string name="msg_no_mention">No mention</string>
-    <string name="msg_all_the_mentions_appear_here">All the mentions\nappear here</string>
+    <string name="msg_mentions">Menciones</string>
+    <string name="msg_no_mention">Sin Menciones</string>
+    <string name="msg_all_the_mentions_appear_here">todas las menciones aparecen aquí</string>
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Mensajes fijados</string>
@@ -215,17 +194,15 @@
     <string name="no_pinned_description">Todas las mensajes fijadas\naparecen aquí</string>
 
     <!-- Favorite Messages -->
-    <!-- TODO Add proper translation-->
-    <string name="title_favorite_messages">Favorite Messages</string>
-    <string name="no_favorite_messages">No favorite messages</string>
-    <string name="no_favorite_description">All the favorite messages\nappear here</string>
+    <string name="title_favorite_messages">Mensajes favoritos</string>
+    <string name="no_favorite_messages">Sin mensajes favoritos</string>
+    <string name="no_favorite_description">Todos los mensajes favoritos aparecen aquí</string>
 
     <!-- Files -->
-    <!-- TODO Add proper translation-->
-    <string name="title_files">Files</string>
-    <string name="title_files_total">Files (%d)</string>
-    <string name="msg_no_files">No files</string>
-    <string name="msg_all_files_appear_here">All the files appear here</string>
+    <string name="title_files">Archivos</string>
+    <string name="title_files_total">Archivos (%d)</string>
+    <string name="msg_no_files">Sin archivos</string>
+    <string name="msg_all_files_appear_here">Todos los archivos aparecen aquí</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">Tamaño del archivo (%1$d bytes) excedió el tamaño máximo de carga de %2$d bytes</string>
@@ -289,8 +266,13 @@
     <string name="notif_action_reply_hint">RESPUESTA</string>
     <string name="notif_error_sending">La respuesta ha fallado. Inténtalo de nuevo.</string>
     <string name="notif_success_sending">Mensaje enviado a %1$s!</string>
+
+    <string name="share_label">Editar mensaje compartido</string>
     <string name="read_by">Leído por</string>
     <string name="message_information_title">Información del mensaje</string>
     <string name="msg_log_out">Saliendo de tu cuenta…</string>
+    <string name="msg_upload_file">Subir archivo</string>
+    <string name="msg_file_description">Descripción del archivo</string>
+    <string name="msg_send">Enviar</string>
     <string name="msg_sent_attachment">Envió un archivo</string>
 </resources>
