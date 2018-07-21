@@ -1,5 +1,6 @@
 package chat.rocket.android.server
 
+import android.os.Build
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
 import okhttp3.OkHttpClient
@@ -17,6 +18,7 @@ class RocketChatClientFactory @Inject constructor(
         val client = RocketChatClient.create {
             httpClient = okHttpClient
             restUrl = url
+            userAgent = "RC Mobile; Android ${Build.VERSION.RELEASE}; v1.0.0 (1)"
             tokenRepository = repository
             platformLogger = logger
         }
