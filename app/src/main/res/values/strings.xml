@@ -171,6 +171,7 @@
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">Editing Message</string>
     <string name="action_msg_add_reaction">Add reaction</string>
+    <string name="action_share">Share</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Editing is not allowed</string>
@@ -268,6 +269,7 @@
     <string name="header_unknown">Unknown</string>
 
     <!--Notifications-->
+    <string name="share_label">Edit shared message</string>
     <string name="notif_action_reply_hint">REPLY</string>
     <string name="notif_error_sending">Reply has failed. Please try again.</string>
     <string name="notif_success_sending">Message sent to %1$s!</string>

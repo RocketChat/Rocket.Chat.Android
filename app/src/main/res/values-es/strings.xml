@@ -36,6 +36,7 @@
     <string name="action_away">Ausente</string>
     <string name="action_busy">Ocupado</string>
     <string name="action_invisible">Invisible</string>
+    <string name="action_drawing">dibujo</string>
     <string name="action_save_to_gallery">Guardar en la galería</string>
     <string name="action_share">Compartir</string>
 
@@ -172,6 +173,9 @@
     // TODO: Add proper translation.
     <string name="permission_starring_not_allowed">Starring is not allowed</string>
 
+    <!-- Search message -->
+    <string name="title_search_message">Mensaje de búsqueda</string>
+
     <!-- Favorite/Unfavorite chat room -->
     <string name="title_favorite_chat">Chat favorito</string>
     <string name="title_unfavorite_chat">Deshacer chat favorito</string>
@@ -240,6 +244,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Sin emojis recientes</string>
+    <string name="alert_title_default_skin_tone">Tono de piel predeterminado</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Ordenar</string>
@@ -266,5 +271,8 @@
     <string name="read_by">Leído por</string>
     <string name="message_information_title">Información del mensaje</string>
     <string name="msg_log_out">Saliendo de tu cuenta…</string>
+    <string name="msg_upload_file">Subir archivo</string>
+    <string name="msg_file_description">Descripción del archivo</string>
+    <string name="msg_send">Enviar</string>
     <string name="msg_sent_attachment">Envió un archivo</string>
 </resources>

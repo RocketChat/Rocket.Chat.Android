@@ -185,6 +185,7 @@
     <string name="action_msg_share">Partager</string>
     <string name="action_title_editing">Modification du message</string>
     <string name="action_msg_add_reaction">Ajouter une réaction</string>
+    <string name="action_share">Partager</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">L\'édition n\'est pas autorisée</string>
@@ -288,6 +289,7 @@
     <string name="header_unknown">Inconnu</string>
 
     <!--Notifications-->
+    <string name="share_label">Modifier le message partagé</string>
     <string name="notif_action_reply_hint">RÉPONDRE</string>
     <string name="notif_error_sending">La réponse a échoué. Veuillez réessayer.</string>
     <string name="notif_success_sending">Message envoyé à %1$s!</string>
