@@ -152,7 +152,7 @@ class MainPresenter @Inject constructor(
     }
 
     fun connect() {
-        launch { refreshSettingsInteractor.refresh(currentServer) }
+        refreshSettingsInteractor.refreshAsync(currentServer)
         manager.connect()
     }
 
