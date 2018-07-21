@@ -4,13 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.DrawingActivity">
+    tools:context=".main.ui.DrawingActivity">
 
     <chat.rocket.android.draw.widget.CustomDrawView
         android:id="@+id/custom_draw_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_white" />
+        android:background="@color/color_white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/image_close_drawing"

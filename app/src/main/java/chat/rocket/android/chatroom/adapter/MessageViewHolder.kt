@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.text.method.LinkMovementMethod
 import android.view.View
 import androidx.core.view.isVisible
+import chat.rocket.android.R
 import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.core.model.isSystemMessage
@@ -38,6 +39,18 @@ class MessageViewHolder(
             data.message.let {
                 text_edit_indicator.isVisible = !it.isSystemMessage() && it.editedBy != null
                 image_star_indicator.isVisible = it.starred?.isNotEmpty() ?: false
+            }
+            if (data.unread == null) {
+                read_receipt_view.isVisible = false
+            } else {
+                read_receipt_view.setImageResource(
+                    if (data.unread == true) {
+                        R.drawable.ic_check_unread_24dp
+                    } else {
+                        R.drawable.ic_check_read_24dp
+                    }
+                )
+                read_receipt_view.isVisible = true
             }
         }
     }

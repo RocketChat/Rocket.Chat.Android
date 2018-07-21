@@ -24,9 +24,9 @@ ext {
             playServices          : '15.0.0',
             exoPlayer             : '2.6.0',
             flexbox               : '0.3.2',
-            material              : '1.0.0-alpha1',
+            material              : '1.0.0-beta01',
 
-            room                  : '2.0.0-alpha1',
+            room                  : '2.0.0-beta01',
             lifecycle             : '2.0.0-beta01',
 
             rxKotlin              : '2.2.0',
@@ -59,7 +59,7 @@ ext {
             mockito               : '2.10.0'
     ]
     libraries = [
-            kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${versions.kotlin}",
+            kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
             coroutines            : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutine}",
             coroutinesAndroid     : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutine}",
 

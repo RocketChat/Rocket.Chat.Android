@@ -172,16 +172,15 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Répondre</string>
+    <string name="action_msg_info">Informations sur le message</string>
     <string name="action_msg_edit">Modifier</string>
     <string name="action_msg_copy">Copier</string>
     <string name="action_msg_quote">Citation</string>
     <string name="action_msg_delete">Effacer</string>
     <string name="action_msg_pin">Épingle message</string>
     <string name="action_msg_unpin">Enlever message</string>
-    // TODO: Add proper translation.
-    <string name="action_msg_star">Star message</string>
-    // TODO: Add proper translation.
-    <string name="action_msg_unstar">Unstar Message</string>
+    <string name="action_msg_star">Ajouter aux Favoris</string>
+    <string name="action_msg_unstar">Retirer des favoris</string>
     <string name="action_msg_share">Partager</string>
     <string name="action_title_editing">Modification du message</string>
     <string name="action_msg_add_reaction">Ajouter une réaction</string>
@@ -291,6 +290,8 @@
     <string name="notif_action_reply_hint">RÉPONDRE</string>
     <string name="notif_error_sending">La réponse a échoué. Veuillez réessayer.</string>
     <string name="notif_success_sending">Message envoyé à %1$s!</string>
-    <!-- TODO Add proper translation-->
-    <string name="msg_log_out">Logging out…</string>
+    <string name="read_by">Lire par</string>
+    <string name="message_information_title">Informations sur le message</string>
+    <string name="msg_log_out">Déconnecter…</string>
+    <string name="msg_sent_attachment">Envoyé un fichier</string>
 </resources>

@@ -120,10 +120,11 @@
     <string name="msg_are_typing">\u0020are typing…</string>
     <string name="msg_several_users_are_typing">Several users are typing…</string>
     <string name="msg_no_search_found">No result found</string>
-    <string name="msg_log_out">Logging out...</string>
+    <string name="msg_log_out">Logging out…</string>
     <string name="msg_upload_file">Upload file</string>
     <string name="msg_file_description">File description</string>
     <string name="msg_send">Send</string>
+    <string name="msg_sent_attachment">Sent an attachment</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Private</string>
@@ -157,6 +158,7 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Reply</string>
+    <string name="action_msg_info">Message info</string>
     <string name="action_msg_edit">Edit</string>
     <string name="action_msg_copy">Copy</string>
     <string name="action_msg_quote">Quote</string>
@@ -268,4 +270,6 @@
     <string name="notif_action_reply_hint">REPLY</string>
     <string name="notif_error_sending">Reply has failed. Please try again.</string>
     <string name="notif_success_sending">Message sent to %1$s!</string>
+    <string name="read_by">Read by</string>
+    <string name="message_information_title">Message information</string>
 </resources>

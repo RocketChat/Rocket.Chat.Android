@@ -14,7 +14,21 @@ internal fun ChatRoomFragment.setupMenu(menu: Menu) {
     setupSearchMessageMenuItem(menu, requireContext())
     setupFavoriteMenuItem(menu)
 
-    if (chatRoomType != RoomType.DIRECT_MESSAGE) {
+    menu.add(
+        Menu.NONE,
+        MENU_ACTION_PINNED_MESSAGES,
+        Menu.NONE,
+        R.string.title_pinned_messages
+    )
+
+    menu.add(
+        Menu.NONE,
+        MENU_ACTION_FAVORITE_MESSAGES,
+        Menu.NONE,
+        R.string.title_favorite_messages
+    )
+
+    if (chatRoomType != RoomType.DIRECT_MESSAGE && !disableMenu) {
         menu.add(
             Menu.NONE,
             MENU_ACTION_MEMBER,
@@ -30,26 +44,14 @@ internal fun ChatRoomFragment.setupMenu(menu: Menu) {
         )
     }
 
-    menu.add(
-        Menu.NONE,
-        MENU_ACTION_PINNED_MESSAGES,
-        Menu.NONE,
-        R.string.title_pinned_messages
-    )
-
-    menu.add(
-        Menu.NONE,
-        MENU_ACTION_FAVORITE_MESSAGES,
-        Menu.NONE,
-        R.string.title_favorite_messages
-    )
-
-    menu.add(
-        Menu.NONE,
-        MENU_ACTION_FILES,
-        Menu.NONE,
-        R.string.title_files
-    )
+    if (!disableMenu) {
+        menu.add(
+            Menu.NONE,
+            MENU_ACTION_FILES,
+            Menu.NONE,
+            R.string.title_files
+        )
+    }
 }
 
 internal fun ChatRoomFragment.setOnMenuItemClickListener(item: MenuItem) {
@@ -101,7 +103,7 @@ private fun ChatRoomFragment.setupSearchViewTextListener(searchView: SearchView)
         // TODO: We use isSearchTermQueried to avoid querying when the search view is expanded but the user doesn't start typing. Check for a native solution.
         if (it.isEmpty() && isSearchTermQueried) {
             presenter.loadMessages(chatRoomId, chatRoomType, clearDataSet = true)
-        } else if (it.isNotEmpty()){
+        } else if (it.isNotEmpty()) {
             presenter.searchMessages(chatRoomId, it)
             isSearchTermQueried = true
         }
