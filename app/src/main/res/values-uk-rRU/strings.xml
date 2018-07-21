@@ -64,6 +64,7 @@
     <string name="msg_new_user_agreement">Продолжая, вы соглашаетесь с нашими\n%1$s и %2$s</string>
     <string name="msg_2fa_code">Код 2FA</string>
     <string name="msg_yesterday">Вчера</string>
+    <string name="msg_today">Сьогодні</string>
     <string name="msg_message">Сообщение</string>
     <string name="msg_this_room_is_read_only">Этот канал только для чтения</string>
     <string name="msg_invalid_2fa_code">Неверный код 2FA</string>
@@ -173,8 +174,7 @@
     <string name="permission_starring_not_allowed">Отмечивание запрещено</string>
 
     <!-- Search message -->
-    <!-- TODO Add proper translation-->
-    <string name="title_search_message">Search message</string>
+    <string name="title_search_message">Поиск сообщения</string>
 
     <!-- Favorite/Unfavorite chat room -->
     <string name="title_favorite_chat">Добавить чат в избранное</string>
@@ -266,5 +266,5 @@
     <string name="notif_action_reply_hint">ОТВЕТИТЬ</string>
     <string name="notif_error_sending">Ошибка ответа. Пожалуйста, попробуйте еще раз.</string>
     <string name="notif_success_sending">Сообщение отправлено %1$s!</string>
-    <string name="msg_log_out">Виходьте…</string>
+    <string name="msg_log_out">Выход…</string>
 </resources>

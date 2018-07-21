@@ -65,6 +65,7 @@
     <string name="msg_new_user_agreement">आगे बढ़कर आप हमारे %1$s और %2$s से सहमत हो रहे हैं</string>
     <string name="msg_2fa_code">कोड 2FA</string>
     <string name="msg_yesterday">कल</string>
+    <string name="msg_today">आज</string>
     <string name="msg_message">संदेश</string>
     <string name="msg_this_room_is_read_only">यह रूम केवल पढ़ने के लिए है</string>
     <string name="msg_invalid_2fa_code">अमान्य 2FA कोड</string>
