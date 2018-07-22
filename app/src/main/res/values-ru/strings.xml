@@ -37,8 +37,7 @@
     <string name="action_away">Отошел</string>
     <string name="action_busy">Занят</string>
     <string name="action_invisible">Невидимый</string>
-    <!-- TODO Add translation -->
-    <string name="action_drawing">Drawing</string>
+    <string name="action_drawing">Рисование</string>
     <string name="action_save_to_gallery">Сохранить в галерею</string>
 
     <!-- Settings List -->
@@ -155,7 +154,7 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Ответить</string>
-    <string name="action_msg_info">Інформація про повідомлення</string>
+    <string name="action_msg_info">О сообщении</string>
     <string name="action_msg_edit">Редактировать</string>
     <string name="action_msg_copy">Копировать</string>
     <string name="action_msg_quote">Цитата</string>
@@ -245,7 +244,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Нет недавно используемых emoji</string>
-    <string name="alert_title_default_skin_tone">По умолчанию тон кожи</string>
+    <string name="alert_title_default_skin_tone">Тон кожи по умолчанию</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Сортировать</string>
@@ -267,7 +266,7 @@
     <string name="notif_action_reply_hint">ОТВЕТИТЬ</string>
     <string name="notif_error_sending">Ошибка ответа. Пожалуйста, попробуйте еще раз.</string>
     <string name="notif_success_sending">Сообщение отправлено %1$s!</string>
-    <string name="read_by">Read by</string>
-    <string name="message_information_title">Message information</string>
+    <string name="read_by">Прочитано</string>
+    <string name="message_information_title">Информация о сообщении</string>
     <string name="msg_log_out">Выход…</string>
 </resources>
