@@ -39,6 +39,7 @@
     <string name="action_invisible">अदृश्य</string>
     <string name="action_save_to_gallery">गैलरी में सहेजें</string>
     <string name="action_drawing">चित्रकारी</string>
+    <string name="action_share">शेयर</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -65,6 +66,7 @@
     <string name="msg_new_user_agreement">आगे बढ़कर आप हमारे %1$s और %2$s से सहमत हो रहे हैं</string>
     <string name="msg_2fa_code">कोड 2FA</string>
     <string name="msg_yesterday">कल</string>
+    <string name="msg_today">आज</string>
     <string name="msg_message">संदेश</string>
     <string name="msg_this_room_is_read_only">यह रूम केवल पढ़ने के लिए है</string>
     <string name="msg_invalid_2fa_code">अमान्य 2FA कोड</string>
@@ -123,6 +125,7 @@
     <string name="msg_upload_file">फाइल अपलोड करें</string>
     <string name="msg_file_description">फाइल विवरण</string>
     <string name="msg_send">भेजें</string>
+    <string name="msg_sent_attachment">एक अनुलग्नक भेजा</string>
     <string name="msg_delete_message">संदेश को हटाएं</string>
     <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
 
@@ -266,6 +269,7 @@
     <string name="header_unknown">अज्ञात</string>
 
     <!--Notifications-->
+    <string name="share_label">साझा संदेश संपादित करें</string>
     <string name="notif_action_reply_hint">जवाब</string>
     <string name="notif_error_sending">उत्तर विफल हुआ है। कृपया फिर से प्रयास करें।</string>
     <string name="notif_success_sending">संदेश भेजा गया %1$s!</string>

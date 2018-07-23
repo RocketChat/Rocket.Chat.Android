@@ -16,7 +16,9 @@ data class VideoAttachmentUiModel(
         override var preview: Message? = null,
         override var isTemporary: Boolean = false,
         override var unread: Boolean? = null,
-        override var menuItemsToHide: MutableList<Int> = mutableListOf()
+        override var menuItemsToHide: MutableList<Int> = mutableListOf(),
+        override var currentDayMarkerText: String,
+        override var showDayMarker: Boolean
 ) : BaseFileAttachmentUiModel<VideoAttachment> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.VIDEO_ATTACHMENT.viewType

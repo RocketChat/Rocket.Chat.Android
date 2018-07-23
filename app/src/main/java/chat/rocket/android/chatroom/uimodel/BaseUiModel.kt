@@ -14,6 +14,8 @@ interface BaseUiModel<out T> {
     var preview: Message?
     var isTemporary: Boolean
     var unread: Boolean?
+    var currentDayMarkerText: String
+    var showDayMarker: Boolean
     var menuItemsToHide: MutableList<Int>
 
     enum class ViewType(val viewType: Int) {
