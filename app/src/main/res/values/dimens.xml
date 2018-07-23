@@ -32,6 +32,9 @@
     <dimen name="picker_popup_height">250dp</dimen>
     <dimen name="picker_popup_width">300dp</dimen>
 
+    <!--Toolbar-->
+    <dimen name="toolbar_height">56dp</dimen>
+
     <!-- Message -->
     <dimen name="padding_quote">8dp</dimen>
     <dimen name="padding_mention">4dp</dimen>

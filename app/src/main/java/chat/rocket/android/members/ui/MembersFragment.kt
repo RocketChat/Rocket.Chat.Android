@@ -1,24 +1,24 @@
 package chat.rocket.android.members.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DividerItemDecoration
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.presentation.MembersPresenter
 import chat.rocket.android.members.presentation.MembersView
-import chat.rocket.android.members.viewmodel.MemberViewModel
+import chat.rocket.android.members.uimodel.MemberUiModel
 import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.widget.DividerItemDecoration
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_members.*
 import javax.inject.Inject
@@ -37,9 +37,8 @@ class MembersFragment : Fragment(), MembersView {
     @Inject
     lateinit var presenter: MembersPresenter
     private val adapter: MembersAdapter =
-        MembersAdapter { memberViewModel -> presenter.toMemberDetails(memberViewModel) }
-    private val linearLayoutManager =
-        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        MembersAdapter { memberUiModel -> presenter.toMemberDetails(memberUiModel) }
+    private val linearLayoutManager = LinearLayoutManager(context)
     private lateinit var chatRoomId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +65,7 @@ class MembersFragment : Fragment(), MembersView {
         presenter.loadChatRoomsMembers(chatRoomId)
     }
 
-    override fun showMembers(dataSet: List<MemberViewModel>, total: Long) {
+    override fun showMembers(dataSet: List<MemberUiModel>, total: Long) {
         ui {
             setupToolbar(total)
             if (adapter.itemCount == 0) {
@@ -77,7 +76,7 @@ class MembersFragment : Fragment(), MembersView {
                         override fun onLoadMore(
                             page: Int,
                             totalItemsCount: Int,
-                            recyclerView: RecyclerView?
+                            recyclerView: RecyclerView
                         ) {
                             presenter.loadChatRoomsMembers(chatRoomId)
                         }
@@ -90,11 +89,11 @@ class MembersFragment : Fragment(), MembersView {
     }
 
     override fun showLoading() {
-        ui { view_loading.setVisible(true) }
+        ui { view_loading.isVisible = true }
     }
 
     override fun hideLoading() {
-        ui { view_loading.setVisible(false) }
+        ui { view_loading.isVisible = false }
     }
 
     override fun showMessage(resId: Int) {
@@ -114,7 +113,7 @@ class MembersFragment : Fragment(), MembersView {
     private fun setupRecyclerView() {
         ui {
             recycler_view.layoutManager = linearLayoutManager
-            recycler_view.addItemDecoration(DividerItemDecoration(it))
+            recycler_view.addItemDecoration(DividerItemDecoration(it, DividerItemDecoration.HORIZONTAL))
             recycler_view.adapter = adapter
         }
     }

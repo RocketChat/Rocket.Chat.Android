@@ -8,7 +8,7 @@
     android:fillViewport="true"
     tools:context=".authentication.login.ui.LoginFragment">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -59,9 +59,9 @@
         <Button
             android:id="@+id/button_cas"
             style="@style/Authentication.Button"
-            android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
             android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
             android:text="@string/action_login_or_sign_up"
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -73,9 +73,9 @@
             android:id="@+id/text_new_to_rocket_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
             android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
             android:gravity="center"
             android:textColorLink="@color/colorAccent"
             android:visibility="gone"
@@ -88,9 +88,9 @@
             android:id="@+id/text_forgot_your_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
             android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
             android:gravity="center"
             android:textColorLink="@color/colorAccent"
             android:visibility="gone"
@@ -115,14 +115,14 @@
             android:id="@+id/social_accounts_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
             android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingBottom="32dp"
             android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+            android:paddingBottom="32dp"
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -220,7 +220,7 @@
                 tools:visibility="gone" />
         </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -242,7 +242,9 @@
             style="@style/Authentication.Button"
             android:text="@string/title_log_in"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

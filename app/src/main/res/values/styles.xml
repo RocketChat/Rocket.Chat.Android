@@ -9,6 +9,8 @@
 
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="windowActionModeOverlay">true</item>
+
+        <item name="searchViewStyle">@style/ChatRoom.SearchView</item>
     </style>
 
     <style name="AuthenticationTheme" parent="Theme.AppCompat.NoActionBar">
@@ -71,6 +73,13 @@
         <item name="android:paddingStart">@dimen/edit_text_margin</item>
     </style>
 
+    <style name="ChatRoom.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="queryHint">@string/title_search_message</item>
+        <item name="searchIcon">@drawable/ic_search_white_24dp</item>
+        <item name="searchHintIcon">@drawable/ic_search_white_24dp</item>
+        <item name="closeIcon">@drawable/ic_close_white_24dp</item>
+    </style>
+
     <style name="ChatRooms.Header" parent="TextAppearance.AppCompat.Headline">
         <item name="android:textSize">16sp</item>
     </style>
@@ -90,6 +99,12 @@
     <style name="Message.TextView" parent="android:TextAppearance">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/colorPrimaryText</item>
+    </style>
+
+    <style name="Message.DayMarker" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:fontFamily">@string/font_fontFamily_medium</item>
     </style>
 
     <style name="Message.Quote.TextView" parent="Message.TextView">

@@ -1,17 +1,21 @@
 package chat.rocket.android.members.ui
 
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.util.extensions.content
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.textContent
 import kotlinx.android.synthetic.main.fragment_member_bottom_sheet.*
 
-fun newInstance(avatarUri: String, realName: String, username: String, email: String, utcOffset: String): BottomSheetDialogFragment {
+fun newInstance(avatarUri: String,
+                realName: String,
+                username: String,
+                email: String,
+                utcOffset: String): BottomSheetDialogFragment {
     return MemberBottomSheetFragment().apply {
         arguments = Bundle(1).apply {
             putString(BUNDLE_AVATAR_URI, avatarUri)
@@ -66,15 +70,15 @@ class MemberBottomSheetFragment: BottomSheetDialogFragment() {
         if (email.isNotEmpty()) {
             text_member_email_address.textContent = email
         } else {
-            text_email_address.setVisible(false)
-            text_member_email_address.setVisible(false)
+            text_email_address.isVisible = false
+            text_member_email_address.isVisible = false
         }
 
         if (utcOffset.isNotEmpty()){
             text_member_utc.content = utcOffset
         } else {
-            text_utc.setVisible(false)
-            text_member_utc.setVisible(false)
+            text_utc.isVisible = false
+            text_member_utc.isVisible = false
         }
     }
 }

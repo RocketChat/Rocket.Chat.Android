@@ -7,8 +7,6 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.media.MediaScannerConnection
 import android.os.Environment
-import android.support.design.widget.AppBarLayout
-import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.util.TypedValue
 import android.view.ContextThemeWrapper
@@ -16,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.core.view.setPadding
 import chat.rocket.android.R
@@ -26,6 +25,7 @@ import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory
 import com.facebook.imagepipeline.core.ImagePipelineFactory
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
+import com.google.android.material.appbar.AppBarLayout
 import com.stfalcon.frescoimageviewer.ImageViewer
 import timber.log.Timber
 import java.io.File
@@ -147,16 +147,16 @@ object ImageHelper {
         return true
     }
 
-    private fun canWriteToExternalStorage(context: Context): Boolean {
+    fun canWriteToExternalStorage(context: Context): Boolean {
         return AndroidPermissionsHelper.checkPermission(
             context,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
     }
 
-    private fun checkWritingPermission(context: Context) {
-        if (context is ContextThemeWrapper && context.baseContext is Activity) {
-            val activity = context.baseContext as Activity
+    fun checkWritingPermission(context: Context) {
+        if (context is ContextThemeWrapper) {
+            val activity = if (context.baseContext is Activity) context.baseContext as Activity else context as Activity
             AndroidPermissionsHelper.requestPermission(
                 activity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,

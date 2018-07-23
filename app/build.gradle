@@ -3,7 +3,6 @@ apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'realm-android'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -11,12 +10,18 @@ android {
 
     defaultConfig {
         applicationId "chat.rocket.android"
-        minSdkVersion 21
+        minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 2027
-        versionName "2.4.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionCode 2034
+        versionName "2.5.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     signingConfigs {
@@ -62,6 +67,10 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation project(':player')
+    implementation project(':emoji')
+    implementation project(':draw')
+    implementation project(':util')
+    implementation project(':core')
 
     implementation libraries.kotlin
     implementation libraries.coroutines
@@ -69,11 +78,11 @@ dependencies {
 
     implementation libraries.appCompat
     implementation libraries.recyclerview
-    implementation libraries.design
-    implementation libraries.constraintLayout
-    implementation libraries.cardView
+    implementation libraries.material
+    implementation libraries.constraintlayout
+    implementation libraries.cardview
     implementation libraries.flexbox
-    implementation libraries.customTabs
+    implementation libraries.browser
 
     implementation libraries.androidKtx
 
@@ -87,7 +96,6 @@ dependencies {
 
     implementation libraries.room
     kapt libraries.roomProcessor
-    implementation libraries.roomRxjava
     implementation libraries.lifecycleExtensions
     kapt libraries.lifecycleCompiler
 
@@ -100,7 +108,6 @@ dependencies {
 
     implementation libraries.timber
     implementation libraries.threeTenABP
-    implementation libraries.rxBinding
 
     implementation libraries.fresco
     api libraries.frescoOkHttp
@@ -115,11 +122,11 @@ dependencies {
 
     implementation libraries.markwon
 
-    implementation libraries.sheetMenu
-
     implementation libraries.aVLoadingIndicatorView
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    implementation "com.github.luciofm:livedata-ktx:b1e8bbc25a"
+
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.2@aar') {
         transitive = true
     }
 

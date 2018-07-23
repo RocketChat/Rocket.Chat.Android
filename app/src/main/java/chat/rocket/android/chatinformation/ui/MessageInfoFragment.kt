@@ -1,13 +1,13 @@
 package chat.rocket.android.chatinformation.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatinformation.adapter.ReadReceiptAdapter
 import chat.rocket.android.chatinformation.presentation.MessageInfoPresenter
@@ -37,7 +37,6 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
     lateinit var presenter: MessageInfoPresenter
 
     private lateinit var adapter: ReadReceiptAdapter
-    private lateinit var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener
     private lateinit var messageId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,24 +66,14 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
         presenter.loadReadReceipts(messageId = messageId)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        receipt_list.removeOnScrollListener(endlessRecyclerViewScrollListener)
-    }
-
     private fun setupRecyclerView() {
         // Initialize the endlessRecyclerViewScrollListener so we don't NPE at onDestroyView
-        val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+        val linearLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
         adapter = ReadReceiptAdapter()
         linearLayoutManager.stackFromEnd = true
         receipt_list.layoutManager = linearLayoutManager
         receipt_list.itemAnimator = DefaultItemAnimator()
         receipt_list.adapter = adapter
-        endlessRecyclerViewScrollListener = object :
-            EndlessRecyclerViewScrollListener(receipt_list.layoutManager as LinearLayoutManager) {
-            override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
-            }
-        }
     }
 
     override fun showGenericErrorMessage() {

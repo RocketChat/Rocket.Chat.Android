@@ -6,7 +6,7 @@ import javax.inject.Singleton
 typealias TupleGroupIdMessageCount = Pair<Int, AtomicInteger>
 
 class GroupedPush {
-    // Notifications received from the same server are grouped in a single bundled notification.
+    // Notifications received from the same server are isGrouped in a single bundled notification.
     // This map associates a host to a group id.
     val groupMap = HashMap<String, TupleGroupIdMessageCount>()
 

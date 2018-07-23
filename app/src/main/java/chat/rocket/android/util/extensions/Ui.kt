@@ -1,18 +1,22 @@
 package chat.rocket.android.util.extensions
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.support.annotation.LayoutRes
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.annotation.LayoutRes
+import androidx.annotation.MenuRes
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.SupportMenuInflater
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 
 // TODO: Remove. Use KTX instead.
@@ -90,11 +94,21 @@ fun Fragment.showToast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SH
 fun Fragment.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) =
     activity?.showToast(message, duration)
 
-fun RecyclerView.isAtBottom(): Boolean {
-    val manager: RecyclerView.LayoutManager? = layoutManager
-    if (manager is LinearLayoutManager) {
-        return manager.findFirstVisibleItemPosition() == 0
-    }
+@SuppressLint("RestrictedApi")
+fun Context.inflate(@MenuRes menuRes: Int): Menu {
+    val menu = MenuBuilder(this)
+    val menuInflater = SupportMenuInflater(this)
+    menuInflater.inflate(menuRes, menu)
+    return menu
+}
 
-    return false // or true??? we can't determine the first visible item.
+/**
+ * Developed by Magora-Systems.com
+ * @since 2017
+ * @author Anton Vlasov - whalemare
+ */
+fun Menu.toList(): List<MenuItem> {
+    val menuItems = ArrayList<MenuItem>(this.size())
+    (0 until this.size()).mapTo(menuItems) { this.getItem(it) }
+    return menuItems
 }

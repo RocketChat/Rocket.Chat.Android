@@ -3,17 +3,17 @@ package chat.rocket.android.files.presentation
 import android.net.Uri
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
-import chat.rocket.android.files.viewmodel.FileViewModel
+import chat.rocket.android.files.uimodel.FileUiModel
 
 interface FilesView : MessageView, LoadingView {
 
     /**
-     * Show list of files for the current room.
+     * Shows the list of files for the current room.
      *
      * @param dataSet The data set to show.
      * @param total The total number of files.
      */
-    fun showFiles(dataSet: List<FileViewModel>, total: Long)
+    fun showFiles(dataSet: List<FileUiModel>, total: Long)
 
     /**
      * Plays a media file (audio/video).

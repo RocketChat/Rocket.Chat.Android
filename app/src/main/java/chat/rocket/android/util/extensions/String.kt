@@ -6,11 +6,11 @@ import chat.rocket.common.model.Token
 import timber.log.Timber
 
 fun String.removeTrailingSlash(): String {
-    return if (isNotEmpty() && this[length - 1] == '/') {
-        this.substring(0, length - 1)
-    } else {
-        this
+    var removed = this
+    while (removed.isNotEmpty() && removed[removed.length - 1] == '/') {
+        removed = removed.substring(0, removed.length - 1)
     }
+    return removed
 }
 
 fun String.sanitize(): String {
@@ -40,8 +40,11 @@ fun String.safeUrl(): String {
 
 fun String.serverLogoUrl(favicon: String) = "${removeTrailingSlash()}/$favicon"
 
-fun String.casUrl(serverUrl: String, token: String) =
-    "${removeTrailingSlash()}?service=${serverUrl.removeTrailingSlash()}/_cas/$token"
+fun String.casUrl(serverUrl: String, casToken: String) =
+    "${removeTrailingSlash()}?service=${serverUrl.removeTrailingSlash()}/_cas/$casToken"
+
+fun String.samlUrl(provider: String, samlToken: String) =
+    "${removeTrailingSlash()}/_saml/authorize/$provider/$samlToken"
 
 fun String.termsOfServiceUrl() = "${removeTrailingSlash()}/terms-of-service"
 
@@ -57,4 +60,8 @@ fun String.parseColor(): Int {
         Timber.e(exception)
         Color.parseColor("white")
     }
+}
+
+fun String.userId(userId: String?): String? {
+    return userId?.let { this.replace(it, "") }
 }

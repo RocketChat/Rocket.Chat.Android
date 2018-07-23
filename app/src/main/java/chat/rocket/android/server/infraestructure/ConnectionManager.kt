@@ -1,8 +1,14 @@
 package chat.rocket.android.server.infraestructure
 
+import androidx.lifecycle.MutableLiveData
+import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.User
+import chat.rocket.common.model.UserStatus
 import chat.rocket.core.RocketChatClient
+import chat.rocket.core.internal.realtime.setDefaultStatus
+import chat.rocket.core.internal.realtime.setTemporaryStatus
 import chat.rocket.core.internal.realtime.socket.connect
 import chat.rocket.core.internal.realtime.socket.disconnect
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -16,27 +22,40 @@ import chat.rocket.core.internal.realtime.unsubscribe
 import chat.rocket.core.internal.rest.chatRooms
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
+import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.channels.Channel
+import kotlinx.coroutines.experimental.channels.SendChannel
+import kotlinx.coroutines.experimental.channels.actor
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.newSingleThreadContext
+import kotlinx.coroutines.experimental.selects.select
 import timber.log.Timber
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.math.absoluteValue
 
-class ConnectionManager(internal val client: RocketChatClient) {
+class ConnectionManager(
+    internal val client: RocketChatClient,
+    private val dbManager: DatabaseManager
+) {
+    val statusLiveData = MutableLiveData<State>()
     private val statusChannelList = CopyOnWriteArrayList<Channel<State>>()
     private val statusChannel = Channel<State>(Channel.CONFLATED)
     private var connectJob: Job? = null
 
-    private val roomAndSubscriptionChannels = ArrayList<Channel<StreamMessage<BaseRoom>>>()
     private val roomMessagesChannels = LinkedHashMap<String, Channel<Message>>()
     private val userDataChannels = ArrayList<Channel<Myself>>()
-    private val activeUsersChannels = ArrayList<Channel<User>>()
     private val subscriptionIdMap = HashMap<String, String>()
 
     private var subscriptionId: String? = null
     private var roomsId: String? = null
     private var userDataId: String? = null
     private var activeUserId: String? = null
+    private var temporaryStatus: UserStatus? = null
+
+    private val activeUsersContext = newSingleThreadContext("activeUsersContext")
+    private val roomsContext = newSingleThreadContext("roomsContext")
 
     fun connect() {
         if (connectJob?.isActive == true && (state !is State.Disconnected)) {
@@ -56,6 +75,7 @@ class ConnectionManager(internal val client: RocketChatClient) {
                 Timber.d("Changing status to: $status")
                 when (status) {
                     is State.Connected -> {
+                        dbManager.clearUsersStatus()
                         client.subscribeSubscriptions { _, id ->
                             Timber.d("Subscribed to subscriptions: $id")
                             subscriptionId = id
@@ -74,11 +94,17 @@ class ConnectionManager(internal val client: RocketChatClient) {
                         }
 
                         resubscribeRooms()
+
+                        temporaryStatus?.let { status ->
+                            client.setTemporaryStatus(status)
+                        }
                     }
                     is State.Waiting -> {
                         Timber.d("Connection in: ${status.seconds}")
                     }
                 }
+
+                statusLiveData.postValue(status)
 
                 for (channel in statusChannelList) {
                     Timber.d("Sending status: $status to $channel")
@@ -87,24 +113,39 @@ class ConnectionManager(internal val client: RocketChatClient) {
             }
         }
 
+        var totalBatchedUsers = 0
+        val userActor = createBatchActor<User>(activeUsersContext, parent = connectJob,
+                maxSize = 500, maxTime = 1000) { users ->
+            totalBatchedUsers += users.size
+            Timber.d("Processing Users batch: ${users.size} - $totalBatchedUsers")
+
+            // TODO - move this to an Interactor
+            dbManager.processUsersBatch(users)
+        }
+
+        val roomsActor = createBatchActor<StreamMessage<BaseRoom>>(roomsContext, parent = connectJob,
+                maxSize = 10) { batch ->
+            Timber.d("processing Stream batch: ${batch.size} - $batch")
+            dbManager.processStreamBatch(batch)
+        }
+
+        // stream-notify-user - ${userId}/rooms-changed
         launch(parent = connectJob) {
             for (room in client.roomsChannel) {
                 Timber.d("GOT Room streamed")
-                for (channel in roomAndSubscriptionChannels) {
-                    channel.send(room)
-                }
+                roomsActor.send(room)
             }
         }
 
+        // stream-notify-user - ${userId}/subscriptions-changed
         launch(parent = connectJob) {
             for (subscription in client.subscriptionsChannel) {
                 Timber.d("GOT Subscription streamed")
-                for (channel in roomAndSubscriptionChannels) {
-                    channel.send(subscription)
-                }
+                roomsActor.send(subscription)
             }
         }
 
+        // stream-room-messages - $roomId
         launch(parent = connectJob) {
             for (message in client.messagesChannel) {
                 Timber.d("Received new Message for room ${message.roomId}")
@@ -113,21 +154,24 @@ class ConnectionManager(internal val client: RocketChatClient) {
             }
         }
 
+        // userData
         launch(parent = connectJob) {
             for (myself in client.userDataChannel) {
                 Timber.d("Got userData")
+                dbManager.updateSelfUser(myself)
                 for (channel in userDataChannels) {
                     channel.send(myself)
                 }
             }
         }
 
+        var totalUsers = 0
+        // activeUsers
         launch(parent = connectJob) {
             for (user in client.activeUsersChannel) {
-                Timber.d("Got activeUsers")
-                for (channel in activeUsersChannels) {
-                    channel.send(user)
-                }
+                totalUsers++
+                //Timber.d("Got activeUsers: $totalUsers")
+                userActor.send(user)
             }
         }
 
@@ -138,6 +182,16 @@ class ConnectionManager(internal val client: RocketChatClient) {
         for (channel in statusChannelList) {
             channel.offer(state)
         }
+    }
+
+    fun setDefaultStatus(userStatus: UserStatus) {
+        temporaryStatus = null
+        client.setDefaultStatus(userStatus)
+    }
+
+    fun setTemporaryStatus(userStatus: UserStatus) {
+        temporaryStatus = userStatus
+        client.setTemporaryStatus(userStatus)
     }
 
     private fun resubscribeRooms() {
@@ -154,25 +208,16 @@ class ConnectionManager(internal val client: RocketChatClient) {
         client.removeStateChannel(statusChannel)
         client.disconnect()
         connectJob?.cancel()
+        temporaryStatus = null
     }
 
     fun addStatusChannel(channel: Channel<State>) = statusChannelList.add(channel)
 
     fun removeStatusChannel(channel: Channel<State>) = statusChannelList.remove(channel)
 
-    fun addRoomsAndSubscriptionsChannel(channel: Channel<StreamMessage<BaseRoom>>) =
-        roomAndSubscriptionChannels.add(channel)
-
-    fun removeRoomsAndSubscriptionsChannel(channel: Channel<StreamMessage<BaseRoom>>) =
-        roomAndSubscriptionChannels.remove(channel)
-
     fun addUserDataChannel(channel: Channel<Myself>) = userDataChannels.add(channel)
 
     fun removeUserDataChannel(channel: Channel<Myself>) = userDataChannels.remove(channel)
-
-    fun addActiveUserChannel(channel: Channel<User>) = activeUsersChannels.add(channel)
-
-    fun removeActiveUserChannel(channel: Channel<User>) = activeUsersChannels.remove(channel)
 
     fun subscribeRoomMessages(roomId: String, channel: Channel<Message>) {
         val oldSub = roomMessagesChannels.put(roomId, channel)
@@ -196,6 +241,47 @@ class ConnectionManager(internal val client: RocketChatClient) {
             id?.let { client.unsubscribe(it) }
         }
     }
+
+    private inline fun <T> createBatchActor(context: CoroutineContext = CommonPool,
+                                            parent: Job? = null,
+                                            maxSize: Int = 100,
+                                            maxTime: Int = 500,
+                                            crossinline block: (List<T>) -> Unit): SendChannel<T> {
+        return actor(context, parent = parent) {
+            val batch = ArrayList<T>(maxSize)
+            var deadline = 0L // deadline for sending this batch to callback block
+
+            while(true) {
+                // when deadline is reached or size is exceeded, pass the batch to the callback block
+                val remainingTime = deadline - System.currentTimeMillis()
+                if (batch.isNotEmpty() && remainingTime <= 0 || batch.size >= maxSize) {
+                    Timber.d("Processing batch: ${batch.size}")
+                    block(batch.toList())
+                    batch.clear()
+                    continue
+                }
+
+                // wait until items is received or timeout reached
+                select<Unit> {
+                    // when received -> add to batch
+                    channel.onReceive {
+                        batch.add(it)
+                        //Timber.d("Adding user to batch: ${batch.size}")
+                        // init deadline on first item added to batch
+                        if (batch.size == 1) deadline = System.currentTimeMillis() + maxTime
+                    }
+                    // when timeout is reached just finish select, note: no timeout when batch is empty
+                    if (batch.isNotEmpty()) onTimeout(remainingTime.orZero()) {}
+                }
+
+                if (!isActive) break
+            }
+        }
+    }
+}
+
+private fun Long.orZero(): Long {
+    return if (this < 0) 0 else this
 }
 
 suspend fun ConnectionManager.chatRooms(timestamp: Long = 0, filterCustom: Boolean = true) =

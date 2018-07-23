@@ -10,16 +10,17 @@ import chat.rocket.android.server.domain.SaveConnectingServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extensions.isValidUrl
-import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extension.launchUI
 import javax.inject.Inject
 
-class ServerPresenter @Inject constructor(private val view: ServerView,
-                                          private val strategy: CancelStrategy,
-                                          private val navigator: AuthenticationNavigator,
-                                          private val serverInteractor: SaveConnectingServerInteractor,
-                                          private val refreshSettingsInteractor: RefreshSettingsInteractor,
-                                          private val getAccountsInteractor: GetAccountsInteractor,
-                                          factory: RocketChatClientFactory
+class ServerPresenter @Inject constructor(
+    private val view: ServerView,
+    private val strategy: CancelStrategy,
+    private val navigator: AuthenticationNavigator,
+    private val serverInteractor: SaveConnectingServerInteractor,
+    private val refreshSettingsInteractor: RefreshSettingsInteractor,
+    private val getAccountsInteractor: GetAccountsInteractor,
+    factory: RocketChatClientFactory
 ) : CheckServerPresenter(strategy, factory, view) {
 
     fun checkServer(server: String) {

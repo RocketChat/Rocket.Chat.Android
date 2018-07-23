@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorWhite">#FFFFFFFF</color>
+
+    <color name="darkGray">#FFa0a0a0</color>
+    <color name="whitesmoke">#FFf1f1f1</color>
+
+    <color name="colorEmojiIcon">#FF767676</color>
+    <color name="colorDividerMessageComposer">#D8D8D8</color>
+
+    <!-- Skin tone colors -->
+    <color name="tone_default">#fdcb45</color>
+    <color name="tone_light">#fcd6b4</color>
+    <color name="tone_medium_light">#ecc0a1</color>
+    <color name="tone_medium">#ba8b6f</color>
+    <color name="tone_medium_dark">#926b4f</color>
+    <color name="tone_dark">#614833</color>
+</resources>

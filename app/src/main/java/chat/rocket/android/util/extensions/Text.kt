@@ -5,10 +5,8 @@ import android.text.Spanned
 import android.text.TextUtils
 import android.util.Base64
 import android.util.Patterns
-import android.widget.EditText
 import android.widget.TextView
-import chat.rocket.android.widget.emoji.EmojiParser
-import chat.rocket.android.widget.emoji.EmojiTypefaceSpan
+import chat.rocket.android.emoji.EmojiParser
 import org.json.JSONObject
 import ru.noties.markwon.Markwon
 import java.net.URLDecoder
@@ -19,21 +17,6 @@ fun String.ifEmpty(value: String): String {
         return value
     }
     return this
-}
-
-fun CharSequence.ifEmpty(value: String): CharSequence {
-    if (isEmpty()) {
-        return value
-    }
-    return this
-}
-
-fun EditText.erase() {
-    this.text.clear()
-    val spans = this.text.getSpans(0, text.length, EmojiTypefaceSpan::class.java)
-    spans.forEach {
-        text.removeSpan(it)
-    }
 }
 
 fun String.isEmail(): Boolean = Patterns.EMAIL_ADDRESS.matcher(this).matches()
