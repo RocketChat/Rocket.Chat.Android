@@ -55,8 +55,10 @@
             android:padding="8dp"
             android:src="@drawable/ic_search_gray_24px"
             android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/emoji_backspace"
-            app:layout_constraintStart_toEndOf="@+id/color_change_view" />
+            app:layout_constraintStart_toEndOf="@+id/color_change_view"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/emoji_backspace"
