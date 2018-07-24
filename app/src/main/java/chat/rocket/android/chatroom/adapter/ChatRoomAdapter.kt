@@ -145,8 +145,32 @@ class ChatRoomAdapter(
     }
 
     fun appendData(dataSet: List<BaseUiModel<*>>) {
+        if (dataSet.isEmpty()) return
+
         val previousDataSetSize = this.dataSet.size
+
+        if (previousDataSetSize == 0) {
+            if (this.dataSet.size > 1) {
+                var prevMsgModel = this.dataSet[0]
+
+                for (i in dataSet.indices) {
+                    val msgModel = dataSet[i]
+
+                    val currentDayMarkerText = msgModel.currentDayMarkerText
+                    val previousDayMarkerText = prevMsgModel.currentDayMarkerText
+                    if (previousDayMarkerText != currentDayMarkerText) {
+                        msgModel.showDayMarker = true
+                    }
+
+                    prevMsgModel = msgModel
+                }
+            } else {
+                dataSet.last().showDayMarker = true
+            }
+        }
+
         this.dataSet.addAll(dataSet)
+
         notifyItemChanged(previousDataSetSize, dataSet.size)
     }
 
@@ -154,7 +178,23 @@ class ChatRoomAdapter(
         val item = dataSet.indexOfFirst { newItem ->
             this.dataSet.indexOfFirst { it.messageId == newItem.messageId && it.viewType == newItem.viewType } > -1
         }
+
         if (item == -1) {
+            if (this.dataSet.isNotEmpty()) {
+                val prevMsgModel = this.dataSet[0]
+
+                // Compare newly entered message with the last one we have in the chat.
+                for (i in dataSet.indices) {
+                    val msgModel = dataSet[i]
+
+                    val currentDayMarkerText = msgModel.currentDayMarkerText
+                    val previousDayMarkerText = prevMsgModel.currentDayMarkerText
+                    if (previousDayMarkerText != currentDayMarkerText) {
+                        msgModel.showDayMarker = true
+                    }
+                }
+            }
+
             this.dataSet.addAll(0, dataSet)
             notifyItemRangeInserted(0, dataSet.size)
         } else {
@@ -162,8 +202,23 @@ class ChatRoomAdapter(
                 val index = this.dataSet.indexOfFirst {
                     item.messageId == it.messageId && item.viewType == it.viewType
                 }
+
                 if (index > -1) {
                     this.dataSet[index] = item
+
+                    // Check if exists a previous message within bounds.
+                    if (index + 1 < this.dataSet.size) {
+                        val prevMsgModel = this.dataSet[index + 1]
+
+                        val msgModel = this.dataSet[index]
+
+                        val currentDayMarkerText = msgModel.currentDayMarkerText
+                        val previousDayMarkerText = prevMsgModel.currentDayMarkerText
+                        if (previousDayMarkerText != currentDayMarkerText) {
+                            msgModel.showDayMarker = true
+                        }
+                    }
+
                     notifyItemChanged(index)
                 }
             }
@@ -176,6 +231,23 @@ class ChatRoomAdapter(
         Timber.d("index: $index")
         if (index > -1) {
             dataSet[index] = message
+
+            // Check if exists a previous message within bounds.
+            if (index + 1 < this.dataSet.size) {
+                val prevMsgModel = this.dataSet[index + 1]
+
+                val msgModel = this.dataSet[index]
+
+                val currentDayMarkerText = msgModel.currentDayMarkerText
+                val previousDayMarkerText = prevMsgModel.currentDayMarkerText
+                if (previousDayMarkerText != currentDayMarkerText) {
+                    msgModel.showDayMarker = true
+                }
+            } else {
+                dataSet[index].showDayMarker = true
+            }
+
+
             dataSet.forEachIndexed { index, viewModel ->
                 if (viewModel.messageId == message.messageId) {
                     if (viewModel.nextDownStreamMessage == null) {
@@ -248,10 +320,10 @@ class ChatRoomAdapter(
                         context?.let {
                             val builder = AlertDialog.Builder(it)
                             builder.setTitle(it.getString(R.string.msg_delete_message))
-                                    .setMessage(it.getString(R.string.msg_delete_description))
-                                    .setPositiveButton(it.getString(R.string.msg_ok)) { _, _ -> presenter?.deleteMessage(roomId, id) }
-                                    .setNegativeButton(it.getString(R.string.msg_cancel)) { _, _ ->  }
-                                    .show()
+                                .setMessage(it.getString(R.string.msg_delete_description))
+                                .setPositiveButton(it.getString(R.string.msg_ok)) { _, _ -> presenter?.deleteMessage(roomId, id) }
+                                .setNegativeButton(it.getString(R.string.msg_cancel)) { _, _ -> }
+                                .show()
                         }
                     }
                     R.id.action_menu_msg_react -> presenter?.showReactions(id)
