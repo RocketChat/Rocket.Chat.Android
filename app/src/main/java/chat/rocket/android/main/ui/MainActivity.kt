@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
 
         headerLayout.image_avatar.setOnClickListener {
-            view_navigation.menu.findItem(R.id.action_update_profile).isChecked = true
+            view_navigation.menu.findItem(R.id.action_profile).isChecked = true
             presenter.toUserProfile()
             drawer_layout.closeDrawer(Gravity.START)
         }
@@ -218,18 +218,19 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
-        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
-        toolbar.setNavigationOnClickListener {
-            openDrawer()
-        }
     }
 
-    private fun setupNavigationView() {
+    fun setupNavigationView() {
         view_navigation.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
             closeDrawer()
             onNavDrawerItemSelected(menuItem)
             true
+        }
+
+        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
+        toolbar.setNavigationOnClickListener {
+            openDrawer()
         }
     }
 
