@@ -13,7 +13,9 @@ data class MessageReplyUiModel(
     override var isTemporary: Boolean = false,
     override val message: Message,
     override var unread: Boolean? = null,
-    override var menuItemsToHide: MutableList<Int> = mutableListOf()
+    override var menuItemsToHide: MutableList<Int> = mutableListOf(),
+    override var currentDayMarkerText: String,
+    override var showDayMarker: Boolean
 ) : BaseUiModel<MessageReply> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.MESSAGE_REPLY.viewType

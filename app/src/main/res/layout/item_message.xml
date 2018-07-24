@@ -14,6 +14,47 @@
     android:paddingBottom="@dimen/message_item_top_and_bottom_padding">
 
     <LinearLayout
+        android:id="@+id/day_marker_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_messages_notif">
+
+        <View
+            android:layout_width="0px"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/colorDivider" />
+
+        <TextView
+            android:id="@+id/day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:textAppearance="@style/Message.DayMarker"
+            tools:text="Wednesday" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/colorDivider" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/layout_avatar"
+        layout="@layout/avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text_sender" />
+
+    <LinearLayout
         android:id="@+id/new_messages_notif"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,7 +91,7 @@
     <include
         android:id="@+id/layout_avatar"
         layout="@layout/avatar"
-        android:layout_width="40dp"
+        android:layout_width="38dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,8 +104,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
         app:layout_constraintStart_toEndOf="@+id/layout_avatar"
-        app:layout_constraintTop_toBottomOf="@+id/new_messages_notif"
+        app:layout_constraintTop_toBottomOf="@+id/day_marker_layout"
         tools:text="Ronald Perkins" />
 
     <TextView

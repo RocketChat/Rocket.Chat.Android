@@ -265,6 +265,10 @@ class UiModelMapper @Inject constructor(
         val roomName =
             if (settings.useRealName() && name != null) name else message.sender?.username ?: ""
         val permalink = messageHelper.createPermalink(message, chatRoom)
+
+        val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
+        val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+
         return MessageReplyUiModel(
             messageId = message.id,
             isTemporary = false,
@@ -273,7 +277,9 @@ class UiModelMapper @Inject constructor(
             preview = mapMessagePreview(message),
             rawData = MessageReply(roomName = roomName, permalink = permalink),
             nextDownStreamMessage = null,
-            unread = message.unread
+            unread = message.unread,
+            currentDayMarkerText = dayMarkerText,
+            showDayMarker = false
         )
     }
 
@@ -285,8 +291,12 @@ class UiModelMapper @Inject constructor(
         val title = url.meta?.title
         val description = url.meta?.description
 
+        val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
+        val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+
         return UrlPreviewUiModel(message, url, message.id, title, hostname, description, thumb,
-            getReactions(message), preview = message.copy(message = url.url), unread = message.unread)
+            getReactions(message), preview = message.copy(message = url.url), unread = message.unread,
+            showDayMarker = false, currentDayMarkerText = dayMarkerText)
     }
 
     private fun mapAttachment(message: Message, attachment: Attachment): BaseUiModel<*>? {
@@ -304,10 +314,14 @@ class UiModelMapper @Inject constructor(
             val content = stripMessageQuotes(message)
             val id = attachmentId(message, attachment)
 
+            val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
+            val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+
             ColorAttachmentUiModel(attachmentUrl = url, id = id, color = color.color,
                 text = text, message = message, rawData = attachment,
                 messageId = message.id, reactions = getReactions(message),
-                preview = message.copy(message = content.message), unread = message.unread)
+                preview = message.copy(message = content.message), unread = message.unread,
+                showDayMarker = false, currentDayMarkerText = dayMarkerText)
         }
     }
 
@@ -332,10 +346,14 @@ class UiModelMapper @Inject constructor(
             }
             val id = attachmentId(message, attachment)
 
+            val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
+            val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+
             AuthorAttachmentUiModel(attachmentUrl = url, id = id, name = authorName,
                 icon = authorIcon, fields = fieldsText, message = message, rawData = attachment,
                 messageId = message.id, reactions = getReactions(message),
-                preview = message.copy(message = content.message), unread = message.unread)
+                preview = message.copy(message = content.message), unread = message.unread,
+                showDayMarker = false, currentDayMarkerText = dayMarkerText)
         }
     }
 
@@ -349,11 +367,17 @@ class UiModelMapper @Inject constructor(
             is GenericFileAttachment -> context.getString(R.string.msg_preview_file)
             else -> attachment.text ?: ""
         }
+
+        val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
+        val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+
         val content = stripMessageQuotes(message)
+
         return MessageAttachmentUiModel(message = content, rawData = message,
             messageId = message.id, time = time, senderName = attachmentAuthor,
             content = attachmentText, isPinned = message.pinned, reactions = getReactions(message),
-            preview = message.copy(message = content.message), unread = message.unread)
+            preview = message.copy(message = content.message), unread = message.unread,
+            currentDayMarkerText = dayMarkerText, showDayMarker = false)
     }
 
     private fun mapFileAttachment(message: Message, attachment: FileAttachment): BaseUiModel<*>? {
@@ -362,19 +386,27 @@ class UiModelMapper @Inject constructor(
         val attachmentText = attachmentText(attachment)
         val attachmentDescription = attachmentDescription(attachment)
         val id = attachmentId(message, attachment)
+
+        val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
+        val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+
         return when (attachment) {
             is ImageAttachment -> ImageAttachmentUiModel(message, attachment, message.id,
                 attachmentUrl, attachmentTitle, attachmentText, attachmentDescription, id, getReactions(message),
-                preview = message.copy(message = context.getString(R.string.msg_preview_photo)), unread = message.unread)
+                preview = message.copy(message = context.getString(R.string.msg_preview_photo)), unread = message.unread,
+                showDayMarker = false, currentDayMarkerText = dayMarkerText)
             is VideoAttachment -> VideoAttachmentUiModel(message, attachment, message.id,
                 attachmentUrl, attachmentTitle, id, getReactions(message),
-                preview = message.copy(message = context.getString(R.string.msg_preview_video)), unread = message.unread)
+                preview = message.copy(message = context.getString(R.string.msg_preview_video)), unread = message.unread,
+                showDayMarker = false, currentDayMarkerText = dayMarkerText)
             is AudioAttachment -> AudioAttachmentUiModel(message, attachment, message.id,
                 attachmentUrl, attachmentTitle, id, getReactions(message),
-                preview = message.copy(message = context.getString(R.string.msg_preview_audio)), unread = message.unread)
+                preview = message.copy(message = context.getString(R.string.msg_preview_audio)), unread = message.unread,
+                showDayMarker = false, currentDayMarkerText = dayMarkerText)
             is GenericFileAttachment -> GenericFileAttachmentUiModel(message, attachment,
                 message.id, attachmentUrl, attachmentTitle, id, getReactions(message),
-                preview = message.copy(message = context.getString(R.string.msg_preview_file)), unread = message.unread)
+                preview = message.copy(message = context.getString(R.string.msg_preview_file)), unread = message.unread,
+                showDayMarker = false, currentDayMarkerText = dayMarkerText)
             else -> null
         }
     }
@@ -434,11 +466,15 @@ class UiModelMapper @Inject constructor(
             null
         }
 
+        val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
+        val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+
         val content = getContent(stripMessageQuotes(message))
         MessageUiModel(message = stripMessageQuotes(message), rawData = message,
             messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
-            content = content, isPinned = message.pinned, reactions = getReactions(message),
-            isFirstUnread = false, preview = preview, isTemporary = isTemp, unread = unread)
+            content = content, isPinned = message.pinned, currentDayMarkerText = dayMarkerText,
+            showDayMarker = false, reactions = getReactions(message), isFirstUnread = false,
+            preview = preview, isTemporary = isTemp, unread = unread)
     }
 
     private fun mapMessagePreview(message: Message): Message {

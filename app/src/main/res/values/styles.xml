@@ -101,6 +101,12 @@
         <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
 
+    <style name="Message.DayMarker" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:fontFamily">@string/font_fontFamily_medium</item>
+    </style>
+
     <style name="Message.Quote.TextView" parent="Message.TextView">
         <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
