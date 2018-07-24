@@ -27,8 +27,7 @@
     <string name="action_search">Chercher</string>
     <string name="action_update">Mettre à jour</string>
     <string name="action_settings">Paramètres</string>
-    // TODO: Add proper translation.
-    <string name="action_create_channel">Create channel</string>
+    <string name="action_create_channel">Create channel</string> <!-- TODO Add translation -->
     <string name="action_create">Create</string>
     <string name="action_logout">Se déconnecter</string>
     <string name="action_files">Fichiers</string>
@@ -40,8 +39,9 @@
     <string name="action_busy">Occupé</string>
     <string name="action_invisible">Invisible</string>
     <string name="action_drawing">Dessin</string>
-    // TODO: Add proper translation.
-    <string name="action_save_to_gallery">Save to gallery</string>
+    <string name="action_save_to_gallery">Save to gallery</string> <!-- TODO Add translation -->
+    <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">

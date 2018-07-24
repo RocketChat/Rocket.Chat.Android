@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                     text_user_name.text = userDisplayName
                 }
                 if (userAvatar != null) {
-                    image_avatar.setImageURI(userAvatar)
+                    setAvatar(userAvatar)
                 }
                 if (serverLogo != null) {
                     server_logo.setImageURI(serverLogo)
@@ -251,6 +251,10 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                 presenter.logout()
             }
         }
+    }
+
+    fun setAvatar(avatarUrl: String) {
+        headerLayout.image_avatar.setImageURI(avatarUrl)
     }
 
     fun getDrawerLayout(): DrawerLayout = drawer_layout

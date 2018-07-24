@@ -36,9 +36,11 @@
     <string name="action_away">Ausente</string>
     <string name="action_busy">Ocupado</string>
     <string name="action_invisible">Invisible</string>
-    <!-- TODO Add translation -->
-    <string name="action_drawing">Drawing</string>
+    <string name="action_drawing">Drawing</string> <!-- TODO Add translation -->
     <string name="action_save_to_gallery">Guardar en la galería</string>
+    <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
+
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -139,7 +141,6 @@
     <string name="msg_member_already_added">Ya has seleccionado este usuario</string>
     <string name="msg_member_not_found">Miembro no encontrado</string>
     <string name="msg_channel_created_successfully">Canal creado con éxito</string>
-
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nombre de la sala cambiado para: %1$s por %2$s</string>
