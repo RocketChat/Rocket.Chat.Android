@@ -313,7 +313,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
                     val currentDayMarkerText = msgModel.currentDayMarkerText
                     val previousDayMarkerText = prevMsgModel.currentDayMarkerText
-                    println("$previousDayMarkerText then $currentDayMarkerText")
                     if (previousDayMarkerText != currentDayMarkerText) {
                         prevMsgModel.showDayMarker = true
                     }
@@ -360,6 +359,43 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 verticalScrollOffset.set(0)
             }
             presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
+            empty_chat_view.isVisible = adapter.itemCount == 0
+        }
+    }
+
+    override fun showNewMessage(message: List<BaseUiModel<*>>, isMessageReceived: Boolean) {
+        ui {
+            if (message.isNotEmpty()) {
+                var prevMsgModel = message[0]
+
+                for (i in message.indices) {
+                    val msgModel = message[i]
+
+                    if (i > 0) {
+                        prevMsgModel = message[i - 1]
+                    }
+
+                    val currentDayMarkerText = msgModel.currentDayMarkerText
+                    val previousDayMarkerText = prevMsgModel.currentDayMarkerText
+                    if (previousDayMarkerText != currentDayMarkerText) {
+                        prevMsgModel.showDayMarker = true
+                    }
+                }
+            }
+
+            adapter.prependData(message)
+            if (isMessageReceived && button_fab.isVisible) {
+                newMessageCount++
+
+                if (newMessageCount <= 99)
+                    text_count.text = newMessageCount.toString()
+                else
+                    text_count.text = "99+"
+
+                text_count.isVisible = true
+            } else if (!button_fab.isVisible)
+                recycler_view.scrollToPosition(0)
+            verticalScrollOffset.set(0)
             empty_chat_view.isVisible = adapter.itemCount == 0
         }
     }
@@ -496,25 +532,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun showInvalidFileMessage() {
         showMessage(getString(R.string.msg_invalid_file))
-    }
-
-    override fun showNewMessage(message: List<BaseUiModel<*>>, isMessageReceived: Boolean) {
-        ui {
-            adapter.prependData(message)
-            if (isMessageReceived && button_fab.isVisible) {
-                newMessageCount++
-
-                if (newMessageCount <= 99)
-                    text_count.text = newMessageCount.toString()
-                else
-                    text_count.text = "99+"
-
-                text_count.isVisible = true
-            } else if (!button_fab.isVisible)
-                recycler_view.scrollToPosition(0)
-            verticalScrollOffset.set(0)
-            empty_chat_view.isVisible = adapter.itemCount == 0
-        }
     }
 
     override fun disableSendMessageButton() {
