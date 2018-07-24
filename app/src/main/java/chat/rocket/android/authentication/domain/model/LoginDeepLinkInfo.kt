@@ -11,8 +11,8 @@ import timber.log.Timber
 @Parcelize
 data class LoginDeepLinkInfo(
     val url: String,
-    val userId: String,
-    val token: String
+    val userId: String?,
+    val token: String?
 ) : Parcelable
 
 fun Intent.getLoginDeepLinkInfo(): LoginDeepLinkInfo? {
