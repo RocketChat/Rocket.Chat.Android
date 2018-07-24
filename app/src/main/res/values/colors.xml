@@ -44,6 +44,8 @@
 
     <color name="quoteBar">#A0A0A0</color>
 
+    <color name="colorDivider">#1F000000</color>
+
     <!-- Suggestions -->
     <color name="suggestion_background_color">@color/colorWhite</color>
 

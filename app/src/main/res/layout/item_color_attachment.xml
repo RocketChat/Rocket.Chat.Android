@@ -8,10 +8,10 @@
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:paddingBottom="@dimen/message_item_top_and_bottom_padding"
-    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
     android:paddingStart="@dimen/screen_edge_left_and_right_padding"
-    android:paddingTop="@dimen/message_item_top_and_bottom_padding">
+    android:paddingTop="@dimen/message_item_top_and_bottom_padding"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+    android:paddingBottom="@dimen/message_item_top_and_bottom_padding">
 
     <View
         android:id="@+id/quote_bar"
@@ -19,19 +19,20 @@
         android:layout_height="0dp"
         android:layout_marginStart="56dp"
         android:background="@drawable/quote_vertical_gray_bar"
+        app:layout_constraintBottom_toTopOf="@id/recycler_view_reactions"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/recycler_view_reactions"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/attachment_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:autoLink="web"
-        app:layout_constraintStart_toEndOf="@id/quote_bar"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/quote_bar"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="#5571 - User profile from SSO must not have password change option" />
 
     <include
