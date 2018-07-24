@@ -183,6 +183,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             dispatchTakePicture(REQUEST_CODE_FOR_PERFORM_CAMERA)
             hideUpdateAvatarOptions()
         }
+
+        button_reset_avatar.setOnClickListener {
+            hideUpdateAvatarOptions()
+            presenter.resetAvatar()
+        }
     }
 
     private fun showUpdateAvatarOptions() {

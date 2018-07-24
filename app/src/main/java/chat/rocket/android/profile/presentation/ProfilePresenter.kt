@@ -15,6 +15,7 @@ import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
+import chat.rocket.core.internal.rest.resetAvatar
 import chat.rocket.core.internal.rest.setAvatar
 import chat.rocket.core.internal.rest.updateProfile
 import java.util.*
@@ -116,6 +117,24 @@ class ProfilePresenter @Inject constructor(
                         byteArray?.inputStream()
                     }
                 }
+                view.reloadUserAvatar(serverUrl.avatarUrl(myselfUsername))
+            } catch (exception: RocketChatException) {
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideLoading()
+            }
+        }
+    }
+
+    fun resetAvatar() {
+        launchUI(strategy) {
+            view.showLoading()
+            try {
+                retryIO { client.resetAvatar(myselfId) }
                 view.reloadUserAvatar(serverUrl.avatarUrl(myselfUsername))
             } catch (exception: RocketChatException) {
                 exception.message?.let {

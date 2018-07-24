@@ -41,6 +41,7 @@
     <string name="action_drawing">चित्रकारी</string>
     <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
     <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
