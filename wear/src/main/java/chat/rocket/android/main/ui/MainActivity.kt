@@ -2,13 +2,11 @@ package chat.rocket.android.main.ui
 
 import android.app.Activity
 import android.app.Fragment
-import android.content.Context
 import android.os.Bundle
 import androidx.wear.widget.drawer.WearableNavigationDrawerView
 import chat.rocket.android.R
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
-import com.google.firebase.FirebaseApp
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.android.*

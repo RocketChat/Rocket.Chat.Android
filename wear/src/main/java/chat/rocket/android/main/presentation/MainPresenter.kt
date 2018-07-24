@@ -67,7 +67,6 @@ class MainPresenter @Inject constructor(
 
     private suspend fun clearTokens() {
         serverInteractor.clear()
-        //TODO clear Push tokens if any
         val pushToken = localRepository.get(LocalRepository.KEY_PUSH_TOKEN)
         if (pushToken != null) {
             try {

@@ -3,7 +3,9 @@ package chat.rocket.android.push
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
@@ -12,6 +14,8 @@ import android.text.Html
 import android.text.Spanned
 import androidx.core.app.NotificationCompat
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.ui.chatRoomIntent
+import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import com.squareup.moshi.Json
@@ -86,6 +90,7 @@ class PushManager @Inject constructor(
                 .bigText(message.fromHtml())
                 .setBigContentTitle(title.fromHtml())
 
+            builder.addReplyAction()
             builder.setStyle(bigText)
 
             return builder.build()
@@ -95,12 +100,14 @@ class PushManager @Inject constructor(
     private fun createNotificationBuilder(pushMessage: PushMessage): NotificationCompat.Builder {
         return with(pushMessage) {
             val host = info.host
+            val contentIntent = getContentIntent(pushMessage)
 
             val builder = NotificationCompat.Builder(context, host)
                 .setWhen(info.createdAt)
                 .setContentTitle(title.fromHtml())
                 .setContentText(message.fromHtml())
                 .setSmallIcon(R.drawable.notification_small_icon)
+                .setContentIntent(contentIntent)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val channelId = host
@@ -116,6 +123,42 @@ class PushManager @Inject constructor(
             }
             return@with builder
         }
+    }
+
+    private fun getContentIntent(pushMessage: PushMessage): PendingIntent {
+        val chatRoomName =
+            if (pushMessage.info.name == null) "#DefaultChannel" else pushMessage.info.name
+        val notificationIntent = context.chatRoomIntent(
+            chatRoomId = pushMessage.info.roomId,
+            chatRoomName = chatRoomName,
+            chatRoomType = pushMessage.info.type.toString()
+        )
+        return PendingIntent.getActivity(
+            context,
+            random.nextInt(),
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
+
+    private fun NotificationCompat.Builder.addReplyAction(): NotificationCompat.Builder {
+        val actionExtender = NotificationCompat.Action.WearableExtender()
+            .setHintLaunchesActivity(true)
+            .setHintDisplayActionInline(true)
+
+        val replyHint = context.getText(R.string.notification_reply_action_hint)
+        val notificationIntent = Intent(context, MainActivity::class.java)
+        val notificationPendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0)
+        val replyAction = NotificationCompat.Action.Builder(
+            R.drawable.ic_reply_white_24dp,
+            replyHint,
+            notificationPendingIntent
+        )
+            .extend(actionExtender)
+            .build()
+
+        this.addAction(replyAction)
+        return this
     }
 
     private fun CharSequence.fromHtml(): Spanned {

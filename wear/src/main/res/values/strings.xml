@@ -23,6 +23,7 @@
     <string name="current_user_helper">You</string>
     <string name="default_current_user_full_name">Sample User</string>
     <string name="default_current_user_name">\u0040 %1$s</string>
+    <string name="notification_reply_action_hint">Reply</string>
 
     <!--Settings-->
     <string name="default_settings_item">Account</string>
