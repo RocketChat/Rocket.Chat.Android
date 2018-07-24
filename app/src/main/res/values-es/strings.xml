@@ -121,12 +121,6 @@
     <string name="msg_delete_message">Borrar mensaje</string>
     <string name="msg_delete_description">Seguro que quieres borrar este mensaje</string>
     <string name="msg_no_search_found">No se han encontrado resultados</string>
-    <!-- TODO Add translation -->
-    <string name="msg_upload_file">Upload file</string>
-    <!-- TODO Add translation -->
-    <string name="msg_file_description">File description</string>
-    <!-- TODO Add translation -->
-    <string name="msg_send">Send</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
