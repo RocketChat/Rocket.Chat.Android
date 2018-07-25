@@ -9,11 +9,12 @@ import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.db.ChatRoomDao
 import chat.rocket.android.db.DatabaseManager
-import chat.rocket.android.db.DatabaseManagerFactory
+import chat.rocket.android.db.UserDao
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetCurrentUserInteractor
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.infraestructure.ConnectionManager
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
@@ -39,13 +40,6 @@ class ChatRoomsFragmentModule {
 
     @Provides
     @PerFragment
-    @Named("currentServer")
-    fun provideCurrentServer(currentServerInteractor: GetCurrentServerInteractor): String {
-        return currentServerInteractor.get()!!
-    }
-
-    @Provides
-    @PerFragment
     fun provideRocketChatClient(
         factory: RocketChatClientFactory,
         @Named("currentServer") currentServer: String
@@ -55,16 +49,11 @@ class ChatRoomsFragmentModule {
 
     @Provides
     @PerFragment
-    fun provideDatabaseManager(
-        factory: DatabaseManagerFactory,
-        @Named("currentServer") currentServer: String
-    ): DatabaseManager {
-        return factory.create(currentServer)
-    }
+    fun provideChatRoomDao(manager: DatabaseManager): ChatRoomDao = manager.chatRoomDao()
 
     @Provides
     @PerFragment
-    fun provideChatRoomDao(manager: DatabaseManager): ChatRoomDao = manager.chatRoomDao()
+    fun provideUserDao(manager: DatabaseManager): UserDao = manager.userDao()
 
     @Provides
     @PerFragment
@@ -98,9 +87,19 @@ class ChatRoomsFragmentModule {
     fun provideRoomMapper(
         context: Application,
         repository: SettingsRepository,
-        localRepository: LocalRepository,
+        userInteractor: GetCurrentUserInteractor,
         @Named("currentServer") serverUrl: String
     ): RoomUiModelMapper {
-        return RoomUiModelMapper(context, repository.get(serverUrl), localRepository, serverUrl)
+        return RoomUiModelMapper(context, repository.get(serverUrl), userInteractor, serverUrl)
+    }
+
+    @Provides
+    @PerFragment
+    fun provideGetCurrentUserInteractor(
+        tokenRepository: TokenRepository,
+        @Named("currentServer") serverUrl: String,
+        userDao: UserDao
+    ): GetCurrentUserInteractor {
+        return GetCurrentUserInteractor(tokenRepository, serverUrl, userDao)
     }
 }

@@ -15,11 +15,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.text.bold
 import androidx.core.view.isVisible
@@ -52,9 +52,9 @@ import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiPickerPopup
 import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
+import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
 import chat.rocket.android.util.extensions.fadeIn
@@ -147,6 +147,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private lateinit var actionSnackbar: ActionSnackbar
     internal var citation: String? = null
     private var editingMessageId: String? = null
+    internal var disableMenu: Boolean = false
 
     private val compositeDisposable = CompositeDisposable()
     private var playComposeMessageButtonsAnimation = true
@@ -249,7 +250,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onPause() {
         super.onPause()
         setReactionButtonIcon(R.drawable.ic_reaction_24dp)
-        emojiKeyboardPopup.dismiss()
+        dismissEmojiKeyboard()
+        activity?.invalidateOptionsMenu()
+    }
+
+    private fun dismissEmojiKeyboard() {
+        // Check if the keyboard was ever initialized.
+        // It may be the case when you are looking a not joined room
+        if (::emojiKeyboardPopup.isInitialized) {
+            emojiKeyboardPopup.dismiss()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
@@ -285,24 +295,42 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 adapter.clearData()
             }
 
-            // track the message sent immediately after the current message
-            var prevMessageUiModel: MessageUiModel? = null
+            if (dataSet.isNotEmpty()) {
+                var prevMsgModel = dataSet[0]
 
-            // Loop over received messages to determine first unread
-            for (i in dataSet.indices) {
-                val msgModel = dataSet[i]
+                // track the message sent immediately after the current message
+                var prevMessageUiModel: MessageUiModel? = null
 
-                if (msgModel is MessageUiModel) {
-                    val msg = msgModel.rawData
-                    if (msg.timestamp < chatRoomLastSeen) {
-                        // This message was sent before the last seen of the room. Hence, it was seen.
-                        // if there is a message after (below) this, mark it firstUnread.
-                        if (prevMessageUiModel != null) {
-                            prevMessageUiModel.isFirstUnread = true
-                        }
-                        break
+                // Checking for all messages to assign true to the required showDayMaker
+                // Loop over received messages to determine first unread
+                var firstUnread = false
+                for (i in dataSet.indices) {
+                    val msgModel = dataSet[i]
+
+                    if (i > 0) {
+                        prevMsgModel = dataSet[i - 1]
                     }
-                    prevMessageUiModel = msgModel
+
+                    val currentDayMarkerText = msgModel.currentDayMarkerText
+                    val previousDayMarkerText = prevMsgModel.currentDayMarkerText
+                    println("$previousDayMarkerText then $currentDayMarkerText")
+                    if (previousDayMarkerText != currentDayMarkerText) {
+                        prevMsgModel.showDayMarker = true
+                    }
+
+                    if (!firstUnread && msgModel is MessageUiModel) {
+                        val msg = msgModel.rawData
+                        if (msg.timestamp < chatRoomLastSeen) {
+                            // This message was sent before the last seen of the room. Hence, it was seen.
+                            // if there is a message after (below) this, mark it firstUnread.
+                            if (prevMessageUiModel != null) {
+                                prevMessageUiModel.isFirstUnread = true
+                            }
+                            // Found first unread message.
+                            firstUnread = true
+                        }
+                        prevMessageUiModel = msgModel
+                    }
                 }
             }
 
@@ -320,6 +348,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }
                 recycler_view.addOnLayoutChangeListener(layoutChangeListener)
                 recycler_view.addOnScrollListener(onScrollListener)
+
+                // Load just once, on the first page...
+                presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
             }
 
             val oldMessagesCount = adapter.itemCount
@@ -350,7 +381,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             setupMessageComposer(userCanPost)
             isBroadcastChannel = channelIsBroadcast
-            if (isBroadcastChannel && !userCanMod) activity?.invalidateOptionsMenu()
+            if (isBroadcastChannel && !userCanMod) {
+                disableMenu = true
+                activity?.invalidateOptionsMenu()
+            }
         }
     }
 
@@ -411,7 +445,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             } else {
                 if (dy < 0 && !button_fab.isVisible) {
                     button_fab.show()
-                    if (newMessageCount !=0) text_count.isVisible = true
+                    if (newMessageCount != 0) text_count.isVisible = true
                 }
             }
         }
@@ -470,14 +504,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             if (isMessageReceived && button_fab.isVisible) {
                 newMessageCount++
 
-            if (newMessageCount <= 99)
-                text_count.text = newMessageCount.toString()
-            else
-                text_count.text = "99+"
+                if (newMessageCount <= 99)
+                    text_count.text = newMessageCount.toString()
+                else
+                    text_count.text = "99+"
 
                 text_count.isVisible = true
-            }
-            else if (!button_fab.isVisible)
+            } else if (!button_fab.isVisible)
                 recycler_view.scrollToPosition(0)
             verticalScrollOffset.set(0)
             empty_chat_view.isVisible = adapter.itemCount == 0
@@ -866,7 +899,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             clearMessageComposition(false)
             if (text_message.textContent.isEmpty()) {
                 KeyboardHelper.showSoftKeyboard(text_message)
-            }    
+            }
         }
     }
 

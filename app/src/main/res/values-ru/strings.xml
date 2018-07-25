@@ -37,6 +37,7 @@
     <string name="action_away">Отошел</string>
     <string name="action_busy">Занят</string>
     <string name="action_invisible">Невидимый</string>
+    <string name="action_drawing">малюнок</string>
     <string name="action_save_to_gallery">Сохранить в галерею</string>
 
     <!-- Settings List -->
@@ -64,6 +65,7 @@
     <string name="msg_new_user_agreement">Продолжая, вы соглашаетесь с нашими\n%1$s и %2$s</string>
     <string name="msg_2fa_code">Код 2FA</string>
     <string name="msg_yesterday">Вчера</string>
+    <string name="msg_today">Сьогодні</string>
     <string name="msg_message">Сообщение</string>
     <string name="msg_this_room_is_read_only">Этот канал только для чтения</string>
     <string name="msg_invalid_2fa_code">Неверный код 2FA</string>
@@ -119,6 +121,7 @@
     <string name="msg_upload_file">Загрузить файл</string>
     <string name="msg_file_description">Описание файла</string>
     <string name="msg_send">послать</string>
+    <string name="msg_sent_attachment">Надіслано вкладення</string>
     <string name="msg_delete_message">Удалить сообщение</string>
     <string name="msg_delete_description">Вы уверены, что хотите удалить это сообщение?</string>
     <string name="msg_channel_name">Название канала</string>
@@ -153,6 +156,7 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Ответить</string>
+    <string name="action_msg_info">О сообщении</string>
     <string name="action_msg_edit">Редактировать</string>
     <string name="action_msg_copy">Копировать</string>
     <string name="action_msg_quote">Цитата</string>
@@ -164,6 +168,7 @@
     <string name="action_msg_share">Поделиться</string>
     <string name="action_title_editing">Редактирование сообщения</string>
     <string name="action_msg_add_reaction">Добавить реакцию</string>
+    <string name="action_share">Поділитися</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редактирование запрещено</string>
@@ -242,7 +247,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Нет недавно используемых emoji</string>
-    <string name="alert_title_default_skin_tone">По умолчанию тон кожи</string>
+    <string name="alert_title_default_skin_tone">Тон кожи по умолчанию</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Сортировать</string>
@@ -261,8 +266,11 @@
     <string name="header_unknown">Неизвестные</string>
 
     <!--Notifications-->
+    <string name="share_label">Редагування спільного повідомлення</string>
     <string name="notif_action_reply_hint">ОТВЕТИТЬ</string>
     <string name="notif_error_sending">Ошибка ответа. Пожалуйста, попробуйте еще раз.</string>
     <string name="notif_success_sending">Сообщение отправлено %1$s!</string>
+    <string name="read_by">Прочитано</string>
+    <string name="message_information_title">Інформація про повідомлення</string>
     <string name="msg_log_out">Выход…</string>
 </resources>

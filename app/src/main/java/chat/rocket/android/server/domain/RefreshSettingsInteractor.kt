@@ -5,7 +5,9 @@ import chat.rocket.android.util.retryIO
 import chat.rocket.core.internal.rest.settings
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class RefreshSettingsInteractor @Inject constructor(
@@ -25,12 +27,13 @@ class RefreshSettingsInteractor @Inject constructor(
         HIDE_USER_JOIN, HIDE_USER_LEAVE,
         HIDE_TYPE_AU, HIDE_MUTE_UNMUTE, HIDE_TYPE_RU, ALLOW_MESSAGE_DELETING,
         ALLOW_MESSAGE_EDITING, ALLOW_MESSAGE_PINNING, ALLOW_MESSAGE_STARRING, SHOW_DELETED_STATUS, SHOW_EDITED_STATUS,
-        WIDE_TILE_310, STORE_LAST_MESSAGE)
+        WIDE_TILE_310, STORE_LAST_MESSAGE, MESSAGE_READ_RECEIPT_ENABLED, MESSAGE_READ_RECEIPT_STORE_USERS)
 
     suspend fun refresh(server: String) {
         withContext(CommonPool) {
             factory.create(server).let { client ->
-                val settings = retryIO(description = "settings", times = 5) {
+                val settings = retryIO(description = "settings", times = 5,
+                        maxDelay = 5000, initialDelay = 300) {
                     client.settings(*settingsFilter)
                 }
                 repository.save(server, settings)
@@ -39,11 +42,11 @@ class RefreshSettingsInteractor @Inject constructor(
     }
 
     fun refreshAsync(server: String) {
-        async {
+        launch(CommonPool) {
             try {
                 refresh(server)
             } catch (ex: Exception) {
-                ex.printStackTrace()
+                Timber.e(ex, "Error refreshing settings for: $server")
             }
         }
     }

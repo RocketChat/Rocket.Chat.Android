@@ -5,7 +5,10 @@ import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.User
+import chat.rocket.common.model.UserStatus
 import chat.rocket.core.RocketChatClient
+import chat.rocket.core.internal.realtime.setDefaultStatus
+import chat.rocket.core.internal.realtime.setTemporaryStatus
 import chat.rocket.core.internal.realtime.socket.connect
 import chat.rocket.core.internal.realtime.socket.disconnect
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -49,6 +52,7 @@ class ConnectionManager(
     private var roomsId: String? = null
     private var userDataId: String? = null
     private var activeUserId: String? = null
+    private var temporaryStatus: UserStatus? = null
 
     private val activeUsersContext = newSingleThreadContext("activeUsersContext")
     private val roomsContext = newSingleThreadContext("roomsContext")
@@ -71,6 +75,7 @@ class ConnectionManager(
                 Timber.d("Changing status to: $status")
                 when (status) {
                     is State.Connected -> {
+                        dbManager.clearUsersStatus()
                         client.subscribeSubscriptions { _, id ->
                             Timber.d("Subscribed to subscriptions: $id")
                             subscriptionId = id
@@ -89,6 +94,10 @@ class ConnectionManager(
                         }
 
                         resubscribeRooms()
+
+                        temporaryStatus?.let { status ->
+                            client.setTemporaryStatus(status)
+                        }
                     }
                     is State.Waiting -> {
                         Timber.d("Connection in: ${status.seconds}")
@@ -149,7 +158,7 @@ class ConnectionManager(
         launch(parent = connectJob) {
             for (myself in client.userDataChannel) {
                 Timber.d("Got userData")
-                userActor.send(myself.asUser())
+                dbManager.updateSelfUser(myself)
                 for (channel in userDataChannels) {
                     channel.send(myself)
                 }
@@ -175,6 +184,16 @@ class ConnectionManager(
         }
     }
 
+    fun setDefaultStatus(userStatus: UserStatus) {
+        temporaryStatus = null
+        client.setDefaultStatus(userStatus)
+    }
+
+    fun setTemporaryStatus(userStatus: UserStatus) {
+        temporaryStatus = userStatus
+        client.setTemporaryStatus(userStatus)
+    }
+
     private fun resubscribeRooms() {
         roomMessagesChannels.toList().map { (roomId, channel) ->
             client.subscribeRoomMessages(roomId) { _, id ->
@@ -189,6 +208,7 @@ class ConnectionManager(
         client.removeStateChannel(statusChannel)
         client.disconnect()
         connectJob?.cancel()
+        temporaryStatus = null
     }
 
     fun addStatusChannel(channel: Channel<State>) = statusChannelList.add(channel)
@@ -258,10 +278,6 @@ class ConnectionManager(
             }
         }
     }
-}
-
-private fun Myself.asUser(): User {
-    return User(id, name, username, status, utcOffset, null, roles)
 }
 
 private fun Long.orZero(): Long {

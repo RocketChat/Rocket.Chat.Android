@@ -14,7 +14,11 @@ data class AudioAttachmentUiModel(
         override var reactions: List<ReactionUiModel>,
         override var nextDownStreamMessage: BaseUiModel<*>? = null,
         override var preview: Message? = null,
-        override var isTemporary: Boolean = false
+        override var isTemporary: Boolean = false,
+        override var unread: Boolean? = null,
+        override var menuItemsToHide: MutableList<Int> = mutableListOf(),
+        override var currentDayMarkerText: String,
+        override var showDayMarker: Boolean
 ) : BaseFileAttachmentUiModel<AudioAttachment> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.AUDIO_ATTACHMENT.viewType
