@@ -14,20 +14,18 @@ import kotlinx.android.synthetic.main.message_bottomsheet.*
 
 class MessageActionsBottomSheet : BottomSheetDialogFragment() {
 
-    private lateinit var adapter: MessageActionAdapter
+    private val adapter = MessageActionAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.message_bottomsheet, container, false)
     }
 
     fun addItems(items: List<MenuItem>, itemClickListener: MenuItem.OnMenuItemClickListener) {
-        adapter = MessageActionAdapter()
         adapter.addItems(items, ActionItemClickListener(dismissAction = { dismiss() },
             itemClickListener = itemClickListener))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         bottomsheet_recycler_view.layoutManager = LinearLayoutManager(context)
         bottomsheet_recycler_view.adapter = adapter
     }
@@ -58,6 +56,7 @@ class MessageActionsBottomSheet : BottomSheetDialogFragment() {
             this.itemClickListener = itemClickListener
             menuItems.clear()
             menuItems.addAll(items)
+            notifyDataSetChanged()
         }
     }
 
