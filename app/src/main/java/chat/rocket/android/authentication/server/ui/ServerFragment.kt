@@ -13,8 +13,10 @@ import android.widget.ArrayAdapter
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
+import chat.rocket.android.authentication.loginoptions.ui.LoginOptionsFragment
 import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
+import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.util.extensions.*
 import chat.rocket.common.util.ifNull
@@ -210,8 +212,11 @@ class ServerFragment : Fragment(), ServerView {
     private fun setupOnClickListener() {
         ui {
             button_connect.setOnClickListener {
-                val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
-                presenter.checkServer("${protocol}${url.sanitize()}")
+//                val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
+//                presenter.checkServer("${protocol}${url.sanitize()}")
+                (activity as AuthenticationActivity).addFragmentBackStack("LoginOption", R.id.fragment_container){
+                    LoginOptionsFragment.newInstance()
+                }
             }
         }
     }

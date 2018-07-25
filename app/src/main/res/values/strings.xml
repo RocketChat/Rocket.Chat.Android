@@ -3,7 +3,7 @@
 
     <!-- Titles -->
     <string name="title_sign_in_your_server">Sign in to your server</string>
-    <string name="title_log_in">Log in</string>
+    <string name="title_log_in">Login</string>
     <string name="title_register_username">Register username</string>
     <string name="title_reset_password">Reset password</string>
     <string name="title_sign_up">Sign up</string>

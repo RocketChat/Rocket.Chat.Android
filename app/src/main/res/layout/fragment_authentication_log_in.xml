@@ -143,7 +143,7 @@
                 android:clickable="false"
                 android:contentDescription="@string/msg_content_description_log_in_using_facebook"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_facebook"
+                android:src="@drawable/ic_facebook_24dp"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
@@ -155,7 +155,7 @@
                 android:clickable="false"
                 android:contentDescription="@string/msg_content_description_log_in_using_github"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_github"
+                android:src="@drawable/ic_github_24dp"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
@@ -167,7 +167,7 @@
                 android:clickable="false"
                 android:contentDescription="@string/msg_content_description_log_in_using_google"
                 android:foreground="?android:attr/selectableItemBackground"
-                android:src="@drawable/ic_google"
+                android:src="@drawable/ic_google_24dp"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
@@ -179,7 +179,7 @@
                 android:clickable="false"
                 android:contentDescription="@string/msg_content_description_log_in_using_linkedin"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_linkedin"
+                android:src="@drawable/ic_linkedin_24dp"
                 android:visibility="gone"
                 tools:visibility="gone" />
 
@@ -215,7 +215,7 @@
                 android:clickable="false"
                 android:contentDescription="@string/msg_content_description_log_in_using_gitlab"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_gitlab"
+                android:src="@drawable/ic_gitlab_24dp"
                 android:visibility="gone"
                 tools:visibility="gone" />
         </LinearLayout>
