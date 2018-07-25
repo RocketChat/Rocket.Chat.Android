@@ -80,7 +80,7 @@ private fun formatLocalDateTime(localDateTime: LocalDateTime): String {
 }
 
 private fun formatLocalDate(localDate: LocalDate): String {
-    val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+    val formatter = DateTimeFormatter.ofPattern("MMM dd, YYYY")
     return localDate.format(formatter).toString()
 }
 
