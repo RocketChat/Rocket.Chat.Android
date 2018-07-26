@@ -24,7 +24,7 @@
     <string name="action_privacy_policy" >Datenschutz</string>
     <string name="action_search" >Suche</string>
     <string name="action_update" >Updaten</string>
-    <string name="action_settings" >Enstellungen</string>
+    <string name="action_settings" >Einstellungen</string>
     <string name="action_create_channel" >Erstelle Raum</string>
     <string name="action_create" >Erstelle</string>
     <string name="action_logout" >Abmelden</string>
@@ -59,12 +59,13 @@
     <string name="msg_new_user" >Neuer Benutzer? %1$s</string>
     <string name="msg_forgot_password" >Passwort vergessen? %1$s</string>
     <string name="msg_reset" >Zurücksetzen</string>
-    <string name="msg_check_your_email_to_reset_your_password" >Email gesendet! Prüfe dein E-Mail Posteingang um dein Passwort zurückzusetzen.</string>
+    <string name="msg_check_your_email_to_reset_your_password" >E-Mail gesendet! Prüfe dein E-Mail Posteingang um dein Passwort zurückzusetzen.</string>
     <string name="msg_invalid_email" >Bitte eine korrekte E-Mail Adresse eingeben</string>
     <string name="msg_new_user_agreement" >Beim weitergehen akzeptieren Sie usere\n%1$s und %2$s</string>
     <string name="msg_2fa_code" >2FA Code</string>
     <!-- <string name="msg_more_than_ninety_nine_unread_messages" translatable="false" >99+</string> -->
     <string name="msg_yesterday" >Gestern</string>
+    <string name="msg_today" >Heute</string>
     <string name="msg_message" >Nachricht</string>
     <string name="msg_this_room_is_read_only" >Dieser Raum ist nur lesen</string>
     <string name="msg_invalid_2fa_code" >Falscher 2FA Code</string>
@@ -81,7 +82,7 @@
     <string name="msg_content_description_show_attachment_options" >Zeige Anhang Optionen</string>
     <string name="msg_you" >Du</string>
     <string name="msg_unknown" >Unbekannt</string>
-    <string name="msg_email_address" >E-mail Addresse</string>
+    <string name="msg_email_address" >E-Mail Addresse</string>
     <string name="msg_utc_offset" >UTC Offset</string>
     <string name="msg_new_password" >Neues Passwort eingeben</string>
     <string name="msg_confirm_password" >Bestätige neues Passwort</string>
@@ -98,16 +99,16 @@
     <string name="msg_ok" >OK</string>
     <string name="msg_update_app_version_in_order_to_continue" >Server Version veraltet. Bitte kontaktieren Sie ihren Server Administrator.</string>
     <string name="msg_ver_not_recommended" >
-        Die Server Version scheint älter als die empfolene Version %1$s zu sein.\nSie können trotzdem einloggen, aber es kann zu einem unerwartetem Verhalten kommen.</string>
+        Die Server Version scheint älter als die empfolene Version %1$s zu sein.\nSie können sich trotzdem einloggen, aber es kann zu einem unerwartetem Verhalten kommen.</string>
     <string name="msg_ver_not_minimum" >
-        Die Server Version scheint älter als die minimale Version %1$s zu sein.\nBitte updaten Sie Ihren Server um einloggen zu können!
+        Die Server Version scheint älter als die minimale Version %1$s zu sein.\nBitte updaten Sie Ihren Server um sich einloggen zu können!
     </string>
     <string name="msg_no_chat_title" >Keine Chat Nachrichten</string>
-    <string name="msg_no_chat_description" >Starte die Konversation um Ihre \nNachriten hier zu sehen.</string>
+    <string name="msg_no_chat_description" >Starte die Konversation um Ihre \nNachrichten hier zu sehen.</string>
     <string name="msg_proceed" >WEITER</string>
     <string name="msg_cancel" >ABBRUCH</string>
     <string name="msg_warning" >WARNUNG</string>
-    <string name="msg_http_insecure" >Bei HTTP, verbinden Sie sich usicher zu einem Server. Wir empfehlen HTTPS zu benutzen.</string>
+    <string name="msg_http_insecure" >Bei HTTP verbinden Sie sich usicher zu einem Server. Wir empfehlen HTTPS zu benutzen.</string>
     <string name="msg_error_checking_server_version" >Ein Fehler ist aufgetreten beim prüfen der Server Version, bitte versuchen Sie es noch einmal</string>
     <string name="msg_invalid_server_protocol" >Das ausgewählte Protokoll wird vom Server nicht akzeptiert, versuchen Sie HTTPS</string>
     <string name="msg_image_saved_successfully" >Bild wurde in der Gallerie gespeichert</string>
@@ -145,7 +146,7 @@
     <string name="message_user_removed_by" >Benutzer %1$s entfernt von %2$s</string>
     <string name="message_user_left" >Hat den Raum verlassen.</string>
     <string name="message_user_joined_channel" >Hat den Raum betreten.</string>
-    <string name="message_welcome" >Wilkommen %s</string>
+    <string name="message_welcome" >Willkommen %s</string>
     <string name="message_removed" >Nachricht entfernt</string>
     <string name="message_pinned" >Nachricht angeheftet:</string>
     <string name="message_muted" >Benutzer %1$s stumm geschaltet von %2$s</string>
@@ -168,6 +169,7 @@
     <string name="action_msg_share" >Teilen</string>
     <string name="action_title_editing" >Nachricht bearbeiten</string>
     <string name="action_msg_add_reaction" >Reaktion hinzufügen</string>
+    <string name="action_share" >Teilen</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed" >Bearbeiten nicht erlaubt</string>
@@ -192,7 +194,7 @@
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages" >Angeheftete Nachrichten</string>
-    <string name="no_pinned_messages" >Keine angeheftete Nachrichten vorhanden</string>
+    <string name="no_pinned_messages" >Keine angehefteten Nachrichten vorhanden</string>
     <string name="no_pinned_description" >Alle angehefteten Nachrichten\nerscheinen hier</string>
 
     <!-- Favorite Messages -->
@@ -265,6 +267,7 @@
     <string name="header_unknown" >Unbekannt</string>
 
     <!--Notifications-->
+    <string name="share_label" >Bearbeite geteilte Nachricht</string>
     <string name="notif_action_reply_hint" >Antworten</string>
     <string name="notif_error_sending" >Antworten fehlgeschlagen. Bitte versuchen Sie es noch einmal.</string>
     <string name="notif_success_sending" >Nachricht gesendet nach %1$s!</string>
