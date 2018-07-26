@@ -81,42 +81,42 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
             .create()
 
         view.findViewById<TextView>(R.id.default_tone_text).also {
-            it.text = EmojiParser.parse(it.text)
+            it.text = EmojiParser.parse(context, it.text)
         }.setOnClickListener {
             dialog.dismiss()
             changeSkinTone(Fitzpatrick.Default)
         }
 
         view.findViewById<TextView>(R.id.light_tone_text).also {
-            it.text = EmojiParser.parse(it.text)
+            it.text = EmojiParser.parse(context, it.text)
         }.setOnClickListener {
             dialog.dismiss()
             changeSkinTone(Fitzpatrick.LightTone)
         }
 
         view.findViewById<TextView>(R.id.medium_light_text).also {
-            it.text = EmojiParser.parse(it.text)
+            it.text = EmojiParser.parse(context, it.text)
         }.setOnClickListener {
             dialog.dismiss()
             changeSkinTone(Fitzpatrick.MediumLightTone)
         }
 
         view.findViewById<TextView>(R.id.medium_tone_text).also {
-            it.text = EmojiParser.parse(it.text)
+            it.text = EmojiParser.parse(context, it.text)
         }.setOnClickListener {
             dialog.dismiss()
             changeSkinTone(Fitzpatrick.MediumTone)
         }
 
         view.findViewById<TextView>(R.id.medium_dark_tone_text).also {
-            it.text = EmojiParser.parse(it.text)
+            it.text = EmojiParser.parse(context, it.text)
         }.setOnClickListener {
             dialog.dismiss()
             changeSkinTone(Fitzpatrick.MediumDarkTone)
         }
 
         view.findViewById<TextView>(R.id.dark_tone_text).also {
-            it.text = EmojiParser.parse(it.text)
+            it.text = EmojiParser.parse(context, it.text)
         }.setOnClickListener {
             dialog.dismiss()
             changeSkinTone(Fitzpatrick.DarkTone)

@@ -618,7 +618,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onEmojiAdded(emoji: Emoji) {
         val cursorPosition = text_message.selectionStart
         if (cursorPosition > -1) {
-            text_message.text?.insert(cursorPosition, EmojiParser.parse(emoji.shortname))
+            text_message.text?.insert(cursorPosition, EmojiParser.parse(context!!, emoji.shortname))
             text_message.setSelection(cursorPosition + emoji.unicode.length)
         }
     }

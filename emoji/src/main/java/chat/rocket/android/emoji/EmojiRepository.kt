@@ -21,10 +21,12 @@ object EmojiRepository {
     private val shortNameToUnicode = HashMap<String, String>()
     private val SHORTNAME_PATTERN = Pattern.compile(":([-+\\w]+):")
     private val ALL_EMOJIS = mutableListOf<Emoji>()
+    private var customEmojis: List<Emoji> = emptyList()
     private lateinit var preferences: SharedPreferences
     internal lateinit var cachedTypeface: Typeface
 
     fun load(context: Context, customEmojis: List<Emoji> = emptyList(), path: String = "emoji.json") {
+        this.customEmojis = customEmojis
         preferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
         ALL_EMOJIS.clear()
         cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
@@ -133,6 +135,8 @@ object EmojiRepository {
         preferences.edit().putString(PREF_EMOJI_RECENTS, recentsJson.toString()).apply()
     }
 
+    internal fun getCustomEmojis(): List<Emoji> = customEmojis
+
     /**
      * Get all recently used emojis ordered by usage count.
      *
@@ -157,7 +161,7 @@ object EmojiRepository {
     /**
      * Replace shortnames to unicode characters.
      */
-    fun shortnameToUnicode(input: CharSequence, removeIfUnsupported: Boolean): String {
+    fun shortnameToUnicode(input: CharSequence): String {
         val matcher = SHORTNAME_PATTERN.matcher(input)
         var result: String = input.toString()
 

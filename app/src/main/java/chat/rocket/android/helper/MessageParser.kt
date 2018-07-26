@@ -9,6 +9,7 @@ import android.net.Uri
 import androidx.core.content.res.ResourcesCompat
 import android.text.Spanned
 import android.text.style.ClickableSpan
+import android.text.style.ImageSpan
 import android.text.style.ReplacementSpan
 import android.text.style.StyleSpan
 import android.util.Patterns
@@ -62,11 +63,11 @@ class MessageParser @Inject constructor(
             }
         }
         val builder = SpannableBuilder()
-        val content = EmojiRepository.shortnameToUnicode(text, true)
+        val content = EmojiRepository.shortnameToUnicode(text)
         val parentNode = parser.parse(toLenientMarkdown(content))
         parentNode.accept(MarkdownVisitor(configuration, builder))
         parentNode.accept(LinkVisitor(builder))
-        parentNode.accept(EmojiVisitor(configuration, builder))
+        parentNode.accept(EmojiVisitor(context, configuration, builder))
         message.mentions?.let {
             parentNode.accept(MentionVisitor(context, builder, mentions, selfUsername))
         }
@@ -128,15 +129,20 @@ class MessageParser @Inject constructor(
     }
 
     class EmojiVisitor(
+        private val context: Context,
         configuration: SpannableConfiguration,
         private val builder: SpannableBuilder
     ) : SpannableMarkdownVisitor(configuration, builder) {
 
         override fun visit(document: Document) {
-            val spannable = EmojiParser.parse(builder.text())
+            val spannable = EmojiParser.parse(context, builder.text())
             if (spannable is Spanned) {
                 val spans = spannable.getSpans(0, spannable.length, EmojiTypefaceSpan::class.java)
+                val spans2 = spannable.getSpans(0, spannable.length, ImageSpan::class.java)
                 spans.forEach {
+                    builder.setSpan(it, spannable.getSpanStart(it), spannable.getSpanEnd(it), 0)
+                }
+                spans2.forEach {
                     builder.setSpan(it, spannable.getSpanStart(it), spannable.getSpanEnd(it), 0)
                 }
             }

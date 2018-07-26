@@ -151,7 +151,7 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
                     val parsedUnicode = unicodeCache[emoji.unicode]
                     emoji_view.setSpannableFactory(spannableFactory)
                     emoji_view.text = if (parsedUnicode == null) {
-                        EmojiParser.parse(emoji.unicode, spannableFactory).let {
+                        EmojiParser.parse(itemView.context, emoji.unicode, spannableFactory).let {
                             unicodeCache[emoji.unicode] = it
                             it
                         }
