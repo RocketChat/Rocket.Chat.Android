@@ -5,6 +5,9 @@ import android.content.SharedPreferences
 import android.graphics.Typeface
 import chat.rocket.android.emoji.internal.EmojiCategory
 import chat.rocket.android.emoji.internal.PREF_EMOJI_RECENTS
+import com.bumptech.glide.Glide
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -14,6 +17,7 @@ import java.util.*
 import java.util.regex.Pattern
 import kotlin.collections.ArrayList
 import kotlin.coroutines.experimental.buildSequence
+
 
 object EmojiRepository {
 
@@ -26,56 +30,68 @@ object EmojiRepository {
     internal lateinit var cachedTypeface: Typeface
 
     fun load(context: Context, customEmojis: List<Emoji> = emptyList(), path: String = "emoji.json") {
-        this.customEmojis = customEmojis
-        preferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
-        ALL_EMOJIS.clear()
-        cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
-        val stream = context.assets.open(path)
-        val emojis = loadEmojis(stream).also {
-            it.addAll(customEmojis)
-        }.toList()
+        launch(CommonPool) {
+            cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
+            this@EmojiRepository.customEmojis = customEmojis
+            preferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
+            ALL_EMOJIS.clear()
+            val stream = context.assets.open(path)
+            val emojis = loadEmojis(stream).also {
+                it.addAll(customEmojis)
+            }.toList()
 
-        for (emoji in emojis) {
-            val unicodeIntList = mutableListOf<Int>()
+            for (emoji in emojis) {
+                val unicodeIntList = mutableListOf<Int>()
 
-            // If empty it's a custom emoji.
-            if (emoji.unicode.isEmpty()) {
-                ALL_EMOJIS.add(emoji)
-                continue
-            }
+                // If empty it's a custom emoji.
+                if (emoji.unicode.isEmpty()) {
+                    ALL_EMOJIS.add(emoji)
+                    continue
+                }
 
-            emoji.unicode.split("-").forEach {
-                val value = it.toInt(16)
-                if (value >= 0x10000) {
-                    val surrogatePair = calculateSurrogatePairs(value)
-                    unicodeIntList.add(surrogatePair.first)
-                    unicodeIntList.add(surrogatePair.second)
+                emoji.unicode.split("-").forEach {
+                    val value = it.toInt(16)
+                    if (value >= 0x10000) {
+                        val surrogatePair = calculateSurrogatePairs(value)
+                        unicodeIntList.add(surrogatePair.first)
+                        unicodeIntList.add(surrogatePair.second)
+                    } else {
+                        unicodeIntList.add(value)
+                    }
+                }
+                val unicodeIntArray = unicodeIntList.toIntArray()
+                val unicode = String(unicodeIntArray, 0, unicodeIntArray.size)
+                val emojiWithUnicode = emoji.copy(unicode = unicode)
+                if (hasFitzpatrick(emoji.shortname)) {
+                    val matchResult = FITZPATRICK_REGEX.find(emoji.shortname)
+                    val prefix = matchResult!!.groupValues[1] + ":"
+                    val fitzpatrick = Fitzpatrick.valueOf(matchResult.groupValues[2])
+                    val defaultEmoji = ALL_EMOJIS.firstOrNull { it.shortname == prefix }
+                    val emojiWithFitzpatrick = emojiWithUnicode.copy(fitzpatrick = fitzpatrick)
+                    if (defaultEmoji != null) {
+                        defaultEmoji.siblings.add(emojiWithFitzpatrick)
+                    } else {
+                        // This emoji doesn't have a default tone, ie. :man_in_business_suit_levitating_tone1:
+                        // In this case, the default emoji becomes the first toned one.
+                        ALL_EMOJIS.add(emojiWithFitzpatrick)
+                    }
                 } else {
-                    unicodeIntList.add(value)
+                    ALL_EMOJIS.add(emojiWithUnicode)
+                }
+                shortNameToUnicode.apply {
+                    put(emoji.shortname, unicode)
+                    emoji.shortnameAlternates.forEach { alternate -> put(alternate, unicode) }
                 }
             }
-            val unicodeIntArray = unicodeIntList.toIntArray()
-            val unicode = String(unicodeIntArray, 0, unicodeIntArray.size)
-            val emojiWithUnicode = emoji.copy(unicode = unicode)
-            if (hasFitzpatrick(emoji.shortname)) {
-                val matchResult = FITZPATRICK_REGEX.find(emoji.shortname)
-                val prefix = matchResult!!.groupValues[1] + ":"
-                val fitzpatrick = Fitzpatrick.valueOf(matchResult.groupValues[2])
-                val defaultEmoji = ALL_EMOJIS.firstOrNull { it.shortname == prefix }
-                val emojiWithFitzpatrick = emojiWithUnicode.copy(fitzpatrick = fitzpatrick)
-                if (defaultEmoji != null) {
-                    defaultEmoji.siblings.add(emojiWithFitzpatrick)
-                } else {
-                    // This emoji doesn't have a default tone, ie. :man_in_business_suit_levitating_tone1:
-                    // In this case, the default emoji becomes the first toned one.
-                    ALL_EMOJIS.add(emojiWithFitzpatrick)
-                }
-            } else {
-                ALL_EMOJIS.add(emojiWithUnicode)
-            }
-            shortNameToUnicode.apply {
-                put(emoji.shortname, unicode)
-                emoji.shortnameAlternates.forEach { alternate -> put(alternate, unicode) }
+
+            val density = context.resources.displayMetrics.density
+            val px = (32 * density).toInt()
+
+            customEmojis.forEach {
+                val future = Glide.with(context)
+                    .load(it.url)
+                    .submit(px, px)
+                future.get()
             }
         }
     }

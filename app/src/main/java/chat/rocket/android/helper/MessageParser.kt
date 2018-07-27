@@ -11,7 +11,6 @@ import android.text.Spanned
 import android.text.style.ClickableSpan
 import android.text.style.ImageSpan
 import android.text.style.ReplacementSpan
-import android.text.style.StyleSpan
 import android.util.Patterns
 import android.view.View
 import chat.rocket.android.R
@@ -137,13 +136,18 @@ class MessageParser @Inject constructor(
         override fun visit(document: Document) {
             val spannable = EmojiParser.parse(context, builder.text())
             if (spannable is Spanned) {
-                val spans = spannable.getSpans(0, spannable.length, EmojiTypefaceSpan::class.java)
-                val spans2 = spannable.getSpans(0, spannable.length, ImageSpan::class.java)
-                spans.forEach {
-                    builder.setSpan(it, spannable.getSpanStart(it), spannable.getSpanEnd(it), 0)
+                val emojiOneTypefaceSpans = spannable.getSpans(0, spannable.length,
+                    EmojiTypefaceSpan::class.java)
+                val emojiImageSpans = spannable.getSpans(0, spannable.length, ImageSpan::class.java)
+
+                emojiOneTypefaceSpans.forEach {
+                    builder.setSpan(it, spannable.getSpanStart(it), spannable.getSpanEnd(it),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
-                spans2.forEach {
-                    builder.setSpan(it, spannable.getSpanStart(it), spannable.getSpanEnd(it), 0)
+
+                emojiImageSpans.forEach {
+                    builder.setSpan(it, spannable.getSpanStart(it), spannable.getSpanEnd(it),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
             }
         }

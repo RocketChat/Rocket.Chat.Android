@@ -72,7 +72,7 @@ class MessageViewHolder(
             text_content.setTextColor(
                 if (data.isTemporary) Color.GRAY else Color.BLACK
             )
-            
+
             data.message.let {
                 text_edit_indicator.isVisible = !it.isSystemMessage() && it.editedBy != null
                 image_star_indicator.isVisible = it.starred?.isNotEmpty() ?: false

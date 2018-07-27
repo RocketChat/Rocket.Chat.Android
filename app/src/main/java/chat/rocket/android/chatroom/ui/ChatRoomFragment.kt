@@ -6,21 +6,24 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
+import android.os.SystemClock
+import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.style.ImageSpan
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.text.bold
 import androidx.core.view.isVisible
@@ -53,10 +56,11 @@ import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiPickerPopup
 import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
+import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.util.extension.asObservable
+import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
@@ -70,6 +74,7 @@ import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.model.ChatRoom
+import com.bumptech.glide.load.resource.gif.GifDrawable
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -78,6 +83,8 @@ import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -127,7 +134,9 @@ internal const val MENU_ACTION_PINNED_MESSAGES = 4
 internal const val MENU_ACTION_FAVORITE_MESSAGES = 5
 internal const val MENU_ACTION_FILES = 6
 
-class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
+class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener,
+    Drawable.Callback {
+
     @Inject
     lateinit var presenter: ChatRoomPresenter
     @Inject
@@ -428,7 +437,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             } else {
                 if (dy < 0 && !button_fab.isVisible) {
                     button_fab.show()
-                    if (newMessageCount !=0) text_count.isVisible = true
+                    if (newMessageCount != 0) text_count.isVisible = true
                 }
             }
         }
@@ -487,14 +496,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             if (isMessageReceived && button_fab.isVisible) {
                 newMessageCount++
 
-            if (newMessageCount <= 99)
-                text_count.text = newMessageCount.toString()
-            else
-                text_count.text = "99+"
+                if (newMessageCount <= 99)
+                    text_count.text = newMessageCount.toString()
+                else
+                    text_count.text = "99+"
 
                 text_count.isVisible = true
-            }
-            else if (!button_fab.isVisible)
+            } else if (!button_fab.isVisible)
                 recycler_view.scrollToPosition(0)
             verticalScrollOffset.set(0)
             empty_chat_view.isVisible = adapter.itemCount == 0
@@ -618,8 +626,29 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onEmojiAdded(emoji: Emoji) {
         val cursorPosition = text_message.selectionStart
         if (cursorPosition > -1) {
-            text_message.text?.insert(cursorPosition, EmojiParser.parse(context!!, emoji.shortname))
-            text_message.setSelection(cursorPosition + emoji.unicode.length)
+            context?.let { ctx ->
+                launch(UI) {
+                    val parsedText = EmojiParser.parseAsync(ctx, emoji.shortname).await()
+
+                    if (parsedText is Spannable) {
+                        val spans = parsedText.getSpans(0, parsedText.length, ImageSpan::class.java)
+                        spans.forEach {
+                            if (it.drawable is GifDrawable) {
+                                it.drawable.callback = this@ChatRoomFragment
+                                (it.drawable as GifDrawable).start()
+                            }
+                        }
+
+                        text_message.text?.insert(text_message.selectionStart, parsedText)
+                        text_message.text?.insert(text_message.selectionStart, " ")
+                    }
+
+                    // If it has no url then it's not a custom emoji.
+                    if (emoji.url == null) {
+                        text_message.setSelection(cursorPosition + emoji.unicode.length)
+                    }
+                }
+            }
         }
     }
 
@@ -750,9 +779,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_send.isVisible = false
             button_show_attachment_options.alpha = 1f
             button_show_attachment_options.isVisible = true
+
             activity?.supportFragmentManager?.addOnBackStackChangedListener {
                 println("attach")
             }
+
             activity?.supportFragmentManager?.registerFragmentLifecycleCallbacks(
                 object : FragmentManager.FragmentLifecycleCallbacks() {
                     override fun onFragmentAttached(fm: FragmentManager, f: Fragment, context: Context) {
@@ -764,6 +795,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 },
                 true
             )
+
             subscribeComposeTextMessage()
             emojiKeyboardPopup =
                 EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
@@ -883,7 +915,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             clearMessageComposition(false)
             if (text_message.textContent.isEmpty()) {
                 KeyboardHelper.showSoftKeyboard(text_message)
-            }    
+            }
         }
     }
 
@@ -950,5 +982,17 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupToolbar(toolbarTitle: String) {
         (activity as ChatRoomActivity).showToolbarTitle(toolbarTitle)
+    }
+
+    override fun unscheduleDrawable(who: Drawable?, what: Runnable?) {
+        text_message?.removeCallbacks(what)
+    }
+
+    override fun invalidateDrawable(p0: Drawable?) {
+        text_message?.invalidate()
+    }
+
+    override fun scheduleDrawable(who: Drawable?, what: Runnable?, w: Long) {
+        text_message?.postDelayed(what, w)
     }
 }

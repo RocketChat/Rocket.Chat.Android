@@ -2,19 +2,21 @@ package chat.rocket.android.emoji
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
+import android.graphics.drawable.BitmapDrawable
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ImageSpan
 import android.util.Log
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.gif.GifDrawable
-import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.FutureTarget
+import com.bumptech.glide.request.RequestFutureTarget
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.experimental.async
 
 class EmojiParser {
 
@@ -77,7 +79,6 @@ class EmojiParser {
                 regex.findAll(spannable).iterator().forEach { match ->
                     customEmojis.find { it.shortname.toLowerCase() == match.value.toLowerCase() }?.let {
                         it.url?.let { url ->
-
                             try {
                                 val glideRequest = if (url.endsWith("gif", true)) {
                                     Glide.with(context).asGif()
@@ -85,7 +86,13 @@ class EmojiParser {
                                     Glide.with(context).asBitmap()
                                 }
 
-                                val futureTarget = glideRequest.load(url).submit(px, px)
+                                val futureTarget = glideRequest
+                                    .apply(RequestOptions()
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .onlyRetrieveFromCache(true))
+                                    .load(url)
+                                    .submit(px, px)
+
                                 val range = match.range
                                 futureTarget.get()?.let { image ->
                                     if (image is Bitmap) {
@@ -104,6 +111,14 @@ class EmojiParser {
                     }
                 }
             }
+        }
+
+        fun parseAsync(
+            context: Context,
+            text: CharSequence,
+            factory: Spannable.Factory? = null
+        ): Deferred<CharSequence> {
+            return async(CommonPool) { parse(context, text, factory) }
         }
     }
 }
