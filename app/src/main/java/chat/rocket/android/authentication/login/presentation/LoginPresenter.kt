@@ -134,10 +134,15 @@ class LoginPresenter @Inject constructor(
     fun authenticateWithDeepLink(deepLinkInfo: LoginDeepLinkInfo) {
         val serverUrl = deepLinkInfo.url
         setupConnectionInfo(serverUrl)
-        deepLinkUserId = deepLinkInfo.userId
-        deepLinkToken = deepLinkInfo.token
-        tokenRepository.save(serverUrl, Token(deepLinkUserId, deepLinkToken))
-        doAuthentication(TYPE_LOGIN_DEEP_LINK)
+        if (deepLinkInfo.userId != null && deepLinkInfo.token != null) {
+            deepLinkUserId = deepLinkInfo.userId
+            deepLinkToken = deepLinkInfo.token
+            tokenRepository.save(serverUrl, Token(deepLinkUserId, deepLinkToken))
+            doAuthentication(TYPE_LOGIN_DEEP_LINK)
+        } else {
+            // If we don't have the login credentials, just go through normal setup and user input.
+            setupView()
+        }
     }
 
     private fun setupConnectionInfo(serverUrl: String) {
