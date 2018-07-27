@@ -507,9 +507,7 @@ class LoginPresenter @Inject constructor(
     private fun getServiceMap(
         listMap: List<Map<String, Any>>,
         serviceName: String
-    ): Map<String, Any>? {
-        return listMap.find { map -> map.containsValue(serviceName) }
-    }
+    ): Map<String, Any>? = listMap.find { map -> map.containsValue(serviceName) }
 
     /**
      * Returns the OAuth client ID of a [serviceMap].
@@ -519,83 +517,56 @@ class LoginPresenter @Inject constructor(
      * @param serviceMap The service map to get the OAuth client ID.
      * @return The OAuth client ID or null otherwise.
      */
-    private fun getOauthClientId(serviceMap: Map<String, Any>): String? {
-        return try {
-            serviceMap["clientId"] as String ?: serviceMap["appId"] as String
-        } catch (exception: ClassCastException) {
-            null
-        }
-    }
+    private fun getOauthClientId(serviceMap: Map<String, Any>): String? =
+        serviceMap["clientId"] as? String ?: serviceMap["appId"] as? String
 
     /**
      * Returns a custom OAuth service list.
      *
      * @return A custom OAuth service list, otherwise an empty list if there is no custom OAuth service.
      */
-    private fun getCustomOauthServices(listMap: List<Map<String, Any>>): List<Map<String, Any>> {
-        return listMap.filter { map -> map["custom"] == true }
-    }
+    private fun getCustomOauthServices(listMap: List<Map<String, Any>>): List<Map<String, Any>> =
+        listMap.filter { map -> map["custom"] == true }
 
     /** Returns the custom OAuth service host.
      *
      * @param serviceMap The service map to get the custom OAuth service host.
      * @return The custom OAuth service host, otherwise null.
      */
-    private fun getCustomOauthHost(serviceMap: Map<String, Any>): String? {
-        return try {
-            serviceMap["serverURL"] as String
-        } catch (exception: ClassCastException) {
-            null
-        }
-    }
+    private fun getCustomOauthHost(serviceMap: Map<String, Any>): String? =
+        serviceMap["serverURL"] as? String
 
     /** Returns the custom OAuth service authorize path.
      *
      * @param serviceMap The service map to get the custom OAuth service authorize path.
      * @return The custom OAuth service authorize path, otherwise null.
      */
-    private fun getCustomOauthAuthorizePath(serviceMap: Map<String, Any>): String? {
-        return try {
-            serviceMap["authorizePath"] as String
-        } catch (exception: ClassCastException) {
-            null
-        }
-    }
+    private fun getCustomOauthAuthorizePath(serviceMap: Map<String, Any>): String? =
+        serviceMap["authorizePath"] as? String
 
     /** Returns the custom OAuth service scope.
      *
      * @param serviceMap The service map to get the custom OAuth service scope.
      * @return The custom OAuth service scope, otherwise null.
      */
-    private fun getCustomOauthScope(serviceMap: Map<String, Any>): String? {
-        return try {
-            serviceMap["scope"] as String
-        } catch (exception: ClassCastException) {
-            null
-        }
-    }
+    private fun getCustomOauthScope(serviceMap: Map<String, Any>): String? =
+        serviceMap["scope"] as? String
 
     /** Returns the text of the custom OAuth service.
-    *
-    * @param serviceMap The service map to get the text of the custom OAuth service.
-    * @return The text of the custom OAuth service, otherwise null.
-    */
-    private fun getCustomOauthServiceName(serviceMap: Map<String, Any>): String? {
-        return try {
-            serviceMap["service"] as String
-        } catch (exception: ClassCastException) {
-            null
-        }
-    }
+     *
+     * @param serviceMap The service map to get the text of the custom OAuth service.
+     * @return The text of the custom OAuth service, otherwise null.
+     */
+    private fun getCustomOauthServiceName(serviceMap: Map<String, Any>): String? =
+        serviceMap["service"] as? String
 
     /**
      * Returns a SAML OAuth service list.
      *
      * @return A SAML service list, otherwise an empty list if there is no SAML OAuth service.
      */
-    private fun getSamlServices(listMap: List<Map<String, Any>>): List<Map<String, Any>> {
-        return listMap.filter { map -> map["service"] == "saml" }
-    }
+    private fun getSamlServices(listMap: List<Map<String, Any>>): List<Map<String, Any>> =
+        listMap.filter { map -> map["service"] == "saml" }
 
     /**
      * Returns the SAML provider.
@@ -603,13 +574,8 @@ class LoginPresenter @Inject constructor(
      * @param serviceMap The service map to provider from.
      * @return The SAML provider, otherwise null.
      */
-    private fun getSamlProvider(serviceMap: Map<String, Any>): String? {
-        return try {
-            (serviceMap["clientConfig"] as Map<*, *>)["provider"] as String
-        } catch (exception: ClassCastException) {
-            null
-        }
-    }
+    private fun getSamlProvider(serviceMap: Map<String, Any>): String? =
+        (serviceMap["clientConfig"] as Map<*, *>)["provider"] as? String
 
     /**
      * Returns the text of the SAML service.
@@ -617,13 +583,8 @@ class LoginPresenter @Inject constructor(
      * @param serviceMap The service map to get the text of the SAML service.
      * @return The text of the SAML service, otherwise null.
      */
-    private fun getSamlServiceName(serviceMap: Map<String, Any>): String? {
-        return try {
-            serviceMap["buttonLabelText"] as String
-        } catch (exception: ClassCastException) {
-            null
-        }
-    }
+    private fun getSamlServiceName(serviceMap: Map<String, Any>): String? =
+        serviceMap["buttonLabelText"] as? String
 
     /**
      * Returns the text color of the service name.
@@ -632,13 +593,8 @@ class LoginPresenter @Inject constructor(
      * @param serviceMap The service map to get the text color from.
      * @return The text color of the service (custom OAuth or SAML), otherwise null.
      */
-    private fun getServiceNameColorForCustomOauthOrSaml(serviceMap: Map<String, Any>): Int? {
-        return try {
-            (serviceMap["buttonLabelColor"] as String).parseColor()
-        } catch (exception: ClassCastException) {
-            null
-        }
-    }
+    private fun getServiceNameColorForCustomOauthOrSaml(serviceMap: Map<String, Any>): Int? =
+        (serviceMap["buttonLabelColor"] as? String)?.parseColor()
 
     /**
      * Returns the button color of the service name.
@@ -647,13 +603,8 @@ class LoginPresenter @Inject constructor(
      * @param serviceMap The service map to get the button color from.
      * @return The button color of the service (custom OAuth or SAML), otherwise null.
      */
-    private fun getServiceButtonColor(serviceMap: Map<String, Any>): Int? {
-        return try {
-            (serviceMap["buttonColor"] as String).parseColor()
-        } catch (exception: ClassCastException) {
-            null
-        }
-    }
+    private fun getServiceButtonColor(serviceMap: Map<String, Any>): Int? =
+        (serviceMap["buttonColor"] as? String)?.parseColor()
 
     private suspend fun saveAccount(username: String) {
         val icon = settings.favicon()?.let {
