@@ -78,6 +78,7 @@
     <string name="msg_content_description_log_in_using_meteor">Inicia sesión usando Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Inicia sesión usando Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Inicia sesión usando Gitlab</string>
+    <string name="msg_content_description_log_in_using_wordprees">Login using WordPress</string> <!-- TODO Translate-->
     <string name="msg_content_description_send_message">Enviar mensaje</string>
     <string name="msg_content_description_show_attachment_options">Mostrar opciones de archivo adjunto</string>
     <string name="msg_you">Tú</string>
