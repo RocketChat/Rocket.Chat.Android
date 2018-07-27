@@ -31,7 +31,15 @@ import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.domain.wideTile
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
-import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.casUrl
+import chat.rocket.android.util.extensions.encodeToBase64
+import chat.rocket.android.util.extensions.generateRandomString
+import chat.rocket.android.util.extensions.isEmail
+import chat.rocket.android.util.extensions.parseColor
+import chat.rocket.android.util.extensions.registerPushToken
+import chat.rocket.android.util.extensions.samlUrl
+import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
