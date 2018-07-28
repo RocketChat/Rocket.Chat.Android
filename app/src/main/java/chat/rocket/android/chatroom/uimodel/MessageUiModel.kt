@@ -12,6 +12,8 @@ data class MessageUiModel(
     override val senderName: CharSequence,
     override val content: CharSequence,
     override val isPinned: Boolean,
+    override var currentDayMarkerText: String,
+    override var showDayMarker: Boolean,
     override var reactions: List<ReactionUiModel>,
     override var nextDownStreamMessage: BaseUiModel<*>? = null,
     override var preview: Message? = null,

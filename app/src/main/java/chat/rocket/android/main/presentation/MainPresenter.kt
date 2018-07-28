@@ -152,7 +152,7 @@ class MainPresenter @Inject constructor(
     }
 
     fun connect() {
-        launch { refreshSettingsInteractor.refresh(currentServer) }
+        refreshSettingsInteractor.refreshAsync(currentServer)
         manager.connect()
     }
 
@@ -176,7 +176,7 @@ class MainPresenter @Inject constructor(
     fun changeDefaultStatus(userStatus: UserStatus) {
         launchUI(strategy) {
             try {
-                client.setDefaultStatus(userStatus)
+                manager.setDefaultStatus(userStatus)
                 view.showUserStatus(userStatus)
             } catch (ex: RocketChatException) {
                 ex.message?.let {

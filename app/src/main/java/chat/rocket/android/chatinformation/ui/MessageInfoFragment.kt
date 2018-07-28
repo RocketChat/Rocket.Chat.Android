@@ -68,7 +68,7 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
 
     private fun setupRecyclerView() {
         // Initialize the endlessRecyclerViewScrollListener so we don't NPE at onDestroyView
-        val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+        val linearLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
         adapter = ReadReceiptAdapter()
         linearLayoutManager.stackFromEnd = true
         receipt_list.layoutManager = linearLayoutManager
