@@ -11,7 +11,8 @@ import androidx.room.PrimaryKey
             Index(value = ["userId"]),
             Index(value = ["ownerId"]),
             Index(value = ["subscriptionId"], unique = true),
-            Index(value = ["updatedAt"])
+            Index(value = ["updatedAt"]),
+            Index(value = ["lastMessageUserId"])
         ],
         foreignKeys = [
             ForeignKey(entity = UserEntity::class, parentColumns = ["id"], childColumns = ["ownerId"]),
@@ -19,7 +20,6 @@ import androidx.room.PrimaryKey
             ForeignKey(entity = UserEntity::class, parentColumns = ["id"], childColumns = ["lastMessageUserId"])
         ]
 )
-
 data class ChatRoomEntity(
     @PrimaryKey var id: String,
     var subscriptionId: String,

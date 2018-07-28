@@ -14,6 +14,7 @@ import chat.rocket.android.profile.presentation.ProfileView
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.avatar_profile.*
@@ -28,7 +29,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private lateinit var currentEmail: String
     private lateinit var currentAvatar: String
     private var actionMode: ActionMode? = null
-    private lateinit var editTextsDisposable: Disposable
+    private val editTextsDisposable = CompositeDisposable()
 
     companion object {
         fun newInstance() = ProfileFragment()
@@ -170,7 +171,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun subscribeEditTexts() {
-        editTextsDisposable = Observables.combineLatest(
+        editTextsDisposable.add(Observables.combineLatest(
             text_name.asObservable(),
             text_username.asObservable(),
             text_email.asObservable(),
@@ -186,11 +187,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             } else {
                 finishActionMode()
             }
-        }
+        })
     }
 
     private fun unsubscribeEditTexts() {
-        editTextsDisposable.dispose()
+        editTextsDisposable.clear()
     }
 
     private fun startActionMode() {
