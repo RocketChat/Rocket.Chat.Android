@@ -4,6 +4,7 @@ import android.app.Application
 import chat.rocket.android.app.RocketChatWearApplication
 import chat.rocket.android.dagger.module.ActivityBuilder
 import chat.rocket.android.dagger.module.AppModule
+import chat.rocket.android.dagger.module.ReceiverBuilder
 import chat.rocket.android.dagger.module.ServiceBuilder
 import chat.rocket.android.push.FirebaseTokenService
 import chat.rocket.android.services.DataLayerListenerService
@@ -13,7 +14,10 @@ import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AndroidSupportInjectionModule::class, AppModule::class, ServiceBuilder::class, ActivityBuilder::class])
+@Component(
+    modules = [AndroidSupportInjectionModule::class, AppModule::class, ServiceBuilder::class,
+        ActivityBuilder::class, ReceiverBuilder::class]
+)
 interface AppComponent {
     @Component.Builder
     interface Builder {

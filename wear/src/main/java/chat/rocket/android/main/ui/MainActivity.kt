@@ -7,6 +7,7 @@ import androidx.wear.widget.drawer.WearableNavigationDrawerView
 import chat.rocket.android.R
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
+import com.google.firebase.FirebaseApp
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.android.*
@@ -35,6 +36,7 @@ class MainActivity : Activity(), MainView, HasActivityInjector,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_rooms)
 
+        FirebaseApp.initializeApp(this)
         launch(CommonPool) {
             try {
                 val token = FirebaseInstanceId.getInstance().token

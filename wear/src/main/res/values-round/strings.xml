@@ -29,4 +29,13 @@
     <string name="default_settings_item">Account</string>
     <string name="settings_item_account">@string/default_settings_item</string>
 
+    <!--Reply Choices For Notification-->
+    <string-array name="reply_choices">
+        <item>Yes</item>
+        <item>Okay!</item>
+        <item>Sounds Cool</item>
+        <item>No</item>
+        <item>Got it!</item>
+    </string-array>
+
 </resources>

@@ -13,9 +13,9 @@ import android.os.Parcelable
 import android.text.Html
 import android.text.Spanned
 import androidx.core.app.NotificationCompat
+import androidx.core.app.RemoteInput
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.chatRoomIntent
-import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import com.squareup.moshi.Json
@@ -90,7 +90,7 @@ class PushManager @Inject constructor(
                 .bigText(message.fromHtml())
                 .setBigContentTitle(title.fromHtml())
 
-            builder.addReplyAction()
+            builder.addReplyAction(pushMessage)
             builder.setStyle(bigText)
 
             return builder.build()
@@ -108,6 +108,7 @@ class PushManager @Inject constructor(
                 .setContentText(message.fromHtml())
                 .setSmallIcon(R.drawable.notification_small_icon)
                 .setContentIntent(contentIntent)
+
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val channelId = host
@@ -127,7 +128,7 @@ class PushManager @Inject constructor(
 
     private fun getContentIntent(pushMessage: PushMessage): PendingIntent {
         val chatRoomName =
-            if (pushMessage.info.name == null) "#DefaultChannel" else pushMessage.info.name
+            pushMessage.info.name ?: "#general"
         val notificationIntent = context.chatRoomIntent(
             chatRoomId = pushMessage.info.roomId,
             chatRoomName = chatRoomName,
@@ -141,20 +142,26 @@ class PushManager @Inject constructor(
         )
     }
 
-    private fun NotificationCompat.Builder.addReplyAction(): NotificationCompat.Builder {
+    private fun NotificationCompat.Builder.addReplyAction(pushMessage: PushMessage): NotificationCompat.Builder {
         val actionExtender = NotificationCompat.Action.WearableExtender()
             .setHintLaunchesActivity(true)
             .setHintDisplayActionInline(true)
 
         val replyHint = context.getText(R.string.notification_reply_action_hint)
-        val notificationIntent = Intent(context, MainActivity::class.java)
-        val notificationPendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0)
+        val replyChoices = context.resources.getStringArray(R.array.reply_choices)
+        val remoteInput = RemoteInput.Builder(REMOTE_INPUT_REPLY)
+            .setLabel(replyHint)
+            .setChoices(replyChoices)
+            .build()
+
+        val notificationPendingIntent = getPendingIntent(pushMessage)
         val replyAction = NotificationCompat.Action.Builder(
             R.drawable.ic_reply_white_24dp,
             replyHint,
             notificationPendingIntent
         )
             .extend(actionExtender)
+            .addRemoteInput(remoteInput)
             .build()
 
         this.addAction(replyAction)
@@ -165,6 +172,39 @@ class PushManager @Inject constructor(
         return Html.fromHtml(this as String)
     }
 
+    private fun getPendingIntent(pushMessage: PushMessage): PendingIntent {
+        val replyIntent = getReplyIntent(pushMessage)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            PendingIntent.getBroadcast(
+                context,
+                random.nextInt(),
+                replyIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        } else {
+            PendingIntent.getActivity(
+                context,
+                random.nextInt(),
+                replyIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+    }
+
+    private fun getReplyIntent(pushMessage: PushMessage): Intent {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Intent(context, DirectReplyReceiver::class.java)
+        } else {
+            context.chatRoomIntent(
+                chatRoomId = pushMessage.info.roomId,
+                chatRoomName = pushMessage.info.name ?: "general",
+                chatRoomType = pushMessage.info.type.toString()
+            )
+        }.also {
+            it.action = ACTION_REPLY
+            it.putExtra(EXTRA_PUSH_MESSAGE, pushMessage)
+        }
+    }
 
     data class PushMessage(
         val title: String,
@@ -306,3 +346,7 @@ class PushManager @Inject constructor(
         }
     }
 }
+
+const val EXTRA_PUSH_MESSAGE = "chat.rocket.android.EXTRA_PUSH_MESSAGE"
+const val REMOTE_INPUT_REPLY = "remote_input_reply"
+const val ACTION_REPLY = "chat.rocket.android.ACTION_REPLY"

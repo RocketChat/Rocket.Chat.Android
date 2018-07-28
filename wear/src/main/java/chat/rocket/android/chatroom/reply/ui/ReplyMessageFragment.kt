@@ -16,16 +16,18 @@ import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.fragment_reply_message.*
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String): Fragment {
+fun newInstance(chatRoomId: String, replyText: String): Fragment {
     return ReplyMessageFragment().apply {
         arguments = Bundle(1).apply {
             putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
+            putString(BUNDLE_REPLY_TEXT, replyText)
         }
     }
 
 }
 
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
+private const val BUNDLE_REPLY_TEXT = "reply_text"
 
 class ReplyMessageFragment : Fragment(), ReplyMessageView {
 
@@ -34,6 +36,7 @@ class ReplyMessageFragment : Fragment(), ReplyMessageView {
     @Inject
     lateinit var navigator: ChatRoomNavigator
     private lateinit var chatRoomId: String
+    private lateinit var replyText: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -49,6 +52,8 @@ class ReplyMessageFragment : Fragment(), ReplyMessageView {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        reply_message_edit_text.setText(replyText)
+
         with(action_message_send) {
             setOnClickListener {
                 if (reply_message_edit_text.text.isNotBlank()) {
@@ -99,6 +104,7 @@ class ReplyMessageFragment : Fragment(), ReplyMessageView {
         val bundle = arguments
         if (arguments != null) {
             chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
+            replyText = bundle.getString(BUNDLE_REPLY_TEXT)
         }
     }
 }

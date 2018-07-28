@@ -2,11 +2,14 @@ package chat.rocket.android.chatroom.ui
 
 import android.app.Activity
 import android.app.Fragment
+import android.app.RemoteInput
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
+import chat.rocket.android.push.ACTION_REPLY
+import chat.rocket.android.push.REMOTE_INPUT_REPLY
 import dagger.android.*
 import javax.inject.Inject
 
@@ -40,13 +43,25 @@ class ChatRoomActivity : Activity(), HasActivityInjector, HasFragmentInjector {
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
+    private var replyText: CharSequence? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_room)
         getValuesFromIntent()
-        navigator.toChatRoom(chatRoomId, chatRoomName, chatRoomType)
+        if (replyText != null) {
+            navigator.toReplyMessage(
+                chatRoomId = chatRoomId,
+                replyText = replyText.toString()
+            )
+        } else {
+            navigator.toChatRoom(
+                chatRoomId = chatRoomId,
+                chatRoomName = chatRoomName,
+                chatRoomType = chatRoomType
+            )
+        }
     }
 
     override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
@@ -57,5 +72,16 @@ class ChatRoomActivity : Activity(), HasActivityInjector, HasFragmentInjector {
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
         chatRoomName = intent.getStringExtra(INTENT_CHAT_ROOM_NAME)
         chatRoomType = intent.getStringExtra(INTENT_CHAT_ROOM_TYPE)
+        if (ACTION_REPLY == intent.action) {
+            replyText = extractReplyMessage(intent)
+        }
+    }
+
+    private fun extractReplyMessage(intent: Intent): CharSequence? {
+        val bundle = RemoteInput.getResultsFromIntent(intent)
+        bundle?.let {
+            return bundle.getCharSequence(REMOTE_INPUT_REPLY)
+        }
+        return null
     }
 }
