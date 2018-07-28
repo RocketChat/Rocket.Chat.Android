@@ -81,6 +81,8 @@
 
         <activity android:name=".main.ui.MainActivity" />
         <activity android:name=".chatroom.ui.ChatRoomActivity" />
+        <activity android:name="androidx.wear.activity.ConfirmationActivity" />
+
 
     </application>
 

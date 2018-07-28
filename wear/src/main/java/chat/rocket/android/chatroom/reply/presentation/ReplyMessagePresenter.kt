@@ -2,6 +2,10 @@ package chat.rocket.android.chatroom.reply.presentation
 
 import chat.rocket.android.server.GetCurrentServerInteractor
 import chat.rocket.android.server.RocketChatClientFactory
+import chat.rocket.android.util.retryIO
+import chat.rocket.common.RocketChatException
+import chat.rocket.common.RocketChatNetworkErrorException
+import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.sendMessage
 import kotlinx.coroutines.experimental.launch
@@ -24,19 +28,21 @@ class ReplyMessagePresenter @Inject constructor(
             view.showLoading()
             try {
                 val id = UUID.randomUUID().toString()
-                client.sendMessage(id, chatRoomId, text)
+                retryIO("sending message") {
+                    client.sendMessage(id, chatRoomId, text)
+                }
                 view.messageSentSuccessfully()
-            } catch (ex: Exception) {
-                //update this when this is updated in the mobile app
-                // TODO - remove the generic message when we implement :userId:/message subscription
-                if (ex is IllegalStateException) {
-                    Timber.d(ex, "Probably a read-only problem...")
+            } catch (ex: RocketChatException) {
+                Timber.e(ex)
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
                     view.showGenericErrorMessage()
-                } else {
-                    // some other error, just rethrow it...
-                    throw ex
                 }
                 view.hideLoading()
+
+                if (ex is RocketChatNetworkErrorException)
+                    view.showGenericErrorMessage()
             }
         }
     }

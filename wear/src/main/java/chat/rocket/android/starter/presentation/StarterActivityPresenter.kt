@@ -2,10 +2,12 @@ package chat.rocket.android.starter.presentation
 
 import chat.rocket.android.server.*
 import chat.rocket.android.util.retryIO
+import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.Token
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.me
 import kotlinx.coroutines.experimental.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class StarterActivityPresenter @Inject constructor(
@@ -31,8 +33,12 @@ class StarterActivityPresenter @Inject constructor(
 
         //TODO remove the launch segment. This is just for testing purposes.
         launch {
-            username = retryIO("me()") {
-                client.me().username
+            try {
+                username = retryIO("me()") {
+                    client.me().username
+                }
+            } catch (ex: RocketChatException) {
+                Timber.e(ex)
             }
             if (username != null) {
                 localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, username)

@@ -15,6 +15,8 @@
     <string name="msg_login_with_phone">Please login with the mobile app</string>
     <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
     <string name="msg_attachments_exist">This message has attachments.</string>
+    <string name="msg_sent">Message Sent</string>
+    <string name="msg_sending_failed">Network Error</string>
 
     <!--EditTextHints-->
     <string name="hint_send_message">Enter Message</string>

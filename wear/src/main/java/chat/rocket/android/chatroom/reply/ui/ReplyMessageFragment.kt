@@ -1,11 +1,13 @@
 package chat.rocket.android.chatroom.reply.ui
 
 import android.app.Fragment
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.wear.activity.ConfirmationActivity
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.chatroom.reply.presentation.ReplyMessagePresenter
@@ -14,6 +16,8 @@ import chat.rocket.android.util.showToast
 import chat.rocket.android.util.ui
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.fragment_reply_message.*
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
 fun newInstance(chatRoomId: String, replyText: String): Fragment {
@@ -23,7 +27,6 @@ fun newInstance(chatRoomId: String, replyText: String): Fragment {
             putString(BUNDLE_REPLY_TEXT, replyText)
         }
     }
-
 }
 
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
@@ -65,7 +68,13 @@ class ReplyMessageFragment : Fragment(), ReplyMessageView {
 
     override fun messageSentSuccessfully() {
         hideLoading()
-        navigator.removeReplyMessageFragment()
+        showConfirmationAnimation(
+            ConfirmationActivity.SUCCESS_ANIMATION, getString(R.string.msg_sent)
+        )
+        launch {
+            delay(1000L)
+            navigator.removeReplyMessageFragment()
+        }
     }
 
     override fun showMessage(resId: Int) {
@@ -76,8 +85,12 @@ class ReplyMessageFragment : Fragment(), ReplyMessageView {
         ui { showToast(message) }
     }
 
-    override fun showGenericErrorMessage() =
-        showMessage(getString(R.string.msg_generic_error))
+    override fun showGenericErrorMessage() {
+        showConfirmationAnimation(
+            ConfirmationActivity.FAILURE_ANIMATION,
+            getString(R.string.msg_sending_failed)
+        )
+    }
 
     override fun showLoading() {
         ui {
@@ -91,6 +104,19 @@ class ReplyMessageFragment : Fragment(), ReplyMessageView {
             view_loading.isVisible = false
             changeViewVisibility(true, 1.0f)
         }
+    }
+
+    private fun showConfirmationAnimation(animationType: Int, confirmationMessage: String) {
+        val confirmationIntent = Intent(context, ConfirmationActivity::class.java)
+        confirmationIntent.putExtra(
+            ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+            animationType
+        )
+        confirmationIntent.putExtra(
+            ConfirmationActivity.EXTRA_MESSAGE,
+            confirmationMessage
+        )
+        startActivity(confirmationIntent)
     }
 
     private fun changeViewVisibility(visibility: Boolean, alpha: Float) {
