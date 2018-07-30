@@ -71,7 +71,7 @@ class ServerFragment : Fragment(), ServerView {
         }
 
         text_server_protocol.adapter = ArrayAdapter<String>(activity,
-                R.layout.spinner_list, arrayOf("https://", "http://"))
+                android.R.layout.simple_dropdown_item_1line, arrayOf("https://", "http://"))
         text_server_protocol.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 when(position) {

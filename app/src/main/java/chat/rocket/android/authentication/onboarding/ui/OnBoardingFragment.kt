@@ -12,16 +12,17 @@ import chat.rocket.android.authentication.onboarding.presentation.OnBoardingPres
 import chat.rocket.android.authentication.onboarding.presentation.OnBoardingView
 import chat.rocket.android.authentication.server.ui.ServerFragment
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.util.extensions.addFragmentBackStack
-import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_authentication_on_boarding.*
 import javax.inject.Inject
 
 class OnBoardingFragment : Fragment(), OnBoardingView {
+
     @Inject
     lateinit var presenter: OnBoardingPresenter
+    private var protocol = "https://"
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_authentication_on_boarding)
 
@@ -45,9 +46,7 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
             }
         }
         button_join_community.setOnClickListener {
-            (activity as AuthenticationActivity).addFragmentBackStack("ServerFragment", R.id.fragment_container) {
-                ServerFragment.newInstance(deepLinkInfo)
-            }
+            connectToCommunityServer()
         }
         button_create_server.setOnClickListener {
             presenter.createServer()
@@ -60,14 +59,41 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
     }
 
     override fun showLoading() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        ui{
+            view_loading.setVisible(true)
+        }
     }
 
     override fun hideLoading() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        ui{
+            view_loading.setVisible(false)
+        }
     }
 
+    override fun showInvalidServerUrlMessage() = showMessage(getString(R.string.msg_invalid_server_url))
 
+    override fun showMessage(resId: Int) {
+        ui {
+            showToast(resId)
+        }
+    }
+
+    override fun showMessage(message: String) {
+        ui {
+            showToast(message)
+        }
+    }
+
+    override fun showGenericErrorMessage() {
+        showMessage(getString(R.string.msg_generic_error))
+    }
+
+    private fun connectToCommunityServer() {
+        ui {
+            val url = "open.rocket.chat"
+            presenter.connect("$protocol${url.sanitize()}")
+        }
+    }
     companion object {
         fun newInstance() = OnBoardingFragment()
     }

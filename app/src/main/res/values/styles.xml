@@ -13,7 +13,7 @@
         <item name="searchViewStyle">@style/ChatRoom.SearchView</item>
     </style>
 
-    <style name="AuthenticationTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="AuthenticationTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/colorWhite</item>
     </style>

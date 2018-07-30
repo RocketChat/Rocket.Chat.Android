@@ -166,10 +166,20 @@
                 android:textStyle="bold"
                 android:textColor="#fff"
                 android:letterSpacing="0.04"
-                android:text="Connect with a server"
+                android:text="Create a new server"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/image_new_server" />
         </RelativeLayout>
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/view_loading"
+            style="@style/Authentication.AVLoadingIndicatorView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
