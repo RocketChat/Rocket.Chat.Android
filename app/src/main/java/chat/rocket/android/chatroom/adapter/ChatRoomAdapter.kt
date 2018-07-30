@@ -8,14 +8,20 @@ import android.view.ViewGroup
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.uimodel.*
+import chat.rocket.android.customtab.CustomTab
+import chat.rocket.android.customtab.WebViewFallback
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.emoji.EmojiReactionListener
+import chat.rocket.android.helper.ToastHelper
+import chat.rocket.core.model.attachment.actions.Action
+import chat.rocket.core.model.attachment.actions.ButtonAction
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
 import timber.log.Timber
 import java.security.InvalidParameterException
 
 class ChatRoomAdapter(
+    private val roomId: String? = null,
     private val roomType: String? = null,
     private val roomName: String? = null,
     private val presenter: ChatRoomPresenter? = null,
@@ -73,6 +79,10 @@ class ChatRoomAdapter(
                     presenter?.openDirectMessage(roomName, permalink)
                 }
             }
+            BaseUiModel.ViewType.ACTIONS_ATTACHMENT -> {
+                val view = parent.inflate(R.layout.item_actions_attachment)
+                ActionsAttachmentViewHolder(view, actionsListener, reactionListener, actionAttachmentOnClickListener)
+            }
             else -> {
                 throw InvalidParameterException("TODO - implement for ${viewType.toViewType()}")
             }
@@ -126,6 +136,8 @@ class ChatRoomAdapter(
                 holder.bind(dataSet[position] as GenericFileAttachmentUiModel)
             is MessageReplyViewHolder ->
                 holder.bind(dataSet[position] as MessageReplyUiModel)
+            is ActionsAttachmentViewHolder ->
+                holder.bind(dataSet[position] as ActionsAttachmentUiModel)
         }
     }
 
@@ -201,6 +213,33 @@ class ChatRoomAdapter(
             dataSet.addAll(newSet)
             val newSize = dataSet.size
             notifyItemRangeRemoved(index, oldSize - newSize)
+        }
+    }
+
+    private val actionAttachmentOnClickListener = object : ActionAttachmentOnClickListener {
+        override fun onActionClicked(action: Action) {
+            val temp = action as ButtonAction
+            if (temp.url != null && temp.isWebView != null) {
+                if (temp.isWebView!!) {
+                    //Open in a configurable sizable webview
+                    ToastHelper.showCustomToast(this@ChatRoomAdapter.context, "Open in a configurable sizable webview")
+                } else {
+                    //Open in chrome custom tab
+                    CustomTab.openCustomTab(this@ChatRoomAdapter.context!!, temp.url!!, WebViewFallback())
+                }
+            } else if (temp.message != null && temp.isMessageInChatWindow != null) {
+                if (temp.isMessageInChatWindow!!) {
+                    //Send to chat window
+                    temp.message.run {
+                        if (roomId != null) {
+                            presenter?.sendMessage(roomId, temp.message!!, null)
+                        }
+                    }
+                } else {
+                    //Send to bot but not in chat window
+                    ToastHelper.showCustomToast(this@ChatRoomAdapter.context, "Send to bot but not in chat window")
+                }
+            }
         }
     }
 
