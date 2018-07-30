@@ -315,10 +315,14 @@ class UiModelMapper @Inject constructor(
         return with(attachment) {
             val content = stripMessageQuotes(message)
 
+            val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
+            val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+
             ActionsAttachmentUiModel(attachmentUrl = url, title = title,
                     actions = actions, message = message, rawData = attachment,
                     messageId = message.id, reactions = getReactions(message),
-                    preview = message.copy(message = content.message))
+                    preview = message.copy(message = content.message), unread = message.unread,
+                    showDayMarker = false, currentDayMarkerText = dayMarkerText)
         }
     }
 

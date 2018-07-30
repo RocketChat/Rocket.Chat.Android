@@ -9,6 +9,7 @@
         style="@style/Widget.MaterialComponents.Button"
         android:id="@+id/action_button"
         android:textSize="12sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

@@ -2,17 +2,19 @@ package chat.rocket.android.chatroom.adapter
 
 import android.app.AlertDialog
 import android.content.Context
+import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
 import android.view.MenuItem
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.res.ResourcesCompat
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.uimodel.*
-import chat.rocket.android.customtab.CustomTab
-import chat.rocket.android.customtab.WebViewFallback
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.emoji.EmojiReactionListener
-import chat.rocket.android.helper.ToastHelper
+import chat.rocket.android.util.extensions.openTabbedUrl
 import chat.rocket.core.model.attachment.actions.Action
 import chat.rocket.core.model.attachment.actions.ButtonAction
 import chat.rocket.core.model.Message
@@ -222,10 +224,19 @@ class ChatRoomAdapter(
             if (temp.url != null && temp.isWebView != null) {
                 if (temp.isWebView!!) {
                     //Open in a configurable sizable webview
-                    ToastHelper.showCustomToast(this@ChatRoomAdapter.context, "Open in a configurable sizable webview")
+                    Toast.makeText(context, "Open in a configurable sizable webview", Toast.LENGTH_SHORT).show()
                 } else {
                     //Open in chrome custom tab
-                    CustomTab.openCustomTab(this@ChatRoomAdapter.context!!, temp.url!!, WebViewFallback())
+                    with(this) {
+                        val customTabsBuilder = CustomTabsIntent.Builder()
+                        customTabsBuilder.setToolbarColor(ResourcesCompat.getColor(context!!.resources, R.color.colorPrimary, context.theme))
+                        val customTabsIntent = customTabsBuilder.build()
+                        try {
+                            customTabsIntent.launchUrl(context, Uri.parse(temp.url!!))
+                        } catch (ex: Exception) {
+                            Timber.d(ex, "Unable to launch URL")
+                        }
+                    }
                 }
             } else if (temp.message != null && temp.isMessageInChatWindow != null) {
                 if (temp.isMessageInChatWindow!!) {
@@ -237,7 +248,7 @@ class ChatRoomAdapter(
                     }
                 } else {
                     //Send to bot but not in chat window
-                    ToastHelper.showCustomToast(this@ChatRoomAdapter.context, "Send to bot but not in chat window")
+                    Toast.makeText(context, "Send to bot but not in chat window", Toast.LENGTH_SHORT).show()
                 }
             }
         }
