@@ -157,7 +157,7 @@ class MessageParser @Inject constructor(
                 if (node is ListItem) {
                     newLine()
                     builder.append("$number$delimiter ")
-                    super.visitChildren(node.firstChild)
+                    super.visitChildren(node)
                     newLine()
                 }
                 number++
