@@ -6,16 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
-    android:paddingEnd="24dp"
-    android:paddingStart="72dp">
+    android:paddingStart="72dp"
+    android:paddingEnd="24dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_preview"
         android:layout_width="70dp"
         android:layout_height="50dp"
+        app:actualImageScaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:actualImageScaleType="centerCrop" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_host"
@@ -23,9 +23,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:textColor="@color/colorSecondaryText"
+        android:textDirection="locale"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_preview"
-        android:textDirection="locale"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="www.uol.com.br" />
 
     <TextView
@@ -33,20 +34,20 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="@color/colorAccent"
+        android:textDirection="locale"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/text_host"
         app:layout_constraintTop_toBottomOf="@id/text_host"
-        android:textDirection="locale"
         tools:text="Web page title" />
 
     <TextView
         android:id="@+id/text_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textDirection="locale"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/text_host"
         app:layout_constraintTop_toBottomOf="@id/text_title"
-        android:textDirection="locale"
         tools:text="description" />
 
     <include
