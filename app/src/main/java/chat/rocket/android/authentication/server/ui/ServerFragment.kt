@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.view.isVisible
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
@@ -21,6 +22,7 @@ import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.util.extensions.*
 import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_authentication_server.*
 import okhttp3.HttpUrl
 import javax.inject.Inject
@@ -60,6 +62,7 @@ class ServerFragment : Fragment(), ServerView {
         super.onViewCreated(view, savedInstanceState)
         constraint_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
         setupOnClickListener()
+        setupToobar()
 
         deepLinkInfo?.let {
             val uri = Uri.parse(it.url)
@@ -104,6 +107,11 @@ class ServerFragment : Fragment(), ServerView {
         }
     }
 
+    private fun setupToobar() {
+        val toolbar = (activity as AuthenticationActivity).toolbar
+        toolbar.isVisible = false
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
@@ -146,10 +154,10 @@ class ServerFragment : Fragment(), ServerView {
             hideLoading()
             AlertDialog.Builder(it)
                 .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
-                .setPositiveButton(R.string.msg_ok, { _, _ ->
+                .setPositiveButton(R.string.msg_ok) { _, _ ->
                     performConnect()
-                })
-                .create()
+                }
+                    .create()
                 .show()
         }
     }
@@ -212,12 +220,14 @@ class ServerFragment : Fragment(), ServerView {
     private fun setupOnClickListener() {
         ui {
             button_connect.setOnClickListener {
-//                val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
-//                presenter.checkServer("${protocol}${url.sanitize()}")
-                (activity as AuthenticationActivity).addFragmentBackStack("LoginOption", R.id.fragment_container){
-                    LoginOptionsFragment.newInstance()
-                }
+                val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
+                presenter.checkServer("$protocol${url.sanitize()}")
             }
         }
+    }
+
+    private fun joinCommunity(){
+        val url = "https://open.rocket.chat"
+        presenter.checkServer("$protocol${url.sanitize()}")
     }
 }

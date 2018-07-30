@@ -100,7 +100,6 @@ class LoginPresenter @Inject constructor(
     fun setupView() {
         setupConnectionInfo(currentServer)
         setupLoginView()
-        setupUserRegistrationView()
         setupForgotPasswordView()
         setupCasView()
         setupOauthServicesView()
@@ -161,7 +160,6 @@ class LoginPresenter @Inject constructor(
         if (settings.isLoginFormEnabled()) {
             view.showFormView()
             view.setupLoginButtonListener()
-            view.setupGlobalListener()
         } else {
             view.hideFormView()
         }
@@ -175,13 +173,6 @@ class LoginPresenter @Inject constructor(
                 casToken
             )
             view.showCasButton()
-        }
-    }
-
-    private fun setupUserRegistrationView() {
-        if (settings.isRegistrationEnabledForNewUsers() && settings.isLoginFormEnabled()) {
-            view.setupSignUpView()
-            view.showSignUpView()
         }
     }
 
@@ -202,94 +193,6 @@ class LoginPresenter @Inject constructor(
                     val state =
                         "{\"loginStyle\":\"popup\",\"credentialToken\":\"${generateRandomString(40)}\",\"isCordova\":true}".encodeToBase64()
                     var totalSocialAccountsEnabled = 0
-
-                    if (settings.isFacebookAuthenticationEnabled()) {
-                        val clientId = getOauthClientId(services, SERVICE_NAME_FACEBOOK)
-                        if (clientId != null) {
-                            view.setupFacebookButtonListener(
-                                OauthHelper.getFacebookOauthUrl(
-                                    clientId,
-                                    currentServer,
-                                    state
-                                ), state
-                            )
-                            view.enableLoginByFacebook()
-                            totalSocialAccountsEnabled++
-                        }
-                    }
-                    if (settings.isGithubAuthenticationEnabled()) {
-                        val clientId = getOauthClientId(services, SERVICE_NAME_GITHUB)
-                        if (clientId != null) {
-                            view.setupGithubButtonListener(
-                                OauthHelper.getGithubOauthUrl(
-                                    clientId,
-                                    state
-                                ), state
-                            )
-                            view.enableLoginByGithub()
-                            totalSocialAccountsEnabled++
-                        }
-                    }
-                    if (settings.isGoogleAuthenticationEnabled()) {
-                        val clientId = getOauthClientId(services, SERVICE_NAME_GOOGLE)
-                        if (clientId != null) {
-                            view.setupGoogleButtonListener(
-                                OauthHelper.getGoogleOauthUrl(
-                                    clientId,
-                                    currentServer,
-                                    state
-                                ), state
-                            )
-                            view.enableLoginByGoogle()
-                            totalSocialAccountsEnabled++
-                        }
-                    }
-                    if (settings.isLinkedinAuthenticationEnabled()) {
-                        val clientId = getOauthClientId(services, SERVICE_NAME_LINKEDIN)
-                        if (clientId != null) {
-                            view.setupLinkedinButtonListener(
-                                OauthHelper.getLinkedinOauthUrl(
-                                    clientId,
-                                    currentServer,
-                                    state
-                                ), state
-                            )
-                            view.enableLoginByLinkedin()
-                            totalSocialAccountsEnabled++
-                        }
-                    }
-                    if (settings.isMeteorAuthenticationEnabled()) {
-                        //TODO: Remove until we have this implemented
-//                        view.enableLoginByMeteor()
-//                        totalSocialAccountsEnabled++
-                    }
-                    if (settings.isTwitterAuthenticationEnabled()) {
-                        //TODO: Remove until Twitter provides support to OAuth2
-//                        view.enableLoginByTwitter()
-//                        totalSocialAccountsEnabled++
-                    }
-                    if (settings.isGitlabAuthenticationEnabled()) {
-                        val clientId = getOauthClientId(services, SERVICE_NAME_GILAB)
-                        if (clientId != null) {
-                            val gitlabOauthUrl = if (settings.gitlabUrl() != null) {
-                                OauthHelper.getGitlabOauthUrl(
-                                    host = settings.gitlabUrl(),
-                                    clientId = clientId,
-                                    serverUrl = currentServer,
-                                    state = state
-                                )
-                            } else {
-                                OauthHelper.getGitlabOauthUrl(
-                                    clientId = clientId,
-                                    serverUrl = currentServer,
-                                    state = state
-                                )
-                            }
-                            view.setupGitlabButtonListener(gitlabOauthUrl, state)
-                            view.enableLoginByGitlab()
-                            totalSocialAccountsEnabled++
-                        }
-                    }
 
                     getCustomOauthServices(services).let {
                         for (service in it) {
@@ -330,21 +233,9 @@ class LoginPresenter @Inject constructor(
                             totalSocialAccountsEnabled++
                         }
                     }
-
-                    if (totalSocialAccountsEnabled > 0) {
-                        view.enableOauthView()
-                        if (totalSocialAccountsEnabled > 3) {
-                            view.setupFabListener()
-                        }
-                    } else {
-                        view.disableOauthView()
-                    }
-                } else {
-                    view.disableOauthView()
                 }
             } catch (exception: RocketChatException) {
                 Timber.e(exception)
-                view.disableOauthView()
             }
         }
     }

@@ -6,11 +6,8 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import chat.rocket.android.R
-import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
-import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
-import chat.rocket.android.authentication.onboarding.OnBoardingFragment
+import chat.rocket.android.authentication.onboarding.ui.OnBoardingFragment
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
-import chat.rocket.android.authentication.server.ui.ServerFragment
 import chat.rocket.android.util.extensions.addFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -37,13 +34,12 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun onStart() {
         super.onStart()
-        val deepLinkInfo = intent.getLoginDeepLinkInfo()
         launch(UI + job) {
             val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
             // if we got authenticateWithDeepLink information, pass true to newServer also
-            presenter.loadCredentials(newServer || deepLinkInfo != null) { authenticated ->
+            presenter.loadCredentials(newServer) { authenticated ->
                 if (!authenticated) {
-                    showServerInput(deepLinkInfo)
+                    showOnBoarding()
                 }
             }
         }
@@ -56,19 +52,15 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-        if (currentFragment != null) {
-            currentFragment.onActivityResult(requestCode, resultCode, data)
-        }
+        supportFragmentManager.findFragmentById(R.id.fragment_container)?.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentDispatchingAndroidInjector
     }
 
-    fun showServerInput(deepLinkInfo: LoginDeepLinkInfo?) {
+    private fun showOnBoarding() {
         addFragment("OnBoardingFragment", R.id.fragment_container, allowStateLoss = true) {
-//            ServerFragment.newInstance(deepLinkInfo)
             OnBoardingFragment.newInstance()
         }
     }

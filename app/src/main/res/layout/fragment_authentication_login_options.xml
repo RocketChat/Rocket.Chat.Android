@@ -140,36 +140,38 @@
         android:layout_marginEnd="16dp"
         android:background="#e1e5e8" />
     
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_email_login"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
+    <Button
+        android:id="@+id/button_login"
+        style="@style/Authentication.Button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image_more_login_option"
-        app:cornerRadius="2dp"
-        app:backgroundTint="@color/colorAccent"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginTop="32dp"
-        android:text="Login with e-mail"
-        android:textSize="16sp"
-        android:textAllCaps="false" />
+        android:text="Login with e-mail" />
 
     <Button
-        android:layout_width="0dp"
+        android:id="@+id/button_create_account"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_email_login"
+        app:layout_constraintTop_toBottomOf="@id/button_login"
         style="?borderlessButtonStyle"
         android:layout_marginTop="10dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:text="Create an account"
         android:textSize="18sp"
+        android:textStyle="bold"
         android:textColor="@color/colorAccent"
         android:textAllCaps="false" />
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/view_loading"
+        style="@style/Authentication.AVLoadingIndicatorView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

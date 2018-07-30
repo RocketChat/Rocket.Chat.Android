@@ -4,7 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/AuthenticationTheme"
+    android:orientation="vertical"
     tools:context=".authentication.ui.AuthenticationActivity">
+
+    <include
+        android:id="@+id/layout_app_bar"
+        layout="@layout/app_bar_chat_room" />
 
     <FrameLayout
         android:id="@+id/fragment_container"

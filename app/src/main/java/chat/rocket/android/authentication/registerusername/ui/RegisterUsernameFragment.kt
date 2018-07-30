@@ -102,7 +102,7 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
 
     private fun tintEditTextDrawableStart() {
         ui {
-            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, it)
+            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_20dp, it)
             DrawableHelper.wrapDrawable(atDrawable)
             DrawableHelper.tintDrawable(atDrawable, it, R.color.colorDrawableTintGrey)
             DrawableHelper.compoundDrawable(text_username, atDrawable)

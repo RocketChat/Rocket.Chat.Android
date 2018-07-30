@@ -103,7 +103,7 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
 
     private fun tintEditTextDrawableStart() {
         ui {
-            val emailDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_24dp, it)
+            val emailDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_20dp, it)
             DrawableHelper.wrapDrawable(emailDrawable)
             DrawableHelper.tintDrawable(emailDrawable, it, R.color.colorDrawableTintGrey)
             DrawableHelper.compoundDrawable(text_email, emailDrawable)

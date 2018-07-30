@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWhite"
-    tools:context="chat.rocket.android.authentication.onboarding.OnBoardingFragment">
+    tools:context="chat.rocket.android.authentication.onboarding.ui.OnBoardingFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -22,13 +22,7 @@
 
         <TextView
             android:id="@+id/text_onboarding_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:fontFamily="sans-serif"
-            android:textStyle="bold"
-            android:textColor="#2f343d"
-            android:lineSpacingExtra="4sp"
+            style="@style/Authentication.Headline.TextView"
             android:text="Welcome to Rocket.Chat"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -37,13 +31,7 @@
 
         <TextView
             android:id="@+id/text_onboarding_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:fontFamily="sans-serif"
-            android:textStyle="normal"
-            android:textColor="#54585e"
-            android:lineSpacingExtra="4sp"
+            style="@style/Authentication.Description.TextView"
             android:text="Open Source Communication"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -150,6 +138,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/button_create_server"
             android:layout_width="0dp"
             android:layout_height="60dp"
             app:layout_constraintStart_toStartOf="parent"

@@ -4,6 +4,7 @@ import android.content.Intent
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.ui.LoginFragment
+import chat.rocket.android.authentication.loginoptions.ui.LoginOptionsFragment
 import chat.rocket.android.authentication.registerusername.ui.RegisterUsernameFragment
 import chat.rocket.android.authentication.resetpassword.ui.ResetPasswordFragment
 import chat.rocket.android.authentication.signup.ui.SignupFragment
@@ -17,6 +18,12 @@ import chat.rocket.android.util.extensions.toPreviousView
 import chat.rocket.android.webview.ui.webViewIntent
 
 class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
+
+    fun toLoginOptions() {
+        activity.addFragmentBackStack("LoginOptionFragment", R.id.fragment_container) {
+            LoginOptionsFragment.newInstance()
+        }
+    }
 
     fun toLogin() {
         activity.addFragmentBackStack("LoginFragment", R.id.fragment_container) {
@@ -60,6 +67,12 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
     fun toRegisterUsername(userId: String, authToken: String) {
         activity.addFragmentBackStack("RegisterUsernameFragment", R.id.fragment_container) {
             RegisterUsernameFragment.newInstance(userId, authToken)
+        }
+    }
+
+    fun toCreateAccount() {
+        activity.addFragmentBackStack("SignUpFragment", R.id.fragment_container){
+            SignupFragment.newInstance()
         }
     }
 
