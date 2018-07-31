@@ -380,10 +380,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun openDirectMessage(chatRoom: ChatRoom, permalink: String) {
-
-    }
-
     private val layoutChangeListener =
         View.OnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
             val y = oldBottom - bottom
@@ -626,28 +622,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onEmojiAdded(emoji: Emoji) {
         val cursorPosition = text_message.selectionStart
         if (cursorPosition > -1) {
-            context?.let { ctx ->
-                launch(UI) {
-                    val parsedText = EmojiParser.parseAsync(ctx, emoji.shortname).await()
-
-                    if (parsedText is Spannable) {
-                        val spans = parsedText.getSpans(0, parsedText.length, ImageSpan::class.java)
-                        spans.forEach {
-                            if (it.drawable is GifDrawable) {
-                                it.drawable.callback = this@ChatRoomFragment
-                                (it.drawable as GifDrawable).start()
-                            }
-                        }
-
-                        text_message.text?.insert(text_message.selectionStart, parsedText)
-                        text_message.text?.insert(text_message.selectionStart, " ")
-                    }
-
-                    // If it has no url then it's not a custom emoji.
-                    if (emoji.url == null) {
-                        text_message.setSelection(cursorPosition + emoji.unicode.length)
-                    }
-                }
+            context?.let {
+                val offset = if (emoji.url == null) emoji.unicode.length else emoji.shortname.length
+                text_message.text?.insert(cursorPosition, EmojiParser.parse(it, emoji.shortname))
+                text_message.setSelection(cursorPosition + offset)
             }
         }
     }
