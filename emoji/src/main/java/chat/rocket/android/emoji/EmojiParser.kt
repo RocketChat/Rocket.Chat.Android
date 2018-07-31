@@ -8,6 +8,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ImageSpan
 import android.util.Log
+import chat.rocket.android.emoji.internal.GlideApp
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.gif.GifDrawable
@@ -73,7 +74,7 @@ class EmojiParser {
             val customEmojis = EmojiRepository.getCustomEmojis()
 
             val density = context.resources.displayMetrics.density
-            val px = (24 * density).toInt()
+            val px = (22 * density).toInt()
 
             return spannable.also {
                 regex.findAll(spannable).iterator().forEach { match ->
@@ -81,15 +82,13 @@ class EmojiParser {
                         it.url?.let { url ->
                             try {
                                 val glideRequest = if (url.endsWith("gif", true)) {
-                                    Glide.with(context).asGif()
+                                    GlideApp.with(context).asGif()
                                 } else {
-                                    Glide.with(context).asBitmap()
+                                    GlideApp.with(context).asBitmap()
                                 }
 
                                 val futureTarget = glideRequest
-                                    .apply(RequestOptions()
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                        .onlyRetrieveFromCache(true))
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .load(url)
                                     .submit(px, px)
 
@@ -99,7 +98,7 @@ class EmojiParser {
                                         spannable.setSpan(ImageSpan(context, image), range.start,
                                             range.endInclusive + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                                     } else if (image is GifDrawable) {
-                                        image.setBounds(0, 0, px, px)
+                                        image.setBounds(0, 0, image.intrinsicWidth, image.intrinsicHeight)
                                         spannable.setSpan(ImageSpan(image), range.start,
                                             range.endInclusive + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                                     }

@@ -15,6 +15,8 @@ import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.emoji.Fitzpatrick
 import chat.rocket.android.emoji.R
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.cache.ExternalPreferredCacheDiskCacheFactory
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.emoji_category_layout.view.*
 import kotlinx.android.synthetic.main.emoji_image_row_item.view.*
@@ -159,8 +161,9 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
                         parsedUnicode
                     }
                 } else {
-                    Glide.with(context)
+                    GlideApp.with(context)
                         .load(emoji.url)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(emoji_image_view)
                 }
 

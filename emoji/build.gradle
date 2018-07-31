@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -35,7 +36,7 @@ dependencies {
     implementation libraries.recyclerview
     implementation libraries.material
     implementation libraries.glide
-    annotationProcessor libraries.glideProcessor
+    kapt libraries.glideProcessor
 }
 
 kotlin {

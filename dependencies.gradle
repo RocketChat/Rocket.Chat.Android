@@ -46,7 +46,7 @@ ext {
             frescoImageViewer     : '0.5.1',
             markwon               : '1.0.6',
             aVLoadingIndicatorView: '2.1.3',
-            glide                 : '4.7.1',
+            glide                 : '4.8.0-SNAPSHOT',
 
             // For wearable
             wear                  : '2.3.0',
