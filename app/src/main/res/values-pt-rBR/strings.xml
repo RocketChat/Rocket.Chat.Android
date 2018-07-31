@@ -64,7 +64,8 @@
     <string name="msg_invalid_email">Por favor informe um e-mail válido</string>
     <string name="msg_new_user_agreement">Ao proceder você concorda com nossos %1$s e %2$s</string>
     <string name="msg_2fa_code">Código 2FA</string>
-    <string name="msg_yesterday">ontem</string>
+    <string name="msg_yesterday">Ontem</string>
+    <string name="msg_today">Hoje</string>
     <string name="msg_message">Mensagem</string>
     <string name="msg_this_room_is_read_only">Este chat é apenas de leitura</string>
     <string name="msg_invalid_2fa_code">Código 2FA inválido</string>
@@ -77,6 +78,7 @@
     <string name="msg_content_description_log_in_using_meteor">Fazer login através do Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Fazer login através do Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Fazer login através do Gitlab</string>
+    <string name="msg_content_description_log_in_using_wordprees">Fazer login através do WordPress</string>
     <string name="msg_content_description_send_message">Enviar mensagem</string>
     <string name="msg_content_description_show_attachment_options">Mostrar opções de anexo</string>
     <string name="msg_you">Você</string>
@@ -266,10 +268,13 @@
     <string name="header_unknown">Desconhecido</string>
 
     <!--Notifications-->
+    <string name="share_label">Editar mensagem compartilhada</string>
     <string name="notif_action_reply_hint">RESPONDER</string>
     <string name="notif_error_sending">Falha ao enviar a mensagem.</string>
     <string name="notif_success_sending">Mensagem enviada para %1$s!</string>
+    <string name="action_share">Compartilhar</string>
     <string name="read_by">Lida por</string>
     <string name="message_information_title">Informações da mensagem</string>
     <string name="msg_log_out">Deslogando…</string>
+    <string name="msg_sent_attachment">Enviou um arquivo</string>
 </resources>
