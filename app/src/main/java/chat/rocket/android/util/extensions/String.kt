@@ -50,6 +50,8 @@ fun String.termsOfServiceUrl() = "${removeTrailingSlash()}/terms-of-service"
 
 fun String.privacyPolicyUrl() = "${removeTrailingSlash()}/privacy-policy"
 
+fun String.adminPanelUrl() = "${removeTrailingSlash()}/admin/info?layout=embedded"
+
 fun String.isValidUrl(): Boolean = Patterns.WEB_URL.matcher(this).matches()
 
 fun String.parseColor(): Int {

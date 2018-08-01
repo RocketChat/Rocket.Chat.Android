@@ -9,11 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Gravity
-import android.view.MenuItem
 import androidx.annotation.IdRes
 import androidx.drawerlayout.widget.DrawerLayout
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
+import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
@@ -51,6 +51,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
     lateinit var presenter: MainPresenter
+    @Inject
+    lateinit var userHelper: UserHelper
     private var isFragmentAdded: Boolean = false
     private var expanded = false
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
@@ -169,7 +171,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
 
         headerLayout.image_avatar.setOnClickListener {
-            view_navigation.menu.findItem(R.id.action_profile).isChecked = true
+            view_navigation.menu.findItem(MENU_ACTION_PROFILE).isChecked = true
             presenter.toUserProfile()
             drawer_layout.closeDrawer(Gravity.START)
         }
@@ -221,37 +223,20 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     fun setupNavigationView() {
-        view_navigation.setNavigationItemSelectedListener { menuItem ->
-            menuItem.isChecked = true
+        with (view_navigation.menu) {
+            clear()
+            setupMenu(this)
+        }
+
+        view_navigation.setNavigationItemSelectedListener {
+            it.isChecked = true
             closeDrawer()
-            onNavDrawerItemSelected(menuItem)
+            onNavDrawerItemSelected(it)
             true
         }
 
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
-        toolbar.setNavigationOnClickListener {
-            openDrawer()
-        }
-    }
-
-    private fun onNavDrawerItemSelected(menuItem: MenuItem) {
-        when (menuItem.itemId) {
-            R.id.action_chat_rooms -> {
-                presenter.toChatList()
-            }
-            R.id.action_profile -> {
-                presenter.toUserProfile()
-            }
-            R.id.action_channel -> {
-                presenter.toCreateChannel()
-            }
-            R.id.action_settings -> {
-                presenter.toSettings()
-            }
-            R.id.action_logout -> {
-                presenter.logout()
-            }
-        }
+        toolbar.setNavigationOnClickListener { openDrawer() }
     }
 
     fun getDrawerLayout(): DrawerLayout = drawer_layout

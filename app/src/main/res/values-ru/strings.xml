@@ -12,6 +12,7 @@
     <string name="title_profile">Профиль</string>
     <string name="title_members">Пользователи (%d)</string>
     <string name="title_settings">Настройки</string>
+    <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
     <string name="title_password">Изменить пароль</string>
     <string name="title_update_profile">Обновить профиль</string>
     <string name="title_about">О программе</string>
