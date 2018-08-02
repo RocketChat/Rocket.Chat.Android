@@ -38,6 +38,7 @@
     <string name="action_invisible">Invisible</string>
     <string name="action_drawing">dibujo</string>
     <string name="action_save_to_gallery">Guardar en la galería</string>
+    <string name="action_share">Compartir</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -262,6 +263,7 @@
     <string name="header_unknown">Desconocido</string>
 
     <!--Notifications-->
+    <string name="share_label">Edita mensaje compartido</string>
     <string name="notif_action_reply_hint">RESPUESTA</string>
     <string name="notif_error_sending">La respuesta ha fallado. Inténtalo de nuevo.</string>
     <string name="notif_success_sending">Mensaje enviado a %1$s!</string>
