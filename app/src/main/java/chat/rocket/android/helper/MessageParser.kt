@@ -5,21 +5,19 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
-import android.net.Uri
-import androidx.core.content.res.ResourcesCompat
 import android.text.Spanned
 import android.text.style.ClickableSpan
 import android.text.style.ReplacementSpan
-import android.text.style.StyleSpan
 import android.util.Patterns
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import chat.rocket.android.R
-import chat.rocket.android.server.domain.PublicSettings
-import chat.rocket.android.server.domain.useRealName
-import chat.rocket.android.util.extensions.openTabbedUrl
 import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.emoji.EmojiTypefaceSpan
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.useRealName
+import chat.rocket.android.util.extensions.openTabbedUrl
 import chat.rocket.common.model.SimpleUser
 import chat.rocket.core.model.Message
 import org.commonmark.node.AbstractVisitor
@@ -159,7 +157,7 @@ class MessageParser @Inject constructor(
                 if (node is ListItem) {
                     newLine()
                     builder.append("$number$delimiter ")
-                    super.visit(node.firstChild as Paragraph)
+                    super.visitChildren(node.firstChild)
                     newLine()
                 }
                 number++
@@ -187,21 +185,13 @@ class MessageParser @Inject constructor(
                 if (!link.startsWith("@") && link !in consumed) {
                     builder.setSpan(object : ClickableSpan() {
                         override fun onClick(view: View) {
-                            view.openTabbedUrl(getUri(link))
+                            view.openTabbedUrl(link)
                         }
                     }, matcher.start(0), matcher.end(0))
                     consumed.add(link)
                 }
             }
             visitChildren(text)
-        }
-
-        private fun getUri(link: String): Uri {
-            val uri = Uri.parse(link)
-            if (uri.scheme == null) {
-                return Uri.parse("http://$link")
-            }
-            return uri
         }
     }
 
