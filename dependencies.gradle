@@ -75,6 +75,7 @@ ext {
             daggerProcessor       : "com.google.dagger:dagger-compiler:${versions.dagger}",
             daggerAndroidApt      : "com.google.dagger:dagger-android-processor:${versions.dagger}",
             fcm                   : "com.google.firebase:firebase-messaging:${versions.firebase}",
+            firebaseAnalyticsImpl : "com.google.firebase:firebase-analytics-impl:${versions.firebase}",
             playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServices}",
             exoPlayer             : "com.google.android.exoplayer:exoplayer:${versions.exoPlayer}",
             flexbox               : "com.google.android:flexbox:${versions.flexbox}",
