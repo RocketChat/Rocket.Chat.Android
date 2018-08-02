@@ -122,7 +122,7 @@
     <string name="msg_are_typing">\u0020are typing…</string>
     <string name="msg_several_users_are_typing">Several users are typing…</string>
     <string name="msg_no_search_found">No result found</string>
-    <string name="msg_log_out">Logging out...</string>
+    <string name="msg_log_out">Logging out…</string>
     <string name="msg_upload_file">Upload file</string>
     <string name="msg_file_description">File description</string>
     <string name="msg_send">Send</string>

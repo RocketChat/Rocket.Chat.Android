@@ -116,12 +116,12 @@
     <string name="msg_is_typing">\u0020esta escribiendo…</string>
     <string name="msg_are_typing">\u0020están escribiendo…</string>
     <string name="msg_several_users_are_typing">Varios usuarios están escribiendo…</string>
-    <string name="msg_no_search_found">No se han encontrado resultados</string>
     <string name="msg_channel_name">Nombre del Canal</string>
     <string name="msg_search">Buscar</string>
     <string name="msg_message_copied">Mensaje copiado</string>
     <string name="msg_delete_message">Borrar mensaje</string>
     <string name="msg_delete_description">Seguro que quieres borrar este mensaje</string>
+    <string name="msg_no_search_found">No se han encontrado resultados</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
@@ -170,11 +170,11 @@
     <string name="permission_editing_not_allowed">La edición no és permitida</string>
     <string name="permission_deleting_not_allowed">Eliminar no és permitido</string>
     <string name="permission_pinning_not_allowed">Fijar no és permitido</string>
-    // TODO: Add proper translation.
+    <!-- TODO Add translation -->
     <string name="permission_starring_not_allowed">Starring is not allowed</string>
 
     <!-- Search message -->
-    <string name="title_search_message">Mensaje de búsqueda</string>
+    <string name="title_search_message">Búsqueda de mensajes</string>
 
     <!-- Favorite/Unfavorite chat room -->
     <string name="title_favorite_chat">Chat favorito</string>
@@ -263,11 +263,10 @@
     <string name="header_unknown">Desconocido</string>
 
     <!--Notifications-->
+    <string name="share_label">Edita mensaje compartido</string>
     <string name="notif_action_reply_hint">RESPUESTA</string>
     <string name="notif_error_sending">La respuesta ha fallado. Inténtalo de nuevo.</string>
     <string name="notif_success_sending">Mensaje enviado a %1$s!</string>
-
-    <string name="share_label">Editar mensaje compartido</string>
     <string name="read_by">Leído por</string>
     <string name="message_information_title">Información del mensaje</string>
     <string name="msg_log_out">Saliendo de tu cuenta…</string>
