@@ -13,12 +13,12 @@ import androidx.annotation.IdRes
 import androidx.drawerlayout.widget.DrawerLayout
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
-import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
 import chat.rocket.android.main.uimodel.NavHeaderUiModel
+import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.ui.INTENT_CHAT_ROOM_ID
 import chat.rocket.android.util.extensions.fadeIn
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     @Inject
     lateinit var presenter: MainPresenter
     @Inject
-    lateinit var userHelper: UserHelper
+    lateinit var permissions: PermissionsInteractor
     private var isFragmentAdded: Boolean = false
     private var expanded = false
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }

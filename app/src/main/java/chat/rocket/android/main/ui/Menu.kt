@@ -45,7 +45,7 @@ internal fun MainActivity.setupMenu(menu: Menu) {
         R.string.title_settings
     ).setIcon(R.drawable.ic_settings_black_24dp)
 
-    if (userHelper.isAdmin()) {
+    if (permissions.canSeeTheAdminChannel()) {
         menu.add(
             MENU_SECTION_TWO,
             MENU_ACTION_ADMIN_PANEL,
