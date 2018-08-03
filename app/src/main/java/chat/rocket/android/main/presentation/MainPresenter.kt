@@ -11,6 +11,7 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
+import chat.rocket.android.server.domain.RefreshPermissionsInteractor
 import chat.rocket.android.server.domain.RemoveAccountInteractor
 import chat.rocket.android.server.domain.SaveAccountInteractor
 import chat.rocket.android.server.domain.TokenRepository
@@ -46,6 +47,7 @@ class MainPresenter @Inject constructor(
     private val tokenRepository: TokenRepository,
     private val serverInteractor: GetCurrentServerInteractor,
     private val refreshSettingsInteractor: RefreshSettingsInteractor,
+    private val refreshPermissionsInteractor: RefreshPermissionsInteractor,
     private val localRepository: LocalRepository,
     private val navHeaderMapper: NavHeaderUiModelMapper,
     private val saveAccountInteractor: SaveAccountInteractor,
@@ -157,6 +159,7 @@ class MainPresenter @Inject constructor(
 
     fun connect() {
         refreshSettingsInteractor.refreshAsync(currentServer)
+        refreshPermissionsInteractor.refreshAsync(currentServer)
         manager.connect()
     }
 

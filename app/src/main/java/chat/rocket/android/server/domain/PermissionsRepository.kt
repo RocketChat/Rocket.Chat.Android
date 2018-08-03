@@ -5,12 +5,12 @@ import chat.rocket.core.model.Permission
 interface PermissionsRepository {
 
     /**
-     * Stores [permission] locally.
+     * Stores a list of [Permission] locally.
      *
      * @param url The server url to store the permission.
-     * @param permission The permission to store.
+     * @param permissionList The permission list to store.
      */
-    fun save(url: String, permission: Permission)
+    fun save(url: String, permissionList: List<Permission>)
 
     /**
      * Gets permission given by the [permissionId] and for the server [url].
