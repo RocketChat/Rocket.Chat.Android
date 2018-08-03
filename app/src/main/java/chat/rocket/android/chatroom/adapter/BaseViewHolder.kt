@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.bottomsheet.MessageActionsBottomSheet
@@ -94,9 +95,11 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
                     view.context?.let {
                         if (it is ContextThemeWrapper && it.baseContext is AppCompatActivity) {
                             with(it.baseContext as AppCompatActivity) {
-                                val actionsBottomSheet = MessageActionsBottomSheet()
-                                actionsBottomSheet.addItems(menuItems, this@BaseViewHolder)
-                                actionsBottomSheet.show(supportFragmentManager, null)
+                                if (this.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                                    val actionsBottomSheet = MessageActionsBottomSheet()
+                                    actionsBottomSheet.addItems(menuItems, this@BaseViewHolder)
+                                    actionsBottomSheet.show(supportFragmentManager, null)
+                                }
                             }
                         }
                     }

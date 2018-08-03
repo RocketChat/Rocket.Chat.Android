@@ -218,6 +218,18 @@
                 android:src="@drawable/ic_gitlab"
                 android:visibility="gone"
                 tools:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/button_wordpress"
+                android:layout_width="290dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:clickable="false"
+                android:contentDescription="@string/msg_content_description_log_in_using_gitlab"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_wordpress"
+                android:visibility="gone"
+                tools:visibility="gone" />
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

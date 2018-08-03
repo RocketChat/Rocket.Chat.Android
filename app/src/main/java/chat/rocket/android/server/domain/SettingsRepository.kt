@@ -19,9 +19,10 @@ const val ACCOUNT_GITHUB = "Accounts_OAuth_Github"
 const val ACCOUNT_LINKEDIN = "Accounts_OAuth_Linkedin"
 const val ACCOUNT_METEOR = "Accounts_OAuth_Meteor"
 const val ACCOUNT_TWITTER = "Accounts_OAuth_Twitter"
-const val ACCOUNT_WORDPRESS = "Accounts_OAuth_Wordpress"
 const val ACCOUNT_GITLAB = "Accounts_OAuth_Gitlab"
 const val ACCOUNT_GITLAB_URL = "API_Gitlab_URL"
+const val ACCOUNT_WORDPRESS = "Accounts_OAuth_Wordpress"
+const val ACCOUNT_WORDPRESS_URL = "API_Wordpress_URL"
 
 const val SITE_URL = "Site_Url"
 const val SITE_NAME = "Site_Name"
@@ -71,6 +72,7 @@ fun PublicSettings.isTwitterAuthenticationEnabled(): Boolean = this[ACCOUNT_TWIT
 fun PublicSettings.isGitlabAuthenticationEnabled(): Boolean = this[ACCOUNT_GITLAB]?.value == true
 fun PublicSettings.gitlabUrl(): String? = this[ACCOUNT_GITLAB_URL]?.value as String?
 fun PublicSettings.isWordpressAuthenticationEnabled(): Boolean = this[ACCOUNT_WORDPRESS]?.value == true
+fun PublicSettings.wordpressUrl(): String? = this[ACCOUNT_WORDPRESS_URL]?.value as String?
 
 fun PublicSettings.useRealName(): Boolean = this[USE_REALNAME]?.value == true
 fun PublicSettings.useSpecialCharsOnRoom(): Boolean = this[ALLOW_ROOM_NAME_SPECIAL_CHARS]?.value == true

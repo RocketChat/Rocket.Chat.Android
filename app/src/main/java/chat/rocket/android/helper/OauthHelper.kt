@@ -93,6 +93,59 @@ object OauthHelper {
     }
 
     /**
+     * Returns the WordPress-Com Oauth URL.
+     *
+     * @param clientId The WordPress-Com client ID.
+     * @param serverUrl The server URL.
+     * @param state An unguessable random string used to protect against forgery attacks.
+     * @return The WordPress-Com Oauth URL.
+     */
+    fun getWordpressComOauthUrl(clientId: String, serverUrl: String, state: String): String {
+        return "https://public-api.wordpress.com/oauth2/authorize" +
+                "?client_id=$clientId" +
+                "&redirect_uri=${serverUrl.removeTrailingSlash()}/_oauth/wordpress?close" +
+                "&state=$state" +
+                "&response_type=code" +
+                "&scope=auth"
+    }
+
+    /**
+     * Returns the WordPress custom Oauth URL.
+     *
+     * @param host The WordPress custom OAuth host.
+     * @param authorizePath The WordPress custom OAuth authorization path.
+     * @param clientId The WordPress custom OAuth client ID.
+     * @param serverUrl The server URL.
+     * @param serviceName The service name.
+     * @param state An unguessable random string used to protect against forgery attacks.
+     * @param scope The WordPress custom OAuth scope.
+     * @return The WordPress custom Oauth URL.
+     */
+    fun getWordpressCustomOauthUrl(
+        host: String,
+        authorizePath: String,
+        clientId: String,
+        serverUrl: String,
+        serviceName: String,
+        state: String,
+        scope: String
+    ): String {
+        (authorizePath +
+                "?client_id=$clientId" +
+                "&redirect_uri=${serverUrl.removeTrailingSlash()}/_oauth/$serviceName?close" +
+                "&state=$state" +
+                "&scope=$scope" +
+                "&response_type=code"
+                ).let {
+            return if (it.contains(host)) {
+                it
+            } else {
+                host + it
+            }
+        }
+    }
+
+    /**
      * Returns the Custom Oauth URL.
      *
      * @param host The custom OAuth host.
