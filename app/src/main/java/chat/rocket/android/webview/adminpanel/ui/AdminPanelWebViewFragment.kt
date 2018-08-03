@@ -50,7 +50,11 @@ class AdminPanelWebViewFragment : Fragment() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
-        web_view.settings.javaScriptEnabled = true
+        with(web_view.settings) {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+        }
+
         web_view.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
