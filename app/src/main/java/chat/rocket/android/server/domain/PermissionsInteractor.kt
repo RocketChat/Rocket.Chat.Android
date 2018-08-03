@@ -71,7 +71,6 @@ class PermissionsInteractor @Inject constructor(
 
     fun canSeeTheAdminChannel(): Boolean {
         currentServerUrl()?.let { serverUrl ->
-            val test = permissionsRepository.get(serverUrl, POST_READONLY)
             val viewStatistics =
                 permissionsRepository.get(serverUrl, VIEW_STATISTICS)
             val viewRoomAdministration =
