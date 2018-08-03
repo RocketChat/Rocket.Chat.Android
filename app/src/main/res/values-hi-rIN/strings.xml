@@ -80,6 +80,7 @@
     <string name="msg_content_description_log_in_using_meteor">Meteor द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_twitter">Twitter द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_gitlab">Gitlab द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_wordprees">Login using WordPress</string> <!-- TODO Translate-->
     <string name="msg_content_description_send_message">मेसेज भेजें</string>
     <string name="msg_content_description_show_attachment_options">अटैचमेंट विकल्प दिखाएं</string>
     <string name="msg_you">आप</string>

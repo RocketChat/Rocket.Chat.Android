@@ -35,7 +35,7 @@ private const val INTENT_CHAT_ROOM_ID = "chat_room_id"
 
 class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
     private lateinit var chatRoomId: String
-    private lateinit var adapter: ChatRoomAdapter
+    private val adapter = ChatRoomAdapter(enableActions = false)
     @Inject
     lateinit var presenter: FavoriteMessagesPresenter
 
@@ -66,7 +66,6 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
     override fun showFavoriteMessages(favoriteMessages: List<BaseUiModel<*>>) {
         ui {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(enableActions = false)
                 recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context)
                 recycler_view.layoutManager = linearLayoutManager

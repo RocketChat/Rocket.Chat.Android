@@ -3,6 +3,7 @@ package chat.rocket.android.util.extensions
 import android.graphics.Color
 import android.util.Patterns
 import chat.rocket.common.model.Token
+import okhttp3.HttpUrl
 import timber.log.Timber
 
 fun String.removeTrailingSlash(): String {
@@ -66,4 +67,11 @@ fun String.parseColor(): Int {
 
 fun String.userId(userId: String?): String? {
     return userId?.let { this.replace(it, "") }
+}
+
+fun String.lowercaseUrl(): String? {
+    val httpUrl = HttpUrl.parse(this)
+    val newScheme = httpUrl?.scheme()?.toLowerCase()
+
+    return httpUrl?.newBuilder()?.scheme(newScheme)?.build()?.toString()
 }
