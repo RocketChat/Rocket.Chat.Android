@@ -104,6 +104,8 @@ class ServerFragment : Fragment(), ServerView {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // reset deep link info, so user can come back and log to another server...
+        deepLinkInfo = null
         relative_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
     }
 
@@ -144,9 +146,9 @@ class ServerFragment : Fragment(), ServerView {
             hideLoading()
             AlertDialog.Builder(it)
                 .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
-                .setPositiveButton(R.string.msg_ok, { _, _ ->
+                .setPositiveButton(R.string.msg_ok) { _, _ ->
                     performConnect()
-                })
+                }
                 .create()
                 .show()
         }

@@ -5,6 +5,7 @@ import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.uimodel.NavHeaderUiModel
 import chat.rocket.android.main.uimodel.NavHeaderUiModelMapper
+import chat.rocket.android.push.GroupedPush
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
@@ -52,6 +53,7 @@ class MainPresenter @Inject constructor(
     private val getAccountsInteractor: GetAccountsInteractor,
     private val removeAccountInteractor: RemoveAccountInteractor,
     private val factory: RocketChatClientFactory,
+    private val groupedPush: GroupedPush,
     dbManagerFactory: DatabaseManagerFactory,
     getSettingsInteractor: GetSettingsInteractor,
     managerFactory: ConnectionManagerFactory
@@ -152,7 +154,7 @@ class MainPresenter @Inject constructor(
     }
 
     fun connect() {
-        launch { refreshSettingsInteractor.refresh(currentServer) }
+        refreshSettingsInteractor.refreshAsync(currentServer)
         manager.connect()
     }
 
@@ -176,7 +178,7 @@ class MainPresenter @Inject constructor(
     fun changeDefaultStatus(userStatus: UserStatus) {
         launchUI(strategy) {
             try {
-                client.setDefaultStatus(userStatus)
+                manager.setDefaultStatus(userStatus)
                 view.showUserStatus(userStatus)
             } catch (ex: RocketChatException) {
                 ex.message?.let {
@@ -232,4 +234,12 @@ class MainPresenter @Inject constructor(
 
     private fun updateMyself(myself: Myself) =
         view.setupUserAccountInfo(navHeaderMapper.mapToUiModel(myself))
+
+    fun clearNotificationsForChatroom(chatRoomId: String?) {
+        if (chatRoomId == null) return
+
+        groupedPush.hostToPushMessageList[currentServer]?.let { list ->
+            list.removeAll { it.info.roomId == chatRoomId }
+        }
+    }
 }

@@ -443,6 +443,24 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
 
+    override fun enableLoginByWordpress() {
+        ui {
+            button_wordpress.isClickable = true
+        }
+    }
+
+    override fun setupWordpressButtonListener(wordpressUrl: String, state: String) {
+        ui { activity ->
+            button_wordpress.setOnClickListener {
+                startActivityForResult(
+                    activity.oauthWebViewIntent(wordpressUrl, state),
+                    REQUEST_CODE_FOR_OAUTH
+                )
+                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+            }
+        }
+    }
+
     override fun addCustomOauthServiceButton(
         customOauthUrl: String,
         state: String,
@@ -488,11 +506,11 @@ class LoginFragment : Fragment(), LoginView {
     override fun setupFabListener() {
         ui {
             button_fab.isVisible = true
-            button_fab.setOnClickListener({
+            button_fab.setOnClickListener {
                 button_fab.hide()
                 showRemainingSocialAccountsView()
                 scrollToBottom()
-            })
+            }
         }
     }
 

@@ -15,11 +15,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.text.bold
 import androidx.core.view.isVisible
@@ -52,9 +52,9 @@ import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiPickerPopup
 import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
+import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
 import chat.rocket.android.util.extensions.fadeIn
@@ -126,7 +126,8 @@ internal const val MENU_ACTION_PINNED_MESSAGES = 4
 internal const val MENU_ACTION_FAVORITE_MESSAGES = 5
 internal const val MENU_ACTION_FILES = 6
 
-class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
+class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener,
+    ChatRoomAdapter.OnActionSelected {
     @Inject
     lateinit var presenter: ChatRoomPresenter
     @Inject
@@ -200,6 +201,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
+
+        adapter = ChatRoomAdapter(chatRoomType, chatRoomName, this,
+                reactionListener = this)
     }
 
     override fun onCreateView(
@@ -295,35 +299,46 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 adapter.clearData()
             }
 
-            // track the message sent immediately after the current message
-            var prevMessageUiModel: MessageUiModel? = null
+            if (dataSet.isNotEmpty()) {
+                var prevMsgModel = dataSet[0]
 
-            // Loop over received messages to determine first unread
-            for (i in dataSet.indices) {
-                val msgModel = dataSet[i]
+                // track the message sent immediately after the current message
+                var prevMessageUiModel: MessageUiModel? = null
 
-                if (msgModel is MessageUiModel) {
-                    val msg = msgModel.rawData
-                    if (msg.timestamp < chatRoomLastSeen) {
-                        // This message was sent before the last seen of the room. Hence, it was seen.
-                        // if there is a message after (below) this, mark it firstUnread.
-                        if (prevMessageUiModel != null) {
-                            prevMessageUiModel.isFirstUnread = true
-                        }
-                        break
+                // Checking for all messages to assign true to the required showDayMaker
+                // Loop over received messages to determine first unread
+                var firstUnread = false
+                for (i in dataSet.indices) {
+                    val msgModel = dataSet[i]
+
+                    if (i > 0) {
+                        prevMsgModel = dataSet[i - 1]
                     }
-                    prevMessageUiModel = msgModel
+
+                    val currentDayMarkerText = msgModel.currentDayMarkerText
+                    val previousDayMarkerText = prevMsgModel.currentDayMarkerText
+                    println("$previousDayMarkerText then $currentDayMarkerText")
+                    if (previousDayMarkerText != currentDayMarkerText) {
+                        prevMsgModel.showDayMarker = true
+                    }
+
+                    if (!firstUnread && msgModel is MessageUiModel) {
+                        val msg = msgModel.rawData
+                        if (msg.timestamp < chatRoomLastSeen) {
+                            // This message was sent before the last seen of the room. Hence, it was seen.
+                            // if there is a message after (below) this, mark it firstUnread.
+                            if (prevMessageUiModel != null) {
+                                prevMessageUiModel.isFirstUnread = true
+                            }
+                            // Found first unread message.
+                            firstUnread = true
+                        }
+                        prevMessageUiModel = msgModel
+                    }
                 }
             }
 
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(
-                    chatRoomType,
-                    chatRoomName,
-                    presenter,
-                    reactionListener = this@ChatRoomFragment,
-                    context = context
-                )
                 recycler_view.adapter = adapter
                 if (dataSet.size >= 30) {
                     recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
@@ -427,7 +442,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             } else {
                 if (dy < 0 && !button_fab.isVisible) {
                     button_fab.show()
-                    if (newMessageCount !=0) text_count.isVisible = true
+                    if (newMessageCount != 0) text_count.isVisible = true
                 }
             }
         }
@@ -486,14 +501,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             if (isMessageReceived && button_fab.isVisible) {
                 newMessageCount++
 
-            if (newMessageCount <= 99)
-                text_count.text = newMessageCount.toString()
-            else
-                text_count.text = "99+"
+                if (newMessageCount <= 99)
+                    text_count.text = newMessageCount.toString()
+                else
+                    text_count.text = "99+"
 
                 text_count.isVisible = true
-            }
-            else if (!button_fab.isVisible)
+            } else if (!button_fab.isVisible)
                 recycler_view.scrollToPosition(0)
             verticalScrollOffset.set(0)
             empty_chat_view.isVisible = adapter.itemCount == 0
@@ -882,7 +896,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             clearMessageComposition(false)
             if (text_message.textContent.isEmpty()) {
                 KeyboardHelper.showSoftKeyboard(text_message)
-            }    
+            }
         }
     }
 
@@ -949,5 +963,56 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupToolbar(toolbarTitle: String) {
         (activity as ChatRoomActivity).showToolbarTitle(toolbarTitle)
+    }
+
+    override fun showMessageInfo(id: String) {
+        presenter.messageInfo(id)
+    }
+
+    override fun citeMessage(roomName: String, roomType: String, messageId: String, mentionAuthor: Boolean) {
+        presenter.citeMessage(roomName, roomType, messageId, mentionAuthor)
+    }
+
+    override fun copyMessage(id: String) {
+        presenter.copyMessage(id)
+    }
+
+    override fun editMessage(roomId: String, messageId: String, text: String) {
+        presenter.editMessage(roomId, messageId, text)
+    }
+
+    override fun toogleStar(id: String, star: Boolean) {
+        if (star) {
+            presenter.starMessage(id)
+        } else {
+            presenter.unstarMessage(id)
+        }
+    }
+
+    override fun tooglePin(id: String, pin: Boolean) {
+        if (pin) {
+            presenter.pinMessage(id)
+        } else {
+            presenter.unpinMessage(id)
+        }
+    }
+
+    override fun deleteMessage(roomId: String, id: String) {
+        ui {
+            val builder = AlertDialog.Builder(it)
+            builder.setTitle(it.getString(R.string.msg_delete_message))
+                    .setMessage(it.getString(R.string.msg_delete_description))
+                    .setPositiveButton(it.getString(R.string.msg_ok)) { _, _ -> presenter.deleteMessage(roomId, id) }
+                    .setNegativeButton(it.getString(R.string.msg_cancel)) { _, _ ->  }
+                    .show()
+        }
+    }
+
+    override fun showReactions(id: String) {
+        presenter.showReactions(id)
+    }
+
+    override fun openDirectMessage(roomName: String, message: String) {
+        presenter.openDirectMessage(roomName, message)
     }
 }

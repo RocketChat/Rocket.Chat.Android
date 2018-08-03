@@ -10,8 +10,11 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_bottom_sheet_avatar"
-        android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/name_and_username_container"
@@ -19,9 +22,9 @@
         android:layout_height="wrap_content"
         android:background="@color/colorBackgroundMemberContainer"
         android:orientation="vertical"
-        android:paddingBottom="10dp"
         android:paddingStart="16dp"
         android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/image_bottom_sheet_avatar"
         app:layout_constraintLeft_toLeftOf="parent">
 

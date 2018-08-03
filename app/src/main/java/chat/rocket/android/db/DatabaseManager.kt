@@ -249,7 +249,7 @@ class DatabaseManager(val context: Application,
                         id = roomId,
                         subscriptionId = id,
                         type = type.toString(),
-                        name = name ?: "",
+                        name = name ?: throw NullPointerException(), // this should be filtered on the SDK
                         fullname = fullName ?: chatRoom.fullname,
                         userId = userId ?: chatRoom.userId,
                         readonly = readonly ?: chatRoom.readonly,
@@ -330,7 +330,7 @@ class DatabaseManager(val context: Application,
             id = room.id,
             subscriptionId = subscription.id,
             type = room.type.toString(),
-            name = room.name ?: subscription.name ?: "",
+            name = room.name ?: subscription.name ?: throw NullPointerException(), // this should be filtered on the SDK
             fullname = subscription.fullName ?: room.fullName,
             userId = userId,
             ownerId = room.user?.id,
@@ -436,6 +436,7 @@ private fun String.databaseName(): String {
     val tmp = this.removePrefix("https://")
             .removePrefix("http://")
             .removeTrailingSlash()
+            .replace("/","-")
             .replace(".", "_")
 
     return "$tmp.db"
