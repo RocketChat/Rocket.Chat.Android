@@ -116,7 +116,7 @@ class ServerFragment : Fragment(), ServerView {
         constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
         // reset deep link info, so user can come back and log to another server...
         deepLinkInfo = null
-        relative_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+        constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
     }
 
     override fun showInvalidServerUrlMessage() = showMessage(getString(R.string.msg_invalid_server_url))
