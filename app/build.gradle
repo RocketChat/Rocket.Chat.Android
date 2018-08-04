@@ -12,8 +12,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 2034
-        versionName "2.5.0"
+        versionCode 2036
+        versionName "2.5.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -126,7 +126,7 @@ dependencies {
 
     implementation "com.github.luciofm:livedata-ktx:b1e8bbc25a"
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.2@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
         transitive = true
     }
 

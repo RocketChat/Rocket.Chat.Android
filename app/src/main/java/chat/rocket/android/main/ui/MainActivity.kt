@@ -5,13 +5,13 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Gravity
 import android.view.MenuItem
 import androidx.annotation.IdRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.main.adapter.AccountsAdapter
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     private var expanded = false
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
     private var chatRoomId: String? = null
-    private var progressDialog : ProgressDialog? = null
+    private var progressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -73,6 +73,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
 
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
+
+        println("ChatRoomId: $chatRoomId")
+        presenter.clearNotificationsForChatroom(chatRoomId)
 
         presenter.connect()
         presenter.loadServerAccounts()
