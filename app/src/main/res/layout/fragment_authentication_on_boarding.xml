@@ -23,7 +23,7 @@
         <TextView
             android:id="@+id/text_onboarding_title"
             style="@style/Authentication.Headline.TextView"
-            android:text="Welcome to Rocket.Chat"
+            android:text="@string/msg_welcome_to_rocket_chat"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/image_on_boarding"
@@ -32,7 +32,7 @@
         <TextView
             android:id="@+id/text_onboarding_description"
             style="@style/Authentication.Description.TextView"
-            android:text="Open Source Communication"
+            android:text="@string/msg_open_source_communication"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_onboarding_title"
@@ -67,7 +67,7 @@
                 android:textStyle="bold"
                 android:textColor="#1d74f5"
                 android:letterSpacing="0.04"
-                android:text="Connect with a server"
+                android:text="@string/action_connect_server"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/image_connect_server" />
 
@@ -111,7 +111,7 @@
                 android:textStyle="bold"
                 android:textColor="#1d74f5"
                 android:letterSpacing="0.04"
-                android:text="Join in the community"
+                android:text="@string/action_join_community"
                 android:layout_marginTop="10dp"
                 android:layout_toEndOf="@id/image_join_community" />
 
@@ -123,7 +123,7 @@
                 android:textStyle="normal"
                 android:textColor="#9ea2a8"
                 android:letterSpacing="0.04"
-                android:text="open.rocket.chat"
+                android:text="@string/community_server"
                 android:layout_below="@id/text_join_community"
                 android:layout_toEndOf="@id/image_join_community"/>
 
@@ -166,7 +166,7 @@
                 android:textStyle="bold"
                 android:textColor="#fff"
                 android:letterSpacing="0.04"
-                android:text="Create a new server"
+                android:text="@string/action_create_server"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/image_new_server" />
         </RelativeLayout>

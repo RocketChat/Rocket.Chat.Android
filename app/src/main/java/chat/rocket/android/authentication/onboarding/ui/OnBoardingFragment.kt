@@ -90,7 +90,7 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
 
     private fun connectToCommunityServer() {
         ui {
-            val url = "open.rocket.chat"
+            val url = getString(R.string.community_server)
             presenter.connect("$protocol${url.sanitize()}")
         }
     }
