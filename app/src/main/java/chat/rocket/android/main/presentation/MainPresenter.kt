@@ -137,11 +137,12 @@ class MainPresenter @Inject constructor(
                         category = EmojiCategory.CUSTOM.name,
                         url = "$currentServer/emoji-custom/${customEmoji.name}.${customEmoji.extension}",
                         count = 0,
-                        fitzpatrick = Fitzpatrick.Default,
+                        fitzpatrick = Fitzpatrick.Default.type,
                         keywords = customEmoji.aliases,
                         shortnameAlternates = customEmoji.aliases,
                         siblings = mutableListOf(),
-                        unicode = ""
+                        unicode = "",
+                        default = true
                     ))
                 }
 

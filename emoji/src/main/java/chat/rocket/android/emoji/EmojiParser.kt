@@ -2,19 +2,14 @@ package chat.rocket.android.emoji
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ImageSpan
 import android.util.Log
 import chat.rocket.android.emoji.internal.GlideApp
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.gif.GifDrawable
-import com.bumptech.glide.request.FutureTarget
-import com.bumptech.glide.request.RequestFutureTarget
-import com.bumptech.glide.request.RequestOptions
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.async

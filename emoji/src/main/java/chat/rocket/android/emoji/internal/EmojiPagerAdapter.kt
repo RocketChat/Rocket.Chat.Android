@@ -53,17 +53,21 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
                 } else {
                     sequenceOf(*EmojiRepository.getRecents().toTypedArray())
                 }
+
                 val recentEmojiSize = EmojiRepository.getRecents().size
                 text_no_recent_emoji.isVisible = category == EmojiCategory.RECENTS && recentEmojiSize == 0
+
                 if (adapters[category] == null) {
                     val adapter = EmojiAdapter(listener = listener)
                     emoji_recycler_view.adapter = adapter
                     adapters[category] = adapter
                     adapter.addEmojisFromSequence(emojis)
                 }
+
                 adapters[category]!!.setFitzpatrick(fitzpatrick)
             }
         }
+
         return view
     }
 
@@ -126,7 +130,13 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
         override fun onBindViewHolder(holder: EmojiRowViewHolder, position: Int) {
             val emoji = emojis[position]
             holder.bind(
-                emoji.siblings.find { it.fitzpatrick == fitzpatrick } ?: emoji
+                emoji.siblings.find {
+                    it.endsWith(fitzpatrick.type)
+                }?.let { shortname ->
+                    emojis.firstOrNull {
+                        it.shortname == shortname
+                    }
+                } ?: emoji
             )
         }
 

@@ -37,6 +37,8 @@ dependencies {
     implementation libraries.material
     implementation libraries.glide
     kapt libraries.glideProcessor
+    implementation libraries.room
+    kapt libraries.roomProcessor
 }
 
 kotlin {

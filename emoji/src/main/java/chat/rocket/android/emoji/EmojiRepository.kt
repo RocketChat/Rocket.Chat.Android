@@ -5,9 +5,11 @@ import android.content.SharedPreferences
 import android.graphics.Typeface
 import chat.rocket.android.emoji.internal.EmojiCategory
 import chat.rocket.android.emoji.internal.PREF_EMOJI_RECENTS
+import chat.rocket.android.emoji.internal.db.EmojiDatabase
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -24,18 +26,20 @@ object EmojiRepository {
     private val FITZPATRICK_REGEX = "(.*)_(tone[0-9]):".toRegex(RegexOption.IGNORE_CASE)
     private val shortNameToUnicode = HashMap<String, String>()
     private val SHORTNAME_PATTERN = Pattern.compile(":([-+\\w]+):")
-    private val ALL_EMOJIS = mutableListOf<Emoji>()
-    private var customEmojis: List<Emoji> = emptyList()
+    private var customEmojis = listOf<Emoji>()
     private lateinit var preferences: SharedPreferences
     internal lateinit var cachedTypeface: Typeface
+    private lateinit var db: EmojiDatabase
 
     fun load(context: Context, customEmojis: List<Emoji> = emptyList(), path: String = "emoji.json") {
         launch(CommonPool) {
-            cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
             this@EmojiRepository.customEmojis = customEmojis
+            val allEmojis = mutableListOf<Emoji>()
+            db = EmojiDatabase.getInstance(context)
+            cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
             preferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
-            ALL_EMOJIS.clear()
             val stream = context.assets.open(path)
+            // Load emojis from emojione ttf file temporarily here. We still need to work on them.
             val emojis = loadEmojis(stream).also {
                 it.addAll(customEmojis)
             }.toList()
@@ -43,9 +47,11 @@ object EmojiRepository {
             for (emoji in emojis) {
                 val unicodeIntList = mutableListOf<Int>()
 
-                // If empty it's a custom emoji.
+                emoji.category = emoji.category.toUpperCase()
+
+                // If unicode is empty it's a custom emoji, just add it.
                 if (emoji.unicode.isEmpty()) {
-                    ALL_EMOJIS.add(emoji)
+                    allEmojis.add(emoji)
                     continue
                 }
 
@@ -59,30 +65,37 @@ object EmojiRepository {
                         unicodeIntList.add(value)
                     }
                 }
+
                 val unicodeIntArray = unicodeIntList.toIntArray()
                 val unicode = String(unicodeIntArray, 0, unicodeIntArray.size)
                 val emojiWithUnicode = emoji.copy(unicode = unicode)
+
                 if (hasFitzpatrick(emoji.shortname)) {
                     val matchResult = FITZPATRICK_REGEX.find(emoji.shortname)
                     val prefix = matchResult!!.groupValues[1] + ":"
                     val fitzpatrick = Fitzpatrick.valueOf(matchResult.groupValues[2])
-                    val defaultEmoji = ALL_EMOJIS.firstOrNull { it.shortname == prefix }
-                    val emojiWithFitzpatrick = emojiWithUnicode.copy(fitzpatrick = fitzpatrick)
+                    val defaultEmoji = allEmojis.firstOrNull { it.shortname == prefix }
+                    val emojiWithFitzpatrick = emojiWithUnicode.copy(fitzpatrick = fitzpatrick.type)
+
                     if (defaultEmoji != null) {
-                        defaultEmoji.siblings.add(emojiWithFitzpatrick)
+                        emojiWithFitzpatrick.default = false
+                        defaultEmoji.siblings.toMutableList().add(emoji.shortname)
                     } else {
                         // This emoji doesn't have a default tone, ie. :man_in_business_suit_levitating_tone1:
                         // In this case, the default emoji becomes the first toned one.
-                        ALL_EMOJIS.add(emojiWithFitzpatrick)
+                        allEmojis.add(emojiWithFitzpatrick)
                     }
                 } else {
-                    ALL_EMOJIS.add(emojiWithUnicode)
+                    allEmojis.add(emojiWithUnicode)
                 }
+
                 shortNameToUnicode.apply {
                     put(emoji.shortname, unicode)
                     emoji.shortnameAlternates.forEach { alternate -> put(alternate, unicode) }
                 }
             }
+
+            saveEmojisToDatabase(allEmojis.toList())
 
             val density = context.resources.displayMetrics.density
             val px = (32 * density).toInt()
@@ -96,6 +109,12 @@ object EmojiRepository {
         }
     }
 
+    private suspend fun saveEmojisToDatabase(emojis: List<Emoji>) {
+        withContext(CommonPool) {
+            db.emojiDao().insertAllEmojis(*emojis.toTypedArray())
+        }
+    }
+
     private fun hasFitzpatrick(shortname: String): Boolean {
         return FITZPATRICK_REGEX matches shortname
     }
@@ -105,21 +124,15 @@ object EmojiRepository {
      *
      * @return All emojis for all categories.
      */
-    internal fun getAll() = ALL_EMOJIS
-
-    /**
-     * Get all emojis for a given category.
-     *
-     * @param category Emoji category such as: PEOPLE, NATURE, ETC
-     *
-     * @return All emoji from specified category
-     */
-    internal fun getEmojisByCategory(category: EmojiCategory): List<Emoji> {
-        return ALL_EMOJIS.filter { it.category.toLowerCase() == category.name.toLowerCase() }
+    internal suspend fun getAll(): List<Emoji> = withContext(CommonPool) {
+        return@withContext db.emojiDao().loadAllEmojis()
     }
 
-    internal fun getEmojiSequenceByCategory(category: EmojiCategory): Sequence<Emoji> {
-        val list = ALL_EMOJIS.filter { it.category.toLowerCase() == category.name.toLowerCase() }
+    internal suspend fun getEmojiSequenceByCategory(category: EmojiCategory): Sequence<Emoji> {
+        val list = withContext(CommonPool) {
+            db.emojiDao().loadEmojisByCategory(category.name.toLowerCase())
+        }
+
         return buildSequence {
             list.forEach {
                 yield(it)
@@ -134,7 +147,9 @@ object EmojiRepository {
      *
      * @return Emoji given by shortname or null
      */
-    internal fun getEmojiByShortname(shortname: String) = ALL_EMOJIS.firstOrNull { it.shortname == shortname }
+    private suspend fun getEmojiByShortname(shortname: String): Emoji? = withContext(CommonPool) {
+        return@withContext db.emojiDao().loadEmojiByShortname(shortname)
+    }
 
     /**
      * Add an emoji to the Recents category.
@@ -151,6 +166,14 @@ object EmojiRepository {
         preferences.edit().putString(PREF_EMOJI_RECENTS, recentsJson.toString()).apply()
     }
 
+    internal suspend fun getCustomEmojisAsync(): List<Emoji> {
+        return withContext(CommonPool) {
+            db.emojiDao().loadAllCustomEmojis().also {
+                this.customEmojis = it
+            }
+        }
+    }
+
     internal fun getCustomEmojis(): List<Emoji> = customEmojis
 
     /**
@@ -158,19 +181,22 @@ object EmojiRepository {
      *
      * @return All recent emojis ordered by usage.
      */
-    internal fun getRecents(): List<Emoji> {
+    internal suspend fun getRecents(): List<Emoji> {
         val list = mutableListOf<Emoji>()
         val recentsJson = JSONObject(preferences.getString(PREF_EMOJI_RECENTS, "{}"))
-        for (shortname in recentsJson.keys()) {
-            val emoji = getEmojiByShortname(shortname)
-            emoji?.let {
-                val useCount = recentsJson.getInt(it.shortname)
-                list.add(it.copy(count = useCount))
-            }
-        }
-        list.sortWith(Comparator { o1, o2 ->
-            o2.count - o1.count
-        })
+
+//        for (shortname in recentsJson.keys()) {
+//            val emoji = getEmojiByShortname(shortname)
+//            emoji?.let {
+//                val useCount = recentsJson.getInt(it.shortname)
+//                list.add(it.copy(count = useCount))
+//            }
+//        }
+//
+//        list.sortWith(Comparator { o1, o2 ->
+//            o2.count - o1.count
+//        })
+
         return list
     }
 
