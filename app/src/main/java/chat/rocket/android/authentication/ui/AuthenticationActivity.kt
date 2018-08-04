@@ -85,6 +85,8 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         supportFragmentManager.findFragmentById(R.id.fragment_container)?.onActivityResult(requestCode, resultCode, data)
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        currentFragment?.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {

@@ -2,7 +2,6 @@ package chat.rocket.android.server.infraestructure
 
 import androidx.lifecycle.MutableLiveData
 import chat.rocket.android.db.DatabaseManager
-import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.User
 import chat.rocket.common.model.UserStatus

@@ -114,6 +114,9 @@ class ServerFragment : Fragment(), ServerView {
     override fun onDestroyView() {
         super.onDestroyView()
         constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+        // reset deep link info, so user can come back and log to another server...
+        deepLinkInfo = null
+        relative_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
     }
 
     override fun showInvalidServerUrlMessage() = showMessage(getString(R.string.msg_invalid_server_url))
@@ -156,7 +159,7 @@ class ServerFragment : Fragment(), ServerView {
                 .setPositiveButton(R.string.msg_ok) { _, _ ->
                     performConnect()
                 }
-                    .create()
+                .create()
                 .show()
         }
     }

@@ -36,7 +36,7 @@ private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
 
     private lateinit var chatRoomId: String
-    private lateinit var adapter: ChatRoomAdapter
+    private val adapter = ChatRoomAdapter(enableActions = false)
     @Inject
     lateinit var presenter: PinnedMessagesPresenter
 
@@ -68,7 +68,6 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
     override fun showPinnedMessages(pinnedMessages: List<BaseUiModel<*>>) {
         ui {
             if (recycler_view_pinned.adapter == null) {
-                adapter = ChatRoomAdapter(enableActions = false)
                 recycler_view_pinned.adapter = adapter
 
                 val linearLayoutManager = LinearLayoutManager(context)

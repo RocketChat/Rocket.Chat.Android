@@ -23,10 +23,10 @@ import chat.rocket.android.server.domain.isGoogleAuthenticationEnabled
 import chat.rocket.android.server.domain.isLdapAuthenticationEnabled
 import chat.rocket.android.server.domain.isLinkedinAuthenticationEnabled
 import chat.rocket.android.server.domain.isLoginFormEnabled
-import chat.rocket.android.server.domain.isMeteorAuthenticationEnabled
+import chat.rocket.android.server.domain.isWordpressAuthenticationEnabled
 import chat.rocket.android.server.domain.isPasswordResetEnabled
 import chat.rocket.android.server.domain.isRegistrationEnabledForNewUsers
-import chat.rocket.android.server.domain.isTwitterAuthenticationEnabled
+import chat.rocket.android.server.domain.wordpressUrl
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.domain.wideTile
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
@@ -72,6 +72,7 @@ private const val SERVICE_NAME_GITHUB = "github"
 private const val SERVICE_NAME_GOOGLE = "google"
 private const val SERVICE_NAME_LINKEDIN = "linkedin"
 private const val SERVICE_NAME_GILAB = "gitlab"
+private const val SERVICE_NAME_WORDPRESS = "wordpress"
 
 class LoginPresenter @Inject constructor(
     private val view: LoginView,
@@ -140,10 +141,15 @@ class LoginPresenter @Inject constructor(
     fun authenticateWithDeepLink(deepLinkInfo: LoginDeepLinkInfo) {
         val serverUrl = deepLinkInfo.url
         setupConnectionInfo(serverUrl)
-        deepLinkUserId = deepLinkInfo.userId
-        deepLinkToken = deepLinkInfo.token
-        tokenRepository.save(serverUrl, Token(deepLinkUserId, deepLinkToken))
-        doAuthentication(TYPE_LOGIN_DEEP_LINK)
+        if (deepLinkInfo.userId != null && deepLinkInfo.token != null) {
+            deepLinkUserId = deepLinkInfo.userId
+            deepLinkToken = deepLinkInfo.token
+            tokenRepository.save(serverUrl, Token(deepLinkUserId, deepLinkToken))
+            doAuthentication(TYPE_LOGIN_DEEP_LINK)
+        } else {
+            // If we don't have the login credentials, just go through normal setup and user input.
+            setupView()
+        }
     }
 
     private fun setupConnectionInfo(serverUrl: String) {
@@ -195,42 +201,67 @@ class LoginPresenter @Inject constructor(
                     var totalSocialAccountsEnabled = 0
 
                     getCustomOauthServices(services).let {
-                        for (service in it) {
-                            val serviceName = getCustomOauthServiceName(service)
+                        for (serviceMap in it) {
+                            val serviceName = getCustomOauthServiceName(serviceMap)
+                            val host = getCustomOauthHost(serviceMap)
+                            val authorizePath = getCustomOauthAuthorizePath(serviceMap)
+                            val clientId = getOauthClientId(serviceMap)
+                            val scope = getCustomOauthScope(serviceMap)
+                            val textColor = getServiceNameColorForCustomOauthOrSaml(serviceMap)
+                            val buttonColor = getServiceButtonColor(serviceMap)
 
-                            val customOauthUrl = OauthHelper.getCustomOauthUrl(
-                                getCustomOauthHost(service),
-                                getCustomOauthAuthorizePath(service),
-                                getCustomOauthClientId(service),
-                                currentServer,
-                                serviceName,
-                                state,
-                                getCustomOauthScope(service)
-                            )
+                            if (serviceName != null &&
+                                host != null &&
+                                authorizePath != null &&
+                                clientId != null &&
+                                scope != null &&
+                                textColor != null &&
+                                buttonColor != null
+                            ) {
+                                val customOauthUrl = OauthHelper.getCustomOauthUrl(
+                                    host,
+                                    authorizePath,
+                                    clientId,
+                                    currentServer,
+                                    serviceName,
+                                    state,
+                                    scope
+                                )
 
-                            view.addCustomOauthServiceButton(
-                                customOauthUrl,
-                                state,
-                                serviceName,
-                                getServiceNameColor(service),
-                                getServiceButtonColor(service)
-                            )
-                            totalSocialAccountsEnabled++
+                                view.addCustomOauthServiceButton(
+                                    customOauthUrl,
+                                    state,
+                                    serviceName,
+                                    textColor,
+                                    buttonColor
+                                )
+                                totalSocialAccountsEnabled++
+                            }
                         }
                     }
 
                     getSamlServices(services).let {
                         val samlToken = generateRandomString(17)
+                        for (serviceMap in it) {
+                            val provider = getSamlProvider(serviceMap)
+                            val serviceName = getSamlServiceName(serviceMap)
+                            val textColor = getServiceNameColorForCustomOauthOrSaml(serviceMap)
+                            val buttonColor = getServiceButtonColor(serviceMap)
 
-                        for (service in it) {
-                            view.addSamlServiceButton(
-                                currentServer.samlUrl(getSamlProvider(service), samlToken),
-                                samlToken,
-                                getSamlServiceName(service),
-                                getServiceNameColor(service),
-                                getServiceButtonColor(service)
-                            )
-                            totalSocialAccountsEnabled++
+                            if (provider != null &&
+                                serviceName != null &&
+                                textColor != null &&
+                                buttonColor != null
+                            ) {
+                                view.addSamlServiceButton(
+                                    currentServer.samlUrl(provider, samlToken),
+                                    samlToken,
+                                    serviceName,
+                                    textColor,
+                                    buttonColor
+                                )
+                                totalSocialAccountsEnabled++
+                            }
                         }
                     }
                 }
@@ -324,55 +355,114 @@ class LoginPresenter @Inject constructor(
         }
     }
 
-    private fun getOauthClientId(listMap: List<Map<String, Any>>, serviceName: String): String? {
-        return listMap.find { map -> map.containsValue(serviceName) }?.let {
-            it["clientId"] ?: it["appId"]
-        }.toString()
-    }
+    /**
+     * Returns an OAuth service map given a [serviceName].
+     *
+     * @param listMap The list of [Map] to get the service from.
+     * @param serviceName The service name to get in the [listMap]
+     * @return The OAuth service map or null otherwise.
+     */
+    private fun getServiceMap(
+        listMap: List<Map<String, Any>>,
+        serviceName: String
+    ): Map<String, Any>? = listMap.find { map -> map.containsValue(serviceName) }
 
-    private fun getSamlServices(listMap: List<Map<String, Any>>): List<Map<String, Any>> {
-        return listMap.filter { map -> map["service"] == "saml" }
-    }
+    /**
+     * Returns the OAuth client ID of a [serviceMap].
+     * REMARK: This function works for common OAuth providers (Google, Facebook, Github and so on)
+     * as well as custom OAuth.
+     *
+     * @param serviceMap The service map to get the OAuth client ID.
+     * @return The OAuth client ID or null otherwise.
+     */
+    private fun getOauthClientId(serviceMap: Map<String, Any>): String? =
+        serviceMap["clientId"] as? String ?: serviceMap["appId"] as? String
 
-    private fun getSamlServiceName(service: Map<String, Any>): String {
-        return service["buttonLabelText"].toString()
-    }
+    /**
+     * Returns a custom OAuth service list.
+     *
+     * @return A custom OAuth service list, otherwise an empty list if there is no custom OAuth service.
+     */
+    private fun getCustomOauthServices(listMap: List<Map<String, Any>>): List<Map<String, Any>> =
+        listMap.filter { map -> map["custom"] == true }
 
-    private fun getSamlProvider(service: Map<String, Any>): String {
-        return (service["clientConfig"] as Map<*, *>)["provider"].toString()
-    }
+    /** Returns the custom OAuth service host.
+     *
+     * @param serviceMap The service map to get the custom OAuth service host.
+     * @return The custom OAuth service host, otherwise null.
+     */
+    private fun getCustomOauthHost(serviceMap: Map<String, Any>): String? =
+        serviceMap["serverURL"] as? String
 
-    private fun getCustomOauthServices(listMap: List<Map<String, Any>>): List<Map<String, Any>> {
-        return listMap.filter { map -> map["custom"] == true }
-    }
+    /** Returns the custom OAuth service authorize path.
+     *
+     * @param serviceMap The service map to get the custom OAuth service authorize path.
+     * @return The custom OAuth service authorize path, otherwise null.
+     */
+    private fun getCustomOauthAuthorizePath(serviceMap: Map<String, Any>): String? =
+        serviceMap["authorizePath"] as? String
 
-    private fun getCustomOauthHost(service: Map<String, Any>): String {
-        return service["serverURL"].toString()
-    }
+    /** Returns the custom OAuth service scope.
+     *
+     * @param serviceMap The service map to get the custom OAuth service scope.
+     * @return The custom OAuth service scope, otherwise null.
+     */
+    private fun getCustomOauthScope(serviceMap: Map<String, Any>): String? =
+        serviceMap["scope"] as? String
 
-    private fun getCustomOauthAuthorizePath(service: Map<String, Any>): String {
-        return service["authorizePath"].toString()
-    }
+    /** Returns the text of the custom OAuth service.
+     *
+     * @param serviceMap The service map to get the text of the custom OAuth service.
+     * @return The text of the custom OAuth service, otherwise null.
+     */
+    private fun getCustomOauthServiceName(serviceMap: Map<String, Any>): String? =
+        serviceMap["service"] as? String
 
-    private fun getCustomOauthClientId(service: Map<String, Any>): String {
-        return service["clientId"].toString()
-    }
+    /**
+     * Returns a SAML OAuth service list.
+     *
+     * @return A SAML service list, otherwise an empty list if there is no SAML OAuth service.
+     */
+    private fun getSamlServices(listMap: List<Map<String, Any>>): List<Map<String, Any>> =
+        listMap.filter { map -> map["service"] == "saml" }
 
-    private fun getCustomOauthServiceName(service: Map<String, Any>): String {
-        return service["service"].toString()
-    }
+    /**
+     * Returns the SAML provider.
+     *
+     * @param serviceMap The service map to provider from.
+     * @return The SAML provider, otherwise null.
+     */
+    private fun getSamlProvider(serviceMap: Map<String, Any>): String? =
+        (serviceMap["clientConfig"] as Map<*, *>)["provider"] as? String
 
-    private fun getCustomOauthScope(service: Map<String, Any>): String {
-        return service["scope"].toString()
-    }
+    /**
+     * Returns the text of the SAML service.
+     *
+     * @param serviceMap The service map to get the text of the SAML service.
+     * @return The text of the SAML service, otherwise null.
+     */
+    private fun getSamlServiceName(serviceMap: Map<String, Any>): String? =
+        serviceMap["buttonLabelText"] as? String
 
-    private fun getServiceButtonColor(service: Map<String, Any>): Int {
-        return service["buttonColor"].toString().parseColor()
-    }
+    /**
+     * Returns the text color of the service name.
+     * REMARK: This can be used for custom OAuth or SAML.
+     *
+     * @param serviceMap The service map to get the text color from.
+     * @return The text color of the service (custom OAuth or SAML), otherwise null.
+     */
+    private fun getServiceNameColorForCustomOauthOrSaml(serviceMap: Map<String, Any>): Int? =
+        (serviceMap["buttonLabelColor"] as? String)?.parseColor()
 
-    private fun getServiceNameColor(service: Map<String, Any>): Int {
-        return service["buttonLabelColor"].toString().parseColor()
-    }
+    /**
+     * Returns the button color of the service name.
+     * REMARK: This can be used for custom OAuth or SAML.
+     *
+     * @param serviceMap The service map to get the button color from.
+     * @return The button color of the service (custom OAuth or SAML), otherwise null.
+     */
+    private fun getServiceButtonColor(serviceMap: Map<String, Any>): Int? =
+        (serviceMap["buttonColor"] as? String)?.parseColor()
 
     private suspend fun saveAccount(username: String) {
         val icon = settings.favicon()?.let {
