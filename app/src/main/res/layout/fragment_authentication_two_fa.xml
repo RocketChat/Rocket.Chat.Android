@@ -34,7 +34,7 @@
         android:drawableStart="@drawable/ic_vpn_key_black_24dp"
         android:hint="@string/msg_2fa_code"
         android:imeOptions="actionDone"
-        android:inputType="text" />
+        android:inputType="number" />
 
     <Button
         android:id="@+id/button_log_in"

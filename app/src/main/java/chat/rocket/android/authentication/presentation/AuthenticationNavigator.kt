@@ -1,6 +1,7 @@
 package chat.rocket.android.authentication.presentation
 
 import android.content.Intent
+import androidx.appcompat.widget.DialogTitle
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.ui.LoginFragment
@@ -19,9 +20,9 @@ import chat.rocket.android.webview.ui.webViewIntent
 
 class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
 
-    fun toLoginOptions() {
+    fun toLoginOptions(server: String) {
         activity.addFragmentBackStack("LoginOptionFragment", R.id.fragment_container) {
-            LoginOptionsFragment.newInstance()
+            LoginOptionsFragment.newInstance(server)
         }
     }
 
@@ -59,8 +60,8 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
         }
     }
 
-    fun toWebPage(url: String) {
-        activity.startActivity(activity.webViewIntent(url))
+    fun toWebPage(url: String, toolbarTitle: String? = null) {
+        activity.startActivity(activity.webViewIntent(url, toolbarTitle))
         activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
     }
 

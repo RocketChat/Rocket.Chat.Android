@@ -3,6 +3,8 @@ package chat.rocket.android.authentication.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import chat.rocket.android.R
@@ -13,6 +15,7 @@ import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -28,8 +31,17 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_authentication)
-        setTheme(R.style.AuthenticationTheme)
         super.onCreate(savedInstanceState)
+        setupToolbar()
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
     }
 
     override fun onStart() {
@@ -42,6 +54,26 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
                     showOnBoarding()
                 }
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.legal, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item?.itemId){
+            R.id.action_terms_of_Service -> {
+                presenter.termsOfService(getString(R.string.title_legal_terms))
+                true
+            }
+            R.id.action_privacy_policy -> {
+                presenter.privacyPolicy(getString(R.string.title_legal_terms))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

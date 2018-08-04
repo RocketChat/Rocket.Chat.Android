@@ -22,7 +22,7 @@
             android:name=".authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/AuthenticationTheme"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
@@ -49,7 +49,7 @@
 
         <activity
             android:name=".server.ui.ChangeServerActivity"
-            android:theme="@style/AuthenticationTheme" />
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".main.ui.MainActivity"

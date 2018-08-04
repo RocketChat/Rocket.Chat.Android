@@ -14,7 +14,6 @@ import androidx.core.view.isVisible
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
-import chat.rocket.android.authentication.loginoptions.ui.LoginOptionsFragment
 import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
@@ -224,10 +223,5 @@ class ServerFragment : Fragment(), ServerView {
                 presenter.checkServer("$protocol${url.sanitize()}")
             }
         }
-    }
-
-    private fun joinCommunity(){
-        val url = "https://open.rocket.chat"
-        presenter.checkServer("$protocol${url.sanitize()}")
     }
 }

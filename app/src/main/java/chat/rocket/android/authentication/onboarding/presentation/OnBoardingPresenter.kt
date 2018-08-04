@@ -25,7 +25,7 @@ class OnBoardingPresenter @Inject constructor(
     fun connect(server: String) {
         //code that leads to login screen (smart lock will be implemented after this)
         connectToServer(server) {
-            navigator.toLoginOptions()
+            navigator.toLoginOptions(server)
         }
     }
 

@@ -2,17 +2,17 @@ package chat.rocket.android.authentication.loginoptions.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.authentication.login.ui.REQUEST_CODE_FOR_OAUTH
 import chat.rocket.android.authentication.loginoptions.presentation.LoginOptionsPresenter
 import chat.rocket.android.authentication.loginoptions.presentation.LoginOptionsView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
+import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
@@ -24,18 +24,32 @@ import kotlinx.android.synthetic.main.fragment_authentication_login_options.*
 import javax.inject.Inject
 
 
+private const val BUNDLE_SERVER_NAME = "BUNDLE_SERVER_NAME"
+
 class LoginOptionsFragment : Fragment(), LoginOptionsView {
 
     @Inject
     lateinit var presenter: LoginOptionsPresenter
+    private var server: String? = null
 
     companion object {
-        fun newInstance() = LoginOptionsFragment()
+        fun newInstance(server: String) : LoginOptionsFragment {
+            return LoginOptionsFragment().apply {
+                arguments = Bundle(1).apply {
+                    putString(BUNDLE_SERVER_NAME, server)
+                }
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        setHasOptionsMenu(true)
+        val bundle = arguments
+        if (bundle != null) {
+            server = bundle.getString(BUNDLE_SERVER_NAME)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -57,17 +71,24 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         button_login.setOnClickListener {
             presenter.toLogin()
         }
+        image_more_login_option.setOnClickListener{
+            if (it.rotation == 0f){
+                image_more_login_option.rotateBy(180f)
+                button_linkedin.isVisible = true
+                button_gitlab.isVisible = true
+            }else {
+                image_more_login_option.rotateBy(-180f)
+                button_linkedin.isVisible = false
+                button_gitlab.isVisible = false
+            }
+        }
     }
 
     private fun setupToolbar() {
         val toolbar = (activity as AuthenticationActivity).toolbar
-        val textServerName = (activity as AuthenticationActivity).text_room_name
-        textServerName.text = "open.rocket.chat"
         toolbar.isVisible = true
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        toolbar.setNavigationOnClickListener {
-            (activity as AuthenticationActivity).onBackPressed()
-        }
+        val textServerName = (activity as AuthenticationActivity).text_room_name
+        textServerName.text = server?.replace("https://","")
     }
 
     override fun enableLoginByFacebook() {

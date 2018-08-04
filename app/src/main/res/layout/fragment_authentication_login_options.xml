@@ -84,7 +84,8 @@
         android:textColor="#2f343d"
         android:textSize="16sp"
         android:textAllCaps="false"
-        style="?borderlessButtonStyle" />
+        style="?borderlessButtonStyle"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/button_gitlab"
@@ -104,7 +105,8 @@
         android:textColor="#2f343d"
         android:textSize="16sp"
         android:textAllCaps="false"
-        style="?borderlessButtonStyle" />
+        style="?borderlessButtonStyle"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/image_more_login_option"
