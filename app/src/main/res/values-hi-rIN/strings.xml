@@ -134,6 +134,13 @@
     <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
     <string name="msg_welcome_to_rocket_chat">Rocket.chat में आपका स्वागत है</string>
     <string name="msg_open_source_communication">ओपन सोर्स कम्युनिकेशन</string>
+    <string name="msg_login_with_email">ई-मेल के साथ लॉगिन करें</string>
+    <string name="msg_create_account">खाता बनाएं</string>
+    <string name="msg_continue_with_facebook">Facebook के साथ जारी रखें</string>
+    <string name="msg_continue_with_github">Github के साथ जारी रखें</string>
+    <string name="msg_continue_with_google">Google के साथ जारी रखें</string>
+    <string name="msg_continue_with_linkedin">Linkedin के साथ जारी रखें</string>
+    <string name="msg_continue_with_gitlab">GitLab के साथ जारी रखें</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">प्राइवेट</string>

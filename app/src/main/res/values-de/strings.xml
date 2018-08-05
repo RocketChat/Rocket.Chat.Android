@@ -131,6 +131,13 @@
     // TODO: Verify translations
     <string name="msg_welcome_to_rocket_chat">Willkommen bei Rocket.Chat</string>
     <string name="msg_open_source_communication">Open Source Kommunikation</string>
+    <string name="msg_login_with_email">Einloggen mit E-Mail</string>
+    <string name="msg_create_account">Ein Konto erstellen</string>
+    <string name="msg_continue_with_facebook">Weiter mit Facebook</string>
+    <string name="msg_continue_with_github">Weiter mit Github</string>
+    <string name="msg_continue_with_google">Weiter mit Google</string>
+    <string name="msg_continue_with_linkedin">Weiter mit Linkedin</string>
+    <string name="msg_continue_with_gitlab">Weiter mit GitLab</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privat</string>

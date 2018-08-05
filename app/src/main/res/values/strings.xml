@@ -132,6 +132,13 @@
     <string name="msg_sent_attachment">Sent an attachment</string>
     <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string>
     <string name="msg_open_source_communication">Open Source Communication</string>
+    <string name="msg_login_with_email">Login with e-mail</string>
+    <string name="msg_create_account">Create an account</string>
+    <string name="msg_continue_with_facebook">Continue with Facebook</string>
+    <string name="msg_continue_with_github">Continue with Github</string>
+    <string name="msg_continue_with_google">Continue with Google</string>
+    <string name="msg_continue_with_linkedin">Continue with Linkedin</string>
+    <string name="msg_continue_with_gitlab">Continue with GitLab</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Private</string>

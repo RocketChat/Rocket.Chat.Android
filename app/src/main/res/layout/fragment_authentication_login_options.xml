@@ -20,7 +20,7 @@
         android:drawableStart="@drawable/ic_facebook_24dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:text="Continue with Facebook"
+        android:text="@string/msg_continue_with_facebook"
         android:textColor="#2f343d"
         android:textSize="16sp"
         android:textAllCaps="false"
@@ -40,7 +40,7 @@
         android:drawableStart="@drawable/ic_github_24dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:text="Continue with Github"
+        android:text="@string/msg_continue_with_github"
         android:textColor="#2f343d"
         android:textSize="16sp"
         android:textAllCaps="false"
@@ -60,7 +60,7 @@
         android:drawableStart="@drawable/ic_google_24dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:text="Continue with Google"
+        android:text="@string/msg_continue_with_google"
         android:textColor="#2f343d"
         android:textSize="16sp"
         android:textAllCaps="false"
@@ -80,12 +80,13 @@
         android:drawableStart="@drawable/ic_linkedin_24dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:text="Continue with Linkedin"
+        android:text="@string/msg_continue_with_linkedin"
         android:textColor="#2f343d"
         android:textSize="16sp"
         android:textAllCaps="false"
         style="?borderlessButtonStyle"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/button_gitlab"
@@ -101,12 +102,13 @@
         android:drawableStart="@drawable/ic_gitlab_24dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:text="Continue with GitLab"
+        android:text="@string/msg_continue_with_gitlab"
         android:textColor="#2f343d"
         android:textSize="16sp"
         android:textAllCaps="false"
         style="?borderlessButtonStyle"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/image_more_login_option"
@@ -149,7 +151,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image_more_login_option"
         android:layout_marginTop="32dp"
-        android:text="Login with e-mail" />
+        android:text="@string/msg_login_with_email" />
 
     <Button
         android:id="@+id/button_create_account"
@@ -160,7 +162,7 @@
         app:layout_constraintTop_toBottomOf="@id/button_login"
         style="?borderlessButtonStyle"
         android:layout_marginTop="10dp"
-        android:text="Create an account"
+        android:text="@string/msg_create_account"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/colorAccent"
