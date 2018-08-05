@@ -44,6 +44,7 @@
     <string name="action_join_community">Присоединиться к сообществу</string>
     <string name="action_create_server">Создать новый сервер</string>
     <string name="action_register">регистр</string>
+    <string name="action_confirm">подтвердить</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -143,6 +144,8 @@
     <string name="msg_continue_with_google">Продолжить работу с Google</string>
     <string name="msg_continue_with_linkedin">Продолжить работу с Linkedin</string>
     <string name="msg_continue_with_gitlab">Продолжить работу с GitLab</string>
+    <string name="msg_two_factor_authentication">Двухфакторная аутентификация</string>
+    <string name="msg__your_2fa_code">Какой у вас код 2FA?</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>

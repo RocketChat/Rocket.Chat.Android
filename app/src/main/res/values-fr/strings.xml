@@ -47,6 +47,7 @@
     <string name="action_join_community">Rejoindre la communauté</string>
     <string name="action_create_server">Créer un nouveau serveur</string>
     <string name="action_register">registre</string>
+    <string name="action_confirm">confirmer</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -156,6 +157,8 @@
     <string name="msg_continue_with_google">Continuer avec Google</string>
     <string name="msg_continue_with_linkedin">Continuer avec Linkedin</string>
     <string name="msg_continue_with_gitlab">Continuer avec GitLab</string>
+    <string name="msg_two_factor_authentication">Authentification à deux facteurs</string>
+    <string name="msg__your_2fa_code">Quel est votre code 2FA?</string>
 
     <!-- Create channel messages -->
     // TODO: Add proper translation.

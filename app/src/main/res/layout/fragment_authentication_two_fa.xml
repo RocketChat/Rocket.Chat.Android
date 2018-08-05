@@ -39,7 +39,7 @@
     <Button
         android:id="@+id/button_log_in"
         style="@style/Authentication.Button"
-        android:text="Confirm"
+        android:text="@string/action_confirm"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_two_factor_auth"

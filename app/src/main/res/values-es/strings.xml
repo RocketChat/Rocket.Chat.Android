@@ -43,6 +43,7 @@
     <string name="action_join_community">Únete a la comunidad</string>
     <string name="action_create_server">Crea un nuevo servidor</string>
     <string name="action_register">Registro</string>
+    <string name="action_confirm">confirmar</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -138,6 +139,8 @@
     <string name="msg_continue_with_google">Continuar con Google</string>
     <string name="msg_continue_with_linkedin">Continuar con Linkedin</string>
     <string name="msg_continue_with_gitlab">Continuar con GitLab</string>
+    <string name="msg_two_factor_authentication">Autenticación de dos factores</string>
+    <string name="msg__your_2fa_code">¿Cuál es tu código 2FA?</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
