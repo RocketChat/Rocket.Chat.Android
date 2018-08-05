@@ -42,6 +42,10 @@
     <string name="action_drawing">Dessin</string>
     // TODO: Add proper translation.
     <string name="action_save_to_gallery">Save to gallery</string>
+    // TODO: Verify translations
+    <string name="action_connect_server">Se connecter avec un serveur</string>
+    <string name="action_join_community">Rejoindre la communauté</string>
+    <string name="action_create_server">Créer un nouveau serveur</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -141,6 +145,9 @@
     // TODO: Add proper translation.
     <string name="msg_delete_message">Delete Message</string>
     <string name="msg_delete_description">Are you sure you want to delete this message</string>
+    // TODO: Verify translations
+    <string name="msg_welcome_to_rocket_chat">Bienvenue sur Rocket.Chat</string>
+    <string name="msg_open_source_communication">Communication Open Source</string>
 
     <!-- Create channel messages -->
     // TODO: Add proper translation.

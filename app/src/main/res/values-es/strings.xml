@@ -38,6 +38,10 @@
     <string name="action_invisible">Invisible</string>
     <string name="action_drawing">dibujo</string>
     <string name="action_save_to_gallery">Guardar en la galería</string>
+    // TODO: Verify translations
+    <string name="action_connect_server">Conéctate con un servidor</string>
+    <string name="action_join_community">Únete a la comunidad</string>
+    <string name="action_create_server">Crea un nuevo servidor</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -122,6 +126,9 @@
     <string name="msg_delete_message">Borrar mensaje</string>
     <string name="msg_delete_description">Seguro que quieres borrar este mensaje</string>
     <string name="msg_no_search_found">No se han encontrado resultados</string>
+    // TODO: Verify translations
+    <string name="msg_welcome_to_rocket_chat">Bienvenido a Rocket.Chat</string>
+    <string name="msg_open_source_communication">Comunicación de código abierto</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>

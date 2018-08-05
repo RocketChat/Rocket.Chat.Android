@@ -39,6 +39,10 @@
     <string name="action_invisible">Невидимый</string>
     <string name="action_drawing">Рисование</string>
     <string name="action_save_to_gallery">Сохранить в галерею</string>
+    // TODO: Verify translations
+    <string name="action_connect_server">Подключение к серверу</string>
+    <string name="action_join_community">Присоединиться к сообществу</string>
+    <string name="action_create_server">Создать новый сервер</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -127,6 +131,9 @@
     <string name="msg_delete_description">Вы уверены, что хотите удалить это сообщение?</string>
     <string name="msg_channel_name">Название канала</string>
     <string name="msg_search">Поиск</string>
+    // TODO: Verify translations
+    <string name="msg_welcome_to_rocket_chat">Добро пожаловать в Rocket.Chat</string>
+    <string name="msg_open_source_communication">Связь с открытым исходным кодом</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>

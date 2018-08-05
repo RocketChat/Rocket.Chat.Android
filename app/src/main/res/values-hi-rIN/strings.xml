@@ -40,6 +40,9 @@
     <string name="action_save_to_gallery">गैलरी में सहेजें</string>
     <string name="action_drawing">चित्रकारी</string>
     <string name="action_share">शेयर</string>
+    <string name="action_connect_server">सर्वर से कनेक्ट करें</string>
+    <string name="action_join_community">समुदाय में शामिल हों</string>
+    <string name="action_create_server">नया सर्वर बनाएं</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -129,6 +132,8 @@
     <string name="msg_sent_attachment">एक अनुलग्नक भेजा</string>
     <string name="msg_delete_message">संदेश को हटाएं</string>
     <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
+    <string name="msg_welcome_to_rocket_chat">Rocket.chat में आपका स्वागत है</string>
+    <string name="msg_open_source_communication">ओपन सोर्स कम्युनिकेशन</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">प्राइवेट</string>

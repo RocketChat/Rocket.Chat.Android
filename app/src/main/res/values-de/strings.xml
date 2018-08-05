@@ -38,6 +38,10 @@
     <string name="action_invisible">Unsichtbar</string>
     <string name="action_drawing">Zeichnung</string>
     <string name="action_save_to_gallery">Sichern in Gallerie</string>
+    // TODO: Verify translations
+    <string name="action_connect_server">Verbinde dich mit einem Server</string>
+    <string name="action_join_community">Trete der Community bei</string>
+    <string name="action_create_server">Erstelle einen neuen Server</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -124,6 +128,9 @@
     <string name="msg_file_description">Datei Beschreibung</string>
     <string name="msg_send">Sende</string>
     <string name="msg_sent_attachment">Sende Anhang</string>
+    // TODO: Verify translations
+    <string name="msg_welcome_to_rocket_chat">Willkommen bei Rocket.Chat</string>
+    <string name="msg_open_source_communication">Open Source Kommunikation</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privat</string>
