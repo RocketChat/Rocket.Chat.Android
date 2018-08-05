@@ -43,6 +43,7 @@
     <string name="action_connect_server">Подключение к серверу</string>
     <string name="action_join_community">Присоединиться к сообществу</string>
     <string name="action_create_server">Создать новый сервер</string>
+    <string name="action_register">регистр</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">

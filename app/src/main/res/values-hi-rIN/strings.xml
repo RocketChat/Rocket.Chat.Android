@@ -43,6 +43,7 @@
     <string name="action_connect_server">सर्वर से कनेक्ट करें</string>
     <string name="action_join_community">समुदाय में शामिल हों</string>
     <string name="action_create_server">नया सर्वर बनाएं</string>
+    <string name="action_register">रजिस्टर</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">

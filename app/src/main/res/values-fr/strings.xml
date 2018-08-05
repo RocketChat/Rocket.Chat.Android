@@ -46,6 +46,7 @@
     <string name="action_connect_server">Se connecter avec un serveur</string>
     <string name="action_join_community">Rejoindre la communauté</string>
     <string name="action_create_server">Créer un nouveau serveur</string>
+    <string name="action_register">registre</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">

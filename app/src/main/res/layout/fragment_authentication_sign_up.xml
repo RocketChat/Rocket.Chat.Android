@@ -72,7 +72,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_email"
         android:layout_marginTop="20dp"
-        android:text="Register" />
+        android:text="@string/action_register" />
 
     <TextView
         android:id="@+id/text_new_user_agreement"
