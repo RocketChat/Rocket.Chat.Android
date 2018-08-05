@@ -67,7 +67,7 @@
         android:layout_width="wrap_content"
         style="?borderlessButtonStyle"
         android:layout_height="48dp"
-        android:text="Forgot your password?"
+        android:text="@string/msg_forgot_password"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/colorAccent"
