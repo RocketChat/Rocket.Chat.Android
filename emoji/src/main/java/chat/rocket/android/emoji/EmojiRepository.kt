@@ -149,7 +149,7 @@ object EmojiRepository {
      * @return Emoji given by shortname or null
      */
     private suspend fun getEmojiByShortname(shortname: String): Emoji? = withContext(CommonPool) {
-        return@withContext db.emojiDao().loadEmojiByShortname(shortname)
+        return@withContext db.emojiDao().loadAllCustomEmojis().firstOrNull()
     }
 
     /**
@@ -158,12 +158,14 @@ object EmojiRepository {
     internal fun addToRecents(emoji: Emoji) {
         val emojiShortname = emoji.shortname
         val recentsJson = JSONObject(preferences.getString(PREF_EMOJI_RECENTS, "{}"))
+
         if (recentsJson.has(emojiShortname)) {
             val useCount = recentsJson.getInt(emojiShortname)
             recentsJson.put(emojiShortname, useCount + 1)
         } else {
             recentsJson.put(emojiShortname, 1)
         }
+
         preferences.edit().putString(PREF_EMOJI_RECENTS, recentsJson.toString()).apply()
     }
 
@@ -182,23 +184,26 @@ object EmojiRepository {
      *
      * @return All recent emojis ordered by usage.
      */
-    internal suspend fun getRecents(): List<Emoji> {
+    internal suspend fun getRecents(): List<Emoji> = withContext(CommonPool) {
         val list = mutableListOf<Emoji>()
         val recentsJson = JSONObject(preferences.getString(PREF_EMOJI_RECENTS, "{}"))
 
-//        for (shortname in recentsJson.keys()) {
-//            val emoji = getEmojiByShortname(shortname)
-//            emoji?.let {
-//                val useCount = recentsJson.getInt(it.shortname)
-//                list.add(it.copy(count = useCount))
-//            }
-//        }
-//
-//        list.sortWith(Comparator { o1, o2 ->
-//            o2.count - o1.count
-//        })
+        val allEmojis = db.emojiDao().loadAllEmojis()
+        val len = recentsJson.length()
+        val recentShortnames = recentsJson.keys()
+        for (i in 0 until len) {
+            val shortname = recentShortnames.next()
+            allEmojis.firstOrNull { it.shortname == shortname }?.let {
+                val useCount = recentsJson.getInt(it.shortname)
+                list.add(it.copy(count = useCount))
+            }
+        }
 
-        return list
+        list.sortWith(Comparator { o1, o2 ->
+            o2.count - o1.count
+        })
+
+        return@withContext list
     }
 
     /**

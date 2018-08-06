@@ -20,7 +20,7 @@ interface EmojiDao {
     fun loadAllCustomEmojis(): List<Emoji>
 
     @Query("SELECT * FROM emoji WHERE shortname=:shortname")
-    fun loadEmojiByShortname(shortname: String): Emoji?
+    fun loadEmojiByShortname(shortname: String): List<Emoji>
 
     @Query("SELECT * FROM emoji WHERE UPPER(category)=UPPER(:category)")
     fun loadEmojisByCategory(category: String): List<Emoji>
