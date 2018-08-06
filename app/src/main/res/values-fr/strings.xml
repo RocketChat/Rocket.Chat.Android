@@ -100,8 +100,6 @@
     <string name="msg_preview_photo">Photo</string>
     <string name="msg_preview_file">File</string>
     <string name="msg_no_messages_yet">Aucun message pour le moment</string>
-    <string name="msg_version">Version %1$s</string>
-    <string name="msg_build">Build %1$d</string>
     <string name="msg_ok">OK</string>
     // TODO: Add proper translation.
     <string name="msg_update_app_version_in_order_to_continue">Out to date server version. Please contact the server admin to update the server version in order to continue.</string>
