@@ -78,6 +78,7 @@
     <string name="msg_content_description_log_in_using_meteor">Login mit Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Login mit Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Login mit Gitlab</string>
+    <string name="msg_content_description_log_in_using_wordpress">Login mit WordPress</string>
     <string name="msg_content_description_send_message">Sende Nachricht</string>
     <string name="msg_content_description_show_attachment_options">Zeige Anhang Optionen</string>
     <string name="msg_you">Du</string>
