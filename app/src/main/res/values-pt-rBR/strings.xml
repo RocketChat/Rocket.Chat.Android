@@ -270,7 +270,6 @@
     <string name="notif_action_reply_hint">RESPONDER</string>
     <string name="notif_error_sending">Falha ao enviar a mensagem.</string>
     <string name="notif_success_sending">Mensagem enviada para %1$s!</string>
-    <string name="action_share">Compartilhar</string>
     <string name="read_by">Lida por</string>
     <string name="message_information_title">Informações da mensagem</string>
     <string name="msg_log_out">Deslogando…</string>
