@@ -33,7 +33,6 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.UserStatus
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.realtime.setDefaultStatus
 import chat.rocket.core.internal.rest.getCustomEmojis
 import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.me
@@ -41,7 +40,6 @@ import chat.rocket.core.internal.rest.unregisterPushToken
 import chat.rocket.core.model.Myself
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.channels.Channel
-import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import javax.inject.Inject
@@ -142,7 +140,7 @@ class MainPresenter @Inject constructor(
                         shortnameAlternates = customEmoji.aliases,
                         siblings = mutableListOf(),
                         unicode = "",
-                        default = true
+                        isDefault = true
                     ))
                 }
 

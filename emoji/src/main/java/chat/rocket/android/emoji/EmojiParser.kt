@@ -2,6 +2,7 @@ package chat.rocket.android.emoji
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
@@ -33,7 +34,13 @@ class EmojiParser {
             val spannable = factory?.newSpannable(unicodedText)
                 ?: SpannableString.valueOf(unicodedText)
 
-            val typeface = EmojiRepository.cachedTypeface
+            val typeface = try {
+                EmojiRepository.cachedTypeface
+            } catch (ex: UninitializedPropertyAccessException) {
+                // swallow this exception and create typeface now
+                Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
+            }
+
             // Look for groups of emojis, set a EmojiTypefaceSpan with the emojione font.
             val length = spannable.length
             var inEmoji = false
@@ -47,6 +54,7 @@ class EmojiParser {
                     offset += count
                     continue
                 }
+
                 if (codepoint >= 0x200) {
                     if (!inEmoji) {
                         emojiStart = offset
@@ -59,6 +67,7 @@ class EmojiParser {
                     }
                     inEmoji = false
                 }
+
                 offset += count
                 if (offset >= length && inEmoji) {
                     spannable.setSpan(EmojiTypefaceSpan("sans-serif", typeface),

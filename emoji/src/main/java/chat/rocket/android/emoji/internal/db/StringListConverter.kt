@@ -2,17 +2,15 @@ package chat.rocket.android.emoji.internal.db
 
 import androidx.room.TypeConverter
 
-internal object StringListConverter {
+class StringListConverter {
 
     @TypeConverter
-    @JvmStatic
-    fun toString(list: List<String>?): String? {
-        return if (list == null) null else list.joinToString(separator = ",")
+    fun fromStringList(list: List<String>?): String {
+        return list?.joinToString(separator = ",") ?: ""
     }
 
     @TypeConverter
-    @JvmStatic
-    fun toStringList(value: String?): List<String>? {
-        return value?.split(",")
+    fun fromString(value: String?): List<String> {
+        return value?.split(",") ?: emptyList()
     }
 }

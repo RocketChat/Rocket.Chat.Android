@@ -14,10 +14,7 @@ import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.emoji.Fitzpatrick
 import chat.rocket.android.emoji.R
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.cache.ExternalPreferredCacheDiskCacheFactory
-import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.emoji_category_layout.view.*
 import kotlinx.android.synthetic.main.emoji_image_row_item.view.*
 import kotlinx.android.synthetic.main.emoji_row_item.view.*
@@ -97,26 +94,24 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
         private val listener: EmojiKeyboardListener
     ) : RecyclerView.Adapter<EmojiRowViewHolder>() {
 
-        private val TYPE_CUSTOM = 1
-        private val TYPE_NORMAL = 2
+        private val CUSTOM = 1
+        private val NORMAL = 2
+        private val allEmojis = mutableListOf<Emoji>()
         private val emojis = mutableListOf<Emoji>()
 
-        fun addEmojis(emojis: List<Emoji>) {
-            this.emojis.clear()
-            this.emojis.addAll(emojis)
-            notifyDataSetChanged()
-        }
-
         override fun getItemViewType(position: Int): Int {
-            return if (emojis[position].url != null) TYPE_CUSTOM else TYPE_NORMAL
+            return if (emojis[position].isCustom()) CUSTOM else NORMAL
         }
 
         suspend fun addEmojisFromSequence(emojiSequence: Sequence<Emoji>) {
             withContext(CommonPool) {
                 emojiSequence.forEachIndexed { index, emoji ->
                     withContext(UI) {
-                        emojis.add(emoji)
-                        notifyItemInserted(index)
+                        allEmojis.add(emoji)
+                        if (emoji.isDefault) {
+                            emojis.add(emoji)
+                            notifyItemInserted(emojis.size - 1)
+                        }
                     }
                 }
             }
@@ -130,18 +125,22 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
         override fun onBindViewHolder(holder: EmojiRowViewHolder, position: Int) {
             val emoji = emojis[position]
             holder.bind(
-                emoji.siblings.find {
-                    it.endsWith(fitzpatrick.type)
-                }?.let { shortname ->
-                    emojis.firstOrNull {
-                        it.shortname == shortname
-                    }
-                } ?: emoji
+                if (fitzpatrick != Fitzpatrick.Default) {
+                    emoji.siblings.find {
+                        it.endsWith("${fitzpatrick.type}:")
+                    }?.let { shortname ->
+                        allEmojis.firstOrNull {
+                            it.shortname == shortname
+                        }
+                    } ?: emoji
+                } else {
+                    emoji
+                }
             )
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmojiRowViewHolder {
-            val view = if (viewType == TYPE_CUSTOM) {
+            val view = if (viewType == CUSTOM) {
                 LayoutInflater.from(parent.context).inflate(R.layout.emoji_image_row_item, parent, false)
             } else {
                 LayoutInflater.from(parent.context).inflate(R.layout.emoji_row_item, parent, false)
@@ -160,6 +159,7 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
         fun bind(emoji: Emoji) {
             with(itemView) {
                 if (emoji.unicode.isNotEmpty()) {
+                    // Handle simple emoji.
                     val parsedUnicode = unicodeCache[emoji.unicode]
                     emoji_view.setSpannableFactory(spannableFactory)
                     emoji_view.text = if (parsedUnicode == null) {
@@ -171,6 +171,7 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
                         parsedUnicode
                     }
                 } else {
+                    // Handle custom emoji.
                     GlideApp.with(context)
                         .load(emoji.url)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)

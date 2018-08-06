@@ -6,6 +6,7 @@ import android.graphics.Typeface
 import chat.rocket.android.emoji.internal.EmojiCategory
 import chat.rocket.android.emoji.internal.PREF_EMOJI_RECENTS
 import chat.rocket.android.emoji.internal.db.EmojiDatabase
+import chat.rocket.android.emoji.internal.isCustom
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
@@ -47,10 +48,9 @@ object EmojiRepository {
             for (emoji in emojis) {
                 val unicodeIntList = mutableListOf<Int>()
 
-                emoji.category = emoji.category.toUpperCase()
+                emoji.category = emoji.category
 
-                // If unicode is empty it's a custom emoji, just add it.
-                if (emoji.unicode.isEmpty()) {
+                if (emoji.isCustom()) {
                     allEmojis.add(emoji)
                     continue
                 }
@@ -68,26 +68,26 @@ object EmojiRepository {
 
                 val unicodeIntArray = unicodeIntList.toIntArray()
                 val unicode = String(unicodeIntArray, 0, unicodeIntArray.size)
-                val emojiWithUnicode = emoji.copy(unicode = unicode)
+                emoji.unicode = unicode
 
                 if (hasFitzpatrick(emoji.shortname)) {
                     val matchResult = FITZPATRICK_REGEX.find(emoji.shortname)
                     val prefix = matchResult!!.groupValues[1] + ":"
                     val fitzpatrick = Fitzpatrick.valueOf(matchResult.groupValues[2])
                     val defaultEmoji = allEmojis.firstOrNull { it.shortname == prefix }
-                    val emojiWithFitzpatrick = emojiWithUnicode.copy(fitzpatrick = fitzpatrick.type)
+                    emoji.fitzpatrick = fitzpatrick.type
 
-                    if (defaultEmoji != null) {
-                        emojiWithFitzpatrick.default = false
-                        defaultEmoji.siblings.toMutableList().add(emoji.shortname)
+                    emoji.isDefault = if (defaultEmoji != null) {
+                        defaultEmoji.siblings.add(emoji.shortname)
+                        false
                     } else {
-                        // This emoji doesn't have a default tone, ie. :man_in_business_suit_levitating_tone1:
-                        // In this case, the default emoji becomes the first toned one.
-                        allEmojis.add(emojiWithFitzpatrick)
+                        true
                     }
-                } else {
-                    allEmojis.add(emojiWithUnicode)
+
+                    emoji.isDefault = false
                 }
+
+                allEmojis.add(emoji)
 
                 shortNameToUnicode.apply {
                     put(emoji.shortname, unicode)
@@ -97,6 +97,7 @@ object EmojiRepository {
 
             saveEmojisToDatabase(allEmojis.toList())
 
+            // Prefetch all custom emojis to make cache.
             val density = context.resources.displayMetrics.density
             val px = (32 * density).toInt()
 
@@ -130,7 +131,7 @@ object EmojiRepository {
 
     internal suspend fun getEmojiSequenceByCategory(category: EmojiCategory): Sequence<Emoji> {
         val list = withContext(CommonPool) {
-            db.emojiDao().loadEmojisByCategory(category.name.toLowerCase())
+            db.emojiDao().loadEmojisByCategory(category.name)
         }
 
         return buildSequence {

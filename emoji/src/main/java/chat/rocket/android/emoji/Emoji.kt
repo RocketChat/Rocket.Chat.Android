@@ -13,8 +13,8 @@ data class Emoji(
     @Ignore val keywords: List<String> = listOf(),
     var category: String = "",
     var count: Int = 0,
-    var siblings: List<String> = listOf(),
+    var siblings: MutableList<String> = mutableListOf(), // Siblings are the same emoji with different skin tones.
     var fitzpatrick: String = Fitzpatrick.Default.type,
     var url: String? = null, // Filled for custom emojis
-    var default: Boolean = true
+    var isDefault: Boolean = true // Tell if this is the default emoji if it has siblings (usually a yellow-toned one).
 )
