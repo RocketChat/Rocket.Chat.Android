@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Rocket.Chat</string>
 
     <!-- Titles -->
@@ -276,4 +276,6 @@
     <string name="notif_success_sending">Message sent to %1$s!</string>
     <string name="read_by">Read by</string>
     <string name="message_information_title">Message information</string>
+
+    <string name="foss" tools:ignore="MissingTranslation">(FOSS)</string>
 </resources>

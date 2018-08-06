@@ -108,9 +108,6 @@ dependencies {
     kapt libraries.daggerProcessor
     kapt libraries.daggerAndroidApt
 
-    playImplementation libraries.fcm
-    playImplementation libraries.playServicesAuth
-
     implementation libraries.room
     kapt libraries.roomProcessor
     implementation libraries.lifecycleExtensions
@@ -142,6 +139,9 @@ dependencies {
     implementation libraries.aVLoadingIndicatorView
 
     implementation "com.github.luciofm:livedata-ktx:b1e8bbc25a"
+
+    playImplementation libraries.fcm
+    playImplementation libraries.playServicesAuth
 
     playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
         transitive = true
