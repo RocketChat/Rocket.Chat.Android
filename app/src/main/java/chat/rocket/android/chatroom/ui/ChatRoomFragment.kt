@@ -982,12 +982,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         text_message?.removeCallbacks(what)
     }
 
-    override fun invalidateDrawable(p0: Drawable?) {
+    override fun invalidateDrawable(who: Drawable?) {
         text_message?.invalidate()
     }
 
-    override fun scheduleDrawable(who: Drawable?, what: Runnable?, w: Long) {
-        text_message?.postDelayed(what, w)
+    override fun scheduleDrawable(who: Drawable?, what: Runnable?, `when`: Long) {
+        text_message?.postDelayed(what, `when`)
     }
 
     override fun showMessageInfo(id: String) {

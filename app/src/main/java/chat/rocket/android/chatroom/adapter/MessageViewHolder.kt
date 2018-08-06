@@ -3,12 +3,10 @@ package chat.rocket.android.chatroom.adapter
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.text.Spannable
-import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ImageSpan
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.core.view.postDelayed
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.emoji.EmojiReactionListener
@@ -48,56 +46,53 @@ class MessageViewHolder(
     }
 
     override fun bindViews(data: MessageUiModel) {
-        with(itemView) {
-            day_marker_layout.visibility = if (data.showDayMarker) {
-                day.text = data.currentDayMarkerText
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
+        itemView.day_marker_layout.visibility = if (data.showDayMarker) {
+            itemView.day.text = data.currentDayMarkerText
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
 
-            if (data.isFirstUnread) {
-                new_messages_notif.visibility = View.VISIBLE
-            } else {
-                new_messages_notif.visibility = View.GONE
-            }
+        if (data.isFirstUnread) {
+            itemView.new_messages_notif.visibility = View.VISIBLE
+        } else {
+            itemView.new_messages_notif.visibility = View.GONE
+        }
 
-            text_message_time.text = data.time
-            text_sender.text = data.senderName
+        itemView.text_message_time.text = data.time
+        itemView.text_sender.text = data.senderName
 
-            if (data.content is Spannable) {
-                val spans = data.content.getSpans(0, data.content.length, ImageSpan::class.java)
-                spans.forEach {
-
-                    if (it.drawable is GifDrawable) {
-                        it.drawable.callback = this@MessageViewHolder
-                        (it.drawable as GifDrawable).start()
-                    }
+        if (data.content is Spannable) {
+            val spans = data.content.getSpans(0, data.content.length, ImageSpan::class.java)
+            spans.forEach {
+                if (it.drawable is GifDrawable) {
+                    it.drawable.callback = this@MessageViewHolder
+                    (it.drawable as GifDrawable).start()
                 }
             }
+        }
 
-            text_content.text_content.text = data.content
+        itemView.text_content.text_content.text = data.content
 
-            image_avatar.setImageURI(data.avatar)
-            text_content.setTextColor(if (data.isTemporary) Color.GRAY else Color.BLACK)
+        itemView.image_avatar.setImageURI(data.avatar)
+        itemView.text_content.setTextColor(if (data.isTemporary) Color.GRAY else Color.BLACK)
 
-            data.message.let {
-                text_edit_indicator.isVisible = !it.isSystemMessage() && it.editedBy != null
-                image_star_indicator.isVisible = it.starred?.isNotEmpty() ?: false
-            }
+        data.message.let {
+            itemView.text_edit_indicator.isVisible = !it.isSystemMessage() && it.editedBy != null
+            itemView.image_star_indicator.isVisible = it.starred?.isNotEmpty() ?: false
+        }
 
-            if (data.unread == null) {
-                read_receipt_view.isVisible = false
-            } else {
-                read_receipt_view.setImageResource(
-                    if (data.unread == true) {
-                        R.drawable.ic_check_unread_24dp
-                    } else {
-                        R.drawable.ic_check_read_24dp
-                    }
-                )
-                read_receipt_view.isVisible = true
-            }
+        if (data.unread == null) {
+            itemView.read_receipt_view.isVisible = false
+        } else {
+            itemView.read_receipt_view.setImageResource(
+                if (data.unread == true) {
+                    R.drawable.ic_check_unread_24dp
+                } else {
+                    R.drawable.ic_check_read_24dp
+                }
+            )
+            itemView.read_receipt_view.isVisible = true
         }
     }
 }
