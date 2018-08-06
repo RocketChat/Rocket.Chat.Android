@@ -55,6 +55,7 @@ import chat.rocket.android.emoji.EmojiKeyboardPopup
 import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiPickerPopup
 import chat.rocket.android.emoji.EmojiReactionListener
+import chat.rocket.android.emoji.internal.isCustom
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.helper.KeyboardHelper
@@ -637,8 +638,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         val cursorPosition = text_message.selectionStart
         if (cursorPosition > -1) {
             context?.let {
-                val offset = if (emoji.url == null) emoji.unicode.length else emoji.shortname.length
-                text_message.text?.insert(cursorPosition, EmojiParser.parse(it, emoji.shortname))
+                val offset = if (!emoji.isCustom()) emoji.unicode.length else emoji.shortname.length
+                val parsed = if (emoji.isCustom()) emoji.shortname else EmojiParser.parse(it, emoji.shortname)
+                text_message.text?.insert(cursorPosition, parsed)
                 text_message.setSelection(cursorPosition + offset)
             }
         }
