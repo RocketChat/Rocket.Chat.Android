@@ -41,6 +41,9 @@
     <string name="action_invisible">Invisible</string>
     <string name="action_drawing">Drawing</string>
     <string name="action_save_to_gallery">Save to gallery</string>
+    <string name="action_select_photo_from_gallery">Select photo from gallery</string>
+    <string name="action_take_photo">Take photo</string>
+    <string name="action_reset_avatar">Reset avatar</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
