@@ -214,7 +214,17 @@ object EmojiRepository {
         val recentShortnames = recentsJson.keys()
         for (i in 0 until len) {
             val shortname = recentShortnames.next()
-            allEmojis.firstOrNull { it.shortname == shortname }?.let {
+            allEmojis.firstOrNull {
+                if (it.shortname == shortname) {
+                    if (it.isCustom()) {
+                        return@firstOrNull getCurrentServerUrl()?.let { url ->
+                            it.url?.startsWith(url)
+                        } ?: false
+                    }
+                    return@firstOrNull true
+                }
+                false
+            }?.let {
                 val useCount = recentsJson.getInt(it.shortname)
                 list.add(it.copy(count = useCount))
             }
