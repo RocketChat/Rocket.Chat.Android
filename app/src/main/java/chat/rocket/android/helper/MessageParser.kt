@@ -132,6 +132,9 @@ class MessageParser @Inject constructor(
         private val builder: SpannableBuilder
     ) : SpannableMarkdownVisitor(configuration, builder) {
 
+        private val density = context.resources.displayMetrics.density
+        private val px = (22 * density).toInt()
+
         override fun visit(document: Document) {
             val spannable = EmojiParser.parse(context, builder.text())
             if (spannable is Spanned) {
@@ -145,6 +148,7 @@ class MessageParser @Inject constructor(
                 }
 
                 emojiImageSpans.forEach {
+                    it.drawable?.setBounds(0, 0, px, px)
                     builder.setSpan(it, spannable.getSpanStart(it), spannable.getSpanEnd(it),
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
