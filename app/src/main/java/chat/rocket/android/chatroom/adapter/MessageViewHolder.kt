@@ -20,6 +20,59 @@ class MessageViewHolder(
     listener: ActionsListener,
     reactionListener: EmojiReactionListener? = null
 ) : BaseViewHolder<MessageUiModel>(itemView, listener, reactionListener), Drawable.Callback {
+
+    init {
+        with(itemView) {
+            setupActionMenu(message_container)
+            text_content.movementMethod = LinkMovementMethod()
+        }
+    }
+
+    override fun bindViews(data: MessageUiModel) {
+        with(itemView) {
+            day.text = data.currentDayMarkerText
+            day_marker_layout.isVisible = data.showDayMarker
+
+            new_messages_notif.isVisible = data.isFirstUnread
+
+            text_message_time.text = data.time
+            text_sender.text = data.senderName
+
+            if (data.content is Spannable) {
+                val spans = data.content.getSpans(0, data.content.length, ImageSpan::class.java)
+                spans.forEach {
+                    if (it.drawable is GifDrawable) {
+                        it.drawable.callback = this@MessageViewHolder
+                        (it.drawable as GifDrawable).start()
+                    }
+                }
+            }
+
+            text_content.text_content.text = data.content
+
+            image_avatar.setImageURI(data.avatar)
+            text_content.setTextColor(if (data.isTemporary) Color.GRAY else Color.BLACK)
+
+            data.message.let {
+                text_edit_indicator.isVisible = !it.isSystemMessage() && it.editedBy != null
+                image_star_indicator.isVisible = it.starred?.isNotEmpty() ?: false
+            }
+
+            if (data.unread == null) {
+                read_receipt_view.isVisible = false
+            } else {
+                read_receipt_view.setImageResource(
+                    if (data.unread == true) {
+                        R.drawable.ic_check_unread_24dp
+                    } else {
+                        R.drawable.ic_check_read_24dp
+                    }
+                )
+                read_receipt_view.isVisible = true
+            }
+        }
+    }
+
     override fun unscheduleDrawable(who: Drawable?, what: Runnable?) {
         with(itemView) {
             text_content.removeCallbacks(what)
@@ -35,64 +88,6 @@ class MessageViewHolder(
     override fun scheduleDrawable(who: Drawable?, what: Runnable?, w: Long) {
         with(itemView) {
             text_content.postDelayed(what, w)
-        }
-    }
-
-    init {
-        with(itemView) {
-            setupActionMenu(message_container)
-            text_content.movementMethod = LinkMovementMethod()
-        }
-    }
-
-    override fun bindViews(data: MessageUiModel) {
-        itemView.day_marker_layout.visibility = if (data.showDayMarker) {
-            itemView.day.text = data.currentDayMarkerText
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
-
-        if (data.isFirstUnread) {
-            itemView.new_messages_notif.visibility = View.VISIBLE
-        } else {
-            itemView.new_messages_notif.visibility = View.GONE
-        }
-
-        itemView.text_message_time.text = data.time
-        itemView.text_sender.text = data.senderName
-
-        if (data.content is Spannable) {
-            val spans = data.content.getSpans(0, data.content.length, ImageSpan::class.java)
-            spans.forEach {
-                if (it.drawable is GifDrawable) {
-                    it.drawable.callback = this@MessageViewHolder
-                    (it.drawable as GifDrawable).start()
-                }
-            }
-        }
-
-        itemView.text_content.text_content.text = data.content
-
-        itemView.image_avatar.setImageURI(data.avatar)
-        itemView.text_content.setTextColor(if (data.isTemporary) Color.GRAY else Color.BLACK)
-
-        data.message.let {
-            itemView.text_edit_indicator.isVisible = !it.isSystemMessage() && it.editedBy != null
-            itemView.image_star_indicator.isVisible = it.starred?.isNotEmpty() ?: false
-        }
-
-        if (data.unread == null) {
-            itemView.read_receipt_view.isVisible = false
-        } else {
-            itemView.read_receipt_view.setImageResource(
-                if (data.unread == true) {
-                    R.drawable.ic_check_unread_24dp
-                } else {
-                    R.drawable.ic_check_read_24dp
-                }
-            )
-            itemView.read_receipt_view.isVisible = true
         }
     }
 }
