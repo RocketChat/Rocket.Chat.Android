@@ -125,8 +125,13 @@ class MainPresenter @Inject constructor(
         }
     }
 
+    /**
+     * Load all emojis for the current server. Simple emojis are always the same for every server,
+     * but custom emojis vary according to the its url.
+     */
     fun loadEmojis() {
         launchUI(strategy) {
+            EmojiRepository.setCurrentServerUrl(currentServer)
             val customEmojiList = mutableListOf<Emoji>()
             try {
                 for (customEmoji in retryIO("getCustomEmojis()") { client.getCustomEmojis() }) {

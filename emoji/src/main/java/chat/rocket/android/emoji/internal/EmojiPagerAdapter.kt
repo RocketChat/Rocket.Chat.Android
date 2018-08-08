@@ -45,8 +45,15 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
 
             container.addView(view)
             launch(UI) {
+                val currentServerUrl = EmojiRepository.getCurrentServerUrl()
                 val emojis = if (category != EmojiCategory.RECENTS) {
-                    EmojiRepository.getEmojiSequenceByCategory(category)
+                    if (category == EmojiCategory.CUSTOM) {
+                        currentServerUrl?.let { url ->
+                            EmojiRepository.getEmojiSequenceByCategoryAndUrl(category, url)
+                        } ?: emptySequence()
+                    } else {
+                        EmojiRepository.getEmojiSequenceByCategory(category)
+                    }
                 } else {
                     sequenceOf(*EmojiRepository.getRecents().toTypedArray())
                 }

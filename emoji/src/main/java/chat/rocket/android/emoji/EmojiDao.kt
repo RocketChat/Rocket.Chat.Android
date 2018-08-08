@@ -25,6 +25,9 @@ interface EmojiDao {
     @Query("SELECT * FROM emoji WHERE UPPER(category)=UPPER(:category)")
     fun loadEmojisByCategory(category: String): List<Emoji>
 
+    @Query("SELECT * FROM emoji WHERE UPPER(category)=UPPER(:category) AND url LIKE :url")
+    fun loadEmojisByCategoryAndUrl(category: String, url: String): List<Emoji>
+
     @Insert(onConflict = IGNORE)
     fun insertEmoji(emoji: Emoji)
 

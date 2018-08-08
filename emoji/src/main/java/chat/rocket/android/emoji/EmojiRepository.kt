@@ -31,6 +31,15 @@ object EmojiRepository {
     private lateinit var preferences: SharedPreferences
     internal lateinit var cachedTypeface: Typeface
     private lateinit var db: EmojiDatabase
+    private lateinit var currentServerUrl: String
+
+    fun setCurrentServerUrl(url: String) {
+        currentServerUrl = url
+    }
+
+    fun getCurrentServerUrl(): String? {
+        return if (::currentServerUrl.isInitialized) currentServerUrl else null
+    }
 
     fun load(context: Context, customEmojis: List<Emoji> = emptyList(), path: String = "emoji.json") {
         launch(CommonPool) {
@@ -132,6 +141,18 @@ object EmojiRepository {
     internal suspend fun getEmojiSequenceByCategory(category: EmojiCategory): Sequence<Emoji> {
         val list = withContext(CommonPool) {
             db.emojiDao().loadEmojisByCategory(category.name)
+        }
+
+        return buildSequence {
+            list.forEach {
+                yield(it)
+            }
+        }
+    }
+
+    internal suspend fun getEmojiSequenceByCategoryAndUrl(category: EmojiCategory, url: String): Sequence<Emoji> {
+        val list = withContext(CommonPool) {
+            db.emojiDao().loadEmojisByCategoryAndUrl(category.name, "$url%")
         }
 
         return buildSequence {
