@@ -17,6 +17,8 @@
     <string name="title_update_profile">Update profile</string>
     <string name="title_about">About</string>
     <string name="title_create_channel">Create Channel</string>
+    <string name="title_wallet">Wallet</string>
+    <string name="title_tokens">Your tokens…</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
@@ -279,4 +281,20 @@
     <string name="notif_success_sending">Message sent to %1$s!</string>
     <string name="read_by">Read by</string>
     <string name="message_information_title">Message information</string>
+
+    <!--Wallet strings-->
+    <string name="title_transactions">Transactions</string>
+    <string name="button_send">SEND</string>
+    <string name="balance_placeholder">…</string>
+    <string name="title_transaction">Transaction</string>
+    <string name="action_confirm_transaction">Confirm Transaction</string>
+    <string name="title_create_wallet">Create Wallet</string>
+    <string name="action_confirm_create_wallet">Confirm new wallet creation?</string>
+    <string name="wallet_creation_error">Sorry, there was an error creating your new wallet. Error: </string>
+    <string name="wallet_creation_success">Congratulations! Your new wallet has been created.</string>
+    <string name="sent_transaction_direct_message">"@%1$s, I'm sending you %2$s token(s) for: %3$s.\n[More Details](%4$s)"</string>
+    <string name="wallet_search_users">Search Users</string>
+    <string name="wallet_scan_qr_code">Scan QR Code</string>
+    <string name="wallet_recipient_address">Recipient Address</string>
+    <string name="wallet_recipient_address_hint">0x…</string>
 </resources>

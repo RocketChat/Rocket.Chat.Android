@@ -126,6 +126,10 @@ dependencies {
 
     implementation "com.github.luciofm:livedata-ktx:b1e8bbc25a"
 
+    implementation 'org.web3j:core:3.3.1-android'
+
+    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
         transitive = true
     }

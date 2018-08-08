@@ -30,6 +30,11 @@
             android:id="@+id/action_settings"
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/title_settings" />
+
+        <item
+            android:id="@+id/action_wallet"
+            android:icon="@drawable/ic_email_black_24dp"
+            android:title="@string/title_wallet"/>
     </group>
 
     <group

@@ -10,6 +10,7 @@ import chat.rocket.android.profile.ui.ProfileFragment
 import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.settings.ui.SettingsFragment
 import chat.rocket.android.util.extensions.addFragment
+import chat.rocket.android.wallet.ui.WalletFragment
 
 class MainNavigator(internal val activity: MainActivity) {
 
@@ -37,6 +38,12 @@ class MainNavigator(internal val activity: MainActivity) {
         }
     }
 
+    fun toWallet() {
+        activity.addFragment("WalletFragment", R.id.fragment_container) {
+            WalletFragment.newInstance()
+        }
+    }
+
     fun toChatRoom(
         chatRoomId: String,
         chatRoomName: String,
@@ -44,6 +51,7 @@ class MainNavigator(internal val activity: MainActivity) {
         isReadOnly: Boolean,
         chatRoomLastSeen: Long,
         isSubscribed: Boolean,
+        isFromWallet: Boolean,
         isCreator: Boolean,
         isFavorite: Boolean
     ) {
@@ -55,6 +63,7 @@ class MainNavigator(internal val activity: MainActivity) {
                 isReadOnly,
                 chatRoomLastSeen,
                 isSubscribed,
+                isFromWallet,
                 isCreator,
                 isFavorite
             )

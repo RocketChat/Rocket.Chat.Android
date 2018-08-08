@@ -62,9 +62,12 @@ import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.hideKeyboard
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.rotateBy
+import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.wallet.BlockchainInterface
+import chat.rocket.android.wallet.transaction.ui.TransactionActivity
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -88,6 +91,7 @@ fun newInstance(
     isReadOnly: Boolean,
     chatRoomLastSeen: Long,
     isSubscribed: Boolean = true,
+    isFromWallet: Boolean = false,
     isCreator: Boolean = false,
     isFavorite: Boolean = false,
     chatRoomMessage: String? = null
@@ -100,6 +104,7 @@ fun newInstance(
             putBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY, isReadOnly)
             putLong(BUNDLE_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
             putBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED, isSubscribed)
+            putBoolean(BUNDLE_IS_FROM_WALLET, isFromWallet)
             putBoolean(BUNDLE_CHAT_ROOM_IS_CREATOR, isCreator)
             putBoolean(BUNDLE_CHAT_ROOM_IS_FAVORITE, isFavorite)
             putString(BUNDLE_CHAT_ROOM_MESSAGE, chatRoomMessage)
@@ -112,9 +117,12 @@ private const val BUNDLE_CHAT_ROOM_NAME = "chat_room_name"
 private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
+private const val REQUEST_CODE_FOR_SEND_TOKENS = 43
 private const val REQUEST_CODE_FOR_DRAW = 101
 private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
+private const val BUNDLE_IS_FROM_WALLET = "is_from_wallet"
+
 private const val BUNDLE_CHAT_ROOM_IS_CREATOR = "chat_room_is_creator"
 private const val BUNDLE_CHAT_ROOM_IS_FAVORITE = "chat_room_is_favorite"
 private const val BUNDLE_CHAT_ROOM_MESSAGE = "chat_room_message"
@@ -148,6 +156,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private lateinit var actionSnackbar: ActionSnackbar
     internal var citation: String? = null
     private var editingMessageId: String? = null
+    private var isFromWallet: Boolean = false
     internal var disableMenu: Boolean = false
 
     private val compositeDisposable = CompositeDisposable()
@@ -195,6 +204,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             isReadOnly = bundle.getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
             isSubscribed = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED)
             chatRoomLastSeen = bundle.getLong(BUNDLE_CHAT_ROOM_LAST_SEEN)
+            isFromWallet = bundle.getBoolean(BUNDLE_IS_FROM_WALLET)
             isCreator = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_CREATOR)
             isFavorite = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_FAVORITE)
             chatRoomMessage = bundle.getString(BUNDLE_CHAT_ROOM_MESSAGE)
@@ -233,6 +243,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         text_message.addTextChangedListener(EmojiKeyboardPopup.EmojiTextWatcher(text_message))
+
+        // Immediately redirect to a TransactionActivity if originally from the WalletFragment
+        if (isFromWallet) {
+            showSendTokens()
+        }
     }
 
     override fun onDestroyView() {
@@ -271,8 +286,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             when (requestCode) {
                 REQUEST_CODE_FOR_PERFORM_SAF -> showFileAttachmentDialog(resultData.data)
                 REQUEST_CODE_FOR_DRAW -> showDrawAttachmentDialog(
-                    resultData.getByteArrayExtra(DRAWING_BYTE_ARRAY_EXTRA_DATA)
+                        resultData.getByteArrayExtra(DRAWING_BYTE_ARRAY_EXTRA_DATA)
                 )
+                REQUEST_CODE_FOR_SEND_TOKENS -> sendTransactionMessage(resultData)
             }
         }
     }
@@ -690,6 +706,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         showMessage(getString(R.string.max_file_size_exceeded, fileSize, maxFileSize))
     }
 
+    override fun showSendTokens() {
+        ui {
+            val intent = Intent(activity, TransactionActivity::class.java)
+            intent.putExtra("recipient_user_name", chatRoomName)
+            startActivityForResult(intent, REQUEST_CODE_FOR_SEND_TOKENS)
+            activity?.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
+        }
+    }
+
     override fun showConnectionState(state: State) {
         ui {
             text_connection_status.fadeIn()
@@ -826,6 +851,19 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }, 400)
             }
 
+            if (roomTypeOf(chatRoomType) is RoomType.DirectMessage) {
+                if (presenter.isWalletEnabled()) button_send_tokens.setVisible(true)
+                button_send_tokens.setOnClickListener {
+                    handler.postDelayed({
+                        presenter.sendTokens()
+                    }, 200)
+
+                    handler.postDelayed({
+                        hideAttachmentOptions()
+                    }, 400)
+                }
+            }
+
             button_add_reaction.setOnClickListener { view ->
                 openEmojiKeyboardPopup()
             }
@@ -935,6 +973,18 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_show_attachment_options.isVisible = true
             playComposeMessageButtonsAnimation = true
         }
+    }
+
+    private fun sendTransactionMessage(data: Intent) {
+        val recipient = data.getStringExtra("recipientId")
+        val amount = data.getDoubleExtra("amount", -1.0)
+        val txHash = data.getStringExtra("transaction_hash")
+        var reason = data.getStringExtra("reason")
+        if (reason.isEmpty()) reason = "No reason"
+        // Link to this transaction page on the explorer site
+        val txUrl = BlockchainInterface.EXPLORER_URL +
+                BlockchainInterface.TX_ADDON + txHash
+        sendMessage(getString(R.string.sent_transaction_direct_message, recipient, amount.toString(), reason, txUrl))
     }
 
     private fun sendTypingStatus(charSequence: CharSequence) {

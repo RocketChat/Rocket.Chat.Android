@@ -6,6 +6,17 @@
     android:orientation="vertical">
 
     <Button
+        android:id="@+id/button_send_tokens"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="20dp"
+        android:drawableStart="@drawable/ic_send_24dp"
+        android:gravity="start|center"
+        android:text="Send Tokens"
+        android:visibility="gone" />
+
+    <Button
         android:id="@+id/button_files"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"

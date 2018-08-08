@@ -49,6 +49,7 @@ const val ALLOW_MESSAGE_STARRING = "Message_AllowStarring"
 const val STORE_LAST_MESSAGE = "Store_Last_Message"
 const val MESSAGE_READ_RECEIPT_ENABLED = "Message_Read_Receipt_Enabled"
 const val MESSAGE_READ_RECEIPT_STORE_USERS = "Message_Read_Receipt_Store_Users"
+const val WALLET_ENABLED = "Wallet_Enabled"
 
 /*
  * Extension functions for Public Settings.
@@ -108,6 +109,8 @@ fun PublicSettings.uploadMaxFileSize(): Int {
 
 fun PublicSettings.baseUrl(): String = this[SITE_URL]?.value as String
 fun PublicSettings.siteName(): String? = this[SITE_NAME]?.value as String?
+
+fun PublicSettings.isWalletEnabled(): Boolean = this[WALLET_ENABLED]?.value == true
 
 interface SettingsRepository {
     fun save(url: String, settings: PublicSettings)

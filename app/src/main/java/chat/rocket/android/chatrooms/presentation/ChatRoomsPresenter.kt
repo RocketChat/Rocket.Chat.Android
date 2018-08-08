@@ -112,6 +112,7 @@ class ChatRoomsPresenter @Inject constructor(
                         isReadOnly = readonly ?: false,
                         chatRoomLastSeen = lastSeen ?: -1,
                         isSubscribed = open,
+                        isFromWallet = false,
                         isCreator = ownerId == myself.id || isDirectMessage,
                         isFavorite = favorite ?: false
                 )

@@ -25,6 +25,7 @@ import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.RoomRepository
 import chat.rocket.android.server.domain.UsersRepository
+import chat.rocket.android.server.domain.isWalletEnabled
 import chat.rocket.android.server.domain.uploadMaxFileSize
 import chat.rocket.android.server.domain.uploadMimeTypeFilter
 import chat.rocket.android.server.domain.useRealName
@@ -436,6 +437,10 @@ class ChatRoomPresenter @Inject constructor(
                 client.setTypingStatus(chatRoomId.toString(), currentLoggedUsername, false)
             }
         }
+    }
+
+    fun sendTokens() {
+        view.showSendTokens()
     }
 
     private fun markRoomAsRead(roomId: String) {
@@ -1081,5 +1086,9 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             navigator.toMessageInformation(messageId = messageId)
         }
+    }
+
+    fun isWalletEnabled(): Boolean {
+        return settings.isWalletEnabled()
     }
 }
