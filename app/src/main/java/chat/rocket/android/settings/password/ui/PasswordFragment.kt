@@ -7,10 +7,10 @@ import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.settings.password.presentation.PasswordPresenter
 import chat.rocket.android.settings.password.presentation.PasswordView
-import chat.rocket.android.util.extensions.asObservable
 import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.textContent
 import androidx.appcompat.view.ActionMode
+import chat.rocket.android.util.extension.asObservable
+import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable

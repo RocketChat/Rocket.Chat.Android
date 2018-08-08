@@ -44,39 +44,48 @@ object DateTimeHelper {
         }
     }
 
-    /**
-     * Returns a time from a [LocalDateTime].
-     *
-     * @param localDateTime The [LocalDateTime].
-     * @return The time from a [LocalDateTime].
-     */
-    fun getTime(localDateTime: LocalDateTime): String {
-        val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
-        return localDateTime.toLocalTime().format(formatter).toString()
+    fun getFormattedDateForMessages(localDateTime: LocalDateTime, context: Context): String {
+        val localDate = localDateTime.toLocalDate()
+        return when (localDate) {
+            today -> context.getString(R.string.msg_today)
+            yesterday -> context.getString(R.string.msg_yesterday)
+            else -> formatLocalDate(localDate)
+        }
     }
 
-    /**
-     * Returns a date time from a [LocalDateTime].
-     *
-     * @param localDateTime The [LocalDateTime].
-     * @return The time from a [LocalDateTime].
-     */
-    fun getDateTime(localDateTime: LocalDateTime): String {
-        return formatLocalDateTime(localDateTime)
-    }
+/**
+ * Returns a time from a [LocalDateTime].
+ *
+ * @param localDateTime The [LocalDateTime].
+ * @return The time from a [LocalDateTime].
+ */
+fun getTime(localDateTime: LocalDateTime): String {
+    val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+    return localDateTime.toLocalTime().format(formatter).toString()
+}
 
-    private fun formatLocalDateTime(localDateTime: LocalDateTime): String {
-        val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
-        return localDateTime.format(formatter).toString()
-    }
+/**
+ * Returns a date time from a [LocalDateTime].
+ *
+ * @param localDateTime The [LocalDateTime].
+ * @return The time from a [LocalDateTime].
+ */
+fun getDateTime(localDateTime: LocalDateTime): String {
+    return formatLocalDateTime(localDateTime)
+}
 
-    private fun formatLocalDate(localDate: LocalDate): String {
-        val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
-        return localDate.format(formatter).toString()
-    }
+private fun formatLocalDateTime(localDateTime: LocalDateTime): String {
+    val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+    return localDateTime.format(formatter).toString()
+}
 
-    private fun formatLocalTime(localTime: LocalTime): String {
-        val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
-        return localTime.format(formatter).toString()
-    }
+private fun formatLocalDate(localDate: LocalDate): String {
+    val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+    return localDate.format(formatter).toString()
+}
+
+private fun formatLocalTime(localTime: LocalTime): String {
+    val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+    return localTime.format(formatter).toString()
+}
 }

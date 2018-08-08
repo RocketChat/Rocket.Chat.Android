@@ -1,4 +1,4 @@
-package chat.rocket.android.chatroom.di
+package chat.rocket.android.pinnedmessages.di
 
 import androidx.lifecycle.LifecycleOwner
 import chat.rocket.android.core.lifecycle.CancelStrategy
@@ -14,6 +14,12 @@ class PinnedMessagesFragmentModule {
 
     @Provides
     @PerFragment
+    fun providePinnedMessagesView(frag: PinnedMessagesFragment): PinnedMessagesView {
+        return frag
+    }
+
+    @Provides
+    @PerFragment
     fun provideJob() = Job()
 
     @Provides
@@ -26,11 +32,5 @@ class PinnedMessagesFragmentModule {
     @PerFragment
     fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy {
         return CancelStrategy(owner, jobs)
-    }
-
-    @Provides
-    @PerFragment
-    fun providePinnedMessagesView(frag: PinnedMessagesFragment): PinnedMessagesView {
-        return frag
     }
 }

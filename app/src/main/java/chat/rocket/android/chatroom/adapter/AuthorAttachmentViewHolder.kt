@@ -5,16 +5,16 @@ import android.net.Uri
 import android.view.View
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import chat.rocket.android.chatroom.viewmodel.AuthorAttachmentViewModel
+import chat.rocket.android.chatroom.uimodel.AuthorAttachmentUiModel
+import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.util.extensions.content
-import chat.rocket.android.widget.emoji.EmojiReactionListener
 import chat.rocket.common.util.ifNull
 import kotlinx.android.synthetic.main.item_author_attachment.view.*
 
 class AuthorAttachmentViewHolder(itemView: View,
                                  listener: ActionsListener,
                                  reactionListener: EmojiReactionListener? = null)
-    : BaseViewHolder<AuthorAttachmentViewModel>(itemView, listener, reactionListener) {
+    : BaseViewHolder<AuthorAttachmentUiModel>(itemView, listener, reactionListener) {
 
     init {
         with(itemView) {
@@ -22,7 +22,7 @@ class AuthorAttachmentViewHolder(itemView: View,
         }
     }
 
-    override fun bindViews(data: AuthorAttachmentViewModel) {
+    override fun bindViews(data: AuthorAttachmentUiModel) {
         with(itemView) {
             data.icon?.let { icon ->
                 author_icon.isVisible = true

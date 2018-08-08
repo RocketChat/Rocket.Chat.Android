@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
-import chat.rocket.android.chatroom.viewmodel.BaseViewModel
+import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.favoritemessages.presentation.FavoriteMessagesPresenter
 import chat.rocket.android.favoritemessages.presentation.FavoriteMessagesView
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
@@ -35,7 +35,7 @@ private const val INTENT_CHAT_ROOM_ID = "chat_room_id"
 
 class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
     private lateinit var chatRoomId: String
-    private lateinit var adapter: ChatRoomAdapter
+    private val adapter = ChatRoomAdapter(enableActions = false)
     @Inject
     lateinit var presenter: FavoriteMessagesPresenter
 
@@ -63,10 +63,9 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
         presenter.loadFavoriteMessages(chatRoomId)
     }
 
-    override fun showFavoriteMessages(favoriteMessages: List<BaseViewModel<*>>) {
+    override fun showFavoriteMessages(favoriteMessages: List<BaseUiModel<*>>) {
         ui {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(enableActions = false)
                 recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context)
                 recycler_view.layoutManager = linearLayoutManager

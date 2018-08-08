@@ -19,9 +19,10 @@ const val ACCOUNT_GITHUB = "Accounts_OAuth_Github"
 const val ACCOUNT_LINKEDIN = "Accounts_OAuth_Linkedin"
 const val ACCOUNT_METEOR = "Accounts_OAuth_Meteor"
 const val ACCOUNT_TWITTER = "Accounts_OAuth_Twitter"
-const val ACCOUNT_WORDPRESS = "Accounts_OAuth_Wordpress"
 const val ACCOUNT_GITLAB = "Accounts_OAuth_Gitlab"
 const val ACCOUNT_GITLAB_URL = "API_Gitlab_URL"
+const val ACCOUNT_WORDPRESS = "Accounts_OAuth_Wordpress"
+const val ACCOUNT_WORDPRESS_URL = "API_Wordpress_URL"
 
 const val SITE_URL = "Site_Url"
 const val SITE_NAME = "Site_Name"
@@ -46,6 +47,8 @@ const val SHOW_EDITED_STATUS = "Message_ShowEditedStatus"
 const val ALLOW_MESSAGE_PINNING = "Message_AllowPinning"
 const val ALLOW_MESSAGE_STARRING = "Message_AllowStarring"
 const val STORE_LAST_MESSAGE = "Store_Last_Message"
+const val MESSAGE_READ_RECEIPT_ENABLED = "Message_Read_Receipt_Enabled"
+const val MESSAGE_READ_RECEIPT_STORE_USERS = "Message_Read_Receipt_Store_Users"
 
 /*
  * Extension functions for Public Settings.
@@ -69,8 +72,10 @@ fun PublicSettings.isTwitterAuthenticationEnabled(): Boolean = this[ACCOUNT_TWIT
 fun PublicSettings.isGitlabAuthenticationEnabled(): Boolean = this[ACCOUNT_GITLAB]?.value == true
 fun PublicSettings.gitlabUrl(): String? = this[ACCOUNT_GITLAB_URL]?.value as String?
 fun PublicSettings.isWordpressAuthenticationEnabled(): Boolean = this[ACCOUNT_WORDPRESS]?.value == true
+fun PublicSettings.wordpressUrl(): String? = this[ACCOUNT_WORDPRESS_URL]?.value as String?
 
 fun PublicSettings.useRealName(): Boolean = this[USE_REALNAME]?.value == true
+fun PublicSettings.useSpecialCharsOnRoom(): Boolean = this[ALLOW_ROOM_NAME_SPECIAL_CHARS]?.value == true
 fun PublicSettings.faviconLarge(): String? = this[FAVICON_512]?.value as String?
 fun PublicSettings.favicon(): String? = this[FAVICON_196]?.value as String?
 fun PublicSettings.wideTile(): String? = this[WIDE_TILE_310]?.value as String?
@@ -85,6 +90,9 @@ fun PublicSettings.allowedMessageDeleting(): Boolean = this[ALLOW_MESSAGE_DELETI
 
 fun PublicSettings.hasShowLastMessage(): Boolean = this[STORE_LAST_MESSAGE] != null
 fun PublicSettings.showLastMessage(): Boolean = this[STORE_LAST_MESSAGE]?.value == true
+
+fun PublicSettings.messageReadReceiptEnabled(): Boolean = this[MESSAGE_READ_RECEIPT_ENABLED]?.value == true
+fun PublicSettings.messageReadReceiptStoreUsers(): Boolean = this[MESSAGE_READ_RECEIPT_STORE_USERS]?.value == true
 
 fun PublicSettings.uploadMimeTypeFilter(): Array<String>? {
     val values = this[UPLOAD_WHITELIST_MIMETYPES]?.value as String?

@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter.PeopleSuggestionViewHolder
-import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
+import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.widget.autocompletion.model.SuggestionModel
 import chat.rocket.android.widget.autocompletion.ui.BaseSuggestionViewHolder
@@ -22,14 +22,14 @@ class PeopleSuggestionsAdapter(context: Context) : SuggestionsAdapter<PeopleSugg
         val allDescription = context.getString(R.string.suggest_all_description)
         val hereDescription = context.getString(R.string.suggest_here_description)
         val pinnedList = listOf(
-                PeopleSuggestionViewModel(imageUri = null,
+                PeopleSuggestionUiModel(imageUri = null,
                         text = "all",
                         username = "all",
                         name = allDescription,
                         status = null,
                         pinned = false,
                         searchList = listOf("all")),
-                PeopleSuggestionViewModel(imageUri = null,
+                PeopleSuggestionUiModel(imageUri = null,
                         text = "here",
                         username = "here",
                         name = hereDescription,
@@ -49,7 +49,7 @@ class PeopleSuggestionsAdapter(context: Context) : SuggestionsAdapter<PeopleSugg
     class PeopleSuggestionViewHolder(view: View) : BaseSuggestionViewHolder(view) {
 
         override fun bind(item: SuggestionModel, itemClickListener: SuggestionsAdapter.ItemClickListener?) {
-            item as PeopleSuggestionViewModel
+            item as PeopleSuggestionUiModel
             with(itemView) {
                 val username = itemView.findViewById<TextView>(R.id.text_username)
                 val name = itemView.findViewById<TextView>(R.id.text_name)

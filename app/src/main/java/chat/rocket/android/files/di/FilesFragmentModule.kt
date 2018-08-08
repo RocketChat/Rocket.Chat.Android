@@ -14,6 +14,12 @@ class FilesFragmentModule {
 
     @Provides
     @PerFragment
+    fun provideFilesView(frag: FilesFragment): FilesView {
+        return frag
+    }
+
+    @Provides
+    @PerFragment
     fun provideJob() = Job()
 
     @Provides
@@ -26,11 +32,5 @@ class FilesFragmentModule {
     @PerFragment
     fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy {
         return CancelStrategy(owner, jobs)
-    }
-
-    @Provides
-    @PerFragment
-    fun provideFilesView(frag: FilesFragment): FilesView {
-        return frag
     }
 }

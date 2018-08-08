@@ -4,7 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.User
+import chat.rocket.common.model.UserStatus
 import chat.rocket.core.RocketChatClient
+import chat.rocket.core.internal.realtime.setDefaultStatus
+import chat.rocket.core.internal.realtime.setTemporaryStatus
 import chat.rocket.core.internal.realtime.socket.connect
 import chat.rocket.core.internal.realtime.socket.disconnect
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -40,16 +43,15 @@ class ConnectionManager(
     private val statusChannel = Channel<State>(Channel.CONFLATED)
     private var connectJob: Job? = null
 
-    private val roomAndSubscriptionChannels = ArrayList<Channel<StreamMessage<BaseRoom>>>()
     private val roomMessagesChannels = LinkedHashMap<String, Channel<Message>>()
     private val userDataChannels = ArrayList<Channel<Myself>>()
-    private val activeUsersChannels = ArrayList<Channel<User>>()
     private val subscriptionIdMap = HashMap<String, String>()
 
     private var subscriptionId: String? = null
     private var roomsId: String? = null
     private var userDataId: String? = null
     private var activeUserId: String? = null
+    private var temporaryStatus: UserStatus? = null
 
     private val activeUsersContext = newSingleThreadContext("activeUsersContext")
     private val roomsContext = newSingleThreadContext("roomsContext")
@@ -72,6 +74,7 @@ class ConnectionManager(
                 Timber.d("Changing status to: $status")
                 when (status) {
                     is State.Connected -> {
+                        dbManager.clearUsersStatus()
                         client.subscribeSubscriptions { _, id ->
                             Timber.d("Subscribed to subscriptions: $id")
                             subscriptionId = id
@@ -90,6 +93,10 @@ class ConnectionManager(
                         }
 
                         resubscribeRooms()
+
+                        temporaryStatus?.let { status ->
+                            client.setTemporaryStatus(status)
+                        }
                     }
                     is State.Waiting -> {
                         Timber.d("Connection in: ${status.seconds}")
@@ -126,9 +133,6 @@ class ConnectionManager(
             for (room in client.roomsChannel) {
                 Timber.d("GOT Room streamed")
                 roomsActor.send(room)
-                for (channel in roomAndSubscriptionChannels) {
-                    channel.send(room)
-                }
             }
         }
 
@@ -137,9 +141,6 @@ class ConnectionManager(
             for (subscription in client.subscriptionsChannel) {
                 Timber.d("GOT Subscription streamed")
                 roomsActor.send(subscription)
-                for (channel in roomAndSubscriptionChannels) {
-                    channel.send(subscription)
-                }
             }
         }
 
@@ -156,7 +157,7 @@ class ConnectionManager(
         launch(parent = connectJob) {
             for (myself in client.userDataChannel) {
                 Timber.d("Got userData")
-                userActor.send(myself.asUser())
+                dbManager.updateSelfUser(myself)
                 for (channel in userDataChannels) {
                     channel.send(myself)
                 }
@@ -170,9 +171,6 @@ class ConnectionManager(
                 totalUsers++
                 //Timber.d("Got activeUsers: $totalUsers")
                 userActor.send(user)
-                for (channel in activeUsersChannels) {
-                    channel.send(user)
-                }
             }
         }
 
@@ -183,6 +181,16 @@ class ConnectionManager(
         for (channel in statusChannelList) {
             channel.offer(state)
         }
+    }
+
+    fun setDefaultStatus(userStatus: UserStatus) {
+        temporaryStatus = null
+        client.setDefaultStatus(userStatus)
+    }
+
+    fun setTemporaryStatus(userStatus: UserStatus) {
+        temporaryStatus = userStatus
+        client.setTemporaryStatus(userStatus)
     }
 
     private fun resubscribeRooms() {
@@ -199,25 +207,16 @@ class ConnectionManager(
         client.removeStateChannel(statusChannel)
         client.disconnect()
         connectJob?.cancel()
+        temporaryStatus = null
     }
 
     fun addStatusChannel(channel: Channel<State>) = statusChannelList.add(channel)
 
     fun removeStatusChannel(channel: Channel<State>) = statusChannelList.remove(channel)
 
-    fun addRoomsAndSubscriptionsChannel(channel: Channel<StreamMessage<BaseRoom>>) =
-        roomAndSubscriptionChannels.add(channel)
-
-    fun removeRoomsAndSubscriptionsChannel(channel: Channel<StreamMessage<BaseRoom>>) =
-        roomAndSubscriptionChannels.remove(channel)
-
     fun addUserDataChannel(channel: Channel<Myself>) = userDataChannels.add(channel)
 
     fun removeUserDataChannel(channel: Channel<Myself>) = userDataChannels.remove(channel)
-
-    fun addActiveUserChannel(channel: Channel<User>) = activeUsersChannels.add(channel)
-
-    fun removeActiveUserChannel(channel: Channel<User>) = activeUsersChannels.remove(channel)
 
     fun subscribeRoomMessages(roomId: String, channel: Channel<Message>) {
         val oldSub = roomMessagesChannels.put(roomId, channel)
@@ -278,10 +277,6 @@ class ConnectionManager(
             }
         }
     }
-}
-
-private fun Myself.asUser(): User {
-    return User(id, name, username, status, utcOffset, null, roles)
 }
 
 private fun Long.orZero(): Long {

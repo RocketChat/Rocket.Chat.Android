@@ -1,27 +1,28 @@
 package chat.rocket.android.favoritemessages.presentation
 
-import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
+import chat.rocket.android.chatroom.uimodel.UiModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.server.domain.ChatRoomsInteractor
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extension.launchUI
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
+import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.getFavoriteMessages
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Named
 
 class FavoriteMessagesPresenter @Inject constructor(
     private val view: FavoriteMessagesView,
     private val strategy: CancelStrategy,
-    private val roomsInteractor: ChatRoomsInteractor,
-    private val mapper: ViewModelMapper,
-    val serverInteractor: GetCurrentServerInteractor,
+    private val dbManager: DatabaseManager,
+    @Named("currentServer") private val currentServer: String,
+    private val mapper: UiModelMapper,
     val factory: RocketChatClientFactory
 ) {
-    private val serverUrl = serverInteractor.get()!!
-    private val client = factory.create(serverUrl)
+    private val client: RocketChatClient = factory.create(currentServer)
     private var offset: Int = 0
 
     /**
@@ -33,8 +34,9 @@ class FavoriteMessagesPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 view.showLoading()
-                roomsInteractor.getById(serverUrl, roomId)?.let {
-                    val favoriteMessages = client.getFavoriteMessages(roomId, it.type, offset)
+                dbManager.getRoom(roomId)?.let {
+                    val favoriteMessages =
+                        client.getFavoriteMessages(roomId, roomTypeOf(it.chatRoom.type), offset)
                     val messageList = mapper.map(favoriteMessages.result, asNotReversed = true)
                     view.showFavoriteMessages(messageList)
                     offset += 1 * 30

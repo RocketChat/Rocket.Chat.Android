@@ -14,7 +14,7 @@
         app:layout_constraintBottom_toTopOf="@id/text_typing_status"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/text_connection_status">
 
         <include
             android:id="@+id/layout_message_list"
@@ -68,25 +68,29 @@
         android:id="@+id/empty_chat_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="image_chat_icon, text_chat_title, text_chat_description"
         android:visibility="gone"
+        app:constraint_referenced_ids="image_chat_icon, text_chat_title, text_chat_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
     <chat.rocket.android.widget.autocompletion.ui.SuggestionsView
         android:id="@+id/suggestions_view"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/suggestion_background_color"
-        app:layout_constraintBottom_toTopOf="@id/layout_message_composer" />
+        app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/text_typing_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="5dp"
         android:maxLines="2"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
@@ -95,30 +99,37 @@
     <include
         android:id="@+id/layout_message_composer"
         layout="@layout/message_composer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <View
         android:id="@+id/view_dim"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@color/colorDim"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/layout_message_composer" />
+        app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <include
         android:id="@+id/layout_message_attachment_options"
         layout="@layout/message_attachment_options"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/layout_message_composer" />
+        app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/connection_status_text"
-        android:layout_width="match_parent"
+        android:id="@+id/text_connection_status"
+        android:layout_width="0dp"
         android:layout_height="32dp"
         android:alpha="0"
         android:background="@color/colorPrimary"
@@ -127,6 +138,9 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="@color/colorWhite"
         android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:alpha="1"
         tools:text="connected"
         tools:visibility="visible" />

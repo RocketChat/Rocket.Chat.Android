@@ -1,32 +1,48 @@
 package chat.rocket.android.profile.ui
 
 import DrawableHelper
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.view.ActionMode
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
+import androidx.core.net.toUri
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
-import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.extension.asObservable
+import chat.rocket.android.util.extension.dispatchImageSelection
+import chat.rocket.android.util.extension.dispatchTakePicture
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.extensions.ui
+import com.facebook.drawee.backends.pipeline.Fresco
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.avatar_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.update_avatar_options.*
 import javax.inject.Inject
 
+private const val REQUEST_CODE_FOR_PERFORM_SAF = 1
+private const val REQUEST_CODE_FOR_PERFORM_CAMERA = 2
+
 class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
-    @Inject lateinit var presenter: ProfilePresenter
-    private lateinit var currentName: String
-    private lateinit var currentUsername: String
-    private lateinit var currentEmail: String
-    private lateinit var currentAvatar: String
+    @Inject
+    lateinit var presenter: ProfilePresenter
+    private var currentName = ""
+    private var currentUsername = ""
+    private var currentEmail = ""
     private var actionMode: ActionMode? = null
-    private val disposables = CompositeDisposable()
+    private val editTextsDisposable = CompositeDisposable()
 
     companion object {
         fun newInstance() = ProfileFragment()
@@ -37,42 +53,58 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_profile)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = container?.inflate(R.layout.fragment_profile)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar()
+        setupListeners()
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             tintEditTextDrawableStart()
         }
-
         presenter.loadUserProfile()
+        subscribeEditTexts()
     }
 
     override fun onDestroyView() {
-        disposables.clear()
         super.onDestroyView()
+        unsubscribeEditTexts()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
+        if (resultData != null && resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_FOR_PERFORM_SAF) {
+                presenter.updateAvatar(resultData.data)
+            } else if (requestCode == REQUEST_CODE_FOR_PERFORM_CAMERA) {
+                presenter.preparePhotoAndUpdateAvatar(resultData.extras["data"] as Bitmap)
+            }
+        }
     }
 
     override fun showProfile(avatarUrl: String, name: String, username: String, email: String?) {
         ui {
             image_avatar.setImageURI(avatarUrl)
-
             text_name.textContent = name
             text_username.textContent = username
             text_email.textContent = email ?: ""
-            text_avatar_url.textContent = ""
 
             currentName = name
             currentUsername = username
             currentEmail = email ?: ""
-            currentAvatar = avatarUrl
 
-            profile_container.setVisible(true)
-
-            listenToChanges()
+            profile_container.isVisible = true
         }
+    }
+
+    override fun reloadUserAvatar(avatarUrl: String) {
+        Fresco.getImagePipeline().evictFromCache(avatarUrl.toUri())
+        image_avatar.setImageURI(avatarUrl)
+        (activity as MainActivity).setAvatar(avatarUrl)
     }
 
     override fun showProfileUpdateSuccessfullyMessage() {
@@ -81,30 +113,24 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     override fun showLoading() {
         enableUserInput(false)
-        ui {
-            view_loading.setVisible(true)
-        }
+        ui { view_loading.isVisible = true }
     }
 
     override fun hideLoading() {
         ui {
             if (view_loading != null) {
-                view_loading.setVisible(false)
+                view_loading.isVisible = false
             }
         }
         enableUserInput(true)
     }
 
     override fun showMessage(resId: Int) {
-        ui {
-            showToast(resId)
-        }
+        ui { showToast(resId) }
     }
 
     override fun showMessage(message: String) {
-        ui {
-            showToast(message)
-        }
+        ui { showToast(message) }
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
@@ -119,8 +145,12 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
-            R.id.action_profile -> {
-                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, text_avatar_url.textContent)
+            R.id.action_update_profile -> {
+                presenter.updateUserProfile(
+                    text_email.textContent,
+                    text_name.textContent,
+                    text_username.textContent
+                )
                 mode.finish()
                 true
             }
@@ -135,32 +165,67 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun setupToolbar() {
-        (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_profile)
+        (activity as AppCompatActivity?)?.supportActionBar?.title =
+                getString(R.string.title_profile)
+    }
+
+    private fun setupListeners() {
+        image_avatar.setOnClickListener { showUpdateAvatarOptions() }
+
+        view_dim.setOnClickListener { hideUpdateAvatarOptions() }
+
+        button_open_gallery.setOnClickListener {
+            dispatchImageSelection(REQUEST_CODE_FOR_PERFORM_SAF)
+            hideUpdateAvatarOptions()
+        }
+
+        button_take_photo.setOnClickListener {
+            dispatchTakePicture(REQUEST_CODE_FOR_PERFORM_CAMERA)
+            hideUpdateAvatarOptions()
+        }
+
+        button_reset_avatar.setOnClickListener {
+            hideUpdateAvatarOptions()
+            presenter.resetAvatar()
+        }
+    }
+
+    private fun showUpdateAvatarOptions() {
+        view_dim.isVisible = true
+        layout_update_avatar_options.isVisible = true
+    }
+
+    private fun hideUpdateAvatarOptions() {
+        layout_update_avatar_options.isVisible = false
+        view_dim.isVisible = false
     }
 
     private fun tintEditTextDrawableStart() {
         (activity as MainActivity).apply {
-            val personDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_24dp, this)
+            val personDrawable =
+                DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_24dp, this)
             val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, this)
-            val emailDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_24dp, this)
-            val linkDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_link_black_24dp, this)
+            val emailDrawable =
+                DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_24dp, this)
 
-            val drawables = arrayOf(personDrawable, atDrawable, emailDrawable, linkDrawable)
+            val drawables = arrayOf(personDrawable, atDrawable, emailDrawable)
             DrawableHelper.wrapDrawables(drawables)
             DrawableHelper.tintDrawables(drawables, this, R.color.colorDrawableTintGrey)
-            DrawableHelper.compoundDrawables(arrayOf(text_name, text_username, text_email, text_avatar_url), drawables)
+            DrawableHelper.compoundDrawables(
+                arrayOf(text_name, text_username, text_email), drawables
+            )
         }
     }
 
-    private fun listenToChanges() {
-        disposables.add(Observables.combineLatest(text_name.asObservable(),
-                text_username.asObservable(),
-                text_email.asObservable(),
-                text_avatar_url.asObservable()) { text_name, text_username, text_email, text_avatar_url ->
+    private fun subscribeEditTexts() {
+        editTextsDisposable.add(Observables.combineLatest(
+            text_name.asObservable(),
+            text_username.asObservable(),
+            text_email.asObservable()
+        ) { text_name, text_username, text_email ->
             return@combineLatest (text_name.toString() != currentName ||
                     text_username.toString() != currentUsername ||
-                    text_email.toString() != currentEmail ||
-                    (text_avatar_url.toString() != "" && text_avatar_url.toString() != currentAvatar))
+                    text_email.toString() != currentEmail)
         }.subscribe { isValid ->
             if (isValid) {
                 startActionMode()
@@ -169,6 +234,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             }
         })
     }
+
+    private fun unsubscribeEditTexts() = editTextsDisposable.clear()
 
     private fun startActionMode() {
         if (actionMode == null) {
@@ -183,7 +250,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             text_username.isEnabled = value
             text_username.isEnabled = value
             text_email.isEnabled = value
-            text_avatar_url.isEnabled = value
         }
     }
 }

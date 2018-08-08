@@ -16,7 +16,9 @@ class MembersFragmentModule {
 
     @Provides
     @PerFragment
-    fun provideJob() = Job()
+    fun membersView(frag: MembersFragment): MembersView {
+        return frag
+    }
 
     @Provides
     @PerFragment
@@ -24,9 +26,7 @@ class MembersFragmentModule {
 
     @Provides
     @PerFragment
-    fun membersView(frag: MembersFragment): MembersView {
-        return frag
-    }
+    fun provideJob() = Job()
 
     @Provides
     @PerFragment

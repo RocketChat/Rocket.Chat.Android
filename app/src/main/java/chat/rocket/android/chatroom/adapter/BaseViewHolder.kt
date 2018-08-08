@@ -1,24 +1,26 @@
 package chat.rocket.android.chatroom.adapter
 
-import androidx.recyclerview.widget.RecyclerView
+import android.view.ContextThemeWrapper
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
+import androidx.lifecycle.Lifecycle
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.ui.bottomsheet.BottomSheetMenu
-import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
-import chat.rocket.android.chatroom.viewmodel.BaseViewModel
-import chat.rocket.android.widget.emoji.Emoji
-import chat.rocket.android.widget.emoji.EmojiReactionListener
+import chat.rocket.android.chatroom.ui.bottomsheet.MessageActionsBottomSheet
+import chat.rocket.android.chatroom.uimodel.BaseUiModel
+import chat.rocket.android.emoji.Emoji
+import chat.rocket.android.emoji.EmojiReactionListener
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.toList
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
-import ru.whalemare.sheetmenu.extension.inflate
-import ru.whalemare.sheetmenu.extension.toList
 
-abstract class BaseViewHolder<T : BaseViewModel<*>>(
+abstract class BaseViewHolder<T : BaseUiModel<*>>(
     itemView: View,
     private val listener: ActionsListener,
     var reactionListener: EmojiReactionListener? = null
@@ -77,20 +79,31 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
 
     private val onClickListener = { view: View ->
         if (data?.message?.isSystemMessage() == false) {
-            data?.message?.let {
-                val menuItems = view.context.inflate(R.menu.message_actions).toList()
-                menuItems.find { it.itemId == R.id.action_message_unpin }?.apply {
-                    setTitle(if (it.pinned) R.string.action_msg_unpin else R.string.action_msg_pin)
-                    isChecked = it.pinned
-                }
+            data?.let { vm ->
+                vm.message.let {
+                    val menuItems = view.context.inflate(R.menu.message_actions).toList()
+                    menuItems.find { it.itemId == R.id.action_message_unpin }?.apply {
+                        setTitle(if (it.pinned) R.string.action_msg_unpin else R.string.action_msg_pin)
+                        isChecked = it.pinned
+                    }
 
-                menuItems.find { it.itemId == R.id.action_message_star }?.apply {
-                    val isStarred = it.starred?.isNotEmpty() ?: false
-                    setTitle(if (isStarred) R.string.action_msg_unstar else R.string.action_msg_star)
-                    isChecked = isStarred
+                    menuItems.find { it.itemId == R.id.action_message_star }?.apply {
+                        val isStarred = it.starred?.isNotEmpty() ?: false
+                        setTitle(if (isStarred) R.string.action_msg_unstar else R.string.action_msg_star)
+                        isChecked = isStarred
+                    }
+                    view.context?.let {
+                        if (it is ContextThemeWrapper && it.baseContext is AppCompatActivity) {
+                            with(it.baseContext as AppCompatActivity) {
+                                if (this.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                                    val actionsBottomSheet = MessageActionsBottomSheet()
+                                    actionsBottomSheet.addItems(menuItems, this@BaseViewHolder)
+                                    actionsBottomSheet.show(supportFragmentManager, null)
+                                }
+                            }
+                        }
+                    }
                 }
-                val adapter = ActionListAdapter(menuItems, this@BaseViewHolder)
-                BottomSheetMenu(adapter).show(view.context)
             }
         }
     }

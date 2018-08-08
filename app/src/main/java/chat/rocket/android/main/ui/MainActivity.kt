@@ -3,20 +3,22 @@ package chat.rocket.android.main.ui
 import DrawableHelper
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Gravity
 import android.view.MenuItem
-import android.view.View
+import androidx.annotation.IdRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
-import chat.rocket.android.main.viewmodel.NavHeaderViewModel
+import chat.rocket.android.main.uimodel.NavHeaderUiModel
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.ui.INTENT_CHAT_ROOM_ID
 import chat.rocket.android.util.extensions.fadeIn
@@ -26,7 +28,6 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.common.model.UserStatus
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.android.gms.common.api.GoogleApiClient
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     private var expanded = false
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
     private var chatRoomId: String? = null
+    private var progressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -72,7 +74,11 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
 
+        println("ChatRoomId: $chatRoomId")
+        presenter.clearNotificationsForChatroom(chatRoomId)
+
         presenter.connect()
+        presenter.loadServerAccounts()
         presenter.loadCurrentInfo()
         setupToolbar()
         setupNavigationView()
@@ -117,10 +123,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
     }
 
-    override fun setupNavHeader(viewModel: NavHeaderViewModel, accounts: List<Account>) {
-        Timber.d("Setting up nav header: $viewModel")
+    override fun setupUserAccountInfo(uiModel: NavHeaderUiModel) {
         with(headerLayout) {
-            with(viewModel) {
+            with(uiModel) {
                 if (userStatus != null) {
                     image_user_status.setImageDrawable(
                         DrawableHelper.getUserStatusDrawable(userStatus, context)
@@ -130,16 +135,49 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                     text_user_name.text = userDisplayName
                 }
                 if (userAvatar != null) {
-                    image_avatar.setImageURI(userAvatar)
+                    setAvatar(userAvatar)
                 }
                 if (serverLogo != null) {
                     server_logo.setImageURI(serverLogo)
                 }
-                text_server_url.text = viewModel.serverUrl
+                text_server_url.text = uiModel.serverUrl
             }
-            setupAccountsList(headerLayout, accounts)
         }
     }
+
+    override fun setupServerAccountList(serverAccountList: List<Account>) {
+        accounts_list.layoutManager = LinearLayoutManager(this)
+        accounts_list.adapter = AccountsAdapter(serverAccountList, object : Selector {
+            override fun onStatusSelected(userStatus: UserStatus) {
+                presenter.changeDefaultStatus(userStatus)
+            }
+
+            override fun onAccountSelected(serverUrl: String) {
+                presenter.changeServer(serverUrl)
+            }
+
+            override fun onAddedAccountSelected() {
+                presenter.addNewServer()
+            }
+        })
+
+        headerLayout.account_container.setOnClickListener {
+            it.image_account_expand.rotateBy(180f)
+            if (expanded) {
+                accounts_list.fadeOut()
+            } else {
+                accounts_list.fadeIn()
+            }
+            expanded = !expanded
+        }
+
+        headerLayout.image_avatar.setOnClickListener {
+            view_navigation.menu.findItem(R.id.action_profile).isChecked = true
+            presenter.toUserProfile()
+            drawer_layout.closeDrawer(Gravity.START)
+        }
+    }
+
 
     override fun closeServerSelection() {
         view_navigation.getHeaderView(0).account_container.performClick()
@@ -172,9 +210,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             .show()
     }
 
-    override fun invalidateToken(token: String) {
+    override fun invalidateToken(token: String) =
         FirebaseInstanceId.getInstance().deleteToken(token, FirebaseMessaging.INSTANCE_ID_SCOPE)
-    }
 
     override fun showMessage(resId: Int) = showToast(resId)
 
@@ -184,18 +221,19 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
-        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
-        toolbar.setNavigationOnClickListener {
-            drawer_layout.openDrawer(Gravity.START)
-        }
     }
 
-    private fun setupNavigationView() {
+    fun setupNavigationView() {
         view_navigation.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
-            drawer_layout.closeDrawer(Gravity.START)
+            closeDrawer()
             onNavDrawerItemSelected(menuItem)
             true
+        }
+
+        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
+        toolbar.setNavigationOnClickListener {
+            openDrawer()
         }
     }
 
@@ -207,6 +245,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             R.id.action_profile -> {
                 presenter.toUserProfile()
             }
+            R.id.action_channel -> {
+                presenter.toCreateChannel()
+            }
             R.id.action_settings -> {
                 presenter.toSettings()
             }
@@ -216,37 +257,24 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
     }
 
-    private fun setupAccountsList(header: View, accounts: List<Account>) {
-        accounts_list.layoutManager = LinearLayoutManager(this)
-        accounts_list.adapter = AccountsAdapter(accounts, object : Selector {
-            override fun onStatusSelected(userStatus: UserStatus) {
-                presenter.changeDefaultStatus(userStatus)
-            }
+    fun setAvatar(avatarUrl: String) {
+        headerLayout.image_avatar.setImageURI(avatarUrl)
+    }
 
-            override fun onAccountSelected(serverUrl: String) {
-                presenter.changeServer(serverUrl)
-            }
+    fun getDrawerLayout(): DrawerLayout = drawer_layout
 
-            override fun onAddedAccountSelected() {
-                presenter.addNewServer()
-            }
-        })
+    fun openDrawer() = drawer_layout.openDrawer(Gravity.START)
 
-        header.account_container.setOnClickListener {
-            header.image_account_expand.rotateBy(180f)
-            if (expanded) {
-                accounts_list.fadeOut()
-            } else {
-                accounts_list.fadeIn()
-            }
+    fun closeDrawer() = drawer_layout.closeDrawer(Gravity.START)
 
-            expanded = !expanded
-        }
+    fun setCheckedNavDrawerItem(@IdRes item: Int) = view_navigation.setCheckedItem(item)
 
-        header.image_avatar.setOnClickListener {
-            view_navigation.menu.findItem(R.id.action_profile).isChecked = true
-            presenter.toUserProfile()
-            drawer_layout.closeDrawer(Gravity.START)
-        }
+    override fun showProgress() {
+        progressDialog = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.msg_log_out), true, false)
+    }
+
+    override fun hideProgress() {
+        progressDialog?.dismiss()
+        progressDialog = null
     }
 }

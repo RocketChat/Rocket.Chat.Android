@@ -18,6 +18,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import android.text.Html
 import android.text.Spanned
+import androidx.core.content.ContextCompat
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.server.domain.GetAccountInteractor
@@ -36,10 +37,6 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
-/**
- * Refer to: https://github.com/RocketChat/Rocket.Chat.Android/blob/9e846b7fde8fe0c74b9e0117c37ce49293308db5/app/src/main/java/chat/rocket/android/push/PushManager.kt
- * for old source code.
- */
 class PushManager @Inject constructor(
     private val groupedPushes: GroupedPush,
     private val manager: NotificationManager,
@@ -80,7 +77,7 @@ class PushManager @Inject constructor(
 
             showNotification(pushMessage)
         } catch (ex: Exception) {
-            Timber.d(ex, "Error parsing PUSH message: $data")
+            Timber.e(ex, "Error parsing PUSH message: $data")
             ex.printStackTrace()
         }
     }
@@ -101,7 +98,7 @@ class PushManager @Inject constructor(
         val groupTuple = getGroupForHost(host)
 
         groupTuple.second.incrementAndGet()
-        val notIdListForHostname: MutableList<PushMessage>? = groupedPushes.hostToPushMessageList.get(host)
+        val notIdListForHostname: MutableList<PushMessage>? = groupedPushes.hostToPushMessageList[host]
         if (notIdListForHostname == null) {
             groupedPushes.hostToPushMessageList[host] = arrayListOf(pushMessage)
         } else {
@@ -365,14 +362,14 @@ class PushManager @Inject constructor(
         val res = context.resources
         val smallIcon = res.getIdentifier(
             "rocket_chat_notification", "drawable", context.packageName)
-        with(this, {
+        with(this) {
             setAutoCancel(true)
             setShowWhen(true)
-            color = context.resources.getColor(R.color.colorPrimary)
+            color = ContextCompat.getColor(context, R.color.colorPrimary)
             setDefaults(Notification.DEFAULT_ALL)
             setSmallIcon(smallIcon)
             setSound(alarmSound)
-        })
+        }
         return this
     }
 }

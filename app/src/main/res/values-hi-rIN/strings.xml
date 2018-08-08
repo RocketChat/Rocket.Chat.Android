@@ -15,6 +15,7 @@
     <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
+    <string name="title_create_channel">चैनल बनाएं</string>
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
@@ -25,6 +26,8 @@
     <string name="action_search">खोजें</string>
     <string name="action_update">अद्यतन करें</string>
     <string name="action_settings">सेटिंग्स</string>
+    <string name="action_create_channel">चैनल बनाएं</string>
+    <string name="action_create">बनाएं</string>
     <string name="action_logout">लोग आउट करें</string>
     <string name="action_files">फ़ाइलें</string>
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
@@ -35,6 +38,11 @@
     <string name="action_busy">व्यस्त</string>
     <string name="action_invisible">अदृश्य</string>
     <string name="action_save_to_gallery">गैलरी में सहेजें</string>
+    <string name="action_drawing">चित्रकारी</string>
+    <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
+    <string name="action_share">शेयर</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -61,6 +69,7 @@
     <string name="msg_new_user_agreement">आगे बढ़कर आप हमारे %1$s और %2$s से सहमत हो रहे हैं</string>
     <string name="msg_2fa_code">कोड 2FA</string>
     <string name="msg_yesterday">कल</string>
+    <string name="msg_today">आज</string>
     <string name="msg_message">संदेश</string>
     <string name="msg_this_room_is_read_only">यह रूम केवल पढ़ने के लिए है</string>
     <string name="msg_invalid_2fa_code">अमान्य 2FA कोड</string>
@@ -73,6 +82,7 @@
     <string name="msg_content_description_log_in_using_meteor">Meteor द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_twitter">Twitter द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_gitlab">Gitlab द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_wordprees">Login using WordPress</string> <!-- TODO Translate-->
     <string name="msg_content_description_send_message">मेसेज भेजें</string>
     <string name="msg_content_description_show_attachment_options">अटैचमेंट विकल्प दिखाएं</string>
     <string name="msg_you">आप</string>
@@ -84,7 +94,7 @@
     <string name="msg_preview_video">वीडियो</string>
     <string name="msg_preview_audio">ऑडियो</string>
     <string name="msg_preview_photo">तस्वीरें</string>
-    <string name="msg_preview_file">File</string>
+    <string name="msg_preview_file">फ़ाइल</string>
     <string name="msg_unread_messages">अपठित संदेश</string>
     <string name="msg_no_messages_yet">अभी तक कोई पोस्ट नहीं</string>
     <string name="msg_version">वर्शन %1$s</string>
@@ -113,7 +123,27 @@
     <string name="msg_are_typing">\u0020टाइप कर रहे हैं…</string>
     <string name="msg_several_users_are_typing">कई उपयोगकर्ता टाइप कर रहे हैं…</string>
     <string name="msg_no_search_found">कोई परिणाम नहीं मिला</string>
+    <string name="msg_channel_name">चैनल का नाम</string>
+    <string name="msg_search">खोजें</string>
     <string name="msg_message_copied">संदेश कॉपी किया गया</string>
+    <string name="msg_upload_file">फाइल अपलोड करें</string>
+    <string name="msg_file_description">फाइल विवरण</string>
+    <string name="msg_send">भेजें</string>
+    <string name="msg_sent_attachment">एक अनुलग्नक भेजा</string>
+    <string name="msg_delete_message">संदेश को हटाएं</string>
+    <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
+
+    <!-- Create channel messages -->
+    <string name="msg_private_channel">प्राइवेट</string>
+    <string name="msg_public_channel">सार्वजनिक</string>
+    <string name="msg_private_channel_description">केवल आप और आमंत्रित सदस्य ही इस चैनल तक पहुंच सकते हैं</string>
+    <string name="msg_public_channel_description">हर कोई इस चैनल तक पहुंच सकता है</string>
+    <string name="msg_ready_only_channel">चैनल केवल पढ़ने के लिए है।</string>
+    <string name="msg_ready_only_channel_description">केवल एडमिन नए संदेश लिख सकते हैं</string>
+    <string name="msg_invite_members">सदस्यों को चैनल में आमंत्रित करें</string>
+    <string name="msg_member_already_added">आपने पहले से ही इस यूजर को चुन चुके है।</string>
+    <string name="msg_member_not_found">सदस्य नहीं मिला</string>
+    <string name="msg_channel_created_successfully">चैनल सफलतापूर्वक बनाया गया</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
@@ -133,6 +163,7 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">जवाब दें</string>
+    <string name="action_msg_info">संदेश जानकारी</string>
     <string name="action_msg_edit">संपादन करें</string>
     <string name="action_msg_copy">कॉपी</string>
     <string name="action_msg_quote">उद्धरण</string>
@@ -151,8 +182,21 @@
     <string name="permission_pinning_not_allowed">पिनि करने की अनुमति नहीं है</string>
     <string name="permission_starring_not_allowed">तारांकित की अनुमति नहीं है</string>
 
+    <!-- Search message -->
+    <!-- TODO Add proper translation-->
+    <string name="title_search_message">Search message</string>
+
+    <!-- Favorite/Unfavorite chat room -->
+    <string name="title_favorite_chat">पसंदीदा चैट</string>
+    <string name="title_unfavorite_chat">नापसंद चैट</string>
+
     <!-- Members List -->
     <string name="title_members_list">सदस्य</string>
+
+    <!-- Mentions -->
+    <string name="msg_mentions">ज़िक्र</string>
+    <string name="msg_no_mention">कोई ज़िक्र नहीं</string>
+    <string name="msg_all_the_mentions_appear_here">सभी ज़िक्र यहां दिखाई देते हैं</string>
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">पिन किए गए संदेश</string>
@@ -165,7 +209,7 @@
     <string name="no_favorite_description">सभी पसंदीदा संदेश यहां\nदिखाई देते हैं</string>
 
     <!-- Files -->
-    <string name="msg_files">फ़ाइलें</string>
+    <string name="title_files">फ़ाइलें</string>
     <string name="title_files_total">फ़ाइलें (%d)</string>
     <string name="msg_no_files">कोई फाइल नहीं है</string>
     <string name="msg_all_files_appear_here">सभी फाइलें यहां दिखाई देती हैं</string>
@@ -198,7 +242,7 @@
     <string name="Archive">संग्रहित करें</string>
     <string name="Remove_someone_from_room">रूम से किसी को निकालें</string>
     <string name="Leave_the_current_channel">मौजूदा चैनल को छोड़ दें</string>
-    <string name="Displays_action_text">Displays action text</string>
+    <string name="Displays_action_text">कार्रवाई पाठ प्रदर्शित करता है</string>
     <string name="Direct_message_someone">किसी को प्रत्यक्ष संदेश भेजें</string>
     <string name="Mute_someone_in_room">रूम में किसी को म्यूट करें</string>
     <string name="Unmute_someone_in_room">रूम में किसी को अनम्यूट करें</string>
@@ -210,6 +254,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji"> कोई नया इमोजी नहीं</string>
+    <string name="alert_title_default_skin_tone">डिफ़ॉल्ट त्वचा टोन</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">क्रम</string>
@@ -224,11 +269,15 @@
     <string name="header_channel">चैनलों</string>
     <string name="header_private_groups">निजी समूहों</string>
     <string name="header_direct_messages">प्रत्यक्ष संदेश</string>
-    <string name="header_live_chats">Live Chats</string>
+    <string name="header_live_chats">लाइव चैट</string>
     <string name="header_unknown">अज्ञात</string>
 
     <!--Notifications-->
+    <string name="share_label">साझा संदेश संपादित करें</string>
     <string name="notif_action_reply_hint">जवाब</string>
     <string name="notif_error_sending">उत्तर विफल हुआ है। कृपया फिर से प्रयास करें।</string>
     <string name="notif_success_sending">संदेश भेजा गया %1$s!</string>
+    <string name="read_by">द्वारा पढ़ें</string>
+    <string name="message_information_title">संदेश की जानकारी</string>
+    <string name="msg_log_out">लॉग आउट कर रहा हूं…</string>
 </resources>

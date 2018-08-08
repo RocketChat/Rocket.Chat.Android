@@ -1,10 +1,9 @@
 package chat.rocket.android.chatroom.presentation
 
-import android.net.Uri
-import chat.rocket.android.chatroom.viewmodel.BaseViewModel
-import chat.rocket.android.chatroom.viewmodel.suggestion.ChatRoomSuggestionViewModel
-import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewModel
-import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
+import chat.rocket.android.chatroom.uimodel.BaseUiModel
+import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
+import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
+import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -13,11 +12,26 @@ import chat.rocket.core.model.ChatRoom
 interface ChatRoomView : LoadingView, MessageView {
 
     /**
+     * Shows the Favorite/Unfavorite chat room icon.
+     *
+     * @param isFavorite Shows the favorite icon if true, otherwise shows the unfavorite icon.
+     */
+    fun showFavoriteIcon(isFavorite: Boolean)
+
+    /**
      * Shows the chat room messages.
      *
      * @param dataSet The data set to show.
+     * @param clearDataSet If true it will clear the previous data set.
      */
-    fun showMessages(dataSet: List<BaseViewModel<*>>)
+    fun showMessages(dataSet: List<BaseUiModel<*>>, clearDataSet: Boolean)
+
+    /**
+     * Shows the chat room messages in the basis of a search term.
+     *
+     * @param dataSet The data set to show.
+     */
+    fun showSearchedMessages(dataSet: List<BaseUiModel<*>>)
 
     /**
      * Send a message to a chat room.
@@ -44,13 +58,6 @@ interface ChatRoomView : LoadingView, MessageView {
     fun showFileSelection(filter: Array<String>?)
 
     /**
-     * Uploads a file to a chat room.
-     *
-     * @param uri The file URI to send.
-     */
-    fun uploadFile(uri: Uri)
-
-    /**
      * Shows a invalid file message.
      */
     fun showInvalidFileMessage()
@@ -60,7 +67,7 @@ interface ChatRoomView : LoadingView, MessageView {
      *
      * @param message The (recent) message sent to a chat room.
      */
-    fun showNewMessage(message: List<BaseViewModel<*>>)
+    fun showNewMessage(message: List<BaseUiModel<*>>, isMessageReceived: Boolean)
 
     /**
      * Dispatch to the recycler views adapter that we should remove a message.
@@ -74,7 +81,7 @@ interface ChatRoomView : LoadingView, MessageView {
      *
      * @param index The index of the changed message
      */
-    fun dispatchUpdateMessage(index: Int, message: List<BaseViewModel<*>>)
+    fun dispatchUpdateMessage(index: Int, message: List<BaseUiModel<*>>)
 
     /**
      * Show reply status above the message composer.
@@ -111,15 +118,15 @@ interface ChatRoomView : LoadingView, MessageView {
     /**
      * Clears the message composition.
      */
-    fun clearMessageComposition()
+    fun clearMessageComposition(deleteMessage: Boolean)
 
     fun showInvalidFileSize(fileSize: Int, maxFileSize: Int)
 
     fun showConnectionState(state: State)
 
-    fun populatePeopleSuggestions(members: List<PeopleSuggestionViewModel>)
+    fun populatePeopleSuggestions(members: List<PeopleSuggestionUiModel>)
 
-    fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionViewModel>)
+    fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionUiModel>)
     /**
      * This user has joined the chat callback.
      *
@@ -134,7 +141,7 @@ interface ChatRoomView : LoadingView, MessageView {
      *
      * @param commands The list of available commands.
      */
-    fun populateCommandSuggestions(commands: List<CommandSuggestionViewModel>)
+    fun populateCommandSuggestions(commands: List<CommandSuggestionUiModel>)
 
     /**
      * Communicate whether it's a broadcast channel and if current user can post to it.

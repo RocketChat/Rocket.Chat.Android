@@ -10,12 +10,18 @@ android {
 
     defaultConfig {
         applicationId "chat.rocket.android"
-        minSdkVersion 21
+        minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 2030
-        versionName "2.4.0"
+        versionCode 2036
+        versionName "2.5.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     signingConfigs {
@@ -53,6 +59,7 @@ android {
 
     packagingOptions {
         exclude 'META-INF/core.kotlin_module'
+        exclude 'META-INF/main.kotlin_module'
     }
 }
 
@@ -60,6 +67,10 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation project(':player')
+    implementation project(':emoji')
+    implementation project(':draw')
+    implementation project(':util')
+    implementation project(':core')
 
     implementation libraries.kotlin
     implementation libraries.coroutines
@@ -97,7 +108,6 @@ dependencies {
 
     implementation libraries.timber
     implementation libraries.threeTenABP
-    implementation libraries.rxBinding
 
     implementation libraries.fresco
     api libraries.frescoOkHttp
@@ -112,13 +122,11 @@ dependencies {
 
     implementation libraries.markwon
 
-    implementation libraries.sheetMenu
-
     implementation libraries.aVLoadingIndicatorView
 
     implementation "com.github.luciofm:livedata-ktx:b1e8bbc25a"
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.2@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
         transitive = true
     }
 

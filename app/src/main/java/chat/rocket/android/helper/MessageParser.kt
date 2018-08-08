@@ -5,24 +5,27 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
-import android.net.Uri
-import androidx.core.content.res.ResourcesCompat
 import android.text.Spanned
 import android.text.style.ClickableSpan
 import android.text.style.ReplacementSpan
 import android.util.Patterns
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import chat.rocket.android.R
+import chat.rocket.android.emoji.EmojiParser
+import chat.rocket.android.emoji.EmojiRepository
+import chat.rocket.android.emoji.EmojiTypefaceSpan
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.openTabbedUrl
-import chat.rocket.android.widget.emoji.EmojiParser
-import chat.rocket.android.widget.emoji.EmojiRepository
-import chat.rocket.android.widget.emoji.EmojiTypefaceSpan
 import chat.rocket.common.model.SimpleUser
 import chat.rocket.core.model.Message
 import org.commonmark.node.AbstractVisitor
 import org.commonmark.node.Document
+import org.commonmark.node.ListItem
+import org.commonmark.node.Node
+import org.commonmark.node.OrderedList
+import org.commonmark.node.Paragraph
 import org.commonmark.node.Text
 import ru.noties.markwon.Markwon
 import ru.noties.markwon.SpannableBuilder
@@ -59,7 +62,7 @@ class MessageParser @Inject constructor(
         val builder = SpannableBuilder()
         val content = EmojiRepository.shortnameToUnicode(text, true)
         val parentNode = parser.parse(toLenientMarkdown(content))
-        parentNode.accept(SpannableMarkdownVisitor(configuration, builder))
+        parentNode.accept(MarkdownVisitor(configuration, builder))
         parentNode.accept(LinkVisitor(builder))
         parentNode.accept(EmojiVisitor(configuration, builder))
         message.mentions?.let {
@@ -138,6 +141,37 @@ class MessageParser @Inject constructor(
         }
     }
 
+    class MarkdownVisitor(
+        configuration: SpannableConfiguration,
+        val builder: SpannableBuilder
+    ) : SpannableMarkdownVisitor(configuration, builder) {
+
+        /**
+         * NOOP
+         */
+        override fun visit(orderedList: OrderedList) {
+            var number = orderedList.startNumber
+            val delimiter = orderedList.delimiter
+            var node: Node? = orderedList.firstChild
+            while (node != null) {
+                if (node is ListItem) {
+                    newLine()
+                    builder.append("$number$delimiter ")
+                    super.visitChildren(node)
+                    newLine()
+                }
+                number++
+                node = node.next
+            }
+        }
+
+        private fun newLine() {
+            if (builder.length() > 0 && '\n' != builder.lastChar()) {
+                builder.append('\n')
+            }
+        }
+    }
+
     class LinkVisitor(private val builder: SpannableBuilder) : AbstractVisitor() {
 
         override fun visit(text: Text) {
@@ -151,21 +185,13 @@ class MessageParser @Inject constructor(
                 if (!link.startsWith("@") && link !in consumed) {
                     builder.setSpan(object : ClickableSpan() {
                         override fun onClick(view: View) {
-                            view.openTabbedUrl(getUri(link))
+                            view.openTabbedUrl(link)
                         }
                     }, matcher.start(0), matcher.end(0))
                     consumed.add(link)
                 }
             }
             visitChildren(text)
-        }
-
-        private fun getUri(link: String): Uri {
-            val uri = Uri.parse(link)
-            if (uri.scheme == null) {
-                return Uri.parse("http://$link")
-            }
-            return uri
         }
     }
 
