@@ -39,6 +39,9 @@
     <string name="action_invisible">Invisível</string>
     <string name="action_drawing">Desenhando</string>
     <string name="action_save_to_gallery">Salvar na galeria</string>
+    <string name="action_select_photo_from_gallery">Escolher foto da galeria</string>
+    <string name="action_take_photo">Tirar foto</string>
+    <string name="action_reset_avatar">Resetar avatar</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -78,6 +81,7 @@
     <string name="msg_content_description_log_in_using_meteor">Fazer login através do Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Fazer login através do Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Fazer login através do Gitlab</string>
+    <string name="msg_content_description_log_in_using_wordprees">Fazer login através do WordPress</string>
     <string name="msg_content_description_send_message">Enviar mensagem</string>
     <string name="msg_content_description_show_attachment_options">Mostrar opções de anexo</string>
     <string name="msg_you">Você</string>

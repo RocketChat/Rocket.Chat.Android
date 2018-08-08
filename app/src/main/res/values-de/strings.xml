@@ -38,6 +38,9 @@
     <string name="action_invisible">Unsichtbar</string>
     <string name="action_drawing">Zeichnung</string>
     <string name="action_save_to_gallery">Sichern in Gallerie</string>
+    <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -78,6 +81,7 @@
     <string name="msg_content_description_log_in_using_meteor">Login mit Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Login mit Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Login mit Gitlab</string>
+    <string name="msg_content_description_log_in_using_wordprees">Login using WordPress</string> <!-- TODO Translate-->
     <string name="msg_content_description_send_message">Sende Nachricht</string>
     <string name="msg_content_description_show_attachment_options">Zeige Anhang Optionen</string>
     <string name="msg_you">Du</string>

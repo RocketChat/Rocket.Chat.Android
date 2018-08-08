@@ -36,8 +36,11 @@
     <string name="action_away">Ausente</string>
     <string name="action_busy">Ocupado</string>
     <string name="action_invisible">Invisible</string>
-    <string name="action_drawing">dibujo</string>
+    <string name="action_drawing">Dibujo</string>
     <string name="action_save_to_gallery">Guardar en la galería</string>
+    <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -77,6 +80,7 @@
     <string name="msg_content_description_log_in_using_meteor">Inicia sesión usando Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Inicia sesión usando Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Inicia sesión usando Gitlab</string>
+    <string name="msg_content_description_log_in_using_wordprees">Login using WordPress</string> <!-- TODO Translate-->
     <string name="msg_content_description_send_message">Enviar mensaje</string>
     <string name="msg_content_description_show_attachment_options">Mostrar opciones de archivo adjunto</string>
     <string name="msg_you">Tú</string>
@@ -133,7 +137,6 @@
     <string name="msg_member_already_added">Ya has seleccionado este usuario</string>
     <string name="msg_member_not_found">Miembro no encontrado</string>
     <string name="msg_channel_created_successfully">Canal creado con éxito</string>
-
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nombre de la sala cambiado para: %1$s por %2$s</string>
@@ -262,6 +265,7 @@
     <string name="header_unknown">Desconocido</string>
 
     <!--Notifications-->
+    <string name="share_label">Edita mensaje compartido</string>
     <string name="notif_action_reply_hint">RESPUESTA</string>
     <string name="notif_error_sending">La respuesta ha fallado. Inténtalo de nuevo.</string>
     <string name="notif_success_sending">Mensaje enviado a %1$s!</string>
@@ -272,4 +276,5 @@
     <string name="msg_file_description">Descripción del archivo</string>
     <string name="msg_send">Enviar</string>
     <string name="msg_sent_attachment">Envió un archivo</string>
+
 </resources>

@@ -39,6 +39,9 @@
     <string name="action_invisible">अदृश्य</string>
     <string name="action_save_to_gallery">गैलरी में सहेजें</string>
     <string name="action_drawing">चित्रकारी</string>
+    <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
     <string name="action_share">शेयर</string>
 
     <!-- Settings List -->
@@ -79,6 +82,7 @@
     <string name="msg_content_description_log_in_using_meteor">Meteor द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_twitter">Twitter द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_gitlab">Gitlab द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_wordprees">Login using WordPress</string> <!-- TODO Translate-->
     <string name="msg_content_description_send_message">मेसेज भेजें</string>
     <string name="msg_content_description_show_attachment_options">अटैचमेंट विकल्प दिखाएं</string>
     <string name="msg_you">आप</string>

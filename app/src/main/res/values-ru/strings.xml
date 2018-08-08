@@ -39,6 +39,9 @@
     <string name="action_invisible">Невидимый</string>
     <string name="action_drawing">Рисование</string>
     <string name="action_save_to_gallery">Сохранить в галерею</string>
+    <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -78,6 +81,7 @@
     <string name="msg_content_description_log_in_using_meteor">Войти используя Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Войти используя Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Войти используя Gitlab</string>
+    <string name="msg_content_description_log_in_using_wordprees">Login using WordPress</string> <!-- TODO Translate-->
     <string name="msg_content_description_send_message">Отправить сообщение</string>
     <string name="msg_content_description_show_attachment_options">Показать параметры вложения</string>
     <string name="msg_you">Вы</string>

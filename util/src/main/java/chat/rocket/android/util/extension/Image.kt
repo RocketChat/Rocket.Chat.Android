@@ -1,6 +1,9 @@
 package chat.rocket.android.util.extension
 
+import android.content.Intent
 import android.graphics.Bitmap
+import android.provider.MediaStore
+import androidx.fragment.app.Fragment
 import kotlinx.coroutines.experimental.DefaultDispatcher
 import kotlinx.coroutines.experimental.withContext
 import java.io.ByteArrayInputStream
@@ -60,5 +63,19 @@ fun String.getCompressFormat(): Bitmap.CompressFormat {
         this.contains("jpeg") -> Bitmap.CompressFormat.JPEG
         this.contains("webp") -> Bitmap.CompressFormat.WEBP
         else -> Bitmap.CompressFormat.PNG
+    }
+}
+
+fun Fragment.dispatchImageSelection(requestCode: Int) {
+    val intent = Intent(Intent.ACTION_GET_CONTENT)
+    intent.type = "image/*"
+    intent.addCategory(Intent.CATEGORY_OPENABLE)
+    startActivityForResult(intent, requestCode)
+}
+
+fun Fragment.dispatchTakePicture(requestCode: Int) {
+    val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+    if (takePictureIntent.resolveActivity(context?.packageManager) != null) {
+        startActivityForResult(takePictureIntent, requestCode)
     }
 }
