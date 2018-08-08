@@ -63,6 +63,7 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
                 isChatRoomReadOnly,
                 chatRoomLastSeen,
                 isChatRoomSubscribed,
+                false,
                 isChatRoomCreator,
                 isChatRoomFavorite,
                 chatRoomMessage

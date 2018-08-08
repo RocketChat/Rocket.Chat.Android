@@ -30,6 +30,7 @@ fun Context.chatRoomIntent(
     isReadOnly: Boolean,
     chatRoomLastSeen: Long,
     isSubscribed: Boolean = true,
+    isFromWallet: Boolean = false,
     isCreator: Boolean = false,
     isFavorite: Boolean = false,
     chatRoomMessage: String? = null
@@ -41,6 +42,7 @@ fun Context.chatRoomIntent(
         putExtra(INTENT_CHAT_ROOM_IS_READ_ONLY, isReadOnly)
         putExtra(INTENT_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
         putExtra(INTENT_CHAT_IS_SUBSCRIBED, isSubscribed)
+        putExtra(INTENT_IS_FROM_WALLET, isFromWallet)
         putExtra(INTENT_CHAT_ROOM_IS_CREATOR, isCreator)
         putExtra(INTENT_CHAT_ROOM_IS_FAVORITE, isFavorite)
         putExtra(INTENT_CHAT_ROOM_MESSAGE, chatRoomMessage)
@@ -55,6 +57,7 @@ private const val INTENT_CHAT_ROOM_IS_CREATOR = "chat_room_is_creator"
 private const val INTENT_CHAT_ROOM_IS_FAVORITE = "chat_room_is_favorite"
 private const val INTENT_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val INTENT_CHAT_IS_SUBSCRIBED = "is_chat_room_subscribed"
+private const val INTENT_IS_FROM_WALLET = "is_from_wallet"
 private const val INTENT_CHAT_ROOM_MESSAGE = "chat_room_message"
 
 class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
@@ -102,6 +105,8 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         val isSubscribed = intent.getBooleanExtra(INTENT_CHAT_IS_SUBSCRIBED, true)
 
+        val isFromWallet = intent.getBooleanExtra(INTENT_IS_FROM_WALLET, false)
+
         val chatRoomMessage = intent.getStringExtra(INTENT_CHAT_ROOM_MESSAGE)
 
         setupToolbar()
@@ -115,6 +120,7 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
                     isReadOnly,
                     chatRoomLastSeen,
                     isSubscribed,
+                    isFromWallet,
                     isCreator,
                     isFavorite,
                     chatRoomMessage

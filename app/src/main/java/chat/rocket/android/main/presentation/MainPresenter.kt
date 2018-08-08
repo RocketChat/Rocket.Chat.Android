@@ -15,6 +15,7 @@ import chat.rocket.android.server.domain.RemoveAccountInteractor
 import chat.rocket.android.server.domain.SaveAccountInteractor
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.favicon
+import chat.rocket.android.server.domain.isWalletEnabled
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
@@ -71,6 +72,8 @@ class MainPresenter @Inject constructor(
     fun toUserProfile() = navigator.toUserProfile()
 
     fun toSettings() = navigator.toSettings()
+
+    fun toWallet() = navigator.toWallet()
 
     fun toCreateChannel() = navigator.toCreateChannel()
 
@@ -241,5 +244,9 @@ class MainPresenter @Inject constructor(
         groupedPush.hostToPushMessageList[currentServer]?.let { list ->
             list.removeAll { it.info.roomId == chatRoomId }
         }
+    }
+
+    fun isWalletEnabled(): Boolean {
+        return settings.isWalletEnabled()
     }
 }

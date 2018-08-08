@@ -31,6 +31,11 @@ import chat.rocket.android.server.ui.ChangeServerActivity
 import chat.rocket.android.settings.di.SettingsFragmentProvider
 import chat.rocket.android.settings.password.di.PasswordFragmentProvider
 import chat.rocket.android.settings.password.ui.PasswordActivity
+import chat.rocket.android.wallet.create.di.CreateWalletFragmentProvider
+import chat.rocket.android.wallet.create.ui.CreateWalletActivity
+import chat.rocket.android.wallet.di.WalletFragmentProvider
+import chat.rocket.android.wallet.transaction.di.TransactionFragmentProvider
+import chat.rocket.android.wallet.transaction.ui.TransactionActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -56,7 +61,8 @@ abstract class ActivityBuilder {
             ChatRoomsFragmentProvider::class,
             CreateChannelProvider::class,
             ProfileFragmentProvider::class,
-            SettingsFragmentProvider::class
+            SettingsFragmentProvider::class,
+            WalletFragmentProvider::class
         ]
     )
     abstract fun bindMainActivity(): MainActivity
@@ -82,6 +88,14 @@ abstract class ActivityBuilder {
     @PerActivity
     @ContributesAndroidInjector(modules = [ChangeServerModule::class])
     abstract fun bindChangeServerActivity(): ChangeServerActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = [TransactionFragmentProvider::class])
+    abstract fun bindTransactionActivity(): TransactionActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = [CreateWalletFragmentProvider::class])
+    abstract fun bindCreateWalletActivity(): CreateWalletActivity
 
     @PerActivity
     @ContributesAndroidInjector(modules = [MessageInfoFragmentProvider::class])

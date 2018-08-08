@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:focusable="true">
+
+    <RadioGroup
+        android:id="@+id/radio_group_send_to"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/search_users_radioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/wallet_search_users" />
+
+        <AutoCompleteTextView
+            android:id="@+id/search_users_autoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:completionThreshold="0"
+            android:selectAllOnFocus="true" />
+
+        <RadioButton
+            android:id="@+id/qr_radioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wallet_scan_qr_code" />
+
+        <ImageButton
+            android:id="@+id/qr_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
+
+        <RadioButton
+            android:id="@+id/recipient_address_radioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wallet_recipient_address" />
+
+        <EditText
+            android:id="@+id/recipient_address_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:enabled="false"
+            android:selectAllOnFocus="true"
+            android:text="@string/wallet_recipient_address_hint" />
+
+
+    </RadioGroup>
+
+</LinearLayout>

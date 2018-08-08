@@ -224,6 +224,11 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     fun setupNavigationView() {
+        if (!presenter.isWalletEnabled()) {
+            val wallet = view_navigation.menu.findItem(R.id.action_wallet)
+            wallet.isVisible = false
+        }
+
         view_navigation.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
             closeDrawer()
@@ -250,6 +255,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             }
             R.id.action_settings -> {
                 presenter.toSettings()
+            }
+            R.id.action_wallet -> {
+                presenter.toWallet()
             }
             R.id.action_logout -> {
                 presenter.logout()

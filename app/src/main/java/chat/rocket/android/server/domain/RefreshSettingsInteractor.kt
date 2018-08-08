@@ -58,7 +58,8 @@ class RefreshSettingsInteractor @Inject constructor(
         WIDE_TILE_310,
         STORE_LAST_MESSAGE,
         MESSAGE_READ_RECEIPT_ENABLED,
-        MESSAGE_READ_RECEIPT_STORE_USERS
+        MESSAGE_READ_RECEIPT_STORE_USERS,
+        WALLET_ENABLED
     )
 
     suspend fun refresh(server: String) {

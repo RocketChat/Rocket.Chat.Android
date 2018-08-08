@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title_save_mnemonic"
+        android:paddingTop="40px"
+        android:paddingBottom="40px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please save your phrase:"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/mnemonic"
+        android:layout_width="match_parent"
+        android:layout_height="198dp"
+        android:paddingHorizontal="40px"
+        android:ems="10"
+        android:inputType="none"
+        android:lines="4"
+        android:scrollHorizontally="false"
+        android:textIsSelectable="true"
+        android:singleLine="false"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/button_mnemonic_saved"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_green_light"
+        android:text="I HAVE SAVED MY PHRASE"
+        android:textColor="@color/whitesmoke" />
+</LinearLayout>
