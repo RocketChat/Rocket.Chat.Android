@@ -216,7 +216,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 AlertDialog.Builder(context)
                     .setTitle(R.string.dialog_sort_title)
                     .setView(dialogLayout)
-                    .setPositiveButton("Done") { dialog, _ ->
+                    .setPositiveButton(R.string.dialog_button_done) { dialog, _ ->
                         invalidateQueryOnSearch()
                         updateSort()
                         dialog.dismiss()
