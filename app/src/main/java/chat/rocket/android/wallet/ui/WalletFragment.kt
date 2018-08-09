@@ -124,7 +124,7 @@ class WalletFragment : Fragment(), WalletView {
     }
 
     override fun setupSendToDialog(names: List<String>) {
-        button_sendToken.setOnClickListener {
+        button_sendToken?.setOnClickListener {
             val dialogLayout = layoutInflater.inflate(R.layout.wallet_send_to_dialog, null)
             val adapter: ArrayAdapter<String> = ArrayAdapter(activity, android.R.layout.simple_dropdown_item_1line, names)
             val textView: AutoCompleteTextView = dialogLayout.findViewById(R.id.search_users_autoCompleteTextView)

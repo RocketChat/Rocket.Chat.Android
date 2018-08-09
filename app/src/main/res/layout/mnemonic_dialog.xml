@@ -32,7 +32,7 @@
         android:id="@+id/button_mnemonic_saved"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_green_light"
+        android:background="@color/colorAccent"
         android:text="I HAVE SAVED MY PHRASE"
         android:textColor="@color/whitesmoke" />
 </LinearLayout>

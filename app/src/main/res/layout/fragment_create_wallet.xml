@@ -78,7 +78,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Create your wallet!"
-        android:textColor="@android:color/holo_green_light"
+        android:textColor="@color/colorAccent"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/editText_wallet_name"
         app:layout_constraintEnd_toEndOf="parent"
