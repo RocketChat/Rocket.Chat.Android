@@ -37,7 +37,7 @@
     <string name="action_away">Отошел</string>
     <string name="action_busy">Занят</string>
     <string name="action_invisible">Невидимый</string>
-    <string name="action_drawing">Рисование</string>
+    <string name="action_drawing">Рисунок</string>
     <string name="action_save_to_gallery">Сохранить в галерею</string>
     <string name="action_select_photo_from_gallery">Выбрать из галереи</string>
     <string name="action_take_photo">Сделать снимок</string>
