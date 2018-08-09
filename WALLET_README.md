@@ -5,14 +5,14 @@ Our goal is to integrate a cryptocurrency wallet into the Rocket.Chat Android ap
 Note: This code has mainly been tested on a private Ethereum test network, but can plug into other networks. See _Interaction with Ethereum Network_ for more details.
 
 <div align="center">
-  <img width="30%" src="https://preview.ibb.co/hiQiM8/Screenshot_1532719878.png">
-  <img width="30%" src="https://preview.ibb.co/kueeTo/Screenshot_1532720121.png">
-  <img width="30%" src="https://preview.ibb.co/bXJZuT/Screenshot_1532720468.png">
+  <img width="30%" src="https://preview.ibb.co/kYQrGU/Screenshot_1532719878.png">
+  <img width="30%" src="https://preview.ibb.co/jcNMGU/Screenshot_1533822646.png">
+  <img width="30%" src="https://preview.ibb.co/hAxSqp/Screenshot_1533822697.png">
 </div>
 
 ### Configuration
 
-There is the option to toggle the wallet on/off for your server. Having the wallet turned off currently means just hiding the UI from the user, although that should also prevent any backend wallet code from running. We plan on having the wallet turned off on default.
+There is the option to toggle the wallet on/off for your server. Having the wallet turned off currently means just hiding the UI from the user, although that should also prevent any backend wallet code from running. We plan on having the wallet turned off by default.
 
 Add the following to Rocket.Chat/packages/rocketchat-lib/server/startup/settings.js in your server code:
 ```js
@@ -44,7 +44,7 @@ The Create Wallet screen is where a user can create a new wallet if they do not 
 
 Users enter a wallet name (currently does nothing; may make sense if multiple wallets are supported in the future) and a password (8+ chars) for the new wallet. Confirming the creation will show the user with a mnemonic phrase to save, which could recover his/her account if the private key is lost (recovery is not implemented at the moment).
 
-Navigating to this screen from the Wallet screen when the user does not have a wallet yet.
+Users reach this screen from the Wallet screen, when the user does not have a wallet yet.
 
 ## Storing Private & Public Keys
 
@@ -75,3 +75,16 @@ Via the add attachment button in the message composer, the user has the option t
 Whenever a user makes a transaction with another Rocket.Chat user (whether originally from the Wallet screen or from a chatroom), from the Transaction screen the user will be sent back to the direct message room with the recipient and a message will be auto-generated from the recipient detailing that the transaction was initiated.
 
 __Note:__ This message sent in the chatroom is not a confirmation that the transaction was completed (mined) on the Ethereum blockchain, but rather that the transaction is pending. Currently, there is not implementation for notifying a user when the transaction is actually completed.
+
+## Roadmap
+* Automatically update wallet balance and transaction history in the wallet screen
+* Implement backend for transaction history (something that watches the blockchain network)
+* Have transaction history show who the transaction is from if it is another Rocket.Chat use
+* Have users receive notifications when a transaction is completed
+* Add permission/role to allow the wallet to be toggled on/off for certain users
+* Allow users to import an existing cryptocurrency wallet
+* Allow users to export their wallets
+* Allow the user to view his/her wallet address
+* Allow the user to display a QR code representing his/her wallet address
+* Implement sending tokens via scanning a QR code
+* Add support for multiple wallets per user
