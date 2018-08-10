@@ -107,8 +107,7 @@ object EmojiRepository {
             saveEmojisToDatabase(allEmojis.toList())
 
             // Prefetch all custom emojis to make cache.
-            val density = context.resources.displayMetrics.density
-            val px = (32 * density).toInt()
+            val px = context.resources.getDimensionPixelSize(R.dimen.custom_emoji_large)
 
             customEmojis.forEach {
                 val future = Glide.with(context)

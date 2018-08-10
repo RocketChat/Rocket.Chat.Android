@@ -77,8 +77,7 @@ class EmojiParser {
 
             val customEmojis = EmojiRepository.getCustomEmojis()
 
-            val density = context.resources.displayMetrics.density
-            val px = (22 * density).toInt()
+            val px = context.resources.getDimensionPixelSize(R.dimen.custom_emoji_small)
 
             return spannable.also {
                 regex.findAll(spannable).iterator().forEach { match ->
