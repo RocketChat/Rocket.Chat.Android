@@ -5,9 +5,9 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.view.Gravity
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -174,9 +174,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
 
         headerLayout.image_avatar.setOnClickListener {
-            view_navigation.menu.findItem(MENU_ACTION_PROFILE).isChecked = true
+            view_navigation.menu.findItem(R.id.menu_action_profile).isChecked = true
             presenter.toUserProfile()
-            drawer_layout.closeDrawer(Gravity.START)
+            drawer_layout.closeDrawer(GravityCompat.START)
         }
     }
 
@@ -248,9 +248,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     fun getDrawerLayout(): DrawerLayout = drawer_layout
 
-    fun openDrawer() = drawer_layout.openDrawer(Gravity.START)
+    fun openDrawer() = drawer_layout.openDrawer(GravityCompat.START)
 
-    fun closeDrawer() = drawer_layout.closeDrawer(Gravity.START)
+    fun closeDrawer() = drawer_layout.closeDrawer(GravityCompat.START)
 
     fun setCheckedNavDrawerItem(@IdRes item: Int) = view_navigation.setCheckedItem(item)
 
