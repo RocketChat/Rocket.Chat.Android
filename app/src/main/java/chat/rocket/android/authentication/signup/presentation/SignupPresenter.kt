@@ -8,6 +8,7 @@ import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.helper.AnswersEvent
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
@@ -66,9 +67,11 @@ class SignupPresenter @Inject constructor(
                         localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
                         saveAccount(me)
                         registerPushToken()
+                        AnswersEvent.logSignUp(AnswersEvent.LOGIN_OR_SIGN_UP_BY_USER_AND_PASSWORD, true)
                         view.saveSmartLockCredentials(username, password)
                         navigator.toChatList()
                     } catch (exception: RocketChatException) {
+                        AnswersEvent.logSignUp(AnswersEvent.LOGIN_OR_SIGN_UP_BY_USER_AND_PASSWORD, false)
                         exception.message?.let {
                             view.showMessage(it)
                         }.ifNull {

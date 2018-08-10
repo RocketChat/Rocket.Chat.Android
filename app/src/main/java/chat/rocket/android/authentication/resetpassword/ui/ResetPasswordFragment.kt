@@ -12,9 +12,12 @@ import chat.rocket.android.R
 import chat.rocket.android.authentication.resetpassword.presentation.ResetPasswordPresenter
 import chat.rocket.android.authentication.resetpassword.presentation.ResetPasswordView
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.helper.AnswersEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_reset_password.*
 import javax.inject.Inject
+
+internal const val TAG_RESET_PASSWORD_FRAGMENT = "ResetPasswordFragment"
 
 class ResetPasswordFragment : Fragment(), ResetPasswordView {
     @Inject
@@ -48,6 +51,7 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
         }
 
         setupOnClickListener()
+        AnswersEvent.logScreenView(TAG_RESET_PASSWORD_FRAGMENT)
     }
 
     override fun alertBlankEmail() {

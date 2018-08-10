@@ -33,6 +33,7 @@ import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extension.compressImageAndGetInputStream
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.helper.AnswersEvent
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -107,7 +108,7 @@ class ChatRoomPresenter @Inject constructor(
     private val messagesChannel = Channel<Message>()
 
     private var chatRoomId: String? = null
-    private var chatRoomType: String? = null
+    private lateinit var chatRoomType: String
     private var chatIsBroadcast: Boolean = false
     private var chatRoles = emptyList<ChatRoomRole>()
     private val stateChannel = Channel<State>()
@@ -261,7 +262,7 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 // ignore message for now, will receive it on the stream
                 val id = UUID.randomUUID().toString()
-                val message = if (messageId == null) {
+                if (messageId == null) {
                     val username = userHelper.username()
                     val newMessage = Message(
                         id = id,
@@ -296,6 +297,7 @@ class ChatRoomPresenter @Inject constructor(
                             ), false
                         )
                         client.sendMessage(id, chatRoomId, text)
+                        AnswersEvent.logMessageSent(chatRoomType, currentServer)
                     } catch (ex: Exception) {
                         // Ok, not very beautiful, but the backend sends us a not valid response
                         // When someone sends a message on a read-only channel, so we just ignore it
@@ -366,6 +368,7 @@ class ChatRoomPresenter @Inject constructor(
                                     inputStream
                                 }
                             }
+                            AnswersEvent.logMediaUploaded(chatRoomType, mimeType)
                         }
                     }
                 }
@@ -938,6 +941,7 @@ class ChatRoomPresenter @Inject constructor(
                 retryIO("toggleEmoji($messageId, $emoji)") {
                     client.toggleReaction(messageId, emoji.removeSurrounding(":"))
                 }
+                AnswersEvent.logReaction(chatRoomType)
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
             }

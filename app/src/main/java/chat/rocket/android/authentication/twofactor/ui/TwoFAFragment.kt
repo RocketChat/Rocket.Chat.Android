@@ -13,9 +13,12 @@ import chat.rocket.android.R
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAPresenter
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.helper.AnswersEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_two_fa.*
 import javax.inject.Inject
+
+internal const val TAG_TWO_FA_FRAGMENT = "TwoFAFragment"
 
 class TwoFAFragment : Fragment(), TwoFAView {
     @Inject lateinit var presenter: TwoFAPresenter
@@ -60,6 +63,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
         }
 
         setupOnClickListener()
+        AnswersEvent.logScreenView(TAG_TWO_FA_FRAGMENT)
     }
 
     override fun alertBlankTwoFactorAuthenticationCode() {

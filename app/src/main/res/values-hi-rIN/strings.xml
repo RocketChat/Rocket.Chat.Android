@@ -12,7 +12,8 @@
     <string name="title_profile">प्रोफाइल</string>
     <string name="title_members">सदस्य (%d)</string>
     <string name="title_settings">सेटिंग्स</string>
-    <string name="title_password">पासवर्ड बदलें</string>
+    <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
+    <string name="title_change_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
     <string name="title_create_channel">चैनल बनाएं</string>
@@ -42,10 +43,10 @@
     <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
     <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
     <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
-    <string name="action_share">शेयर</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
+        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">पासवर्ड बदलें</item>
         <item name="item_password">परिचय</item>
     </string-array>
@@ -144,6 +145,11 @@
     <string name="msg_member_already_added">आपने पहले से ही इस यूजर को चुन चुके है।</string>
     <string name="msg_member_not_found">सदस्य नहीं मिला</string>
     <string name="msg_channel_created_successfully">चैनल सफलतापूर्वक बनाया गया</string>
+
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
+    <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>

@@ -12,7 +12,8 @@
     <string name="title_profile">Profil</string>
     <string name="title_members">Membres (%d)</string>
     <string name="title_settings">Paramètres</string>
-    <string name="title_password">Changer le mot de passe</string>
+    <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
+    <string name="title_change_password">Changer le mot de passe</string>
     <string name="title_update_profile">Update profile</string>
     <string name="title_about">Sur</string>
     // TODO: Add proper translation.
@@ -46,6 +47,7 @@
 
     <!-- Settings List -->
     <string-array name="settings_actions">
+        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Changer le mot de passe</item>
         <item name="item_password">Sur</item>
     </string-array>
@@ -156,6 +158,11 @@
     <string name="msg_member_not_found">Member not found</string>
     <string name="msg_channel_created_successfully">Channel created successfully</string>
 
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
+    <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+
     <!-- System messages -->
     <string name="message_room_name_changed">Le nom de le salle a changé à: %1$s par %2$s</string>
     <string name="message_user_added_by">Utilisateur %1$s ajouté par %2$s</string>
@@ -187,7 +194,6 @@
     <string name="action_msg_share">Partager</string>
     <string name="action_title_editing">Modification du message</string>
     <string name="action_msg_add_reaction">Ajouter une réaction</string>
-    <string name="action_share">Partager</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">L\'édition n\'est pas autorisée</string>

@@ -12,7 +12,8 @@
     <string name="title_profile">Профиль</string>
     <string name="title_members">Пользователи (%d)</string>
     <string name="title_settings">Настройки</string>
-    <string name="title_password">Изменить пароль</string>
+    <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
+    <string name="title_change_password">Изменить пароль</string>
     <string name="title_update_profile">Обновить профиль</string>
     <string name="title_about">О программе</string>
     <string name="title_create_channel">Создать новый канал</string>
@@ -45,6 +46,7 @@
 
     <!-- Settings List -->
     <string-array name="settings_actions">
+        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Изменить пароль</item>
         <item name="item_password">О программе</item>
     </string-array>
@@ -143,6 +145,11 @@
     <string name="msg_member_not_found">Пользователь не найден</string>
     <string name="msg_channel_created_successfully">Канал создан успешно</string>
 
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
+    <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+
     <!-- System messages -->
     <string name="message_room_name_changed">Название канала изменено на: %1$s by %2$s</string>
     <string name="message_user_added_by">Пользователь %1$s добавлен пользователем %2$s</string>
@@ -172,7 +179,6 @@
     <string name="action_msg_share">Поделиться</string>
     <string name="action_title_editing">Редактирование сообщения</string>
     <string name="action_msg_add_reaction">Добавить реакцию</string>
-    <string name="action_share">Поделиться</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редактирование запрещено</string>

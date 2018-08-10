@@ -11,7 +11,8 @@
     <string name="title_profile">Profil</string>
     <string name="title_members">Benutzer (%d)</string>
     <string name="title_settings">Einstellungen</string>
-    <string name="title_password">Ändere Passwort</string>
+    <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
+    <string name="title_change_password">Ändere Passwort</string>
     <string name="title_update_profile">Update Profil</string>
     <string name="title_about">Über</string>
     <string name="title_create_channel">Erstelle Raum</string>
@@ -44,6 +45,7 @@
 
     <!-- Settings List -->
     <string-array name="settings_actions">
+        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Ändere Passwort</item>
         <item name="item_password">Über</item>
     </string-array>
@@ -144,6 +146,11 @@
     <string name="msg_delete_message">Lösche Nachricht</string>
     <string name="msg_delete_description">Sind Sie sicher, dass Sie diese Nachricht löschen wollen?</string>
 
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
+    <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+
     <!-- System messages -->
     <string name="message_room_name_changed">Raum Namen geändert zu: %1$s von %2$s</string>
     <string name="message_user_added_by">Benutzer %1$s hinzugefügt von %2$s</string>
@@ -173,7 +180,6 @@
     <string name="action_msg_share">Teilen</string>
     <string name="action_title_editing">Nachricht bearbeiten</string>
     <string name="action_msg_add_reaction">Reaktion hinzufügen</string>
-    <string name="action_share">Teilen</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Bearbeiten nicht erlaubt</string>

@@ -24,6 +24,7 @@ import chat.rocket.android.player.PlayerActivity
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.AnswersEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_files.*
 import javax.inject.Inject
@@ -36,6 +37,7 @@ fun newInstance(chatRoomId: String): Fragment {
     }
 }
 
+internal const val TAG_FILES_FRAGMENT = "FilesFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class FilesFragment : Fragment(), FilesView {
@@ -68,6 +70,7 @@ class FilesFragment : Fragment(), FilesView {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         presenter.loadFiles(chatRoomId)
+        AnswersEvent.logScreenView(TAG_FILES_FRAGMENT)
     }
 
     override fun showFiles(dataSet: List<FileUiModel>, total: Long) {

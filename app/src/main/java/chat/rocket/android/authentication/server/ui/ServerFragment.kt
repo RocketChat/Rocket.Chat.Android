@@ -17,11 +17,14 @@ import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.helper.AnswersEvent
 import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_server.*
 import okhttp3.HttpUrl
 import javax.inject.Inject
+
+internal const val TAG_SERVER_FRAGMENT = "ServerFragment"
 
 class ServerFragment : Fragment(), ServerView {
     @Inject
@@ -100,6 +103,8 @@ class ServerFragment : Fragment(), ServerView {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
+
+        AnswersEvent.logScreenView(TAG_SERVER_FRAGMENT)
     }
 
     override fun onDestroyView() {

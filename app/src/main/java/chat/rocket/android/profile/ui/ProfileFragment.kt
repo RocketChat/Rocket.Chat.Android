@@ -23,6 +23,7 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.AnswersEvent
 import com.facebook.drawee.backends.pipeline.Fresco
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
@@ -31,6 +32,8 @@ import kotlinx.android.synthetic.main.avatar_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.update_avatar_options.*
 import javax.inject.Inject
+
+internal const val TAG_PROFILE_FRAGMENT = "ProfileFragment"
 
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 1
 private const val REQUEST_CODE_FOR_PERFORM_CAMERA = 2
@@ -69,6 +72,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
         presenter.loadUserProfile()
         subscribeEditTexts()
+        AnswersEvent.logScreenView(TAG_PROFILE_FRAGMENT)
     }
 
     override fun onDestroyView() {

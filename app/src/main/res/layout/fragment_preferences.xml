@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".chatinformation.ui.MessageInfoFragment">
+    android:layout_margin="16dp"
+    tools:context="preferences.ui.PreferencesFragment">
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"
@@ -21,27 +21,32 @@
         tools:visibility="visible" />
 
     <TextView
-        android:id="@+id/text_read_by"
-        android:layout_width="0dp"
+        android:id="@+id/text_analytics_tracking"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textSize="18sp"
-        android:text="@string/read_by"
-        app:layout_constraintBottom_toTopOf="@+id/receipt_list"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/msg_analytics_tracking"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/receipt_list"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/text_analytics_tracking_description"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/msg_send_analytics_tracking"
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_read_by" />
+        app:layout_constraintTop_toBottomOf="@+id/text_analytics_tracking" />
+
+    <Switch
+        android:id="@+id/switch_analytics_tracking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        app:layout_constraintBottom_toBottomOf="@+id/text_analytics_tracking_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text_analytics_tracking" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

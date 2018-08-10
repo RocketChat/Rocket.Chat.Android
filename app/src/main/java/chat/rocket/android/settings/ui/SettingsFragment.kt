@@ -10,18 +10,21 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import chat.rocket.android.R
 import chat.rocket.android.about.ui.AboutFragment
+import chat.rocket.android.about.ui.TAG_ABOUT_FRAGMENT
 import chat.rocket.android.main.ui.MainActivity
+import chat.rocket.android.preferences.ui.PreferencesFragment
+import chat.rocket.android.preferences.ui.TAG_PREFERENCES_FRAGMENT
 import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.helper.AnswersEvent
 import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlin.reflect.KClass
 
+internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
+
 class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListener {
-    companion object {
-        fun newInstance() = SettingsFragment()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,23 +36,32 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupListView()
+        AnswersEvent.logScreenView(TAG_SETTINGS_FRAGMENT)
     }
 
     override fun onResume() {
         // FIXME - gambiarra ahead. will fix when moving to new androidx Navigation
-        (activity as? MainActivity)?.let {
-            it.setupNavigationView()
-        }
+        (activity as? MainActivity)?.setupNavigationView()
         super.onResume()
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         when (parent?.getItemAtPosition(position).toString()) {
-            resources.getString(R.string.title_password) -> {
-                startNewActivity(PasswordActivity::class)
+            resources.getString(R.string.title_preferences) -> {
+                (activity as AppCompatActivity).addFragmentBackStack(
+                    TAG_PREFERENCES_FRAGMENT,
+                    R.id.fragment_container
+                ) {
+                    PreferencesFragment.newInstance()
+                }
             }
+            resources.getString(R.string.title_change_password) ->
+                startNewActivity(PasswordActivity::class)
             resources.getString(R.string.title_about) -> {
-                (activity as AppCompatActivity).addFragmentBackStack("AboutFragmnet", R.id.fragment_container){
+                (activity as AppCompatActivity).addFragmentBackStack(
+                    TAG_ABOUT_FRAGMENT,
+                    R.id.fragment_container
+                ) {
                     AboutFragment.newInstance()
                 }
             }
@@ -68,5 +80,9 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     private fun startNewActivity(classType: KClass<out AppCompatActivity>) {
         startActivity(Intent(activity, classType.java))
         activity?.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
+    }
+
+    companion object {
+        fun newInstance() = SettingsFragment()
     }
 }

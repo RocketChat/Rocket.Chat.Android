@@ -6,10 +6,11 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.android.util.extensions.serverLogoUrl
+import chat.rocket.android.util.helper.AnswersEvent
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.Token
@@ -51,9 +52,11 @@ class RegisterUsernamePresenter @Inject constructor(
                         saveCurrentServer.save(currentServer)
                         tokenRepository.save(currentServer, Token(userId, authToken))
                         registerPushToken()
+                        AnswersEvent.logSignUp(AnswersEvent.LOGIN_OR_SIGN_UP_BY_OAUTH, true)
                         navigator.toChatList()
                     }
                 } catch (exception: RocketChatException) {
+                    AnswersEvent.logSignUp(AnswersEvent.LOGIN_OR_SIGN_UP_BY_OAUTH, false)
                     exception.message?.let {
                         view.showMessage(it)
                     }.ifNull {

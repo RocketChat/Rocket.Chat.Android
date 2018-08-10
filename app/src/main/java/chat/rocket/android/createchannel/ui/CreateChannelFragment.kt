@@ -24,6 +24,7 @@ import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.AnswersEvent
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import com.google.android.material.chip.Chip
@@ -33,6 +34,8 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_create_channel.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
+internal const val TAG_CREATE_CHANNEL_FRAGMENT = "CreateChannelFragment"
 
 class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback {
     @Inject
@@ -69,6 +72,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         setupViewListeners()
         setupRecyclerView()
         subscribeEditTexts()
+        AnswersEvent.logScreenView(TAG_CREATE_CHANNEL_FRAGMENT)
     }
 
     override fun onDestroyView() {

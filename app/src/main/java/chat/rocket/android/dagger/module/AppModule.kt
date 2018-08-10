@@ -21,32 +21,8 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPreferencesLocalRepository
 import chat.rocket.android.push.GroupedPush
 import chat.rocket.android.push.PushManager
-import chat.rocket.android.server.domain.AccountsRepository
-import chat.rocket.android.server.domain.ActiveUsersRepository
-import chat.rocket.android.server.domain.ChatRoomsRepository
-import chat.rocket.android.server.domain.CurrentServerRepository
-import chat.rocket.android.server.domain.GetAccountInteractor
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import chat.rocket.android.server.domain.GetSettingsInteractor
-import chat.rocket.android.server.domain.JobSchedulerInteractor
-import chat.rocket.android.server.domain.MessagesRepository
-import chat.rocket.android.server.domain.MultiServerTokenRepository
-import chat.rocket.android.server.domain.PermissionsRepository
-import chat.rocket.android.server.domain.RoomRepository
-import chat.rocket.android.server.domain.SettingsRepository
-import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.domain.UsersRepository
-import chat.rocket.android.server.infraestructure.JobSchedulerInteractorImpl
-import chat.rocket.android.server.infraestructure.MemoryActiveUsersRepository
-import chat.rocket.android.server.infraestructure.MemoryChatRoomsRepository
-import chat.rocket.android.server.infraestructure.MemoryRoomRepository
-import chat.rocket.android.server.infraestructure.MemoryUsersRepository
-import chat.rocket.android.server.infraestructure.SharedPreferencesAccountsRepository
-import chat.rocket.android.server.infraestructure.SharedPreferencesMessagesRepository
-import chat.rocket.android.server.infraestructure.SharedPreferencesPermissionsRepository
-import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsConnectingServerRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
+import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.infraestructure.*
 import chat.rocket.android.util.AppJsonAdapterFactory
 import chat.rocket.android.util.HttpLoggingInterceptor
 import chat.rocket.android.util.TimberLogger
@@ -161,6 +137,12 @@ class AppModule {
     @Singleton
     fun provideCurrentServerRepository(prefs: SharedPreferences): CurrentServerRepository {
         return SharedPrefsCurrentServerRepository(prefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAnalyticsTrackingRepository(prefs: SharedPreferences): AnalyticsTrackingRepository {
+        return SharedPrefsAnalyticsTrackingRepository(prefs)
     }
 
     @Provides

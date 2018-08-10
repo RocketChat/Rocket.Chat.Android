@@ -19,6 +19,7 @@ import chat.rocket.android.members.uimodel.MemberUiModel
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.AnswersEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_members.*
 import javax.inject.Inject
@@ -31,6 +32,7 @@ fun newInstance(chatRoomId: String): Fragment {
     }
 }
 
+internal const val TAG_MEMBERS_FRAGMENT = "MembersFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class MembersFragment : Fragment(), MembersView {
@@ -63,6 +65,7 @@ class MembersFragment : Fragment(), MembersView {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         presenter.loadChatRoomsMembers(chatRoomId)
+        AnswersEvent.logScreenView(TAG_MEMBERS_FRAGMENT)
     }
 
     override fun showMembers(dataSet: List<MemberUiModel>, total: Long) {

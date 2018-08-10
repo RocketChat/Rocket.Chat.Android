@@ -11,7 +11,8 @@
     <string name="title_profile">Perfil</string>
     <string name="title_members">Miembros (%d)</string>
     <string name="title_settings">Configuraciones</string>
-    <string name="title_password">Cambia la contraseña</string>
+    <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
+    <string name="title_change_password">Cambia la contraseña</string>
     <string name="title_update_profile">Actualización del perfil</string>
     <string name="title_about">Acerca de</string>
     <string name="title_create_channel">Crear canal</string>
@@ -44,6 +45,7 @@
 
     <!-- Settings List -->
     <string-array name="settings_actions">
+        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Cambia la contraseña</item>
         <item name="item_password">Acerca de</item>
     </string-array>
@@ -137,6 +139,11 @@
     <string name="msg_member_already_added">Ya has seleccionado este usuario</string>
     <string name="msg_member_not_found">Miembro no encontrado</string>
     <string name="msg_channel_created_successfully">Canal creado con éxito</string>
+
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
+    <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nombre de la sala cambiado para: %1$s por %2$s</string>

@@ -11,9 +11,12 @@ import chat.rocket.android.R
 import chat.rocket.android.authentication.registerusername.presentation.RegisterUsernamePresenter
 import chat.rocket.android.authentication.registerusername.presentation.RegisterUsernameView
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.helper.AnswersEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_register_username.*
 import javax.inject.Inject
+
+internal const val TAG_REGISTER_USERNAME_FRAGMENT = "RegisterUsernameFragment"
 
 class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
     @Inject
@@ -61,6 +64,7 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
         }
 
         setupOnClickListener()
+        AnswersEvent.logScreenView(TAG_REGISTER_USERNAME_FRAGMENT)
     }
 
     override fun alertBlankUsername() {

@@ -19,11 +19,13 @@ import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.SmartLockHelper
 import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.helper.AnswersEvent
 import com.google.android.gms.auth.api.credentials.Credentials
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
 import javax.inject.Inject
 
+internal const val TAG_SIGNUP_FRAGMENT = "SignupFragment"
 internal const val SAVE_CREDENTIALS = 1
 
 class SignupFragment : Fragment(), SignupView {
@@ -75,6 +77,8 @@ class SignupFragment : Fragment(), SignupView {
                 text_email.textContent
             )
         }
+
+        AnswersEvent.logScreenView(TAG_SIGNUP_FRAGMENT)
     }
 
     override fun onDestroyView() {

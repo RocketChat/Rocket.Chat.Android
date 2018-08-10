@@ -19,6 +19,7 @@ import chat.rocket.android.mentions.presentention.MentionsView
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.AnswersEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_mentions.*
 import javax.inject.Inject
@@ -31,6 +32,7 @@ fun newInstance(chatRoomId: String): Fragment {
     }
 }
 
+internal const val TAG_MENTIONS_FRAGMENT = "MentionsFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class MentionsFragment : Fragment(), MentionsView {
@@ -63,6 +65,7 @@ class MentionsFragment : Fragment(), MentionsView {
 
         setupToolbar()
         presenter.loadMentions(chatRoomId)
+        AnswersEvent.logScreenView(TAG_MENTIONS_FRAGMENT)
     }
 
     override fun showMentions(mentions: List<BaseUiModel<*>>) {

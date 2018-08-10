@@ -24,6 +24,7 @@ import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
 import chat.rocket.android.helper.*
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.helper.AnswersEvent
 import chat.rocket.android.webview.sso.ui.INTENT_SSO_TOKEN
 import chat.rocket.android.webview.sso.ui.ssoWebViewIntent
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
@@ -34,6 +35,8 @@ import com.google.android.gms.auth.api.credentials.*
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
+
+internal const val TAG_LOGIN_FRAGMENT = "LoginFragment"
 
 internal const val REQUEST_CODE_FOR_CAS = 4
 internal const val REQUEST_CODE_FOR_SAML = 5
@@ -85,6 +88,8 @@ class LoginFragment : Fragment(), LoginView {
         }.ifNull {
             presenter.setupView()
         }
+
+        AnswersEvent.logScreenView(TAG_LOGIN_FRAGMENT)
     }
 
     override fun onDestroyView() {

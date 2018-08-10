@@ -12,12 +12,15 @@ import androidx.appcompat.view.ActionMode
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.AnswersEvent
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.fragment_password.*
 import javax.inject.Inject
+
+internal const val TAG_PASSWORD_FRAGMENT = "PasswordFragment"
 
 class PasswordFragment: Fragment(), PasswordView, ActionMode.Callback {
     @Inject lateinit var presenter: PasswordPresenter
@@ -39,6 +42,7 @@ class PasswordFragment: Fragment(), PasswordView, ActionMode.Callback {
         super.onViewCreated(view, savedInstanceState)
 
         disposables.add(listenToChanges())
+        AnswersEvent.logScreenView(TAG_PASSWORD_FRAGMENT)
     }
 
     override fun onDestroyView() {

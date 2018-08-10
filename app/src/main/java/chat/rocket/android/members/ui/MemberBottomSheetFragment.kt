@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.helper.AnswersEvent
 import kotlinx.android.synthetic.main.fragment_member_bottom_sheet.*
 
 fun newInstance(avatarUri: String,
@@ -26,6 +27,8 @@ fun newInstance(avatarUri: String,
         }
     }
 }
+
+internal const val TAG_MEMBER_BOTTOM_SHEET_FRAGMENT = "MemberBottomSheetFragment"
 
 private const val BUNDLE_AVATAR_URI = "avatar_uri"
 private const val BUNDLE_REAL_NAME = "real_name"
@@ -60,6 +63,7 @@ class MemberBottomSheetFragment: BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showMemberDetails()
+        AnswersEvent.logScreenView(TAG_MEMBER_BOTTOM_SHEET_FRAGMENT)
     }
 
     private fun showMemberDetails() {

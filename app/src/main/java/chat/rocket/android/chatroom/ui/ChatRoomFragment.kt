@@ -65,6 +65,7 @@ import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.AnswersEvent
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -106,6 +107,8 @@ fun newInstance(
         }
     }
 }
+
+internal const val TAG_CHAT_ROOM_FRAGMENT = "ChatRoomFragment"
 
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 private const val BUNDLE_CHAT_ROOM_NAME = "chat_room_name"
@@ -228,6 +231,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             it.showToolbarTitle(chatRoomName)
             it.showToolbarChatRoomIcon(chatRoomType)
         }
+
+        AnswersEvent.logScreenView(TAG_CHAT_ROOM_FRAGMENT)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

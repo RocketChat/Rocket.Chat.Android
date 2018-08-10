@@ -19,6 +19,7 @@ import chat.rocket.android.pinnedmessages.presentation.PinnedMessagesView
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.AnswersEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_pinned_messages.*
 import javax.inject.Inject
@@ -31,10 +32,10 @@ fun newInstance(chatRoomId: String): Fragment {
     }
 }
 
+internal const val TAG_PINNED_MESSAGES_FRAGMENT = "PinnedMessagesFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
-
     private lateinit var chatRoomId: String
     private val adapter = ChatRoomAdapter(enableActions = false)
     @Inject
@@ -63,6 +64,7 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
 
         setupToolbar()
         presenter.loadPinnedMessages(chatRoomId)
+        AnswersEvent.logScreenView(TAG_PINNED_MESSAGES_FRAGMENT)
     }
 
     override fun showPinnedMessages(pinnedMessages: List<BaseUiModel<*>>) {

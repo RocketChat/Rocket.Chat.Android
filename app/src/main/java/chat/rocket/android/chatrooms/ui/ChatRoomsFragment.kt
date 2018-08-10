@@ -38,12 +38,15 @@ import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.AnswersEvent
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
 import timber.log.Timber
 import javax.inject.Inject
+
+internal const val TAG_CHAT_ROOMS_FRAGMENT = "ChatRoomsFragment"
 
 private const val BUNDLE_CHAT_ROOM_ID = "BUNDLE_CHAT_ROOM_ID"
 
@@ -108,6 +111,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         subscribeUi()
 
         setupToolbar()
+        AnswersEvent.logScreenView(TAG_CHAT_ROOMS_FRAGMENT)
     }
 
     private fun subscribeUi() {

@@ -5,6 +5,7 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.helper.AnswersEvent
 import chat.rocket.common.util.ifNull
 import javax.inject.Inject
 
@@ -21,12 +22,14 @@ class ChangeServerPresenter @Inject constructor(
     private val localRepository: LocalRepository,
     private val connectionManager: ConnectionManagerFactory
 ) {
+
     fun loadServer(newUrl: String?, chatRoomId: String? = null) {
         launchUI(strategy) {
             view.showProgress()
             var url = newUrl
-            if (url == null) { // Try to load next server on the list...
-                val accounts = getAccountsInteractor.get()
+            val accounts = getAccountsInteractor.get()
+            if (url == null) {
+                // Try to load next server on the list...
                 url = accounts.firstOrNull()?.serverUrl
             }
 
@@ -56,6 +59,7 @@ class ChangeServerPresenter @Inject constructor(
 
                 saveCurrentServerInteractor.save(serverUrl)
                 view.hideProgress()
+                AnswersEvent.logServerSwitch(serverUrl, accounts.size)
                 navigator.toChatRooms(chatRoomId)
             }.ifNull {
                 view.hideProgress()

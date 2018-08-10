@@ -9,7 +9,7 @@ ext {
             dokka                 : '0.9.16',
 
             // For app
-            kotlin                : '1.2.51',
+            kotlin                : '1.2.60',
             coroutine             : '0.24.0',
 
             appCompat             : '1.0.0-beta01',
@@ -20,7 +20,8 @@ ext {
             androidKtx            : '1.0.0-beta01',
 
             dagger                : '2.16',
-            firebase              : '15.0.0',
+            firebaseCloudMessage  : '17.1.0',
+            firebaseAnalytics     : '16.0.1',
             playServices          : '15.0.1',
             exoPlayer             : '2.8.2',
             flexbox               : '1.0.0',
@@ -74,7 +75,8 @@ ext {
             daggerSupport         : "com.google.dagger:dagger-android-support:${versions.dagger}",
             daggerProcessor       : "com.google.dagger:dagger-compiler:${versions.dagger}",
             daggerAndroidApt      : "com.google.dagger:dagger-android-processor:${versions.dagger}",
-            fcm                   : "com.google.firebase:firebase-messaging:${versions.firebase}",
+            fcm                   : "com.google.firebase:firebase-messaging:${versions.firebaseCloudMessage}",
+            firebaseAnalytics     : "com.google.firebase:firebase-core:${versions.firebaseAnalytics}",
             playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServices}",
             exoPlayer             : "com.google.android.exoplayer:exoplayer:${versions.exoPlayer}",
             flexbox               : "com.google.android:flexbox:${versions.flexbox}",
