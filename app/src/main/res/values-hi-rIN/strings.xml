@@ -43,7 +43,6 @@
     <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
     <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
     <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
-    <string name="action_share">शेयर</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -83,7 +82,7 @@
     <string name="msg_content_description_log_in_using_meteor">Meteor द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_twitter">Twitter द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_gitlab">Gitlab द्वारा लॉगिन करें</string>
-    <string name="msg_content_description_log_in_using_wordprees">Login using WordPress</string> <!-- TODO Translate-->
+    <string name="msg_content_description_log_in_using_wordpress">Login using WordPress</string> <!-- TODO Translate-->
     <string name="msg_content_description_send_message">मेसेज भेजें</string>
     <string name="msg_content_description_show_attachment_options">अटैचमेंट विकल्प दिखाएं</string>
     <string name="msg_you">आप</string>
@@ -98,8 +97,6 @@
     <string name="msg_preview_file">फ़ाइल</string>
     <string name="msg_unread_messages">अपठित संदेश</string>
     <string name="msg_no_messages_yet">अभी तक कोई पोस्ट नहीं</string>
-    <string name="msg_version">वर्शन %1$s</string>
-    <string name="msg_build">बिल्ड %1$d</string>
     <string name="msg_update_app_version_in_order_to_continue">पुराना सर्वर वर्शन। जारी रखने के लिए सर्वर वर्शन को अद्यतन करने के लिए कृपया सर्वर व्यवस्थापक से संपर्क करें।</string>
     <string name="msg_ok">ठीक है</string>
     <string name="msg_ver_not_recommended">
@@ -264,6 +261,7 @@
     <string name="dialog_sort_by_activity">गतिविधि</string>
     <string name="dialog_group_by_type">प्रकार के आधार पर समूह</string>
     <string name="dialog_group_favourites">पसंदीदा समूह</string>
+    <string name="dialog_button_done">Done</string><!-- TODO Add translation -->
     <string name="chatroom_header">हैडर</string>
 
     <!--ChatRooms Headers-->
