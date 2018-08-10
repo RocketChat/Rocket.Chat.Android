@@ -278,6 +278,7 @@
     <string name="dialog_sort_by_activity">Activité</string>
     <string name="dialog_group_by_type">Grouper par type</string>
     <string name="dialog_group_favourites">Grouper favoris</string>
+    <string name="dialog_button_done">Done</string><!-- TODO Add translation -->
     <string name="chatroom_header">Entête</string>
 
     <!--ChatRooms Headers-->
