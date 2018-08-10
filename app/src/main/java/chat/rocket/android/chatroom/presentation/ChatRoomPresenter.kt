@@ -338,12 +338,9 @@ class ChatRoomPresenter @Inject constructor(
                     val maxFileSizeAllowed = settings.uploadMaxFileSize()
 
                     when {
-                        fileName.isEmpty() -> {
-                            view.showInvalidFileMessage()
-                        }
-                        fileSize > maxFileSizeAllowed -> {
+                        fileName.isEmpty() -> view.showInvalidFileMessage()
+                        fileSize > maxFileSizeAllowed && maxFileSizeAllowed !in -1..0 ->
                             view.showInvalidFileSize(fileSize, maxFileSizeAllowed)
-                        }
                         else -> {
                             var inputStream: InputStream? = uriInteractor.getInputStream(uri)
 
