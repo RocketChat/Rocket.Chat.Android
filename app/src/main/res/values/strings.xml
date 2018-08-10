@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Rocket.Chat</string>
 
     <!-- Titles -->
@@ -40,6 +40,9 @@
     <string name="action_invisible">Invisible</string>
     <string name="action_drawing">Drawing</string>
     <string name="action_save_to_gallery">Save to gallery</string>
+    <string name="action_select_photo_from_gallery">Select photo from gallery</string>
+    <string name="action_take_photo">Take photo</string>
+    <string name="action_reset_avatar">Reset avatar</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -80,7 +83,7 @@
     <string name="msg_content_description_log_in_using_meteor">Login using Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Login using Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Login using Gitlab</string>
-    <string name="msg_content_description_log_in_using_wordprees">Login using WordPress</string>
+    <string name="msg_content_description_log_in_using_wordpress">Login using WordPress</string>
     <string name="msg_content_description_send_message">Send message</string>
     <string name="msg_content_description_show_attachment_options">Show attachment options</string>
     <string name="msg_you">You</string>
@@ -97,8 +100,7 @@
     <string name="msg_preview_photo">Photo</string>
     <string name="msg_preview_file">File</string>
     <string name="msg_no_messages_yet">No messages yet</string>
-    <string name="msg_version">Version %1$s</string>
-    <string name="msg_build">Build %1$d</string>
+    <string name="msg_build" tools:ignore="MissingTranslation">Build %1$d - %2$s - %3$s</string>
     <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">Out to date server version. Please contact the server admin to update the server version in order to continue.</string>
     <string name="msg_ver_not_recommended">
@@ -172,7 +174,6 @@
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">Editing Message</string>
     <string name="action_msg_add_reaction">Add reaction</string>
-    <string name="action_share">Share</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Editing is not allowed</string>
@@ -260,6 +261,7 @@
     <string name="dialog_sort_by_activity">Activity</string>
     <string name="dialog_group_by_type">Group by type</string>
     <string name="dialog_group_favourites">Group favourites</string>
+    <string name="dialog_button_done">Done</string>
     <string name="chatroom_header">Header</string>
 
     <!--ChatRooms Headers-->
@@ -276,4 +278,6 @@
     <string name="notif_success_sending">Message sent to %1$s!</string>
     <string name="read_by">Read by</string>
     <string name="message_information_title">Message information</string>
+
+    <string name="foss" tools:ignore="MissingTranslation">(FOSS)</string>
 </resources>

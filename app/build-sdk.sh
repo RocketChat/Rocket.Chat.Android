@@ -1,13 +1,19 @@
 #!/bin/bash
 
 CURRENT_DIR=$(pwd)
-# The SDK dir should be 2 directories up in the tree, so we use dirname 2 times
-# to get the common parent dir of the SDK and the app
 GIT=$(which git)
-cd ../..
-tmp=$(pwd)
-SDK_DIR="$tmp/Rocket.Chat.Kotlin.SDK"
-cd "${CURRENT_DIR}"
+
+if [ "$#" -eq 1 ] && [ ! -z "$1" ]; then
+    # if in an argument is given this is the (relative) path to SDK_DIR
+    SDK_DIR=$(readlink -f $1)
+else
+    # The SDK dir should be 2 directories up in the tree, so we use dirname 2 times
+    # to get the common parent dir of the SDK and the app
+    cd ../..
+    tmp=$(pwd)
+    SDK_DIR="$tmp/Rocket.Chat.Kotlin.SDK"
+    cd "${CURRENT_DIR}"
+fi
 
 echo "CURRENT DIR: $CURRENT_DIR"
 echo "SDK DIR: $SDK_DIR"

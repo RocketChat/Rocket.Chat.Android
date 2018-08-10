@@ -22,6 +22,9 @@ class AppLifecycleObserver @Inject constructor(
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onEnterForeground() {
         changeTemporaryStatus(UserStatus.Online())
+        serverInteractor.get()?.let { currentServer ->
+            factory.create(currentServer).resetReconnectionTimer()
+        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
