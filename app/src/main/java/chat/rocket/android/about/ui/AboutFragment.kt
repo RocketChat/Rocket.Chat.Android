@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
@@ -29,8 +30,9 @@ class AboutFragment : Fragment() {
     }
 
     private fun setupViews() {
-        text_version_name.text = getString(R.string.msg_version, BuildConfig.VERSION_NAME)
-        text_build_number.text = getString(R.string.msg_build, BuildConfig.VERSION_CODE)
+        text_version_name.text = BuildConfig.VERSION_NAME
+        text_build_number.text = getString(R.string.msg_build, BuildConfig.VERSION_CODE,
+                BuildConfig.GIT_SHA, BuildConfig.FLAVOR)
     }
 
     private fun setupToolbar() {

@@ -5,13 +5,13 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Gravity
 import android.view.MenuItem
 import androidx.annotation.IdRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.main.adapter.AccountsAdapter
@@ -25,9 +25,9 @@ import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.invalidateFirebaseToken
+import chat.rocket.android.util.refreshFCMToken
 import chat.rocket.common.model.UserStatus
-import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     private var expanded = false
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
     private var chatRoomId: String? = null
-    private var progressDialog : ProgressDialog? = null
+    private var progressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -63,16 +63,13 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         setContentView(R.layout.activity_main)
 
         launch(CommonPool) {
-            try {
-                val token = FirebaseInstanceId.getInstance().token
-                Timber.d("FCM token: $token")
-                presenter.refreshToken(token)
-            } catch (ex: Exception) {
-                Timber.d(ex, "Missing play services...")
-            }
+            refreshFCMToken(presenter)
         }
 
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
+
+        println("ChatRoomId: $chatRoomId")
+        presenter.clearNotificationsForChatroom(chatRoomId)
 
         presenter.connect()
         presenter.loadServerAccounts()
@@ -132,7 +129,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                     text_user_name.text = userDisplayName
                 }
                 if (userAvatar != null) {
-                    image_avatar.setImageURI(userAvatar)
+                    setAvatar(userAvatar)
                 }
                 if (serverLogo != null) {
                     server_logo.setImageURI(serverLogo)
@@ -208,7 +205,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     override fun invalidateToken(token: String) =
-        FirebaseInstanceId.getInstance().deleteToken(token, FirebaseMessaging.INSTANCE_ID_SCOPE)
+        invalidateFirebaseToken(token)
 
     override fun showMessage(resId: Int) = showToast(resId)
 
@@ -252,6 +249,10 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                 presenter.logout()
             }
         }
+    }
+
+    fun setAvatar(avatarUrl: String) {
+        headerLayout.image_avatar.setImageURI(avatarUrl)
     }
 
     fun getDrawerLayout(): DrawerLayout = drawer_layout

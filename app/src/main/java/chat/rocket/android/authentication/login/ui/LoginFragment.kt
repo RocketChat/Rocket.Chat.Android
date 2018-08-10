@@ -41,6 +41,9 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
 
+internal const val REQUEST_CODE_FOR_SIGN_IN_REQUIRED = 1
+internal const val REQUEST_CODE_FOR_MULTIPLE_ACCOUNTS_RESOLUTION = 2
+internal const val REQUEST_CODE_FOR_SAVE_RESOLUTION = 3
 internal const val REQUEST_CODE_FOR_CAS = 4
 internal const val REQUEST_CODE_FOR_SAML = 5
 internal const val REQUEST_CODE_FOR_OAUTH = 6
@@ -54,7 +57,6 @@ class LoginFragment : Fragment(), LoginView {
     }
     private var isGlobalLayoutListenerSetUp = false
     private var deepLinkInfo: LoginDeepLinkInfo? = null
-    private val credentialsClient by lazy { Credentials.getClient(requireActivity()) }
 
     companion object {
         private const val DEEP_LINK_INFO = "DeepLinkInfo"
@@ -91,6 +93,10 @@ class LoginFragment : Fragment(), LoginView {
         }.ifNull {
             presenter.setupView()
         }
+
+        if (!hasCredentialsSupport()) {
+            image_key.isVisible = false
+        }
     }
 
     override fun onDestroyView() {
@@ -106,13 +112,15 @@ class LoginFragment : Fragment(), LoginView {
             if (data != null) {
                 when (requestCode) {
                     REQUEST_CODE_FOR_MULTIPLE_ACCOUNTS_RESOLUTION -> {
-                        onCredentialRetrieved(data.getParcelableExtra(Credential.EXTRA_KEY))
+                        getCredentials(data)?.let {
+                            onCredentialRetrieved(it.first, it.second)
+                        }
                     }
                     REQUEST_CODE_FOR_SIGN_IN_REQUIRED -> {
-                        //use the hints to autofill sign in forms to reduce the info to be filled.
-                        val credential: Credential = data.getParcelableExtra(Credential.EXTRA_KEY)
-                        text_username_or_email.setText(credential.id)
-                        text_password.setText(credential.password)
+                        getCredentials(data)?.let { credential ->
+                            text_username_or_email.setText(credential.first)
+                            text_password.setText(credential.second)
+                        }
                     }
                     REQUEST_CODE_FOR_SAVE_RESOLUTION -> {
                         showMessage(getString(R.string.message_credentials_saved_successfully))
@@ -179,19 +187,19 @@ class LoginFragment : Fragment(), LoginView {
 
     private fun requestStoredCredentials() {
         activity?.let {
-            SmartLockHelper.requestStoredCredentials(credentialsClient, it)?.let {
-                onCredentialRetrieved(it)
+            it.requestStoredCredentials()?.let { credentials ->
+                onCredentialRetrieved(credentials.first, credentials.second)
             }
         }
     }
 
-    private fun onCredentialRetrieved(credential: Credential) {
-        presenter.authenticateWithUserAndPassword(credential.id, credential.password.toString())
+    private fun onCredentialRetrieved(id: String, password: String) {
+        presenter.authenticateWithUserAndPassword(id, password)
     }
 
     override fun saveSmartLockCredentials(id: String, password: String) {
         activity?.let {
-            SmartLockHelper.save(credentialsClient, it, id, password)
+            it.saveCredentials(id, password)
         }
     }
 
@@ -468,6 +476,24 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
 
+    override fun enableLoginByWordpress() {
+        ui {
+            button_wordpress.isClickable = true
+        }
+    }
+
+    override fun setupWordpressButtonListener(wordpressUrl: String, state: String) {
+        ui { activity ->
+            button_wordpress.setOnClickListener {
+                startActivityForResult(
+                    activity.oauthWebViewIntent(wordpressUrl, state),
+                    REQUEST_CODE_FOR_OAUTH
+                )
+                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+            }
+        }
+    }
+
     override fun addCustomOauthServiceButton(
         customOauthUrl: String,
         state: String,
@@ -513,11 +539,11 @@ class LoginFragment : Fragment(), LoginView {
     override fun setupFabListener() {
         ui {
             button_fab.isVisible = true
-            button_fab.setOnClickListener({
+            button_fab.setOnClickListener {
                 button_fab.hide()
                 showRemainingSocialAccountsView()
                 scrollToBottom()
-            })
+            }
         }
     }
 

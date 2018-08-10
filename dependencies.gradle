@@ -5,12 +5,12 @@ ext {
             compileSdk            : 28,
             targetSdk             : 28,
             minSdk                : 21,
-            buildTools            : '28.0.0-rc2',
+            buildTools            : '28.0.1',
             dokka                 : '0.9.16',
 
             // For app
             kotlin                : '1.2.51',
-            coroutine             : '0.23.1',
+            coroutine             : '0.24.0',
 
             appCompat             : '1.0.0-beta01',
             recyclerview          : '1.0.0-beta01',
@@ -22,9 +22,9 @@ ext {
             dagger                : '2.16',
 
             firebase              : '15.0.0',
-            playServices          : '15.0.0',
-            exoPlayer             : '2.6.0',
-            flexbox               : '0.3.2',
+            playServices          : '15.0.1',
+            exoPlayer             : '2.8.2',
+            flexbox               : '1.0.0',
             material              : '1.0.0-beta01',
 
             room                  : '2.0.0-beta01',
@@ -34,18 +34,18 @@ ext {
             rxAndroid             : '2.0.2',
 
             moshi                 : '1.6.0',
-            okhttp                : '3.10.0',
+            okhttp                : '3.11.0',
 
-            timber                : '4.7.0',
-            threeTenABP           : '1.0.5',
-            rxBinding             : '2.0.0',
+            timber                : '4.7.1',
+            threeTenABP           : '1.1.0',
+            rxBinding             : '2.1.1',
 
-            fresco                : '1.9.0',
+            fresco                : '1.10.0',
 
-            kotshi                : '1.0.2',
+            kotshi                : '1.0.4',
 
             frescoImageViewer     : '0.5.1',
-            markwon               : '1.0.6',
+            markwon               : '1.1.0',
             aVLoadingIndicatorView: '2.1.3',
 
             firebaseCloudMessaging: '15.0.2',
@@ -57,9 +57,9 @@ ext {
 
             // For testing
             junit                 : '4.12',
-            truth                 : '0.36',
-            espresso              : '3.1.0-alpha2',
-            mockito               : '2.10.0'
+            truth                 : '0.42',
+            espresso              : '3.1.0-alpha4',
+            mockito               : '2.21.0'
     ]
     libraries = [
             kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
@@ -127,10 +127,10 @@ ext {
             wearSupport           : "com.android.support:wear:${versions.supportWearable}",
 
             // For testing
-            junit                 : "junit:junit:$versions.junit",
+            junit                 : "junit:junit:${versions.junit}",
             espressoCore          : "androidx.test.espresso:espresso-core:${versions.espresso}",
             espressoIntents       : "androidx.test.espresso:espresso-intents:${versions.espresso}",
             roomTest              : "android.arch.persistence.room:testing:${versions.room}",
-            truth                 : "com.google.truth:truth:$versions.truth"
+            truth                 : "com.google.truth:truth:${versions.truth}"
     ]
 }
