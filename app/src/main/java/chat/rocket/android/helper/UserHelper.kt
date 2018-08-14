@@ -29,16 +29,13 @@ class UserHelper @Inject constructor(
      * If setting 'Use_Real_Name' is true then the real name will be given, otherwise the username
      * without the '@' is yielded.
      */
-    fun displayName(user: SimpleUser): String {
-        val displayName: String? = getCurrentServerInteractor.get()?.let {
-            if (settingsRepository.get(it).useRealName()) {
-                user.name
-            } else {
-                user.username
-            }
+    fun displayName(user: SimpleUser) = getCurrentServerInteractor.get()?.let {
+        if (settingsRepository.get(it).useRealName()) {
+            user.name
+        } else {
+            user.username
         }
-        return displayName ?: ""
-    }
+    }.orEmpty()
 
     /**
      * Whether current [User] is admin on the current server.

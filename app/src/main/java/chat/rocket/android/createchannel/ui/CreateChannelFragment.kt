@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.createchannel.presentation.CreateChannelPresenter
 import chat.rocket.android.createchannel.presentation.CreateChannelView
-import chat.rocket.android.main.ui.MENU_ACTION_CHATS
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.uimodel.MemberUiModel
@@ -162,7 +161,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
 
     override fun prepareToShowChatList() {
         with(activity as MainActivity) {
-            setCheckedNavDrawerItem(MENU_ACTION_CHATS)
+            setCheckedNavDrawerItem(R.id.menu_action_chats)
             openDrawer()
             getDrawerLayout().postDelayed(1000) {
                 closeDrawer()

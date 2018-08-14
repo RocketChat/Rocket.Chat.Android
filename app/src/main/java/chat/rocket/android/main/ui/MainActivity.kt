@@ -5,9 +5,9 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.view.Gravity
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,9 +25,9 @@ import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.invalidateFirebaseToken
+import chat.rocket.android.util.refreshFCMToken
 import chat.rocket.common.model.UserStatus
-import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -65,13 +65,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         setContentView(R.layout.activity_main)
 
         launch(CommonPool) {
-            try {
-                val token = FirebaseInstanceId.getInstance().token
-                Timber.d("FCM token: $token")
-                presenter.refreshToken(token)
-            } catch (ex: Exception) {
-                Timber.d(ex, "Missing play services...")
-            }
+            refreshFCMToken(presenter)
         }
 
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
@@ -174,9 +168,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
 
         headerLayout.image_avatar.setOnClickListener {
-            view_navigation.menu.findItem(MENU_ACTION_PROFILE).isChecked = true
+            view_navigation.menu.findItem(R.id.menu_action_profile).isChecked = true
             presenter.toUserProfile()
-            drawer_layout.closeDrawer(Gravity.START)
+            drawer_layout.closeDrawer(GravityCompat.START)
         }
     }
 
@@ -213,7 +207,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     override fun invalidateToken(token: String) =
-        FirebaseInstanceId.getInstance().deleteToken(token, FirebaseMessaging.INSTANCE_ID_SCOPE)
+        invalidateFirebaseToken(token)
 
     override fun showMessage(resId: Int) = showToast(resId)
 
@@ -248,9 +242,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     fun getDrawerLayout(): DrawerLayout = drawer_layout
 
-    fun openDrawer() = drawer_layout.openDrawer(Gravity.START)
+    fun openDrawer() = drawer_layout.openDrawer(GravityCompat.START)
 
-    fun closeDrawer() = drawer_layout.closeDrawer(Gravity.START)
+    fun closeDrawer() = drawer_layout.closeDrawer(GravityCompat.START)
 
     fun setCheckedNavDrawerItem(@IdRes item: Int) = view_navigation.setCheckedItem(item)
 
