@@ -9,6 +9,9 @@ import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * This class reloads the current logged server settings whenever needed.
+ */
 class RefreshSettingsInteractor @Inject constructor(
     private val factory: RocketChatClientFactory,
     private val repository: SettingsRepository
