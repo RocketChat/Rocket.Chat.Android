@@ -19,9 +19,6 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlin.reflect.KClass
 
 class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListener {
-    companion object {
-        fun newInstance() = SettingsFragment()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,5 +65,9 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     private fun startNewActivity(classType: KClass<out AppCompatActivity>) {
         startActivity(Intent(activity, classType.java))
         activity?.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
+    }
+
+    companion object {
+        fun newInstance() = SettingsFragment()
     }
 }

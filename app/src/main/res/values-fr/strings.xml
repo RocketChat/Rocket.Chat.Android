@@ -12,6 +12,7 @@
     <string name="title_profile">Profil</string>
     <string name="title_members">Membres (%d)</string>
     <string name="title_settings">Paramètres</string>
+    <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
     <string name="title_password">Changer le mot de passe</string>
     <string name="title_update_profile">Update profile</string>
     <string name="title_about">Sur</string>

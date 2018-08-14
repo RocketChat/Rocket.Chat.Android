@@ -12,6 +12,7 @@
     <string name="title_profile">Perfil</string>
     <string name="title_members">Membros (%d)</string>
     <string name="title_settings">Configurações</string>
+    <string name="title_admin_panel">Painel administrativo</string>
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
