@@ -14,6 +14,7 @@ import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.settings.ui.SettingsFragment
 import chat.rocket.android.settings.ui.TAG_SETTINGS_FRAGMENT
 import chat.rocket.android.util.extensions.addFragment
+import chat.rocket.android.webview.adminpanel.ui.AdminPanelWebViewFragment
 
 class MainNavigator(internal val activity: MainActivity) {
 
@@ -38,6 +39,12 @@ class MainNavigator(internal val activity: MainActivity) {
     fun toSettings() {
         activity.addFragment(TAG_SETTINGS_FRAGMENT, R.id.fragment_container) {
             SettingsFragment.newInstance()
+        }
+    }
+
+    fun toAdminPanel(webPageUrl: String, userToken: String) {
+        activity.addFragment("AdminPanelWebViewFragment", R.id.fragment_container) {
+            AdminPanelWebViewFragment.newInstance(webPageUrl, userToken)
         }
     }
 

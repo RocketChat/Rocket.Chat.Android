@@ -14,6 +14,8 @@
     <string name="title_settings">Configurações</string>
     <string name="title_preferences">Preferencias</string>
     <string name="title_change_password">Alterar senha</string>
+    <string name="title_admin_panel">Painel administrativo</string>
+    <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
     <string name="title_create_channel">Criar chat</string>
@@ -83,7 +85,7 @@
     <string name="msg_content_description_log_in_using_meteor">Fazer login através do Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Fazer login através do Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Fazer login através do Gitlab</string>
-    <string name="msg_content_description_log_in_using_wordprees">Fazer login através do WordPress</string>
+    <string name="msg_content_description_log_in_using_wordpress">Fazer login através do WordPress</string>
     <string name="msg_content_description_send_message">Enviar mensagem</string>
     <string name="msg_content_description_show_attachment_options">Mostrar opções de anexo</string>
     <string name="msg_you">Você</string>
@@ -98,8 +100,6 @@
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_preview_file">Arquivo</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
-    <string name="msg_version">Versão %1$s</string>
-    <string name="msg_build">Build %1$d</string>
     <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">Versão do servidor desatualizada. Por favor, entre em contato com o administrador do sistema para continuar.</string>
     <string name="msg_ver_not_recommended">
@@ -268,6 +268,7 @@
     <string name="dialog_sort_by_activity">Atividade</string>
     <string name="dialog_group_by_type">Agrupar por tipo</string>
     <string name="dialog_group_favourites">Grupos favoritos</string>
+    <string name="dialog_button_done">Done</string><!-- TODO Add translation -->
     <string name="chatroom_header">Cabeçalho</string>
 
     <!--ChatRooms Headers-->

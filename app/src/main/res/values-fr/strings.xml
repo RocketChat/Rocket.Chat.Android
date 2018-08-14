@@ -14,6 +14,8 @@
     <string name="title_settings">Paramètres</string>
     <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
     <string name="title_change_password">Changer le mot de passe</string>
+    <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
+    <string name="title_password">Changer le mot de passe</string>
     <string name="title_update_profile">Update profile</string>
     <string name="title_about">Sur</string>
     // TODO: Add proper translation.
@@ -88,7 +90,7 @@
     <string name="msg_content_description_log_in_using_meteor">Connectez-vous en utilisant Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Connectez-vous en utilisant Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Connectez-vous en utilisant Gitlab</string>
-    <string name="msg_content_description_log_in_using_wordprees">Login using WordPress</string> <!-- TODO Translate-->
+    <string name="msg_content_description_log_in_using_wordpress">Login using WordPress</string> <!-- TODO Translate-->
     <string name="msg_content_description_send_message">Envoyer message</string>
     <string name="msg_content_description_show_attachment_options">Afficher les options de fichiers</string>
     <string name="msg_you">Toi</string>
@@ -103,8 +105,6 @@
     <string name="msg_preview_photo">Photo</string>
     <string name="msg_preview_file">File</string>
     <string name="msg_no_messages_yet">Aucun message pour le moment</string>
-    <string name="msg_version">Version %1$s</string>
-    <string name="msg_build">Build %1$d</string>
     <string name="msg_ok">OK</string>
     // TODO: Add proper translation.
     <string name="msg_update_app_version_in_order_to_continue">Out to date server version. Please contact the server admin to update the server version in order to continue.</string>
@@ -287,6 +287,7 @@
     <string name="dialog_sort_by_activity">Activité</string>
     <string name="dialog_group_by_type">Grouper par type</string>
     <string name="dialog_group_favourites">Grouper favoris</string>
+    <string name="dialog_button_done">Done</string><!-- TODO Add translation -->
     <string name="chatroom_header">Entête</string>
 
     <!--ChatRooms Headers-->
