@@ -12,6 +12,7 @@
     <string name="title_profile">प्रोफाइल</string>
     <string name="title_members">सदस्य (%d)</string>
     <string name="title_settings">सेटिंग्स</string>
+    <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
     <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>

@@ -1,21 +1,24 @@
 package chat.rocket.android.server.domain
 
 import chat.rocket.android.helper.UserHelper
-import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.core.model.Permission
 import javax.inject.Inject
 
 // Creating rooms
-const val CREATE_PUBLIC_CHANNELS = "create-c"
-const val CREATE_DIRECT_MESSAGES = "create-d"
-const val CREATE_PRIVATE_CHANNELS = "create-p"
+private const val CREATE_PUBLIC_CHANNELS = "create-c"
+private const val CREATE_DIRECT_MESSAGES = "create-d"
+private const val CREATE_PRIVATE_CHANNELS = "create-p"
 
 // Messages
-const val DELETE_MESSAGE = "delete-message"
-const val FORCE_DELETE_MESSAGE = "force-delete-message"
-const val EDIT_MESSAGE = "edit-message"
-const val PIN_MESSAGE = "pin-message"
-const val POST_READONLY = "post-readonly"
+private const val DELETE_MESSAGE = "delete-message"
+private const val FORCE_DELETE_MESSAGE = "force-delete-message"
+private const val EDIT_MESSAGE = "edit-message"
+private const val PIN_MESSAGE = "pin-message"
+private const val POST_READONLY = "post-readonly"
+
+private const val VIEW_STATISTICS = "view-statistics"
+private const val VIEW_ROOM_ADMINISTRATION = "view-room-administration"
+private const val VIEW_USER_ADMINISTRATION = "view-user-administration"
+private const val VIEW_PRIVILEGED_SETTING = "view-privileged-setting"
 
 class PermissionsInteractor @Inject constructor(
     private val settingsRepository: SettingsRepository,
@@ -23,13 +26,7 @@ class PermissionsInteractor @Inject constructor(
     private val getCurrentServerInteractor: GetCurrentServerInteractor,
     private val userHelper: UserHelper
 ) {
-
     private fun publicSettings(): PublicSettings? = settingsRepository.get(currentServerUrl()!!)
-
-    fun saveAll(permissions: List<Permission>) {
-        val url = currentServerUrl()!!
-        permissions.forEach { permissionsRepository.save(url, it) }
-    }
 
     /**
      * Check whether the user is allowed to delete a message.
@@ -69,6 +66,28 @@ class PermissionsInteractor @Inject constructor(
                 currentUserRoles.contains(it)
             }
         } == true || userHelper.isAdmin()
+    }
+
+
+    fun canSeeTheAdminPanel(): Boolean {
+        currentServerUrl()?.let { serverUrl ->
+            val viewStatistics =
+                permissionsRepository.get(serverUrl, VIEW_STATISTICS)
+            val viewRoomAdministration =
+                permissionsRepository.get(serverUrl, VIEW_ROOM_ADMINISTRATION)
+            val viewUserAdministration =
+                permissionsRepository.get(serverUrl, VIEW_USER_ADMINISTRATION)
+            val viewPrivilegedSetting =
+                permissionsRepository.get(serverUrl, VIEW_PRIVILEGED_SETTING)
+
+            userHelper.user()?.roles?.let { userRolesList ->
+                return viewStatistics?.roles?.any { userRolesList.contains(it) } == true ||
+                        viewRoomAdministration?.roles?.any { userRolesList.contains(it) } == true ||
+                        viewUserAdministration?.roles?.any { userRolesList.contains(it) } == true ||
+                        viewPrivilegedSetting?.roles?.any { userRolesList.contains(it) } == true
+            }
+        }
+        return false
     }
 
     private fun currentServerUrl(): String? {
