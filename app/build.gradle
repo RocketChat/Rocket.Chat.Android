@@ -1,24 +1,17 @@
-def taskRequests = getGradle().getStartParameter().getTaskRequests().toString()
-def isPlay = !(taskRequests.contains("Foss") || taskRequests.contains("foss"))
-
-apply plugin: 'com.android.application'
-if (isPlay) { apply plugin: 'io.fabric' }
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
 
     defaultConfig {
-        applicationId "chat.rocket.android"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode 2036
         versionName "2.5.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
 
         def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
         def buildTime = new GregorianCalendar().format("MM-dd-yyyy' 'h:mm:ss a z")
@@ -31,36 +24,15 @@ android {
         }
     }
 
-    signingConfigs {
-        release {
-            storeFile project.rootProject.file('Rocket.jks').getCanonicalFile()
-            storePassword System.getenv("KEYSTORE_PASSWORD")
-            keyAlias System.getenv("KEY_ALIAS")
-            keyPassword System.getenv("KEY_PASSWORD")
-        }
-
-        debug {
-            storeFile project.rootProject.file('debug.keystore').getCanonicalFile()
-            storePassword "android"
-            keyAlias "androiddebugkey"
-            keyPassword "android"
-        }
-    }
-
     buildTypes {
         release {
             buildConfigField "String", "REQUIRED_SERVER_VERSION", '"0.62.0"'
             buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.64.2"'
-            signingConfig signingConfigs.release
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
             buildConfigField "String", "REQUIRED_SERVER_VERSION", '"0.62.0"'
             buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.64.2"'
-            signingConfig signingConfigs.debug
-            applicationIdSuffix ".dev"
         }
     }
 
@@ -179,6 +151,3 @@ task compileSdk(type:Exec) {
     }
 }
 preBuild.dependsOn compileSdk
-if (isPlay) {
-    apply plugin: 'com.google.gms.google-services'
-}

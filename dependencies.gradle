@@ -103,6 +103,7 @@ ext {
             frescoWebP            : "com.facebook.fresco:webpsupport:${versions.fresco}",
             frescoAnimatedWebP    : "com.facebook.fresco:animated-webp:${versions.fresco}",
 
+            jetbrainsAnnotations  : "org.jetbrains:annotations:16.0.1",
             kotshiApi             : "se.ansman.kotshi:api:${versions.kotshi}",
             kotshiCompiler        : "se.ansman.kotshi:compiler:${versions.kotshi}",
 
