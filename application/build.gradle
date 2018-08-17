@@ -1,5 +1,8 @@
+def taskRequests = getGradle().getStartParameter().getTaskRequests().toString()
+def isPlay = !(taskRequests.contains("Foss") || taskRequests.contains("foss"))
+
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+if (isPlay) { apply plugin: 'io.fabric' }
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -86,4 +89,6 @@ androidExtensions {
     experimental = true
 }
 
-apply plugin: 'com.google.gms.google-services'
+if (isPlay) {
+    apply plugin: 'com.google.gms.google-services'
+}

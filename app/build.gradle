@@ -12,6 +12,10 @@ android {
         targetSdkVersion versions.targetSdk
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+        def buildTime = new GregorianCalendar().format("MM-dd-yyyy' 'h:mm:ss a z")
+        buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
+
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
@@ -31,6 +35,24 @@ android {
         }
     }
 
+    flavorDimensions "type"
+
+    productFlavors {
+        // includes proprietary libs
+        play {
+            dimension "type"
+        }
+
+        // only foss
+        foss {
+            dimension "type"
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/core.kotlin_module'
+        exclude 'META-INF/main.kotlin_module'
+    }
 }
 
 dependencies {
@@ -60,9 +82,6 @@ dependencies {
     implementation libraries.daggerSupport
     kapt libraries.daggerProcessor
     kapt libraries.daggerAndroidApt
-
-    implementation libraries.fcm
-    implementation libraries.playServicesAuth
 
     implementation libraries.room
     kapt libraries.roomProcessor
@@ -96,7 +115,10 @@ dependencies {
 
     implementation "com.github.luciofm:livedata-ktx:b1e8bbc25a"
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
+    playImplementation libraries.fcm
+    playImplementation libraries.playServicesAuth
+
+    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
         transitive = true
     }
 
@@ -118,11 +140,13 @@ androidExtensions {
 
 // FIXME - build and install the sdk into the app/libs directory
 // We were having some issues with the kapt generated files from the sdk when importing as a module
+
+def sdk_location=project.properties['sdk_location'] ?: ""
 task compileSdk(type:Exec) {
     if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-        commandLine 'cmd', '/c', 'build-sdk.sh'
+        commandLine 'cmd', '/c', 'build-sdk.sh', sdk_location
     } else {
-        commandLine './build-sdk.sh'
+        commandLine './build-sdk.sh', sdk_location
     }
 }
 preBuild.dependsOn compileSdk

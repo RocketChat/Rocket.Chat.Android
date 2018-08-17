@@ -9,11 +9,12 @@ class SharedPreferencesPermissionsRepository(
     private val localRepository: LocalRepository,
     moshi: Moshi
 ) : PermissionsRepository {
-
     private val adapter = moshi.adapter(Permission::class.java)
 
-    override fun save(url: String, permission: Permission) {
-        localRepository.save(getPermissionKey(url, permission.id), adapter.toJson(permission))
+    override fun save(url: String, permissionList: List<Permission>) {
+        for (permission in permissionList) {
+            localRepository.save(getPermissionKey(url, permission.id), adapter.toJson(permission))
+        }
     }
 
     override fun get(url: String, permissionId: String): Permission? {
