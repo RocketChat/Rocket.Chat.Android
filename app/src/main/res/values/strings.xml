@@ -13,6 +13,7 @@
     <string name="title_profile">Profile</string>
     <string name="title_members">Members (%d)</string>
     <string name="title_settings">Settings</string>
+    <string name="title_admin_panel">Admin panel</string>
     <string name="title_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
     <string name="title_about">About</string>

@@ -161,7 +161,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
 
     override fun prepareToShowChatList() {
         with(activity as MainActivity) {
-            setCheckedNavDrawerItem(R.id.action_chat_rooms)
+            setCheckedNavDrawerItem(R.id.menu_action_chats)
             openDrawer()
             getDrawerLayout().postDelayed(1000) {
                 closeDrawer()
