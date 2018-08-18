@@ -3,34 +3,35 @@ package chat.rocket.android.util
 import java.io.Serializable
 
 class TokenSerialisableModel(
-    private val firstParam: String,
-    private val secondParam: String,
-    private val thirdParam: String = ""
+    private val tokenId: String,
+    private val tokenAuth: String,
+    private val urlServer: String = ""
 ) :
     Serializable {
-    companion object {
-        private val serialVersionUID: Long = 101L
-    }
 
     private val tokenUserId: String
     private val authToken: String
     private val serverUrl: String
 
     init {
-        tokenUserId = firstParam
-        authToken = secondParam
-        serverUrl = thirdParam
+        tokenUserId = tokenId
+        authToken = tokenAuth
+        serverUrl = urlServer
     }
 
-    fun getFirst(): String {
+    fun getTokenUserId(): String {
         return tokenUserId
     }
 
-    fun getSecond(): String {
+    fun getAuthToken(): String {
         return authToken
     }
 
-    fun getThird(): String {
+    fun getServerUrl(): String {
         return serverUrl
+    }
+
+    companion object {
+        private val serialVersionUID: Long = 101L
     }
 }

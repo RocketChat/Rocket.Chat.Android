@@ -6,17 +6,17 @@ import java.io.*
 var byteArray: ByteArray? = null
 
 fun serialiseToken(token: TokenSerialisableModel): ByteArray? {
-    val a = ByteArrayOutputStream()
-    val b = ObjectOutputStream(a)
+    val byteArrayOutputStream = ByteArrayOutputStream()
+    val outputStream = ObjectOutputStream(byteArrayOutputStream)
     try {
-        b.writeObject(token)
-        byteArray = a.toByteArray()
+        outputStream.writeObject(token)
+        byteArray = byteArrayOutputStream.toByteArray()
     } catch (ex: InvalidClassException) {
-        Timber.e("Excecption: $ex")
+        Timber.e("Exception: $ex")
     } catch (ex: NotSerializableException) {
-        Timber.e("Excecption: $ex")
+        Timber.e("Exception: $ex")
     } catch (ex: IOException) {
-        Timber.e("Excecption: $ex")
+        Timber.e("Exception: $ex")
     }
     return byteArray
 }

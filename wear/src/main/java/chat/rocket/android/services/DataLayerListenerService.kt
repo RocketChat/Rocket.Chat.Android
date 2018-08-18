@@ -56,7 +56,7 @@ class DataLayerListenerService : WearableListenerService() {
             val tokenToSave: TokenSerialisableModel = deserialiseToken(messageEvent.data)
             val currentServer = getCurrentServerInteractor.get()
             if (currentServer != null) {
-                val loginToken = Token(tokenToSave.getFirst(), tokenToSave.getSecond())
+                val loginToken = Token(tokenToSave.getTokenUserId(), tokenToSave.getAuthToken())
                 tokenRepository.save(currentServer, loginToken)
 
                 client = factory.create(currentServer)

@@ -4,21 +4,21 @@ import timber.log.Timber
 import java.io.*
 
 fun deserialiseToken(bytesArray: ByteArray): TokenSerialisableModel {
-    val a = ByteArrayInputStream(bytesArray)
-    val b = ObjectInputStream(a)
+    val byteArrayOutputStream = ByteArrayInputStream(bytesArray)
+    val outputStream = ObjectInputStream(byteArrayOutputStream)
     var returnObject: TokenSerialisableModel? = null
     try {
-        returnObject = b.readObject() as TokenSerialisableModel
+        returnObject = outputStream.readObject() as TokenSerialisableModel
     } catch (ex: ClassNotFoundException) {
-        Timber.e("Excecption: $ex")
+        Timber.e("Exception: $ex")
     } catch (ex: InvalidClassException) {
-        Timber.e("Excecption: $ex")
+        Timber.e("Exception: $ex")
     } catch (ex: StreamCorruptedException) {
-        Timber.e("Excecption: $ex")
+        Timber.e("Exception: $ex")
     } catch (ex: OptionalDataException) {
-        Timber.e("Excecption: $ex")
+        Timber.e("Exception: $ex")
     } catch (ex: IOException) {
-        Timber.e("Excecption: $ex")
+        Timber.e("Exception: $ex")
     }
     return returnObject!!
 }
