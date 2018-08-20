@@ -29,6 +29,7 @@ class TwoFAPresenter @Inject constructor(
     private val localRepository: LocalRepository,
     private val serverInteractor: GetConnectingServerInteractor,
     private val saveCurrentServerInteractor: SaveCurrentServerInteractor,
+    private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
     private val factory: RocketChatClientFactory,
     private val saveAccountInteractor: SaveAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
@@ -66,13 +67,23 @@ class TwoFAPresenter @Inject constructor(
                         saveCurrentServerInteractor.save(currentServer)
                         tokenRepository.save(server, token)
                         registerPushToken()
-                        AnswersEvent.logLogin(AnswersEvent.LOGIN_OR_SIGN_UP_BY_USER_AND_PASSWORD, true)
+                        if (analyticsTrackingInteractor.get()) {
+                            AnswersEvent.logLogin(
+                                AnswersEvent.LOGIN_OR_SIGN_UP_BY_USER_AND_PASSWORD,
+                                true
+                            )
+                        }
                         navigator.toChatList()
                     } catch (exception: RocketChatException) {
                         if (exception is RocketChatAuthException) {
                             view.alertInvalidTwoFactorAuthenticationCode()
                         } else {
-                            AnswersEvent.logLogin(AnswersEvent.LOGIN_OR_SIGN_UP_BY_USER_AND_PASSWORD, false)
+                            if (analyticsTrackingInteractor.get()) {
+                                AnswersEvent.logLogin(
+                                    AnswersEvent.LOGIN_OR_SIGN_UP_BY_USER_AND_PASSWORD,
+                                    false
+                                )
+                            }
                             exception.message?.let {
                                 view.showMessage(it)
                             }.ifNull {

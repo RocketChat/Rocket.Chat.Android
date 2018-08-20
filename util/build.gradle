@@ -17,6 +17,25 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "type"
+
+    productFlavors {
+        // includes proprietary libs
+        play {
+            dimension "type"
+        }
+
+        // only foss
+        foss {
+            dimension "type"
+        }
     }
 }
 
@@ -37,7 +56,7 @@ dependencies {
     implementation libraries.lifecycleExtensions
     kapt libraries.lifecycleCompiler
 
-    implementation('com.crashlytics.sdk.android:answers:1.4.2@aar') {
+    playImplementation('com.crashlytics.sdk.android:answers:1.4.2@aar') {
         transitive = true
     }
 }

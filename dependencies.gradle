@@ -9,7 +9,7 @@ ext {
             dokka                 : '0.9.16',
 
             // For app
-            kotlin                : '1.2.60',
+            kotlin                : '1.2.61',
             coroutine             : '0.24.0',
 
             appCompat             : '1.0.0-beta01',

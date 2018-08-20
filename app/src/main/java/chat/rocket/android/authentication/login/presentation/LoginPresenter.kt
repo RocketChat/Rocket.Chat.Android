@@ -5,30 +5,8 @@ import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.OauthHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.GetAccountsInteractor
-import chat.rocket.android.server.domain.GetConnectingServerInteractor
-import chat.rocket.android.server.domain.GetSettingsInteractor
-import chat.rocket.android.server.domain.PublicSettings
-import chat.rocket.android.server.domain.SaveAccountInteractor
-import chat.rocket.android.server.domain.SaveCurrentServerInteractor
-import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.domain.casLoginUrl
-import chat.rocket.android.server.domain.favicon
-import chat.rocket.android.server.domain.gitlabUrl
-import chat.rocket.android.server.domain.isCasAuthenticationEnabled
-import chat.rocket.android.server.domain.isFacebookAuthenticationEnabled
-import chat.rocket.android.server.domain.isGithubAuthenticationEnabled
-import chat.rocket.android.server.domain.isGitlabAuthenticationEnabled
-import chat.rocket.android.server.domain.isGoogleAuthenticationEnabled
-import chat.rocket.android.server.domain.isLdapAuthenticationEnabled
-import chat.rocket.android.server.domain.isLinkedinAuthenticationEnabled
-import chat.rocket.android.server.domain.isLoginFormEnabled
-import chat.rocket.android.server.domain.isWordpressAuthenticationEnabled
-import chat.rocket.android.server.domain.isPasswordResetEnabled
-import chat.rocket.android.server.domain.isRegistrationEnabledForNewUsers
-import chat.rocket.android.server.domain.wordpressUrl
+import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
-import chat.rocket.android.server.domain.wideTile
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
@@ -83,6 +61,7 @@ class LoginPresenter @Inject constructor(
     private val localRepository: LocalRepository,
     private val getAccountsInteractor: GetAccountsInteractor,
     private val settingsInteractor: GetSettingsInteractor,
+    private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
     serverInteractor: GetConnectingServerInteractor,
     private val saveCurrentServer: SaveCurrentServerInteractor,
     private val saveAccountInteractor: SaveAccountInteractor,
@@ -477,7 +456,9 @@ class LoginPresenter @Inject constructor(
                     saveAccount(myself.username!!)
                     saveToken(token)
                     registerPushToken()
-                    AnswersEvent.logLogin(loginMethod, true)
+                    if (analyticsTrackingInteractor.get()) {
+                        AnswersEvent.logLogin(loginMethod, true)
+                    }
                     if (loginType == TYPE_LOGIN_USER_EMAIL) {
                         view.saveSmartLockCredentials(usernameOrEmail, password)
                     }
@@ -491,7 +472,9 @@ class LoginPresenter @Inject constructor(
                         navigator.toTwoFA(usernameOrEmail, password)
                     }
                     else -> {
-                        AnswersEvent.logLogin(loginMethod, false)
+                        if (analyticsTrackingInteractor.get()) {
+                            AnswersEvent.logLogin(loginMethod, false)
+                        }
                         exception.message?.let {
                             view.showMessage(it)
                         }.ifNull {

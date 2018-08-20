@@ -14,6 +14,7 @@ import chat.rocket.android.chatinformation.presentation.MessageInfoPresenter
 import chat.rocket.android.chatinformation.presentation.MessageInfoView
 import chat.rocket.android.chatinformation.viewmodel.ReadReceiptViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.helper.AnswersEvent
@@ -34,10 +35,10 @@ internal const val TAG_MESSAGE_INFO_FRAGMENT = "MessageInfoFragment"
 private const val BUNDLE_MESSAGE_ID = "message_id"
 
 class MessageInfoFragment : Fragment(), MessageInfoView {
-
     @Inject
     lateinit var presenter: MessageInfoPresenter
-
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private lateinit var adapter: ReadReceiptAdapter
     private lateinit var messageId: String
 
@@ -66,7 +67,10 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         presenter.loadReadReceipts(messageId = messageId)
-        AnswersEvent.logScreenView(TAG_MESSAGE_INFO_FRAGMENT)
+
+        if (analyticsTrackingInteractor.get()) {
+            AnswersEvent.logScreenView(TAG_MESSAGE_INFO_FRAGMENT)
+        }
     }
 
     private fun setupRecyclerView() {

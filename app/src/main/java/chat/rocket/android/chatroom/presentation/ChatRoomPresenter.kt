@@ -17,17 +17,7 @@ import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import chat.rocket.android.server.domain.GetSettingsInteractor
-import chat.rocket.android.server.domain.JobSchedulerInteractor
-import chat.rocket.android.server.domain.MessagesRepository
-import chat.rocket.android.server.domain.PermissionsInteractor
-import chat.rocket.android.server.domain.PublicSettings
-import chat.rocket.android.server.domain.RoomRepository
-import chat.rocket.android.server.domain.UsersRepository
-import chat.rocket.android.server.domain.uploadMaxFileSize
-import chat.rocket.android.server.domain.uploadMimeTypeFilter
-import chat.rocket.android.server.domain.useRealName
+import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extension.compressImageAndGetInputStream
@@ -91,6 +81,7 @@ class ChatRoomPresenter @Inject constructor(
     private val usersRepository: UsersRepository,
     private val roomsRepository: RoomRepository,
     private val localRepository: LocalRepository,
+    private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
     private val userHelper: UserHelper,
     private val mapper: UiModelMapper,
     private val jobSchedulerInteractor: JobSchedulerInteractor,
@@ -292,12 +283,14 @@ class ChatRoomPresenter @Inject constructor(
                         messagesRepository.save(newMessage)
                         view.showNewMessage(
                             mapper.map(
-                                newMessage, 
+                                newMessage,
                                 RoomUiModel(roles = chatRoles, isBroadcast = chatIsBroadcast)
                             ), false
                         )
                         client.sendMessage(id, chatRoomId, text)
-                        AnswersEvent.logMessageSent(chatRoomType, currentServer)
+                        if (analyticsTrackingInteractor.get()) {
+                            AnswersEvent.logMessageSent(chatRoomType, currentServer)
+                        }
                     } catch (ex: Exception) {
                         // Ok, not very beautiful, but the backend sends us a not valid response
                         // When someone sends a message on a read-only channel, so we just ignore it
@@ -368,7 +361,9 @@ class ChatRoomPresenter @Inject constructor(
                                     inputStream
                                 }
                             }
-                            AnswersEvent.logMediaUploaded(chatRoomType, mimeType)
+                            if (analyticsTrackingInteractor.get()) {
+                                AnswersEvent.logMediaUploaded(chatRoomType, mimeType)
+                            }
                         }
                     }
                 }
@@ -941,7 +936,9 @@ class ChatRoomPresenter @Inject constructor(
                 retryIO("toggleEmoji($messageId, $emoji)") {
                     client.toggleReaction(messageId, emoji.removeSurrounding(":"))
                 }
-                AnswersEvent.logReaction(chatRoomType)
+                if (analyticsTrackingInteractor.get()) {
+                    AnswersEvent.logReaction(chatRoomType)
+                }
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
             }

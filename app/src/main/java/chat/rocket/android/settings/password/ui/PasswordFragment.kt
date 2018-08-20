@@ -9,6 +9,7 @@ import chat.rocket.android.settings.password.presentation.PasswordPresenter
 import chat.rocket.android.settings.password.presentation.PasswordView
 import chat.rocket.android.util.extensions.inflate
 import androidx.appcompat.view.ActionMode
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
@@ -23,7 +24,10 @@ import javax.inject.Inject
 internal const val TAG_PASSWORD_FRAGMENT = "PasswordFragment"
 
 class PasswordFragment: Fragment(), PasswordView, ActionMode.Callback {
-    @Inject lateinit var presenter: PasswordPresenter
+    @Inject
+    lateinit var presenter: PasswordPresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private var actionMode: ActionMode? = null
     private val disposables = CompositeDisposable()
 
@@ -42,7 +46,10 @@ class PasswordFragment: Fragment(), PasswordView, ActionMode.Callback {
         super.onViewCreated(view, savedInstanceState)
 
         disposables.add(listenToChanges())
-        AnswersEvent.logScreenView(TAG_PASSWORD_FRAGMENT)
+
+        if (analyticsTrackingInteractor.get()) {
+            AnswersEvent.logScreenView(TAG_PASSWORD_FRAGMENT)
+        }
     }
 
     override fun onDestroyView() {

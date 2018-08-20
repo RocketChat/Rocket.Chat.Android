@@ -2,29 +2,33 @@ package chat.rocket.android.settings.ui
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.about.ui.AboutFragment
 import chat.rocket.android.about.ui.TAG_ABOUT_FRAGMENT
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.preferences.ui.PreferencesFragment
 import chat.rocket.android.preferences.ui.TAG_PREFERENCES_FRAGMENT
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.helper.AnswersEvent
 import kotlinx.android.synthetic.main.fragment_settings.*
+import javax.inject.Inject
 import kotlin.reflect.KClass
 
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
 class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListener {
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +40,10 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupListView()
-        AnswersEvent.logScreenView(TAG_SETTINGS_FRAGMENT)
+
+        if (analyticsTrackingInteractor.get()) {
+            AnswersEvent.logScreenView(TAG_SETTINGS_FRAGMENT)
+        }
     }
 
     override fun onResume() {

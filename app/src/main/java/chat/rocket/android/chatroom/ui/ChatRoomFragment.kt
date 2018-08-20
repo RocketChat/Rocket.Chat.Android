@@ -55,6 +55,7 @@ import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
 import chat.rocket.android.util.extensions.fadeIn
@@ -135,6 +136,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     lateinit var presenter: ChatRoomPresenter
     @Inject
     lateinit var parser: MessageParser
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private lateinit var adapter: ChatRoomAdapter
     internal lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -232,7 +235,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             it.showToolbarChatRoomIcon(chatRoomType)
         }
 
-        AnswersEvent.logScreenView(TAG_CHAT_ROOM_FRAGMENT)
+        if (analyticsTrackingInteractor.get()) {
+            AnswersEvent.logScreenView(TAG_CHAT_ROOM_FRAGMENT)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

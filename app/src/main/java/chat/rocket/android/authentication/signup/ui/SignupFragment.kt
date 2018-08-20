@@ -18,6 +18,7 @@ import chat.rocket.android.authentication.signup.presentation.SignupView
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.helper.saveCredentials
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.helper.AnswersEvent
 import dagger.android.support.AndroidSupportInjection
@@ -30,6 +31,8 @@ internal const val SAVE_CREDENTIALS = 1
 class SignupFragment : Fragment(), SignupView {
     @Inject
     lateinit var presenter: SignupPresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         if (KeyboardHelper.isSoftKeyboardShown(relative_layout.rootView)) {
             bottom_container.setVisible(false)
@@ -40,10 +43,6 @@ class SignupFragment : Fragment(), SignupView {
                 }, 3)
             }
         }
-    }
-
-    companion object {
-        fun newInstance() = SignupFragment()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,7 +76,9 @@ class SignupFragment : Fragment(), SignupView {
             )
         }
 
-        AnswersEvent.logScreenView(TAG_SIGNUP_FRAGMENT)
+        if(analyticsTrackingInteractor.get()) {
+            AnswersEvent.logScreenView(TAG_SIGNUP_FRAGMENT)
+        }
     }
 
     override fun onDestroyView() {
@@ -216,5 +217,9 @@ class SignupFragment : Fragment(), SignupView {
         text_username.isEnabled = value
         text_password.isEnabled = value
         text_email.isEnabled = value
+    }
+
+    companion object {
+        fun newInstance() = SignupFragment()
     }
 }

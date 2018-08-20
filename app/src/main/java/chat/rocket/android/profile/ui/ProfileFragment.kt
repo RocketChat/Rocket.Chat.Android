@@ -16,6 +16,7 @@ import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.dispatchImageSelection
 import chat.rocket.android.util.extension.dispatchTakePicture
@@ -41,6 +42,8 @@ private const val REQUEST_CODE_FOR_PERFORM_CAMERA = 2
 class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     @Inject
     lateinit var presenter: ProfilePresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private var currentName = ""
     private var currentUsername = ""
     private var currentEmail = ""
@@ -72,7 +75,10 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
         presenter.loadUserProfile()
         subscribeEditTexts()
-        AnswersEvent.logScreenView(TAG_PROFILE_FRAGMENT)
+
+        if (analyticsTrackingInteractor.get()) {
+            AnswersEvent.logScreenView(TAG_PROFILE_FRAGMENT)
+        }
     }
 
     override fun onDestroyView() {

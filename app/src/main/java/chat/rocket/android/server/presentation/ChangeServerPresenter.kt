@@ -17,6 +17,7 @@ class ChangeServerPresenter @Inject constructor(
     private val getCurrentServerInteractor: GetCurrentServerInteractor,
     private val getAccountInteractor: GetAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
+    private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
     private val settingsRepository: SettingsRepository,
     private val tokenRepository: TokenRepository,
     private val localRepository: LocalRepository,
@@ -59,7 +60,9 @@ class ChangeServerPresenter @Inject constructor(
 
                 saveCurrentServerInteractor.save(serverUrl)
                 view.hideProgress()
-                AnswersEvent.logServerSwitch(serverUrl, accounts.size)
+                if (analyticsTrackingInteractor.get()) {
+                    AnswersEvent.logServerSwitch(serverUrl, accounts.size)
+                }
                 navigator.toChatRooms(chatRoomId)
             }.ifNull {
                 view.hideProgress()

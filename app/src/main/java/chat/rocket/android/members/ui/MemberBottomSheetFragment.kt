@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import chat.rocket.android.R
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.helper.AnswersEvent
 import kotlinx.android.synthetic.main.fragment_member_bottom_sheet.*
+import javax.inject.Inject
 
 fun newInstance(avatarUri: String,
                 realName: String,
@@ -37,6 +39,8 @@ private const val BUNDLE_EMAIL = "email"
 private const val BUNDLE_UTC_OFFSET = "utc_offset"
 
 class MemberBottomSheetFragment: BottomSheetDialogFragment() {
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private lateinit var avatarUri: String
     private lateinit var realName: String
     private lateinit var username: String
@@ -63,7 +67,10 @@ class MemberBottomSheetFragment: BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showMemberDetails()
-        AnswersEvent.logScreenView(TAG_MEMBER_BOTTOM_SHEET_FRAGMENT)
+
+        if (analyticsTrackingInteractor.get()) {
+            AnswersEvent.logScreenView(TAG_MEMBER_BOTTOM_SHEET_FRAGMENT)
+        }
     }
 
     private fun showMemberDetails() {

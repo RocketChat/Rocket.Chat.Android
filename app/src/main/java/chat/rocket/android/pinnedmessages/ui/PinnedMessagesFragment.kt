@@ -16,6 +16,7 @@ import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.pinnedmessages.presentation.PinnedMessagesPresenter
 import chat.rocket.android.pinnedmessages.presentation.PinnedMessagesView
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
@@ -36,10 +37,12 @@ internal const val TAG_PINNED_MESSAGES_FRAGMENT = "PinnedMessagesFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
-    private lateinit var chatRoomId: String
-    private val adapter = ChatRoomAdapter(enableActions = false)
     @Inject
     lateinit var presenter: PinnedMessagesPresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
+    private lateinit var chatRoomId: String
+    private val adapter = ChatRoomAdapter(enableActions = false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +67,10 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
 
         setupToolbar()
         presenter.loadPinnedMessages(chatRoomId)
-        AnswersEvent.logScreenView(TAG_PINNED_MESSAGES_FRAGMENT)
+
+        if (analyticsTrackingInteractor.get()) {
+            AnswersEvent.logScreenView(TAG_PINNED_MESSAGES_FRAGMENT)
+        }
     }
 
     override fun showPinnedMessages(pinnedMessages: List<BaseUiModel<*>>) {

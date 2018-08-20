@@ -16,6 +16,7 @@ import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.helper.KeyboardHelper
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.helper.AnswersEvent
 import chat.rocket.common.util.ifNull
@@ -29,21 +30,12 @@ internal const val TAG_SERVER_FRAGMENT = "ServerFragment"
 class ServerFragment : Fragment(), ServerView {
     @Inject
     lateinit var presenter: ServerPresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private var deepLinkInfo: LoginDeepLinkInfo? = null
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         text_server_url.isCursorVisible = KeyboardHelper.isSoftKeyboardShown(relative_layout.rootView)
     }
-
-    companion object {
-        private const val DEEP_LINK_INFO = "DeepLinkInfo"
-
-        fun newInstance(deepLinkInfo: LoginDeepLinkInfo?) = ServerFragment().apply {
-            arguments = Bundle().apply {
-                putParcelable(DEEP_LINK_INFO, deepLinkInfo)
-            }
-        }
-    }
-
     private var protocol = "https://"
     private var ignoreChange = false
 
@@ -104,7 +96,9 @@ class ServerFragment : Fragment(), ServerView {
             }
         }
 
-        AnswersEvent.logScreenView(TAG_SERVER_FRAGMENT)
+        if (analyticsTrackingInteractor.get()) {
+            AnswersEvent.logScreenView(TAG_SERVER_FRAGMENT)
+        }
     }
 
     override fun onDestroyView() {
@@ -219,6 +213,16 @@ class ServerFragment : Fragment(), ServerView {
             button_connect.setOnClickListener {
                 val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
                 presenter.checkServer("${protocol}${url.sanitize()}")
+            }
+        }
+    }
+
+    companion object {
+        private const val DEEP_LINK_INFO = "DeepLinkInfo"
+
+        fun newInstance(deepLinkInfo: LoginDeepLinkInfo?) = ServerFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(DEEP_LINK_INFO, deepLinkInfo)
             }
         }
     }

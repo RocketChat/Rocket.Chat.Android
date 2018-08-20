@@ -28,6 +28,7 @@ class RegisterUsernamePresenter @Inject constructor(
     private val factory: RocketChatClientFactory,
     private val saveAccountInteractor: SaveAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
+    private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
     serverInteractor: GetConnectingServerInteractor,
     private val saveCurrentServer: SaveCurrentServerInteractor,
     settingsInteractor: GetSettingsInteractor
@@ -52,11 +53,15 @@ class RegisterUsernamePresenter @Inject constructor(
                         saveCurrentServer.save(currentServer)
                         tokenRepository.save(currentServer, Token(userId, authToken))
                         registerPushToken()
-                        AnswersEvent.logSignUp(AnswersEvent.LOGIN_OR_SIGN_UP_BY_OAUTH, true)
+                        if (analyticsTrackingInteractor.get()) {
+                            AnswersEvent.logSignUp(AnswersEvent.LOGIN_OR_SIGN_UP_BY_OAUTH, true)
+                        }
                         navigator.toChatList()
                     }
                 } catch (exception: RocketChatException) {
-                    AnswersEvent.logSignUp(AnswersEvent.LOGIN_OR_SIGN_UP_BY_OAUTH, false)
+                    if (analyticsTrackingInteractor.get()) {
+                        AnswersEvent.logSignUp(AnswersEvent.LOGIN_OR_SIGN_UP_BY_OAUTH, false)
+                    }
                     exception.message?.let {
                         view.showMessage(it)
                     }.ifNull {

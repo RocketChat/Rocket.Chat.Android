@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import chat.rocket.android.R
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAPresenter
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.helper.AnswersEvent
 import dagger.android.support.AndroidSupportInjection
@@ -21,22 +22,12 @@ import javax.inject.Inject
 internal const val TAG_TWO_FA_FRAGMENT = "TwoFAFragment"
 
 class TwoFAFragment : Fragment(), TwoFAView {
-    @Inject lateinit var presenter: TwoFAPresenter
+    @Inject
+    lateinit var presenter: TwoFAPresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     lateinit var username: String
     lateinit var password: String
-
-    // TODO - we could create an in memory repository to save username and password.
-    companion object {
-        private const val USERNAME = "username"
-        private const val PASSWORD = "password"
-
-        fun newInstance(username: String, password: String) = TwoFAFragment().apply {
-            arguments = Bundle(2).apply {
-                putString(USERNAME, username)
-                putString(PASSWORD, password)
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +54,10 @@ class TwoFAFragment : Fragment(), TwoFAView {
         }
 
         setupOnClickListener()
-        AnswersEvent.logScreenView(TAG_TWO_FA_FRAGMENT)
+
+        if(analyticsTrackingInteractor.get()) {
+            AnswersEvent.logScreenView(TAG_TWO_FA_FRAGMENT)
+        }
     }
 
     override fun alertBlankTwoFactorAuthenticationCode() {
@@ -122,6 +116,19 @@ class TwoFAFragment : Fragment(), TwoFAView {
     private fun setupOnClickListener() {
         button_log_in.setOnClickListener {
             presenter.authenticate(username, password, text_two_factor_auth.textContent)
+        }
+    }
+
+    // TODO - we could create an in memory repository to save username and password.
+    companion object {
+        private const val USERNAME = "username"
+        private const val PASSWORD = "password"
+
+        fun newInstance(username: String, password: String) = TwoFAFragment().apply {
+            arguments = Bundle(2).apply {
+                putString(USERNAME, username)
+                putString(PASSWORD, password)
+            }
         }
     }
 }

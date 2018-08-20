@@ -23,6 +23,7 @@ import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
 import chat.rocket.android.helper.*
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.helper.AnswersEvent
 import chat.rocket.android.webview.sso.ui.INTENT_SSO_TOKEN
@@ -46,6 +47,8 @@ internal const val REQUEST_CODE_FOR_OAUTH = 6
 class LoginFragment : Fragment(), LoginView {
     @Inject
     lateinit var presenter: LoginPresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private var isOauthViewEnable = false
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         areLoginOptionsNeeded()
@@ -93,7 +96,9 @@ class LoginFragment : Fragment(), LoginView {
             image_key.isVisible = false
         }
 
-        AnswersEvent.logScreenView(TAG_LOGIN_FRAGMENT)
+        if (analyticsTrackingInteractor.get()) {
+            AnswersEvent.logScreenView(TAG_LOGIN_FRAGMENT)
+        }
     }
 
     override fun onDestroyView() {

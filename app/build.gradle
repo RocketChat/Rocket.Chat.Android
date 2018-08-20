@@ -155,7 +155,7 @@ dependencies {
         transitive = true
     }
 
-    implementation('com.crashlytics.sdk.android:answers:1.4.2@aar') {
+    playImplementation('com.crashlytics.sdk.android:answers:1.4.2@aar') {
         transitive = true
     }
 

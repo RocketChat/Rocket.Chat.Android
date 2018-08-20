@@ -32,6 +32,7 @@ import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
@@ -57,14 +58,12 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     lateinit var factory: ChatRoomsViewModelFactory
     @Inject
     lateinit var dbManager: DatabaseManager // TODO - remove when moving ChatRoom screen to DB
-
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     lateinit var viewModel: ChatRoomsViewModel
-
     private var searchView: SearchView? = null
     private var sortView: MenuItem? = null
-
     private val handler = Handler()
-
     private var chatRoomId: String? = null
     private var progressDialog: ProgressDialog? = null
 
@@ -111,7 +110,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         subscribeUi()
 
         setupToolbar()
-        AnswersEvent.logScreenView(TAG_CHAT_ROOMS_FRAGMENT)
+
+        if (analyticsTrackingInteractor.get()) {
+            AnswersEvent.logScreenView(TAG_CHAT_ROOMS_FRAGMENT)
+        }
     }
 
     private fun subscribeUi() {

@@ -5,10 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.preferences.presentation.PreferencesPresenter
 import chat.rocket.android.preferences.presentation.PreferencesView
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.helper.AnswersEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
@@ -20,6 +22,8 @@ internal const val TAG_PREFERENCES_FRAGMENT = "PreferencesFragment"
 class PreferencesFragment : Fragment(), PreferencesView {
     @Inject
     lateinit var presenter: PreferencesPresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,10 +41,21 @@ class PreferencesFragment : Fragment(), PreferencesView {
         setupToolbar()
         setupListeners()
         presenter.loadAnalyticsTrackingInformation()
-        AnswersEvent.logScreenView(TAG_PREFERENCES_FRAGMENT)
+
+        if(analyticsTrackingInteractor.get()) {
+            AnswersEvent.logScreenView(TAG_PREFERENCES_FRAGMENT)
+        }
     }
 
     override fun setupAnalyticsTrackingView(isAnalyticsTrackingEnabled: Boolean) {
+        if (BuildConfig.FLAVOR == "foss") {
+            text_analytics_tracking_description.text =
+                    getString(R.string.msg_not_applicable_since_it_is_a_foss_version)
+            switch_analytics_tracking.isChecked = false
+            switch_analytics_tracking.isEnabled = false
+            return
+        }
+
         if (isAnalyticsTrackingEnabled) {
             text_analytics_tracking_description.text =
                     getString(R.string.msg_send_analytics_tracking)

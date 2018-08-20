@@ -26,6 +26,7 @@ class SignupPresenter @Inject constructor(
     private val localRepository: LocalRepository,
     private val serverInteractor: GetConnectingServerInteractor,
     private val saveCurrentServerInteractor: SaveCurrentServerInteractor,
+    private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
     private val factory: RocketChatClientFactory,
     private val saveAccountInteractor: SaveAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
@@ -67,11 +68,21 @@ class SignupPresenter @Inject constructor(
                         localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
                         saveAccount(me)
                         registerPushToken()
-                        AnswersEvent.logSignUp(AnswersEvent.LOGIN_OR_SIGN_UP_BY_USER_AND_PASSWORD, true)
+                        if (analyticsTrackingInteractor.get()) {
+                            AnswersEvent.logSignUp(
+                                AnswersEvent.LOGIN_OR_SIGN_UP_BY_USER_AND_PASSWORD,
+                                true
+                            )
+                        }
                         view.saveSmartLockCredentials(username, password)
                         navigator.toChatList()
                     } catch (exception: RocketChatException) {
-                        AnswersEvent.logSignUp(AnswersEvent.LOGIN_OR_SIGN_UP_BY_USER_AND_PASSWORD, false)
+                        if (analyticsTrackingInteractor.get()) {
+                            AnswersEvent.logSignUp(
+                                AnswersEvent.LOGIN_OR_SIGN_UP_BY_USER_AND_PASSWORD,
+                                false
+                            )
+                        }
                         exception.message?.let {
                             view.showMessage(it)
                         }.ifNull {
