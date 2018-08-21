@@ -20,6 +20,7 @@ ext {
             androidKtx            : '1.0.0-beta01',
 
             dagger                : '2.16',
+
             firebase              : '15.0.0',
             playServices          : '15.0.1',
             exoPlayer             : '2.8.2',
@@ -47,10 +48,12 @@ ext {
             markwon               : '1.1.0',
             aVLoadingIndicatorView: '2.1.3',
 
-            // For wearable
+            firebaseCloudMessaging: '15.0.2',
+            
+            //For wearable
             wear                  : '2.3.0',
             playServicesWearable  : '15.0.1',
-            supportWearable       : '27.1.1',
+            supportWearable       : '28.0.0-alpha3',
 
             // For testing
             junit                 : '4.12',
@@ -79,6 +82,9 @@ ext {
             exoPlayer             : "com.google.android.exoplayer:exoplayer:${versions.exoPlayer}",
             flexbox               : "com.google.android:flexbox:${versions.flexbox}",
             material              : "com.google.android.material:material:${versions.material}",
+
+            firebaseCloudMessaging: "com.google.firebase:firebase-messaging:${versions.firebaseCloudMessaging}",
+            firebaseCore          : "com.google.firebase:firebase-core:${versions.firebaseCloudMessaging}",
 
             room                  : "androidx.room:room-runtime:${versions.room}",
             roomProcessor         : "androidx.room:room-compiler:${versions.room}",
@@ -116,7 +122,7 @@ ext {
             wearable              : "com.google.android.support:wearable:${versions.wear}",
             playServicesWearable  : "com.google.android.gms:play-services-wearable:${versions.playServicesWearable}",
             percentLayout         : "com.android.support:percent:${versions.supportWearable}",
-            supportWearable       : "com.android.support:support-v4:${versions.supportWearable}",
+            supportWearable       : "com.android.support:support-v13:${versions.supportWearable}",
             wearableRecyclerView  : "com.android.support:recyclerview-v7:${versions.supportWearable}",
             wearSupport           : "com.android.support:wear:${versions.supportWearable}",
 

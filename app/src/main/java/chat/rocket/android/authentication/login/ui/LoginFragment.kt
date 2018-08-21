@@ -12,24 +12,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.ScrollView
+import android.widget.*
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
+import chat.rocket.android.util.TokenSerialisableModel
 import chat.rocket.android.helper.*
 import chat.rocket.android.util.extensions.*
-import chat.rocket.android.webview.sso.ui.INTENT_SSO_TOKEN
-import chat.rocket.android.webview.sso.ui.ssoWebViewIntent
+import chat.rocket.android.util.serialiseToken
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
+import chat.rocket.android.webview.sso.ui.INTENT_SSO_TOKEN
+import chat.rocket.android.webview.sso.ui.ssoWebViewIntent
+import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
+import com.google.android.gms.auth.api.credentials.*
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.ResolvingResultCallbacks
+import com.google.android.gms.common.api.Status
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.wearable.Wearable
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
@@ -157,6 +164,25 @@ class LoginFragment : Fragment(), LoginView {
                 drawables
             )
         }
+    }
+
+    override fun sendCredentialstoWearApp(token: Token) {
+        val tokenToSend = TokenSerialisableModel(token.userId, token.authToken)
+        val sendTokenTask: Task<Int> =
+            Wearable.getMessageClient(activity!!).sendMessage(
+                "*", "/send-token", serialiseToken(tokenToSend)
+            )
+
+        //remove toast messages when tested successfully
+        sendTokenTask.addOnSuccessListener { result ->
+            Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show()
+        }
+        sendTokenTask.addOnCompleteListener { result ->
+            Toast.makeText(activity, "Complete", Toast.LENGTH_SHORT).show()
+        }
+        sendTokenTask.addOnFailureListener { result ->
+            Toast.makeText(activity, result.toString(), Toast.LENGTH_SHORT).show()
+        }     
     }
 
     private fun requestStoredCredentials() {

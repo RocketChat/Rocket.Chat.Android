@@ -1,3 +1,43 @@
 <resources>
-    <string name="hello_world">Hello Round World!</string>
+    <string name="app_name">Rocket&#46;Chat</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <!--Titles-->
+    <string name="title_chat_rooms">Channels</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_logout">Logout</string>
+    <string name="title_default_channel_name">general</string>
+
+    <!--Messages-->
+    <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
+    <string name="msg_login_with_phone">Please login with the mobile app</string>
+    <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
+    <string name="msg_attachments_exist">This message has attachments.</string>
+    <string name="msg_sent">Message Sent</string>
+    <string name="msg_sending_failed">Network Error</string>
+
+    <!--EditTextHints-->
+    <string name="hint_send_message">Enter Message</string>
+
+    <!--Helpers-->
+    <string name="current_user_helper">You</string>
+    <string name="default_current_user_full_name">Sample User</string>
+    <string name="default_current_user_name">\u0040 %1$s</string>
+    <string name="notification_reply_action_hint">Reply</string>
+
+    <!--Settings-->
+    <string name="default_settings_item">Account</string>
+    <string name="settings_item_account">@string/default_settings_item</string>
+
+    <!--Reply Choices For Notification-->
+    <string-array name="reply_choices">
+        <item>Yes</item>
+        <item>Okay!</item>
+        <item>Sounds Cool</item>
+        <item>No</item>
+        <item>Got it!</item>
+    </string-array>
+
 </resources>

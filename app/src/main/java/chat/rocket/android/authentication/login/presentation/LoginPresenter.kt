@@ -470,6 +470,9 @@ class LoginPresenter @Inject constructor(
                     saveAccount(myself.username!!)
                     saveToken(token)
                     registerPushToken()
+                    //sent tokens to wear app
+                    view.sendCredentialstoWearApp(token)
+
                     if (loginType == TYPE_LOGIN_USER_EMAIL) {
                         view.saveSmartLockCredentials(usernameOrEmail, password)
                     }
