@@ -389,9 +389,8 @@ class ChatRoomPresenter @Inject constructor(
                     val maxFileSizeAllowed = settings.uploadMaxFileSize()
 
                     when {
-                        fileSize > maxFileSizeAllowed -> {
+                        fileSize > maxFileSizeAllowed && maxFileSizeAllowed !in -1..0 ->
                             view.showInvalidFileSize(fileSize, maxFileSizeAllowed)
-                        }
                         else -> {
                             retryIO("uploadFile($roomId, $fileName, $mimeType") {
                                 client.uploadFile(
