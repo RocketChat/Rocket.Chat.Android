@@ -18,7 +18,8 @@ import chat.rocket.android.util.extensions.parseColor
 import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.android.util.extensions.samlUrl
 import chat.rocket.android.util.extensions.serverLogoUrl
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.AuthenticationEvent
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
@@ -77,7 +78,7 @@ class LoginPresenter @Inject constructor(
     private lateinit var credentialSecret: String
     private lateinit var deepLinkUserId: String
     private lateinit var deepLinkToken: String
-    private lateinit var loginMethod: String // For Answers Log In event.
+    private lateinit var loginMethod: AuthenticationEvent
 
     fun setupView() {
         setupConnectionInfo(currentServer)
@@ -99,7 +100,7 @@ class LoginPresenter @Inject constructor(
             else -> {
                 this.usernameOrEmail = usernameOrEmail
                 this.password = password
-                loginMethod = AnswersEvent.LOGIN_OR_SIGN_UP_BY_USER_AND_PASSWORD
+                loginMethod = AuthenticationEvent.AuthenticationWithUserAndPassword
                 doAuthentication(TYPE_LOGIN_USER_EMAIL)
             }
         }
@@ -107,20 +108,20 @@ class LoginPresenter @Inject constructor(
 
     fun authenticateWithCas(casToken: String) {
         credentialToken = casToken
-        loginMethod = AnswersEvent.LOGIN_BY_CAS
+        loginMethod = AuthenticationEvent.AuthenticationWithCas
         doAuthentication(TYPE_LOGIN_CAS)
     }
 
     fun authenticateWithSaml(samlToken: String) {
         credentialToken = samlToken
-        loginMethod = AnswersEvent.LOGIN_BY_SAML
+        loginMethod = AuthenticationEvent.AuthenticationWithSaml
         doAuthentication(TYPE_LOGIN_SAML)
     }
 
     fun authenticateWithOauth(oauthToken: String, oauthSecret: String) {
         credentialToken = oauthToken
         credentialSecret = oauthSecret
-        loginMethod = AnswersEvent.LOGIN_OR_SIGN_UP_BY_OAUTH
+        loginMethod = AuthenticationEvent.AuthenticationWithOauth
         doAuthentication(TYPE_LOGIN_OAUTH)
     }
 
@@ -131,7 +132,7 @@ class LoginPresenter @Inject constructor(
             deepLinkUserId = deepLinkInfo.userId
             deepLinkToken = deepLinkInfo.token
             tokenRepository.save(serverUrl, Token(deepLinkUserId, deepLinkToken))
-            loginMethod = AnswersEvent.LOGIN_BY_DEEP_LINK
+            loginMethod = AuthenticationEvent.AuthenticationWithDeeplink
             doAuthentication(TYPE_LOGIN_DEEP_LINK)
         } else {
             // If we don't have the login credentials, just go through normal setup and user input.
@@ -432,7 +433,7 @@ class LoginPresenter @Inject constructor(
                             if (myself.id == deepLinkUserId) {
                                 Token(deepLinkUserId, deepLinkToken)
                             } else {
-                                throw RocketChatAuthException("Invalid Authentication Deep Link Credentials...")
+                                throw RocketChatAuthException("Invalid AuthenticationEvent Deep Link Credentials...")
                             }
                         }
                         else -> {
@@ -457,7 +458,7 @@ class LoginPresenter @Inject constructor(
                     saveToken(token)
                     registerPushToken()
                     if (analyticsTrackingInteractor.get()) {
-                        AnswersEvent.logLogin(loginMethod, true)
+                        AnalyticsManager.logLogin(loginMethod, true)
                     }
                     if (loginType == TYPE_LOGIN_USER_EMAIL) {
                         view.saveSmartLockCredentials(usernameOrEmail, password)
@@ -473,7 +474,7 @@ class LoginPresenter @Inject constructor(
                     }
                     else -> {
                         if (analyticsTrackingInteractor.get()) {
-                            AnswersEvent.logLogin(loginMethod, false)
+                            AnalyticsManager.logLogin(loginMethod, false)
                         }
                         exception.message?.let {
                             view.showMessage(it)

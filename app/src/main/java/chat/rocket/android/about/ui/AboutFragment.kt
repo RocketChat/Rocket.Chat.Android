@@ -9,7 +9,8 @@ import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_about.*
 import javax.inject.Inject
@@ -32,7 +33,7 @@ class AboutFragment : Fragment() {
         setupViews()
 
         if (analyticsTrackingInteractor.get()) {
-            AnswersEvent.logScreenView(TAG_ABOUT_FRAGMENT)
+            AnalyticsManager.logScreenView(ScreenViewEvent.About)
         }
     }
 

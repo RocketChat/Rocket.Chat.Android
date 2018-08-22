@@ -1,14 +1,14 @@
 package chat.rocket.android.pinnedmessages.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
@@ -20,7 +20,8 @@ import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_pinned_messages.*
 import javax.inject.Inject
@@ -69,7 +70,7 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
         presenter.loadPinnedMessages(chatRoomId)
 
         if (analyticsTrackingInteractor.get()) {
-            AnswersEvent.logScreenView(TAG_PINNED_MESSAGES_FRAGMENT)
+            AnalyticsManager.logScreenView(ScreenViewEvent.PinnedMessages)
         }
     }
 

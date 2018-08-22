@@ -5,12 +5,12 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.R.string.message_credentials_saved_successfully
 import chat.rocket.android.authentication.signup.presentation.SignupPresenter
@@ -19,8 +19,14 @@ import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.helper.saveCredentials
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
-import chat.rocket.android.util.extensions.*
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.shake
+import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.vibrateSmartPhone
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
 import javax.inject.Inject
@@ -76,8 +82,8 @@ class SignupFragment : Fragment(), SignupView {
             )
         }
 
-        if(analyticsTrackingInteractor.get()) {
-            AnswersEvent.logScreenView(TAG_SIGNUP_FRAGMENT)
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.SignUp)
         }
     }
 

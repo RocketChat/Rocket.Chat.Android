@@ -13,7 +13,8 @@ import chat.rocket.android.authentication.resetpassword.presentation.ResetPasswo
 import chat.rocket.android.authentication.resetpassword.presentation.ResetPasswordView
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.*
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_reset_password.*
 import javax.inject.Inject
@@ -52,7 +53,7 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
         setupOnClickListener()
 
         if (analyticsTrackingInteractor.get()) {
-            AnswersEvent.logScreenView(TAG_RESET_PASSWORD_FRAGMENT)
+            AnalyticsManager.logScreenView(ScreenViewEvent.ResetPassword)
         }
     }
 

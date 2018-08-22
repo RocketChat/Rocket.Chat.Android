@@ -34,7 +34,8 @@ import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extension.compressImageAndGetInputStream
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.SubscriptionTypeEvent
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -300,7 +301,7 @@ class ChatRoomPresenter @Inject constructor(
                         )
                         client.sendMessage(id, chatRoomId, text)
                         if (analyticsTrackingInteractor.get()) {
-                            AnswersEvent.logMessageSent(chatRoomType, currentServer)
+                            logMessageSent(currentServer)
                         }
                     } catch (ex: Exception) {
                         // Ok, not very beautiful, but the backend sends us a not valid response
@@ -370,7 +371,7 @@ class ChatRoomPresenter @Inject constructor(
                                 }
                             }
                             if (analyticsTrackingInteractor.get()) {
-                                AnswersEvent.logMediaUploaded(chatRoomType, mimeType)
+                                logMediaUploaded(mimeType)
                             }
                         }
                     }
@@ -944,11 +945,41 @@ class ChatRoomPresenter @Inject constructor(
                     client.toggleReaction(messageId, emoji.removeSurrounding(":"))
                 }
                 if (analyticsTrackingInteractor.get()) {
-                    AnswersEvent.logReaction(chatRoomType)
+                    logReactionEvent()
                 }
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
             }
+        }
+    }
+
+    private fun logReactionEvent() {
+        when {
+            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
+                AnalyticsManager.logReaction(SubscriptionTypeEvent.DirectMessage)
+            roomTypeOf(chatRoomType) is RoomType.Channel ->
+                AnalyticsManager.logReaction(SubscriptionTypeEvent.Channel)
+            else -> AnalyticsManager.logReaction(SubscriptionTypeEvent.Group)
+        }
+    }
+
+    private fun logMediaUploaded(mimeType: String) {
+        when {
+            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
+                AnalyticsManager.logMediaUploaded(SubscriptionTypeEvent.DirectMessage, mimeType)
+            roomTypeOf(chatRoomType) is RoomType.Channel ->
+                AnalyticsManager.logMediaUploaded(SubscriptionTypeEvent.Channel, mimeType)
+            else -> AnalyticsManager.logMediaUploaded(SubscriptionTypeEvent.Group, mimeType)
+        }
+    }
+
+    private fun logMessageSent(serverUrl: String) {
+        when {
+            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
+                AnalyticsManager.logMessageSent(SubscriptionTypeEvent.DirectMessage, serverUrl)
+            roomTypeOf(chatRoomType) is RoomType.Channel ->
+                AnalyticsManager.logMessageSent(SubscriptionTypeEvent.Channel, serverUrl)
+            else -> AnalyticsManager.logMessageSent(SubscriptionTypeEvent.Group, serverUrl)
         }
     }
 

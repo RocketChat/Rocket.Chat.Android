@@ -18,7 +18,8 @@ import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.*
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_server.*
@@ -97,7 +98,7 @@ class ServerFragment : Fragment(), ServerView {
         }
 
         if (analyticsTrackingInteractor.get()) {
-            AnswersEvent.logScreenView(TAG_SERVER_FRAGMENT)
+            AnalyticsManager.logScreenView(ScreenViewEvent.Server)
         }
     }
 

@@ -13,12 +13,11 @@ import chat.rocket.android.chatinformation.adapter.ReadReceiptAdapter
 import chat.rocket.android.chatinformation.presentation.MessageInfoPresenter
 import chat.rocket.android.chatinformation.presentation.MessageInfoView
 import chat.rocket.android.chatinformation.viewmodel.ReadReceiptViewModel
-import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.helper.AnswersEvent
-import chat.rocket.core.model.ReadReceipt
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_message_info.*
 import javax.inject.Inject
@@ -69,7 +68,7 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
         presenter.loadReadReceipts(messageId = messageId)
 
         if (analyticsTrackingInteractor.get()) {
-            AnswersEvent.logScreenView(TAG_MESSAGE_INFO_FRAGMENT)
+            AnalyticsManager.logScreenView(ScreenViewEvent.MessageInfo)
         }
     }
 

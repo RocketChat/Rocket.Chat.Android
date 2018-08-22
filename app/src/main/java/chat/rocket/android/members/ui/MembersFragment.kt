@@ -20,7 +20,8 @@ import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_members.*
 import javax.inject.Inject
@@ -70,7 +71,7 @@ class MembersFragment : Fragment(), MembersView {
         presenter.loadChatRoomsMembers(chatRoomId)
 
         if (analyticsTrackingInteractor.get()) {
-            AnswersEvent.logScreenView(TAG_MEMBERS_FRAGMENT)
+            AnalyticsManager.logScreenView(ScreenViewEvent.Members)
         }
     }
 

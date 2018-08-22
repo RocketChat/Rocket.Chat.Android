@@ -1,19 +1,24 @@
 package chat.rocket.android.settings.password.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.view.ActionMode
+import androidx.fragment.app.Fragment
 import chat.rocket.android.R
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.settings.password.presentation.PasswordPresenter
 import chat.rocket.android.settings.password.presentation.PasswordView
-import chat.rocket.android.util.extensions.inflate
-import androidx.appcompat.view.ActionMode
-import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extension.asObservable
+import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -23,7 +28,7 @@ import javax.inject.Inject
 
 internal const val TAG_PASSWORD_FRAGMENT = "PasswordFragment"
 
-class PasswordFragment: Fragment(), PasswordView, ActionMode.Callback {
+class PasswordFragment : Fragment(), PasswordView, ActionMode.Callback {
     @Inject
     lateinit var presenter: PasswordPresenter
     @Inject
@@ -40,7 +45,11 @@ class PasswordFragment: Fragment(), PasswordView, ActionMode.Callback {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_password)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = container?.inflate(R.layout.fragment_password)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,7 +57,7 @@ class PasswordFragment: Fragment(), PasswordView, ActionMode.Callback {
         disposables.add(listenToChanges())
 
         if (analyticsTrackingInteractor.get()) {
-            AnswersEvent.logScreenView(TAG_PASSWORD_FRAGMENT)
+            AnalyticsManager.logScreenView(ScreenViewEvent.Password)
         }
     }
 
@@ -109,12 +118,17 @@ class PasswordFragment: Fragment(), PasswordView, ActionMode.Callback {
     private fun finishActionMode() = actionMode?.finish()
 
     private fun listenToChanges(): Disposable {
-        return Observables.combineLatest(text_new_password.asObservable(),
-                text_confirm_password.asObservable()).subscribe {
+        return Observables.combineLatest(
+            text_new_password.asObservable(),
+            text_confirm_password.asObservable()
+        ).subscribe {
             val textPassword = text_new_password.textContent
             val textConfirmPassword = text_confirm_password.textContent
 
-            if (textPassword.length > 5 && textConfirmPassword.length > 5 && textPassword.equals(textConfirmPassword))
+            if (textPassword.length > 5 && textConfirmPassword.length > 5 && textPassword.equals(
+                    textConfirmPassword
+                )
+            )
                 startActionMode()
             else
                 finishActionMode()

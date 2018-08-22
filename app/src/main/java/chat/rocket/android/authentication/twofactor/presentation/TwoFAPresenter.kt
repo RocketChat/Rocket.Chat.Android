@@ -10,7 +10,8 @@ import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.android.util.extensions.serverLogoUrl
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.AuthenticationEvent
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
@@ -68,8 +69,8 @@ class TwoFAPresenter @Inject constructor(
                         tokenRepository.save(server, token)
                         registerPushToken()
                         if (analyticsTrackingInteractor.get()) {
-                            AnswersEvent.logLogin(
-                                AnswersEvent.LOGIN_OR_SIGN_UP_BY_USER_AND_PASSWORD,
+                            AnalyticsManager.logLogin(
+                                AuthenticationEvent.AuthenticationWithUserAndPassword,
                                 true
                             )
                         }
@@ -79,8 +80,8 @@ class TwoFAPresenter @Inject constructor(
                             view.alertInvalidTwoFactorAuthenticationCode()
                         } else {
                             if (analyticsTrackingInteractor.get()) {
-                                AnswersEvent.logLogin(
-                                    AnswersEvent.LOGIN_OR_SIGN_UP_BY_USER_AND_PASSWORD,
+                                AnalyticsManager.logLogin(
+                                    AuthenticationEvent.AuthenticationWithUserAndPassword,
                                     false
                                 )
                             }

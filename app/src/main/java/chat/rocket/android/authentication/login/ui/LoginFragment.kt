@@ -25,7 +25,8 @@ import chat.rocket.android.authentication.login.presentation.LoginView
 import chat.rocket.android.helper.*
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.*
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import chat.rocket.android.webview.sso.ui.INTENT_SSO_TOKEN
 import chat.rocket.android.webview.sso.ui.ssoWebViewIntent
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
@@ -97,7 +98,7 @@ class LoginFragment : Fragment(), LoginView {
         }
 
         if (analyticsTrackingInteractor.get()) {
-            AnswersEvent.logScreenView(TAG_LOGIN_FRAGMENT)
+            AnalyticsManager.logScreenView(ScreenViewEvent.Login)
         }
     }
 

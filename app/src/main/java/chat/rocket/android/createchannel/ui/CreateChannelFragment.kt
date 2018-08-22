@@ -25,7 +25,8 @@ import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import com.google.android.material.chip.Chip
@@ -77,7 +78,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         subscribeEditTexts()
 
         if (analyticsTrackingInteractor.get()) {
-            AnswersEvent.logScreenView(TAG_CREATE_CHANNEL_FRAGMENT)
+            AnalyticsManager.logScreenView(ScreenViewEvent.CreateChannel)
         }
     }
 

@@ -11,7 +11,8 @@ import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.preferences.presentation.PreferencesPresenter
 import chat.rocket.android.preferences.presentation.PreferencesView
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_preferences.*
@@ -42,8 +43,8 @@ class PreferencesFragment : Fragment(), PreferencesView {
         setupListeners()
         presenter.loadAnalyticsTrackingInformation()
 
-        if(analyticsTrackingInteractor.get()) {
-            AnswersEvent.logScreenView(TAG_PREFERENCES_FRAGMENT)
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.Preferences)
         }
     }
 

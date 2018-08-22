@@ -19,7 +19,8 @@ import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import kotlinx.android.synthetic.main.fragment_settings.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
@@ -42,7 +43,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
         setupListView()
 
         if (analyticsTrackingInteractor.get()) {
-            AnswersEvent.logScreenView(TAG_SETTINGS_FRAGMENT)
+            AnalyticsManager.logScreenView(ScreenViewEvent.Settings)
         }
     }
 

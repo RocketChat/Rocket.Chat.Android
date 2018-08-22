@@ -39,7 +39,8 @@ import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
@@ -112,7 +113,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         setupToolbar()
 
         if (analyticsTrackingInteractor.get()) {
-            AnswersEvent.logScreenView(TAG_CHAT_ROOMS_FRAGMENT)
+            AnalyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
         }
     }
 

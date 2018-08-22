@@ -12,7 +12,8 @@ import chat.rocket.android.authentication.registerusername.presentation.Register
 import chat.rocket.android.authentication.registerusername.presentation.RegisterUsernameView
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.*
-import chat.rocket.android.util.helper.AnswersEvent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_register_username.*
 import javax.inject.Inject
@@ -69,7 +70,7 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
         setupOnClickListener()
 
         if (analyticsTrackingInteractor.get()) {
-            AnswersEvent.logScreenView(TAG_REGISTER_USERNAME_FRAGMENT)
+            AnalyticsManager.logScreenView(ScreenViewEvent.RegisterUsername)
         }
     }
 
