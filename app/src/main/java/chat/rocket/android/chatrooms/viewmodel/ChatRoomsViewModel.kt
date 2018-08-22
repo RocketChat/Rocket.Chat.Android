@@ -17,7 +17,7 @@ import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.rest.spotlight
 import chat.rocket.core.model.SpotlightResult
-import kotlinx.coroutines.experimental.android.UI
+import chat.rocket.android.util.temp.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.isActive
 import kotlinx.coroutines.experimental.launch
