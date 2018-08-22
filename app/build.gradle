@@ -110,9 +110,6 @@ dependencies {
     kapt libraries.daggerProcessor
     kapt libraries.daggerAndroidApt
 
-    implementation libraries.fcm
-    implementation libraries.firebaseAnalytics
-    implementation libraries.playServicesAuth
     implementation libraries.flexbox
     implementation libraries.material
 
@@ -148,16 +145,12 @@ dependencies {
 
     implementation "com.github.luciofm:livedata-ktx:b1e8bbc25a"
 
+    // Proprietary libraries
     playImplementation libraries.fcm
+    playImplementation libraries.firebaseAnalytics
     playImplementation libraries.playServicesAuth
-
-    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
-        transitive = true
-    }
-
-    playImplementation('com.crashlytics.sdk.android:answers:1.4.2@aar') {
-        transitive = true
-    }
+    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') { transitive = true }
+    playImplementation('com.crashlytics.sdk.android:answers:1.4.2@aar') { transitive = true }
 
     testImplementation libraries.junit
     testImplementation libraries.truth
