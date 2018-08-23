@@ -88,15 +88,6 @@
             android:background="@color/colorRed" />
     </LinearLayout>
 
-    <include
-        android:id="@+id/layout_avatar"
-        layout="@layout/avatar"
-        android:layout_width="38dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_messages_notif" />
-
     <TextView
         android:id="@+id/text_sender"
         style="@style/Sender.Name.TextView"
