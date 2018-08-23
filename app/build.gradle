@@ -99,10 +99,8 @@ dependencies {
 
     implementation libraries.appCompat
     implementation libraries.recyclerview
-    implementation libraries.material
     implementation libraries.constraintlayout
     implementation libraries.cardview
-    implementation libraries.flexbox
     implementation libraries.browser
 
     implementation libraries.androidKtx
@@ -111,6 +109,9 @@ dependencies {
     implementation libraries.daggerSupport
     kapt libraries.daggerProcessor
     kapt libraries.daggerAndroidApt
+
+    implementation libraries.flexbox
+    implementation libraries.material
 
     implementation libraries.room
     kapt libraries.roomProcessor
@@ -144,12 +145,12 @@ dependencies {
 
     implementation "com.github.luciofm:livedata-ktx:b1e8bbc25a"
 
+    // Proprietary libraries
     playImplementation libraries.fcm
+    playImplementation libraries.firebaseAnalytics
     playImplementation libraries.playServicesAuth
-
-    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
-        transitive = true
-    }
+    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') { transitive = true }
+    playImplementation('com.crashlytics.sdk.android:answers:1.4.2@aar') { transitive = true }
 
     testImplementation libraries.junit
     testImplementation libraries.truth

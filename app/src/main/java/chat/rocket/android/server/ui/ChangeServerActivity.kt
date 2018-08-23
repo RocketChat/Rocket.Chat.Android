@@ -11,6 +11,18 @@ import chat.rocket.android.util.extensions.showToast
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
+private const val INTENT_SERVER_URL = "INTENT_SERVER_URL"
+const val INTENT_CHAT_ROOM_ID = "INTENT_CHAT_ROOM_ID"
+
+fun Context.changeServerIntent(serverUrl: String? = null, chatRoomId: String? = ""): Intent {
+    return Intent(this, ChangeServerActivity::class.java).apply {
+        serverUrl?.let { url ->
+            putExtra(INTENT_SERVER_URL, url)
+            putExtra(INTENT_CHAT_ROOM_ID, chatRoomId)
+        }
+        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    }
+}
 class ChangeServerActivity : AppCompatActivity(), ChangeServerView {
     @Inject lateinit var presenter: ChangeServerPresenter
 
@@ -35,20 +47,5 @@ class ChangeServerActivity : AppCompatActivity(), ChangeServerView {
 
     override fun hideProgress() {
         progress?.dismiss()
-    }
-}
-
-private const val INTENT_SERVER_URL = "INTENT_SERVER_URL"
-private const val INTENT_CHAT_ROOM_NAME = "INTENT_CHAT_ROOM_NAME"
-private const val INTENT_CHAT_ROOM_TYPE = "INTENT_CHAT_ROOM_TYPE"
-const val INTENT_CHAT_ROOM_ID = "INTENT_CHAT_ROOM_ID"
-
-fun Context.changeServerIntent(serverUrl: String? = null, chatRoomId: String? = ""): Intent {
-    return Intent(this, ChangeServerActivity::class.java).apply {
-        serverUrl?.let { url ->
-            putExtra(INTENT_SERVER_URL, url)
-            putExtra(INTENT_CHAT_ROOM_ID, chatRoomId)
-        }
-        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
 }

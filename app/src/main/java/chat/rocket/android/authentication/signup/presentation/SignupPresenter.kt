@@ -3,11 +3,25 @@ package chat.rocket.android.authentication.signup.presentation
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
+import chat.rocket.android.server.domain.GetAccountsInteractor
+import chat.rocket.android.server.domain.GetConnectingServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.SaveAccountInteractor
+import chat.rocket.android.server.domain.SaveCurrentServerInteractor
+import chat.rocket.android.server.domain.favicon
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.server.domain.wideTile
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
-import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.privacyPolicyUrl
+import chat.rocket.android.util.extensions.registerPushToken
+import chat.rocket.android.util.extensions.serverLogoUrl
+import chat.rocket.android.util.extensions.termsOfServiceUrl
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.AuthenticationEvent
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
@@ -25,6 +39,7 @@ class SignupPresenter @Inject constructor(
     private val localRepository: LocalRepository,
     private val serverInteractor: GetConnectingServerInteractor,
     private val saveCurrentServerInteractor: SaveCurrentServerInteractor,
+    private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
     private val factory: RocketChatClientFactory,
     private val saveAccountInteractor: SaveAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
@@ -66,9 +81,21 @@ class SignupPresenter @Inject constructor(
                         localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
                         saveAccount(me)
                         registerPushToken()
+                        if (analyticsTrackingInteractor.get()) {
+                            AnalyticsManager.logSignUp(
+                                AuthenticationEvent.AuthenticationWithUserAndPassword,
+                                true
+                            )
+                        }
                         view.saveSmartLockCredentials(username, password)
                         navigator.toChatList()
                     } catch (exception: RocketChatException) {
+                        if (analyticsTrackingInteractor.get()) {
+                            AnalyticsManager.logSignUp(
+                                AuthenticationEvent.AuthenticationWithUserAndPassword,
+                                false
+                            )
+                        }
                         exception.message?.let {
                             view.showMessage(it)
                         }.ifNull {

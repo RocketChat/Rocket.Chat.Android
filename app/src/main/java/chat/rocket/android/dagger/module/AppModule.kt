@@ -23,6 +23,7 @@ import chat.rocket.android.push.GroupedPush
 import chat.rocket.android.push.PushManager
 import chat.rocket.android.server.domain.AccountsRepository
 import chat.rocket.android.server.domain.ActiveUsersRepository
+import chat.rocket.android.server.domain.AnalyticsTrackingRepository
 import chat.rocket.android.server.domain.ChatRoomsRepository
 import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.GetAccountInteractor
@@ -34,7 +35,6 @@ import chat.rocket.android.server.domain.MultiServerTokenRepository
 import chat.rocket.android.server.domain.PermissionsRepository
 import chat.rocket.android.server.domain.RoomRepository
 import chat.rocket.android.server.domain.SettingsRepository
-import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.UsersRepository
 import chat.rocket.android.server.infraestructure.JobSchedulerInteractorImpl
 import chat.rocket.android.server.infraestructure.MemoryActiveUsersRepository
@@ -45,6 +45,7 @@ import chat.rocket.android.server.infraestructure.SharedPreferencesAccountsRepos
 import chat.rocket.android.server.infraestructure.SharedPreferencesMessagesRepository
 import chat.rocket.android.server.infraestructure.SharedPreferencesPermissionsRepository
 import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
+import chat.rocket.android.server.infraestructure.SharedPrefsAnalyticsTrackingRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsConnectingServerRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
 import chat.rocket.android.util.AppJsonAdapterFactory
@@ -56,6 +57,7 @@ import chat.rocket.common.model.TimestampAdapter
 import chat.rocket.common.util.CalendarISO8601Converter
 import chat.rocket.common.util.Logger
 import chat.rocket.common.util.PlatformLogger
+import chat.rocket.core.TokenRepository
 import chat.rocket.core.internal.AttachmentAdapterFactory
 import chat.rocket.core.internal.ReactionsAdapter
 import com.facebook.drawee.backends.pipeline.DraweeConfig
@@ -161,6 +163,12 @@ class AppModule {
     @Singleton
     fun provideCurrentServerRepository(prefs: SharedPreferences): CurrentServerRepository {
         return SharedPrefsCurrentServerRepository(prefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAnalyticsTrackingRepository(prefs: SharedPreferences): AnalyticsTrackingRepository {
+        return SharedPrefsAnalyticsTrackingRepository(prefs)
     }
 
     @Provides

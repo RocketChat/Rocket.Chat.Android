@@ -1,7 +1,5 @@
 package chat.rocket.android.util
 
-import chat.rocket.android.R
-import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.main.presentation.MainPresenter
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging

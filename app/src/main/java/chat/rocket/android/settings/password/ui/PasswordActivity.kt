@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import chat.rocket.android.R
-import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
 import dagger.android.AndroidInjection
@@ -23,7 +22,7 @@ class PasswordActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setContentView(R.layout.activity_password)
 
         setupToolbar()
-        addFragment("PasswordFragment")
+        addFragment(TAG_PASSWORD_FRAGMENT)
     }
 
     override fun onBackPressed() {
@@ -47,6 +46,6 @@ class PasswordActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
-        text_change_password.textContent = resources.getString(R.string.title_password)
+        text_change_password.textContent = resources.getString(R.string.title_change_password)
     }
 }

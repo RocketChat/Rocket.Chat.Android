@@ -19,14 +19,36 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // Since we are using the util module here, we need to declare the same flavorDimensions and
+    // productFlavors from there.
+
+    flavorDimensions "type"
+
+    productFlavors {
+        // includes proprietary libs
+        play {
+            dimension "type"
+        }
+
+        // only foss
+        foss {
+            dimension "type"
+        }
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation project(':util')
     implementation project(':core')
+    implementation project(':util')
 
     implementation libraries.kotlin
     implementation libraries.coroutines

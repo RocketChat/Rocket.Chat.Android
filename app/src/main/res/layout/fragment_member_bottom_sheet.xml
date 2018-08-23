@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="16dp"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    tools:context=".members.ui.MemberBottomSheetFragment">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_bottom_sheet_avatar"

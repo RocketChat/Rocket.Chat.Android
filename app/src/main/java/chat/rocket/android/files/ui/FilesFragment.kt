@@ -21,9 +21,12 @@ import chat.rocket.android.files.uimodel.FileUiModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.player.PlayerActivity
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_files.*
 import javax.inject.Inject
@@ -36,11 +39,14 @@ fun newInstance(chatRoomId: String): Fragment {
     }
 }
 
+internal const val TAG_FILES_FRAGMENT = "FilesFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class FilesFragment : Fragment(), FilesView {
     @Inject
     lateinit var presenter: FilesPresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private val adapter: FilesAdapter =
         FilesAdapter { fileUiModel -> presenter.openFile(fileUiModel) }
     private val linearLayoutManager = LinearLayoutManager(context)
@@ -68,6 +74,10 @@ class FilesFragment : Fragment(), FilesView {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         presenter.loadFiles(chatRoomId)
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.Files)
+        }
     }
 
     override fun showFiles(dataSet: List<FileUiModel>, total: Long) {
