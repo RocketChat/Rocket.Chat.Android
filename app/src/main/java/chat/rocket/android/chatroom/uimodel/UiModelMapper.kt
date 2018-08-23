@@ -319,7 +319,7 @@ class UiModelMapper @Inject constructor(
             val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
 
             ActionsAttachmentUiModel(attachmentUrl = url, title = title,
-                    actions = actions, message = message, rawData = attachment,
+                    actions = actions, buttonAlignment = buttonAlignment, message = message, rawData = attachment,
                     messageId = message.id, reactions = getReactions(message),
                     preview = message.copy(message = content.message), unread = message.unread,
                     showDayMarker = false, currentDayMarkerText = dayMarkerText)

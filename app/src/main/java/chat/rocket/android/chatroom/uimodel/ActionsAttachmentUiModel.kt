@@ -9,6 +9,7 @@ data class ActionsAttachmentUiModel(
         override val attachmentUrl: String,
         val title: String?,
         val actions: List<Action>,
+        val buttonAlignment: String,
         override val message: Message,
         override val rawData: ActionsAttachment,
         override val messageId: String,

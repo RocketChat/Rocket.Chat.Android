@@ -5,10 +5,8 @@ import android.content.Context
 import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.content.res.ResourcesCompat
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.uimodel.*
@@ -219,24 +217,15 @@ class ChatRoomAdapter(
     }
 
     private val actionAttachmentOnClickListener = object : ActionAttachmentOnClickListener {
-        override fun onActionClicked(action: Action) {
+        override fun onActionClicked(view: View, action: Action) {
             val temp = action as ButtonAction
             if (temp.url != null && temp.isWebView != null) {
                 if (temp.isWebView!!) {
-                    //Open in a configurable sizable webview
-                    Toast.makeText(context, "Open in a configurable sizable webview", Toast.LENGTH_SHORT).show()
+                    //TODO: Open in a configurable sizable webview
+                    Timber.d("Open in a configurable sizable webview")
                 } else {
                     //Open in chrome custom tab
-                    with(this) {
-                        val customTabsBuilder = CustomTabsIntent.Builder()
-                        customTabsBuilder.setToolbarColor(ResourcesCompat.getColor(context!!.resources, R.color.colorPrimary, context.theme))
-                        val customTabsIntent = customTabsBuilder.build()
-                        try {
-                            customTabsIntent.launchUrl(context, Uri.parse(temp.url!!))
-                        } catch (ex: Exception) {
-                            Timber.d(ex, "Unable to launch URL")
-                        }
-                    }
+                    view.openTabbedUrl(Uri.parse(temp.url))
                 }
             } else if (temp.message != null && temp.isMessageInChatWindow != null) {
                 if (temp.isMessageInChatWindow!!) {
@@ -247,8 +236,8 @@ class ChatRoomAdapter(
                         }
                     }
                 } else {
-                    //Send to bot but not in chat window
-                    Toast.makeText(context, "Send to bot but not in chat window", Toast.LENGTH_SHORT).show()
+                    //TODO: Send to bot but not in chat window
+                    Timber.d("Send to bot but not in chat window")
                 }
             }
         }
