@@ -11,18 +11,21 @@ import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.authentication.resetpassword.presentation.ResetPasswordPresenter
 import chat.rocket.android.authentication.resetpassword.presentation.ResetPasswordView
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_reset_password.*
 import javax.inject.Inject
 
+internal const val TAG_RESET_PASSWORD_FRAGMENT = "ResetPasswordFragment"
+
 class ResetPasswordFragment : Fragment(), ResetPasswordView {
     @Inject
     lateinit var presenter: ResetPasswordPresenter
-
-    companion object {
-        fun newInstance() = ResetPasswordFragment()
-    }
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +51,10 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
         }
 
         setupOnClickListener()
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.ResetPassword)
+        }
     }
 
     override fun alertBlankEmail() {
@@ -130,5 +137,9 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
         button_reset_password.setOnClickListener {
             presenter.resetPassword(text_email.textContent)
         }
+    }
+
+    companion object {
+        fun newInstance() = ResetPasswordFragment()
     }
 }

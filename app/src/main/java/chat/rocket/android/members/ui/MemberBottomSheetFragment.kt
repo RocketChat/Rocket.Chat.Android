@@ -1,21 +1,27 @@
 package chat.rocket.android.members.ui
 
 import android.os.Bundle
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import chat.rocket.android.R
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_member_bottom_sheet.*
+import javax.inject.Inject
 
-fun newInstance(avatarUri: String,
-                realName: String,
-                username: String,
-                email: String,
-                utcOffset: String): BottomSheetDialogFragment {
+fun newInstance(
+    avatarUri: String,
+    realName: String,
+    username: String,
+    email: String,
+    utcOffset: String
+): BottomSheetDialogFragment {
     return MemberBottomSheetFragment().apply {
         arguments = Bundle(1).apply {
             putString(BUNDLE_AVATAR_URI, avatarUri)
@@ -27,13 +33,17 @@ fun newInstance(avatarUri: String,
     }
 }
 
+internal const val TAG_MEMBER_BOTTOM_SHEET_FRAGMENT = "MemberBottomSheetFragment"
+
 private const val BUNDLE_AVATAR_URI = "avatar_uri"
 private const val BUNDLE_REAL_NAME = "real_name"
 private const val BUNDLE_USERNAME = "username"
 private const val BUNDLE_EMAIL = "email"
 private const val BUNDLE_UTC_OFFSET = "utc_offset"
 
-class MemberBottomSheetFragment: BottomSheetDialogFragment() {
+class MemberBottomSheetFragment : BottomSheetDialogFragment() {
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private lateinit var avatarUri: String
     private lateinit var realName: String
     private lateinit var username: String
@@ -54,12 +64,21 @@ class MemberBottomSheetFragment: BottomSheetDialogFragment() {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
     }
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
         inflater.inflate(R.layout.fragment_member_bottom_sheet, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showMemberDetails()
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.MemberBottomSheet)
+        }
     }
 
     private fun showMemberDetails() {
@@ -74,7 +93,7 @@ class MemberBottomSheetFragment: BottomSheetDialogFragment() {
             text_member_email_address.isVisible = false
         }
 
-        if (utcOffset.isNotEmpty()){
+        if (utcOffset.isNotEmpty()) {
             text_member_utc.content = utcOffset
         } else {
             text_utc.isVisible = false

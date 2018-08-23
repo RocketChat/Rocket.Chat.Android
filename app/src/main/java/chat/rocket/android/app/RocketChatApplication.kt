@@ -19,7 +19,7 @@ import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.SITE_URL
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.emoji.EmojiRepository
-import chat.rocket.android.util.setupCrashlytics
+import chat.rocket.android.util.setupFabric
 import com.facebook.drawee.backends.pipeline.DraweeConfig
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
@@ -86,7 +86,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         AndroidThreeTen.init(this)
         EmojiRepository.load(this)
 
-        setupCrashlytics(this)
+        setupFabric(this)
         setupFresco()
         setupTimber()
 

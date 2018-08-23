@@ -149,7 +149,7 @@ class MainPresenter @Inject constructor(
                 tokenRepository.remove(currentServer)
 
                 withContext(CommonPool) { dbManager.logout() }
-                navigator.toNewServer()
+                navigator.switchOrAddNewServer()
             } catch (ex: Exception) {
                 Timber.d(ex, "Error cleaning up the session...")
             }
@@ -170,7 +170,7 @@ class MainPresenter @Inject constructor(
 
     fun changeServer(serverUrl: String) {
         if (currentServer != serverUrl) {
-            navigator.toNewServer(serverUrl)
+            navigator.switchOrAddNewServer(serverUrl)
         } else {
             view.closeServerSelection()
         }
