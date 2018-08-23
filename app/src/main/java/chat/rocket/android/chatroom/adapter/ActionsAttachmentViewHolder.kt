@@ -30,7 +30,6 @@ class ActionsAttachmentViewHolder(
             title.text = data.title ?: ""
             actions_list.layoutManager = LinearLayoutManager(itemView.context,
                     when (alignment) {
-                        "vertical" -> LinearLayoutManager.VERTICAL
                         "horizontal" -> LinearLayoutManager.HORIZONTAL
                         else -> LinearLayoutManager.VERTICAL //Default
                     }, false)
