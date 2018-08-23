@@ -24,10 +24,9 @@ class ChatRoomAdapter(
     private val roomId: String? = null,
     private val roomType: String? = null,
     private val roomName: String? = null,
-    private val presenter: ChatRoomPresenter? = null,
+    private val actionSelectListener: OnActionSelected? = null,
     private val enableActions: Boolean = true,
-    private val reactionListener: EmojiReactionListener? = null,
-    private val context: Context? = null
+    private val reactionListener: EmojiReactionListener? = null
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
     private val dataSet = ArrayList<BaseUiModel<*>>()
 
@@ -76,7 +75,7 @@ class ChatRoomAdapter(
             BaseUiModel.ViewType.MESSAGE_REPLY -> {
                 val view = parent.inflate(R.layout.item_message_reply)
                 MessageReplyViewHolder(view, actionsListener, reactionListener) { roomName, permalink ->
-                    presenter?.openDirectMessage(roomName, permalink)
+                    actionSelectListener?.openDirectMessage(roomName, permalink)
                 }
             }
             BaseUiModel.ViewType.ACTIONS_ATTACHMENT -> {
@@ -251,52 +250,53 @@ class ChatRoomAdapter(
             message.apply {
                 when (item.itemId) {
                     R.id.action_message_info -> {
-                        presenter?.messageInfo(id)
+                        actionSelectListener?.showMessageInfo(id)
                     }
                     R.id.action_message_reply -> {
                         if (roomName != null && roomType != null) {
-                            presenter?.citeMessage(roomName, roomType, id, true)
+                            actionSelectListener?.citeMessage(roomName, roomType, id, true)
                         }
                     }
                     R.id.action_message_quote -> {
                         if (roomName != null && roomType != null) {
-                            presenter?.citeMessage(roomName, roomType, id, false)
+                            actionSelectListener?.citeMessage(roomName, roomType, id, false)
                         }
                     }
                     R.id.action_message_copy -> {
-                        presenter?.copyMessage(id)
+                        actionSelectListener?.copyMessage(id)
                     }
                     R.id.action_message_edit -> {
-                        presenter?.editMessage(roomId, id, message.message)
+                        actionSelectListener?.editMessage(roomId, id, message.message)
                     }
                     R.id.action_message_star -> {
-                        if (!item.isChecked) {
-                            presenter?.starMessage(id)
-                        } else {
-                            presenter?.unstarMessage(id)
-                        }
+                        actionSelectListener?.toogleStar(id, !item.isChecked)
                     }
                     R.id.action_message_unpin -> {
-                        if (!item.isChecked) {
-                            presenter?.pinMessage(id)
-                        } else {
-                            presenter?.unpinMessage(id)
-                        }
+                        actionSelectListener?.tooglePin(id, !item.isChecked)
                     }
                     R.id.action_message_delete -> {
-                        context?.let {
-                            val builder = AlertDialog.Builder(it)
-                            builder.setTitle(it.getString(R.string.msg_delete_message))
-                                    .setMessage(it.getString(R.string.msg_delete_description))
-                                    .setPositiveButton(it.getString(R.string.msg_ok)) { _, _ -> presenter?.deleteMessage(roomId, id) }
-                                    .setNegativeButton(it.getString(R.string.msg_cancel)) { _, _ ->  }
-                                    .show()
-                        }
+                        actionSelectListener?.deleteMessage(roomId, id)
                     }
-                    R.id.action_menu_msg_react -> presenter?.showReactions(id)
-                    else -> TODO("Not implemented")
+                    R.id.action_menu_msg_react -> {
+                        actionSelectListener?.showReactions(id)
+                    }
+                    else -> {
+                        TODO("Not implemented")
+                    }
                 }
             }
         }
+    }
+
+    interface OnActionSelected {
+        fun showMessageInfo(id: String)
+        fun citeMessage(roomName: String, roomType: String, messageId: String, mentionAuthor: Boolean)
+        fun copyMessage(id: String)
+        fun editMessage(roomId: String, messageId: String, text: String)
+        fun toogleStar(id: String, star: Boolean)
+        fun tooglePin(id: String, pin: Boolean)
+        fun deleteMessage(roomId: String, id: String)
+        fun showReactions(id: String)
+        fun openDirectMessage(roomName: String, message: String)
     }
 }

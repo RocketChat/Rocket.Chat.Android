@@ -2,7 +2,6 @@ package chat.rocket.android.server.infraestructure
 
 import androidx.lifecycle.MutableLiveData
 import chat.rocket.android.db.DatabaseManager
-import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.User
 import chat.rocket.common.model.UserStatus
@@ -192,6 +191,14 @@ class ConnectionManager(
     fun setTemporaryStatus(userStatus: UserStatus) {
         temporaryStatus = userStatus
         client.setTemporaryStatus(userStatus)
+    }
+
+    fun resetReconnectionTimer() {
+        // if we are waiting to reconnect, immediately try to reconnect
+        // and reset the reconnection counter
+        if (client.state is State.Waiting) {
+            client.connect(resetCounter = true)
+        }
     }
 
     private fun resubscribeRooms() {

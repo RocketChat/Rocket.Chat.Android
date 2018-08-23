@@ -126,7 +126,8 @@ internal const val MENU_ACTION_PINNED_MESSAGES = 4
 internal const val MENU_ACTION_FAVORITE_MESSAGES = 5
 internal const val MENU_ACTION_FILES = 6
 
-class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
+class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener,
+    ChatRoomAdapter.OnActionSelected {
     @Inject
     lateinit var presenter: ChatRoomPresenter
     @Inject
@@ -200,6 +201,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
+
+        adapter = ChatRoomAdapter(chatRoomType, chatRoomName, this,
+                reactionListener = this)
     }
 
     override fun onCreateView(
@@ -967,5 +971,56 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupToolbar(toolbarTitle: String) {
         (activity as ChatRoomActivity).showToolbarTitle(toolbarTitle)
+    }
+
+    override fun showMessageInfo(id: String) {
+        presenter.messageInfo(id)
+    }
+
+    override fun citeMessage(roomName: String, roomType: String, messageId: String, mentionAuthor: Boolean) {
+        presenter.citeMessage(roomName, roomType, messageId, mentionAuthor)
+    }
+
+    override fun copyMessage(id: String) {
+        presenter.copyMessage(id)
+    }
+
+    override fun editMessage(roomId: String, messageId: String, text: String) {
+        presenter.editMessage(roomId, messageId, text)
+    }
+
+    override fun toogleStar(id: String, star: Boolean) {
+        if (star) {
+            presenter.starMessage(id)
+        } else {
+            presenter.unstarMessage(id)
+        }
+    }
+
+    override fun tooglePin(id: String, pin: Boolean) {
+        if (pin) {
+            presenter.pinMessage(id)
+        } else {
+            presenter.unpinMessage(id)
+        }
+    }
+
+    override fun deleteMessage(roomId: String, id: String) {
+        ui {
+            val builder = AlertDialog.Builder(it)
+            builder.setTitle(it.getString(R.string.msg_delete_message))
+                    .setMessage(it.getString(R.string.msg_delete_description))
+                    .setPositiveButton(it.getString(R.string.msg_ok)) { _, _ -> presenter.deleteMessage(roomId, id) }
+                    .setNegativeButton(it.getString(R.string.msg_cancel)) { _, _ ->  }
+                    .show()
+        }
+    }
+
+    override fun showReactions(id: String) {
+        presenter.showReactions(id)
+    }
+
+    override fun openDirectMessage(roomName: String, message: String) {
+        presenter.openDirectMessage(roomName, message)
     }
 }

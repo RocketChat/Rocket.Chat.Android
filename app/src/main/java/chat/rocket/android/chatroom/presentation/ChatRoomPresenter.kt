@@ -70,7 +70,7 @@ import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.DefaultDispatcher
-import kotlinx.coroutines.experimental.android.UI
+import chat.rocket.android.util.temp.UI
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
@@ -338,12 +338,9 @@ class ChatRoomPresenter @Inject constructor(
                     val maxFileSizeAllowed = settings.uploadMaxFileSize()
 
                     when {
-                        fileName.isEmpty() -> {
-                            view.showInvalidFileMessage()
-                        }
-                        fileSize > maxFileSizeAllowed -> {
+                        fileName.isEmpty() -> view.showInvalidFileMessage()
+                        fileSize > maxFileSizeAllowed && maxFileSizeAllowed !in -1..0 ->
                             view.showInvalidFileSize(fileSize, maxFileSizeAllowed)
-                        }
                         else -> {
                             var inputStream: InputStream? = uriInteractor.getInputStream(uri)
 
@@ -392,9 +389,8 @@ class ChatRoomPresenter @Inject constructor(
                     val maxFileSizeAllowed = settings.uploadMaxFileSize()
 
                     when {
-                        fileSize > maxFileSizeAllowed -> {
+                        fileSize > maxFileSizeAllowed && maxFileSizeAllowed !in -1..0 ->
                             view.showInvalidFileSize(fileSize, maxFileSizeAllowed)
-                        }
                         else -> {
                             retryIO("uploadFile($roomId, $fileName, $mimeType") {
                                 client.uploadFile(

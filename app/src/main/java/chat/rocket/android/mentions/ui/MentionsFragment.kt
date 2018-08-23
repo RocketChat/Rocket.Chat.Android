@@ -36,7 +36,7 @@ private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 class MentionsFragment : Fragment(), MentionsView {
 
     private lateinit var chatRoomId: String
-    private lateinit var adapter: ChatRoomAdapter
+    private val adapter = ChatRoomAdapter(enableActions = false)
     @Inject
     lateinit var presenter: MentionsPresenter
 
@@ -68,7 +68,6 @@ class MentionsFragment : Fragment(), MentionsView {
     override fun showMentions(mentions: List<BaseUiModel<*>>) {
         ui {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(enableActions = false)
                 recycler_view.adapter = adapter
 
                 val linearLayoutManager = LinearLayoutManager(context)

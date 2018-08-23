@@ -26,6 +26,8 @@ android {
 }
 
 dependencies {
+    implementation project(':util')
+
     implementation libraries.androidKtx
     implementation libraries.appCompat
     implementation libraries.kotlin

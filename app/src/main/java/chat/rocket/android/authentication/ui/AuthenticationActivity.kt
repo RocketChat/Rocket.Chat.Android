@@ -16,7 +16,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
+import chat.rocket.android.util.temp.UI
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
@@ -56,9 +56,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-        if (currentFragment != null) {
-            currentFragment.onActivityResult(requestCode, resultCode, data)
-        }
+        currentFragment?.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {

@@ -1,5 +1,8 @@
+def taskRequests = getGradle().getStartParameter().getTaskRequests().toString()
+def isPlay = !(taskRequests.contains("Foss") || taskRequests.contains("foss"))
+
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+if (isPlay) { apply plugin: 'io.fabric' }
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -12,10 +15,14 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 2034
-        versionName "2.5.0"
+        versionCode 2036
+        versionName "2.5.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+        def buildTime = new GregorianCalendar().format("MM-dd-yyyy' 'h:mm:ss a z")
+        buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -57,6 +64,20 @@ android {
         }
     }
 
+    flavorDimensions "type"
+
+    productFlavors {
+        // includes proprietary libs
+        play {
+            dimension "type"
+        }
+
+        // only foss
+        foss {
+            dimension "type"
+        }
+    }
+
     packagingOptions {
         exclude 'META-INF/core.kotlin_module'
         exclude 'META-INF/main.kotlin_module'
@@ -91,9 +112,6 @@ dependencies {
     kapt libraries.daggerProcessor
     kapt libraries.daggerAndroidApt
 
-    implementation libraries.fcm
-    implementation libraries.playServicesAuth
-
     implementation libraries.room
     kapt libraries.roomProcessor
     implementation libraries.lifecycleExtensions
@@ -126,7 +144,10 @@ dependencies {
 
     implementation "com.github.luciofm:livedata-ktx:b1e8bbc25a"
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.2@aar') {
+    playImplementation libraries.fcm
+    playImplementation libraries.playServicesAuth
+
+    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
         transitive = true
     }
 
@@ -148,13 +169,16 @@ androidExtensions {
 
 // FIXME - build and install the sdk into the app/libs directory
 // We were having some issues with the kapt generated files from the sdk when importing as a module
+
+def sdk_location=project.properties['sdk_location'] ?: ""
 task compileSdk(type:Exec) {
     if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-        commandLine 'cmd', '/c', 'build-sdk.sh'
+        commandLine 'cmd', '/c', 'build-sdk.sh', sdk_location
     } else {
-        commandLine './build-sdk.sh'
+        commandLine './build-sdk.sh', sdk_location
     }
 }
 preBuild.dependsOn compileSdk
-
-apply plugin: 'com.google.gms.google-services'
+if (isPlay) {
+    apply plugin: 'com.google.gms.google-services'
+}
