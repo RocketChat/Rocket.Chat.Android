@@ -17,10 +17,9 @@ import chat.rocket.android.emoji.R
 import kotlinx.android.synthetic.main.emoji_category_layout.view.*
 import kotlinx.android.synthetic.main.emoji_row_item.view.*
 import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
+import chat.rocket.android.util.temp.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
-
 
 internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : PagerAdapter() {
 
