@@ -350,6 +350,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
 
             if (recycler_view.adapter == null) {
+                adapter = ChatRoomAdapter(
+                    chatRoomId,
+                    chatRoomType,
+                    chatRoomName,
+                    presenter,
+                    reactionListener = this@ChatRoomFragment,
+                    context = context
+                )
                 recycler_view.adapter = adapter
                 if (dataSet.size >= 30) {
                     recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)

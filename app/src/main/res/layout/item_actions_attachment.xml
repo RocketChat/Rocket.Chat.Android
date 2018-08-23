@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/actions_attachment_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingBottom="@dimen/message_item_top_and_bottom_padding"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+    android:paddingStart="@dimen/screen_edge_left_and_right_padding">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/Message.TextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="2dp"
+        android:textDirection="locale"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
+
+    <View
+        android:id="@+id/quote_bar"
+        android:layout_width="4dp"
+        android:layout_height="0dp"
+        android:background="@drawable/quote_vertical_gray_bar"
+        app:layout_constraintBottom_toTopOf="@id/recycler_view_reactions"
+        app:layout_constraintStart_toStartOf="@id/title"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/actions_list"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/colorAccent"
+        android:textDirection="locale"
+        app:layout_constraintEnd_toEndOf="@id/title"
+        app:layout_constraintStart_toEndOf="@id/quote_bar"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <include
+        layout="@layout/layout_reactions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/quote_bar"
+        app:layout_constraintTop_toBottomOf="@id/actions_list" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

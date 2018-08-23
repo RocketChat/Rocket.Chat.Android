@@ -2,20 +2,26 @@ package chat.rocket.android.chatroom.adapter
 
 import android.app.AlertDialog
 import android.content.Context
+import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.uimodel.*
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.emoji.EmojiReactionListener
+import chat.rocket.android.util.extensions.openTabbedUrl
+import chat.rocket.core.model.attachment.actions.Action
+import chat.rocket.core.model.attachment.actions.ButtonAction
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
 import timber.log.Timber
 import java.security.InvalidParameterException
 
 class ChatRoomAdapter(
+    private val roomId: String? = null,
     private val roomType: String? = null,
     private val roomName: String? = null,
     private val actionSelectListener: OnActionSelected? = null,
@@ -72,6 +78,10 @@ class ChatRoomAdapter(
                     actionSelectListener?.openDirectMessage(roomName, permalink)
                 }
             }
+            BaseUiModel.ViewType.ACTIONS_ATTACHMENT -> {
+                val view = parent.inflate(R.layout.item_actions_attachment)
+                ActionsAttachmentViewHolder(view, actionsListener, reactionListener, actionAttachmentOnClickListener)
+            }
             else -> {
                 throw InvalidParameterException("TODO - implement for ${viewType.toViewType()}")
             }
@@ -125,6 +135,8 @@ class ChatRoomAdapter(
                 holder.bind(dataSet[position] as GenericFileAttachmentUiModel)
             is MessageReplyViewHolder ->
                 holder.bind(dataSet[position] as MessageReplyUiModel)
+            is ActionsAttachmentViewHolder ->
+                holder.bind(dataSet[position] as ActionsAttachmentUiModel)
         }
     }
 
@@ -200,6 +212,33 @@ class ChatRoomAdapter(
             dataSet.addAll(newSet)
             val newSize = dataSet.size
             notifyItemRangeRemoved(index, oldSize - newSize)
+        }
+    }
+
+    private val actionAttachmentOnClickListener = object : ActionAttachmentOnClickListener {
+        override fun onActionClicked(view: View, action: Action) {
+            val temp = action as ButtonAction
+            if (temp.url != null && temp.isWebView != null) {
+                if (temp.isWebView!!) {
+                    //TODO: Open in a configurable sizable webview
+                    Timber.d("Open in a configurable sizable webview")
+                } else {
+                    //Open in chrome custom tab
+                    view.openTabbedUrl(Uri.parse(temp.url))
+                }
+            } else if (temp.message != null && temp.isMessageInChatWindow != null) {
+                if (temp.isMessageInChatWindow!!) {
+                    //Send to chat window
+                    temp.message.run {
+                        if (roomId != null) {
+                            presenter?.sendMessage(roomId, temp.message!!, null)
+                        }
+                    }
+                } else {
+                    //TODO: Send to bot but not in chat window
+                    Timber.d("Send to bot but not in chat window")
+                }
+            }
         }
     }
 
