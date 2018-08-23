@@ -73,7 +73,7 @@ import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.DefaultDispatcher
-import kotlinx.coroutines.experimental.android.UI
+import chat.rocket.android.util.temp.UI
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext

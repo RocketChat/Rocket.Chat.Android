@@ -4,11 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
+import chat.rocket.android.util.temp.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import kotlin.coroutines.experimental.CoroutineContext
-
 
 class TransformedLiveData<Source, Output>(
     private val runContext: CoroutineContext = CommonPool,
