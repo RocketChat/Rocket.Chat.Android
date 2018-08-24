@@ -3,19 +3,18 @@ package chat.rocket.android.authentication.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import chat.rocket.android.R
-import chat.rocket.android.authentication.onboarding.ui.OnBoardingFragment
+import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
+import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
+import chat.rocket.android.authentication.server.ui.ServerFragment
 import chat.rocket.android.util.extensions.addFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -31,49 +30,21 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_authentication)
+        setTheme(R.style.AuthenticationTheme)
         super.onCreate(savedInstanceState)
-        setupToolbar()
-    }
-
-    private fun setupToolbar() {
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        toolbar.setNavigationOnClickListener {
-            onBackPressed()
-        }
     }
 
     override fun onStart() {
         super.onStart()
+        val deepLinkInfo = intent.getLoginDeepLinkInfo()
         launch(UI + job) {
             val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
             // if we got authenticateWithDeepLink information, pass true to newServer also
-            presenter.loadCredentials(newServer) { authenticated ->
+            presenter.loadCredentials(newServer || deepLinkInfo != null) { authenticated ->
                 if (!authenticated) {
-                    showOnBoarding()
+                    showServerInput(deepLinkInfo)
                 }
             }
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.legal, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item?.itemId){
-            R.id.action_terms_of_Service -> {
-                presenter.termsOfService(getString(R.string.title_legal_terms))
-                true
-            }
-            R.id.action_privacy_policy -> {
-                presenter.privacyPolicy(getString(R.string.title_legal_terms))
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -84,7 +55,6 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        supportFragmentManager.findFragmentById(R.id.fragment_container)?.onActivityResult(requestCode, resultCode, data)
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         currentFragment?.onActivityResult(requestCode, resultCode, data)
     }
@@ -93,9 +63,9 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         return fragmentDispatchingAndroidInjector
     }
 
-    private fun showOnBoarding() {
-        addFragment("OnBoardingFragment", R.id.fragment_container, allowStateLoss = true) {
-            OnBoardingFragment.newInstance()
+    fun showServerInput(deepLinkInfo: LoginDeepLinkInfo?) {
+        addFragment("ServerFragment", R.id.fragment_container, allowStateLoss = true) {
+            ServerFragment.newInstance(deepLinkInfo)
         }
     }
 }

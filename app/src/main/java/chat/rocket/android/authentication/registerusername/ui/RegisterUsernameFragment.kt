@@ -10,14 +10,21 @@ import android.view.ViewGroup
 import chat.rocket.android.R
 import chat.rocket.android.authentication.registerusername.presentation.RegisterUsernamePresenter
 import chat.rocket.android.authentication.registerusername.presentation.RegisterUsernameView
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_register_username.*
 import javax.inject.Inject
 
+internal const val TAG_REGISTER_USERNAME_FRAGMENT = "RegisterUsernameFragment"
+
 class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
     @Inject
     lateinit var presenter: RegisterUsernamePresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private lateinit var userId: String
     private lateinit var authToken: String
 
@@ -61,6 +68,10 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
         }
 
         setupOnClickListener()
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.RegisterUsername)
+        }
     }
 
     override fun alertBlankUsername() {

@@ -5,30 +5,8 @@ import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.OauthHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.GetAccountsInteractor
-import chat.rocket.android.server.domain.GetConnectingServerInteractor
-import chat.rocket.android.server.domain.GetSettingsInteractor
-import chat.rocket.android.server.domain.PublicSettings
-import chat.rocket.android.server.domain.SaveAccountInteractor
-import chat.rocket.android.server.domain.SaveCurrentServerInteractor
-import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.domain.casLoginUrl
-import chat.rocket.android.server.domain.favicon
-import chat.rocket.android.server.domain.gitlabUrl
-import chat.rocket.android.server.domain.isCasAuthenticationEnabled
-import chat.rocket.android.server.domain.isFacebookAuthenticationEnabled
-import chat.rocket.android.server.domain.isGithubAuthenticationEnabled
-import chat.rocket.android.server.domain.isGitlabAuthenticationEnabled
-import chat.rocket.android.server.domain.isGoogleAuthenticationEnabled
-import chat.rocket.android.server.domain.isLdapAuthenticationEnabled
-import chat.rocket.android.server.domain.isLinkedinAuthenticationEnabled
-import chat.rocket.android.server.domain.isLoginFormEnabled
-import chat.rocket.android.server.domain.isWordpressAuthenticationEnabled
-import chat.rocket.android.server.domain.isPasswordResetEnabled
-import chat.rocket.android.server.domain.isRegistrationEnabledForNewUsers
-import chat.rocket.android.server.domain.wordpressUrl
+import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
-import chat.rocket.android.server.domain.wideTile
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
@@ -40,6 +18,8 @@ import chat.rocket.android.util.extensions.parseColor
 import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.android.util.extensions.samlUrl
 import chat.rocket.android.util.extensions.serverLogoUrl
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.AuthenticationEvent
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
@@ -82,6 +62,7 @@ class LoginPresenter @Inject constructor(
     private val localRepository: LocalRepository,
     private val getAccountsInteractor: GetAccountsInteractor,
     private val settingsInteractor: GetSettingsInteractor,
+    private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
     serverInteractor: GetConnectingServerInteractor,
     private val saveCurrentServer: SaveCurrentServerInteractor,
     private val saveAccountInteractor: SaveAccountInteractor,
@@ -97,6 +78,7 @@ class LoginPresenter @Inject constructor(
     private lateinit var credentialSecret: String
     private lateinit var deepLinkUserId: String
     private lateinit var deepLinkToken: String
+    private lateinit var loginMethod: AuthenticationEvent
 
     fun setupView() {
         setupConnectionInfo(currentServer)
@@ -117,6 +99,7 @@ class LoginPresenter @Inject constructor(
             else -> {
                 this.usernameOrEmail = usernameOrEmail
                 this.password = password
+                loginMethod = AuthenticationEvent.AuthenticationWithUserAndPassword
                 doAuthentication(TYPE_LOGIN_USER_EMAIL)
             }
         }
@@ -124,17 +107,20 @@ class LoginPresenter @Inject constructor(
 
     fun authenticateWithCas(casToken: String) {
         credentialToken = casToken
+        loginMethod = AuthenticationEvent.AuthenticationWithCas
         doAuthentication(TYPE_LOGIN_CAS)
     }
 
     fun authenticateWithSaml(samlToken: String) {
         credentialToken = samlToken
+        loginMethod = AuthenticationEvent.AuthenticationWithSaml
         doAuthentication(TYPE_LOGIN_SAML)
     }
 
     fun authenticateWithOauth(oauthToken: String, oauthSecret: String) {
         credentialToken = oauthToken
         credentialSecret = oauthSecret
+        loginMethod = AuthenticationEvent.AuthenticationWithOauth
         doAuthentication(TYPE_LOGIN_OAUTH)
     }
 
@@ -145,6 +131,7 @@ class LoginPresenter @Inject constructor(
             deepLinkUserId = deepLinkInfo.userId
             deepLinkToken = deepLinkInfo.token
             tokenRepository.save(serverUrl, Token(deepLinkUserId, deepLinkToken))
+            loginMethod = AuthenticationEvent.AuthenticationWithDeeplink
             doAuthentication(TYPE_LOGIN_DEEP_LINK)
         } else {
             // If we don't have the login credentials, just go through normal setup and user input.
@@ -304,7 +291,7 @@ class LoginPresenter @Inject constructor(
                             if (myself.id == deepLinkUserId) {
                                 Token(deepLinkUserId, deepLinkToken)
                             } else {
-                                throw RocketChatAuthException("Invalid Authentication Deep Link Credentials...")
+                                throw RocketChatAuthException("Invalid AuthenticationEvent Deep Link Credentials...")
                             }
                         }
                         else -> {
@@ -323,11 +310,14 @@ class LoginPresenter @Inject constructor(
                         username = myself.username,
                         utcOffset = myself.utcOffset
                     )
-                    localRepository.saveCurrentUser(url = currentServer, user = user)
+                    localRepository.saveCurrentUser(currentServer, user)
                     saveCurrentServer.save(currentServer)
                     saveAccount(myself.username!!)
                     saveToken(token)
                     registerPushToken()
+                    if (analyticsTrackingInteractor.get()) {
+                        AnalyticsManager.logLogin(loginMethod, true)
+                    }
                     if (loginType == TYPE_LOGIN_USER_EMAIL) {
                         view.saveSmartLockCredentials(usernameOrEmail, password)
                     }
@@ -341,6 +331,9 @@ class LoginPresenter @Inject constructor(
                         navigator.toTwoFA(usernameOrEmail, password)
                     }
                     else -> {
+                        if (analyticsTrackingInteractor.get()) {
+                            AnalyticsManager.logLogin(loginMethod, false)
+                        }
                         exception.message?.let {
                             view.showMessage(it)
                         }.ifNull {

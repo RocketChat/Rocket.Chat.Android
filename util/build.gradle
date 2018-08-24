@@ -17,6 +17,25 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "type"
+
+    productFlavors {
+        // includes proprietary libs
+        play {
+            dimension "type"
+        }
+
+        // only foss
+        foss {
+            dimension "type"
+        }
     }
 }
 
@@ -36,4 +55,9 @@ dependencies {
     // TODO This is a dependency from the core module, but the util module are unable to get that dependencies. Check why it is occurring since transitive is enable by default
     implementation libraries.lifecycleExtensions
     kapt libraries.lifecycleCompiler
+
+    // Proprietary libraries
+    playImplementation('com.crashlytics.sdk.android:answers:1.4.2@aar') {
+        transitive = true
+    }
 }

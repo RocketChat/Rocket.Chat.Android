@@ -18,7 +18,10 @@ import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.helper.KeyboardHelper
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar_chat_room.*
@@ -26,24 +29,17 @@ import kotlinx.android.synthetic.main.fragment_authentication_server.*
 import okhttp3.HttpUrl
 import javax.inject.Inject
 
+internal const val TAG_SERVER_FRAGMENT = "ServerFragment"
+
 class ServerFragment : Fragment(), ServerView {
     @Inject
     lateinit var presenter: ServerPresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private var deepLinkInfo: LoginDeepLinkInfo? = null
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         text_server_url.isCursorVisible = KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)
     }
-
-    companion object {
-        private const val DEEP_LINK_INFO = "DeepLinkInfo"
-
-        fun newInstance(deepLinkInfo: LoginDeepLinkInfo?) = ServerFragment().apply {
-            arguments = Bundle().apply {
-                putParcelable(DEEP_LINK_INFO, deepLinkInfo)
-            }
-        }
-    }
-
     private var protocol = "https://"
     private var ignoreChange = false
 
@@ -103,6 +99,10 @@ class ServerFragment : Fragment(), ServerView {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
+        }
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.Server)
         }
     }
 
@@ -224,6 +224,16 @@ class ServerFragment : Fragment(), ServerView {
             button_connect.setOnClickListener {
                 val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
                 presenter.checkServer("$protocol${url.sanitize()}")
+            }
+        }
+    }
+
+    companion object {
+        private const val DEEP_LINK_INFO = "DeepLinkInfo"
+
+        fun newInstance(deepLinkInfo: LoginDeepLinkInfo?) = ServerFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(DEEP_LINK_INFO, deepLinkInfo)
             }
         }
     }

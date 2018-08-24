@@ -12,6 +12,9 @@
     <string name="title_profile">Perfil</string>
     <string name="title_members">Membros (%d)</string>
     <string name="title_settings">Configurações</string>
+    <string name="title_preferences">Preferencias</string>
+    <string name="title_change_password">Alterar senha</string>
+    <string name="title_admin_panel">Painel administrativo</string>
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
@@ -39,15 +42,13 @@
     <string name="action_invisible">Invisível</string>
     <string name="action_drawing">Desenhando</string>
     <string name="action_save_to_gallery">Salvar na galeria</string>
-    // TODO: Verify translations
-    <string name="action_connect_server">Conecte-se com um servidor</string>
-    <string name="action_join_community">Junte-se à comunidade</string>
-    <string name="action_create_server">Crie um novo servidor</string>
-    <string name="action_register">registo</string>
-    <string name="action_confirm">confirme</string>
+    <string name="action_select_photo_from_gallery">Escolher foto da galeria</string>
+    <string name="action_take_photo">Tirar foto</string>
+    <string name="action_reset_avatar">Resetar avatar</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
+        <item name="item_preferences">Preferencias</item>
         <item name="item_password">Alterar senha</item>
         <item name="item_password">Sobre</item>
     </string-array>
@@ -64,8 +65,7 @@
     <string name="msg_avatar_url">URL do avatar</string>
     <string name="msg_or_continue_using_social_accounts">Ou continue através de contas sociais</string>
     <string name="msg_new_user">Novo usuário? %1$s</string>
-    // TODO: Verify transaltion
-    <string name="msg_forgot_password">Esqueceu sua senha?</string>
+    <string name="msg_forgot_password">Esqueceu a senha? %1$s</string>
     <string name="msg_reset">Redefinir</string>
     <string name="msg_check_your_email_to_reset_your_password">Email enviado! Verifique sua caixa de entrada para redefinir sua senha.</string>
     <string name="msg_invalid_email">Por favor informe um e-mail válido</string>
@@ -85,7 +85,7 @@
     <string name="msg_content_description_log_in_using_meteor">Fazer login através do Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Fazer login através do Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Fazer login através do Gitlab</string>
-    <string name="msg_content_description_log_in_using_wordprees">Fazer login através do WordPress</string>
+    <string name="msg_content_description_log_in_using_wordpress">Fazer login através do WordPress</string>
     <string name="msg_content_description_send_message">Enviar mensagem</string>
     <string name="msg_content_description_show_attachment_options">Mostrar opções de anexo</string>
     <string name="msg_you">Você</string>
@@ -100,8 +100,6 @@
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_preview_file">Arquivo</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
-    <string name="msg_version">Versão %1$s</string>
-    <string name="msg_build">Build %1$d</string>
     <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">Versão do servidor desatualizada. Por favor, entre em contato com o administrador do sistema para continuar.</string>
     <string name="msg_ver_not_recommended">
@@ -135,18 +133,6 @@
     // TODO: Add proper translation.
     <string name="msg_delete_message">Delete Message</string>
     <string name="msg_delete_description">Are you sure you want to delete this message</string>
-    // TODO: Verify translations
-    <string name="msg_welcome_to_rocket_chat">Bem-vindo ao Rocket.Chat</string>
-    <string name="msg_open_source_communication">Comunicação Open Source</string>
-    <string name="msg_login_with_email">Login com e-mail</string>
-    <string name="msg_create_account">Crie a sua conta aqui</string>
-    <string name="msg_continue_with_facebook">Continue com o Facebook</string>
-    <string name="msg_continue_with_github">Continue com o Github</string>
-    <string name="msg_continue_with_google">Continue com o Google</string>
-    <string name="msg_continue_with_linkedin">Continue com o Linkedin</string>
-    <string name="msg_continue_with_gitlab">Continue com o GitLab</string>
-    <string name="msg_two_factor_authentication">Autenticação de dois fatores</string>
-    <string name="msg__your_2fa_code">Qual é o seu código 2FA?</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
@@ -159,6 +145,12 @@
     <string name="msg_member_already_added">Você já selecionou este usuário</string>
     <string name="msg_member_not_found">Membro não encontrado</string>
     <string name="msg_channel_created_successfully">Chat criado com sucesso</string>
+
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">Rastreamento de análises</string>
+    <string name="msg_send_analytics_tracking">Envie estatísticas anônimas para ajudar a melhorar este app</string>
+    <string name="msg_do_not_send_analytics_tracking">Não envie estatísticas anônimas para ajudar a melhorar este app</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Not aplicável devido a versão do aplicativo ser FOSS</string> <!-- TODO Add translation -->
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
@@ -277,6 +269,7 @@
     <string name="dialog_sort_by_activity">Atividade</string>
     <string name="dialog_group_by_type">Agrupar por tipo</string>
     <string name="dialog_group_favourites">Grupos favoritos</string>
+    <string name="dialog_button_done">Done</string><!-- TODO Add translation -->
     <string name="chatroom_header">Cabeçalho</string>
 
     <!--ChatRooms Headers-->
@@ -291,7 +284,6 @@
     <string name="notif_action_reply_hint">RESPONDER</string>
     <string name="notif_error_sending">Falha ao enviar a mensagem.</string>
     <string name="notif_success_sending">Mensagem enviada para %1$s!</string>
-    <string name="action_share">Compartilhar</string>
     <string name="read_by">Lida por</string>
     <string name="message_information_title">Informações da mensagem</string>
     <string name="msg_log_out">Deslogando…</string>

@@ -11,6 +11,7 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
+import chat.rocket.android.server.domain.RefreshPermissionsInteractor
 import chat.rocket.android.server.domain.RemoveAccountInteractor
 import chat.rocket.android.server.domain.SaveAccountInteractor
 import chat.rocket.android.server.domain.TokenRepository
@@ -20,6 +21,7 @@ import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.extensions.adminPanelUrl
 import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.util.retryIO
@@ -28,14 +30,12 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.UserStatus
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.realtime.setDefaultStatus
 import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.unregisterPushToken
 import chat.rocket.core.model.Myself
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.channels.Channel
-import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import javax.inject.Inject
@@ -47,6 +47,7 @@ class MainPresenter @Inject constructor(
     private val tokenRepository: TokenRepository,
     private val serverInteractor: GetCurrentServerInteractor,
     private val refreshSettingsInteractor: RefreshSettingsInteractor,
+    private val refreshPermissionsInteractor: RefreshPermissionsInteractor,
     private val localRepository: LocalRepository,
     private val navHeaderMapper: NavHeaderUiModelMapper,
     private val saveAccountInteractor: SaveAccountInteractor,
@@ -63,7 +64,6 @@ class MainPresenter @Inject constructor(
     private val dbManager = dbManagerFactory.create(currentServer)
     private val client: RocketChatClient = factory.create(currentServer)
     private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
-
     private val userDataChannel = Channel<Myself>()
 
     fun toChatList(chatRoomId: String? = null) = navigator.toChatList(chatRoomId)
@@ -71,6 +71,10 @@ class MainPresenter @Inject constructor(
     fun toUserProfile() = navigator.toUserProfile()
 
     fun toSettings() = navigator.toSettings()
+
+    fun toAdminPanel() = tokenRepository.get(currentServer)?.let {
+        navigator.toAdminPanel(currentServer.adminPanelUrl(), it.authToken)
+    }
 
     fun toCreateChannel() = navigator.toCreateChannel()
 
@@ -145,7 +149,7 @@ class MainPresenter @Inject constructor(
                 tokenRepository.remove(currentServer)
 
                 withContext(CommonPool) { dbManager.logout() }
-                navigator.toNewServer()
+                navigator.switchOrAddNewServer()
             } catch (ex: Exception) {
                 Timber.d(ex, "Error cleaning up the session...")
             }
@@ -155,6 +159,7 @@ class MainPresenter @Inject constructor(
 
     fun connect() {
         refreshSettingsInteractor.refreshAsync(currentServer)
+        refreshPermissionsInteractor.refreshAsync(currentServer)
         manager.connect()
     }
 
@@ -165,7 +170,7 @@ class MainPresenter @Inject constructor(
 
     fun changeServer(serverUrl: String) {
         if (currentServer != serverUrl) {
-            navigator.toNewServer(serverUrl)
+            navigator.switchOrAddNewServer(serverUrl)
         } else {
             view.closeServerSelection()
         }

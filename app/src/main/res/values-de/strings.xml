@@ -11,6 +11,9 @@
     <string name="title_profile">Profil</string>
     <string name="title_members">Benutzer (%d)</string>
     <string name="title_settings">Einstellungen</string>
+    <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
+    <string name="title_change_password">Ändere Passwort</string>
+    <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
     <string name="title_password">Ändere Passwort</string>
     <string name="title_update_profile">Update Profil</string>
     <string name="title_about">Über</string>
@@ -38,15 +41,13 @@
     <string name="action_invisible">Unsichtbar</string>
     <string name="action_drawing">Zeichnung</string>
     <string name="action_save_to_gallery">Sichern in Gallerie</string>
-    // TODO: Verify translations
-    <string name="action_connect_server">Verbinde dich mit einem Server</string>
-    <string name="action_join_community">Trete der Community bei</string>
-    <string name="action_create_server">Erstelle einen neuen Server</string>
-    <string name="action_register">Registrieren</string>
-    <string name="action_confirm">bestätigen</string>
+    <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
+        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Ändere Passwort</item>
         <item name="item_password">Über</item>
     </string-array>
@@ -63,8 +64,7 @@
     <string name="msg_avatar_url">Avatar URL</string>
     <string name="msg_or_continue_using_social_accounts">Oder weiter mit einem Social Account</string>
     <string name="msg_new_user">Neuer Benutzer? %1$s</string>
-    // TODO: Verify transaltion
-    <string name="msg_forgot_password">Haben Sie Ihr Passwort vergessen?</string>
+    <string name="msg_forgot_password">Passwort vergessen? %1$s</string>
     <string name="msg_reset">Zurücksetzen</string>
     <string name="msg_check_your_email_to_reset_your_password">E-Mail gesendet! Prüfe dein E-Mail Posteingang um dein Passwort zurückzusetzen.</string>
     <string name="msg_invalid_email">Bitte eine korrekte E-Mail Adresse eingeben</string>
@@ -85,6 +85,7 @@
     <string name="msg_content_description_log_in_using_meteor">Login mit Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Login mit Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Login mit Gitlab</string>
+    <string name="msg_content_description_log_in_using_wordpress">Login mit WordPress</string>
     <string name="msg_content_description_send_message">Sende Nachricht</string>
     <string name="msg_content_description_show_attachment_options">Zeige Anhang Optionen</string>
     <string name="msg_you">Du</string>
@@ -101,8 +102,6 @@
     <string name="msg_preview_photo">Bild</string>
     <string name="msg_preview_file">Datei</string>
     <string name="msg_no_messages_yet">Noch keine Nachrichten</string>
-    <string name="msg_version">Version %1$s</string>
-    <string name="msg_build">Build %1$d</string>
     <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">Server Version veraltet. Bitte kontaktieren Sie ihren Server Administrator.</string>
     <string name="msg_ver_not_recommended">
@@ -131,18 +130,6 @@
     <string name="msg_file_description">Datei Beschreibung</string>
     <string name="msg_send">Sende</string>
     <string name="msg_sent_attachment">Sende Anhang</string>
-    // TODO: Verify translations
-    <string name="msg_welcome_to_rocket_chat">Willkommen bei Rocket.Chat</string>
-    <string name="msg_open_source_communication">Open Source Kommunikation</string>
-    <string name="msg_login_with_email">Einloggen mit E-Mail</string>
-    <string name="msg_create_account">Ein Konto erstellen</string>
-    <string name="msg_continue_with_facebook">Weiter mit Facebook</string>
-    <string name="msg_continue_with_github">Weiter mit Github</string>
-    <string name="msg_continue_with_google">Weiter mit Google</string>
-    <string name="msg_continue_with_linkedin">Weiter mit Linkedin</string>
-    <string name="msg_continue_with_gitlab">Weiter mit GitLab</string>
-    <string name="msg_two_factor_authentication">Zwei-Faktor-Authentifizierung</string>
-    <string name="msg__your_2fa_code">Was ist dein 2FA-Code?</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privat</string>
@@ -158,6 +145,12 @@
     <string name="msg_message_copied">Nachricht kopiert</string>
     <string name="msg_delete_message">Lösche Nachricht</string>
     <string name="msg_delete_description">Sind Sie sicher, dass Sie diese Nachricht löschen wollen?</string>
+
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
+    <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string> <!-- TODO Add translation -->
 
     <!-- System messages -->
     <string name="message_room_name_changed">Raum Namen geändert zu: %1$s von %2$s</string>
@@ -188,7 +181,6 @@
     <string name="action_msg_share">Teilen</string>
     <string name="action_title_editing">Nachricht bearbeiten</string>
     <string name="action_msg_add_reaction">Reaktion hinzufügen</string>
-    <string name="action_share">Teilen</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Bearbeiten nicht erlaubt</string>
@@ -276,6 +268,7 @@
     <string name="dialog_sort_by_activity">Aktivität</string>
     <string name="dialog_group_by_type">Räume nach Typ</string>
     <string name="dialog_group_favourites">Räume nach Favoriten</string>
+    <string name="dialog_button_done">Done</string><!-- TODO Add translation -->
     <string name="chatroom_header">Kopf</string>
 
     <!--ChatRooms Headers-->

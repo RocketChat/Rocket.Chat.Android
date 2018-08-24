@@ -16,9 +16,12 @@ import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.presentation.MembersPresenter
 import chat.rocket.android.members.presentation.MembersView
 import chat.rocket.android.members.uimodel.MemberUiModel
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_members.*
 import javax.inject.Inject
@@ -31,11 +34,14 @@ fun newInstance(chatRoomId: String): Fragment {
     }
 }
 
+internal const val TAG_MEMBERS_FRAGMENT = "MembersFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class MembersFragment : Fragment(), MembersView {
     @Inject
     lateinit var presenter: MembersPresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private val adapter: MembersAdapter =
         MembersAdapter { memberUiModel -> presenter.toMemberDetails(memberUiModel) }
     private val linearLayoutManager = LinearLayoutManager(context)
@@ -63,6 +69,10 @@ class MembersFragment : Fragment(), MembersView {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         presenter.loadChatRoomsMembers(chatRoomId)
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.Members)
+        }
     }
 
     override fun showMembers(dataSet: List<MemberUiModel>, total: Long) {

@@ -20,10 +20,13 @@ import chat.rocket.android.createchannel.presentation.CreateChannelView
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.uimodel.MemberUiModel
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import com.google.android.material.chip.Chip
@@ -34,9 +37,13 @@ import kotlinx.android.synthetic.main.fragment_create_channel.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+internal const val TAG_CREATE_CHANNEL_FRAGMENT = "CreateChannelFragment"
+
 class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback {
     @Inject
     lateinit var createChannelPresenter: CreateChannelPresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private var actionMode: ActionMode? = null
     private val adapter: MembersAdapter = MembersAdapter {
         if (it.username != null) {
@@ -69,6 +76,10 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         setupViewListeners()
         setupRecyclerView()
         subscribeEditTexts()
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.CreateChannel)
+        }
     }
 
     override fun onDestroyView() {
@@ -161,7 +172,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
 
     override fun prepareToShowChatList() {
         with(activity as MainActivity) {
-            setCheckedNavDrawerItem(R.id.action_chat_rooms)
+            setCheckedNavDrawerItem(R.id.menu_action_chats)
             openDrawer()
             getDrawerLayout().postDelayed(1000) {
                 closeDrawer()

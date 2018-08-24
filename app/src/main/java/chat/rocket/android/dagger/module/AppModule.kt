@@ -23,6 +23,7 @@ import chat.rocket.android.push.GroupedPush
 import chat.rocket.android.push.PushManager
 import chat.rocket.android.server.domain.AccountsRepository
 import chat.rocket.android.server.domain.ActiveUsersRepository
+import chat.rocket.android.server.domain.AnalyticsTrackingRepository
 import chat.rocket.android.server.domain.ChatRoomsRepository
 import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.GetAccountInteractor
@@ -45,6 +46,7 @@ import chat.rocket.android.server.infraestructure.SharedPreferencesAccountsRepos
 import chat.rocket.android.server.infraestructure.SharedPreferencesMessagesRepository
 import chat.rocket.android.server.infraestructure.SharedPreferencesPermissionsRepository
 import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
+import chat.rocket.android.server.infraestructure.SharedPrefsAnalyticsTrackingRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsConnectingServerRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
 import chat.rocket.android.util.AppJsonAdapterFactory
@@ -161,6 +163,12 @@ class AppModule {
     @Singleton
     fun provideCurrentServerRepository(prefs: SharedPreferences): CurrentServerRepository {
         return SharedPrefsCurrentServerRepository(prefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAnalyticsTrackingRepository(prefs: SharedPreferences): AnalyticsTrackingRepository {
+        return SharedPrefsAnalyticsTrackingRepository(prefs)
     }
 
     @Provides

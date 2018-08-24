@@ -2,7 +2,6 @@ package chat.rocket.android.authentication.login.presentation
 
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
-import com.google.android.gms.auth.api.credentials.Credential
 
 interface LoginView : LoadingView, MessageView {
 

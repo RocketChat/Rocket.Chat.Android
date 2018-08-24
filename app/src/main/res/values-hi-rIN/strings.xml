@@ -12,6 +12,9 @@
     <string name="title_profile">प्रोफाइल</string>
     <string name="title_members">सदस्य (%d)</string>
     <string name="title_settings">सेटिंग्स</string>
+    <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
+    <string name="title_change_password">पासवर्ड बदलें</string>
+    <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
     <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
@@ -39,15 +42,13 @@
     <string name="action_invisible">अदृश्य</string>
     <string name="action_save_to_gallery">गैलरी में सहेजें</string>
     <string name="action_drawing">चित्रकारी</string>
-    <string name="action_share">शेयर</string>
-    <string name="action_connect_server">सर्वर से कनेक्ट करें</string>
-    <string name="action_join_community">समुदाय में शामिल हों</string>
-    <string name="action_create_server">नया सर्वर बनाएं</string>
-    <string name="action_register">रजिस्टर</string>
-    <string name="action_confirm">पुष्टि करें</string>
+    <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
+        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">पासवर्ड बदलें</item>
         <item name="item_password">परिचय</item>
     </string-array>
@@ -64,7 +65,7 @@
     <string name="msg_avatar_url">अवतार यूआरएल</string>
     <string name="msg_or_continue_using_social_accounts">या सामाजिक खाते का उपयोग करना जारी रखें</string>
     <string name="msg_new_user">नया उपयोगकर्ता? %1$s</string>
-    <string name="msg_forgot_password">क्या आप अपना पासवर्ड भूल गए?</string>
+    <string name="msg_forgot_password">पासवर्ड भूल गए? %1$s</string>
     <string name="msg_reset">रीसेट करें</string>
     <string name="msg_check_your_email_to_reset_your_password">ईमेल गया गया है! अपना पासवर्ड रीसेट करने के लिए अपने इनबॉक्स की जांच करें।</string>
     <string name="msg_invalid_email">कृपया एक वैध ई-मेल टाइप करें</string>
@@ -84,7 +85,7 @@
     <string name="msg_content_description_log_in_using_meteor">Meteor द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_twitter">Twitter द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_gitlab">Gitlab द्वारा लॉगिन करें</string>
-    <string name="msg_content_description_log_in_using_wordprees">Login using WordPress</string> <!-- TODO Translate-->
+    <string name="msg_content_description_log_in_using_wordpress">Login using WordPress</string> <!-- TODO Translate-->
     <string name="msg_content_description_send_message">मेसेज भेजें</string>
     <string name="msg_content_description_show_attachment_options">अटैचमेंट विकल्प दिखाएं</string>
     <string name="msg_you">आप</string>
@@ -99,8 +100,6 @@
     <string name="msg_preview_file">फ़ाइल</string>
     <string name="msg_unread_messages">अपठित संदेश</string>
     <string name="msg_no_messages_yet">अभी तक कोई पोस्ट नहीं</string>
-    <string name="msg_version">वर्शन %1$s</string>
-    <string name="msg_build">बिल्ड %1$d</string>
     <string name="msg_update_app_version_in_order_to_continue">पुराना सर्वर वर्शन। जारी रखने के लिए सर्वर वर्शन को अद्यतन करने के लिए कृपया सर्वर व्यवस्थापक से संपर्क करें।</string>
     <string name="msg_ok">ठीक है</string>
     <string name="msg_ver_not_recommended">
@@ -134,17 +133,6 @@
     <string name="msg_sent_attachment">एक अनुलग्नक भेजा</string>
     <string name="msg_delete_message">संदेश को हटाएं</string>
     <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
-    <string name="msg_welcome_to_rocket_chat">Rocket.chat में आपका स्वागत है</string>
-    <string name="msg_open_source_communication">ओपन सोर्स कम्युनिकेशन</string>
-    <string name="msg_login_with_email">ई-मेल के साथ लॉगिन करें</string>
-    <string name="msg_create_account">खाता बनाएं</string>
-    <string name="msg_continue_with_facebook">Facebook के साथ जारी रखें</string>
-    <string name="msg_continue_with_github">Github के साथ जारी रखें</string>
-    <string name="msg_continue_with_google">Google के साथ जारी रखें</string>
-    <string name="msg_continue_with_linkedin">Linkedin के साथ जारी रखें</string>
-    <string name="msg_continue_with_gitlab">GitLab के साथ जारी रखें</string>
-    <string name="msg_two_factor_authentication">दो तरीकों से प्रमाणीकरण</string>
-    <string name="msg__your_2fa_code">आपका 2 एफए कोड क्या है?</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">प्राइवेट</string>
@@ -157,6 +145,12 @@
     <string name="msg_member_already_added">आपने पहले से ही इस यूजर को चुन चुके है।</string>
     <string name="msg_member_not_found">सदस्य नहीं मिला</string>
     <string name="msg_channel_created_successfully">चैनल सफलतापूर्वक बनाया गया</string>
+
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
+    <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string> <!-- TODO Add translation -->
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
@@ -276,6 +270,7 @@
     <string name="dialog_sort_by_activity">गतिविधि</string>
     <string name="dialog_group_by_type">प्रकार के आधार पर समूह</string>
     <string name="dialog_group_favourites">पसंदीदा समूह</string>
+    <string name="dialog_button_done">Done</string><!-- TODO Add translation -->
     <string name="chatroom_header">हैडर</string>
 
     <!--ChatRooms Headers-->
