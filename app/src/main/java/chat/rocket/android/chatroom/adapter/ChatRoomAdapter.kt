@@ -1,14 +1,10 @@
 package chat.rocket.android.chatroom.adapter
 
-import android.app.AlertDialog
-import android.content.Context
-import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.uimodel.*
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.emoji.EmojiReactionListener
@@ -219,19 +215,19 @@ class ChatRoomAdapter(
         override fun onActionClicked(view: View, action: Action) {
             val temp = action as ButtonAction
             if (temp.url != null && temp.isWebView != null) {
-                if (temp.isWebView!!) {
+                if (temp.isWebView == true) {
                     //TODO: Open in a configurable sizable webview
                     Timber.d("Open in a configurable sizable webview")
                 } else {
                     //Open in chrome custom tab
-                    view.openTabbedUrl(Uri.parse(temp.url))
+                    temp.url?.let { view.openTabbedUrl(it) }
                 }
             } else if (temp.message != null && temp.isMessageInChatWindow != null) {
-                if (temp.isMessageInChatWindow!!) {
+                if (temp.isMessageInChatWindow == true) {
                     //Send to chat window
-                    temp.message.run {
+                    temp.message?.let {
                         if (roomId != null) {
-                            presenter?.sendMessage(roomId, temp.message!!, null)
+                            actionSelectListener?.sendMessage(roomId, it)
                         }
                     }
                 } else {
@@ -298,5 +294,6 @@ class ChatRoomAdapter(
         fun deleteMessage(roomId: String, id: String)
         fun showReactions(id: String)
         fun openDirectMessage(roomName: String, message: String)
+        fun sendMessage(chatRoomId: String, text: String)
     }
 }
