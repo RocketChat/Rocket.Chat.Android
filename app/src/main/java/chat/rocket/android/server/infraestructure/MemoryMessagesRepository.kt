@@ -7,6 +7,14 @@ import kotlinx.coroutines.experimental.withContext
 
 class MemoryMessagesRepository : MessagesRepository {
 
+    private var lastSyncDate: Long? = null
+
+    override suspend fun saveLastSyncDate(it: Long) {
+        lastSyncDate = it
+    }
+
+    override suspend fun getLastSyncDate() = lastSyncDate
+
     private val messages: HashMap<String, Message> = HashMap()
 
     override suspend fun getById(id: String): Message? = withContext(CommonPool) {

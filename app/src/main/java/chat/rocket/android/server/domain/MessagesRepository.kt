@@ -72,4 +72,8 @@ interface MessagesRepository {
     suspend fun getAllUnsent(): List<Message>
 
     suspend fun getUnsentByRoomId(roomId: String): List<Message>
+
+    suspend fun saveLastSyncDate(currentTimeMillis: Long)
+
+    suspend fun getLastSyncDate(): Long?
 }

@@ -13,6 +13,28 @@ class SharedPreferencesMessagesRepository(
     private val moshi: Moshi,
     private val currentServerInteractor: GetCurrentServerInteractor
 ) : MessagesRepository {
+    private val KEY_LAST_SYNC_DATE = "KEY_LAST_SYNC_DATE"
+
+    override suspend fun saveLastSyncDate(currentTimeMillis: Long) {
+        withContext(CommonPool) {
+            currentServerInteractor.get()?.let {
+                prefs.edit().putLong(getSyncDateKey(it), currentTimeMillis).apply()
+            }
+        }
+    }
+
+    override suspend fun getLastSyncDate(): Long? = withContext(CommonPool) {
+        currentServerInteractor.get()?.also { server ->
+            if (!prefs.contains(getSyncDateKey(server)))
+                return@withContext null
+            //
+            val time = prefs.getLong(getSyncDateKey(server), -1)
+            return@withContext if (time == -1L) null else time
+        }
+        return@withContext null
+    }
+
+    private fun getSyncDateKey(it: String) = "${KEY_LAST_SYNC_DATE}_${it}"
 
     override suspend fun getById(id: String): Message? = withContext(CommonPool) {
         currentServerInteractor.get()?.also { server ->
