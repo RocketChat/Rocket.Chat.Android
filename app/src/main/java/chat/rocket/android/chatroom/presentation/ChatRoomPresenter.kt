@@ -503,7 +503,6 @@ class ChatRoomPresenter @Inject constructor(
             if (chatRoomId != null && chatRoomType != null) {
                 val roomType = roomTypeOf(chatRoomType!!)
                 messagesRepository.getByRoomId(chatRoomId!!)
-                        //FIXME last message could not be sent
                     .sortedByDescending { it.timestamp }.firstOrNull()?.let { lastMessage ->
 
                         val lastSyncDate = messagesRepository.getLastSyncDate()
