@@ -35,6 +35,7 @@ import chat.rocket.android.server.domain.MultiServerTokenRepository
 import chat.rocket.android.server.domain.PermissionsRepository
 import chat.rocket.android.server.domain.RoomRepository
 import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.UsersRepository
 import chat.rocket.android.server.infraestructure.JobSchedulerInteractorImpl
 import chat.rocket.android.server.infraestructure.MemoryActiveUsersRepository
@@ -57,7 +58,6 @@ import chat.rocket.common.model.TimestampAdapter
 import chat.rocket.common.util.CalendarISO8601Converter
 import chat.rocket.common.util.Logger
 import chat.rocket.common.util.PlatformLogger
-import chat.rocket.core.TokenRepository
 import chat.rocket.core.internal.AttachmentAdapterFactory
 import chat.rocket.core.internal.ReactionsAdapter
 import com.facebook.drawee.backends.pipeline.DraweeConfig
