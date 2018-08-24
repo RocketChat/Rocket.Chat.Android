@@ -4,7 +4,7 @@ import android.os.Looper
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import kotlinx.coroutines.experimental.Job
-import chat.rocket.android.util.temp.UI
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 
 inline fun Fragment.ui(crossinline block: (activity: FragmentActivity) -> Unit): Job? {
