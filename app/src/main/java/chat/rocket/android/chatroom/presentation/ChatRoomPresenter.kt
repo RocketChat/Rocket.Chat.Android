@@ -17,6 +17,7 @@ import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.JobSchedulerInteractor
@@ -33,6 +34,8 @@ import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extension.compressImageAndGetInputStream
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.SubscriptionTypeEvent
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -90,6 +93,7 @@ class ChatRoomPresenter @Inject constructor(
     private val usersRepository: UsersRepository,
     private val roomsRepository: RoomRepository,
     private val localRepository: LocalRepository,
+    private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
     private val userHelper: UserHelper,
     private val mapper: UiModelMapper,
     private val jobSchedulerInteractor: JobSchedulerInteractor,
@@ -107,7 +111,7 @@ class ChatRoomPresenter @Inject constructor(
     private val messagesChannel = Channel<Message>()
 
     private var chatRoomId: String? = null
-    private var chatRoomType: String? = null
+    private lateinit var chatRoomType: String
     private var chatIsBroadcast: Boolean = false
     private var chatRoles = emptyList<ChatRoomRole>()
     private val stateChannel = Channel<State>()
@@ -261,7 +265,7 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 // ignore message for now, will receive it on the stream
                 val id = UUID.randomUUID().toString()
-                val message = if (messageId == null) {
+                if (messageId == null) {
                     val username = userHelper.username()
                     val newMessage = Message(
                         id = id,
@@ -291,11 +295,14 @@ class ChatRoomPresenter @Inject constructor(
                         messagesRepository.save(newMessage)
                         view.showNewMessage(
                             mapper.map(
-                                newMessage, 
+                                newMessage,
                                 RoomUiModel(roles = chatRoles, isBroadcast = chatIsBroadcast)
                             ), false
                         )
                         client.sendMessage(id, chatRoomId, text)
+                        if (analyticsTrackingInteractor.get()) {
+                            logMessageSent(currentServer)
+                        }
                     } catch (ex: Exception) {
                         // Ok, not very beautiful, but the backend sends us a not valid response
                         // When someone sends a message on a read-only channel, so we just ignore it
@@ -362,6 +369,9 @@ class ChatRoomPresenter @Inject constructor(
                                 ) {
                                     inputStream
                                 }
+                            }
+                            if (analyticsTrackingInteractor.get()) {
+                                logMediaUploaded(mimeType)
                             }
                         }
                     }
@@ -934,9 +944,42 @@ class ChatRoomPresenter @Inject constructor(
                 retryIO("toggleEmoji($messageId, $emoji)") {
                     client.toggleReaction(messageId, emoji.removeSurrounding(":"))
                 }
+                if (analyticsTrackingInteractor.get()) {
+                    logReactionEvent()
+                }
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
             }
+        }
+    }
+
+    private fun logReactionEvent() {
+        when {
+            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
+                AnalyticsManager.logReaction(SubscriptionTypeEvent.DirectMessage)
+            roomTypeOf(chatRoomType) is RoomType.Channel ->
+                AnalyticsManager.logReaction(SubscriptionTypeEvent.Channel)
+            else -> AnalyticsManager.logReaction(SubscriptionTypeEvent.Group)
+        }
+    }
+
+    private fun logMediaUploaded(mimeType: String) {
+        when {
+            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
+                AnalyticsManager.logMediaUploaded(SubscriptionTypeEvent.DirectMessage, mimeType)
+            roomTypeOf(chatRoomType) is RoomType.Channel ->
+                AnalyticsManager.logMediaUploaded(SubscriptionTypeEvent.Channel, mimeType)
+            else -> AnalyticsManager.logMediaUploaded(SubscriptionTypeEvent.Group, mimeType)
+        }
+    }
+
+    private fun logMessageSent(serverUrl: String) {
+        when {
+            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
+                AnalyticsManager.logMessageSent(SubscriptionTypeEvent.DirectMessage, serverUrl)
+            roomTypeOf(chatRoomType) is RoomType.Channel ->
+                AnalyticsManager.logMessageSent(SubscriptionTypeEvent.Channel, serverUrl)
+            else -> AnalyticsManager.logMessageSent(SubscriptionTypeEvent.Group, serverUrl)
         }
     }
 

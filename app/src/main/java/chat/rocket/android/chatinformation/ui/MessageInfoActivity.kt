@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
-import chat.rocket.android.chatinformation.ui.MessageInfoFragment.Companion.TAG_MESSAGE_INFO_FRAGMENT
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
 import dagger.android.AndroidInjection

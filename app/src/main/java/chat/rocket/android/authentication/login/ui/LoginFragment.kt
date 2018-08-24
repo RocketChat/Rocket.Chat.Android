@@ -23,7 +23,10 @@ import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
 import chat.rocket.android.helper.*
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import chat.rocket.android.webview.sso.ui.INTENT_SSO_TOKEN
 import chat.rocket.android.webview.sso.ui.ssoWebViewIntent
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
@@ -34,6 +37,7 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
 
+internal const val TAG_LOGIN_FRAGMENT = "LoginFragment"
 internal const val REQUEST_CODE_FOR_SIGN_IN_REQUIRED = 1
 internal const val REQUEST_CODE_FOR_MULTIPLE_ACCOUNTS_RESOLUTION = 2
 internal const val REQUEST_CODE_FOR_SAVE_RESOLUTION = 3
@@ -44,6 +48,8 @@ internal const val REQUEST_CODE_FOR_OAUTH = 6
 class LoginFragment : Fragment(), LoginView {
     @Inject
     lateinit var presenter: LoginPresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private var isOauthViewEnable = false
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         areLoginOptionsNeeded()
@@ -89,6 +95,10 @@ class LoginFragment : Fragment(), LoginView {
 
         if (!hasCredentialsSupport()) {
             image_key.isVisible = false
+        }
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.Login)
         }
     }
 

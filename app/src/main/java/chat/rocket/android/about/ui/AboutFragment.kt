@@ -4,29 +4,37 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_about.*
+import javax.inject.Inject
+
+internal const val TAG_ABOUT_FRAGMENT = "AboutFragment"
 
 class AboutFragment : Fragment() {
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
 
-    companion object {
-        fun newInstance() = AboutFragment()
-    }
-
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_about, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupViews()
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.About)
+        }
     }
 
     private fun setupViews() {
@@ -36,16 +44,14 @@ class AboutFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        val toolbar = (activity as MainActivity).toolbar
-        toolbar.title = getString(R.string.title_about)
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        toolbar.setNavigationOnClickListener {
-            this.activity?.onBackPressed()
+        with((activity as MainActivity).toolbar) {
+            title = getString(R.string.title_about)
+            setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            setNavigationOnClickListener { activity?.onBackPressed() }
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        (activity as MainActivity).toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
+    companion object {
+        fun newInstance() = AboutFragment()
     }
 }
