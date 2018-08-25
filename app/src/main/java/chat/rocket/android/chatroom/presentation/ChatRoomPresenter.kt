@@ -229,10 +229,11 @@ class ChatRoomPresenter @Inject constructor(
 
         //if success - saving last synced time
         if (messages.isEmpty()) {
+            //chat history is empty - just saving current date
             messagesRepository.saveLastSyncDate(System.currentTimeMillis())
         } else {
-            //TODO sort
-            messagesRepository.saveLastSyncDate(messages.last().timestamp)
+            //assume that BE returns ordered messages, the first message is the latest one
+            messagesRepository.saveLastSyncDate(messages.first().timestamp)
         }
 
         view.showMessages(
@@ -529,8 +530,8 @@ class ChatRoomPresenter @Inject constructor(
                                 ))
                                 messagesRepository.saveAll(messages.result)
                                 //if success - saving last synced time
-                                // TODO sort and peek the latest date
-                                messagesRepository.saveLastSyncDate(messages.result.last().timestamp)
+                                //assume that BE returns ordered messages, the first message is the latest one
+                                messagesRepository.saveLastSyncDate(messages.result.first().timestamp)
 
                                 launchUI(strategy) {
                                     view.showNewMessage(models, true)
