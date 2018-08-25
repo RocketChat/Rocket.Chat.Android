@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import android.widget.Toast
 import chat.rocket.android.R
@@ -11,7 +12,7 @@ import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.common.RocketChatException
 import chat.rocket.core.internal.rest.sendMessage
 import dagger.android.AndroidInjection
-import chat.rocket.android.util.temp.UI
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import java.util.*

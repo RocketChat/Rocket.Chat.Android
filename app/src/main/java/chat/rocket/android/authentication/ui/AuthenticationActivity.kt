@@ -10,13 +10,14 @@ import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
 import chat.rocket.android.authentication.server.ui.ServerFragment
+import chat.rocket.android.authentication.server.ui.TAG_SERVER_FRAGMENT
 import chat.rocket.android.util.extensions.addFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.coroutines.experimental.Job
-import chat.rocket.android.util.temp.UI
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
@@ -64,7 +65,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     fun showServerInput(deepLinkInfo: LoginDeepLinkInfo?) {
-        addFragment("ServerFragment", R.id.fragment_container, allowStateLoss = true) {
+        addFragment(TAG_SERVER_FRAGMENT, R.id.fragment_container, allowStateLoss = true) {
             ServerFragment.newInstance(deepLinkInfo)
         }
     }

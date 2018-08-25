@@ -6,7 +6,11 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.net.toUri
@@ -16,6 +20,7 @@ import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.dispatchImageSelection
 import chat.rocket.android.util.extension.dispatchTakePicture
@@ -23,6 +28,8 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import com.facebook.drawee.backends.pipeline.Fresco
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
@@ -32,12 +39,16 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.update_avatar_options.*
 import javax.inject.Inject
 
+internal const val TAG_PROFILE_FRAGMENT = "ProfileFragment"
+
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 1
 private const val REQUEST_CODE_FOR_PERFORM_CAMERA = 2
 
 class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     @Inject
     lateinit var presenter: ProfilePresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private var currentName = ""
     private var currentUsername = ""
     private var currentEmail = ""
@@ -69,6 +80,10 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
         presenter.loadUserProfile()
         subscribeEditTexts()
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.Profile)
+        }
     }
 
     override fun onDestroyView() {

@@ -13,10 +13,11 @@ import chat.rocket.android.chatinformation.adapter.ReadReceiptAdapter
 import chat.rocket.android.chatinformation.presentation.MessageInfoPresenter
 import chat.rocket.android.chatinformation.presentation.MessageInfoView
 import chat.rocket.android.chatinformation.viewmodel.ReadReceiptViewModel
-import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
-import chat.rocket.core.model.ReadReceipt
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_message_info.*
 import javax.inject.Inject
@@ -29,13 +30,14 @@ fun newInstance(messageId: String): Fragment {
     }
 }
 
+internal const val TAG_MESSAGE_INFO_FRAGMENT = "MessageInfoFragment"
 private const val BUNDLE_MESSAGE_ID = "message_id"
 
 class MessageInfoFragment : Fragment(), MessageInfoView {
-
     @Inject
     lateinit var presenter: MessageInfoPresenter
-
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private lateinit var adapter: ReadReceiptAdapter
     private lateinit var messageId: String
 
@@ -64,6 +66,10 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         presenter.loadReadReceipts(messageId = messageId)
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.MessageInfo)
+        }
     }
 
     private fun setupRecyclerView() {
@@ -92,9 +98,5 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
 
     override fun showReadReceipts(messageReceipts: List<ReadReceiptViewModel>) {
         adapter.addAll(messageReceipts)
-    }
-
-    companion object {
-        const val TAG_MESSAGE_INFO_FRAGMENT = "MessageInfoFragment"
     }
 }

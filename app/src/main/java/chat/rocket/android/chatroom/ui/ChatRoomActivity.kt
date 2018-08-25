@@ -6,8 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
-import android.text.SpannableStringBuilder
-import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -168,9 +166,5 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
     private fun finishActivity() {
         super.onBackPressed()
         overridePendingTransition(R.anim.close_enter, R.anim.close_exit)
-    }
-
-    companion object {
-        const val TAG_CHAT_ROOM_FRAGMENT = "ChatRoomFragment"
     }
 }
