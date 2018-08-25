@@ -284,7 +284,7 @@ class ChatRoomPresenter @Inject constructor(
                         timestamp = Instant.now().toEpochMilli(),
                         sender = SimpleUser(null, username, username),
                         attachments = null,
-                        avatar = currentServer.avatarUrl(username!!),
+                        avatar = currentServer.avatarUrl(username ?: ""),
                         channels = null,
                         editedAt = null,
                         editedBy = null,
