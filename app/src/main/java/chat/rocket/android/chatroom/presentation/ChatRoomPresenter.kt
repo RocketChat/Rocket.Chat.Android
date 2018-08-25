@@ -503,51 +503,47 @@ class ChatRoomPresenter @Inject constructor(
         launch(parent = strategy.jobs) {
             if (chatRoomId != null && chatRoomType != null) {
                 val roomType = roomTypeOf(chatRoomType!!)
-                messagesRepository.getByRoomId(chatRoomId!!)
-                    .sortedByDescending { it.timestamp }.firstOrNull()?.let { lastMessage ->
+                val lastSyncDate = messagesRepository.getLastSyncDate()
+                // lastSyncDate or 0. LastSyncDate could be in case when we sent some messages offline(and saved them locally),
+                // but never has obtained chatMessages(or history) from remote. In this case we should sync all chat history from beginning
+                val instant = Instant.ofEpochMilli(lastSyncDate ?: 0).toString()
+                //
+                try {
+                    val messages =
+                        retryIO(description = "history($chatRoomId, $roomType, $instant)") {
+                            client.history(
+                                chatRoomId!!, roomType, count = 50,
+                                oldest = instant
+                            )
+                        }
+                    Timber.d("History: $messages")
 
-                        val lastSyncDate = messagesRepository.getLastSyncDate()
-                        // lastSyncDate or 0. LastSyncDate could be in case when we sent some messages offline(and saved them locally),
-                        // but never has obtained chatMessages(or history) from remote. In this case we should sync all chat history from beginning
-                        val instant = Instant.ofEpochMilli(lastSyncDate ?: 0).toString()
+                    if (messages.result.isNotEmpty()) {
+                        val models = mapper.map(messages.result, RoomUiModel(
+                            roles = chatRoles,
+                            isBroadcast = chatIsBroadcast,
+                            // FIXME: Why are we fixing isRoom attribute to true here?
+                            isRoom = true
+                        ))
+                        messagesRepository.saveAll(messages.result)
+                        //if success - saving last synced time
+                        //assume that BE returns ordered messages, the first message is the latest one
+                        messagesRepository.saveLastSyncDate(messages.result.first().timestamp)
 
-                        try {
-                            val messages =
-                                retryIO(description = "history($chatRoomId, $roomType, $instant)") {
-                                    client.history(
-                                        chatRoomId!!, roomType, count = 50,
-                                        oldest = instant
-                                    )
-                                }
-                            Timber.d("History: $messages")
+                        launchUI(strategy) {
+                            view.showNewMessage(models, true)
+                        }
 
-                            if (messages.result.isNotEmpty()) {
-                                val models = mapper.map(messages.result, RoomUiModel(
-                                    roles = chatRoles,
-                                    isBroadcast = chatIsBroadcast,
-                                    // FIXME: Why are we fixing isRoom attribute to true here?
-                                    isRoom = true
-                                ))
-                                messagesRepository.saveAll(messages.result)
-                                //if success - saving last synced time
-                                //assume that BE returns ordered messages, the first message is the latest one
-                                messagesRepository.saveLastSyncDate(messages.result.first().timestamp)
-
-                                launchUI(strategy) {
-                                    view.showNewMessage(models, true)
-                                }
-
-                                if (messages.result.size == 50) {
-                                    // we loaded at least count messages, try one more to fetch more messages
-                                    loadMissingMessages()
-                                }
-                            }
-                        } catch (ex: Exception) {
-                            // TODO - we need to better treat connection problems here, but no let gaps
-                            // on the messages list
-                            Timber.d(ex, "Error fetching channel history")
+                        if (messages.result.size == 50) {
+                            // we loaded at least count messages, try one more to fetch more messages
+                            loadMissingMessages()
                         }
                     }
+                } catch (ex: Exception) {
+                    // TODO - we need to better treat connection problems here, but no let gaps
+                    // on the messages list
+                    Timber.d(ex, "Error fetching channel history")
+                }
             }
         }
     }
