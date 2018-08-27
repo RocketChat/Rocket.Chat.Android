@@ -209,7 +209,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
 
-        adapter = ChatRoomAdapter(chatRoomType, chatRoomName, this,
+        adapter = ChatRoomAdapter(chatRoomId, chatRoomType, chatRoomName, this,
                 reactionListener = this)
     }
 
@@ -350,14 +350,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
 
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(
-                    chatRoomId,
-                    chatRoomType,
-                    chatRoomName,
-                    presenter,
-                    reactionListener = this@ChatRoomFragment,
-                    context = context
-                )
                 recycler_view.adapter = adapter
                 if (dataSet.size >= 30) {
                     recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
@@ -1033,5 +1025,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun openDirectMessage(roomName: String, message: String) {
         presenter.openDirectMessage(roomName, message)
+    }
+
+    override fun sendMessage(chatRoomId: String, text: String) {
+        presenter.sendMessage(chatRoomId, text, null)
     }
 }
