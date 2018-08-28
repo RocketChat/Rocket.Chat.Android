@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -14,6 +15,11 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -34,6 +40,10 @@ dependencies {
     implementation libraries.constraintlayout
     implementation libraries.recyclerview
     implementation libraries.material
+    implementation libraries.glide
+    kapt libraries.glideProcessor
+    implementation libraries.room
+    kapt libraries.roomProcessor
 }
 
 kotlin {

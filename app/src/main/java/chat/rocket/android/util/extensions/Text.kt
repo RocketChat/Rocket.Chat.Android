@@ -66,12 +66,13 @@ var TextView.content: CharSequence?
         Markwon.unscheduleDrawables(this)
         Markwon.unscheduleTableRows(this)
         if (value is Spanned) {
-            val result = EmojiParser.parse(value.toString()) as Spannable
+            val context = this.context
+            val result = EmojiParser.parse(context, value.toString()) as Spannable
             val end = if (value.length > result.length) result.length else value.length
             TextUtils.copySpansFrom(value, 0, end, Any::class.java, result, 0)
             text = result
         } else {
-            val result = EmojiParser.parse(value.toString()) as Spannable
+            val result = EmojiParser.parse(context, value.toString()) as Spannable
             text = result
         }
         Markwon.scheduleDrawables(this)
