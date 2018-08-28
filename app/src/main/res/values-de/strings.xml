@@ -1,0 +1,288 @@
+<resources>
+    <!-- Titles -->
+    <string name="title_sign_in_your_server">Anmelden am Server</string>
+    <string name="title_log_in">Anmelden</string>
+    <string name="title_register_username">Registriere Benutzernamen</string>
+    <string name="title_reset_password">Passwort zurücksetzen</string>
+    <string name="title_sign_up">registrieren</string>
+    <string name="title_authentication">Login Daten prüfen</string>
+    <string name="title_legal_terms">Legal Terms</string>
+    <string name="title_chats">Chats</string>
+    <string name="title_profile">Profil</string>
+    <string name="title_members">Benutzer (%d)</string>
+    <string name="title_settings">Einstellungen</string>
+    <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
+    <string name="title_change_password">Ändere Passwort</string>
+    <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
+    <string name="title_password">Ändere Passwort</string>
+    <string name="title_update_profile">Update Profil</string>
+    <string name="title_about">Über</string>
+    <string name="title_create_channel">Erstelle Raum</string>
+
+    <!-- Actions -->
+    <string name="action_connect">Verbinde</string>
+    <string name="action_use_this_username">Benutze den Benutzernamen</string>
+    <string name="action_login_or_sign_up">Klick diesen Knopf um sich anzumelden oder einen Account zu erstellen</string>
+    <string name="action_terms_of_service">Nutzungsbedingungen</string>
+    <string name="action_privacy_policy">Datenschutz</string>
+    <string name="action_search">Suche</string>
+    <string name="action_update">Updaten</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="action_create_channel">Erstelle Raum</string>
+    <string name="action_create">Erstelle</string>
+    <string name="action_logout">Abmelden</string>
+    <string name="action_files">Dateien</string>
+    <string name="action_confirm_password">Bestätige Passwort Änderung</string>
+    <string name="action_join_chat">Trete Chat bei</string>
+    <string name="action_add_account">Erstelle Account</string>
+    <string name="action_online">Online</string>
+    <string name="action_away">Abwesend</string>
+    <string name="action_busy">Beschäftigt</string>
+    <string name="action_invisible">Unsichtbar</string>
+    <string name="action_drawing">Zeichnung</string>
+    <string name="action_save_to_gallery">Sichern in Gallerie</string>
+    <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
+
+    <!-- Settings List -->
+    <string-array name="settings_actions">
+        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
+        <item name="item_password">Ändere Passwort</item>
+        <item name="item_password">Über</item>
+    </string-array>
+
+    <!-- Regular information messages -->
+    <string name="msg_generic_error">Entschuldigung, ein Fehler ist aufgetreten, bitte versuchen Sie es noch einmal.</string>
+    <string name="msg_no_data_to_display">Keine Anzeigedaten vorhanden</string>
+    <string name="msg_profile_update_successfully">Profil update erfolgreich</string>
+    <string name="msg_username">Benutzername</string>
+    <string name="msg_username_or_email">Benutzername oder E-Mail</string>
+    <string name="msg_password">Passwort</string>
+    <string name="msg_name">Name</string>
+    <string name="msg_email">E-Mail</string>
+    <string name="msg_avatar_url">Avatar URL</string>
+    <string name="msg_or_continue_using_social_accounts">Oder weiter mit einem Social Account</string>
+    <string name="msg_new_user">Neuer Benutzer? %1$s</string>
+    <string name="msg_forgot_password">Passwort vergessen? %1$s</string>
+    <string name="msg_reset">Zurücksetzen</string>
+    <string name="msg_check_your_email_to_reset_your_password">E-Mail gesendet! Prüfe dein E-Mail Posteingang um dein Passwort zurückzusetzen.</string>
+    <string name="msg_invalid_email">Bitte eine korrekte E-Mail Adresse eingeben</string>
+    <string name="msg_new_user_agreement">Beim weitergehen akzeptieren Sie usere\n%1$s und %2$s</string>
+    <string name="msg_2fa_code">2FA Code</string>
+    <!-- <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string> -->
+    <string name="msg_yesterday">Gestern</string>
+    <string name="msg_today">Heute</string>
+    <string name="msg_message">Nachricht</string>
+    <string name="msg_this_room_is_read_only">Dieser Raum ist nur lesen</string>
+    <string name="msg_invalid_2fa_code">Falscher 2FA Code</string>
+    <string name="msg_invalid_file">Falsche Datei</string>
+    <string name="msg_invalid_server_url">Falsche Server URL</string>
+    <string name="msg_content_description_log_in_using_facebook">Login mit Facebook</string>
+    <string name="msg_content_description_log_in_using_github">Login mit Github</string>
+    <string name="msg_content_description_log_in_using_google">Login mit Google</string>
+    <string name="msg_content_description_log_in_using_linkedin">Login mit Linkedin</string>
+    <string name="msg_content_description_log_in_using_meteor">Login mit Meteor</string>
+    <string name="msg_content_description_log_in_using_twitter">Login mit Twitter</string>
+    <string name="msg_content_description_log_in_using_gitlab">Login mit Gitlab</string>
+    <string name="msg_content_description_log_in_using_wordpress">Login mit WordPress</string>
+    <string name="msg_content_description_send_message">Sende Nachricht</string>
+    <string name="msg_content_description_show_attachment_options">Zeige Anhang Optionen</string>
+    <string name="msg_you">Du</string>
+    <string name="msg_unknown">Unbekannt</string>
+    <string name="msg_email_address">E-Mail Addresse</string>
+    <string name="msg_utc_offset">UTC Offset</string>
+    <string name="msg_new_password">Neues Passwort eingeben</string>
+    <string name="msg_confirm_password">Bestätige neues Passwort</string>
+    <string name="msg_channel_name">Raum Name</string>
+    <string name="msg_search">Suche</string>
+    <string name="msg_unread_messages">Ungelesene Nachrichten</string>
+    <string name="msg_preview_video">Video</string>
+    <string name="msg_preview_audio">Audio</string>
+    <string name="msg_preview_photo">Bild</string>
+    <string name="msg_preview_file">Datei</string>
+    <string name="msg_no_messages_yet">Noch keine Nachrichten</string>
+    <string name="msg_ok">OK</string>
+    <string name="msg_update_app_version_in_order_to_continue">Server Version veraltet. Bitte kontaktieren Sie ihren Server Administrator.</string>
+    <string name="msg_ver_not_recommended">
+        Die Server Version scheint älter als die empfolene Version %1$s zu sein.\nSie können sich trotzdem einloggen, aber es kann zu einem unerwartetem Verhalten kommen.</string>
+    <string name="msg_ver_not_minimum">
+        Die Server Version scheint älter als die minimale Version %1$s zu sein.\nBitte updaten Sie Ihren Server um sich einloggen zu können!
+    </string>
+    <string name="msg_no_chat_title">Keine Chat Nachrichten</string>
+    <string name="msg_no_chat_description">Starte die Konversation um Ihre \nNachrichten hier zu sehen.</string>
+    <string name="msg_proceed">WEITER</string>
+    <string name="msg_cancel">ABBRUCH</string>
+    <string name="msg_warning">WARNUNG</string>
+    <string name="msg_http_insecure">Bei HTTP verbinden Sie sich usicher zu einem Server. Wir empfehlen HTTPS zu benutzen.</string>
+    <string name="msg_error_checking_server_version">Ein Fehler ist aufgetreten beim prüfen der Server Version, bitte versuchen Sie es noch einmal</string>
+    <string name="msg_invalid_server_protocol">Das ausgewählte Protokoll wird vom Server nicht akzeptiert, versuchen Sie HTTPS</string>
+    <string name="msg_image_saved_successfully">Bild wurde in der Gallerie gespeichert</string>
+    <string name="msg_image_saved_failed">Bild speichern fehlgeschlagen</string>
+    <string name="msg_edited">(bearbeitet)</string>
+    <string name="msg_and">\u0020und\u0020</string>
+    <string name="msg_is_typing">\u0020 schreibt…</string>
+    <string name="msg_are_typing">\u0020 schreiben…</string>
+    <string name="msg_several_users_are_typing">Mehrere Benutzer schreiben…</string>
+    <string name="msg_no_search_found">Kein Ergebnis gefunden</string>
+    <string name="msg_log_out">Ausloggen…</string>
+    <string name="msg_upload_file">Lade Datei hoch</string>
+    <string name="msg_file_description">Datei Beschreibung</string>
+    <string name="msg_send">Sende</string>
+    <string name="msg_sent_attachment">Sende Anhang</string>
+
+    <!-- Create channel messages -->
+    <string name="msg_private_channel">Privat</string>
+    <string name="msg_public_channel">Öffentlich</string>
+    <string name="msg_private_channel_description">Nur Sie und eingeladene Benutzer haben Zugriff auf den Raum</string>
+    <string name="msg_public_channel_description">Jeder hat Zugriff auf diesen Raum</string>
+    <string name="msg_ready_only_channel">Nur lesen Raum</string>
+    <string name="msg_ready_only_channel_description">Nur der Admin kann neue Nachrichten schreiben</string>
+    <string name="msg_invite_members">Lade Benutzer in diesen Raum ein</string>
+    <string name="msg_member_already_added">Sie haben diesen Benutzer bereits selektiert</string>
+    <string name="msg_member_not_found">Benutzer nicht gefunden</string>
+    <string name="msg_channel_created_successfully">Raum erfolgreich erstellt</string>
+    <string name="msg_message_copied">Nachricht kopiert</string>
+    <string name="msg_delete_message">Lösche Nachricht</string>
+    <string name="msg_delete_description">Sind Sie sicher, dass Sie diese Nachricht löschen wollen?</string>
+
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
+    <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string> <!-- TODO Add translation -->
+
+    <!-- System messages -->
+    <string name="message_room_name_changed">Raum Namen geändert zu: %1$s von %2$s</string>
+    <string name="message_user_added_by">Benutzer %1$s hinzugefügt von %2$s</string>
+    <string name="message_user_removed_by">Benutzer %1$s entfernt von %2$s</string>
+    <string name="message_user_left">Hat den Raum verlassen.</string>
+    <string name="message_user_joined_channel">Hat den Raum betreten.</string>
+    <string name="message_welcome">Willkommen %s</string>
+    <string name="message_removed">Nachricht entfernt</string>
+    <string name="message_pinned">Nachricht angeheftet:</string>
+    <string name="message_muted">Benutzer %1$s stumm geschaltet von %2$s</string>
+    <string name="message_unmuted">Benutzer %1$s nicht mehr stumm geschaltet von %2$s</string>
+    <string name="message_role_add">%1$s wurde gesetzt %2$s von %3$s</string>
+    <string name="message_role_removed">%1$s ist nicht länger %2$s von %3$s</string>
+    <string name="message_credentials_saved_successfully">Login-Daten erfolgreich gespeichert</string>
+
+    <!-- Message actions -->
+    <string name="action_msg_reply">Antworten</string>
+    <string name="action_msg_info">Nachrichten Info</string>
+    <string name="action_msg_edit">Bearbeiten</string>
+    <string name="action_msg_copy">Kopieren</string>
+    <string name="action_msg_quote">Zitieren</string>
+    <string name="action_msg_delete">Löschen</string>
+    <string name="action_msg_pin">Nachricht anheften</string>
+    <string name="action_msg_unpin">Nachricht nicht mehr anheften</string>
+    <string name="action_msg_star">Nachricht favorisieren</string>
+    <string name="action_msg_unstar">Nachricht nicht mehr favorisieren</string>
+    <string name="action_msg_share">Teilen</string>
+    <string name="action_title_editing">Nachricht bearbeiten</string>
+    <string name="action_msg_add_reaction">Reaktion hinzufügen</string>
+
+    <!-- Permission messages -->
+    <string name="permission_editing_not_allowed">Bearbeiten nicht erlaubt</string>
+    <string name="permission_deleting_not_allowed">Löschen nicht erlaubt</string>
+    <string name="permission_pinning_not_allowed">Anheften nicht erlaubt</string>
+    <string name="permission_starring_not_allowed">Favorisieren nicht erlaubt</string>
+
+    <!-- Search message -->
+    <string name="title_search_message">Suche Nachricht</string>
+
+    <!-- Favorite/Unfavorite chat room -->
+    <string name="title_favorite_chat">Chat favorisieren</string>
+    <string name="title_unfavorite_chat">Chat nicht favorisieren</string>
+
+    <!-- Members List -->
+    <string name="title_members_list">Benutzer</string>
+
+    <!-- Mentions -->
+    <string name="msg_mentions">Erwähnungen</string>
+    <string name="msg_no_mention">Keine Erwähnung</string>
+    <string name="msg_all_the_mentions_appear_here">Alle Erwähnungen\nerscheinen hier</string>
+
+    <!-- Pinned Messages -->
+    <string name="title_pinned_messages">Angeheftete Nachrichten</string>
+    <string name="no_pinned_messages">Keine angehefteten Nachrichten vorhanden</string>
+    <string name="no_pinned_description">Alle angehefteten Nachrichten\nerscheinen hier</string>
+
+    <!-- Favorite Messages -->
+    <string name="title_favorite_messages">Favorisierte Nachrichten</string>
+    <string name="no_favorite_messages">Keine favorisierten Nachrichten vorhanden</string>
+    <string name="no_favorite_description">Alle favorisierten Nachrichten\nerscheinen hier</string>
+
+    <!-- Files -->
+    <string name="title_files">Dateien</string>
+    <string name="title_files_total">Dateien (%d)</string>
+    <string name="msg_no_files">Keine Dateien vorhanden</string>
+    <string name="msg_all_files_appear_here">Alle Dateien erscheinen hier</string>
+
+    <!-- Upload Messages -->
+    <string name="max_file_size_exceeded">Dateigröße von %1$d Bytes überschreitet maximale Hochladegröße von %2$d Bytes</string>
+
+    <!-- Socket status -->
+    <string name="status_connected">Verbunden</string>
+    <string name="status_disconnected">Getrennt</string>
+    <string name="status_connecting">Verbinde</string>
+    <string name="status_authenticating">Authentifiziere</string>
+    <string name="status_disconnecting">Trenne</string>
+    <string name="status_waiting">Verbinde in %d Sekunden</string>
+
+    <!--Suggestions-->
+    <string name="suggest_all_description">Benachrichtige alle in diesem Raum</string>
+    <string name="suggest_here_description">Benachrichtige aktive Benutzer in diesem Raum</string>
+
+    <!-- Slash Commands -->
+    <string name="Slash_Gimme_Description">Zeige ༼ つ ◕_◕ ༽つ vor deiner Nachricht</string>
+    <string name="Slash_LennyFace_Description">Zeige ( ͡° ͜ʖ ͡°) nach deiner Nachricht</string>
+    <string name="Slash_Shrug_Description">Zeige ¯\_(ツ)_/¯ nach deiner Nachricht</string>
+    <string name="Slash_Tableflip_Description">Zeige (╯°□°）╯︵ ┻━┻</string>
+    <string name="Slash_TableUnflip_Description">Zeige ┬─┬ ノ( ゜-゜ノ)</string>
+    <string name="Create_A_New_Channel">Erstelle einen neuen Raum</string>
+    <string name="Show_the_keyboard_shortcut_list">Zeige Tasterturkürzel</string>
+    <string name="Invite_user_to_join_channel_all_from">Lade alle Benutzer von [#channel] in diesen Raum ein</string>
+    <string name="Invite_user_to_join_channel_all_to">Lade alle Benutzer von diesem Raum in [#channel] ein</string>
+    <string name="Archive">Archivieren</string>
+    <string name="Remove_someone_from_room">Entferne jemanden vom Raum</string>
+    <string name="Leave_the_current_channel">Verlasse diesen Raum</string>
+    <string name="Displays_action_text">Zeige Aktions Text</string>
+    <string name="Direct_message_someone">Schicke eine Direktnachricht an jemanden</string>
+    <string name="Mute_someone_in_room">Schalte jemanden im Raum auf Stumm</string>
+    <string name="Unmute_someone_in_room">Schalte jemanden im Raum nicht mehr auf Stumm</string>
+    <string name="Invite_user_to_join_channel">Lade jemanden in diesen Raum ein</string>
+    <string name="Unarchive">Dearchivieren</string>
+    <string name="Join_the_given_channel">Trete diesem Raum bei</string>
+    <string name="Guggy_Command_Description">Erstelle ein Gif, basierend auf den eingegebenen Text</string>
+    <string name="Slash_Topic_Description">Setze Topic</string>
+
+    <!-- Emoji message-->
+    <string name="msg_no_recent_emoji">Keine letzten Emojis</string>
+    <string name="alert_title_default_skin_tone">Standart Hautton</string>
+
+    <!-- Sorting and grouping-->
+    <string name="menu_chatroom_sort">Sortiere</string>
+    <string name="dialog_sort_title">Sortieren nach</string>
+    <string name="dialog_sort_by_alphabet">Alphabetisch</string>
+    <string name="dialog_sort_by_activity">Aktivität</string>
+    <string name="dialog_group_by_type">Räume nach Typ</string>
+    <string name="dialog_group_favourites">Räume nach Favoriten</string>
+    <string name="dialog_button_done">Done</string><!-- TODO Add translation -->
+    <string name="chatroom_header">Kopf</string>
+
+    <!--ChatRooms Headers-->
+    <string name="header_channel">Räume</string>
+    <string name="header_private_groups">Private Räume</string>
+    <string name="header_direct_messages">Direkt Nachrichten</string>
+    <string name="header_live_chats">Live Chats</string>
+    <string name="header_unknown">Unbekannt</string>
+
+    <!--Notifications-->
+    <string name="share_label">Bearbeite geteilte Nachricht</string>
+    <string name="notif_action_reply_hint">Antworten</string>
+    <string name="notif_error_sending">Antworten fehlgeschlagen. Bitte versuchen Sie es noch einmal.</string>
+    <string name="notif_success_sending">Nachricht gesendet nach %1$s!</string>
+    <string name="read_by">Gelesen von</string>
+    <string name="message_information_title">Nachricht Information</string>
+</resources>

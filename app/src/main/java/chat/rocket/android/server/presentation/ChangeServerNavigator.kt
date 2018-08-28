@@ -7,6 +7,7 @@ import chat.rocket.android.server.ui.ChangeServerActivity
 import chat.rocket.android.server.ui.INTENT_CHAT_ROOM_ID
 
 class ChangeServerNavigator (internal val activity: ChangeServerActivity) {
+
     fun toServerScreen() {
         activity.startActivity(activity.newServerIntent())
         activity.finish()

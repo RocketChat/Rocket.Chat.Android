@@ -32,18 +32,23 @@ import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
 import timber.log.Timber
 import javax.inject.Inject
+
+internal const val TAG_CHAT_ROOMS_FRAGMENT = "ChatRoomsFragment"
 
 private const val BUNDLE_CHAT_ROOM_ID = "BUNDLE_CHAT_ROOM_ID"
 
@@ -54,14 +59,12 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     lateinit var factory: ChatRoomsViewModelFactory
     @Inject
     lateinit var dbManager: DatabaseManager // TODO - remove when moving ChatRoom screen to DB
-
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     lateinit var viewModel: ChatRoomsViewModel
-
     private var searchView: SearchView? = null
     private var sortView: MenuItem? = null
-
     private val handler = Handler()
-
     private var chatRoomId: String? = null
     private var progressDialog: ProgressDialog? = null
 
@@ -108,6 +111,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         subscribeUi()
 
         setupToolbar()
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
+        }
     }
 
     private fun subscribeUi() {
@@ -216,7 +223,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 AlertDialog.Builder(context)
                     .setTitle(R.string.dialog_sort_title)
                     .setView(dialogLayout)
-                    .setPositiveButton("Done") { dialog, _ ->
+                    .setPositiveButton(R.string.dialog_button_done) { dialog, _ ->
                         invalidateQueryOnSearch()
                         updateSort()
                         dialog.dismiss()

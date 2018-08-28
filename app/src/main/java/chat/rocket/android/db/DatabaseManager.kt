@@ -330,7 +330,7 @@ class DatabaseManager(val context: Application,
             id = room.id,
             subscriptionId = subscription.id,
             type = room.type.toString(),
-            name = room.name ?: subscription.name ?: throw NullPointerException(),// this should be filtered on the SDK
+            name = room.name ?: subscription.name ?: throw NullPointerException(), // this should be filtered on the SDK
             fullname = subscription.fullName ?: room.fullName,
             userId = userId,
             ownerId = room.user?.id,

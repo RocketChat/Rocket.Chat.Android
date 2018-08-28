@@ -5,10 +5,9 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.view.Gravity
-import android.view.MenuItem
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,15 +18,16 @@ import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
 import chat.rocket.android.main.uimodel.NavHeaderUiModel
+import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.ui.INTENT_CHAT_ROOM_ID
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.invalidateFirebaseToken
+import chat.rocket.android.util.refreshFCMToken
 import chat.rocket.common.model.UserStatus
-import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -51,6 +51,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
     lateinit var presenter: MainPresenter
+    @Inject
+    lateinit var permissions: PermissionsInteractor
     private var isFragmentAdded: Boolean = false
     private var expanded = false
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
@@ -63,13 +65,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         setContentView(R.layout.activity_main)
 
         launch(CommonPool) {
-            try {
-                val token = FirebaseInstanceId.getInstance().token
-                Timber.d("FCM token: $token")
-                presenter.refreshToken(token)
-            } catch (ex: Exception) {
-                Timber.d(ex, "Missing play services...")
-            }
+            refreshFCMToken(presenter)
         }
 
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
@@ -136,7 +132,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                     text_user_name.text = userDisplayName
                 }
                 if (userAvatar != null) {
-                    image_avatar.setImageURI(userAvatar)
+                    setAvatar(userAvatar)
                 }
                 if (serverLogo != null) {
                     server_logo.setImageURI(serverLogo)
@@ -173,9 +169,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
 
         headerLayout.image_avatar.setOnClickListener {
-            view_navigation.menu.findItem(R.id.action_profile).isChecked = true
+            view_navigation.menu.findItem(R.id.menu_action_profile).isChecked = true
             presenter.toUserProfile()
-            drawer_layout.closeDrawer(Gravity.START)
+            drawer_layout.closeDrawer(GravityCompat.START)
         }
     }
 
@@ -212,7 +208,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     override fun invalidateToken(token: String) =
-        FirebaseInstanceId.getInstance().deleteToken(token, FirebaseMessaging.INSTANCE_ID_SCOPE)
+        invalidateFirebaseToken(token)
 
     override fun showMessage(resId: Int) = showToast(resId)
 
@@ -225,44 +221,31 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     fun setupNavigationView() {
-        view_navigation.setNavigationItemSelectedListener { menuItem ->
-            menuItem.isChecked = true
+        with (view_navigation.menu) {
+            clear()
+            setupMenu(this)
+        }
+
+        view_navigation.setNavigationItemSelectedListener {
+            it.isChecked = true
             closeDrawer()
-            onNavDrawerItemSelected(menuItem)
+            onNavDrawerItemSelected(it)
             true
         }
 
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
-        toolbar.setNavigationOnClickListener {
-            openDrawer()
-        }
+        toolbar.setNavigationOnClickListener { openDrawer() }
     }
 
-    private fun onNavDrawerItemSelected(menuItem: MenuItem) {
-        when (menuItem.itemId) {
-            R.id.action_chat_rooms -> {
-                presenter.toChatList()
-            }
-            R.id.action_profile -> {
-                presenter.toUserProfile()
-            }
-            R.id.action_channel -> {
-                presenter.toCreateChannel()
-            }
-            R.id.action_settings -> {
-                presenter.toSettings()
-            }
-            R.id.action_logout -> {
-                presenter.logout()
-            }
-        }
+    fun setAvatar(avatarUrl: String) {
+        headerLayout.image_avatar.setImageURI(avatarUrl)
     }
 
     fun getDrawerLayout(): DrawerLayout = drawer_layout
 
-    fun openDrawer() = drawer_layout.openDrawer(Gravity.START)
+    fun openDrawer() = drawer_layout.openDrawer(GravityCompat.START)
 
-    fun closeDrawer() = drawer_layout.closeDrawer(Gravity.START)
+    fun closeDrawer() = drawer_layout.closeDrawer(GravityCompat.START)
 
     fun setCheckedNavDrawerItem(@IdRes item: Int) = view_navigation.setCheckedItem(item)
 

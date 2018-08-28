@@ -23,18 +23,24 @@ import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
 import chat.rocket.android.helper.*
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import chat.rocket.android.webview.sso.ui.INTENT_SSO_TOKEN
 import chat.rocket.android.webview.sso.ui.ssoWebViewIntent
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
 import chat.rocket.common.util.ifNull
-import com.google.android.gms.auth.api.credentials.*
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
 
+internal const val TAG_LOGIN_FRAGMENT = "LoginFragment"
+internal const val REQUEST_CODE_FOR_SIGN_IN_REQUIRED = 1
+internal const val REQUEST_CODE_FOR_MULTIPLE_ACCOUNTS_RESOLUTION = 2
+internal const val REQUEST_CODE_FOR_SAVE_RESOLUTION = 3
 internal const val REQUEST_CODE_FOR_CAS = 4
 internal const val REQUEST_CODE_FOR_SAML = 5
 internal const val REQUEST_CODE_FOR_OAUTH = 6
@@ -42,13 +48,14 @@ internal const val REQUEST_CODE_FOR_OAUTH = 6
 class LoginFragment : Fragment(), LoginView {
     @Inject
     lateinit var presenter: LoginPresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private var isOauthViewEnable = false
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         areLoginOptionsNeeded()
     }
     private var isGlobalLayoutListenerSetUp = false
     private var deepLinkInfo: LoginDeepLinkInfo? = null
-    private val credentialsClient by lazy { Credentials.getClient(requireActivity()) }
 
     companion object {
         private const val DEEP_LINK_INFO = "DeepLinkInfo"
@@ -85,6 +92,14 @@ class LoginFragment : Fragment(), LoginView {
         }.ifNull {
             presenter.setupView()
         }
+
+        if (!hasCredentialsSupport()) {
+            image_key.isVisible = false
+        }
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.Login)
+        }
     }
 
     override fun onDestroyView() {
@@ -100,13 +115,15 @@ class LoginFragment : Fragment(), LoginView {
             if (data != null) {
                 when (requestCode) {
                     REQUEST_CODE_FOR_MULTIPLE_ACCOUNTS_RESOLUTION -> {
-                        onCredentialRetrieved(data.getParcelableExtra(Credential.EXTRA_KEY))
+                        getCredentials(data)?.let {
+                            onCredentialRetrieved(it.first, it.second)
+                        }
                     }
                     REQUEST_CODE_FOR_SIGN_IN_REQUIRED -> {
-                        //use the hints to autofill sign in forms to reduce the info to be filled.
-                        val credential: Credential = data.getParcelableExtra(Credential.EXTRA_KEY)
-                        text_username_or_email.setText(credential.id)
-                        text_password.setText(credential.password)
+                        getCredentials(data)?.let { credential ->
+                            text_username_or_email.setText(credential.first)
+                            text_password.setText(credential.second)
+                        }
                     }
                     REQUEST_CODE_FOR_SAVE_RESOLUTION -> {
                         showMessage(getString(R.string.message_credentials_saved_successfully))
@@ -154,19 +171,19 @@ class LoginFragment : Fragment(), LoginView {
 
     private fun requestStoredCredentials() {
         activity?.let {
-            SmartLockHelper.requestStoredCredentials(credentialsClient, it)?.let {
-                onCredentialRetrieved(it)
+            it.requestStoredCredentials()?.let { credentials ->
+                onCredentialRetrieved(credentials.first, credentials.second)
             }
         }
     }
 
-    private fun onCredentialRetrieved(credential: Credential) {
-        presenter.authenticateWithUserAndPassword(credential.id, credential.password.toString())
+    private fun onCredentialRetrieved(id: String, password: String) {
+        presenter.authenticateWithUserAndPassword(id, password)
     }
 
     override fun saveSmartLockCredentials(id: String, password: String) {
         activity?.let {
-            SmartLockHelper.save(credentialsClient, it, id, password)
+            it.saveCredentials(id, password)
         }
     }
 

@@ -16,9 +16,12 @@ import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.mentions.presentention.MentionsPresenter
 import chat.rocket.android.mentions.presentention.MentionsView
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_mentions.*
 import javax.inject.Inject
@@ -31,6 +34,7 @@ fun newInstance(chatRoomId: String): Fragment {
     }
 }
 
+internal const val TAG_MENTIONS_FRAGMENT = "MentionsFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class MentionsFragment : Fragment(), MentionsView {
@@ -39,6 +43,8 @@ class MentionsFragment : Fragment(), MentionsView {
     private val adapter = ChatRoomAdapter(enableActions = false)
     @Inject
     lateinit var presenter: MentionsPresenter
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +69,10 @@ class MentionsFragment : Fragment(), MentionsView {
 
         setupToolbar()
         presenter.loadMentions(chatRoomId)
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.Mentions)
+        }
     }
 
     override fun showMentions(mentions: List<BaseUiModel<*>>) {

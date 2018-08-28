@@ -46,6 +46,7 @@ import chat.rocket.core.model.attachment.GenericFileAttachment
 import chat.rocket.core.model.attachment.ImageAttachment
 import chat.rocket.core.model.attachment.MessageAttachment
 import chat.rocket.core.model.attachment.VideoAttachment
+import chat.rocket.core.model.attachment.actions.ActionsAttachment
 import chat.rocket.core.model.isSystemMessage
 import chat.rocket.core.model.url.Url
 import kotlinx.coroutines.experimental.CommonPool
@@ -305,7 +306,23 @@ class UiModelMapper @Inject constructor(
             is MessageAttachment -> mapMessageAttachment(message, attachment)
             is AuthorAttachment -> mapAuthorAttachment(message, attachment)
             is ColorAttachment -> mapColorAttachment(message, attachment)
+            is ActionsAttachment -> mapActionsAttachment(message, attachment)
             else -> null
+        }
+    }
+
+    private fun mapActionsAttachment(message: Message, attachment: ActionsAttachment): BaseUiModel<*>? {
+        return with(attachment) {
+            val content = stripMessageQuotes(message)
+
+            val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
+            val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+
+            ActionsAttachmentUiModel(attachmentUrl = url, title = title,
+                    actions = actions, buttonAlignment = buttonAlignment, message = message, rawData = attachment,
+                    messageId = message.id, reactions = getReactions(message),
+                    preview = message.copy(message = content.message), unread = message.unread,
+                    showDayMarker = false, currentDayMarkerText = dayMarkerText)
         }
     }
 

@@ -60,6 +60,7 @@ import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
@@ -71,6 +72,8 @@ import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.helper.analytics.AnalyticsManager
+import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -116,6 +119,8 @@ fun newInstance(
     }
 }
 
+internal const val TAG_CHAT_ROOM_FRAGMENT = "ChatRoomFragment"
+
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 private const val BUNDLE_CHAT_ROOM_NAME = "chat_room_name"
 private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
@@ -142,6 +147,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     lateinit var presenter: ChatRoomPresenter
     @Inject
     lateinit var parser: MessageParser
+    @Inject
+    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
     private lateinit var adapter: ChatRoomAdapter
     internal lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -212,7 +219,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
 
-        adapter = ChatRoomAdapter(chatRoomType, chatRoomName, this,
+        adapter = ChatRoomAdapter(chatRoomId, chatRoomType, chatRoomName, this,
                 reactionListener = this)
     }
 
@@ -237,6 +244,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         (activity as ChatRoomActivity).let {
             it.showToolbarTitle(chatRoomName)
             it.showToolbarChatRoomIcon(chatRoomType)
+        }
+
+        if (analyticsTrackingInteractor.get()) {
+            AnalyticsManager.logScreenView(ScreenViewEvent.ChatRoom)
         }
     }
 
@@ -1039,5 +1050,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun openDirectMessage(roomName: String, message: String) {
         presenter.openDirectMessage(roomName, message)
+    }
+
+    override fun sendMessage(chatRoomId: String, text: String) {
+        presenter.sendMessage(chatRoomId, text, null)
     }
 }
