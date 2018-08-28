@@ -160,8 +160,7 @@ class ChatRoomAdapter(
             return@filter (matchedIndex < 0)
         }
         //At the second stage we are inserting new received elements into set.
-        if (filteredDataSet.size == 0)
-            return
+        if (filteredDataSet.isEmpty()) return
         this.dataSet.addAll(0, filteredDataSet)
         val tmp = this.dataSet.sortedWith(Comparator { t, t2 -> t.message.timestamp.compareTo(t2.message.timestamp) }).reversed()
         this.dataSet.clear()

@@ -9,8 +9,8 @@ class MemoryMessagesRepository : MessagesRepository {
 
     private var lastSyncDate: Long? = null
 
-    override suspend fun saveLastSyncDate(it: Long) {
-        lastSyncDate = it
+    override suspend fun saveLastSyncDate(currentTimeMillis: Long) {
+        lastSyncDate = currentTimeMillis
     }
 
     override suspend fun getLastSyncDate() = lastSyncDate

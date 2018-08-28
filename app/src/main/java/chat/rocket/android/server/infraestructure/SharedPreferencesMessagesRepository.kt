@@ -27,7 +27,6 @@ class SharedPreferencesMessagesRepository(
         currentServerInteractor.get()?.also { server ->
             if (!prefs.contains(getSyncDateKey(server)))
                 return@withContext null
-            //
             val time = prefs.getLong(getSyncDateKey(server), -1)
             return@withContext if (time == -1L) null else time
         }
