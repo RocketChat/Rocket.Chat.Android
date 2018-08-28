@@ -1,17 +1,25 @@
 package chat.rocket.android.authentication.twofactor.presentation
 
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.AuthenticationEvent
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.GetAccountsInteractor
+import chat.rocket.android.server.domain.GetConnectingServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.SaveAccountInteractor
+import chat.rocket.android.server.domain.SaveCurrentServerInteractor
+import chat.rocket.android.server.domain.TokenRepository
+import chat.rocket.android.server.domain.favicon
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.server.domain.wideTile
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.android.util.extensions.serverLogoUrl
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
-import chat.rocket.android.util.helper.analytics.event.AuthenticationEvent
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
@@ -30,7 +38,7 @@ class TwoFAPresenter @Inject constructor(
     private val localRepository: LocalRepository,
     private val serverInteractor: GetConnectingServerInteractor,
     private val saveCurrentServerInteractor: SaveCurrentServerInteractor,
-    private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
+    private val analyticsManager: AnalyticsManager,
     private val factory: RocketChatClientFactory,
     private val saveAccountInteractor: SaveAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
@@ -68,23 +76,19 @@ class TwoFAPresenter @Inject constructor(
                         saveCurrentServerInteractor.save(currentServer)
                         tokenRepository.save(server, token)
                         registerPushToken()
-                        if (analyticsTrackingInteractor.get()) {
-                            AnalyticsManager.logLogin(
-                                AuthenticationEvent.AuthenticationWithUserAndPassword,
-                                true
-                            )
-                        }
+                        analyticsManager.logLogin(
+                            AuthenticationEvent.AuthenticationWithUserAndPassword,
+                            true
+                        )
                         navigator.toChatList()
                     } catch (exception: RocketChatException) {
                         if (exception is RocketChatAuthException) {
                             view.alertInvalidTwoFactorAuthenticationCode()
                         } else {
-                            if (analyticsTrackingInteractor.get()) {
-                                AnalyticsManager.logLogin(
-                                    AuthenticationEvent.AuthenticationWithUserAndPassword,
-                                    false
-                                )
-                            }
+                            analyticsManager.logLogin(
+                                AuthenticationEvent.AuthenticationWithUserAndPassword,
+                                false
+                            )
                             exception.message?.let {
                                 view.showMessage(it)
                             }.ifNull {

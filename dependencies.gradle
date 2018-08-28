@@ -21,7 +21,7 @@ ext {
 
             dagger                : '2.16',
             firebaseCloudMessage  : '17.1.0',
-            firebaseAnalytics     : '16.0.1',
+            firebaseAnalytics     : '16.0.3',
             playServices          : '15.0.1',
             exoPlayer             : '2.8.2',
             flexbox               : '1.0.0',
