@@ -5,7 +5,7 @@ ext {
             compileSdk            : 28,
             targetSdk             : 28,
             minSdk                : 21,
-            buildTools            : '28.0.1',
+            buildTools            : '28.0.2',
             dokka                 : '0.9.16',
 
             // For app

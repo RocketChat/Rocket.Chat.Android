@@ -26,7 +26,6 @@ import org.commonmark.node.Document
 import org.commonmark.node.ListItem
 import org.commonmark.node.Node
 import org.commonmark.node.OrderedList
-import org.commonmark.node.Paragraph
 import org.commonmark.node.Text
 import ru.noties.markwon.Markwon
 import ru.noties.markwon.SpannableBuilder
@@ -132,8 +131,7 @@ class MessageParser @Inject constructor(
         private val builder: SpannableBuilder
     ) : SpannableMarkdownVisitor(configuration, builder) {
 
-        private val density = context.resources.displayMetrics.density
-        private val px = (22 * density).toInt()
+        private val emojiSize = context.resources.getDimensionPixelSize(R.dimen.radius_mention)
 
         override fun visit(document: Document) {
             val spannable = EmojiParser.parse(context, builder.text())
@@ -148,7 +146,7 @@ class MessageParser @Inject constructor(
                 }
 
                 emojiImageSpans.forEach {
-                    it.drawable?.setBounds(0, 0, px, px)
+                    it.drawable?.setBounds(0, 0, emojiSize, emojiSize)
                     builder.setSpan(it, spannable.getSpanStart(it), spannable.getSpanEnd(it),
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
