@@ -454,6 +454,7 @@ class LoginPresenter @Inject constructor(
                     )
                     localRepository.saveCurrentUser(currentServer, user)
                     saveCurrentServer.save(currentServer)
+                    localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, myself.username)
                     saveAccount(myself.username!!)
                     saveToken(token)
                     registerPushToken()

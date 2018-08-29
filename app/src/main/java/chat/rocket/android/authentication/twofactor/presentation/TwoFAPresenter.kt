@@ -67,6 +67,7 @@ class TwoFAPresenter @Inject constructor(
                         saveAccount(me)
                         saveCurrentServerInteractor.save(currentServer)
                         tokenRepository.save(server, token)
+                        localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
                         registerPushToken()
                         if (analyticsTrackingInteractor.get()) {
                             AnalyticsManager.logLogin(
