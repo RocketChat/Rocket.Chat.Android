@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         presenter.connect()
         presenter.loadServerAccounts()
         presenter.loadCurrentInfo()
+        presenter.loadEmojis()
         setupToolbar()
         setupNavigationView()
     }
