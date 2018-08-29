@@ -21,6 +21,7 @@ import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.helper.analytics.AnalyticsManager
 import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_settings.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
@@ -30,6 +31,11 @@ internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListener {
     @Inject
     lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        AndroidSupportInjection.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
