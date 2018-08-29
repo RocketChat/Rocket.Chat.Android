@@ -1,8 +1,8 @@
 package chat.rocket.android.server.presentation
 
+import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.server.domain.GetAccountInteractor
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -11,7 +11,6 @@ import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
 import chat.rocket.common.util.ifNull
 import javax.inject.Inject
 
@@ -23,7 +22,7 @@ class ChangeServerPresenter @Inject constructor(
     private val getCurrentServerInteractor: GetCurrentServerInteractor,
     private val getAccountInteractor: GetAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
-    private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
+    private val analyticsManager: AnalyticsManager,
     private val settingsRepository: SettingsRepository,
     private val tokenRepository: TokenRepository,
     private val localRepository: LocalRepository,
@@ -66,9 +65,7 @@ class ChangeServerPresenter @Inject constructor(
 
                 saveCurrentServerInteractor.save(serverUrl)
                 view.hideProgress()
-                if (analyticsTrackingInteractor.get()) {
-                    AnalyticsManager.logServerSwitch(serverUrl, accounts.size)
-                }
+                analyticsManager.logServerSwitch()
                 navigator.toChatRooms(chatRoomId)
             }.ifNull {
                 view.hideProgress()

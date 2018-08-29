@@ -1,4 +1,4 @@
-package chat.rocket.android.util.helper.analytics.event
+package chat.rocket.android.analytics.event
 
 sealed class ScreenViewEvent(val screenName: String) {
 

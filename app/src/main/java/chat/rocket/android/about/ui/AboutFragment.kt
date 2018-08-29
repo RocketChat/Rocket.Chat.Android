@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.main.ui.MainActivity
-import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
-import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_about.*
 import javax.inject.Inject
@@ -19,7 +18,7 @@ internal const val TAG_ABOUT_FRAGMENT = "AboutFragment"
 
 class AboutFragment : Fragment() {
     @Inject
-    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,9 +31,7 @@ class AboutFragment : Fragment() {
         setupToolbar()
         setupViews()
 
-        if (analyticsTrackingInteractor.get()) {
-            AnalyticsManager.logScreenView(ScreenViewEvent.About)
-        }
+        analyticsManager.logScreenView(ScreenViewEvent.About)
     }
 
     private fun setupViews() {

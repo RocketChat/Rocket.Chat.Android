@@ -1,5 +1,7 @@
 package chat.rocket.android.authentication.login.presentation
 
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.AuthenticationEvent
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
@@ -18,8 +20,6 @@ import chat.rocket.android.util.extensions.parseColor
 import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.android.util.extensions.samlUrl
 import chat.rocket.android.util.extensions.serverLogoUrl
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
-import chat.rocket.android.util.helper.analytics.event.AuthenticationEvent
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
@@ -62,7 +62,7 @@ class LoginPresenter @Inject constructor(
     private val localRepository: LocalRepository,
     private val getAccountsInteractor: GetAccountsInteractor,
     private val settingsInteractor: GetSettingsInteractor,
-    private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
+    private val analyticsManager: AnalyticsManager,
     serverInteractor: GetConnectingServerInteractor,
     private val saveCurrentServer: SaveCurrentServerInteractor,
     private val saveAccountInteractor: SaveAccountInteractor,
@@ -458,9 +458,7 @@ class LoginPresenter @Inject constructor(
                     saveAccount(myself.username!!)
                     saveToken(token)
                     registerPushToken()
-                    if (analyticsTrackingInteractor.get()) {
-                        AnalyticsManager.logLogin(loginMethod, true)
-                    }
+                    analyticsManager.logLogin(loginMethod, true)
                     if (loginType == TYPE_LOGIN_USER_EMAIL) {
                         view.saveSmartLockCredentials(usernameOrEmail, password)
                     }
@@ -474,9 +472,7 @@ class LoginPresenter @Inject constructor(
                         navigator.toTwoFA(usernameOrEmail, password)
                     }
                     else -> {
-                        if (analyticsTrackingInteractor.get()) {
-                            AnalyticsManager.logLogin(loginMethod, false)
-                        }
+                        analyticsManager.logLogin(loginMethod, false)
                         exception.message?.let {
                             view.showMessage(it)
                         }.ifNull {

@@ -15,18 +15,17 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.createchannel.presentation.CreateChannelPresenter
 import chat.rocket.android.createchannel.presentation.CreateChannelView
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.uimodel.MemberUiModel
-import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
-import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import com.google.android.material.chip.Chip
@@ -43,7 +42,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     @Inject
     lateinit var createChannelPresenter: CreateChannelPresenter
     @Inject
-    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
+    lateinit var analyticsManager: AnalyticsManager
     private var actionMode: ActionMode? = null
     private val adapter: MembersAdapter = MembersAdapter {
         if (it.username != null) {
@@ -77,9 +76,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         setupRecyclerView()
         subscribeEditTexts()
 
-        if (analyticsTrackingInteractor.get()) {
-            AnalyticsManager.logScreenView(ScreenViewEvent.CreateChannel)
-        }
+        analyticsManager.logScreenView(ScreenViewEvent.CreateChannel)
     }
 
     override fun onDestroyView() {
