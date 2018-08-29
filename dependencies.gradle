@@ -12,12 +12,12 @@ ext {
             kotlin                : '1.2.61',
             coroutine             : '0.24.0',
 
-            appCompat             : '1.0.0-beta01',
-            recyclerview          : '1.0.0-beta01',
-            constraintLayout      : '2.0.0-alpha1',
-            cardview              : '1.0.0-beta01',
-            browser               : '1.0.0-beta01',
-            androidKtx            : '1.0.0-beta01',
+            appCompat             : '1.0.0-rc02',
+            recyclerview          : '1.0.0-rc02',
+            constraintLayout      : '2.0.0-alpha2',
+            cardview              : '1.0.0-rc02',
+            browser               : '1.0.0-rc02',
+            androidKtx            : '1.0.0-rc02',
 
             dagger                : '2.16',
             firebaseCloudMessage  : '17.1.0',
@@ -25,7 +25,7 @@ ext {
             playServices          : '15.0.1',
             exoPlayer             : '2.8.2',
             flexbox               : '1.0.0',
-            material              : '1.0.0-beta01',
+            material              : '1.0.0-rc01',
 
             room                  : '2.0.0-beta01',
             lifecycle             : '2.0.0-beta01',
