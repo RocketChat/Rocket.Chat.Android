@@ -1,7 +1,12 @@
 package chat.rocket.android.main.presentation
 
+import android.content.Context
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
+import chat.rocket.android.emoji.Emoji
+import chat.rocket.android.emoji.EmojiRepository
+import chat.rocket.android.emoji.Fitzpatrick
+import chat.rocket.android.emoji.internal.EmojiCategory
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.uimodel.NavHeaderUiModel
 import chat.rocket.android.main.uimodel.NavHeaderUiModelMapper
@@ -30,6 +35,7 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.UserStatus
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
+import chat.rocket.core.internal.rest.getCustomEmojis
 import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.unregisterPushToken
@@ -122,6 +128,38 @@ class MainPresenter @Inject constructor(
                 }
             }
             subscribeMyselfUpdates()
+        }
+    }
+
+    /**
+     * Load all emojis for the current server. Simple emojis are always the same for every server,
+     * but custom emojis vary according to the its url.
+     */
+    fun loadEmojis() {
+        launchUI(strategy) {
+            EmojiRepository.setCurrentServerUrl(currentServer)
+            val customEmojiList = mutableListOf<Emoji>()
+            try {
+                for (customEmoji in retryIO("getCustomEmojis()") { client.getCustomEmojis() }) {
+                    customEmojiList.add(Emoji(
+                        shortname = ":${customEmoji.name}:",
+                        category = EmojiCategory.CUSTOM.name,
+                        url = "$currentServer/emoji-custom/${customEmoji.name}.${customEmoji.extension}",
+                        count = 0,
+                        fitzpatrick = Fitzpatrick.Default.type,
+                        keywords = customEmoji.aliases,
+                        shortnameAlternates = customEmoji.aliases,
+                        siblings = mutableListOf(),
+                        unicode = "",
+                        isDefault = true
+                    ))
+                }
+
+                EmojiRepository.load(view as Context, customEmojis = customEmojiList)
+            } catch (ex: RocketChatException) {
+                Timber.e(ex)
+                EmojiRepository.load(view as Context)
+            }
         }
     }
 
