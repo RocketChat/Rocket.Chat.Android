@@ -510,7 +510,7 @@ class UiModelMapper @Inject constructor(
                 list.add(
                     ReactionUiModel(messageId = message.id,
                         shortname = shortname,
-                        unicode = EmojiParser.parse(shortname),
+                        unicode = EmojiParser.parse(context, shortname),
                         count = count,
                         usernames = usernames)
                 )
