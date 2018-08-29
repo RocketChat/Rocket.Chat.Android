@@ -1,8 +1,8 @@
-package chat.rocket.android.util.helper.analytics
+package chat.rocket.android.analytics
 
-import chat.rocket.android.util.helper.analytics.event.AuthenticationEvent
-import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
-import chat.rocket.android.util.helper.analytics.event.SubscriptionTypeEvent
+import chat.rocket.android.analytics.event.AuthenticationEvent
+import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.analytics.event.SubscriptionTypeEvent
 
 interface Analytics {
 

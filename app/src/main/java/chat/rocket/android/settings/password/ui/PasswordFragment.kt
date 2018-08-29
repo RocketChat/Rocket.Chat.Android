@@ -10,15 +10,14 @@ import android.widget.Toast
 import androidx.appcompat.view.ActionMode
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
-import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.settings.password.presentation.PasswordPresenter
 import chat.rocket.android.settings.password.presentation.PasswordView
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
-import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -32,7 +31,7 @@ class PasswordFragment : Fragment(), PasswordView, ActionMode.Callback {
     @Inject
     lateinit var presenter: PasswordPresenter
     @Inject
-    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
+    lateinit var analyticsManager: AnalyticsManager
     private var actionMode: ActionMode? = null
     private val disposables = CompositeDisposable()
 
@@ -56,9 +55,7 @@ class PasswordFragment : Fragment(), PasswordView, ActionMode.Callback {
 
         disposables.add(listenToChanges())
 
-        if (analyticsTrackingInteractor.get()) {
-            AnalyticsManager.logScreenView(ScreenViewEvent.Password)
-        }
+        analyticsManager.logScreenView(ScreenViewEvent.Password)
     }
 
     override fun onDestroyView() {
