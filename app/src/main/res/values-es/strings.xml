@@ -44,6 +44,11 @@
     <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
     <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
     <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
+    <string name="action_connect_server">Connect with a server</string>
+    <string name="action_join_community">Join in the community</string>
+    <string name="action_create_server">Create a new server</string>
+    <string name="action_register">Register</string>
+    <string name="action_confirm">Confirm</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -127,6 +132,17 @@
     <string name="msg_delete_message">Borrar mensaje</string>
     <string name="msg_delete_description">Seguro que quieres borrar este mensaje</string>
     <string name="msg_no_search_found">No se han encontrado resultados</string>
+    <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string>
+    <string name="msg_open_source_communication">Open Source Communication</string>
+    <string name="msg_login_with_email">Login with e-mail</string>
+    <string name="msg_create_account">Create an account</string>
+    <string name="msg_continue_with_facebook">Continue with Facebook</string>
+    <string name="msg_continue_with_github">Continue with Github</string>
+    <string name="msg_continue_with_google">Continue with Google</string>
+    <string name="msg_continue_with_linkedin">Continue with Linkedin</string>
+    <string name="msg_continue_with_gitlab">Continue with GitLab</string>
+    <string name="msg_two_factor_authentication">Two-factor Authentication</string>
+    <string name="msg__your_2fa_code">What’s your 2FA code?</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
+import chat.rocket.android.authentication.onboarding.ui.OnBoardingFragment
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
 import chat.rocket.android.authentication.server.ui.ServerFragment
 import chat.rocket.android.util.extensions.addFragment
@@ -15,6 +16,7 @@ import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -30,8 +32,17 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_authentication)
-        setTheme(R.style.AuthenticationTheme)
         super.onCreate(savedInstanceState)
+        setupToolbar()
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
     }
 
     override fun onStart() {
@@ -40,9 +51,9 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         launch(UI + job) {
             val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
             // if we got authenticateWithDeepLink information, pass true to newServer also
-            presenter.loadCredentials(newServer || deepLinkInfo != null) { authenticated ->
+            presenter.loadCredentials(newServer) { authenticated ->
                 if (!authenticated) {
-                    showServerInput(deepLinkInfo)
+                    showOnBoarding()
                 }
             }
         }
@@ -63,9 +74,9 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         return fragmentDispatchingAndroidInjector
     }
 
-    fun showServerInput(deepLinkInfo: LoginDeepLinkInfo?) {
-        addFragment("ServerFragment", R.id.fragment_container, allowStateLoss = true) {
-            ServerFragment.newInstance(deepLinkInfo)
+    private fun showOnBoarding() {
+        addFragment("OnBoardingFragment", R.id.fragment_container, allowStateLoss = true) {
+            OnBoardingFragment.newInstance()
         }
     }
 }
