@@ -134,6 +134,8 @@ dependencies {
     implementation libraries.frescoWebP
     implementation libraries.frescoAnimatedWebP
 
+    implementation libraries.glide
+
     kapt libraries.kotshiCompiler
     implementation libraries.kotshiApi
 

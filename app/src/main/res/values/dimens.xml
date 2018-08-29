@@ -31,6 +31,7 @@
     <dimen name="supposed_keyboard_height">252dp</dimen>
     <dimen name="picker_popup_height">250dp</dimen>
     <dimen name="picker_popup_width">300dp</dimen>
+    <dimen name="emoji_size">22dp</dimen>
 
     <!--Toolbar-->
     <dimen name="toolbar_height">56dp</dimen>
