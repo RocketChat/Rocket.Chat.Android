@@ -1,9 +1,10 @@
 package chat.rocket.android.authentication.registerusername.presentation
 
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.AuthenticationEvent
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.GetConnectingServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
@@ -19,8 +20,6 @@ import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.android.util.extensions.serverLogoUrl
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
-import chat.rocket.android.util.helper.analytics.event.AuthenticationEvent
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.Token
@@ -38,7 +37,7 @@ class RegisterUsernamePresenter @Inject constructor(
     private val factory: RocketChatClientFactory,
     private val saveAccountInteractor: SaveAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
-    private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
+    private val analyticsManager: AnalyticsManager,
     serverInteractor: GetConnectingServerInteractor,
     private val saveCurrentServer: SaveCurrentServerInteractor,
     settingsInteractor: GetSettingsInteractor
@@ -63,15 +62,14 @@ class RegisterUsernamePresenter @Inject constructor(
                         saveCurrentServer.save(currentServer)
                         tokenRepository.save(currentServer, Token(userId, authToken))
                         registerPushToken()
-                        if (analyticsTrackingInteractor.get()) {
-                            AnalyticsManager.logSignUp(AuthenticationEvent.AuthenticationWithOauth, true)
-                        }
+                        analyticsManager.logSignUp(
+                            AuthenticationEvent.AuthenticationWithOauth,
+                            true
+                        )
                         navigator.toChatList()
                     }
                 } catch (exception: RocketChatException) {
-                    if (analyticsTrackingInteractor.get()) {
-                        AnalyticsManager.logSignUp(AuthenticationEvent.AuthenticationWithOauth, false)
-                    }
+                    analyticsManager.logSignUp(AuthenticationEvent.AuthenticationWithOauth, false)
                     exception.message?.let {
                         view.showMessage(it)
                     }.ifNull {

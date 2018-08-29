@@ -10,9 +10,10 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAPresenter
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
-import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.shake
@@ -20,8 +21,6 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.util.extensions.vibrateSmartPhone
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
-import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_two_fa.*
 import javax.inject.Inject
@@ -32,7 +31,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
     @Inject
     lateinit var presenter: TwoFAPresenter
     @Inject
-    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
+    lateinit var analyticsManager: AnalyticsManager
     lateinit var username: String
     lateinit var password: String
 
@@ -66,9 +65,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
 
         setupOnClickListener()
 
-        if (analyticsTrackingInteractor.get()) {
-            AnalyticsManager.logScreenView(ScreenViewEvent.TwoFa)
-        }
+        analyticsManager.logScreenView(ScreenViewEvent.TwoFa)
     }
 
     override fun alertBlankTwoFactorAuthenticationCode() {

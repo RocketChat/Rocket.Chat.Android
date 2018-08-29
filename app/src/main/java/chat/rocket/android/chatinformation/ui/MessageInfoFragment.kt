@@ -9,15 +9,14 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatinformation.adapter.ReadReceiptAdapter
 import chat.rocket.android.chatinformation.presentation.MessageInfoPresenter
 import chat.rocket.android.chatinformation.presentation.MessageInfoView
 import chat.rocket.android.chatinformation.viewmodel.ReadReceiptViewModel
-import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
-import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_message_info.*
 import javax.inject.Inject
@@ -37,7 +36,7 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
     @Inject
     lateinit var presenter: MessageInfoPresenter
     @Inject
-    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
+    lateinit var analyticsManager: AnalyticsManager
     private lateinit var adapter: ReadReceiptAdapter
     private lateinit var messageId: String
 
@@ -67,9 +66,7 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
         setupRecyclerView()
         presenter.loadReadReceipts(messageId = messageId)
 
-        if (analyticsTrackingInteractor.get()) {
-            AnalyticsManager.logScreenView(ScreenViewEvent.MessageInfo)
-        }
+        analyticsManager.logScreenView(ScreenViewEvent.MessageInfo)
     }
 
     private fun setupRecyclerView() {

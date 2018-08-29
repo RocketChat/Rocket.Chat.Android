@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.DividerItemDecoration.HORIZONTAL
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.files.adapter.FilesAdapter
 import chat.rocket.android.files.presentation.FilesPresenter
@@ -21,12 +23,9 @@ import chat.rocket.android.files.uimodel.FileUiModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.player.PlayerActivity
-import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
-import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_files.*
 import javax.inject.Inject
@@ -46,7 +45,7 @@ class FilesFragment : Fragment(), FilesView {
     @Inject
     lateinit var presenter: FilesPresenter
     @Inject
-    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
+    lateinit var analyticsManager: AnalyticsManager
     private val adapter: FilesAdapter =
         FilesAdapter { fileUiModel -> presenter.openFile(fileUiModel) }
     private val linearLayoutManager = LinearLayoutManager(context)
@@ -75,9 +74,7 @@ class FilesFragment : Fragment(), FilesView {
         setupRecyclerView()
         presenter.loadFiles(chatRoomId)
 
-        if (analyticsTrackingInteractor.get()) {
-            AnalyticsManager.logScreenView(ScreenViewEvent.Files)
-        }
+        analyticsManager.logScreenView(ScreenViewEvent.Files)
     }
 
     override fun showFiles(dataSet: List<FileUiModel>, total: Long) {

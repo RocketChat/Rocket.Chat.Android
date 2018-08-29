@@ -1,15 +1,14 @@
-package chat.rocket.android.util.helper.analytics
+package chat.rocket.android.analytics
 
-import chat.rocket.android.util.helper.analytics.event.AuthenticationEvent
-import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
-import chat.rocket.android.util.helper.analytics.event.SubscriptionTypeEvent
+import chat.rocket.android.analytics.event.AuthenticationEvent
+import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.analytics.event.SubscriptionTypeEvent
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.crashlytics.android.answers.LoginEvent
 import com.crashlytics.android.answers.SignUpEvent
 
-// TODO inject the and analyticsTrackingInteractor and GetCurrentServerInteractor
-object AnalyticsManager : Analytics {
+class AnswersAnalytics : Analytics {
 
     override fun logLogin(event: AuthenticationEvent, loginSucceeded: Boolean) =
         Answers.getInstance()
