@@ -476,23 +476,18 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showTypingStatus(usernameList: List<String>) {
         ui {
             when (usernameList.size) {
-                1 -> {
-                    text_typing_status.text =
-                            SpannableStringBuilder()
-                                .bold { append(usernameList[0]) }
-                                .append(getString(R.string.msg_is_typing))
-                }
-                2 -> {
-                    text_typing_status.text =
-                            SpannableStringBuilder()
-                                .bold { append(usernameList[0]) }
-                                .append(getString(R.string.msg_and))
-                                .bold { append(usernameList[1]) }
-                                .append(getString(R.string.msg_are_typing))
-                }
-                else -> {
-                    text_typing_status.text = getString(R.string.msg_several_users_are_typing)
-                }
+                1 -> text_typing_status.text =
+                        SpannableStringBuilder()
+                            .bold { append(usernameList[0]) }
+                            .append(getString(R.string.msg_is_typing))
+                2 -> text_typing_status.text =
+                        SpannableStringBuilder()
+                            .bold { append(usernameList[0]) }
+                            .append(getString(R.string.msg_and))
+                            .bold { append(usernameList[1]) }
+                            .append(getString(R.string.msg_are_typing))
+
+                else -> text_typing_status.text = getString(R.string.msg_several_users_are_typing)
             }
             text_typing_status.isVisible = true
         }
@@ -716,16 +711,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                     text_connection_status.text = getString(R.string.status_connected)
                     handler.postDelayed(dismissStatus, 2000)
                 }
-                is State.Disconnected -> text_connection_status.text =
-                        getString(R.string.status_disconnected)
-                is State.Connecting -> text_connection_status.text =
-                        getString(R.string.status_connecting)
-                is State.Authenticating -> text_connection_status.text =
-                        getString(R.string.status_authenticating)
-                is State.Disconnecting -> text_connection_status.text =
-                        getString(R.string.status_disconnecting)
-                is State.Waiting -> text_connection_status.text =
-                        getString(R.string.status_waiting, state.seconds)
+                is State.Disconnected ->
+                    text_connection_status.text = getString(R.string.status_disconnected)
+                is State.Connecting ->
+                    text_connection_status.text = getString(R.string.status_connecting)
+                is State.Authenticating ->
+                    text_connection_status.text = getString(R.string.status_authenticating)
+                is State.Disconnecting ->
+                    text_connection_status.text = getString(R.string.status_disconnecting)
+                is State.Waiting ->
+                    text_connection_status.text = getString(R.string.status_waiting, state.seconds)
             }
         }
     }
@@ -802,12 +797,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             )
 
             subscribeComposeTextMessage()
-            emojiKeyboardPopup =
-                    EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
+            emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
             emojiKeyboardPopup.listener = this
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
-                override fun onKeyboardOpened() {
-                }
+                override fun onKeyboardOpened() {}
 
                 override fun onKeyboardClosed() {
                     activity?.let {
