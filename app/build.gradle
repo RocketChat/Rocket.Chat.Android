@@ -6,6 +6,7 @@ if (isPlay) { apply plugin: 'io.fabric' }
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: "com.github.ben-manes.versions"
 
 android {
     compileSdkVersion versions.compileSdk
@@ -15,8 +16,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 2036
-        versionName "2.5.1"
+        versionCode 2038
+        versionName "2.6.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -145,14 +146,14 @@ dependencies {
 
     implementation libraries.aVLoadingIndicatorView
 
-    implementation "com.github.luciofm:livedata-ktx:b1e8bbc25a"
+    implementation libraries.livedataKtx
 
     // Proprietary libraries
     playImplementation libraries.fcm
     playImplementation libraries.firebaseAnalytics
     playImplementation libraries.playServicesAuth
-    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') { transitive = true }
-    playImplementation('com.crashlytics.sdk.android:answers:1.4.2@aar') { transitive = true }
+    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') { transitive = true }
+    playImplementation('com.crashlytics.sdk.android:answers:1.4.3@aar') { transitive = true }
 
     testImplementation libraries.junit
     testImplementation libraries.truth
