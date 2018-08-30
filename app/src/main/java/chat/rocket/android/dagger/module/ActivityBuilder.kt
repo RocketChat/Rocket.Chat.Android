@@ -1,5 +1,6 @@
 package chat.rocket.android.dagger.module
 
+import chat.rocket.android.about.di.AboutFragmentProvider
 import chat.rocket.android.authentication.di.AuthenticationModule
 import chat.rocket.android.authentication.login.di.LoginFragmentProvider
 import chat.rocket.android.authentication.registerusername.di.RegisterUsernameFragmentProvider
@@ -58,6 +59,7 @@ abstract class ActivityBuilder {
             CreateChannelProvider::class,
             ProfileFragmentProvider::class,
             SettingsFragmentProvider::class,
+            AboutFragmentProvider::class,
             PreferencesFragmentProvider::class
         ]
     )
