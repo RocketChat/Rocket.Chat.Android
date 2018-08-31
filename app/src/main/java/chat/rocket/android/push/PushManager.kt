@@ -361,7 +361,7 @@ class PushManager @Inject constructor(
         val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val res = context.resources
         val smallIcon = res.getIdentifier(
-            "rocket_chat_notification", "drawable", context.packageName)
+            "ic_veranda_swing", "drawable", context.packageName)
         with(this) {
             setAutoCancel(true)
             setShowWhen(true)

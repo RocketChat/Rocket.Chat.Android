@@ -2,8 +2,8 @@
 <resources>
 
     <!-- Main colors -->
-    <color name="colorPrimary">#FF303030</color> <!-- Material Grey 850 -->
-    <color name="colorPrimaryDark">#FF212121</color> <!-- Material Grey 900 -->
+    <color name="colorPrimary">#009FE3</color> <!-- Material Grey 850 -->
+    <color name="colorPrimaryDark">#009FE3</color> <!-- Material Grey 900 -->
     <color name="colorAccent">#FF1976D2</color> <!-- Material Blue 700 -->
 
     <!-- Text colors -->

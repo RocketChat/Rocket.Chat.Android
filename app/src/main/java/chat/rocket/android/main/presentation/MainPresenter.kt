@@ -1,6 +1,13 @@
 package chat.rocket.android.main.presentation
 
 import android.content.Context
+import android.content.Intent
+import android.view.LayoutInflater
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.startActivity
+import chat.rocket.android.R
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.emoji.Emoji
@@ -12,6 +19,7 @@ import chat.rocket.android.main.uimodel.NavHeaderUiModel
 import chat.rocket.android.main.uimodel.NavHeaderUiModelMapper
 import chat.rocket.android.push.GroupedPush
 import chat.rocket.android.server.domain.GetAccountsInteractor
+import chat.rocket.android.server.domain.GetAccountInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.PublicSettings
@@ -58,6 +66,7 @@ class MainPresenter @Inject constructor(
     private val navHeaderMapper: NavHeaderUiModelMapper,
     private val saveAccountInteractor: SaveAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
+    private val getAccountInteractor: GetAccountInteractor,
     private val removeAccountInteractor: RemoveAccountInteractor,
     private val factory: RocketChatClientFactory,
     private val groupedPush: GroupedPush,
@@ -192,6 +201,41 @@ class MainPresenter @Inject constructor(
                 Timber.d(ex, "Error cleaning up the session...")
             }
             view.hideProgress()
+        }
+    }
+
+     /**
+     * Share
+     */
+    fun share(context: Context) {
+        launchUI(strategy) {
+
+            //get serverUrl and username
+            val server = serverInteractor.get()!!
+            val account = getAccountInteractor.get(server)!!
+            val userName = account.userName
+
+            val defaultMessage = "Hey! I’m on Rocket.Chat. \nMy username is “$userName” on server $server "
+
+            //Dialog
+            val layoutInflater = LayoutInflater.from(context)
+            val dialogLayout = layoutInflater.inflate(R.layout.share_dialog, null)
+            val editText = dialogLayout.findViewById<EditText>(R.id.share_text)
+            editText.setText(defaultMessage, TextView.BufferType.NORMAL)
+
+            AlertDialog.Builder(context)
+                    .setTitle(R.string.share_label)
+                    .setView(dialogLayout)
+                    .setPositiveButton(R.string.action_share) { dialog, _ ->
+                        dialog.dismiss()
+
+                        //intent
+                        val shareIntent = Intent()
+                        shareIntent.action = Intent.ACTION_SEND
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, editText.text.toString())
+                        shareIntent.type = "text/plain"
+                        startActivity(context, shareIntent, null)
+                    }.show()
         }
     }
 

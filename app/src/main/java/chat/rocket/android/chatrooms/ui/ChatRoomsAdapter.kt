@@ -93,11 +93,11 @@ class ChatRoomsAdapter(
         private fun bindIcon(chatRoom: ChatRoom, imageView: ImageView) {
             val drawable = when (chatRoom.type) {
                 is RoomType.Channel -> DrawableHelper.getDrawableFromId(
-                    R.drawable.ic_hashtag_black_12dp,
+                    R.drawable.ic_megaphone_black,
                     context
                 )
                 is RoomType.PrivateGroup -> DrawableHelper.getDrawableFromId(
-                    R.drawable.ic_lock_black_12_dp,
+                    R.drawable.ic_community_black,
                     context
                 )
                 is RoomType.DirectMessage -> DrawableHelper.getUserStatusDrawable(

@@ -39,6 +39,7 @@
     <string name="action_away">Ausente</string>
     <string name="action_busy">Ocupado</string>
     <string name="action_invisible">Invisible</string>
+    <string name="action_share">Compartir</string>
     <string name="action_drawing">Dibujo</string>
     <string name="action_save_to_gallery">Guardar en la galería</string>
     <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
@@ -274,10 +275,10 @@
     <string name="header_unknown">Desconocido</string>
 
     <!--Notifications-->
-    <string name="share_label">Edita mensaje compartido</string>
     <string name="notif_action_reply_hint">RESPUESTA</string>
     <string name="notif_error_sending">La respuesta ha fallado. Inténtalo de nuevo.</string>
     <string name="notif_success_sending">Mensaje enviado a %1$s!</string>
+    <string name="share_label">Editar mensaje compartido</string>
     <string name="read_by">Leído por</string>
     <string name="message_information_title">Información del mensaje</string>
     <string name="msg_log_out">Saliendo de tu cuenta…</string>

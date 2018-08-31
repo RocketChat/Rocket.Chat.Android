@@ -8,7 +8,8 @@
     <string name="title_sign_up">Inscreva-se</string>
     <string name="title_authentication">Autenticação</string>
     <string name="title_legal_terms">Termos Legais</string>
-    <string name="title_chats">Chats</string>
+    <string name="title_chats">Veranda</string>
+    <string name="title_home">Tela Inicial</string>
     <string name="title_profile">Perfil</string>
     <string name="title_members">Membros (%d)</string>
     <string name="title_settings">Configurações</string>
@@ -42,6 +43,7 @@
     <string name="action_invisible">Invisível</string>
     <string name="action_drawing">Desenhando</string>
     <string name="action_save_to_gallery">Salvar na galeria</string>
+    <string name="action_share">Compartilhar</string>
     <string name="action_select_photo_from_gallery">Escolher foto da galeria</string>
     <string name="action_take_photo">Tirar foto</string>
     <string name="action_reset_avatar">Resetar avatar</string>
