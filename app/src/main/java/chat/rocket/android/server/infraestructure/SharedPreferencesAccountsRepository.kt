@@ -14,12 +14,12 @@ class SharedPreferencesAccountsRepository(
     private val moshi: Moshi
 ) : AccountsRepository {
 
-    override fun save(newAccount: Account) {
+    override fun save(account: Account) {
         val accounts = load()
 
-        val newList = accounts.filter { account -> newAccount.serverUrl != account.serverUrl }
+        val newList = accounts.filter { it.serverUrl != it.serverUrl }
             .toMutableList()
-        newList.add(0, newAccount)
+        newList.add(0, account)
         save(newList)
     }
 
