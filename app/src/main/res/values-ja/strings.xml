@@ -14,6 +14,9 @@
     <string name="title_profile">プロフィール</string>
     <string name="title_members">メンバー (%d)</string>
     <string name="title_settings">設定</string>
+    <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
+    <string name="title_change_password">Change Password</string> <!-- TODO Add translation -->
+    <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
     <string name="title_password">パスワードの変更</string>
     <string name="title_update_profile">プロフィールの更新</string>
     <string name="title_about">About</string>
@@ -41,6 +44,9 @@
     <string name="action_invisible">状態を隠す</string>
     <string name="action_drawing">絵を描く</string>
     <string name="action_save_to_gallery">ギャラリーに保存</string>
+    <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_take_photo">Take photo</string> <!-- TODO Add translation -->
+    <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -68,6 +74,7 @@
     <string name="msg_new_user_agreement">サインアップすることで、\n%1$s と %2$s に同意したとみなします。</string>
     <string name="msg_2fa_code">2FA コード</string>
     <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
+    <string name="msg_today">Today</string> <!-- TODO Add translation -->
     <string name="msg_yesterday">昨日</string>
     <string name="msg_message">メッセージ</string>
     <string name="msg_this_room_is_read_only">この部屋は読み取り専用です</string>
@@ -81,7 +88,8 @@
     <string name="msg_content_description_log_in_using_meteor">Login using Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Login using Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Login using Gitlab</string>
-    <string name="msg_content_description_send_message">メッセージを送信</string>
+    <string name="msg_content_description_log_in_using_wordpress">Login using WordPress</string>
+    <string name="msg_content_description_send_message">メッセージを送信</string> <!-- TODO Add translation -->
     <string name="msg_content_description_show_attachment_options">添付ファイルオプションを表示する</string>
     <string name="msg_you">あなた</string>
     <string name="msg_unknown">不明</string>
@@ -142,6 +150,12 @@
     <string name="msg_message_copied">メッセージをコピー</string>
     <string name="msg_delete_message">メッセージを削除</string>
     <string name="msg_delete_description">このメッセージを削除してもよろしいですか?</string>
+
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
+    <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string> <!-- TODO Add translation -->
 
     <!-- System messages -->
     <string name="message_room_name_changed">ルーム名を %1$s から %2$s へ変更しました。</string>
@@ -271,6 +285,7 @@
     <string name="header_unknown">不明</string>
 
     <!--Notifications-->
+    <string name="share_label">Edit shared message</string> <!-- TODO Add translation -->
     <string name="notif_action_reply_hint">返信</string>
     <string name="notif_error_sending">送信に失敗しました。もう一度お試しください。</string>
     <string name="notif_success_sending">メッセージは %1$s に送信されました!</string>
