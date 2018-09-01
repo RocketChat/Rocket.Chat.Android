@@ -105,8 +105,6 @@
     <string name="msg_preview_photo">写真</string>
     <string name="msg_preview_file">ファイル</string>
     <string name="msg_no_messages_yet">メッセージはまだありません</string>
-    <!--<string name="msg_version">バージョン %1$s</string>-->
-    <string name="msg_build">ビルド %1$d</string>
     <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">古いバージョンのサーバーを使用しています。続行するには、管理者にサーバーのバージョンを更新するよう連絡してください。</string>
     <string name="msg_ver_not_recommended">
