@@ -158,7 +158,15 @@ class ChatRoomAdapter(
     }
 
     fun prependData(dataSet: List<BaseUiModel<*>>) {
-        //At first we will update all already saved elements with received updated ones
+        val minAdditionDate = dataSet.minBy { it.message.timestamp } ?: return
+        //---1. In the most cases we will just add new elements to the top of messages heap
+        if (minAdditionDate.message.timestamp > this.dataSet[0].message.timestamp) {
+            this.dataSet.addAll(0, dataSet)
+            notifyItemRangeInserted(0, dataSet.size)
+            return
+        }
+        //---2. Else branch: merging messages---
+        //---2.1 At first we will update all already saved elements with received updated ones
         val filteredDataSet = dataSet.filter { newItem ->
             val matchedIndex = this.dataSet.indexOfFirst { it.messageId == newItem.messageId && it.viewType == newItem.viewType }
             if (matchedIndex > -1) {
@@ -167,10 +175,16 @@ class ChatRoomAdapter(
             }
             return@filter (matchedIndex < 0)
         }
-        //At the second stage we are inserting new received elements into set.
+        //---2.2 At the second stage we are inserting new received elements into set.
         if (filteredDataSet.isEmpty()) return
         this.dataSet.addAll(0, filteredDataSet)
-        val tmp = this.dataSet.sortedWith(Comparator { t, t2 -> t.message.timestamp.compareTo(t2.message.timestamp) }).reversed()
+        val tmp = this.dataSet.sortedWith(Comparator { t, t2 ->
+            val timeComparison = t.message.timestamp.compareTo(t2.message.timestamp)
+            if (timeComparison == 0) {
+                return@Comparator t.viewType.compareTo(t2.viewType)
+            }
+            timeComparison
+        }).reversed()
         this.dataSet.clear()
         this.dataSet.addAll(tmp)
         notifyDataSetChanged()
