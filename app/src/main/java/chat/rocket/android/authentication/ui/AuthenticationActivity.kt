@@ -3,6 +3,8 @@ package chat.rocket.android.authentication.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import chat.rocket.android.R
@@ -47,10 +49,8 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun onStart() {
         super.onStart()
-        val deepLinkInfo = intent.getLoginDeepLinkInfo()
         launch(UI + job) {
             val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
-            // if we got authenticateWithDeepLink information, pass true to newServer also
             presenter.loadCredentials(newServer) { authenticated ->
                 if (!authenticated) {
                     showOnBoarding()
@@ -78,6 +78,19 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         addFragment("OnBoardingFragment", R.id.fragment_container, allowStateLoss = true) {
             OnBoardingFragment.newInstance()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.legal, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.action_terms_of_Service -> presenter.termsOfService(getString(R.string.action_terms_of_service))
+            R.id.action_privacy_policy -> presenter.privacyPolicy(getString(R.string.action_privacy_policy))
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
 

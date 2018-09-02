@@ -4,11 +4,11 @@
 
     <item
         android:id="@+id/action_terms_of_Service"
-        android:title="Terms of Service"
+        android:title="@string/action_terms_of_service"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_privacy_policy"
-        android:title="Privacy Policy"
+        android:title="@string/action_privacy_policy"
         app:showAsAction="never" />
 </menu>

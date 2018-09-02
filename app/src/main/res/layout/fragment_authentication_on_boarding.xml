@@ -47,6 +47,7 @@
             app:layout_constraintTop_toBottomOf="@id/text_onboarding_description"
             android:layout_marginTop="48dp"
             android:background="@drawable/rounded_border"
+            android:foreground="?selectableItemBackground"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             >
@@ -90,6 +91,7 @@
             app:layout_constraintTop_toBottomOf="@id/button_connect_server"
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_border"
+            android:foreground="?selectableItemBackground"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             >
@@ -147,7 +149,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/rounded_color_accent">
+            android:background="@drawable/rounded_color_accent"
+            android:foreground="?selectableItemBackground">
             <ImageView
                 android:id="@+id/image_new_server"
                 android:layout_width="30dp"

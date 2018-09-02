@@ -73,7 +73,7 @@
     <string name="msg_or_continue_using_social_accounts">Ou continuer en utilisant les comptes sociaux</string>
     <string name="msg_new_user">Nouvel utilisateur? %1$s</string>
     // TODO: Add proper translation.
-    <string name="msg_forgot_password">Forgot password? %1$s</string>
+    <string name="msg_forgot_password">Forgot password?</string>
     // TODO: Add proper translation.
     <string name="msg_reset">Reset</string>
     // TODO: Add proper translation.

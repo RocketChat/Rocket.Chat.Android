@@ -277,16 +277,10 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun setupForgotPasswordView() {
         ui {
-            val reset = getString(R.string.msg_reset)
-            val forgotPassword = String.format(getString(R.string.msg_forgot_password), reset)
-
-            text_forgot_your_password.text = forgotPassword
-
-            val resetListener = object : ClickableSpan() {
-                override fun onClick(view: View) = presenter.forgotPassword()
+            text_forgot_your_password.text = String.format(getString(R.string.msg_forgot_password))
+            text_forgot_your_password.setOnClickListener {
+                presenter.forgotPassword()
             }
-
-            TextHelper.addLink(text_forgot_your_password, arrayOf(reset), arrayOf(resetListener))
         }
     }
 
