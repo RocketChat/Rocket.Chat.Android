@@ -1,10 +1,13 @@
-package chat.rocket.android.util.helper.analytics
+package chat.rocket.android.analytics
 
-import chat.rocket.android.util.helper.analytics.event.AuthenticationEvent
-import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
-import chat.rocket.android.util.helper.analytics.event.SubscriptionTypeEvent
+import android.content.Context
+import chat.rocket.android.analytics.event.AuthenticationEvent
+import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.analytics.event.SubscriptionTypeEvent
+import javax.inject.Inject
 
-object AnalyticsManager : Analytics {
+class GoogleAnalyticsForFirebase @Inject constructor(val  context: Context) :
+    Analytics {
 
     override fun logLogin(event: AuthenticationEvent, loginSucceeded: Boolean) {
         // Do absolutely nothing

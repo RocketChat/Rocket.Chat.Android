@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -18,20 +17,30 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
+import androidx.fragment.app.Fragment
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
-import chat.rocket.android.helper.*
-import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
-import chat.rocket.android.util.extensions.*
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
-import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
-import chat.rocket.android.webview.sso.ui.INTENT_SSO_TOKEN
-import chat.rocket.android.webview.sso.ui.ssoWebViewIntent
+import chat.rocket.android.helper.KeyboardHelper
+import chat.rocket.android.helper.TextHelper
+import chat.rocket.android.helper.getCredentials
+import chat.rocket.android.helper.hasCredentialsSupport
+import chat.rocket.android.helper.requestStoredCredentials
+import chat.rocket.android.helper.saveCredentials
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.shake
+import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.vibrateSmartPhone
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
+import chat.rocket.android.webview.sso.ui.INTENT_SSO_TOKEN
+import chat.rocket.android.webview.sso.ui.ssoWebViewIntent
 import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
@@ -49,7 +58,7 @@ class LoginFragment : Fragment(), LoginView {
     @Inject
     lateinit var presenter: LoginPresenter
     @Inject
-    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
+    lateinit var analyticsManager: AnalyticsManager
     private var isOauthViewEnable = false
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         areLoginOptionsNeeded()
@@ -97,9 +106,7 @@ class LoginFragment : Fragment(), LoginView {
             image_key.isVisible = false
         }
 
-        if (analyticsTrackingInteractor.get()) {
-            AnalyticsManager.logScreenView(ScreenViewEvent.Login)
-        }
+        analyticsManager.logScreenView(ScreenViewEvent.Login)
     }
 
     override fun onDestroyView() {
