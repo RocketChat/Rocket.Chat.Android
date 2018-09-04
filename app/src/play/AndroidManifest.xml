@@ -13,13 +13,6 @@
         android:supportsRtl="true">
 
         <service
-            android:name=".push.FirebaseTokenService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
-        <service
             android:name=".push.FirebaseMessagingService"
             android:enabled="true"
             android:exported="true">

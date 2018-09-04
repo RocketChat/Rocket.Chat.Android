@@ -105,6 +105,7 @@ dependencies {
     implementation libraries.browser
 
     implementation libraries.androidKtx
+    implementation libraries.fragmentsKtx
 
     implementation libraries.dagger
     implementation libraries.daggerSupport
@@ -118,6 +119,8 @@ dependencies {
     kapt libraries.roomProcessor
     implementation libraries.lifecycleExtensions
     kapt libraries.lifecycleCompiler
+    implementation libraries.viewmodelKtx
+    implementation libraries.workmanager
 
     implementation libraries.rxKotlin
     implementation libraries.rxAndroid
