@@ -47,7 +47,7 @@
     <string name="action_select_photo_from_gallery">Select photo from gallery</string>
     <string name="action_take_photo">Take photo</string>
     <string name="action_reset_avatar">Reset avatar</string>
-    <string name="action_share">Share</string>
+    <string name="action_invite">Invite</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -183,7 +183,7 @@
     <string name="action_msg_unpin">Unpin Message</string>
     <string name="action_msg_star">Star Message</string>
     <string name="action_msg_unstar">Unstar Message</string>
-    <string name="action_msg_share">Share</string>
+    <string name="action_msg_invite">Invite</string>
     <string name="action_title_editing">Editing Message</string>
     <string name="action_msg_add_reaction">Add reaction</string>
 
@@ -284,7 +284,7 @@
     <string name="header_unknown">Unknown</string>
 
     <!--Notifications-->
-    <string name="share_label">Edit shared message</string>
+    <string name="invite_label">Edit invite message</string>
     <string name="notif_action_reply_hint">REPLY</string>
     <string name="notif_error_sending">Reply has failed. Please try again.</string>
     <string name="notif_success_sending">Message sent to %1$s!</string>

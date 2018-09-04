@@ -5,12 +5,12 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/share_text"
+        android:id="@+id/invite_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@null"
         android:gravity="top|start"
-        android:hint="@string/share_label"
+        android:hint="@string/invite_label"
         android:inputType="textMultiLine"
         android:lines="4"
         android:overScrollMode="always"

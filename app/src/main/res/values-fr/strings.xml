@@ -41,7 +41,7 @@
     <string name="action_away">Loin</string>
     <string name="action_busy">Occupé</string>
     <string name="action_invisible">Invisible</string>
-    <string name="action_share">Partager</string>
+    <string name="action_invite">Inviter</string>
     <string name="action_drawing">Dessin</string>
     <string name="action_save_to_gallery">Save to gallery</string> <!-- TODO Add translation -->
     <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
@@ -193,7 +193,7 @@
     <string name="action_msg_unpin">Enlever message</string>
     <string name="action_msg_star">Ajouter aux Favoris</string>
     <string name="action_msg_unstar">Retirer des favoris</string>
-    <string name="action_msg_share">Partager</string>
+    <string name="action_msg_invite">Inviter</string>
     <string name="action_title_editing">Modification du message</string>
     <string name="action_msg_add_reaction">Ajouter une réaction</string>
 
@@ -300,7 +300,7 @@
     <string name="header_unknown">Inconnu</string>
 
     <!--Notifications-->
-    <string name="share_label">Modifier le message partagé</string>
+    <string name="invite_label">Modifier le message dinvitation</string>
     <string name="notif_action_reply_hint">RÉPONDRE</string>
     <string name="notif_error_sending">La réponse a échoué. Veuillez réessayer.</string>
     <string name="notif_success_sending">Message envoyé à %1$s!</string>

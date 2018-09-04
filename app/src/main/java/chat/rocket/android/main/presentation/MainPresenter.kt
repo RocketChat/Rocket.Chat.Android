@@ -205,9 +205,9 @@ class MainPresenter @Inject constructor(
     }
 
      /**
-     * Share
+     * Invite
      */
-    fun share(context: Context) {
+    fun invite(context: Context) {
         launchUI(strategy) {
 
             //get serverUrl and username
@@ -215,26 +215,26 @@ class MainPresenter @Inject constructor(
             val account = getAccountInteractor.get(server)!!
             val userName = account.userName
 
-            val defaultMessage = "Hey! I’m on Rocket.Chat. \nMy username is “$userName” on server $server "
+            val defaultMessage = "Hey! I’m on Veranda. If you sign up we can chat for free. \nMy username is “$userName” on server $server "
 
             //Dialog
             val layoutInflater = LayoutInflater.from(context)
-            val dialogLayout = layoutInflater.inflate(R.layout.share_dialog, null)
-            val editText = dialogLayout.findViewById<EditText>(R.id.share_text)
+            val dialogLayout = layoutInflater.inflate(R.layout.invite_dialog, null)
+            val editText = dialogLayout.findViewById<EditText>(R.id.invite_text)
             editText.setText(defaultMessage, TextView.BufferType.NORMAL)
 
             AlertDialog.Builder(context)
-                    .setTitle(R.string.share_label)
+                    .setTitle(R.string.invite_label)
                     .setView(dialogLayout)
-                    .setPositiveButton(R.string.action_share) { dialog, _ ->
+                    .setPositiveButton(R.string.action_invite) { dialog, _ ->
                         dialog.dismiss()
 
                         //intent
-                        val shareIntent = Intent()
-                        shareIntent.action = Intent.ACTION_SEND
-                        shareIntent.putExtra(Intent.EXTRA_TEXT, editText.text.toString())
-                        shareIntent.type = "text/plain"
-                        startActivity(context, shareIntent, null)
+                        val inviteIntent = Intent()
+                        inviteIntent.action = Intent.ACTION_SEND
+                        inviteIntent.putExtra(Intent.EXTRA_TEXT, editText.text.toString())
+                        inviteIntent.type = "text/plain"
+                        startActivity(context, inviteIntent, null)
                     }.show()
         }
     }
