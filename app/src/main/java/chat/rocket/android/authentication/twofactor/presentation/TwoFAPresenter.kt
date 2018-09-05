@@ -5,7 +5,6 @@ import chat.rocket.android.analytics.event.AuthenticationEvent
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.GetConnectingServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.PublicSettings
@@ -18,13 +17,11 @@ import chat.rocket.android.server.domain.wideTile
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
-import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
-import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.model.Myself
@@ -41,11 +38,9 @@ class TwoFAPresenter @Inject constructor(
     private val analyticsManager: AnalyticsManager,
     private val factory: RocketChatClientFactory,
     private val saveAccountInteractor: SaveAccountInteractor,
-    private val getAccountsInteractor: GetAccountsInteractor,
     settingsInteractor: GetSettingsInteractor
 ) {
     private val currentServer = serverInteractor.get()!!
-    private val client: RocketChatClient = factory.create(currentServer)
     private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
 
     // TODO: If the usernameOrEmail and password was informed by the user on the previous screen, then we should pass only the pin, like this: fun authenticate(pin: EditText)
@@ -75,7 +70,7 @@ class TwoFAPresenter @Inject constructor(
                         saveAccount(me)
                         saveCurrentServerInteractor.save(currentServer)
                         tokenRepository.save(server, token)
-                        registerPushToken()
+                        localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
                         analyticsManager.logLogin(
                             AuthenticationEvent.AuthenticationWithUserAndPassword,
                             true
@@ -104,14 +99,6 @@ class TwoFAPresenter @Inject constructor(
     }
 
     fun signup() = navigator.toSignUp()
-
-    private suspend fun registerPushToken() {
-        localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
-            client.registerPushToken(it, getAccountsInteractor.get(), factory)
-        }
-        // TODO: When the push token is null, at some point we should receive it with
-        // onTokenRefresh() on FirebaseTokenService, we need to confirm it.
-    }
 
     private suspend fun saveAccount(me: Myself) {
         val icon = settings.favicon()?.let {

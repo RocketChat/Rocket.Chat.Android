@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.presentation
 
+import android.graphics.Bitmap
 import android.net.Uri
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
@@ -80,6 +81,7 @@ import org.threeten.bp.Instant
 import timber.log.Timber
 import java.io.InputStream
 import java.util.*
+import java.util.zip.DeflaterInputStream
 import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(
@@ -342,7 +344,7 @@ class ChatRoomPresenter @Inject constructor(
         view.showFileSelection(settings.uploadMimeTypeFilter())
     }
 
-    fun uploadFile(roomId: String, uri: Uri, msg: String) {
+    fun uploadFile(roomId: String, uri: Uri, msg: String, bitmap: Bitmap? = null) {
         launchUI(strategy) {
             view.showLoading()
             try {
@@ -359,12 +361,8 @@ class ChatRoomPresenter @Inject constructor(
                         else -> {
                             var inputStream: InputStream? = uriInteractor.getInputStream(uri)
 
-                            if (mimeType.contains("image")) {
-                                uriInteractor.getBitmap(uri)?.let {
-                                    it.compressImageAndGetInputStream(mimeType)?.let {
-                                        inputStream = it
-                                    }
-                                }
+                            bitmap?.compressImageAndGetInputStream(mimeType)?.let {
+                                inputStream = it
                             }
 
                             retryIO("uploadFile($roomId, $fileName, $mimeType") {
