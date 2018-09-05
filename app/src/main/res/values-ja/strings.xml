@@ -73,7 +73,6 @@
     <string name="msg_invalid_email">有効なメールアドレスを入力してください</string>
     <string name="msg_new_user_agreement">サインアップすることで、\n%1$s と %2$s に同意したとみなします。</string>
     <string name="msg_2fa_code">2FA コード</string>
-    <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
     <string name="msg_today">Today</string> <!-- TODO Add translation -->
     <string name="msg_yesterday">昨日</string>
     <string name="msg_message">メッセージ</string>
