@@ -10,6 +10,7 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.main.ui.MainActivity
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_about.*
 import javax.inject.Inject
@@ -19,6 +20,11 @@ internal const val TAG_ABOUT_FRAGMENT = "AboutFragment"
 class AboutFragment : Fragment() {
     @Inject
     lateinit var analyticsManager: AnalyticsManager
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        AndroidSupportInjection.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,8 +42,10 @@ class AboutFragment : Fragment() {
 
     private fun setupViews() {
         text_version_name.text = BuildConfig.VERSION_NAME
-        text_build_number.text = getString(R.string.msg_build, BuildConfig.VERSION_CODE,
-                BuildConfig.GIT_SHA, BuildConfig.FLAVOR)
+        text_build_number.text = getString(
+            R.string.msg_build, BuildConfig.VERSION_CODE,
+            BuildConfig.GIT_SHA, BuildConfig.FLAVOR
+        )
     }
 
     private fun setupToolbar() {

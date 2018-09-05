@@ -8,8 +8,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.work.Worker
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.dagger.DaggerAppComponent
+import chat.rocket.android.dagger.injector.HasWorkerInjector
 import chat.rocket.android.dagger.qualifier.ForMessages
 import chat.rocket.android.helper.CrashlyticsTree
 import chat.rocket.android.infrastructure.LocalRepository
@@ -33,7 +35,7 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class RocketChatApplication : Application(), HasActivityInjector, HasServiceInjector,
-    HasBroadcastReceiverInjector {
+    HasBroadcastReceiverInjector, HasWorkerInjector {
 
     @Inject
     lateinit var appLifecycleObserver: AppLifecycleObserver
@@ -46,6 +48,9 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
     @Inject
     lateinit var broadcastReceiverInjector: DispatchingAndroidInjector<BroadcastReceiver>
+
+    @Inject
+    lateinit var workerInjector: DispatchingAndroidInjector<Worker>
 
     @Inject
     lateinit var imagePipelineConfig: ImagePipelineConfig
@@ -132,17 +137,13 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         }
     }
 
-    override fun activityInjector(): AndroidInjector<Activity> {
-        return activityDispatchingAndroidInjector
-    }
+    override fun activityInjector() = activityDispatchingAndroidInjector
 
-    override fun serviceInjector(): AndroidInjector<Service> {
-        return serviceDispatchingAndroidInjector
-    }
+    override fun serviceInjector() = serviceDispatchingAndroidInjector
 
-    override fun broadcastReceiverInjector(): AndroidInjector<BroadcastReceiver> {
-        return broadcastReceiverInjector
-    }
+    override fun broadcastReceiverInjector() = broadcastReceiverInjector
+
+    override fun workerInjector() = workerInjector
 
     companion object {
         var context: WeakReference<Context>? = null

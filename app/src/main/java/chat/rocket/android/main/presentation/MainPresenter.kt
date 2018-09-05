@@ -233,13 +233,6 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    suspend fun refreshToken(token: String?) {
-        token?.let {
-            localRepository.save(LocalRepository.KEY_PUSH_TOKEN, token)
-            client.registerPushToken(token, getAccountsInteractor.get(), factory)
-        }
-    }
-
     private suspend fun saveAccount(uiModel: NavHeaderUiModel) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
