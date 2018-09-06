@@ -48,7 +48,11 @@ object EmojiRepository {
             this@EmojiRepository.customEmojis = customEmojis
             val allEmojis = mutableListOf<Emoji>()
             db = EmojiDatabase.getInstance(context)
-            cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
+
+            if (!::cachedTypeface.isInitialized) {
+                cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
+            }
+
             preferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
             val stream = context.assets.open(path)
             // Load emojis from emojione ttf file temporarily here. We still need to work on them.
@@ -308,5 +312,11 @@ object EmojiRepository {
         val s1: Int = Math.floor(temp.toDouble()).toInt() + 0xD800
         val s2: Int = ((scalar - 0x10000) % 0x400) + 0xDC00
         return Pair(s1, s2)
+    }
+
+    fun loadTypeface(context: Context) {
+        launch {
+            cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
+        }
     }
 }
