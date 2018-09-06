@@ -167,14 +167,13 @@ class ChatRoomAdapter(
             }
             return@filter (matchedIndex < 0)
         }
-        val minAdditionDate = dataSet.minBy { it.message.timestamp } ?: return
+        val minAdditionDate = filteredDataSet.minBy { it.message.timestamp } ?: return
         //---In the most cases we will just add new elements to the top of messages heap
         if (minAdditionDate.message.timestamp > this.dataSet[0].message.timestamp) {
-            this.dataSet.addAll(0, dataSet)
-            notifyItemRangeInserted(0, dataSet.size)
+            this.dataSet.addAll(0, filteredDataSet)
+            notifyItemRangeInserted(0, filteredDataSet.size)
             return
         }
-
         //---Else branch: merging messages---
         //---We are inserting new received elements into set. Sort them by time+type and show
         if (filteredDataSet.isEmpty()) return
