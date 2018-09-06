@@ -184,7 +184,7 @@ class ChatRoomPresenter @Inject constructor(
                             isBroadcast = chatIsBroadcast, isRoom = true
                         )
                     )
-                    val lastSyncDate = messagesRepository.getLastSyncDate()
+                    val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
                     if (oldMessages.isNotEmpty() && lastSyncDate != null) {
                         view.showMessages(oldMessages, clearDataSet)
                         loadMissingMessages()
@@ -228,13 +228,16 @@ class ChatRoomPresenter @Inject constructor(
             }
         messagesRepository.saveAll(messages)
 
-        //if success - saving last synced time
-        if (messages.isEmpty()) {
-            //chat history is empty - just saving current date
-            messagesRepository.saveLastSyncDate(System.currentTimeMillis())
-        } else {
-            //assume that BE returns ordered messages, the first message is the latest one
-            messagesRepository.saveLastSyncDate(messages.first().timestamp)
+        //we are saving last sync date of latest synced chat room message
+        if (offset == 0L) {
+            //if success - saving last synced time
+            if (messages.isEmpty()) {
+                //chat history is empty - just saving current date
+                messagesRepository.saveLastSyncDate(chatRoomId, System.currentTimeMillis())
+            } else {
+                //assume that BE returns ordered messages, the first message is the latest one
+                messagesRepository.saveLastSyncDate(chatRoomId, messages.first().timestamp)
+            }
         }
 
         view.showMessages(
@@ -494,9 +497,9 @@ class ChatRoomPresenter @Inject constructor(
 
     private fun loadMissingMessages() {
         launch(parent = strategy.jobs) {
-            if (chatRoomId != null && chatRoomType != null) {
-                val roomType = roomTypeOf(chatRoomType!!)
-                val lastSyncDate = messagesRepository.getLastSyncDate()
+            chatRoomId?.let { chatRoomId ->
+                val roomType = roomTypeOf(chatRoomType)
+                val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
                 // lastSyncDate or 0. LastSyncDate could be in case when we sent some messages offline(and saved them locally),
                 // but never has obtained chatMessages(or history) from remote. In this case we should sync all chat history from beginning
                 val instant = Instant.ofEpochMilli(lastSyncDate ?: 0).toString()
@@ -521,7 +524,7 @@ class ChatRoomPresenter @Inject constructor(
                         messagesRepository.saveAll(messages.result)
                         //if success - saving last synced time
                         //assume that BE returns ordered messages, the first message is the latest one
-                        messagesRepository.saveLastSyncDate(messages.result.first().timestamp)
+                        messagesRepository.saveLastSyncDate(chatRoomId, messages.result.first().timestamp)
 
                         launchUI(strategy) {
                             view.showNewMessage(models, true)

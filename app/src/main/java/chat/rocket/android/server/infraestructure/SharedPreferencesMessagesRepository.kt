@@ -15,25 +15,25 @@ class SharedPreferencesMessagesRepository(
 ) : MessagesRepository {
     private val KEY_LAST_SYNC_DATE = "KEY_LAST_SYNC_DATE"
 
-    override suspend fun saveLastSyncDate(currentTimeMillis: Long) {
+    override suspend fun saveLastSyncDate(rid: String, timeMillis: Long) {
         withContext(CommonPool) {
             currentServerInteractor.get()?.let {
-                prefs.edit().putLong(getSyncDateKey(it), currentTimeMillis).apply()
+                prefs.edit().putLong(getSyncDateKey(it, rid), timeMillis).apply()
             }
         }
     }
 
-    override suspend fun getLastSyncDate(): Long? = withContext(CommonPool) {
+    override suspend fun getLastSyncDate(rid: String): Long? = withContext(CommonPool) {
         currentServerInteractor.get()?.also { server ->
-            if (!prefs.contains(getSyncDateKey(server)))
+            if (!prefs.contains(getSyncDateKey(server, rid)))
                 return@withContext null
-            val time = prefs.getLong(getSyncDateKey(server), -1)
+            val time = prefs.getLong(getSyncDateKey(server, rid), -1)
             return@withContext if (time == -1L) null else time
         }
         return@withContext null
     }
 
-    private fun getSyncDateKey(it: String) = "${KEY_LAST_SYNC_DATE}_${it}"
+    private fun getSyncDateKey(server: String, rid: String) = "${KEY_LAST_SYNC_DATE}_$server $rid"
 
     override suspend fun getById(id: String): Message? = withContext(CommonPool) {
         currentServerInteractor.get()?.also { server ->
