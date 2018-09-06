@@ -78,25 +78,26 @@ class FilesFragment : Fragment(), FilesView {
     }
 
     override fun showFiles(dataSet: List<FileUiModel>, total: Long) {
-        setupToolbar(total)
-        if (adapter.itemCount == 0) {
-            adapter.prependData(dataSet)
-            if (dataSet.size >= 30) {
-                recycler_view.addOnScrollListener(object :
-                    EndlessRecyclerViewScrollListener(linearLayoutManager) {
-                    override fun onLoadMore(
-                        page: Int,
-                        totalItemsCount: Int,
-                        recyclerView: RecyclerView
-                    ) {
-                        presenter.loadFiles(chatRoomId)
-                    }
-                })
+        ui {
+            setupToolbar(total)
+            if (adapter.itemCount == 0) {
+                adapter.prependData(dataSet)
+                if (dataSet.size >= 30) {
+                    recycler_view.addOnScrollListener(object :
+                        EndlessRecyclerViewScrollListener(linearLayoutManager) {
+                        override fun onLoadMore(
+                            page: Int,
+                            totalItemsCount: Int,
+                            recyclerView: RecyclerView
+                        ) {
+                            presenter.loadFiles(chatRoomId)
+                        }
+                    })
+                }
+                group_no_file.isVisible = dataSet.isEmpty()
+            } else {
+                adapter.appendData(dataSet)
             }
-            group_no_file.isVisible = dataSet.isEmpty()
-        } else {
-            adapter.appendData(dataSet)
-
         }
     }
 
