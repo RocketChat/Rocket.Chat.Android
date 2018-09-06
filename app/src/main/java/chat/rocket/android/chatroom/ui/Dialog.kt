@@ -11,6 +11,9 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 
 fun ChatRoomFragment.showFileAttachmentDialog(uri: Uri) {
+    imagePreview.isVisible = false
+    audioVideoAttachment.isVisible = false
+    textFile.isVisible = false
     var bitmap: Bitmap? = null
 
     activity?.let { context ->
@@ -22,16 +25,16 @@ fun ChatRoomFragment.showFileAttachmentDialog(uri: Uri) {
                         .with(context)
                         .asBitmap()
                         .load(uri)
-                        .override(500, 500)
-                        .centerCrop()
+                        .override(imagePreview.width, imagePreview.height)
+                        .fitCenter()
                         .into(object : SimpleTarget<Bitmap>() {
                             override fun onResourceReady(
                                 resource: Bitmap,
                                 transition: Transition<in Bitmap>?
                             ) {
                                 bitmap = resource
-                                imagePreview.isVisible = true
                                 imagePreview.setImageBitmap(resource)
+                                imagePreview.isVisible = true
                             }
                         })
                 }
