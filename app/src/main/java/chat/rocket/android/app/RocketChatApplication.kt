@@ -173,6 +173,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
      * but custom emojis vary according to the its url.
      */
     fun loadEmojis() {
+        EmojiRepository.loadTypeface(this)
         val currentServer = getCurrentServerInteractor.get()
         currentServer?.let { server ->
             launch {
