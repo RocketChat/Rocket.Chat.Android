@@ -59,7 +59,7 @@ class MainPresenter @Inject constructor(
     private val saveAccountInteractor: SaveAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
     private val removeAccountInteractor: RemoveAccountInteractor,
-    private val factory: RocketChatClientFactory,
+    factory: RocketChatClientFactory,
     private val groupedPush: GroupedPush,
     dbManagerFactory: DatabaseManagerFactory,
     getSettingsInteractor: GetSettingsInteractor,

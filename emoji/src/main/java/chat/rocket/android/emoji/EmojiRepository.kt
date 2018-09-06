@@ -3,11 +3,13 @@ package chat.rocket.android.emoji
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
+import android.util.Log
 import chat.rocket.android.emoji.internal.EmojiCategory
 import chat.rocket.android.emoji.internal.PREF_EMOJI_RECENTS
 import chat.rocket.android.emoji.internal.db.EmojiDatabase
 import chat.rocket.android.emoji.internal.isCustom
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.GlideException
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
@@ -110,10 +112,17 @@ object EmojiRepository {
             val px = context.resources.getDimensionPixelSize(R.dimen.custom_emoji_large)
 
             customEmojis.forEach {
-                val future = Glide.with(context)
-                    .load(it.url)
-                    .submit(px, px)
-                future.get()
+                try {
+                    val future = Glide.with(context)
+                            .load(it.url)
+                            .submit(px, px)
+                    future.get()
+                } catch (ex: Exception) {
+                    Log.d("EmojiRepository", "Error fetching custom emoji ${it.shortname}", ex)
+                    if (ex is GlideException) {
+                        ex.logRootCauses("EmojiRepository")
+                    }
+                }
             }
         }
     }

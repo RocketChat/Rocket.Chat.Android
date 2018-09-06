@@ -13,6 +13,10 @@ import chat.rocket.android.BuildConfig
 import chat.rocket.android.dagger.DaggerAppComponent
 import chat.rocket.android.dagger.injector.HasWorkerInjector
 import chat.rocket.android.dagger.qualifier.ForMessages
+import chat.rocket.android.emoji.Emoji
+import chat.rocket.android.emoji.EmojiRepository
+import chat.rocket.android.emoji.Fitzpatrick
+import chat.rocket.android.emoji.internal.EmojiCategory
 import chat.rocket.android.helper.CrashlyticsTree
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.AccountsRepository
@@ -20,7 +24,12 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.SITE_URL
 import chat.rocket.android.server.domain.TokenRepository
+import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.retryIO
 import chat.rocket.android.util.setupFabric
+import chat.rocket.common.RocketChatException
+import chat.rocket.core.internal.rest.getCustomEmojis
 import com.facebook.drawee.backends.pipeline.DraweeConfig
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
@@ -30,6 +39,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.HasBroadcastReceiverInjector
 import dagger.android.HasServiceInjector
+import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -68,6 +78,8 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
     lateinit var localRepository: LocalRepository
     @Inject
     lateinit var accountRepository: AccountsRepository
+    @Inject
+    lateinit var factory: RocketChatClientFactory
 
     @Inject
     @field:ForMessages
@@ -103,6 +115,9 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         // TODO - remove REALM files.
         // TODO - remove this
         checkCurrentServer()
+
+        // TODO - FIXME - we need to proper inject the EmojiRepository and initialize it properly
+        loadEmojis()
     }
 
     private fun checkCurrentServer() {
@@ -149,6 +164,43 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         var context: WeakReference<Context>? = null
         fun getAppContext(): Context? {
             return context?.get()
+        }
+    }
+
+    // TODO - FIXME - This is a big Workaround
+    /**
+     * Load all emojis for the current server. Simple emojis are always the same for every server,
+     * but custom emojis vary according to the its url.
+     */
+    fun loadEmojis() {
+        val currentServer = getCurrentServerInteractor.get()
+        currentServer?.let { server ->
+            launch {
+                val client = factory.create(server)
+                EmojiRepository.setCurrentServerUrl(server)
+                val customEmojiList = mutableListOf<Emoji>()
+                try {
+                    for (customEmoji in retryIO("getCustomEmojis()") { client.getCustomEmojis() }) {
+                        customEmojiList.add(Emoji(
+                                shortname = ":${customEmoji.name}:",
+                                category = EmojiCategory.CUSTOM.name,
+                                url = "$currentServer/emoji-custom/${customEmoji.name}.${customEmoji.extension}",
+                                count = 0,
+                                fitzpatrick = Fitzpatrick.Default.type,
+                                keywords = customEmoji.aliases,
+                                shortnameAlternates = customEmoji.aliases,
+                                siblings = mutableListOf(),
+                                unicode = "",
+                                isDefault = true
+                        ))
+                    }
+
+                    EmojiRepository.load(this@RocketChatApplication, customEmojis = customEmojiList)
+                } catch (ex: RocketChatException) {
+                    Timber.e(ex)
+                    EmojiRepository.load(this@RocketChatApplication as Context)
+                }
+            }
         }
     }
 }
