@@ -33,6 +33,7 @@ import chat.rocket.android.server.domain.uploadMimeTypeFilter
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.state
+import chat.rocket.android.util.extension.compressImageAndGetByteArray
 import chat.rocket.android.util.extension.compressImageAndGetInputStream
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
@@ -353,8 +354,9 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 withContext(DefaultDispatcher) {
                     val fileName = uriInteractor.getFileName(uri) ?: uri.toString()
-                    val fileSize = uriInteractor.getFileSize(uri)
                     val mimeType = uriInteractor.getMimeType(uri)
+                    val byteArray = bitmap?.compressImageAndGetByteArray(mimeType)
+                    val fileSize = byteArray?.size ?: uriInteractor.getFileSize(uri)
                     val maxFileSizeAllowed = settings.uploadMaxFileSize()
 
                     when {
@@ -362,12 +364,6 @@ class ChatRoomPresenter @Inject constructor(
                         fileSize > maxFileSizeAllowed && maxFileSizeAllowed !in -1..0 ->
                             view.showInvalidFileSize(fileSize, maxFileSizeAllowed)
                         else -> {
-                            var inputStream: InputStream? = uriInteractor.getInputStream(uri)
-
-                            bitmap?.compressImageAndGetInputStream(mimeType)?.let {
-                                inputStream = it
-                            }
-
                             retryIO("uploadFile($roomId, $fileName, $mimeType") {
                                 client.uploadFile(
                                     roomId,
@@ -376,7 +372,7 @@ class ChatRoomPresenter @Inject constructor(
                                     msg,
                                     description = fileName
                                 ) {
-                                    inputStream
+                                    byteArray?.inputStream() ?: uriInteractor.getInputStream(uri)
                                 }
                             }
                             logMediaUploaded(mimeType)
