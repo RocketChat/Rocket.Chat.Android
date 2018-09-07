@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" translatable="false">Rocket.Chat</string>
+     <string name="app_name" translatable="false">Veranda</string>
 
     <!-- Titles -->
     <string name="title_sign_in_your_server">Sign in to your server</string>
@@ -9,7 +9,8 @@
     <string name="title_sign_up">Sign up</string>
     <string name="title_authentication">Authentication</string>
     <string name="title_legal_terms">Legal Terms</string>
-    <string name="title_chats">Chats</string>
+    <string name="title_chats">Veranda</string>
+    <string name="title_home">Home</string>
     <string name="title_profile">Profile</string>
     <string name="title_members">Members (%d)</string>
     <string name="title_settings">Settings</string>
@@ -46,6 +47,7 @@
     <string name="action_select_photo_from_gallery">Select photo from gallery</string>
     <string name="action_take_photo">Take photo</string>
     <string name="action_reset_avatar">Reset avatar</string>
+    <string name="action_invite">Invite</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -181,7 +183,7 @@
     <string name="action_msg_unpin">Unpin Message</string>
     <string name="action_msg_star">Star Message</string>
     <string name="action_msg_unstar">Unstar Message</string>
-    <string name="action_msg_share">Share</string>
+    <string name="action_msg_invite">Invite</string>
     <string name="action_title_editing">Editing Message</string>
     <string name="action_msg_add_reaction">Add reaction</string>
 
@@ -275,14 +277,14 @@
     <string name="chatroom_header">Header</string>
 
     <!--ChatRooms Headers-->
-    <string name="header_channel">Channels</string>
-    <string name="header_private_groups">Private Groups</string>
-    <string name="header_direct_messages">Direct Messages</string>
+    <string name="header_channel">Public Rooms</string>
+    <string name="header_private_groups">Private Rooms</string>
+    <string name="header_direct_messages">Chats</string>
     <string name="header_live_chats">Live Chats</string>
     <string name="header_unknown">Unknown</string>
 
     <!--Notifications-->
-    <string name="share_label">Edit shared message</string>
+    <string name="invite_label">Edit invite message</string>
     <string name="notif_action_reply_hint">REPLY</string>
     <string name="notif_error_sending">Reply has failed. Please try again.</string>
     <string name="notif_success_sending">Message sent to %1$s!</string>

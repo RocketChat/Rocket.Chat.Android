@@ -42,6 +42,7 @@
     <string name="action_invisible">Невидимый</string>
     <string name="action_drawing">Рисунок</string>
     <string name="action_save_to_gallery">Сохранить в галерею</string>
+    <string name="action_invite">Поділитися</string>
     <string name="action_select_photo_from_gallery">Выбрать из галереи</string>
     <string name="action_take_photo">Сделать снимок</string>
     <string name="action_reset_avatar">Восстановить аватар</string>
@@ -175,7 +176,7 @@
     <string name="action_msg_unpin">Открепить сообщение</string>
     <string name="action_msg_star">В избранное</string>
     <string name="action_msg_unstar">Из избранного</string>
-    <string name="action_msg_share">Поделиться</string>
+    <string name="action_msg_invite">Поделиться</string>
     <string name="action_title_editing">Редактирование сообщения</string>
     <string name="action_msg_add_reaction">Отреагировать</string>
 
@@ -276,11 +277,11 @@
     <string name="header_unknown">Неизвестные</string>
 
     <!--Notifications-->
-    <string name="share_label">Редактировать сообщение</string>
     <string name="notif_action_reply_hint">ОТВЕТИТЬ</string>
     <string name="notif_error_sending">Не удалось ответить. Пожалуйста, попробуйте еще раз.</string>
     <string name="notif_success_sending">Сообщение отправлено %1$s!</string>
     <string name="read_by">Прочитано</string>
+    <string name="invite_label">Редагувати повідомлення про подію</string>
     <string name="message_information_title">Информация о прочтении</string>
     <string name="msg_log_out">Выходим…</string>
 </resources>

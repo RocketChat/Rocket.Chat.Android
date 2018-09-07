@@ -41,6 +41,7 @@
     <string name="action_busy">व्यस्त</string>
     <string name="action_invisible">अदृश्य</string>
     <string name="action_save_to_gallery">गैलरी में सहेजें</string>
+    <string name="action_invite">शेयर</string>
     <string name="action_drawing">चित्रकारी</string>
     <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
     <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
@@ -179,7 +180,7 @@
     <string name="action_msg_unpin">संदेश को पिन से हटाएँ</string>
     <string name="action_msg_star">संदेश को स्टार करें</string>
     <string name="action_msg_unstar">सन्देश अतारांकित करें</string>
-    <string name="action_msg_share">शेयर करें</string>
+    <string name="action_msg_invite">शेयर करें</string>
     <string name="action_title_editing">संपादन संदेश</string>
     <string name="action_msg_add_reaction">प्रतिक्रिया जोड़ें</string>
 
@@ -281,7 +282,7 @@
     <string name="header_unknown">अज्ञात</string>
 
     <!--Notifications-->
-    <string name="share_label">साझा संदेश संपादित करें</string>
+    <string name="invite_label">साझा संदेश संपादित करें</string>
     <string name="notif_action_reply_hint">जवाब</string>
     <string name="notif_error_sending">उत्तर विफल हुआ है। कृपया फिर से प्रयास करें।</string>
     <string name="notif_success_sending">संदेश भेजा गया %1$s!</string>
