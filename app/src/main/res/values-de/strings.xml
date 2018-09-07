@@ -178,7 +178,7 @@
     <string name="action_msg_unpin">Nachricht nicht mehr anheften</string>
     <string name="action_msg_star">Nachricht favorisieren</string>
     <string name="action_msg_unstar">Nachricht nicht mehr favorisieren</string>
-    <string name="action_msg_share">Teilen</string>
+    <string name="action_msg_invite">Teilen</string>
     <string name="action_title_editing">Nachricht bearbeiten</string>
     <string name="action_msg_add_reaction">Reaktion hinzufügen</string>
 
@@ -279,7 +279,7 @@
     <string name="header_unknown">Unbekannt</string>
 
     <!--Notifications-->
-    <string name="share_label">Bearbeite geteilte Nachricht</string>
+    <string name="invite_label">Bearbeite geteilte Nachricht</string>
     <string name="notif_action_reply_hint">Antworten</string>
     <string name="notif_error_sending">Antworten fehlgeschlagen. Bitte versuchen Sie es noch einmal.</string>
     <string name="notif_success_sending">Nachricht gesendet nach %1$s!</string>
