@@ -44,3 +44,5 @@ Please report via [GitHub issue](https://github.com/RocketChat/Rocket.Chat.Andro
 ## Coding Style
 
 Please follow our [coding style](https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md) when contributing.
+
+trigger
