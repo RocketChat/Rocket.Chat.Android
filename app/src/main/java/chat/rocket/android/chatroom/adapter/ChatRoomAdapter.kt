@@ -169,7 +169,7 @@ class ChatRoomAdapter(
         }
         val minAdditionDate = filteredDataSet.minBy { it.message.timestamp } ?: return
         //---In the most cases we will just add new elements to the top of messages heap
-        if (minAdditionDate.message.timestamp > this.dataSet[0].message.timestamp) {
+        if (this.dataSet.isEmpty() || minAdditionDate.message.timestamp > this.dataSet[0].message.timestamp) {
             this.dataSet.addAll(0, filteredDataSet)
             notifyItemRangeInserted(0, filteredDataSet.size)
             return

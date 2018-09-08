@@ -314,8 +314,10 @@ object EmojiRepository {
         return Pair(s1, s2)
     }
 
-    fun loadTypeface(context: Context) {
+    fun init(context: Context) {
         launch {
+            db = EmojiDatabase.getInstance(context)
+            preferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
             cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
         }
     }

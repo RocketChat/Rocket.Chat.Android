@@ -25,7 +25,6 @@ import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.SITE_URL
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryIO
 import chat.rocket.android.util.setupFabric
 import chat.rocket.common.RocketChatException
@@ -34,7 +33,6 @@ import com.facebook.drawee.backends.pipeline.DraweeConfig
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.jakewharton.threetenabp.AndroidThreeTen
-import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.HasBroadcastReceiverInjector
@@ -173,7 +171,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
      * but custom emojis vary according to the its url.
      */
     fun loadEmojis() {
-        EmojiRepository.loadTypeface(this)
+        EmojiRepository.init(this)
         val currentServer = getCurrentServerInteractor.get()
         currentServer?.let { server ->
             launch {
