@@ -18,19 +18,14 @@ class OnBoardingFragmentModule {
 
     @Provides
     @PerFragment
-    fun onBoardingView(frag: OnBoardingFragment): OnBoardingView{
-        return frag
-    }
+    fun onBoardingView(frag: OnBoardingFragment): OnBoardingView = frag
 
     @Provides
     @PerFragment
-    fun provideLifecycleOwner(frag: OnBoardingFragment): LifecycleOwner {
-        return frag
-    }
+    fun provideLifecycleOwner(frag: OnBoardingFragment): LifecycleOwner = frag
 
     @Provides
     @PerFragment
-    fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy {
-        return CancelStrategy(owner, jobs)
-    }
+    fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy =
+        CancelStrategy(owner, jobs)
 }

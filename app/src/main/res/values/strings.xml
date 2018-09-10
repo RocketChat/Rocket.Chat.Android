@@ -85,6 +85,7 @@
     <string name="msg_invalid_2fa_code">Invalid 2FA Code</string>
     <string name="msg_invalid_file">Invalid file</string>
     <string name="msg_invalid_server_url">Invalid server URL</string>
+    <string name="msg_content_description_onboarding">Onboarding image</string>
     <string name="msg_content_description_log_in_using_facebook">Login using Facebook</string>
     <string name="msg_content_description_log_in_using_github">Login using Github</string>
     <string name="msg_content_description_log_in_using_google">Login using Google</string>
@@ -306,6 +307,7 @@
     <string name="message_information_title">Message information</string>
 
     <string name="foss" tools:ignore="MissingTranslation">(FOSS)</string>
+
     <!-- Community Server-->
-    <string name="community_server" translatable="false">open.rocket.chat</string>
+
 </resources>

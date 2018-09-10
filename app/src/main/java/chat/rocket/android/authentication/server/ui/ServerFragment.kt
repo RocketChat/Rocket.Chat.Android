@@ -107,8 +107,10 @@ class ServerFragment : Fragment(), ServerView {
     }
 
     private fun setupToobar() {
-        val toolbar = (activity as AuthenticationActivity).toolbar
-        toolbar.isVisible = false
+        with(activity as AuthenticationActivity) {
+            view?.let { setLightStatusBar(it) }
+            toolbar.isVisible = false
+        }
     }
 
     override fun onDestroyView() {
