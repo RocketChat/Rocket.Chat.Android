@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.createchannel.presentation.CreateChannelPresenter
 import chat.rocket.android.createchannel.presentation.CreateChannelView
 import chat.rocket.android.main.ui.MainActivity
@@ -34,9 +36,13 @@ import kotlinx.android.synthetic.main.fragment_create_channel.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+internal const val TAG_CREATE_CHANNEL_FRAGMENT = "CreateChannelFragment"
+
 class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback {
     @Inject
     lateinit var createChannelPresenter: CreateChannelPresenter
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
     private var actionMode: ActionMode? = null
     private val adapter: MembersAdapter = MembersAdapter {
         if (it.username != null) {
@@ -69,6 +75,8 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         setupViewListeners()
         setupRecyclerView()
         subscribeEditTexts()
+
+        analyticsManager.logScreenView(ScreenViewEvent.CreateChannel)
     }
 
     override fun onDestroyView() {
@@ -161,7 +169,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
 
     override fun prepareToShowChatList() {
         with(activity as MainActivity) {
-            setCheckedNavDrawerItem(R.id.action_chat_rooms)
+            setCheckedNavDrawerItem(R.id.menu_action_chats)
             openDrawer()
             getDrawerLayout().postDelayed(1000) {
                 closeDrawer()

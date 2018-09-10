@@ -1,5 +1,6 @@
 package chat.rocket.android.dagger.module
 
+import chat.rocket.android.about.di.AboutFragmentProvider
 import chat.rocket.android.authentication.di.AuthenticationModule
 import chat.rocket.android.authentication.login.di.LoginFragmentProvider
 import chat.rocket.android.authentication.registerusername.di.RegisterUsernameFragmentProvider
@@ -25,6 +26,7 @@ import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.members.di.MembersFragmentProvider
 import chat.rocket.android.mentions.di.MentionsFragmentProvider
 import chat.rocket.android.pinnedmessages.di.PinnedMessagesFragmentProvider
+import chat.rocket.android.preferences.di.PreferencesFragmentProvider
 import chat.rocket.android.profile.di.ProfileFragmentProvider
 import chat.rocket.android.server.di.ChangeServerModule
 import chat.rocket.android.server.ui.ChangeServerActivity
@@ -56,7 +58,9 @@ abstract class ActivityBuilder {
             ChatRoomsFragmentProvider::class,
             CreateChannelProvider::class,
             ProfileFragmentProvider::class,
-            SettingsFragmentProvider::class
+            SettingsFragmentProvider::class,
+            AboutFragmentProvider::class,
+            PreferencesFragmentProvider::class
         ]
     )
     abstract fun bindMainActivity(): MainActivity

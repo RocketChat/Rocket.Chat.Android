@@ -3,26 +3,35 @@ package chat.rocket.android.authentication.resetpassword.ui
 import DrawableHelper
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.resetpassword.presentation.ResetPasswordPresenter
 import chat.rocket.android.authentication.resetpassword.presentation.ResetPasswordView
-import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.shake
+import chat.rocket.android.util.extensions.showKeyboard
+import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.vibrateSmartPhone
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_reset_password.*
 import javax.inject.Inject
 
+internal const val TAG_RESET_PASSWORD_FRAGMENT = "ResetPasswordFragment"
+
 class ResetPasswordFragment : Fragment(), ResetPasswordView {
     @Inject
     lateinit var presenter: ResetPasswordPresenter
-
-    companion object {
-        fun newInstance() = ResetPasswordFragment()
-    }
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +57,8 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
         }
 
         setupOnClickListener()
+
+        analyticsManager.logScreenView(ScreenViewEvent.ResetPassword)
     }
 
     override fun alertBlankEmail() {
@@ -130,5 +141,9 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
         button_reset_password.setOnClickListener {
             presenter.resetPassword(text_email.textContent)
         }
+    }
+
+    companion object {
+        fun newInstance() = ResetPasswordFragment()
     }
 }

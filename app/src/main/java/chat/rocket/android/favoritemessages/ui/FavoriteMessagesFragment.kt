@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
@@ -31,13 +33,16 @@ fun newInstance(chatRoomId: String): Fragment {
     }
 }
 
+internal const val TAG_FAVORITE_MESSAGES_FRAGMENT = "FavoriteMessagesFragment"
 private const val INTENT_CHAT_ROOM_ID = "chat_room_id"
 
 class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
-    private lateinit var chatRoomId: String
-    private val adapter = ChatRoomAdapter(enableActions = false)
     @Inject
     lateinit var presenter: FavoriteMessagesPresenter
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
+    private lateinit var chatRoomId: String
+    private val adapter = ChatRoomAdapter(enableActions = false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +66,8 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         presenter.loadFavoriteMessages(chatRoomId)
+
+        analyticsManager.logScreenView(ScreenViewEvent.FavoriteMessages)
     }
 
     override fun showFavoriteMessages(favoriteMessages: List<BaseUiModel<*>>) {

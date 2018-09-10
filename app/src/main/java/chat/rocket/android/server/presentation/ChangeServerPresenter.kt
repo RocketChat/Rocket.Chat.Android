@@ -1,8 +1,14 @@
 package chat.rocket.android.server.presentation
 
+import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.GetAccountInteractor
+import chat.rocket.android.server.domain.GetAccountsInteractor
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.SaveCurrentServerInteractor
+import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.common.util.ifNull
@@ -16,17 +22,20 @@ class ChangeServerPresenter @Inject constructor(
     private val getCurrentServerInteractor: GetCurrentServerInteractor,
     private val getAccountInteractor: GetAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
+    private val analyticsManager: AnalyticsManager,
     private val settingsRepository: SettingsRepository,
     private val tokenRepository: TokenRepository,
     private val localRepository: LocalRepository,
     private val connectionManager: ConnectionManagerFactory
 ) {
+
     fun loadServer(newUrl: String?, chatRoomId: String? = null) {
         launchUI(strategy) {
             view.showProgress()
             var url = newUrl
-            if (url == null) { // Try to load next server on the list...
-                val accounts = getAccountsInteractor.get()
+            val accounts = getAccountsInteractor.get()
+            if (url == null) {
+                // Try to load next server on the list...
                 url = accounts.firstOrNull()?.serverUrl
             }
 
@@ -56,6 +65,7 @@ class ChangeServerPresenter @Inject constructor(
 
                 saveCurrentServerInteractor.save(serverUrl)
                 view.hideProgress()
+                analyticsManager.logServerSwitch()
                 navigator.toChatRooms(chatRoomId)
             }.ifNull {
                 view.hideProgress()

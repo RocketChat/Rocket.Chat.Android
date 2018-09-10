@@ -1,7 +1,10 @@
 package chat.rocket.android.chatroom.presentation
 
+import android.graphics.Bitmap
 import android.net.Uri
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.SubscriptionTypeEvent
 import chat.rocket.android.chatroom.adapter.AutoCompleteType
 import chat.rocket.android.chatroom.adapter.PEOPLE
 import chat.rocket.android.chatroom.adapter.ROOMS
@@ -30,6 +33,7 @@ import chat.rocket.android.server.domain.uploadMimeTypeFilter
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.state
+import chat.rocket.android.util.extension.compressImageAndGetByteArray
 import chat.rocket.android.util.extension.compressImageAndGetInputStream
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
@@ -78,6 +82,7 @@ import org.threeten.bp.Instant
 import timber.log.Timber
 import java.io.InputStream
 import java.util.*
+import java.util.zip.DeflaterInputStream
 import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(
@@ -90,6 +95,7 @@ class ChatRoomPresenter @Inject constructor(
     private val usersRepository: UsersRepository,
     private val roomsRepository: RoomRepository,
     private val localRepository: LocalRepository,
+    private val analyticsManager: AnalyticsManager,
     private val userHelper: UserHelper,
     private val mapper: UiModelMapper,
     private val jobSchedulerInteractor: JobSchedulerInteractor,
@@ -107,7 +113,7 @@ class ChatRoomPresenter @Inject constructor(
     private val messagesChannel = Channel<Message>()
 
     private var chatRoomId: String? = null
-    private var chatRoomType: String? = null
+    private lateinit var chatRoomType: String
     private var chatIsBroadcast: Boolean = false
     private var chatRoles = emptyList<ChatRoomRole>()
     private val stateChannel = Channel<State>()
@@ -179,7 +185,8 @@ class ChatRoomPresenter @Inject constructor(
                             isBroadcast = chatIsBroadcast, isRoom = true
                         )
                     )
-                    if (oldMessages.isNotEmpty()) {
+                    val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
+                    if (oldMessages.isNotEmpty() && lastSyncDate != null) {
                         view.showMessages(oldMessages, clearDataSet)
                         loadMissingMessages()
                     } else {
@@ -221,6 +228,19 @@ class ChatRoomPresenter @Inject constructor(
                 client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
             }
         messagesRepository.saveAll(messages)
+
+        //we are saving last sync date of latest synced chat room message
+        if (offset == 0L) {
+            //if success - saving last synced time
+            if (messages.isEmpty()) {
+                //chat history is empty - just saving current date
+                messagesRepository.saveLastSyncDate(chatRoomId, System.currentTimeMillis())
+            } else {
+                //assume that BE returns ordered messages, the first message is the latest one
+                messagesRepository.saveLastSyncDate(chatRoomId, messages.first().timestamp)
+            }
+        }
+
         view.showMessages(
             mapper.map(
                 messages,
@@ -261,7 +281,7 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 // ignore message for now, will receive it on the stream
                 val id = UUID.randomUUID().toString()
-                val message = if (messageId == null) {
+                if (messageId == null) {
                     val username = userHelper.username()
                     val newMessage = Message(
                         id = id,
@@ -270,7 +290,7 @@ class ChatRoomPresenter @Inject constructor(
                         timestamp = Instant.now().toEpochMilli(),
                         sender = SimpleUser(null, username, username),
                         attachments = null,
-                        avatar = currentServer.avatarUrl(username!!),
+                        avatar = currentServer.avatarUrl(username ?: ""),
                         channels = null,
                         editedAt = null,
                         editedBy = null,
@@ -291,11 +311,12 @@ class ChatRoomPresenter @Inject constructor(
                         messagesRepository.save(newMessage)
                         view.showNewMessage(
                             mapper.map(
-                                newMessage, 
+                                newMessage,
                                 RoomUiModel(roles = chatRoles, isBroadcast = chatIsBroadcast)
                             ), false
                         )
                         client.sendMessage(id, chatRoomId, text)
+                        logMessageSent()
                     } catch (ex: Exception) {
                         // Ok, not very beautiful, but the backend sends us a not valid response
                         // When someone sends a message on a read-only channel, so we just ignore it
@@ -327,34 +348,22 @@ class ChatRoomPresenter @Inject constructor(
         view.showFileSelection(settings.uploadMimeTypeFilter())
     }
 
-    fun uploadFile(roomId: String, uri: Uri, msg: String) {
+    fun uploadFile(roomId: String, uri: Uri, msg: String, bitmap: Bitmap? = null) {
         launchUI(strategy) {
             view.showLoading()
             try {
                 withContext(DefaultDispatcher) {
                     val fileName = uriInteractor.getFileName(uri) ?: uri.toString()
-                    val fileSize = uriInteractor.getFileSize(uri)
                     val mimeType = uriInteractor.getMimeType(uri)
+                    val byteArray = bitmap?.compressImageAndGetByteArray(mimeType)
+                    val fileSize = byteArray?.size ?: uriInteractor.getFileSize(uri)
                     val maxFileSizeAllowed = settings.uploadMaxFileSize()
 
                     when {
-                        fileName.isEmpty() -> {
-                            view.showInvalidFileMessage()
-                        }
-                        fileSize > maxFileSizeAllowed -> {
+                        fileName.isEmpty() -> view.showInvalidFileMessage()
+                        fileSize > maxFileSizeAllowed && maxFileSizeAllowed !in -1..0 ->
                             view.showInvalidFileSize(fileSize, maxFileSizeAllowed)
-                        }
                         else -> {
-                            var inputStream: InputStream? = uriInteractor.getInputStream(uri)
-
-                            if (mimeType.contains("image")) {
-                                uriInteractor.getBitmap(uri)?.let {
-                                    it.compressImageAndGetInputStream(mimeType)?.let {
-                                        inputStream = it
-                                    }
-                                }
-                            }
-
                             retryIO("uploadFile($roomId, $fileName, $mimeType") {
                                 client.uploadFile(
                                     roomId,
@@ -363,9 +372,10 @@ class ChatRoomPresenter @Inject constructor(
                                     msg,
                                     description = fileName
                                 ) {
-                                    inputStream
+                                    byteArray?.inputStream() ?: uriInteractor.getInputStream(uri)
                                 }
                             }
+                            logMediaUploaded(mimeType)
                         }
                     }
                 }
@@ -392,9 +402,8 @@ class ChatRoomPresenter @Inject constructor(
                     val maxFileSizeAllowed = settings.uploadMaxFileSize()
 
                     when {
-                        fileSize > maxFileSizeAllowed -> {
+                        fileSize > maxFileSizeAllowed && maxFileSizeAllowed !in -1..0 ->
                             view.showInvalidFileSize(fileSize, maxFileSizeAllowed)
-                        }
                         else -> {
                             retryIO("uploadFile($roomId, $fileName, $mimeType") {
                                 client.uploadFile(
@@ -484,45 +493,49 @@ class ChatRoomPresenter @Inject constructor(
 
     private fun loadMissingMessages() {
         launch(parent = strategy.jobs) {
-            if (chatRoomId != null && chatRoomType != null) {
-                val roomType = roomTypeOf(chatRoomType!!)
-                messagesRepository.getByRoomId(chatRoomId!!)
-                    .sortedByDescending { it.timestamp }.firstOrNull()?.let { lastMessage ->
-                        val instant = Instant.ofEpochMilli(lastMessage.timestamp).toString()
-                        try {
-                            val messages =
-                                retryIO(description = "history($chatRoomId, $roomType, $instant)") {
-                                    client.history(
-                                        chatRoomId!!, roomType, count = 50,
-                                        oldest = instant
-                                    )
-                                }
-                            Timber.d("History: $messages")
+            chatRoomId?.let { chatRoomId ->
+                val roomType = roomTypeOf(chatRoomType)
+                val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
+                // lastSyncDate or 0. LastSyncDate could be in case when we sent some messages offline(and saved them locally),
+                // but never has obtained chatMessages(or history) from remote. In this case we should sync all chat history from beginning
+                val instant = Instant.ofEpochMilli(lastSyncDate ?: 0).toString()
+                //
+                try {
+                    val messages =
+                        retryIO(description = "history($chatRoomId, $roomType, $instant)") {
+                            client.history(
+                                chatRoomId!!, roomType, count = 50,
+                                oldest = instant
+                            )
+                        }
+                    Timber.d("History: $messages")
 
-                            if (messages.result.isNotEmpty()) {
-                                val models = mapper.map(messages.result, RoomUiModel(
-                                    roles = chatRoles,
-                                    isBroadcast = chatIsBroadcast,
-                                    // FIXME: Why are we fixing isRoom attribute to true here?
-                                    isRoom = true
-                                ))
-                                messagesRepository.saveAll(messages.result)
+                    if (messages.result.isNotEmpty()) {
+                        val models = mapper.map(messages.result, RoomUiModel(
+                            roles = chatRoles,
+                            isBroadcast = chatIsBroadcast,
+                            // FIXME: Why are we fixing isRoom attribute to true here?
+                            isRoom = true
+                        ))
+                        messagesRepository.saveAll(messages.result)
+                        //if success - saving last synced time
+                        //assume that BE returns ordered messages, the first message is the latest one
+                        messagesRepository.saveLastSyncDate(chatRoomId, messages.result.first().timestamp)
 
-                                launchUI(strategy) {
-                                    view.showNewMessage(models, true)
-                                }
+                        launchUI(strategy) {
+                            view.showNewMessage(models, true)
+                        }
 
-                                if (messages.result.size == 50) {
-                                    // we loaded at least count messages, try one more to fetch more messages
-                                    loadMissingMessages()
-                                }
-                            }
-                        } catch (ex: Exception) {
-                            // TODO - we need to better treat connection problems here, but no let gaps
-                            // on the messages list
-                            Timber.d(ex, "Error fetching channel history")
+                        if (messages.result.size == 50) {
+                            // we loaded at least count messages, try one more to fetch more messages
+                            loadMissingMessages()
                         }
                     }
+                } catch (ex: Exception) {
+                    // TODO - we need to better treat connection problems here, but no let gaps
+                    // on the messages list
+                    Timber.d(ex, "Error fetching channel history")
+                }
             }
         }
     }
@@ -938,9 +951,40 @@ class ChatRoomPresenter @Inject constructor(
                 retryIO("toggleEmoji($messageId, $emoji)") {
                     client.toggleReaction(messageId, emoji.removeSurrounding(":"))
                 }
+                logReactionEvent()
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
             }
+        }
+    }
+
+    private fun logReactionEvent() {
+        when {
+            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
+                analyticsManager.logReaction(SubscriptionTypeEvent.DirectMessage)
+            roomTypeOf(chatRoomType) is RoomType.Channel ->
+                analyticsManager.logReaction(SubscriptionTypeEvent.Channel)
+            else -> analyticsManager.logReaction(SubscriptionTypeEvent.Group)
+        }
+    }
+
+    private fun logMediaUploaded(mimeType: String) {
+        when {
+            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
+                analyticsManager.logMediaUploaded(SubscriptionTypeEvent.DirectMessage, mimeType)
+            roomTypeOf(chatRoomType) is RoomType.Channel ->
+                analyticsManager.logMediaUploaded(SubscriptionTypeEvent.Channel, mimeType)
+            else -> analyticsManager.logMediaUploaded(SubscriptionTypeEvent.Group, mimeType)
+        }
+    }
+
+    private fun logMessageSent() {
+        when {
+            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
+                analyticsManager.logMessageSent(SubscriptionTypeEvent.DirectMessage)
+            roomTypeOf(chatRoomType) is RoomType.Channel ->
+                analyticsManager.logMessageSent(SubscriptionTypeEvent.Channel)
+            else -> analyticsManager.logMessageSent(SubscriptionTypeEvent.Group)
         }
     }
 

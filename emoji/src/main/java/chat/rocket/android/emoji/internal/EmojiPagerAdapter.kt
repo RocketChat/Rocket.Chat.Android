@@ -14,7 +14,9 @@ import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.emoji.Fitzpatrick
 import chat.rocket.android.emoji.R
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.emoji_category_layout.view.*
+import kotlinx.android.synthetic.main.emoji_image_row_item.view.*
 import kotlinx.android.synthetic.main.emoji_row_item.view.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
@@ -43,22 +45,33 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
 
             container.addView(view)
             launch(UI) {
+                val currentServerUrl = EmojiRepository.getCurrentServerUrl()
                 val emojis = if (category != EmojiCategory.RECENTS) {
-                    EmojiRepository.getEmojiSequenceByCategory(category)
+                    if (category == EmojiCategory.CUSTOM) {
+                        currentServerUrl?.let { url ->
+                            EmojiRepository.getEmojiSequenceByCategoryAndUrl(category, url)
+                        } ?: emptySequence()
+                    } else {
+                        EmojiRepository.getEmojiSequenceByCategory(category)
+                    }
                 } else {
                     sequenceOf(*EmojiRepository.getRecents().toTypedArray())
                 }
+
                 val recentEmojiSize = EmojiRepository.getRecents().size
                 text_no_recent_emoji.isVisible = category == EmojiCategory.RECENTS && recentEmojiSize == 0
+
                 if (adapters[category] == null) {
                     val adapter = EmojiAdapter(listener = listener)
                     emoji_recycler_view.adapter = adapter
                     adapters[category] = adapter
                     adapter.addEmojisFromSequence(emojis)
                 }
+
                 adapters[category]!!.setFitzpatrick(fitzpatrick)
             }
         }
+
         return view
     }
 
@@ -88,20 +101,24 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
         private val listener: EmojiKeyboardListener
     ) : RecyclerView.Adapter<EmojiRowViewHolder>() {
 
+        private val CUSTOM = 1
+        private val NORMAL = 2
+        private val allEmojis = mutableListOf<Emoji>()
         private val emojis = mutableListOf<Emoji>()
 
-        fun addEmojis(emojis: List<Emoji>) {
-            this.emojis.clear()
-            this.emojis.addAll(emojis)
-            notifyDataSetChanged()
+        override fun getItemViewType(position: Int): Int {
+            return if (emojis[position].isCustom()) CUSTOM else NORMAL
         }
 
         suspend fun addEmojisFromSequence(emojiSequence: Sequence<Emoji>) {
             withContext(CommonPool) {
                 emojiSequence.forEachIndexed { index, emoji ->
                     withContext(UI) {
-                        emojis.add(emoji)
-                        notifyItemInserted(index)
+                        allEmojis.add(emoji)
+                        if (emoji.isDefault) {
+                            emojis.add(emoji)
+                            notifyItemInserted(emojis.size - 1)
+                        }
                     }
                 }
             }
@@ -115,12 +132,27 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
         override fun onBindViewHolder(holder: EmojiRowViewHolder, position: Int) {
             val emoji = emojis[position]
             holder.bind(
-                emoji.siblings.find { it.fitzpatrick == fitzpatrick } ?: emoji
+                if (fitzpatrick != Fitzpatrick.Default) {
+                    emoji.siblings.find {
+                        it.endsWith("${fitzpatrick.type}:")
+                    }?.let { shortname ->
+                        allEmojis.firstOrNull {
+                            it.shortname == shortname
+                        }
+                    } ?: emoji
+                } else {
+                    emoji
+                }
             )
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmojiRowViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.emoji_row_item, parent, false)
+            val inflater = LayoutInflater.from(parent.context)
+            val view = if (viewType == CUSTOM) {
+                inflater.inflate(R.layout.emoji_image_row_item, parent, false)
+            } else {
+                inflater.inflate(R.layout.emoji_row_item, parent, false)
+            }
             return EmojiRowViewHolder(view, listener)
         }
 
@@ -134,16 +166,26 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
 
         fun bind(emoji: Emoji) {
             with(itemView) {
-                val parsedUnicode = unicodeCache[emoji.unicode]
-                emoji_view.setSpannableFactory(spannableFactory)
-                emoji_view.text = if (parsedUnicode == null) {
-                    EmojiParser.parse(emoji.unicode, spannableFactory).let {
-                        unicodeCache[emoji.unicode] = it
-                        it
+                if (emoji.unicode.isNotEmpty()) {
+                    // Handle simple emoji.
+                    val parsedUnicode = unicodeCache[emoji.unicode]
+                    emoji_view.setSpannableFactory(spannableFactory)
+                    emoji_view.text = if (parsedUnicode == null) {
+                        EmojiParser.parse(itemView.context, emoji.unicode, spannableFactory).let {
+                            unicodeCache[emoji.unicode] = it
+                            it
+                        }
+                    } else {
+                        parsedUnicode
                     }
                 } else {
-                    parsedUnicode
+                    // Handle custom emoji.
+                    GlideApp.with(context)
+                        .load(emoji.url)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(emoji_image_view)
                 }
+
                 itemView.setOnClickListener {
                     listener.onEmojiAdded(emoji)
                 }

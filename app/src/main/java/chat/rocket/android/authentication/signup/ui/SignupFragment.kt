@@ -5,30 +5,39 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.R.string.message_credentials_saved_successfully
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.signup.presentation.SignupPresenter
 import chat.rocket.android.authentication.signup.presentation.SignupView
 import chat.rocket.android.helper.KeyboardHelper
-import chat.rocket.android.helper.SmartLockHelper
 import chat.rocket.android.helper.TextHelper
-import chat.rocket.android.util.extensions.*
-import com.google.android.gms.auth.api.credentials.Credentials
+import chat.rocket.android.helper.saveCredentials
+import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.shake
+import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.vibrateSmartPhone
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
 import javax.inject.Inject
 
+internal const val TAG_SIGNUP_FRAGMENT = "SignupFragment"
 internal const val SAVE_CREDENTIALS = 1
 
 class SignupFragment : Fragment(), SignupView {
     @Inject
     lateinit var presenter: SignupPresenter
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         if (KeyboardHelper.isSoftKeyboardShown(relative_layout.rootView)) {
             bottom_container.setVisible(false)
@@ -39,10 +48,6 @@ class SignupFragment : Fragment(), SignupView {
                 }, 3)
             }
         }
-    }
-
-    companion object {
-        fun newInstance() = SignupFragment()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +80,8 @@ class SignupFragment : Fragment(), SignupView {
                 text_email.textContent
             )
         }
+
+        analyticsManager.logScreenView(ScreenViewEvent.SignUp)
     }
 
     override fun onDestroyView() {
@@ -155,9 +162,7 @@ class SignupFragment : Fragment(), SignupView {
     }
 
     override fun saveSmartLockCredentials(id: String, password: String) {
-        activity?.let {
-            SmartLockHelper.save(Credentials.getClient(it), it, id, password)
-        }
+        activity?.saveCredentials(id, password)
     }
 
     private fun tintEditTextDrawableStart() {
@@ -215,5 +220,9 @@ class SignupFragment : Fragment(), SignupView {
         text_username.isEnabled = value
         text_password.isEnabled = value
         text_email.isEnabled = value
+    }
+
+    companion object {
+        fun newInstance() = SignupFragment()
     }
 }

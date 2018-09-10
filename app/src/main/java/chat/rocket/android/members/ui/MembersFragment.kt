@@ -1,15 +1,17 @@
 package chat.rocket.android.members.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.members.adapter.MembersAdapter
@@ -31,11 +33,14 @@ fun newInstance(chatRoomId: String): Fragment {
     }
 }
 
+internal const val TAG_MEMBERS_FRAGMENT = "MembersFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class MembersFragment : Fragment(), MembersView {
     @Inject
     lateinit var presenter: MembersPresenter
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
     private val adapter: MembersAdapter =
         MembersAdapter { memberUiModel -> presenter.toMemberDetails(memberUiModel) }
     private val linearLayoutManager = LinearLayoutManager(context)
@@ -63,6 +68,8 @@ class MembersFragment : Fragment(), MembersView {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         presenter.loadChatRoomsMembers(chatRoomId)
+
+        analyticsManager.logScreenView(ScreenViewEvent.Members)
     }
 
     override fun showMembers(dataSet: List<MemberUiModel>, total: Long) {

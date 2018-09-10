@@ -21,6 +21,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatrooms.adapter.RoomsAdapter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
@@ -45,6 +47,8 @@ import kotlinx.android.synthetic.main.fragment_chat_rooms.*
 import timber.log.Timber
 import javax.inject.Inject
 
+internal const val TAG_CHAT_ROOMS_FRAGMENT = "ChatRoomsFragment"
+
 private const val BUNDLE_CHAT_ROOM_ID = "BUNDLE_CHAT_ROOM_ID"
 
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
@@ -54,14 +58,12 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     lateinit var factory: ChatRoomsViewModelFactory
     @Inject
     lateinit var dbManager: DatabaseManager // TODO - remove when moving ChatRoom screen to DB
-
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
     lateinit var viewModel: ChatRoomsViewModel
-
     private var searchView: SearchView? = null
     private var sortView: MenuItem? = null
-
     private val handler = Handler()
-
     private var chatRoomId: String? = null
     private var progressDialog: ProgressDialog? = null
 
@@ -108,6 +110,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         subscribeUi()
 
         setupToolbar()
+
+        analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
     }
 
     private fun subscribeUi() {
@@ -117,9 +121,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             }
 
             recycler_view.layoutManager = LinearLayoutManager(it)
-            recycler_view.addItemDecoration(DividerItemDecoration(it,
+            recycler_view.addItemDecoration(
+                DividerItemDecoration(
+                    it,
                     resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
-                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
+                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)
+                )
+            )
             recycler_view.itemAnimator = DefaultItemAnimator()
             recycler_view.adapter = adapter
 
@@ -134,7 +142,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             })
 
             viewModel.loadingState.observe(viewLifecycleOwner, Observer { state ->
-                when(state) {
+                when (state) {
                     is LoadingState.Loading -> if (state.count == 0L) showLoading()
                     is LoadingState.Loaded -> {
                         hideLoading()
@@ -188,35 +196,47 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             // TODO - simplify this
             R.id.action_sort -> {
                 val dialogLayout = layoutInflater.inflate(R.layout.chatroom_sort_dialog, null)
-                val sortType = SharedPreferenceHelper.getInt(Constants.CHATROOM_SORT_TYPE_KEY, ChatRoomsSortOrder.ACTIVITY)
-                val groupByType = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
+                val sortType = SharedPreferenceHelper.getInt(
+                    Constants.CHATROOM_SORT_TYPE_KEY,
+                    ChatRoomsSortOrder.ACTIVITY
+                )
+                val groupByType =
+                    SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
 
                 val radioGroup = dialogLayout.findViewById<RadioGroup>(R.id.radio_group_sort)
-                val groupByTypeCheckBox = dialogLayout.findViewById<CheckBox>(R.id.checkbox_group_by_type)
+                val groupByTypeCheckBox =
+                    dialogLayout.findViewById<CheckBox>(R.id.checkbox_group_by_type)
 
-                radioGroup.check(when (sortType) {
-                    0 -> R.id.radio_sort_alphabetical
-                    else -> R.id.radio_sort_activity
-                })
+                radioGroup.check(
+                    when (sortType) {
+                        0 -> R.id.radio_sort_alphabetical
+                        else -> R.id.radio_sort_activity
+                    }
+                )
                 radioGroup.setOnCheckedChangeListener { _, checkedId ->
                     run {
-                        SharedPreferenceHelper.putInt(Constants.CHATROOM_SORT_TYPE_KEY, when (checkedId) {
-                            R.id.radio_sort_alphabetical -> 0
-                            R.id.radio_sort_activity -> 1
-                            else -> 1
-                        })
+                        SharedPreferenceHelper.putInt(
+                            Constants.CHATROOM_SORT_TYPE_KEY, when (checkedId) {
+                                R.id.radio_sort_alphabetical -> 0
+                                R.id.radio_sort_activity -> 1
+                                else -> 1
+                            }
+                        )
                     }
                 }
 
                 groupByTypeCheckBox.isChecked = groupByType
                 groupByTypeCheckBox.setOnCheckedChangeListener { _, isChecked ->
-                    SharedPreferenceHelper.putBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, isChecked)
+                    SharedPreferenceHelper.putBoolean(
+                        Constants.CHATROOM_GROUP_BY_TYPE_KEY,
+                        isChecked
+                    )
                 }
 
                 AlertDialog.Builder(context)
                     .setTitle(R.string.dialog_sort_title)
                     .setView(dialogLayout)
-                    .setPositiveButton("Done") { dialog, _ ->
+                    .setPositiveButton(R.string.dialog_button_done) { dialog, _ ->
                         invalidateQueryOnSearch()
                         updateSort()
                         dialog.dismiss()
@@ -227,10 +247,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     private fun updateSort() {
-        val sortType = SharedPreferenceHelper.getInt(Constants.CHATROOM_SORT_TYPE_KEY, ChatRoomsSortOrder.ACTIVITY)
+        val sortType = SharedPreferenceHelper.getInt(
+            Constants.CHATROOM_SORT_TYPE_KEY,
+            ChatRoomsSortOrder.ACTIVITY
+        )
         val grouped = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
 
-        val query = when(sortType) {
+        val query = when (sortType) {
             ChatRoomsSortOrder.ALPHABETICAL -> {
                 Query.ByName(grouped)
             }
@@ -297,11 +320,16 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     text_connection_status.text = getString(R.string.status_connected)
                     handler.postDelayed(dismissStatus, 2000)
                 }
-                is State.Disconnected -> text_connection_status.text = getString(R.string.status_disconnected)
-                is State.Connecting -> text_connection_status.text = getString(R.string.status_connecting)
-                is State.Authenticating -> text_connection_status.text = getString(R.string.status_authenticating)
-                is State.Disconnecting -> text_connection_status.text = getString(R.string.status_disconnecting)
-                is State.Waiting -> text_connection_status.text = getString(R.string.status_waiting, state.seconds)
+                is State.Disconnected -> text_connection_status.text =
+                        getString(R.string.status_disconnected)
+                is State.Connecting -> text_connection_status.text =
+                        getString(R.string.status_connecting)
+                is State.Authenticating -> text_connection_status.text =
+                        getString(R.string.status_authenticating)
+                is State.Disconnecting -> text_connection_status.text =
+                        getString(R.string.status_disconnecting)
+                is State.Waiting -> text_connection_status.text =
+                        getString(R.string.status_waiting, state.seconds)
             }
         }
     }

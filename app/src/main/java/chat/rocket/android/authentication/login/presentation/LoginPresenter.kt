@@ -1,11 +1,12 @@
 package chat.rocket.android.authentication.login.presentation
 
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.AuthenticationEvent
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.OauthHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.GetConnectingServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.PublicSettings
@@ -23,12 +24,12 @@ import chat.rocket.android.server.domain.isGoogleAuthenticationEnabled
 import chat.rocket.android.server.domain.isLdapAuthenticationEnabled
 import chat.rocket.android.server.domain.isLinkedinAuthenticationEnabled
 import chat.rocket.android.server.domain.isLoginFormEnabled
-import chat.rocket.android.server.domain.isWordpressAuthenticationEnabled
 import chat.rocket.android.server.domain.isPasswordResetEnabled
 import chat.rocket.android.server.domain.isRegistrationEnabledForNewUsers
-import chat.rocket.android.server.domain.wordpressUrl
+import chat.rocket.android.server.domain.isWordpressAuthenticationEnabled
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.domain.wideTile
+import chat.rocket.android.server.domain.wordpressUrl
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
@@ -37,7 +38,6 @@ import chat.rocket.android.util.extensions.encodeToBase64
 import chat.rocket.android.util.extensions.generateRandomString
 import chat.rocket.android.util.extensions.isEmail
 import chat.rocket.android.util.extensions.parseColor
-import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.android.util.extensions.samlUrl
 import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.util.retryIO
@@ -80,8 +80,8 @@ class LoginPresenter @Inject constructor(
     private val navigator: AuthenticationNavigator,
     private val tokenRepository: TokenRepository,
     private val localRepository: LocalRepository,
-    private val getAccountsInteractor: GetAccountsInteractor,
     private val settingsInteractor: GetSettingsInteractor,
+    private val analyticsManager: AnalyticsManager,
     serverInteractor: GetConnectingServerInteractor,
     private val saveCurrentServer: SaveCurrentServerInteractor,
     private val saveAccountInteractor: SaveAccountInteractor,
@@ -97,6 +97,7 @@ class LoginPresenter @Inject constructor(
     private lateinit var credentialSecret: String
     private lateinit var deepLinkUserId: String
     private lateinit var deepLinkToken: String
+    private lateinit var loginMethod: AuthenticationEvent
 
     fun setupView() {
         setupConnectionInfo(currentServer)
@@ -118,6 +119,7 @@ class LoginPresenter @Inject constructor(
             else -> {
                 this.usernameOrEmail = usernameOrEmail
                 this.password = password
+                loginMethod = AuthenticationEvent.AuthenticationWithUserAndPassword
                 doAuthentication(TYPE_LOGIN_USER_EMAIL)
             }
         }
@@ -125,17 +127,20 @@ class LoginPresenter @Inject constructor(
 
     fun authenticateWithCas(casToken: String) {
         credentialToken = casToken
+        loginMethod = AuthenticationEvent.AuthenticationWithCas
         doAuthentication(TYPE_LOGIN_CAS)
     }
 
     fun authenticateWithSaml(samlToken: String) {
         credentialToken = samlToken
+        loginMethod = AuthenticationEvent.AuthenticationWithSaml
         doAuthentication(TYPE_LOGIN_SAML)
     }
 
     fun authenticateWithOauth(oauthToken: String, oauthSecret: String) {
         credentialToken = oauthToken
         credentialSecret = oauthSecret
+        loginMethod = AuthenticationEvent.AuthenticationWithOauth
         doAuthentication(TYPE_LOGIN_OAUTH)
     }
 
@@ -146,6 +151,7 @@ class LoginPresenter @Inject constructor(
             deepLinkUserId = deepLinkInfo.userId
             deepLinkToken = deepLinkInfo.token
             tokenRepository.save(serverUrl, Token(deepLinkUserId, deepLinkToken))
+            loginMethod = AuthenticationEvent.AuthenticationWithDeeplink
             doAuthentication(TYPE_LOGIN_DEEP_LINK)
         } else {
             // If we don't have the login credentials, just go through normal setup and user input.
@@ -446,7 +452,7 @@ class LoginPresenter @Inject constructor(
                             if (myself.id == deepLinkUserId) {
                                 Token(deepLinkUserId, deepLinkToken)
                             } else {
-                                throw RocketChatAuthException("Invalid Authentication Deep Link Credentials...")
+                                throw RocketChatAuthException("Invalid AuthenticationEvent Deep Link Credentials...")
                             }
                         }
                         else -> {
@@ -465,11 +471,12 @@ class LoginPresenter @Inject constructor(
                         username = myself.username,
                         utcOffset = myself.utcOffset
                     )
-                    localRepository.saveCurrentUser(url = currentServer, user = user)
+                    localRepository.saveCurrentUser(currentServer, user)
                     saveCurrentServer.save(currentServer)
+                    localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, myself.username)
                     saveAccount(myself.username!!)
                     saveToken(token)
-                    registerPushToken()
+                    analyticsManager.logLogin(loginMethod, true)
                     if (loginType == TYPE_LOGIN_USER_EMAIL) {
                         view.saveSmartLockCredentials(usernameOrEmail, password)
                     }
@@ -483,6 +490,7 @@ class LoginPresenter @Inject constructor(
                         navigator.toTwoFA(usernameOrEmail, password)
                     }
                     else -> {
+                        analyticsManager.logLogin(loginMethod, false)
                         exception.message?.let {
                             view.showMessage(it)
                         }.ifNull {
@@ -620,13 +628,5 @@ class LoginPresenter @Inject constructor(
 
     private fun saveToken(token: Token) {
         tokenRepository.save(currentServer, token)
-    }
-
-    private suspend fun registerPushToken() {
-        localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
-            client.registerPushToken(it, getAccountsInteractor.get(), factory)
-        }
-        // TODO: When the push token is null, at some point we should receive it with
-        // onTokenRefresh() on FirebaseTokenService, we need to confirm it.
     }
 }

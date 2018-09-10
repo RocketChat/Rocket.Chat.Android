@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
@@ -31,6 +33,7 @@ fun newInstance(chatRoomId: String): Fragment {
     }
 }
 
+internal const val TAG_MENTIONS_FRAGMENT = "MentionsFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class MentionsFragment : Fragment(), MentionsView {
@@ -39,6 +42,8 @@ class MentionsFragment : Fragment(), MentionsView {
     private val adapter = ChatRoomAdapter(enableActions = false)
     @Inject
     lateinit var presenter: MentionsPresenter
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +68,8 @@ class MentionsFragment : Fragment(), MentionsView {
 
         setupToolbar()
         presenter.loadMentions(chatRoomId)
+
+        analyticsManager.logScreenView(ScreenViewEvent.Mentions)
     }
 
     override fun showMentions(mentions: List<BaseUiModel<*>>) {

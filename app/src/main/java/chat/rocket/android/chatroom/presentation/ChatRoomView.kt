@@ -148,9 +148,4 @@ interface ChatRoomView : LoadingView, MessageView {
      */
     fun onRoomUpdated(userCanPost: Boolean, channelIsBroadcast: Boolean, userCanMod: Boolean)
 
-    /**
-     * Open a DM with the user in the given [chatRoom] and pass the [permalink] for the message
-     * to reply.
-     */
-    fun openDirectMessage(chatRoom: ChatRoom, permalink: String)
 }

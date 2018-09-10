@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.text.Spanned
 import android.text.style.ClickableSpan
+import android.text.style.ImageSpan
 import android.text.style.ReplacementSpan
 import android.util.Patterns
 import android.view.View
@@ -25,7 +26,6 @@ import org.commonmark.node.Document
 import org.commonmark.node.ListItem
 import org.commonmark.node.Node
 import org.commonmark.node.OrderedList
-import org.commonmark.node.Paragraph
 import org.commonmark.node.Text
 import ru.noties.markwon.Markwon
 import ru.noties.markwon.SpannableBuilder
@@ -60,11 +60,11 @@ class MessageParser @Inject constructor(
             }
         }
         val builder = SpannableBuilder()
-        val content = EmojiRepository.shortnameToUnicode(text, true)
+        val content = EmojiRepository.shortnameToUnicode(text)
         val parentNode = parser.parse(toLenientMarkdown(content))
         parentNode.accept(MarkdownVisitor(configuration, builder))
         parentNode.accept(LinkVisitor(builder))
-        parentNode.accept(EmojiVisitor(configuration, builder))
+        parentNode.accept(EmojiVisitor(context, configuration, builder))
         message.mentions?.let {
             parentNode.accept(MentionVisitor(context, builder, mentions, selfUsername))
         }
@@ -126,16 +126,29 @@ class MessageParser @Inject constructor(
     }
 
     class EmojiVisitor(
+        private val context: Context,
         configuration: SpannableConfiguration,
         private val builder: SpannableBuilder
     ) : SpannableMarkdownVisitor(configuration, builder) {
 
+        private val emojiSize = context.resources.getDimensionPixelSize(R.dimen.custom_emoji_small)
+
         override fun visit(document: Document) {
-            val spannable = EmojiParser.parse(builder.text())
+            val spannable = EmojiParser.parse(context, builder.text())
             if (spannable is Spanned) {
-                val spans = spannable.getSpans(0, spannable.length, EmojiTypefaceSpan::class.java)
-                spans.forEach {
-                    builder.setSpan(it, spannable.getSpanStart(it), spannable.getSpanEnd(it), 0)
+                val emojiOneTypefaceSpans = spannable.getSpans(0, spannable.length,
+                    EmojiTypefaceSpan::class.java)
+                val emojiImageSpans = spannable.getSpans(0, spannable.length, ImageSpan::class.java)
+
+                emojiOneTypefaceSpans.forEach {
+                    builder.setSpan(it, spannable.getSpanStart(it), spannable.getSpanEnd(it),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                }
+
+                emojiImageSpans.forEach {
+                    it.drawable?.setBounds(0, 0, emojiSize, emojiSize)
+                    builder.setSpan(it, spannable.getSpanStart(it), spannable.getSpanEnd(it),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
             }
         }

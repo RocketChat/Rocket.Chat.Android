@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.DividerItemDecoration.HORIZONTAL
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.files.adapter.FilesAdapter
 import chat.rocket.android.files.presentation.FilesPresenter
@@ -36,11 +38,14 @@ fun newInstance(chatRoomId: String): Fragment {
     }
 }
 
+internal const val TAG_FILES_FRAGMENT = "FilesFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class FilesFragment : Fragment(), FilesView {
     @Inject
     lateinit var presenter: FilesPresenter
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
     private val adapter: FilesAdapter =
         FilesAdapter { fileUiModel -> presenter.openFile(fileUiModel) }
     private val linearLayoutManager = LinearLayoutManager(context)
@@ -68,28 +73,31 @@ class FilesFragment : Fragment(), FilesView {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         presenter.loadFiles(chatRoomId)
+
+        analyticsManager.logScreenView(ScreenViewEvent.Files)
     }
 
     override fun showFiles(dataSet: List<FileUiModel>, total: Long) {
-        setupToolbar(total)
-        if (adapter.itemCount == 0) {
-            adapter.prependData(dataSet)
-            if (dataSet.size >= 30) {
-                recycler_view.addOnScrollListener(object :
-                    EndlessRecyclerViewScrollListener(linearLayoutManager) {
-                    override fun onLoadMore(
-                        page: Int,
-                        totalItemsCount: Int,
-                        recyclerView: RecyclerView
-                    ) {
-                        presenter.loadFiles(chatRoomId)
-                    }
-                })
+        ui {
+            setupToolbar(total)
+            if (adapter.itemCount == 0) {
+                adapter.prependData(dataSet)
+                if (dataSet.size >= 30) {
+                    recycler_view.addOnScrollListener(object :
+                        EndlessRecyclerViewScrollListener(linearLayoutManager) {
+                        override fun onLoadMore(
+                            page: Int,
+                            totalItemsCount: Int,
+                            recyclerView: RecyclerView
+                        ) {
+                            presenter.loadFiles(chatRoomId)
+                        }
+                    })
+                }
+                group_no_file.isVisible = dataSet.isEmpty()
+            } else {
+                adapter.appendData(dataSet)
             }
-            group_no_file.isVisible = dataSet.isEmpty()
-        } else {
-            adapter.appendData(dataSet)
-
         }
     }
 

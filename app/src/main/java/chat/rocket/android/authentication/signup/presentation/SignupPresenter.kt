@@ -1,17 +1,27 @@
 package chat.rocket.android.authentication.signup.presentation
 
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.AuthenticationEvent
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.GetConnectingServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.SaveAccountInteractor
+import chat.rocket.android.server.domain.SaveCurrentServerInteractor
+import chat.rocket.android.server.domain.favicon
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.server.domain.wideTile
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
-import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.privacyPolicyUrl
+import chat.rocket.android.util.extensions.serverLogoUrl
+import chat.rocket.android.util.extensions.termsOfServiceUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
-import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.signup
@@ -25,13 +35,12 @@ class SignupPresenter @Inject constructor(
     private val localRepository: LocalRepository,
     private val serverInteractor: GetConnectingServerInteractor,
     private val saveCurrentServerInteractor: SaveCurrentServerInteractor,
+    private val analyticsManager: AnalyticsManager,
     private val factory: RocketChatClientFactory,
     private val saveAccountInteractor: SaveAccountInteractor,
-    private val getAccountsInteractor: GetAccountsInteractor,
     settingsInteractor: GetSettingsInteractor
 ) {
     private val currentServer = serverInteractor.get()!!
-    private val client: RocketChatClient = factory.create(currentServer)
     private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
 
     fun signup(name: String, username: String, password: String, email: String) {
@@ -65,10 +74,17 @@ class SignupPresenter @Inject constructor(
                         saveCurrentServerInteractor.save(currentServer)
                         localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
                         saveAccount(me)
-                        registerPushToken()
+                        analyticsManager.logSignUp(
+                            AuthenticationEvent.AuthenticationWithUserAndPassword,
+                            true
+                        )
                         view.saveSmartLockCredentials(username, password)
                         navigator.toChatList()
                     } catch (exception: RocketChatException) {
+                        analyticsManager.logSignUp(
+                            AuthenticationEvent.AuthenticationWithUserAndPassword,
+                            false
+                        )
                         exception.message?.let {
                             view.showMessage(it)
                         }.ifNull {
@@ -93,14 +109,6 @@ class SignupPresenter @Inject constructor(
         serverInteractor.get()?.let {
             navigator.toWebPage(it.privacyPolicyUrl())
         }
-    }
-
-    private suspend fun registerPushToken() {
-        localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
-            client.registerPushToken(it, getAccountsInteractor.get(), factory)
-        }
-        // TODO: When the push token is null, at some point we should receive it with
-        // onTokenRefresh() on FirebaseTokenService, we need to confirm it.
     }
 
     private suspend fun saveAccount(me: Myself) {

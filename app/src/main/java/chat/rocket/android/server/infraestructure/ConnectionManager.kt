@@ -193,6 +193,14 @@ class ConnectionManager(
         client.setTemporaryStatus(userStatus)
     }
 
+    fun resetReconnectionTimer() {
+        // if we are waiting to reconnect, immediately try to reconnect
+        // and reset the reconnection counter
+        if (client.state is State.Waiting) {
+            client.connect(resetCounter = true)
+        }
+    }
+
     private fun resubscribeRooms() {
         roomMessagesChannels.toList().map { (roomId, channel) ->
             client.subscribeRoomMessages(roomId) { _, id ->
