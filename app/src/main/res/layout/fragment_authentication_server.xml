@@ -5,93 +5,84 @@
     android:id="@+id/constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusableInTouchMode="true"
     android:background="@color/colorWhite"
+    android:focusableInTouchMode="true"
+    android:padding="@dimen/screen_edge_left_and_right_margins"
     tools:context=".authentication.server.ui.ServerFragment">
 
     <ImageView
         android:id="@+id/image_server"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:src="@drawable/ic_server"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="40dp" />
+        tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/text_headline"
+        android:id="@+id/text_sign_in_to_your_server"
         style="@style/Authentication.Headline.TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image_server"
         android:layout_marginTop="8dp"
-        android:text="@string/title_sign_in_your_server" />
+        android:text="@string/title_sign_in_your_server"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_server" />
 
     <RelativeLayout
-        android:id="@+id/view_server"
+        android:id="@+id/server_url_container"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:background="@drawable/rounded_border"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_headline"
         android:layout_marginTop="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp">
+        android:background="@drawable/rounded_border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_sign_in_to_your_server">
 
         <FrameLayout
             android:id="@+id/protocol_container"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
+
             <Spinner
-                android:id="@+id/text_server_protocol"
-                android:spinnerMode="dropdown"
-                android:layout_width="120dp"
+                android:id="@+id/spinner_server_protocol"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                android:backgroundTint="@color/actionMenuColor" />
+                android:popupBackground="@color/colorWhite" />
         </FrameLayout>
 
         <EditText
             android:id="@+id/text_server_url"
+            style="@style/Authentication.Text.Hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:cursorVisible="false"
-            android:hint="@string/default_server"
-            android:imeOptions="actionDone"
-            android:inputType="text|textUri"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_centerVertical="true"
-            android:textSize="17sp"
-            android:textColorHint="#9ea2a8"
-            android:textColor="#9ea2a8"
-            android:layout_toEndOf="@id/protocol_container"
-            android:background="@color/colorWhite" />
-
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="16dp"
+            android:layout_toEndOf="@+id/protocol_container"
+            android:background="@color/colorWhite"
+            android:cursorVisible="false"
+            android:hint="@string/server_hint_url"
+            android:imeOptions="actionDone"
+            android:inputType="text|textUri" />
     </RelativeLayout>
 
     <Button
         android:id="@+id/button_connect"
         style="@style/Authentication.Button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_server"
-        android:text="@string/action_connect"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp" />
+        android:text="@string/action_connect"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/server_url_container" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"
         style="@style/Authentication.AVLoadingIndicatorView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"
-        tools:visibility="visible" />
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

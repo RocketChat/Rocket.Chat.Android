@@ -7,7 +7,7 @@
     tools:context=".authentication.twofactor.ui.TwoFAFragment">
 
     <TextView
-        android:id="@+id/text_headline"
+        android:id="@+id/text_sign_in_to_your_server"
         style="@style/Authentication.Headline.TextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,14 +19,14 @@
         android:id="@+id/text_description"
         style="@style/Authentication.Description.TextView"
         android:text="What’s your 2FA code?"
-        app:layout_constraintTop_toBottomOf="@id/text_headline"
-        app:layout_constraintStart_toStartOf="@id/text_headline"
+        app:layout_constraintTop_toBottomOf="@id/text_sign_in_to_your_server"
+        app:layout_constraintStart_toStartOf="@id/text_sign_in_to_your_server"
         android:layout_marginTop="4dp" />
 
     <EditText
         android:id="@+id/text_two_factor_auth"
         style="@style/Authentication.EditText"
-        android:layout_below="@id/text_headline"
+        android:layout_below="@id/text_sign_in_to_your_server"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_description"

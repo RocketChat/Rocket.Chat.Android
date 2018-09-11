@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_on_boarding_title" />
 
     <RelativeLayout
-        android:id="@+id/container_connect_with_a_server"
+        android:id="@+id/connect_with_a_server_container"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginTop="32dp"
@@ -58,7 +58,7 @@
             tools:ignore="ContentDescription" />
 
         <TextView
-            style="@style/Authentication.OnBoarding.Button.Title"
+            style="@style/Authentication.Button.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -79,7 +79,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/container_join_community"
+        android:id="@+id/join_community_container"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginTop="10dp"
@@ -87,7 +87,7 @@
         android:foreground="?selectableItemBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/container_connect_with_a_server">
+        app:layout_constraintTop_toBottomOf="@+id/connect_with_a_server_container">
 
         <ImageView
             android:id="@+id/image_join_community"
@@ -101,7 +101,7 @@
 
         <TextView
             android:id="@+id/text_join_community"
-            style="@style/Authentication.OnBoarding.Button.Title"
+            style="@style/Authentication.Button.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -110,7 +110,7 @@
             android:text="@string/action_join_community" />
 
         <TextView
-            style="@style/Authentication.OnBoarding.Button.Description"
+            style="@style/Authentication.Button.Description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_join_community"
@@ -131,7 +131,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/container_create_server"
+        android:id="@+id/create_server_container"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginTop="10dp"
@@ -139,7 +139,7 @@
         android:foreground="?selectableItemBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/container_join_community">
+        app:layout_constraintTop_toBottomOf="@+id/join_community_container">
 
         <ImageView
             android:id="@+id/image_add"
@@ -153,7 +153,7 @@
             tools:ignore="ContentDescription" />
 
         <TextView
-            style="@style/Authentication.OnBoarding.Button.Title.White"
+            style="@style/Authentication.Button.Title.White"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -168,6 +168,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

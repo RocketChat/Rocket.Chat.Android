@@ -65,9 +65,9 @@ class ServerFragment : Fragment(), ServerView {
             presenter.deepLink(it)
         }
 
-        text_server_protocol.adapter = ArrayAdapter<String>(activity,
+        spinner_server_protocol.adapter = ArrayAdapter<String>(activity,
                 android.R.layout.simple_dropdown_item_1line, arrayOf("https://", "http://"))
-        text_server_protocol.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        spinner_server_protocol.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 when(position) {
                     0 -> {
@@ -85,7 +85,7 @@ class ServerFragment : Fragment(), ServerView {
                                             protocol = "http://"
                                         }
                                         .setNegativeButton(R.string.msg_cancel) { _, _ ->
-                                            text_server_protocol.setSelection(0)
+                                            spinner_server_protocol.setSelection(0)
                                         }
                                         .setCancelable(false)
                                         .create()
@@ -197,7 +197,7 @@ class ServerFragment : Fragment(), ServerView {
 
     override fun updateServerUrl(url: HttpUrl) {
         if (activity != null && view != null) {
-            if (url.scheme() == "https") text_server_protocol.setSelection(0) else text_server_protocol.setSelection(1)
+            if (url.scheme() == "https") spinner_server_protocol.setSelection(0) else spinner_server_protocol.setSelection(1)
             protocol = "${url.scheme()}://"
 
             val serverUrl = url.toString().removePrefix("${url.scheme()}://")

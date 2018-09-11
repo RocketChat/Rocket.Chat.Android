@@ -48,11 +48,11 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
     }
 
     private fun setupOnClickListener() {
-        container_connect_with_a_server.setOnClickListener { connectWithAServer() }
+        connect_with_a_server_container.setOnClickListener { connectWithAServer() }
 
-        container_join_community.setOnClickListener { joinInTheCommunity() }
+        join_community_container.setOnClickListener { joinInTheCommunity() }
 
-        container_create_server.setOnClickListener { createANewServer() }
+        create_server_container.setOnClickListener { createANewServer() }
     }
 
     override fun showLoading() {

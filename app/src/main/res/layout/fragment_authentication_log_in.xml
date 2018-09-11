@@ -8,7 +8,7 @@
     tools:context=".authentication.login.ui.LoginFragment">
 
     <TextView
-        android:id="@+id/text_headline"
+        android:id="@+id/text_sign_in_to_your_server"
         style="@style/Authentication.Headline.TextView"
         android:text="@string/title_log_in"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +26,7 @@
         android:inputType="textEmailAddress|text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_headline" />
+        app:layout_constraintTop_toBottomOf="@+id/text_sign_in_to_your_server" />
 
     <ImageView
         android:id="@+id/image_key"

@@ -7,7 +7,7 @@
     tools:context=".authentication.registerusername.ui.RegisterUsernameFragment">
 
     <TextView
-        android:id="@+id/text_headline"
+        android:id="@+id/text_sign_in_to_your_server"
         style="@style/Authentication.Headline.TextView"
         android:text="@string/title_register_username"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,7 +20,7 @@
         style="@style/Authentication.EditText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_headline"
+        app:layout_constraintTop_toBottomOf="@id/text_sign_in_to_your_server"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_at_black_20dp"
         android:hint="@string/msg_username"
