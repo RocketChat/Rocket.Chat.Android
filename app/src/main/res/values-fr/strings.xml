@@ -43,7 +43,7 @@
     <string name="action_save_to_gallery">Sauvegarder vers la gallerie</string>
     <string name="action_select_photo_from_gallery">Sélectionner depuis la gallerie</string>
     <string name="action_take_photo">Prendre une photo</string>
-    <string name="action_reset_avatar">Réinitialiser l'avatar</string>
+    <string name="action_reset_avatar">Réinitialiser l\'avatar</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -100,7 +100,7 @@
     <string name="msg_preview_file">Fichier</string>
     <string name="msg_no_messages_yet">Aucun message pour le moment</string>
     <string name="msg_ok">OK</string>
-    <string name="msg_update_app_version_in_order_to_continue">La version du serveur est trop ancienne. Veuillez contacter l'administateur pour mettre à jour le serveur afin de pouvoir vous y connecter.</string>
+    <string name="msg_update_app_version_in_order_to_continue">La version du serveur est trop ancienne. Veuillez contacter l\'administateur pour mettre à jour le serveur afin de pouvoir vous y connecter.</string>
     <string name="msg_ver_not_recommended">
         On dirait que la version de votre serveur est en dessous de la version recommandée %1$s.\nVous pouvez toujours vous connecter mais vous pouvez rencontrer des comportements inattendus.</string>
     <string name="msg_ver_not_minimum">
@@ -144,10 +144,10 @@
     <string name="msg_channel_created_successfully">Salon créé</string>
 
     <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Pistage à des fins d'analyses</string>
-    <string name="msg_send_analytics_tracking">Envoyer des statistiques anonymes pour aider à l'amélioration de l'application</string>
-    <string name="msg_do_not_send_analytics_tracking">Ne pas envoyer des statistiques anonymes pour aider à l'amélioration de l'application</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Ne s'applique pas étant donné qu'il s'agit d'une version FOSS</string>
+    <string name="msg_analytics_tracking">Pistage à des fins d\'analyses</string>
+    <string name="msg_send_analytics_tracking">Envoyer des statistiques anonymes pour aider à l\'amélioration de l\'application</string>
+    <string name="msg_do_not_send_analytics_tracking">Ne pas envoyer des statistiques anonymes pour aider à l\'amélioration de l\'application</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Ne s\'applique pas étant donné qu\'il s\'agit d\'une version FOSS</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Le nom du salon %1$s a été changé en %2$s</string>
@@ -161,7 +161,7 @@
     <string name="message_muted">Utilisateur %1$s mis en sourdine par %2$s</string>
     <string name="message_unmuted">Utilisateur %1$s a retrouvé la parole grâce à %2$s</string>
     <string name="message_role_add">%1$s a été défini %2$s par %3$s</string>
-    <string name="message_role_removed">%1$s n'est plus %2$s par %3$s</string>
+    <string name="message_role_removed">%1$s n\'est plus %2$s par %3$s</string>
 
     <string name="message_credentials_saved_successfully">Certificats sauvegardés</string>
 
@@ -184,7 +184,7 @@
     <string name="permission_editing_not_allowed">L\'édition n\'est pas autorisée</string>
     <string name="permission_deleting_not_allowed">La suppression n\'est pas autorisée</string>
     <string name="permission_pinning_not_allowed">L\'épinglage n\'est pas autorisé</string>
-    <string name="permission_starring_not_allowed">La mise en favori n'est pas autorisée</string>
+    <string name="permission_starring_not_allowed">La mise en favori n\'est pas autorisée</string>
 
     <!-- Search message -->
     <string name="title_search_message">Rechercher message</string>
