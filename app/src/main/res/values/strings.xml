@@ -1,3 +1,14 @@
+<!--
+REMARK:
+
+When adding a new string in this file do not forget to add a proper translation for the
+corresponding supported language - if applicable.
+
+Please, follow the rules as shown here (by adding a new string in the correct section).
+
+Coding style:
+https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strings
+-->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Rocket.Chat</string>
 

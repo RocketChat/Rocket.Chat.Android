@@ -158,23 +158,36 @@ class ChatRoomAdapter(
     }
 
     fun prependData(dataSet: List<BaseUiModel<*>>) {
-        val item = dataSet.indexOfFirst { newItem ->
-            this.dataSet.indexOfFirst { it.messageId == newItem.messageId && it.viewType == newItem.viewType } > -1
-        }
-        if (item == -1) {
-            this.dataSet.addAll(0, dataSet)
-            notifyItemRangeInserted(0, dataSet.size)
-        } else {
-            dataSet.forEach { item ->
-                val index = this.dataSet.indexOfFirst {
-                    item.messageId == it.messageId && item.viewType == it.viewType
-                }
-                if (index > -1) {
-                    this.dataSet[index] = item
-                    notifyItemChanged(index)
-                }
+        //---At first we will update all already saved elements with received updated ones
+        val filteredDataSet = dataSet.filter { newItem ->
+            val matchedIndex = this.dataSet.indexOfFirst { it.messageId == newItem.messageId && it.viewType == newItem.viewType }
+            if (matchedIndex > -1) {
+                this.dataSet[matchedIndex] = newItem
+                notifyItemChanged(matchedIndex)
             }
+            return@filter (matchedIndex < 0)
         }
+        val minAdditionDate = filteredDataSet.minBy { it.message.timestamp } ?: return
+        //---In the most cases we will just add new elements to the top of messages heap
+        if (this.dataSet.isEmpty() || minAdditionDate.message.timestamp > this.dataSet[0].message.timestamp) {
+            this.dataSet.addAll(0, filteredDataSet)
+            notifyItemRangeInserted(0, filteredDataSet.size)
+            return
+        }
+        //---Else branch: merging messages---
+        //---We are inserting new received elements into set. Sort them by time+type and show
+        if (filteredDataSet.isEmpty()) return
+        this.dataSet.addAll(0, filteredDataSet)
+        val tmp = this.dataSet.sortedWith(Comparator { t, t2 ->
+            val timeComparison = t.message.timestamp.compareTo(t2.message.timestamp)
+            if (timeComparison == 0) {
+                return@Comparator t.viewType.compareTo(t2.viewType)
+            }
+            timeComparison
+        }).reversed()
+        this.dataSet.clear()
+        this.dataSet.addAll(tmp)
+        notifyDataSetChanged()
     }
 
     fun updateItem(message: BaseUiModel<*>) {

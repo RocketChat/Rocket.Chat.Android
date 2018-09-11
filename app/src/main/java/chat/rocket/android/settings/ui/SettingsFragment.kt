@@ -31,7 +31,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     @Inject
     lateinit var analyticsManager: AnalyticsManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+   override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
     }
