@@ -1,6 +1,6 @@
 package chat.rocket.android.chatroom.uimodel.suggestion
 
-import chat.rocket.android.widget.autocompletion.model.SuggestionModel
+import chat.rocket.android.suggestions.model.SuggestionModel
 import chat.rocket.common.model.UserStatus
 
 class PeopleSuggestionUiModel(val imageUri: String?,
