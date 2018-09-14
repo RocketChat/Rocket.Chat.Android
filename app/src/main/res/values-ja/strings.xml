@@ -118,9 +118,7 @@
     </string>
     <string name="msg_no_chat_title">メッセージがまだありません</string>
     <string name="msg_no_chat_description">ここから会話を始めましょう</string>
-    <string name="msg_proceed">PROCEED</string>
     <string name="msg_cancel">キャンセル</string>
-    <string name="msg_warning">警告</string>
     <string name="msg_http_insecure">HTTPを使用している場合、安全ではないサーバーに接続します。安全なサーバーに接続することをお勧めします。</string>
     <string name="msg_error_checking_server_version">サーバーのバージョンを確認中にエラーが発生しました。もう一度お試しください。</string>
     <string name="msg_invalid_server_protocol">選択したプロトコルはこのサーバーでは使用できません。HTTPSを選択してください。</string>

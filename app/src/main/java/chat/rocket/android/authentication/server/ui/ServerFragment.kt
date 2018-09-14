@@ -49,7 +49,6 @@ class ServerFragment : Fragment(), ServerView {
                 KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)
     }
     private var protocol = "https://"
-    private var ignoreChange = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,14 +61,14 @@ class ServerFragment : Fragment(), ServerView {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? =
-        container?.inflate(R.layout.fragment_authentication_server)
+    ): View? = container?.inflate(R.layout.fragment_authentication_server)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         constraint_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
-        setupOnClickListener()
         setupToobar()
+        setupSpinner()
+        setupOnClickListener()
 
         deepLinkInfo?.let {
             val uri = Uri.parse(it.url)
@@ -77,51 +76,15 @@ class ServerFragment : Fragment(), ServerView {
             presenter.deepLink(it)
         }
 
-        spinner_server_protocol.adapter = ArrayAdapter<String>(
-            activity,
-            android.R.layout.simple_dropdown_item_1line, arrayOf("https://", "http://")
-        )
-        spinner_server_protocol.onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parent: AdapterView<*>?,
-                        view: View?,
-                        position: Int,
-                        id: Long
-                    ) {
-                        when (position) {
-                            0 -> {
-                                protocol = "https://"
-                            }
-                            1 -> {
-                                if (ignoreChange) {
-                                    protocol = "http://"
-                                } else {
-                                    ui {
-                                        AlertDialog.Builder(it)
-                                            .setTitle(R.string.msg_warning)
-                                            .setMessage(R.string.msg_http_insecure)
-                                            .setPositiveButton(R.string.msg_proceed) { _, _ ->
-                                                protocol = "http://"
-                                            }
-                                            .setNegativeButton(R.string.msg_cancel) { _, _ ->
-                                                spinner_server_protocol.setSelection(0)
-                                            }
-                                            .setCancelable(false)
-                                            .create()
-                                            .show()
-                                    }
-                                }
-                            }
-                        }
-                        ignoreChange = false
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                    }
-                }
-
         analyticsManager.logScreenView(ScreenViewEvent.Server)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+        // reset deep link info, so user can come back and log to another server...
+        deepLinkInfo = null
+        constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
     }
 
     private fun setupToobar() {
@@ -131,12 +94,32 @@ class ServerFragment : Fragment(), ServerView {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
-        // reset deep link info, so user can come back and log to another server...
-        deepLinkInfo = null
-        constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+    private fun setupSpinner() {
+        context?.let {
+            spinner_server_protocol.adapter = ArrayAdapter<String>(
+                it,
+                android.R.layout.simple_dropdown_item_1line, arrayOf("https://", "http://")
+            )
+
+            spinner_server_protocol.onItemSelectedListener =
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>?, view: View?, position: Int,
+                            id: Long
+                        ) {
+                            when (position) {
+                                0 -> protocol = "https://"
+                                1 -> {
+                                    protocol = "http://"
+                                    showToast(R.string.msg_http_insecure)
+                                }
+                            }
+                        }
+
+                        override fun onNothingSelected(parent: AdapterView<*>?) {}
+                    }
+
+        }
     }
 
     override fun showInvalidServerUrlMessage() =
