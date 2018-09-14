@@ -17,10 +17,11 @@ import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
-import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.dispatchImageSelection
 import chat.rocket.android.util.extension.dispatchTakePicture
@@ -28,8 +29,6 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
-import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import com.facebook.drawee.backends.pipeline.Fresco
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
@@ -48,7 +47,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     @Inject
     lateinit var presenter: ProfilePresenter
     @Inject
-    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
+    lateinit var analyticsManager: AnalyticsManager
     private var currentName = ""
     private var currentUsername = ""
     private var currentEmail = ""
@@ -81,9 +80,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         presenter.loadUserProfile()
         subscribeEditTexts()
 
-        if (analyticsTrackingInteractor.get()) {
-            AnalyticsManager.logScreenView(ScreenViewEvent.Profile)
-        }
+        analyticsManager.logScreenView(ScreenViewEvent.Profile)
     }
 
     override fun onDestroyView() {

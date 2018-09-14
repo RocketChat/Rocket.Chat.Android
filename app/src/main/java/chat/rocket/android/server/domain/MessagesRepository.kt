@@ -72,4 +72,22 @@ interface MessagesRepository {
     suspend fun getAllUnsent(): List<Message>
 
     suspend fun getUnsentByRoomId(roomId: String): List<Message>
+
+    /**
+     * Save time of the latest room messages sync.
+     * Call this fun only when the latest messages list being received via /history or /messages network calls
+     *
+     * @param rid The id of the room the messages are.
+     * @param timeMillis time of room messages sync or the latest room message timestamp(which came with /history request)
+     */
+    suspend fun saveLastSyncDate(rid: String, timeMillis: Long)
+
+    /**
+     * Get time when the room chat history has been loaded last time.
+     *
+     * @param rid The id of the room the messages are.
+     *
+     * @return Last Sync time or Null.
+     */
+    suspend fun getLastSyncDate(rid: String): Long?
 }

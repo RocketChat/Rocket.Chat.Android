@@ -1,12 +1,35 @@
 package chat.rocket.android.authentication.login.presentation
 
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.AuthenticationEvent
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.OauthHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.GetConnectingServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.SaveAccountInteractor
+import chat.rocket.android.server.domain.SaveCurrentServerInteractor
+import chat.rocket.android.server.domain.TokenRepository
+import chat.rocket.android.server.domain.casLoginUrl
+import chat.rocket.android.server.domain.favicon
+import chat.rocket.android.server.domain.gitlabUrl
+import chat.rocket.android.server.domain.isCasAuthenticationEnabled
+import chat.rocket.android.server.domain.isFacebookAuthenticationEnabled
+import chat.rocket.android.server.domain.isGithubAuthenticationEnabled
+import chat.rocket.android.server.domain.isGitlabAuthenticationEnabled
+import chat.rocket.android.server.domain.isGoogleAuthenticationEnabled
+import chat.rocket.android.server.domain.isLdapAuthenticationEnabled
+import chat.rocket.android.server.domain.isLinkedinAuthenticationEnabled
+import chat.rocket.android.server.domain.isLoginFormEnabled
+import chat.rocket.android.server.domain.isPasswordResetEnabled
+import chat.rocket.android.server.domain.isRegistrationEnabledForNewUsers
+import chat.rocket.android.server.domain.isWordpressAuthenticationEnabled
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.server.domain.wideTile
+import chat.rocket.android.server.domain.wordpressUrl
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
@@ -15,11 +38,8 @@ import chat.rocket.android.util.extensions.encodeToBase64
 import chat.rocket.android.util.extensions.generateRandomString
 import chat.rocket.android.util.extensions.isEmail
 import chat.rocket.android.util.extensions.parseColor
-import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.android.util.extensions.samlUrl
 import chat.rocket.android.util.extensions.serverLogoUrl
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
-import chat.rocket.android.util.helper.analytics.event.AuthenticationEvent
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
@@ -60,9 +80,8 @@ class LoginPresenter @Inject constructor(
     private val navigator: AuthenticationNavigator,
     private val tokenRepository: TokenRepository,
     private val localRepository: LocalRepository,
-    private val getAccountsInteractor: GetAccountsInteractor,
     private val settingsInteractor: GetSettingsInteractor,
-    private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
+    private val analyticsManager: AnalyticsManager,
     serverInteractor: GetConnectingServerInteractor,
     private val saveCurrentServer: SaveCurrentServerInteractor,
     private val saveAccountInteractor: SaveAccountInteractor,
@@ -312,12 +331,10 @@ class LoginPresenter @Inject constructor(
                     )
                     localRepository.saveCurrentUser(currentServer, user)
                     saveCurrentServer.save(currentServer)
+                    localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, myself.username)
                     saveAccount(myself.username!!)
                     saveToken(token)
-                    registerPushToken()
-                    if (analyticsTrackingInteractor.get()) {
-                        AnalyticsManager.logLogin(loginMethod, true)
-                    }
+                    analyticsManager.logLogin(loginMethod, true)
                     if (loginType == TYPE_LOGIN_USER_EMAIL) {
                         view.saveSmartLockCredentials(usernameOrEmail, password)
                     }
@@ -331,9 +348,7 @@ class LoginPresenter @Inject constructor(
                         navigator.toTwoFA(usernameOrEmail, password)
                     }
                     else -> {
-                        if (analyticsTrackingInteractor.get()) {
-                            AnalyticsManager.logLogin(loginMethod, false)
-                        }
+                        analyticsManager.logLogin(loginMethod, false)
                         exception.message?.let {
                             view.showMessage(it)
                         }.ifNull {
@@ -471,13 +486,5 @@ class LoginPresenter @Inject constructor(
 
     private fun saveToken(token: Token) {
         tokenRepository.save(currentServer, token)
-    }
-
-    private suspend fun registerPushToken() {
-        localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
-            client.registerPushToken(it, getAccountsInteractor.get(), factory)
-        }
-        // TODO: When the push token is null, at some point we should receive it with
-        // onTokenRefresh() on FirebaseTokenService, we need to confirm it.
     }
 }

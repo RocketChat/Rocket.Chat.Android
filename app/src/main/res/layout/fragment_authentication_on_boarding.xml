@@ -30,7 +30,7 @@
     <TextView
         android:id="@+id/text_on_boarding_description"
         style="@style/Authentication.Description.TextView"
-        android:text="@string/msg_open_source_communication"
+        android:text="@string/msg_team_communication"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_on_boarding_title" />

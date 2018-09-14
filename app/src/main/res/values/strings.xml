@@ -1,3 +1,14 @@
+<!--
+REMARK:
+
+When adding a new string in this file do not forget to add a proper translation for the
+corresponding supported language - if applicable.
+
+Please, follow the rules as shown here (by adding a new string in the correct section).
+
+Coding style:
+https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strings
+-->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Rocket.Chat</string>
 
@@ -85,7 +96,6 @@
     <string name="msg_invalid_2fa_code">Invalid 2FA Code</string>
     <string name="msg_invalid_file">Invalid file</string>
     <string name="msg_invalid_server_url">Invalid server URL</string>
-    <string name="msg_content_description_onboarding">Onboarding image</string>
     <string name="msg_content_description_log_in_using_facebook">Login using Facebook</string>
     <string name="msg_content_description_log_in_using_github">Login using Github</string>
     <string name="msg_content_description_log_in_using_google">Login using Google</string>
@@ -140,7 +150,7 @@
     <string name="msg_send">Send</string>
     <string name="msg_sent_attachment">Sent an attachment</string>
     <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string>
-    <string name="msg_open_source_communication">Open Source Communication</string>
+    <string name="msg_team_communication">Team Communication</string>
     <string name="msg_login_with_email">Login with e-mail</string>
     <string name="msg_create_account">Create an account</string>
     <string name="msg_continue_with_facebook">Continue with Facebook</string>

@@ -3,7 +3,6 @@ package chat.rocket.android.authentication.server.ui
 import android.app.AlertDialog
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,17 +10,25 @@ import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.helper.KeyboardHelper
-import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
-import chat.rocket.android.util.extensions.*
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
-import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
+import chat.rocket.android.util.extensions.hintContent
+import chat.rocket.android.util.extensions.ifEmpty
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.sanitize
+import chat.rocket.android.util.extensions.setLightStatusBar
+import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.extensions.ui
 import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar_chat_room.*
@@ -35,10 +42,11 @@ class ServerFragment : Fragment(), ServerView {
     @Inject
     lateinit var presenter: ServerPresenter
     @Inject
-    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
+    lateinit var analyticsManager: AnalyticsManager
     private var deepLinkInfo: LoginDeepLinkInfo? = null
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        text_server_url.isCursorVisible = KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)
+        text_server_url.isCursorVisible =
+                KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)
     }
     private var protocol = "https://"
     private var ignoreChange = false
@@ -50,7 +58,11 @@ class ServerFragment : Fragment(), ServerView {
         deepLinkInfo = arguments?.getParcelable(DEEP_LINK_INFO)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
         container?.inflate(R.layout.fragment_authentication_server)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,45 +77,51 @@ class ServerFragment : Fragment(), ServerView {
             presenter.deepLink(it)
         }
 
-        spinner_server_protocol.adapter = ArrayAdapter<String>(activity,
-                android.R.layout.simple_dropdown_item_1line, arrayOf("https://", "http://"))
-        spinner_server_protocol.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                when(position) {
-                    0 -> {
-                        protocol = "https://"
-                    }
-                    1 -> {
-                        if (ignoreChange) {
-                            protocol = "http://"
-                        } else {
-                            ui {
-                                AlertDialog.Builder(it)
-                                        .setTitle(R.string.msg_warning)
-                                        .setMessage(R.string.msg_http_insecure)
-                                        .setPositiveButton(R.string.msg_proceed) { _, _ ->
-                                            protocol = "http://"
-                                        }
-                                        .setNegativeButton(R.string.msg_cancel) { _, _ ->
-                                            spinner_server_protocol.setSelection(0)
-                                        }
-                                        .setCancelable(false)
-                                        .create()
-                                        .show()
+        spinner_server_protocol.adapter = ArrayAdapter<String>(
+            activity,
+            android.R.layout.simple_dropdown_item_1line, arrayOf("https://", "http://")
+        )
+        spinner_server_protocol.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        when (position) {
+                            0 -> {
+                                protocol = "https://"
+                            }
+                            1 -> {
+                                if (ignoreChange) {
+                                    protocol = "http://"
+                                } else {
+                                    ui {
+                                        AlertDialog.Builder(it)
+                                            .setTitle(R.string.msg_warning)
+                                            .setMessage(R.string.msg_http_insecure)
+                                            .setPositiveButton(R.string.msg_proceed) { _, _ ->
+                                                protocol = "http://"
+                                            }
+                                            .setNegativeButton(R.string.msg_cancel) { _, _ ->
+                                                spinner_server_protocol.setSelection(0)
+                                            }
+                                            .setCancelable(false)
+                                            .create()
+                                            .show()
+                                    }
+                                }
                             }
                         }
+                        ignoreChange = false
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {
                     }
                 }
-                ignoreChange = false
-            }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-        }
-
-        if (analyticsTrackingInteractor.get()) {
-            AnalyticsManager.logScreenView(ScreenViewEvent.Server)
-        }
+        analyticsManager.logScreenView(ScreenViewEvent.Server)
     }
 
     private fun setupToobar() {
@@ -121,7 +139,8 @@ class ServerFragment : Fragment(), ServerView {
         constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
     }
 
-    override fun showInvalidServerUrlMessage() = showMessage(getString(R.string.msg_invalid_server_url))
+    override fun showInvalidServerUrlMessage() =
+        showMessage(getString(R.string.msg_invalid_server_url))
 
     override fun showLoading() {
         ui {
@@ -157,7 +176,12 @@ class ServerFragment : Fragment(), ServerView {
         ui {
             hideLoading()
             AlertDialog.Builder(it)
-                .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
+                .setMessage(
+                    getString(
+                        R.string.msg_ver_not_recommended,
+                        BuildConfig.RECOMMENDED_SERVER_VERSION
+                    )
+                )
                 .setPositiveButton(R.string.msg_ok) { _, _ ->
                     performConnect()
                 }
@@ -170,7 +194,12 @@ class ServerFragment : Fragment(), ServerView {
         ui {
             hideLoading()
             AlertDialog.Builder(it)
-                .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
+                .setMessage(
+                    getString(
+                        R.string.msg_ver_not_minimum,
+                        BuildConfig.REQUIRED_SERVER_VERSION
+                    )
+                )
                 .setPositiveButton(R.string.msg_ok, null)
                 .setOnDismissListener {
                     // reset the deeplink info, so the user can log to another server...
@@ -197,7 +226,9 @@ class ServerFragment : Fragment(), ServerView {
 
     override fun updateServerUrl(url: HttpUrl) {
         if (activity != null && view != null) {
-            if (url.scheme() == "https") spinner_server_protocol.setSelection(0) else spinner_server_protocol.setSelection(1)
+            if (url.scheme() == "https") spinner_server_protocol.setSelection(0) else spinner_server_protocol.setSelection(
+                1
+            )
             protocol = "${url.scheme()}://"
 
             val serverUrl = url.toString().removePrefix("${url.scheme()}://")

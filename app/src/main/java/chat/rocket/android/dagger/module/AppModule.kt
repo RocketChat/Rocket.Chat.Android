@@ -9,6 +9,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
+import chat.rocket.android.analytics.Analytics
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.AnswersAnalytics
+import chat.rocket.android.analytics.GoogleAnalyticsForFirebase
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesMultiServerTokenRepository
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesTokenRepository
 import chat.rocket.android.chatroom.service.MessageService
@@ -23,10 +27,12 @@ import chat.rocket.android.push.GroupedPush
 import chat.rocket.android.push.PushManager
 import chat.rocket.android.server.domain.AccountsRepository
 import chat.rocket.android.server.domain.ActiveUsersRepository
+import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.server.domain.AnalyticsTrackingRepository
 import chat.rocket.android.server.domain.ChatRoomsRepository
 import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.GetAccountInteractor
+import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.JobSchedulerInteractor
@@ -115,7 +121,10 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideImagePipelineConfig(context: Context, okHttpClient: OkHttpClient): ImagePipelineConfig {
+    fun provideImagePipelineConfig(
+        context: Context,
+        okHttpClient: OkHttpClient
+    ): ImagePipelineConfig {
         val listeners = setOf(RequestLoggingListener())
 
         return OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient)
@@ -185,7 +194,10 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun providePermissionsRepository(localRepository: LocalRepository, moshi: Moshi): PermissionsRepository {
+    fun providePermissionsRepository(
+        localRepository: LocalRepository,
+        moshi: Moshi
+    ): PermissionsRepository {
         return SharedPreferencesPermissionsRepository(localRepository, moshi)
     }
 
@@ -234,15 +246,20 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMultiServerTokenRepository(repository: LocalRepository, moshi: Moshi): MultiServerTokenRepository {
+    fun provideMultiServerTokenRepository(
+        repository: LocalRepository,
+        moshi: Moshi
+    ): MultiServerTokenRepository {
         return SharedPreferencesMultiServerTokenRepository(repository, moshi)
     }
 
     @Provides
     @Singleton
-    fun provideMessageRepository(@ForMessages preferences: SharedPreferences,
-                                 moshi: Moshi,
-                                 currentServerInteractor: GetCurrentServerInteractor): MessagesRepository {
+    fun provideMessageRepository(
+        @ForMessages preferences: SharedPreferences,
+        moshi: Moshi,
+        currentServerInteractor: GetCurrentServerInteractor
+    ): MessagesRepository {
         return SharedPreferencesMessagesRepository(preferences, moshi, currentServerInteractor)
     }
 
@@ -257,10 +274,12 @@ class AppModule {
     fun provideConfiguration(context: Application): SpannableConfiguration {
         val res = context.resources
         return SpannableConfiguration.builder(context)
-            .theme(SpannableTheme.builder()
-                .blockMargin(0)
-                .linkColor(res.getColor(R.color.colorAccent))
-                .build())
+            .theme(
+                SpannableTheme.builder()
+                    .blockMargin(0)
+                    .linkColor(res.getColor(R.color.colorAccent))
+                    .build()
+            )
             .build()
     }
 
@@ -277,7 +296,10 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideAccountsRepository(preferences: SharedPreferences, moshi: Moshi): AccountsRepository =
+    fun provideAccountsRepository(
+        preferences: SharedPreferences,
+        moshi: Moshi
+    ): AccountsRepository =
         SharedPreferencesAccountsRepository(preferences, moshi)
 
     @Provides
@@ -296,8 +318,16 @@ class AppModule {
         manager: NotificationManager,
         moshi: Moshi,
         getAccountInteractor: GetAccountInteractor,
-        getSettingsInteractor: GetSettingsInteractor): PushManager {
-        return PushManager(groupedPushes, manager, moshi, getAccountInteractor, getSettingsInteractor, context)
+        getSettingsInteractor: GetSettingsInteractor
+    ): PushManager {
+        return PushManager(
+            groupedPushes,
+            manager,
+            moshi,
+            getAccountInteractor,
+            getSettingsInteractor,
+            context
+        )
     }
 
     @Provides
@@ -307,14 +337,19 @@ class AppModule {
 
     @Provides
     fun provideSendMessageJob(context: Application): JobInfo {
-        return JobInfo.Builder(MessageService.RETRY_SEND_MESSAGE_ID,
-            ComponentName(context, MessageService::class.java))
+        return JobInfo.Builder(
+            MessageService.RETRY_SEND_MESSAGE_ID,
+            ComponentName(context, MessageService::class.java)
+        )
             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
             .build()
     }
 
     @Provides
-    fun provideJobSchedulerInteractor(jobScheduler: JobScheduler, jobInfo: JobInfo): JobSchedulerInteractor {
+    fun provideJobSchedulerInteractor(
+        jobScheduler: JobScheduler,
+        jobInfo: JobInfo
+    ): JobSchedulerInteractor {
         return JobSchedulerInteractorImpl(jobScheduler, jobInfo)
     }
 
@@ -330,5 +365,34 @@ class AppModule {
         @Named("currentServer") currentServer: String
     ): DatabaseManager {
         return factory.create(currentServer)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAnswersAnalytics(): AnswersAnalytics {
+        return AnswersAnalytics()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGoogleAnalyticsForFirebase(context: Application): GoogleAnalyticsForFirebase {
+        return GoogleAnalyticsForFirebase(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAnalyticsManager(
+        analyticsTrackingInteractor: AnalyticsTrackingInteractor,
+        getCurrentServerInteractor: GetCurrentServerInteractor,
+        getAccountsInteractor: GetAccountsInteractor,
+        answersAnalytics: AnswersAnalytics,
+        googleAnalyticsForFirebase: GoogleAnalyticsForFirebase
+    ): AnalyticsManager {
+        return AnalyticsManager(
+            analyticsTrackingInteractor,
+            getCurrentServerInteractor,
+            getAccountsInteractor,
+            listOf(answersAnalytics, googleAnalyticsForFirebase)
+        )
     }
 }

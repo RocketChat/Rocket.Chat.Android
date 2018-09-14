@@ -147,10 +147,11 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmojiRowViewHolder {
+            val inflater = LayoutInflater.from(parent.context)
             val view = if (viewType == CUSTOM) {
-                LayoutInflater.from(parent.context).inflate(R.layout.emoji_image_row_item, parent, false)
+                inflater.inflate(R.layout.emoji_image_row_item, parent, false)
             } else {
-                LayoutInflater.from(parent.context).inflate(R.layout.emoji_row_item, parent, false)
+                inflater.inflate(R.layout.emoji_row_item, parent, false)
             }
             return EmojiRowViewHolder(view, listener)
         }

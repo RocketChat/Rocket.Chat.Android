@@ -6,41 +6,37 @@ import chat.rocket.android.server.domain.AccountsRepository
 import chat.rocket.android.server.domain.model.Account
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.withContext
+
+private const val ACCOUNTS_KEY = "ACCOUNTS_KEY"
 
 class SharedPreferencesAccountsRepository(
     private val preferences: SharedPreferences,
     private val moshi: Moshi
 ) : AccountsRepository {
 
-    override suspend fun save(newAccount: Account) {
-        withContext(CommonPool) {
-            val accounts = load()
+    override fun save(newAccount: Account) {
+        val accounts = load()
 
-            val newList = accounts.filter { account -> newAccount.serverUrl != account.serverUrl }
-                    .toMutableList()
-            newList.add(0, newAccount)
-            save(newList)
-        }
+        val newList = accounts.filter { account -> newAccount.serverUrl != account.serverUrl }
+            .toMutableList()
+        newList.add(0, newAccount)
+        save(newList)
     }
 
-    override suspend fun load(): List<Account> = withContext(CommonPool) {
+    override fun load(): List<Account> {
         val json = preferences.getString(ACCOUNTS_KEY, "[]")
         val type = Types.newParameterizedType(List::class.java, Account::class.java)
         val adapter = moshi.adapter<List<Account>>(type)
 
-        adapter.fromJson(json) ?: emptyList()
+        return adapter.fromJson(json) ?: emptyList()
     }
 
-    override suspend fun remove(serverUrl: String) {
-        withContext(CommonPool) {
-            val accounts = load()
+    override fun remove(serverUrl: String) {
+        val accounts = load()
 
-            val newList = accounts.filter { account -> serverUrl != account.serverUrl }
-                    .toMutableList()
-            save(newList)
-        }
+        val newList = accounts.filter { account -> serverUrl != account.serverUrl }
+            .toMutableList()
+        save(newList)
     }
 
     private fun save(accounts: List<Account>) {
@@ -51,5 +47,3 @@ class SharedPreferencesAccountsRepository(
         }
     }
 }
-
-private const val ACCOUNTS_KEY = "ACCOUNTS_KEY"

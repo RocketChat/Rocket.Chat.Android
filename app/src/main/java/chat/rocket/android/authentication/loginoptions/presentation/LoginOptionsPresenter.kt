@@ -1,5 +1,7 @@
 package chat.rocket.android.authentication.loginoptions.presentation
 
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.AuthenticationEvent
 import chat.rocket.android.authentication.login.presentation.*
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
@@ -33,17 +35,17 @@ private const val SERVICE_NAME_LINKEDIN = "linkedin"
 private const val SERVICE_NAME_GILAB = "gitlab"
 
 class LoginOptionsPresenter @Inject constructor(
-        private val view: LoginOptionsView,
-        private val strategy: CancelStrategy,
-        private val factory: RocketChatClientFactory,
-        private val navigator: AuthenticationNavigator,
-        private val settingsInteractor: GetSettingsInteractor,
-        private val localRepository: LocalRepository,
-        private val saveCurrentServer: SaveCurrentServerInteractor,
-        private val saveAccountInteractor: SaveAccountInteractor,
-        private val getAccountsInteractor: GetAccountsInteractor,
-        private val tokenRepository: TokenRepository,
-        serverInteractor: GetConnectingServerInteractor
+    private val view: LoginOptionsView,
+    private val strategy: CancelStrategy,
+    private val factory: RocketChatClientFactory,
+    private val navigator: AuthenticationNavigator,
+    private val settingsInteractor: GetSettingsInteractor,
+    private val localRepository: LocalRepository,
+    private val saveCurrentServer: SaveCurrentServerInteractor,
+    private val saveAccountInteractor: SaveAccountInteractor,
+    private val analyticsManager: AnalyticsManager,
+    private val tokenRepository: TokenRepository,
+    serverInteractor: GetConnectingServerInteractor
 ) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
     private var currentServer = serverInteractor.get()!!
@@ -245,7 +247,11 @@ class LoginOptionsPresenter @Inject constructor(
                     saveCurrentServer.save(currentServer)
                     saveAccount(myself.username!!)
                     saveToken(token)
-                    registerPushToken()
+                    // TODO
+//                    analyticsManager.logSignUp(
+//                        AuthenticationEvent.AuthenticationWithOauth,
+//                        true
+//                    )
                     navigator.toChatList()
                 } else if (loginType == TYPE_LOGIN_OAUTH) {
                     navigator.toRegisterUsername(token.userId, token.authToken)
@@ -282,14 +288,6 @@ class LoginOptionsPresenter @Inject constructor(
 
     private fun saveToken(token: Token) {
         tokenRepository.save(currentServer, token)
-    }
-
-    private suspend fun registerPushToken() {
-        localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
-            client.registerPushToken(it, getAccountsInteractor.get(), factory)
-        }
-        // TODO: When the push token is null, at some point we should receive it with
-        // onTokenRefresh() on FirebaseTokenService, we need to confirm it.
     }
 
     fun toCreateAccount() {

@@ -13,20 +13,19 @@ import android.view.ViewTreeObserver
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.R.string.message_credentials_saved_successfully
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.signup.presentation.SignupPresenter
 import chat.rocket.android.authentication.signup.presentation.SignupView
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.helper.saveCredentials
-import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.shake
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.util.extensions.vibrateSmartPhone
-import chat.rocket.android.util.helper.analytics.AnalyticsManager
-import chat.rocket.android.util.helper.analytics.event.ScreenViewEvent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
 import javax.inject.Inject
@@ -38,7 +37,7 @@ class SignupFragment : Fragment(), SignupView {
     @Inject
     lateinit var presenter: SignupPresenter
     @Inject
-    lateinit var analyticsTrackingInteractor: AnalyticsTrackingInteractor
+    lateinit var analyticsManager: AnalyticsManager
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         if (KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)) {
             text_new_user_agreement.setVisible(false)
@@ -82,9 +81,7 @@ class SignupFragment : Fragment(), SignupView {
             )
         }
 
-        if (analyticsTrackingInteractor.get()) {
-            AnalyticsManager.logScreenView(ScreenViewEvent.SignUp)
-        }
+        analyticsManager.logScreenView(ScreenViewEvent.SignUp)
     }
 
     override fun onDestroyView() {
