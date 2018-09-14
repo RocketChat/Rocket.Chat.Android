@@ -68,10 +68,12 @@
             android:inputType="text|textUri" />
     </RelativeLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_connect"
         style="@style/Authentication.Button"
         android:layout_marginTop="20dp"
+        android:backgroundTint="@color/colorAuthenticationOnBoardingButtonDisabled"
+        android:enabled="false"
         android:text="@string/action_connect"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

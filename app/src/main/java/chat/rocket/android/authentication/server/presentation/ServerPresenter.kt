@@ -9,8 +9,8 @@ import chat.rocket.android.server.domain.RefreshSettingsInteractor
 import chat.rocket.android.server.domain.SaveConnectingServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
-import chat.rocket.android.util.extensions.isValidUrl
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.extensions.isValidUrl
 import javax.inject.Inject
 
 class ServerPresenter @Inject constructor(
@@ -33,10 +33,7 @@ class ServerPresenter @Inject constructor(
     }
 
     fun connect(server: String) {
-        //code that leads to login screen (smart lock will be implemented after this)
-        connectToServer(server) {
-            navigator.toLoginOptions(server)
-        }
+        connectToServer(server) { navigator.toLoginOptions(server) }
     }
 
     private fun connectToServer(server: String, block: () -> Unit) {
@@ -66,9 +63,6 @@ class ServerPresenter @Inject constructor(
     }
 
     fun deepLink(deepLinkInfo: LoginDeepLinkInfo) {
-        //code that leads to login screen (smart lock will be implemented after this)
-        connectToServer(deepLinkInfo.url) {
-            navigator.toLogin(deepLinkInfo)
-        }
+        connectToServer(deepLinkInfo.url) { navigator.toLogin(deepLinkInfo) }
     }
 }

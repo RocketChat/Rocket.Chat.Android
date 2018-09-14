@@ -24,6 +24,7 @@
 
     <!-- Authentication colors -->
     <color name="colorAuthenticationOnBoardingButtonBorder">#FFE1E5E8</color>
+    <color name="colorAuthenticationOnBoardingButtonDisabled">#FFE1E5E8</color>
     <color name="colorAuthenticationOnBoardingChevron">#FFCBCED1</color>
     <color name="colorAuthenticationOnBoardingSecondaryText">#FF9EA2A8</color>
 

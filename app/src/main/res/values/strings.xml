@@ -131,7 +131,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_no_chat_title">No chat messages</string>
     <string name="msg_no_chat_description">Start conversing to see your\nmessages here.</string>
     <string name="msg_cancel">CANCEL</string>
-    <string name="msg_http_insecure">When using HTTP, you\'re connecting to an insecure server. We don\'t recommend you doing that.</string>
+    <string name="msg_http_insecure">When using HTTP you\'re connecting to an insecure server. We don\'t recommend you doing that.</string>
     <string name="msg_error_checking_server_version">An error has occurred while checking your server version, please try again</string>
     <string name="msg_invalid_server_protocol">The selected protocol is not accepted by this server, try using HTTPS</string>
     <string name="msg_image_saved_successfully">Image has been saved to gallery</string>

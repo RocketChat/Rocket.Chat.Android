@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
 import chat.rocket.android.authentication.onboarding.presentation.OnBoardingPresenter
 import chat.rocket.android.authentication.onboarding.presentation.OnBoardingView
@@ -23,6 +25,8 @@ import javax.inject.Inject
 class OnBoardingFragment : Fragment(), OnBoardingView {
     @Inject
     lateinit var presenter: OnBoardingPresenter
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +42,8 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
         super.onViewCreated(view, savedInstanceState)
         setupToobar()
         setupOnClickListener()
+
+        analyticsManager.logScreenView(ScreenViewEvent.OnBoarding)
     }
 
     private fun setupToobar() {
