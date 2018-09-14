@@ -5,10 +5,14 @@ import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.ui.LoginFragment
 import chat.rocket.android.authentication.login.ui.TAG_LOGIN_FRAGMENT
+import chat.rocket.android.authentication.loginoptions.ui.LoginOptionsFragment
+import chat.rocket.android.authentication.loginoptions.ui.TAG_LOGIN_OPTIONS
 import chat.rocket.android.authentication.registerusername.ui.RegisterUsernameFragment
 import chat.rocket.android.authentication.registerusername.ui.TAG_REGISTER_USERNAME_FRAGMENT
 import chat.rocket.android.authentication.resetpassword.ui.ResetPasswordFragment
 import chat.rocket.android.authentication.resetpassword.ui.TAG_RESET_PASSWORD_FRAGMENT
+import chat.rocket.android.authentication.server.ui.ServerFragment
+import chat.rocket.android.authentication.server.ui.TAG_SERVER_FRAGMENT
 import chat.rocket.android.authentication.signup.ui.SignupFragment
 import chat.rocket.android.authentication.signup.ui.TAG_SIGNUP_FRAGMENT
 import chat.rocket.android.authentication.twofactor.ui.TAG_TWO_FA_FRAGMENT
@@ -22,6 +26,18 @@ import chat.rocket.android.util.extensions.toPreviousView
 import chat.rocket.android.webview.ui.webViewIntent
 
 class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
+
+    fun toConnectWithAServer(deepLinkInfo: LoginDeepLinkInfo?) {
+        activity.addFragmentBackStack(TAG_SERVER_FRAGMENT, R.id.fragment_container) {
+            ServerFragment.newInstance(deepLinkInfo)
+        }
+    }
+
+    fun toLoginOptions(server: String) {
+        activity.addFragmentBackStack(TAG_LOGIN_OPTIONS, R.id.fragment_container) {
+            LoginOptionsFragment.newInstance(server)
+        }
+    }
 
     fun toLogin() {
         activity.addFragmentBackStack(TAG_LOGIN_FRAGMENT, R.id.fragment_container) {
@@ -57,8 +73,8 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
         }
     }
 
-    fun toWebPage(url: String) {
-        activity.startActivity(activity.webViewIntent(url))
+    fun toWebPage(url: String, toolbarTitle: String? = null) {
+        activity.startActivity(activity.webViewIntent(url, toolbarTitle))
         activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
     }
 
@@ -81,5 +97,11 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
     fun toServerScreen() {
         activity.startActivity(activity.newServerIntent())
         activity.finish()
+    }
+
+    fun toCreateAccount() {
+        activity.addFragmentBackStack("SignUpFragment", R.id.fragment_container) {
+            SignupFragment.newInstance()
+        }
     }
 }

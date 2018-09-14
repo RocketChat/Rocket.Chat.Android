@@ -111,12 +111,6 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
     }
 
     private fun colorSelector() {
-        image_color_black.setOnClickListener {
-            custom_draw_view.setColor(
-                    ResourcesCompat.getColor(resources, R.color.color_black, null)
-            )
-            scaleColorView(image_color_black)
-        }
         image_color_red.setOnClickListener {
             custom_draw_view.setColor(
                 ResourcesCompat.getColor(resources, R.color.color_red, null)

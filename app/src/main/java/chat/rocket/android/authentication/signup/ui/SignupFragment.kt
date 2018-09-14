@@ -39,12 +39,12 @@ class SignupFragment : Fragment(), SignupView {
     @Inject
     lateinit var analyticsManager: AnalyticsManager
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        if (KeyboardHelper.isSoftKeyboardShown(relative_layout.rootView)) {
-            bottom_container.setVisible(false)
+        if (KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)) {
+            text_new_user_agreement.setVisible(false)
         } else {
-            bottom_container.apply {
+            text_new_user_agreement.apply {
                 postDelayed({
-                    ui { setVisible(true) }
+                    ui { setVisible(false) }
                 }, 3)
             }
         }
@@ -68,7 +68,7 @@ class SignupFragment : Fragment(), SignupView {
             tintEditTextDrawableStart()
         }
 
-        relative_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+        constraint_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
 
         setUpNewUserAgreementListener()
 
@@ -85,7 +85,7 @@ class SignupFragment : Fragment(), SignupView {
     }
 
     override fun onDestroyView() {
-        relative_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+        constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
         super.onDestroyView()
     }
 
@@ -168,10 +168,10 @@ class SignupFragment : Fragment(), SignupView {
     private fun tintEditTextDrawableStart() {
         ui {
             val personDrawable =
-                DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_24dp, it)
-            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, it)
+                DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_20dp, it)
+            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_20dp, it)
             val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_24dp, it)
-            val emailDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_24dp, it)
+            val emailDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_20dp, it)
 
             val drawables = arrayOf(personDrawable, atDrawable, lockDrawable, emailDrawable)
             DrawableHelper.wrapDrawables(drawables)

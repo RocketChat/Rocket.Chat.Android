@@ -215,10 +215,10 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private fun tintEditTextDrawableStart() {
         (activity as MainActivity).apply {
             val personDrawable =
-                DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_24dp, this)
-            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, this)
+                DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_20dp, this)
+            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_20dp, this)
             val emailDrawable =
-                DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_24dp, this)
+                DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_20dp, this)
 
             val drawables = arrayOf(personDrawable, atDrawable, emailDrawable)
             DrawableHelper.wrapDrawables(drawables)

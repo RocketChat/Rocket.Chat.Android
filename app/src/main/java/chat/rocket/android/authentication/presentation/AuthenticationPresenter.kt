@@ -1,10 +1,9 @@
 package chat.rocket.android.authentication.presentation
 
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.GetAccountInteractor
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import chat.rocket.android.server.domain.SettingsRepository
-import chat.rocket.android.server.domain.TokenRepository
+import chat.rocket.android.server.domain.*
+import chat.rocket.android.util.extensions.privacyPolicyUrl
+import chat.rocket.android.util.extensions.termsOfServiceUrl
 import javax.inject.Inject
 
 class AuthenticationPresenter @Inject constructor(
@@ -13,7 +12,8 @@ class AuthenticationPresenter @Inject constructor(
     private val getAccountInteractor: GetAccountInteractor,
     private val settingsRepository: SettingsRepository,
     private val localRepository: LocalRepository,
-    private val tokenRepository: TokenRepository
+    private val tokenRepository: TokenRepository,
+    private val serverInteractor: GetConnectingServerInteractor
 ) {
     suspend fun loadCredentials(newServer: Boolean, callback: (authenticated: Boolean) -> Unit) {
         val currentServer = getCurrentServerInteractor.get()
@@ -30,6 +30,18 @@ class AuthenticationPresenter @Inject constructor(
         } else {
             callback(true)
             navigator.toChatList()
+        }
+    }
+
+    fun termsOfService(toolbarTitle: String) {
+        serverInteractor.get()?.let {
+            navigator.toWebPage(it.termsOfServiceUrl(), toolbarTitle)
+        }
+    }
+
+    fun privacyPolicy(toolbarTitle: String) {
+        serverInteractor.get()?.let {
+            navigator.toWebPage(it.privacyPolicyUrl(), toolbarTitle)
         }
     }
 }

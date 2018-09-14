@@ -8,8 +8,8 @@
     <dimen name="message_item_top_and_bottom_padding">6dp</dimen>
     <dimen name="member_item_top_and_bottom_padding">6dp</dimen>
 
-    <dimen name="edit_text_margin">10dp</dimen>
-    <dimen name="edit_text_drawable_padding">16dp</dimen>
+    <dimen name="edit_text_margin">16dp</dimen>
+    <dimen name="edit_text_drawable_padding">10dp</dimen>
 
     <dimen name="text_view_drawable_padding">8dp</dimen>
 

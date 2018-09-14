@@ -23,4 +23,5 @@ sealed class ScreenViewEvent(val screenName: String) {
     object Settings : ScreenViewEvent("SettingsFragment")
     object SignUp : ScreenViewEvent("SignupFragment")
     object TwoFa : ScreenViewEvent("TwoFAFragment")
+    object OnBoarding : ScreenViewEvent("OnBoardingFragment")
 }

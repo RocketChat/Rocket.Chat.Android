@@ -3,19 +3,22 @@ package chat.rocket.android.authentication.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
+import chat.rocket.android.authentication.onboarding.ui.OnBoardingFragment
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
 import chat.rocket.android.authentication.server.ui.ServerFragment
-import chat.rocket.android.authentication.server.ui.TAG_SERVER_FRAGMENT
 import chat.rocket.android.util.extensions.addFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -31,19 +34,26 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_authentication)
-        setTheme(R.style.AuthenticationTheme)
         super.onCreate(savedInstanceState)
+        setupToolbar()
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
     }
 
     override fun onStart() {
         super.onStart()
-        val deepLinkInfo = intent.getLoginDeepLinkInfo()
         launch(UI + job) {
             val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
-            // if we got authenticateWithDeepLink information, pass true to newServer also
-            presenter.loadCredentials(newServer || deepLinkInfo != null) { authenticated ->
+            presenter.loadCredentials(newServer) { authenticated ->
                 if (!authenticated) {
-                    showServerInput(deepLinkInfo)
+                    showOnBoarding()
                 }
             }
         }
@@ -64,10 +74,23 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         return fragmentDispatchingAndroidInjector
     }
 
-    fun showServerInput(deepLinkInfo: LoginDeepLinkInfo?) {
-        addFragment(TAG_SERVER_FRAGMENT, R.id.fragment_container, allowStateLoss = true) {
-            ServerFragment.newInstance(deepLinkInfo)
+    private fun showOnBoarding() {
+        addFragment("OnBoardingFragment", R.id.fragment_container, allowStateLoss = true) {
+            OnBoardingFragment.newInstance()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.legal, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.action_terms_of_Service -> presenter.termsOfService(getString(R.string.action_terms_of_service))
+            R.id.action_privacy_policy -> presenter.privacyPolicy(getString(R.string.action_privacy_policy))
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
 

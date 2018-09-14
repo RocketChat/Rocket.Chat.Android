@@ -14,9 +14,11 @@ import chat.rocket.core.internal.rest.serverInfo
 import kotlinx.coroutines.experimental.Job
 import timber.log.Timber
 
-abstract class CheckServerPresenter constructor(private val strategy: CancelStrategy,
-                                                private val factory: RocketChatClientFactory,
-                                                private val view: VersionCheckView) {
+abstract class CheckServerPresenter constructor(
+    private val strategy: CancelStrategy,
+    private val factory: RocketChatClientFactory,
+    private val view: VersionCheckView
+) {
     private lateinit var currentServer: String
     private lateinit var client: RocketChatClient
 
@@ -49,12 +51,8 @@ abstract class CheckServerPresenter constructor(private val strategy: CancelStra
             } catch (ex: Exception) {
                 Timber.d(ex, "Error getting server info")
                 when (ex) {
-                    is RocketChatInvalidProtocolException -> {
-                        view.errorInvalidProtocol()
-                    }
-                    else -> {
-                        view.errorCheckingServerVersion()
-                    }
+                    is RocketChatInvalidProtocolException -> view.errorInvalidProtocol()
+                    else -> view.errorCheckingServerVersion()
                 }
             }
         }
@@ -64,6 +62,7 @@ abstract class CheckServerPresenter constructor(private val strategy: CancelStra
         val thisServerVersion = serverInfo.version
         val isRequiredVersion = isRequiredServerVersion(thisServerVersion)
         val isRecommendedVersion = isRecommendedServerVersion(thisServerVersion)
+
         return if (isRequiredVersion) {
             if (isRecommendedVersion) {
                 Timber.i("Your version is nice! (Requires: 0.62.0, Yours: $thisServerVersion)")
@@ -81,7 +80,10 @@ abstract class CheckServerPresenter constructor(private val strategy: CancelStra
     }
 
     private fun isRecommendedServerVersion(version: String): Boolean {
-        return isMinimumVersion(version, getVersionDistilled(BuildConfig.RECOMMENDED_SERVER_VERSION))
+        return isMinimumVersion(
+            version,
+            getVersionDistilled(BuildConfig.RECOMMENDED_SERVER_VERSION)
+        )
     }
 
     private fun isMinimumVersion(version: String, required: VersionInfo): Boolean {
@@ -115,12 +117,14 @@ abstract class CheckServerPresenter constructor(private val strategy: CancelStra
         val major = getVersionNumber(split, 0)
         val minor = getVersionNumber(split, 1)
         val update = getVersionNumber(split, 2)
+
         return VersionInfo(
-                major = major,
-                minor = minor,
-                update = update,
-                release = release,
-                full = version)
+            major = major,
+            minor = minor,
+            update = update,
+            release = release,
+            full = version
+        )
     }
 
     private fun getVersionNumber(split: List<String>, index: Int): Int {
@@ -133,7 +137,9 @@ abstract class CheckServerPresenter constructor(private val strategy: CancelStra
 
     sealed class Version(val version: String) {
         data class VersionOk(private val currentVersion: String) : Version(currentVersion)
-        data class RecommendedVersionWarning(private val currentVersion: String) : Version(currentVersion)
+        data class RecommendedVersionWarning(private val currentVersion: String) :
+            Version(currentVersion)
+
         data class OutOfDateError(private val currentVersion: String) : Version(currentVersion)
     }
 }

@@ -102,7 +102,6 @@ class LoginPresenter @Inject constructor(
     fun setupView() {
         setupConnectionInfo(currentServer)
         setupLoginView()
-        setupUserRegistrationView()
         setupForgotPasswordView()
         setupCasView()
         setupOauthServicesView()
@@ -173,7 +172,6 @@ class LoginPresenter @Inject constructor(
         if (settings.isLoginFormEnabled()) {
             view.showFormView()
             view.setupLoginButtonListener()
-            view.setupGlobalListener()
         } else {
             view.hideFormView()
         }
@@ -187,13 +185,6 @@ class LoginPresenter @Inject constructor(
                 casToken
             )
             view.showCasButton()
-        }
-    }
-
-    private fun setupUserRegistrationView() {
-        if (settings.isRegistrationEnabledForNewUsers() && settings.isLoginFormEnabled()) {
-            view.setupSignUpView()
-            view.showSignUpView()
         }
     }
 
@@ -214,127 +205,6 @@ class LoginPresenter @Inject constructor(
                     val state =
                         "{\"loginStyle\":\"popup\",\"credentialToken\":\"${generateRandomString(40)}\",\"isCordova\":true}".encodeToBase64()
                     var totalSocialAccountsEnabled = 0
-
-                    if (settings.isFacebookAuthenticationEnabled()) {
-                        getServiceMap(services, SERVICE_NAME_FACEBOOK)?.let { serviceMap ->
-                            getOauthClientId(serviceMap)?.let { clientId ->
-                                view.setupFacebookButtonListener(
-                                    OauthHelper.getFacebookOauthUrl(
-                                        clientId,
-                                        currentServer,
-                                        state
-                                    ), state
-                                )
-                                view.enableLoginByFacebook()
-                                totalSocialAccountsEnabled++
-                            }
-                        }
-                    }
-
-                    if (settings.isGithubAuthenticationEnabled()) {
-                        getServiceMap(services, SERVICE_NAME_GITHUB)?.let { serviceMap ->
-                            getOauthClientId(serviceMap)?.let { clientId ->
-                                view.setupGithubButtonListener(
-                                    OauthHelper.getGithubOauthUrl(
-                                        clientId,
-                                        state
-                                    ), state
-                                )
-                                view.enableLoginByGithub()
-                                totalSocialAccountsEnabled++
-                            }
-                        }
-                    }
-
-                    if (settings.isGoogleAuthenticationEnabled()) {
-                        getServiceMap(services, SERVICE_NAME_GOOGLE)?.let { serviceMap ->
-                            getOauthClientId(serviceMap)?.let { clientId ->
-                                view.setupGoogleButtonListener(
-                                    OauthHelper.getGoogleOauthUrl(
-                                        clientId,
-                                        currentServer,
-                                        state
-                                    ), state
-                                )
-                                view.enableLoginByGoogle()
-                                totalSocialAccountsEnabled++
-                            }
-                        }
-                    }
-
-                    if (settings.isLinkedinAuthenticationEnabled()) {
-                        getServiceMap(services, SERVICE_NAME_LINKEDIN)?.let { serviceMap ->
-                            getOauthClientId(serviceMap)?.let { clientId ->
-                                view.setupLinkedinButtonListener(
-                                    OauthHelper.getLinkedinOauthUrl(
-                                        clientId,
-                                        currentServer,
-                                        state
-                                    ), state
-                                )
-                                view.enableLoginByLinkedin()
-                                totalSocialAccountsEnabled++
-
-                            }
-                        }
-                    }
-
-                    if (settings.isGitlabAuthenticationEnabled()) {
-                        getServiceMap(services, SERVICE_NAME_GILAB)?.let { serviceMap ->
-                            getOauthClientId(serviceMap)?.let { clientId ->
-                                val gitlabOauthUrl = if (settings.gitlabUrl() != null) {
-                                    OauthHelper.getGitlabOauthUrl(
-                                        host = settings.gitlabUrl(),
-                                        clientId = clientId,
-                                        serverUrl = currentServer,
-                                        state = state
-                                    )
-                                } else {
-                                    OauthHelper.getGitlabOauthUrl(
-                                        clientId = clientId,
-                                        serverUrl = currentServer,
-                                        state = state
-                                    )
-                                }
-                                view.setupGitlabButtonListener(gitlabOauthUrl, state)
-                                view.enableLoginByGitlab()
-                                totalSocialAccountsEnabled++
-                            }
-                        }
-                    }
-
-                    if (settings.isWordpressAuthenticationEnabled()) {
-                        getServiceMap(services, SERVICE_NAME_WORDPRESS)?.let { serviceMap ->
-                            getOauthClientId(serviceMap)?.let { clientId ->
-                                val wordpressOauthUrl =
-                                    if (settings.wordpressUrl().isNullOrEmpty()) {
-                                        OauthHelper.getWordpressComOauthUrl(
-                                            clientId,
-                                            currentServer,
-                                            state
-                                        )
-                                    } else {
-                                        OauthHelper.getWordpressCustomOauthUrl(
-                                            getCustomOauthHost(serviceMap)
-                                                    ?: "https://public-api.wordpress.com",
-                                            getCustomOauthAuthorizePath(serviceMap)
-                                                    ?: "/oauth/authorize",
-                                            clientId,
-                                            currentServer,
-                                            SERVICE_NAME_WORDPRESS,
-                                            state,
-                                            getCustomOauthScope(serviceMap) ?: "openid"
-                                        )
-                                    }
-                                wordpressOauthUrl?.let {
-                                    view.setupWordpressButtonListener(it, state)
-                                    view.enableLoginByWordpress()
-                                    totalSocialAccountsEnabled++
-
-                                }
-                            }
-                        }
-                    }
 
                     getCustomOauthServices(services).let {
                         for (serviceMap in it) {
@@ -400,21 +270,9 @@ class LoginPresenter @Inject constructor(
                             }
                         }
                     }
-
-                    if (totalSocialAccountsEnabled > 0) {
-                        view.enableOauthView()
-                        if (totalSocialAccountsEnabled > 3) {
-                            view.setupFabListener()
-                        }
-                    } else {
-                        view.disableOauthView()
-                    }
-                } else {
-                    view.disableOauthView()
                 }
             } catch (exception: RocketChatException) {
                 Timber.e(exception)
-                view.disableOauthView()
             }
         }
     }
