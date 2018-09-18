@@ -93,6 +93,7 @@ dependencies {
     implementation project(':draw')
     implementation project(':util')
     implementation project(':core')
+    implementation project(':suggestions')
 
     implementation libraries.kotlin
     implementation libraries.coroutines
