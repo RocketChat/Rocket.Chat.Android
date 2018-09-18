@@ -139,9 +139,11 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
     @ColorInt
     private fun getFitzpatrickColor(tone: Fitzpatrick): Int {
         val sharedPreferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
+
         sharedPreferences.edit {
             putString(PREF_EMOJI_SKIN_TONE, tone.type)
         }
+
         return when (tone) {
             Fitzpatrick.Default -> ContextCompat.getColor(context, R.color.tone_default)
             Fitzpatrick.LightTone -> ContextCompat.getColor(context, R.color.tone_light)
@@ -194,6 +196,7 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
     }
 
     class EmojiTextWatcher(private val editor: EditText) : TextWatcher {
+
         @Volatile
         private var emojiToRemove = mutableListOf<EmojiTypefaceSpan>()
 
