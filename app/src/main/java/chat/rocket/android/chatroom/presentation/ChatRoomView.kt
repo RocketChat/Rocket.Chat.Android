@@ -3,6 +3,7 @@ package chat.rocket.android.chatroom.presentation
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
+import chat.rocket.android.chatroom.uimodel.suggestion.EmojiSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
@@ -127,6 +128,9 @@ interface ChatRoomView : LoadingView, MessageView {
     fun populatePeopleSuggestions(members: List<PeopleSuggestionUiModel>)
 
     fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionUiModel>)
+
+    fun populateEmojiSuggestions(emojis: List<EmojiSuggestionUiModel>)
+
     /**
      * This user has joined the chat callback.
      *
