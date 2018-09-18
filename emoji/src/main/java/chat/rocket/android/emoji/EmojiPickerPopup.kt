@@ -37,10 +37,12 @@ class EmojiPickerPopup(context: Context) : Dialog(context) {
 
     private fun setSize() {
         val lp = WindowManager.LayoutParams()
-        lp.copyFrom(window.attributes)
-        val dialogWidth = lp.width
-        val dialogHeight = context.resources.getDimensionPixelSize(R.dimen.picker_popup_height)
-        window.setLayout(dialogWidth, dialogHeight)
+        window?.let {
+            lp.copyFrom(it.attributes)
+            val dialogWidth = lp.width
+            val dialogHeight = context.resources.getDimensionPixelSize(R.dimen.picker_popup_height)
+            it.setLayout(dialogWidth, dialogHeight)
+        }
     }
 
     private suspend fun setupViewPager() {

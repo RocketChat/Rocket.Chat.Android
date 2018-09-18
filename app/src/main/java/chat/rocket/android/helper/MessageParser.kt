@@ -131,7 +131,7 @@ class MessageParser @Inject constructor(
         private val builder: SpannableBuilder
     ) : SpannableMarkdownVisitor(configuration, builder) {
 
-        private val emojiSize = context.resources.getDimensionPixelSize(R.dimen.radius_mention)
+        private val emojiSize = context.resources.getDimensionPixelSize(R.dimen.custom_emoji_small)
 
         override fun visit(document: Document) {
             val spannable = EmojiParser.parse(context, builder.text())

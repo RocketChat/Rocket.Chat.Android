@@ -59,7 +59,7 @@ class MainPresenter @Inject constructor(
     private val saveAccountInteractor: SaveAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
     private val removeAccountInteractor: RemoveAccountInteractor,
-    private val factory: RocketChatClientFactory,
+    factory: RocketChatClientFactory,
     private val groupedPush: GroupedPush,
     dbManagerFactory: DatabaseManagerFactory,
     getSettingsInteractor: GetSettingsInteractor,
@@ -230,13 +230,6 @@ class MainPresenter @Inject constructor(
                     view.showGenericErrorMessage()
                 }
             }
-        }
-    }
-
-    suspend fun refreshToken(token: String?) {
-        token?.let {
-            localRepository.save(LocalRepository.KEY_PUSH_TOKEN, token)
-            client.registerPushToken(token, getAccountsInteractor.get(), factory)
         }
     }
 
