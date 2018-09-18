@@ -210,7 +210,7 @@ object EmojiRepository {
         }
     }
 
-    internal fun getCustomEmojis(): List<Emoji> = customEmojis
+    fun getCustomEmojis(): List<Emoji> = customEmojis
 
     /**
      * Get all recently used emojis ordered by usage count.

@@ -18,6 +18,7 @@ import chat.rocket.android.chatroom.domain.MessageReply
 import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.emoji.EmojiParser
+import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.helper.UserHelper
@@ -504,15 +505,18 @@ class UiModelMapper @Inject constructor(
     private fun getReactions(message: Message): List<ReactionUiModel> {
         val reactions = message.reactions?.let {
             val list = mutableListOf<ReactionUiModel>()
+            val customEmojis = EmojiRepository.getCustomEmojis()
             it.getShortNames().forEach { shortname ->
                 val usernames = it.getUsernames(shortname) ?: emptyList()
                 val count = usernames.size
+                val custom = customEmojis.firstOrNull { emoji -> emoji.shortname == shortname }
                 list.add(
                     ReactionUiModel(messageId = message.id,
                         shortname = shortname,
                         unicode = EmojiParser.parse(context, shortname),
                         count = count,
-                        usernames = usernames)
+                        usernames = usernames,
+                        url = custom?.url)
                 )
             }
             list
