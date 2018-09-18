@@ -1,4 +1,5 @@
 <resources>
+
     <!-- Titles -->
     <string name="title_sign_in_your_server">Connectez-vous sur votre serveur</string>
     <string name="title_log_in">S\'identifier</string>

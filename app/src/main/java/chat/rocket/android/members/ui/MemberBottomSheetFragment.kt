@@ -11,6 +11,7 @@ import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.textContent
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_member_bottom_sheet.*
 import javax.inject.Inject
 
@@ -51,6 +52,7 @@ class MemberBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidSupportInjection.inject(this)
 
         val bundle = arguments
         if (bundle != null) {

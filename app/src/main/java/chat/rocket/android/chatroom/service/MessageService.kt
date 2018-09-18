@@ -5,7 +5,6 @@ import android.app.job.JobService
 import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
-import chat.rocket.common.RocketChatException
 import chat.rocket.core.internal.rest.sendMessage
 import chat.rocket.core.model.Message
 import dagger.android.AndroidInjection

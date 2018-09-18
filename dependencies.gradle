@@ -10,28 +10,31 @@ ext {
 
             // For app
             kotlin                : '1.2.61',
-            coroutine             : '0.24.0',
+            coroutine             : '0.25.0',
 
-            appCompat             : '1.0.0-beta01',
-            recyclerview          : '1.0.0-beta01',
-            constraintLayout      : '2.0.0-alpha1',
-            cardview              : '1.0.0-beta01',
-            browser               : '1.0.0-beta01',
-            androidKtx            : '1.0.0-beta01',
+            appCompat             : '1.0.0-rc02',
+            recyclerview          : '1.0.0-rc02',
+            constraintLayout      : '2.0.0-alpha2',
+            cardview              : '1.0.0-rc02',
+            browser               : '1.0.0-rc02',
+            androidKtx            : '1.0.0-rc02',
+            workmanager           : '1.0.0-alpha08',
 
             dagger                : '2.16',
-            firebaseCloudMessage  : '17.1.0',
+            firebaseCloudMessage  : '17.3.0',
             firebaseAnalytics     : '16.0.3',
-            playServices          : '15.0.1',
+            playServices          : '16.0.0',
             exoPlayer             : '2.8.2',
             flexbox               : '1.0.0',
             material              : '1.0.0-beta01',
 
-            room                  : '2.0.0-beta01',
-            lifecycle             : '2.0.0-beta01',
+            room                  : '2.0.0-rc01',
+            lifecycle             : '2.0.0-rc01',
 
-            rxKotlin              : '2.2.0',
-            rxAndroid             : '2.0.2',
+            livedataKtx           : '2.0.1',
+
+            rxKotlin              : '2.3.0',
+            rxAndroid             : '2.1.0',
 
             moshi                 : '1.6.0',
             okhttp                : '3.11.0',
@@ -45,9 +48,9 @@ ext {
             kotshi                : '1.0.4',
 
             frescoImageViewer     : '0.5.1',
-            markwon               : '1.1.0',
+            markwon               : '1.1.1',
             aVLoadingIndicatorView: '2.1.3',
-            glide                 : '4.8.0-SNAPSHOT',
+            glide                 : '4.8.0',
 
             // For wearable
             wear                  : '2.3.0',
@@ -71,6 +74,9 @@ ext {
             cardview              : "androidx.cardview:cardview:${versions.cardview}",
             browser               : "androidx.browser:browser:${versions.browser}",
             androidKtx            : "androidx.core:core-ktx:${versions.androidKtx}",
+            fragmentsKtx          : "androidx.fragment:fragment-ktx:${versions.androidKtx}",
+            workmanager           : "android.arch.work:work-runtime-ktx:${versions.workmanager}",
+            workmanagerFirebase   : "android.arch.work:work-firebase:${versions.workmanager}",
 
             dagger                : "com.google.dagger:dagger:${versions.dagger}",
             daggerSupport         : "com.google.dagger:dagger-android-support:${versions.dagger}",
@@ -84,6 +90,9 @@ ext {
             roomProcessor         : "androidx.room:room-compiler:${versions.room}",
             lifecycleExtensions   : "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}",
             lifecycleCompiler     : "androidx.lifecycle:lifecycle-compiler:${versions.lifecycle}",
+            viewmodelKtx          : "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}",
+
+            livedataKtx           : "com.shopify:livedata-ktx:${versions.livedataKtx}",
 
             rxKotlin              : "io.reactivex.rxjava2:rxkotlin:${versions.rxKotlin}",
             rxAndroid             : "io.reactivex.rxjava2:rxandroid:${versions.rxAndroid}",
