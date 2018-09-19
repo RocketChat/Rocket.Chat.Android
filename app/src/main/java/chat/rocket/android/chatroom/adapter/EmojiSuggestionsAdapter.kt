@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ class EmojiSuggestionsAdapter : SuggestionsAdapter<EmojiSuggestionViewHolder>(
 
     class EmojiSuggestionViewHolder(view: View) : BaseSuggestionViewHolder(view) {
 
+        @SuppressLint("SetTextI18n")
         override fun bind(item: SuggestionModel, itemClickListener: SuggestionsAdapter.ItemClickListener?) {
             item as EmojiSuggestionUiModel
             with(itemView) {

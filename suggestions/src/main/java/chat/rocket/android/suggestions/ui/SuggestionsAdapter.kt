@@ -11,7 +11,8 @@ abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(
         val token: String,
         val constraint: Int = CONSTRAINT_UNBOUND,
         completionStrategy: CompletionStrategy? = null,
-        threshold: Int = MAX_RESULT_COUNT) : RecyclerView.Adapter<VH>() {
+        threshold: Int = MAX_RESULT_COUNT
+) : RecyclerView.Adapter<VH>() {
 
     private var itemType: Type? = null
     private var itemClickListener: ItemClickListener? = null
