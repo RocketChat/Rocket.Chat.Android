@@ -156,21 +156,24 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
 
     private suspend fun setupViewPager() {
         context.let {
-            val callback = when (it) {
+            val callback: EmojiKeyboardListener? = when (it) {
                 is EmojiKeyboardListener -> it
                 else -> {
                     val fragments = (it as AppCompatActivity).supportFragmentManager.fragments
                     if (fragments.size == 0 || !(fragments[0] is EmojiKeyboardListener)) {
-                        throw IllegalStateException("activity/fragment should implement Listener interface")
+                        // Since the app can arrive in an inconsistent state at this point, do not throw
+//                        throw IllegalStateException("activity/fragment should implement Listener interface")
+                        null
+                    } else {
+                        fragments[0] as EmojiKeyboardListener
                     }
-                    fragments[0] as EmojiKeyboardListener
                 }
             }
 
             adapter = EmojiPagerAdapter(object : EmojiKeyboardListener {
                 override fun onEmojiAdded(emoji: Emoji) {
                     EmojiRepository.addToRecents(emoji)
-                    callback.onEmojiAdded(emoji)
+                    callback?.onEmojiAdded(emoji)
                 }
             })
 
