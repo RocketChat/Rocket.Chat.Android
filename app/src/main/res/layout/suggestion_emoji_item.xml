@@ -22,6 +22,7 @@
             android:id="@+id/text_emoji"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:textColor="@android:color/black"
             tools:text=":)" />
 
         <ImageView

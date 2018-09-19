@@ -1013,6 +1013,7 @@ class ChatRoomPresenter @Inject constructor(
                 EmojiSuggestionUiModel(
                     text = it.shortname.replaceFirst(":", ""),
                     pinned = false,
+                    emoji = it,
                     searchList = listOf(it.shortname)
                 )
             }
