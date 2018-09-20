@@ -34,7 +34,6 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
         colorSelector()
         setPaintAlpha()
         setPaintWidth()
-        setColorSeekBarListener()
     }
 
     override fun sendByteArray(byteArray: ByteArray) {
