@@ -7,9 +7,9 @@ import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter.RoomSuggestionsViewHolder
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
-import chat.rocket.android.widget.autocompletion.model.SuggestionModel
-import chat.rocket.android.widget.autocompletion.ui.BaseSuggestionViewHolder
-import chat.rocket.android.widget.autocompletion.ui.SuggestionsAdapter
+import chat.rocket.android.suggestions.model.SuggestionModel
+import chat.rocket.android.suggestions.ui.BaseSuggestionViewHolder
+import chat.rocket.android.suggestions.ui.SuggestionsAdapter
 
 class RoomSuggestionsAdapter : SuggestionsAdapter<RoomSuggestionsViewHolder>("#") {
 

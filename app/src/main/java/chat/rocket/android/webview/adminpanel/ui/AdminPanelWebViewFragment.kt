@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.ui
 import kotlinx.android.synthetic.main.fragment_admin_panel_web_view.*
 
 private const val BUNDLE_WEB_PAGE_URL = "web_page_url"
@@ -58,8 +59,10 @@ class AdminPanelWebViewFragment : Fragment() {
         web_view.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
-                view_loading.hide()
-                web_view.evaluateJavascript("Meteor.loginWithToken('$userToken', function() { })") {}
+                ui { _ ->
+                    view_loading.hide()
+                    web_view.evaluateJavascript("Meteor.loginWithToken('$userToken', function() { })") {}
+                }
             }
         }
         web_view.loadUrl(webPageUrl)

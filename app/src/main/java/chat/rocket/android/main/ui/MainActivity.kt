@@ -18,6 +18,7 @@ import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
 import chat.rocket.android.main.uimodel.NavHeaderUiModel
+import chat.rocket.android.push.refreshPushToken
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.ui.INTENT_CHAT_ROOM_ID
@@ -26,7 +27,6 @@ import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.invalidateFirebaseToken
-import chat.rocket.android.util.refreshFCMToken
 import chat.rocket.common.model.UserStatus
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -36,9 +36,6 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.nav_header.view.*
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 private const val CURRENT_STATE = "current_state"
@@ -64,9 +61,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        launch(CommonPool) {
-            refreshFCMToken(presenter)
-        }
+        refreshPushToken()
 
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
 

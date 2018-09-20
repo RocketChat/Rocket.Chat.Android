@@ -3,11 +3,13 @@ package chat.rocket.android.emoji
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
+import android.util.Log
 import chat.rocket.android.emoji.internal.EmojiCategory
 import chat.rocket.android.emoji.internal.PREF_EMOJI_RECENTS
 import chat.rocket.android.emoji.internal.db.EmojiDatabase
 import chat.rocket.android.emoji.internal.isCustom
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.GlideException
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
@@ -46,7 +48,11 @@ object EmojiRepository {
             this@EmojiRepository.customEmojis = customEmojis
             val allEmojis = mutableListOf<Emoji>()
             db = EmojiDatabase.getInstance(context)
-            cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
+
+            if (!::cachedTypeface.isInitialized) {
+                cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
+            }
+
             preferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
             val stream = context.assets.open(path)
             // Load emojis from emojione ttf file temporarily here. We still need to work on them.
@@ -110,10 +116,17 @@ object EmojiRepository {
             val px = context.resources.getDimensionPixelSize(R.dimen.custom_emoji_large)
 
             customEmojis.forEach {
-                val future = Glide.with(context)
-                    .load(it.url)
-                    .submit(px, px)
-                future.get()
+                try {
+                    val future = Glide.with(context)
+                            .load(it.url)
+                            .submit(px, px)
+                    future.get()
+                } catch (ex: Exception) {
+                    Log.d("EmojiRepository", "Error fetching custom emoji ${it.shortname}", ex)
+                    if (ex is GlideException) {
+                        ex.logRootCauses("EmojiRepository")
+                    }
+                }
             }
         }
     }
@@ -197,7 +210,7 @@ object EmojiRepository {
         }
     }
 
-    internal fun getCustomEmojis(): List<Emoji> = customEmojis
+    fun getCustomEmojis(): List<Emoji> = customEmojis
 
     /**
      * Get all recently used emojis ordered by usage count.
@@ -299,5 +312,13 @@ object EmojiRepository {
         val s1: Int = Math.floor(temp.toDouble()).toInt() + 0xD800
         val s2: Int = ((scalar - 0x10000) % 0x400) + 0xDC00
         return Pair(s1, s2)
+    }
+
+    fun init(context: Context) {
+        launch {
+            db = EmojiDatabase.getInstance(context)
+            preferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
+            cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
+        }
     }
 }
