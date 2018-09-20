@@ -46,7 +46,6 @@
         android:layout_height="wrap_content"
         android:background="@color/color_white"
         android:elevation="4dp"
-        android:translationY="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -135,7 +134,8 @@
             android:thumbTint="@color/colorAccent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_draw_eraser" />
+            app:layout_constraintTop_toBottomOf="@id/image_draw_eraser"
+            android:visibility="gone" />
 
         <SeekBar
             android:id="@+id/seekBar_opacity"
@@ -148,16 +148,18 @@
             android:thumbTint="@color/colorAccent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_draw_eraser" />
+            app:layout_constraintTop_toBottomOf="@id/image_draw_eraser"
+            android:visibility="gone" />
 
         <include
             android:id="@+id/draw_color_palette"
             layout="@layout/color_palette_view"
             android:layout_width="0dp"
-            android:layout_height="56dp"
+            android:layout_height="112dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_draw_eraser" />
+            app:layout_constraintTop_toBottomOf="@id/image_draw_eraser"
+            android:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

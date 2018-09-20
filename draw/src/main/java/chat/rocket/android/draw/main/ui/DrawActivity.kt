@@ -12,6 +12,8 @@ import androidx.core.view.isVisible
 import chat.rocket.android.draw.R
 import chat.rocket.android.draw.main.presenter.DrawPresenter
 import chat.rocket.android.draw.main.presenter.DrawView
+import chat.rocket.android.draw.widget.ColorSeekBar
+import chat.rocket.android.draw.widget.CustomDrawView
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_drawing.*
 import kotlinx.android.synthetic.main.color_palette_view.*
@@ -32,6 +34,7 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
         colorSelector()
         setPaintAlpha()
         setPaintWidth()
+        setColorSeekBarListener()
     }
 
     override fun sendByteArray(byteArray: ByteArray) {
@@ -50,64 +53,72 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
         image_send_drawing.setOnClickListener {
             presenter.processDrawingImage(custom_draw_view.getBitmap())
         }
+
+        color_seek_bar.setOnColorChangeListener(object: ColorSeekBar.OnColorChangeListener{
+            override fun onColorChangeListener(color: Int) {
+                custom_draw_view.setColor(color)
+            }
+        })
+
+        custom_draw_view.setOnDrawingListener(object: CustomDrawView.OnDrawingListener{
+            override fun onDrawingListener() {
+                closeDrawTools()
+            }
+        })
     }
 
     private fun setupDrawTools() {
         image_draw_eraser.setOnClickListener {
             custom_draw_view.clearCanvas()
-            toggleDrawTools(draw_tools, false)
+            closeDrawTools()
         }
 
         image_draw_width.setOnClickListener {
-            if (draw_tools.translationY == (56).toPx) {
-                toggleDrawTools(draw_tools, true)
-            } else if (draw_tools.translationY == (0).toPx && seekBar_width.isVisible) {
-                toggleDrawTools(draw_tools, false)
+            if (seekBar_width.isVisible){
+                closeDrawTools()
+            }else{
+                seekBar_width.isVisible = true
+                seekBar_opacity.isVisible = false
+                draw_color_palette.isVisible = false
             }
-            seekBar_width.isVisible = true
-            seekBar_opacity.isVisible = false
-            draw_color_palette.isVisible = false
         }
 
         image_draw_opacity.setOnClickListener {
-            if (draw_tools.translationY == (56).toPx) {
-                toggleDrawTools(draw_tools, true)
-            } else if (draw_tools.translationY == (0).toPx && seekBar_opacity.isVisible) {
-                toggleDrawTools(draw_tools, false)
+            if (seekBar_opacity.isVisible){
+                closeDrawTools()
+            }else{
+                seekBar_width.isVisible = false
+                seekBar_opacity.isVisible = true
+                draw_color_palette.isVisible = false
             }
-            seekBar_width.isVisible = false
-            seekBar_opacity.isVisible = true
-            draw_color_palette.isVisible = false
         }
 
         image_draw_color.setOnClickListener {
-            if (draw_tools.translationY == (56).toPx) {
-                toggleDrawTools(draw_tools, true)
-            } else if (draw_tools.translationY == (0).toPx && draw_color_palette.isVisible) {
-                toggleDrawTools(draw_tools, false)
+            if (draw_color_palette.isVisible){
+                closeDrawTools()
+            }else{
+                seekBar_width.isVisible = false
+                seekBar_opacity.isVisible = false
+                draw_color_palette.isVisible = true
             }
-            seekBar_width.isVisible = false
-            seekBar_opacity.isVisible = false
-            draw_color_palette.isVisible = true
         }
 
         image_draw_undo.setOnClickListener {
             custom_draw_view.undo()
-            toggleDrawTools(draw_tools, false)
+            closeDrawTools()
         }
 
         image_draw_redo.setOnClickListener {
             custom_draw_view.redo()
-            toggleDrawTools(draw_tools, false)
+            closeDrawTools()
         }
     }
 
-    private fun toggleDrawTools(view: View, showView: Boolean = true) {
-        if (showView) {
-            view.animate().translationY((0).toPx)
-        } else {
-            view.animate().translationY((56).toPx)
-        }
+    private fun closeDrawTools() {
+        //TODO: Change translationY instead of visibility to make smoother transition
+        seekBar_width.isVisible = false
+        seekBar_opacity.isVisible = false
+        draw_color_palette.isVisible = false
     }
 
     private fun colorSelector() {
@@ -198,6 +209,11 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
         //set scale of selected view
         view.scaleX = 1.5f
         view.scaleY = 1.5f
+    }
+
+
+    private fun setColorSeekBarListener() {
+
     }
 
     private fun setPaintWidth() {

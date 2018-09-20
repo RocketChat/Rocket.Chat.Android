@@ -12,7 +12,7 @@ import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
 
 class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
-    var mPaths = LinkedHashMap<MyPath, PaintOptions>()
+    private var mPaths = LinkedHashMap<MyPath, PaintOptions>()
 
     private var mLastPaths = LinkedHashMap<MyPath, PaintOptions>()
     private var mUndonePaths = LinkedHashMap<MyPath, PaintOptions>()
@@ -27,6 +27,7 @@ class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attr
     private var mStartY = 0f
     private var mIsSaving = false
     private var mIsStrokeWidthBarEnabled = false
+    private var drawingListener: OnDrawingListener? = null
 
     init {
         mPaint.apply {
@@ -168,6 +169,7 @@ class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attr
                 mStartY = y
                 actionDown(x, y)
                 mUndonePaths.clear()
+                drawingListener?.onDrawingListener()
             }
             MotionEvent.ACTION_MOVE -> actionMove(x, y)
             MotionEvent.ACTION_UP -> actionUp()
@@ -175,5 +177,13 @@ class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attr
 
         invalidate()
         return true
+    }
+
+    fun setOnDrawingListener(onDrawingListener: OnDrawingListener) {
+        this.drawingListener = onDrawingListener
+    }
+
+    interface OnDrawingListener{
+        fun onDrawingListener()
     }
 }
