@@ -211,11 +211,6 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
         view.scaleY = 1.5f
     }
 
-
-    private fun setColorSeekBarListener() {
-
-    }
-
     private fun setPaintWidth() {
         seekBar_width.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
