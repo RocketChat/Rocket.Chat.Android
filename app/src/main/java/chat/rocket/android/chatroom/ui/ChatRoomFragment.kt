@@ -336,7 +336,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
                     val currentDayMarkerText = msgModel.currentDayMarkerText
                     val previousDayMarkerText = prevMsgModel.currentDayMarkerText
-                    println("$previousDayMarkerText then $currentDayMarkerText")
                     if (previousDayMarkerText != currentDayMarkerText) {
                         prevMsgModel.showDayMarker = true
                     }
