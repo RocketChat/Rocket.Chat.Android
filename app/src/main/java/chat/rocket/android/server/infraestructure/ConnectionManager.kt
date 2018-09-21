@@ -12,6 +12,7 @@ import chat.rocket.core.internal.realtime.socket.connect
 import chat.rocket.core.internal.realtime.socket.disconnect
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.realtime.socket.model.StreamMessage
+import chat.rocket.core.internal.realtime.socket.model.Type
 import chat.rocket.core.internal.realtime.subscribeActiveUsers
 import chat.rocket.core.internal.realtime.subscribeRoomMessages
 import chat.rocket.core.internal.realtime.subscribeRooms
@@ -129,9 +130,9 @@ class ConnectionManager(
         }
 
         val messagesActor = createBatchActor<Message>(messagesContext, parent = connectJob,
-                maxSize = 100, maxTime = 300) { messages ->
+                maxSize = 100, maxTime = 500) { messages ->
             Timber.d("Processing Messages batch: ${messages.size}")
-            dbManager.processMessagesBatch(messages)
+            dbManager.processMessagesBatch(messages.distinctBy { it.id })
         }
 
         // stream-notify-user - ${userId}/rooms-changed
@@ -139,6 +140,11 @@ class ConnectionManager(
             for (room in client.roomsChannel) {
                 Timber.d("GOT Room streamed")
                 roomsActor.send(room)
+                if (room.type != Type.Removed) {
+                    room.data.lastMessage?.let {
+                        messagesActor.send(it)
+                    }
+                }
             }
         }
 

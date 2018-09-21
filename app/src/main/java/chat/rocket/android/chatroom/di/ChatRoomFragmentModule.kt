@@ -41,19 +41,5 @@ class ChatRoomFragmentModule {
 
     @Provides
     @PerFragment
-    @Named("currentServer")
-    fun provideCurrentServer(currentServerInteractor: GetCurrentServerInteractor): String {
-        return currentServerInteractor.get()!!
-    }
-
-    @Provides
-    @PerFragment
-    fun provideDatabaseManager(factory: DatabaseManagerFactory,
-                               @Named("currentServer") currentServer: String): DatabaseManager {
-        return factory.create(currentServer)
-    }
-
-    @Provides
-    @PerFragment
     fun provideChatRoomDao(manager: DatabaseManager): ChatRoomDao = manager.chatRoomDao()
 }

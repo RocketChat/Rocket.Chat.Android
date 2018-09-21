@@ -14,6 +14,7 @@ import chat.rocket.android.db.model.ReactionMessageRelation
 import chat.rocket.android.db.model.UrlEntity
 import chat.rocket.android.db.model.UserEntity
 import chat.rocket.android.db.model.UserStatus
+import chat.rocket.android.db.model.asEntity
 import chat.rocket.android.util.extensions.removeTrailingSlash
 import chat.rocket.android.util.extensions.toEntity
 import chat.rocket.android.util.extensions.userId
@@ -113,10 +114,21 @@ class DatabaseManager(val context: Application,
                 Timber.d("Running ChatRooms transaction: remove: $toRemove - insert: $toInsert - update: $filteredUpdate")
 
                 chatRoomDao().update(filteredInsert, filteredUpdate, toRemove.toList())
+
+                //updateMessages(batch)
             } catch (ex: Exception) {
                 Timber.d(ex, "Error updating chatrooms")
             }
         }
+    }
+
+    private fun updateMessages(batch: List<StreamMessage<BaseRoom>>) {
+        val list = batch.filterNot { it.type == Type.Removed }
+                .filter { it.data is Room }
+                .filterNot { (it.data as Room).lastMessage == null }
+                .map { (it.data as Room).lastMessage!! }
+
+        processMessagesBatch(list)
     }
 
     fun updateSelfUser(myself: Myself) {
@@ -157,7 +169,7 @@ class DatabaseManager(val context: Application,
     private suspend fun createMessageEntities(message: Message): Pair<MessageEntity, List<BaseMessageEntity>> {
         val messageEntity = message.toEntity()
         val list = mutableListOf<BaseMessageEntity>()
-        //createAttachments(message)?.let {}
+        createAttachments(message)?.let { list.addAll(it)  }
         createFavoriteRelations(message)?.let { list.addAll(it) }
         createMentionRelations(message)?.let { list.addAll(it) }
         createChannelRelations(message)?.let { list.addAll(it) }
@@ -174,11 +186,13 @@ class DatabaseManager(val context: Application,
             return null
         }
 
+        val reactions = message.reactions!!
+
         val list = mutableListOf<BaseMessageEntity>()
-        message.reactions!!.keys.forEach { reaction ->
+        reactions.keys.forEach { reaction ->
             list.add(ReactionEntity(reaction))
 
-            val users = message.reactions!![reaction]
+            val users = reactions[reaction]
             users?.size?.let { size ->
                 list.add(ReactionMessageRelation(reaction, message.id, size))
             }
@@ -247,10 +261,13 @@ class DatabaseManager(val context: Application,
             return null
         }
 
-        message.attachments!!.forEach {
+        val list = ArrayList<BaseMessageEntity>(message.attachments!!.size)
 
+        message.attachments!!.forEach { attachment ->
+            list.addAll(attachment.asEntity(message.id))
         }
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+        return list
     }
 
     private suspend fun createUpdates(): List<ChatRoomEntity> {

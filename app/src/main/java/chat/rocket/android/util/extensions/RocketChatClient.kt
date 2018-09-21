@@ -4,12 +4,10 @@ import chat.rocket.android.db.model.MessageEntity
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.retryIO
-import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.registerPushToken
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.asString
 import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 
