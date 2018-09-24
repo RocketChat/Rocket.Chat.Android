@@ -45,6 +45,8 @@ class MessageAttachmentViewHolder(
                         return
                     }
 
+                    text_view_more.isVisible = true
+
                     val expandAnimation = ValueAnimator
                         .ofInt(collapsedHeight, textMeasuredHeight)
                         .setDuration(300)
