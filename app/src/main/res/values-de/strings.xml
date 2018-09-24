@@ -142,6 +142,9 @@
     <string name="msg_message_copied">Nachricht kopiert</string>
     <string name="msg_delete_message">Lösche Nachricht</string>
     <string name="msg_delete_description">Sind Sie sicher, dass Sie diese Nachricht löschen wollen?</string>
+    <!--Add proper translation-->
+    <string name="msg_view_more">view more</string>
+    <string name="msg_view_less">view less</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->

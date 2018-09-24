@@ -129,6 +129,9 @@
     <string name="msg_send">Надіслати</string>
     <string name="msg_delete_message">Видалити повідомлення</string>
     <string name="msg_delete_description">Ви впевнені, що хочете видалити це повідомлення?</string>
+    <!--Add proper translation-->
+    <string name="msg_view_more">view more</string>
+    <string name="msg_view_less">view less</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватний</string>
