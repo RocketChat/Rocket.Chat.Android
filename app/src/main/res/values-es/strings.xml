@@ -139,8 +139,9 @@
     <string name="msg_member_already_added">Ya has seleccionado este usuario</string>
     <string name="msg_member_not_found">Miembro no encontrado</string>
     <string name="msg_channel_created_successfully">Canal creado con éxito</string>
-    <!--Add proper translation-->
+    <!-- TODO - Add proper translation -->
     <string name="msg_view_more">view more</string>
+    <!-- TODO - Add proper translation -->
     <string name="msg_view_less">view less</string>
 
     <!-- Preferences messages -->

@@ -132,8 +132,9 @@
     <string name="msg_file_description">ファイルの説明</string>
     <string name="msg_send">送信</string>
     <string name="msg_sent_attachment">添付ファイルを送信しました</string>
-    <!--Add proper translation-->
+    <!-- TODO - Add proper translation -->
     <string name="msg_view_more">view more</string>
+    <!-- TODO - Add proper translation -->
     <string name="msg_view_less">view less</string>
 
     <!-- Create channel messages -->

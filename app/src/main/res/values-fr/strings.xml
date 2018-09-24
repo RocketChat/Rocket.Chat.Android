@@ -131,8 +131,9 @@
     <string name="msg_send">envoyer</string>
     <string name="msg_delete_message">Supprimer Message</string>
     <string name="msg_delete_description">Êtes-vous sûr de vouloir supprimer ce message</string>
-    <!--Add proper translation-->
+    <!-- TODO - Add proper translation -->
     <string name="msg_view_more">view more</string>
+    <!-- TODO - Add proper translation -->
     <string name="msg_view_less">view less</string>
 
     <!-- Create channel messages -->
