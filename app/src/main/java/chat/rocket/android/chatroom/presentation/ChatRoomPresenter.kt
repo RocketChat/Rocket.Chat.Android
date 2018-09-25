@@ -180,10 +180,10 @@ class ChatRoomPresenter @Inject constructor(
                     val localMessages = messagesRepository.getByRoomId(chatRoomId)
                     val oldMessages = mapper.map(
                         localMessages, RoomUiModel(
-                            roles = chatRoles,
-                            // FIXME: Why are we fixing isRoom attribute to true here?
-                            isBroadcast = chatIsBroadcast, isRoom = true
-                        )
+                        roles = chatRoles,
+                        // FIXME: Why are we fixing isRoom attribute to true here?
+                        isBroadcast = chatIsBroadcast, isRoom = true
+                    )
                     )
                     val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
                     if (oldMessages.isNotEmpty() && lastSyncDate != null) {
@@ -419,11 +419,12 @@ class ChatRoomPresenter @Inject constructor(
                         }
                     }
                 }
-            } catch (ex: Exception) {
-                Timber.d(ex, "Error uploading file")
-                when (ex) {
-                    is RocketChatException -> view.showMessage(ex)
-                    else -> view.showGenericErrorMessage()
+            } catch (ex: RocketChatException) {
+                Timber.d(ex)
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
                 }
             } finally {
                 view.hideLoading()
@@ -597,9 +598,9 @@ class ChatRoomPresenter @Inject constructor(
                     replyMarkdown = "[ ]($currentServer/$chatRoomType/$room?msg=$id) $mention ",
                     quotedMessage = mapper.map(
                         message, RoomUiModel(
-                            roles = chatRoles,
-                            isBroadcast = chatIsBroadcast
-                        )
+                        roles = chatRoles,
+                        isBroadcast = chatIsBroadcast
+                    )
                     ).last().preview?.message ?: ""
                 )
             }
@@ -868,7 +869,7 @@ class ChatRoomPresenter @Inject constructor(
             }
             it.chatRoom.name == name || it.chatRoom.fullname == name
         }.map {
-            with (it.chatRoom) {
+            with(it.chatRoom) {
                 ChatRoom(
                     id = id,
                     subscriptionId = subscriptionId,
@@ -1103,8 +1104,8 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             val viewModelStreamedMessage = mapper.map(
                 streamedMessage, RoomUiModel(
-                    roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
-                )
+                roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
+            )
             )
 
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
@@ -1125,5 +1126,34 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             navigator.toMessageInformation(messageId = messageId)
         }
+    }
+
+    /**
+     * Save unfinished message, when user left chat room without sending a message. It also clears
+     * saved message from local repository when unfinishedMessage is blank.
+     *
+     * @param chatRoomId Chat room Id.
+     * @param unfinishedMessage The unfinished message to save.
+     */
+    fun saveUnfinishedMessage(chatRoomId: String, unfinishedMessage: String) {
+        val key = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$chatRoomId"
+        if (unfinishedMessage.isNotBlank()) {
+            localRepository.save(key, unfinishedMessage)
+        } else {
+            localRepository.clear(key)
+        }
+    }
+
+    /**
+     * Get unfinished message from local repository, when user left chat room without
+     * sending a message and now the user is back.
+     *
+     * @param chatRoomId Chat room Id.
+     *
+     * @return Returns the unfinished message.
+     */
+    fun getUnfinishedMessage(chatRoomId: String): String {
+        val key = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$chatRoomId"
+        return localRepository.get(key) ?: ""
     }
 }
