@@ -14,7 +14,6 @@
         android:id="@+id/image_server"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:src="@drawable/ic_server"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,17 +39,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_sign_in_to_your_server">
 
-        <FrameLayout
-            android:id="@+id/protocol_container"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-
-            <Spinner
-                android:id="@+id/spinner_server_protocol"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:popupBackground="@color/colorWhite" />
-        </FrameLayout>
+        <Spinner
+            android:id="@+id/spinner_server_protocol"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:popupBackground="@color/colorWhite" />
 
         <EditText
             android:id="@+id/text_server_url"
@@ -60,7 +53,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="16dp"
-            android:layout_toEndOf="@+id/protocol_container"
+            android:layout_toEndOf="@+id/spinner_server_protocol"
             android:background="@color/colorWhite"
             android:cursorVisible="false"
             android:hint="@string/server_hint_url"
@@ -68,11 +61,11 @@
             android:inputType="text|textUri" />
     </RelativeLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/button_connect"
-        style="@style/Authentication.Button"
+        style="@style/Authentication.Button.Flat"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/colorAuthenticationOnBoardingButtonDisabled"
+        android:backgroundTint="@color/colorAuthenticationButtonDisabled"
         android:enabled="false"
         android:text="@string/action_connect"
         app:layout_constraintEnd_toEndOf="parent"

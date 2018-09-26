@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/screen_edge_left_and_right_margins"
     tools:context=".authentication.registerusername.ui.RegisterUsernameFragment">
 
     <TextView
@@ -11,39 +12,38 @@
         style="@style/Authentication.Headline.TextView"
         android:text="@string/title_register_username"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="21dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/text_username"
         style="@style/Authentication.EditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_sign_in_to_your_server"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_at_black_20dp"
         android:hint="@string/msg_username"
         android:imeOptions="actionDone"
-        android:inputType="text" />
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_sign_in_to_your_server" />
 
     <Button
         android:id="@+id/button_use_this_username"
-        style="@style/Authentication.Button"
+        style="@style/Authentication.Button.Flat"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/colorAuthenticationButtonDisabled"
+        android:enabled="false"
         android:text="@string/action_use_this_username"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_username"
-        android:layout_marginTop="20dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_username" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"
         style="@style/Authentication.AVLoadingIndicatorView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"
-        tools:visibility="visible" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

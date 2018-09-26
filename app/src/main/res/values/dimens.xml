@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- Default screen margins, per the Android Design guidelines -->
     <dimen name="screen_edge_left_and_right_margins">16dp</dimen>
-
     <dimen name="screen_edge_left_and_right_padding">16dp</dimen>
+
+    <!-- Authentication -->
+    <dimen name="button_account_margin_top">10dp</dimen>
+
     <dimen name="message_item_top_and_bottom_padding">6dp</dimen>
     <dimen name="member_item_top_and_bottom_padding">6dp</dimen>
 
@@ -24,7 +27,6 @@
 
     <!-- ChatRoom -->
     <dimen name="chat_item_top_and_bottom_padding">12dp</dimen>
-
 
     <!-- Emoji -->
     <dimen name="picker_padding_bottom">16dp</dimen>

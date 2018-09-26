@@ -14,7 +14,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
 
     <!-- Titles -->
     <string name="title_sign_in_your_server">Sign in to your server</string>
-    <string name="title_log_in">Log in</string>
+    <string name="title_log_in">Login</string>
     <string name="title_register_username">Register username</string>
     <string name="title_reset_password">Reset password</string>
     <string name="title_sign_up">Sign up</string>
@@ -75,19 +75,18 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_no_data_to_display">No data to display</string>
     <string name="msg_profile_update_successfully">Profile update successfully</string>
     <string name="msg_username">username</string>
-    <string name="msg_username_or_email">username or email</string>
-    <string name="msg_password">password</string>
-    <string name="msg_name">name</string>
-    <string name="msg_email">email</string>
+    <string name="msg_username_or_email">Username or email</string>
+    <string name="msg_password">Password</string>
+    <string name="msg_name">Name</string>
+    <string name="msg_email">Email</string>
     <string name="msg_avatar_url">avatar URL</string>
     <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
     <string name="msg_new_user">New user? %1$s</string>
-    <string name="msg_forgot_password">Forgot password?</string>
+    <string name="msg_forgot__your_password">Forgot your password?</string>
     <string name="msg_reset">Reset</string>
     <string name="msg_check_your_email_to_reset_your_password">Email sent! Check your inbox to reset your password.</string>
     <string name="msg_invalid_email">Please type a valid e-mail</string>
     <string name="msg_new_user_agreement">By proceeding you are agreeing to our\n%1$s and %2$s</string>
-    <string name="msg_2fa_code">2FA Code</string>
     <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
     <string name="msg_yesterday">Yesterday</string>
     <string name="msg_today">Today</string>
@@ -105,6 +104,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_content_description_log_in_using_gitlab">Login using Gitlab</string>
     <string name="msg_content_description_log_in_using_wordpress">Login using WordPress</string>
     <string name="msg_content_description_send_message">Send message</string>
+    <string name="msg_content_description_show_more_login_options">Show more login options</string>
     <string name="msg_content_description_show_attachment_options">Show attachment options</string>
     <string name="msg_you">You</string>
     <string name="msg_unknown">Unknown</string>
@@ -149,13 +149,14 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_sent_attachment">Sent an attachment</string>
     <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string>
     <string name="msg_team_communication">Team Communication</string>
-    <string name="msg_login_with_email">Login with e-mail</string>
+    <string name="msg_login_with_email">Login with <b>e-mail</b></string>
     <string name="msg_create_account">Create an account</string>
-    <string name="msg_continue_with_facebook">Continue with Facebook</string>
-    <string name="msg_continue_with_github">Continue with Github</string>
-    <string name="msg_continue_with_google">Continue with Google</string>
-    <string name="msg_continue_with_linkedin">Continue with Linkedin</string>
-    <string name="msg_continue_with_gitlab">Continue with GitLab</string>
+    <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string>
+    <string name="msg_continue_with_github">Continue with <b>Github</b></string>
+    <string name="msg_continue_with_google">Continue with <b>Google</b></string>
+    <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string>
+    <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string>
+    <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string>
     <string name="msg_two_factor_authentication">Two-factor Authentication</string>
     <string name="msg__your_2fa_code">What’s your 2FA code?</string>
 

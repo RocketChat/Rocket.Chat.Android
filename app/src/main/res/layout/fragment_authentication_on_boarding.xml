@@ -11,7 +11,6 @@
         android:id="@+id/image_on_boarding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:src="@drawable/ic_onboarding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +73,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
             android:src="@drawable/ic_chevron_right_black_24dp"
-            android:tint="@color/colorAuthenticationOnBoardingChevron"
+            android:tint="@color/colorAuthenticationChevronAndExpandIcon"
             tools:ignore="ContentDescription" />
     </RelativeLayout>
 
@@ -126,7 +125,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
             android:src="@drawable/ic_chevron_right_black_24dp"
-            android:tint="@color/colorAuthenticationOnBoardingChevron"
+            android:tint="@color/colorAuthenticationChevronAndExpandIcon"
             tools:ignore="ContentDescription" />
     </RelativeLayout>
 

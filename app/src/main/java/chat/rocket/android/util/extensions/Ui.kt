@@ -19,9 +19,10 @@ import androidx.appcompat.view.SupportMenuInflater
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import chat.rocket.android.R
 
-fun AppCompatActivity.setLightStatusBar(view: View) {
+fun FragmentActivity.setLightStatusBar(view: View) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         var flags = view.systemUiVisibility
         flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -30,7 +31,7 @@ fun AppCompatActivity.setLightStatusBar(view: View) {
     }
 }
 
-fun AppCompatActivity.clearLightStatusBar(view: View) {
+fun FragmentActivity.clearLightStatusBar() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
     }

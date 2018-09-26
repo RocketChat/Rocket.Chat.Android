@@ -1,6 +1,5 @@
 package chat.rocket.android.authentication.server.ui
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.BuildConfig
@@ -41,7 +41,15 @@ import okhttp3.HttpUrl
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-internal const val TAG_SERVER_FRAGMENT = "ServerFragment"
+fun newInstance(deepLinkInfo: LoginDeepLinkInfo?): Fragment {
+    return ServerFragment().apply {
+        arguments = Bundle(1).apply {
+            putParcelable(DEEP_LINK_INFO, deepLinkInfo)
+        }
+    }
+}
+
+private const val DEEP_LINK_INFO = "DeepLinkInfo"
 
 class ServerFragment : Fragment(), ServerView {
     @Inject
@@ -50,7 +58,7 @@ class ServerFragment : Fragment(), ServerView {
     lateinit var analyticsManager: AnalyticsManager
     private var deepLinkInfo: LoginDeepLinkInfo? = null
     private var protocol = "https://"
-    private lateinit var serverUrlEditTextDisposable: Disposable
+    private lateinit var serverUrlDisposable: Disposable
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         text_server_url.isCursorVisible =
                 KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)
@@ -137,23 +145,20 @@ class ServerFragment : Fragment(), ServerView {
     override fun showInvalidServerUrlMessage() =
         showMessage(getString(R.string.msg_invalid_server_url))
 
-    @SuppressLint("RestrictedApi")
     override fun enableButtonConnect() {
         context?.let {
-            button_connect.supportBackgroundTintList = ContextCompat.getColorStateList(
-                it,
-                R.color.colorAccent
+            ViewCompat.setBackgroundTintList(
+                button_connect, ContextCompat.getColorStateList(it, R.color.colorAccent)
             )
             button_connect.isEnabled = true
         }
     }
 
-    @SuppressLint("RestrictedApi")
     override fun disableButtonConnect() {
         context?.let {
-            button_connect.supportBackgroundTintList = ContextCompat.getColorStateList(
-                it,
-                R.color.colorAuthenticationOnBoardingButtonDisabled
+            ViewCompat.setBackgroundTintList(
+                button_connect,
+                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
             )
             button_connect.isEnabled = false
         }
@@ -242,9 +247,9 @@ class ServerFragment : Fragment(), ServerView {
     }
 
     private fun subscribeEditText() {
-        serverUrlEditTextDisposable = text_server_url.asObservable()
+        serverUrlDisposable = text_server_url.asObservable()
             .debounce(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-            .filter { t -> t.isNotBlank() }
+            .filter { it.isNotBlank() }
             .subscribe {
                 if (it.toString().isValidUrl()) {
                     enableButtonConnect()
@@ -254,7 +259,7 @@ class ServerFragment : Fragment(), ServerView {
             }
     }
 
-    private fun unsubscribeEditText() = serverUrlEditTextDisposable.dispose()
+    private fun unsubscribeEditText() = serverUrlDisposable.dispose()
 
     private fun enableUserInput() {
         enableButtonConnect()
@@ -264,13 +269,5 @@ class ServerFragment : Fragment(), ServerView {
     private fun disableUserInput() {
         disableButtonConnect()
         text_server_url.isEnabled = false
-    }
-
-    companion object {
-        private const val DEEP_LINK_INFO = "DeepLinkInfo"
-
-        fun newInstance(deepLinkInfo: LoginDeepLinkInfo?) = ServerFragment().apply {
-            arguments = Bundle().apply { putParcelable(DEEP_LINK_INFO, deepLinkInfo) }
-        }
     }
 }

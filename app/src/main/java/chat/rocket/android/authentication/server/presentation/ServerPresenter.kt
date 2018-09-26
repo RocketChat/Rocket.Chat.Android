@@ -63,6 +63,10 @@ class ServerPresenter @Inject constructor(
     }
 
     fun deepLink(deepLinkInfo: LoginDeepLinkInfo) {
-        connectToServer(deepLinkInfo.url) { navigator.toLogin(deepLinkInfo) }
+        connectToServer(deepLinkInfo.url) {
+            navigator.toLoginOptions(
+                deepLinkInfo.url, deepLinkInfo
+            )
+        }
     }
 }

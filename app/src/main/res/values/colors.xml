@@ -2,8 +2,8 @@
 <resources>
 
     <!-- Main colors -->
-    <color name="colorPrimary">#2f343d</color>
-    <color name="colorPrimaryDark">#2f343d</color>
+    <color name="colorPrimary">#FF2F343D</color>
+    <color name="colorPrimaryDark">#FF2F343D</color>
     <color name="colorAccent">#FF1D74F5</color>
 
     <!-- Text colors -->
@@ -23,10 +23,10 @@
     <color name="colorRed">#FFFF0000</color>
 
     <!-- Authentication colors -->
-    <color name="colorAuthenticationOnBoardingButtonBorder">#FFE1E5E8</color>
-    <color name="colorAuthenticationOnBoardingButtonDisabled">#FFE1E5E8</color>
-    <color name="colorAuthenticationOnBoardingChevron">#FFCBCED1</color>
-    <color name="colorAuthenticationOnBoardingSecondaryText">#FF9EA2A8</color>
+    <color name="colorAuthenticationButtonBorderAndDivider">#FFE1E5E8</color>
+    <color name="colorAuthenticationButtonDisabled">#FFE1E5E8</color>
+    <color name="colorAuthenticationChevronAndExpandIcon">#FFCBCED1</color>
+    <color name="colorAuthenticationSecondaryText">#FF9EA2A8</color>
 
     <color name="darkGray">#FFa0a0a0</color>
     <color name="actionMenuColor">#FF727272</color>

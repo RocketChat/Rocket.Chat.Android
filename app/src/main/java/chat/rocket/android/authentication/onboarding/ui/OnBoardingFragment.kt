@@ -18,7 +18,7 @@ import chat.rocket.android.util.extensions.setLightStatusBar
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.app_bar_chat_room.*
+import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_authentication_on_boarding.*
 import javax.inject.Inject
 
@@ -48,16 +48,14 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
 
     private fun setupToobar() {
         with(activity as AuthenticationActivity) {
-            view?.let { setLightStatusBar(it) }
+            view?.let { this.setLightStatusBar(it) }
             toolbar.isVisible = false
         }
     }
 
     private fun setupOnClickListener() {
         connect_with_a_server_container.setOnClickListener { connectWithAServer() }
-
         join_community_container.setOnClickListener { joinInTheCommunity() }
-
         create_server_container.setOnClickListener { createANewServer() }
     }
 

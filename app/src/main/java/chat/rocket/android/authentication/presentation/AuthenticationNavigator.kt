@@ -2,21 +2,8 @@ package chat.rocket.android.authentication.presentation
 
 import android.content.Intent
 import chat.rocket.android.R
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
-import chat.rocket.android.authentication.login.ui.LoginFragment
-import chat.rocket.android.authentication.login.ui.TAG_LOGIN_FRAGMENT
-import chat.rocket.android.authentication.loginoptions.ui.LoginOptionsFragment
-import chat.rocket.android.authentication.loginoptions.ui.TAG_LOGIN_OPTIONS
-import chat.rocket.android.authentication.registerusername.ui.RegisterUsernameFragment
-import chat.rocket.android.authentication.registerusername.ui.TAG_REGISTER_USERNAME_FRAGMENT
-import chat.rocket.android.authentication.resetpassword.ui.ResetPasswordFragment
-import chat.rocket.android.authentication.resetpassword.ui.TAG_RESET_PASSWORD_FRAGMENT
-import chat.rocket.android.authentication.server.ui.ServerFragment
-import chat.rocket.android.authentication.server.ui.TAG_SERVER_FRAGMENT
-import chat.rocket.android.authentication.signup.ui.SignupFragment
-import chat.rocket.android.authentication.signup.ui.TAG_SIGNUP_FRAGMENT
-import chat.rocket.android.authentication.twofactor.ui.TAG_TWO_FA_FRAGMENT
-import chat.rocket.android.authentication.twofactor.ui.TwoFAFragment
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.authentication.ui.newServerIntent
 import chat.rocket.android.main.ui.MainActivity
@@ -28,26 +15,44 @@ import chat.rocket.android.webview.ui.webViewIntent
 class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
 
     fun toConnectWithAServer(deepLinkInfo: LoginDeepLinkInfo?) {
-        activity.addFragmentBackStack(TAG_SERVER_FRAGMENT, R.id.fragment_container) {
-            ServerFragment.newInstance(deepLinkInfo)
+        activity.addFragmentBackStack(ScreenViewEvent.Server.screenName, R.id.fragment_container) {
+            chat.rocket.android.authentication.server.ui.newInstance(deepLinkInfo)
         }
     }
 
-    fun toLoginOptions(server: String) {
-        activity.addFragmentBackStack(TAG_LOGIN_OPTIONS, R.id.fragment_container) {
-            LoginOptionsFragment.newInstance(server)
+    fun toLoginOptions(server: String, deepLinkInfo: LoginDeepLinkInfo? = null) {
+        activity.addFragmentBackStack(
+            ScreenViewEvent.LoginOptions.screenName,
+            R.id.fragment_container
+        ) {
+            chat.rocket.android.authentication.loginoptions.ui.newInstance(server, deepLinkInfo)
+        }
+    }
+
+    fun toTwoFA(username: String, password: String) {
+        activity.addFragmentBackStack(ScreenViewEvent.TwoFa.screenName, R.id.fragment_container) {
+            chat.rocket.android.authentication.twofactor.ui.newInstance(username, password)
+        }
+    }
+
+    fun toCreateAccount() {
+        activity.addFragmentBackStack(ScreenViewEvent.SignUp.screenName, R.id.fragment_container) {
+            chat.rocket.android.authentication.signup.ui.newInstance()
         }
     }
 
     fun toLogin() {
-        activity.addFragmentBackStack(TAG_LOGIN_FRAGMENT, R.id.fragment_container) {
-            LoginFragment.newInstance()
+        activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
+            chat.rocket.android.authentication.login.ui.newInstance()
         }
     }
 
-    fun toLogin(deepLinkInfo: LoginDeepLinkInfo) {
-        activity.addFragmentBackStack(TAG_LOGIN_FRAGMENT, R.id.fragment_container) {
-            LoginFragment.newInstance(deepLinkInfo)
+    fun toForgotPassword() {
+        activity.addFragmentBackStack(
+            ScreenViewEvent.ResetPassword.screenName,
+            R.id.fragment_container
+        ) {
+            chat.rocket.android.authentication.resetpassword.ui.newInstance()
         }
     }
 
@@ -55,33 +60,18 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
         activity.toPreviousView()
     }
 
-    fun toTwoFA(username: String, password: String) {
-        activity.addFragmentBackStack(TAG_TWO_FA_FRAGMENT, R.id.fragment_container) {
-            TwoFAFragment.newInstance(username, password)
-        }
-    }
-
-    fun toSignUp() {
-        activity.addFragmentBackStack(TAG_SIGNUP_FRAGMENT, R.id.fragment_container) {
-            SignupFragment.newInstance()
-        }
-    }
-
-    fun toForgotPassword() {
-        activity.addFragmentBackStack(TAG_RESET_PASSWORD_FRAGMENT, R.id.fragment_container) {
-            ResetPasswordFragment.newInstance()
+    fun toRegisterUsername(userId: String, authToken: String) {
+        activity.addFragmentBackStack(
+            ScreenViewEvent.RegisterUsername.screenName,
+            R.id.fragment_container
+        ) {
+            chat.rocket.android.authentication.registerusername.ui.newInstance(userId, authToken)
         }
     }
 
     fun toWebPage(url: String, toolbarTitle: String? = null) {
         activity.startActivity(activity.webViewIntent(url, toolbarTitle))
         activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
-    }
-
-    fun toRegisterUsername(userId: String, authToken: String) {
-        activity.addFragmentBackStack(TAG_REGISTER_USERNAME_FRAGMENT, R.id.fragment_container) {
-            RegisterUsernameFragment.newInstance(userId, authToken)
-        }
     }
 
     fun toChatList() {
@@ -97,11 +87,5 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
     fun toServerScreen() {
         activity.startActivity(activity.newServerIntent())
         activity.finish()
-    }
-
-    fun toCreateAccount() {
-        activity.addFragmentBackStack("SignUpFragment", R.id.fragment_container) {
-            SignupFragment.newInstance()
-        }
     }
 }

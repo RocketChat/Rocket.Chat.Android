@@ -70,12 +70,11 @@
     <string name="msg_avatar_url">अवतार यूआरएल</string>
     <string name="msg_or_continue_using_social_accounts">या सामाजिक खाते का उपयोग करना जारी रखें</string>
     <string name="msg_new_user">नया उपयोगकर्ता? %1$s</string>
-    <string name="msg_forgot_password">पासवर्ड भूल गए?</string>
+    <string name="msg_forgot__your_password">पासवर्ड भूल गए?</string>
     <string name="msg_reset">रीसेट करें</string>
     <string name="msg_check_your_email_to_reset_your_password">ईमेल गया गया है! अपना पासवर्ड रीसेट करने के लिए अपने इनबॉक्स की जांच करें।</string>
     <string name="msg_invalid_email">कृपया एक वैध ई-मेल टाइप करें</string>
     <string name="msg_new_user_agreement">आगे बढ़कर आप हमारे %1$s और %2$s से सहमत हो रहे हैं</string>
-    <string name="msg_2fa_code">कोड 2FA</string>
     <string name="msg_yesterday">कल</string>
     <string name="msg_today">आज</string>
     <string name="msg_message">संदेश</string>
@@ -92,6 +91,7 @@
     <string name="msg_content_description_log_in_using_gitlab">Gitlab द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_wordpress">WordPress द्वारा लॉगिन करें</string>
     <string name="msg_content_description_send_message">मेसेज भेजें</string>
+    <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Translate-->
     <string name="msg_content_description_show_attachment_options">अटैचमेंट विकल्प दिखाएं</string>
     <string name="msg_you">आप</string>
     <string name="msg_unknown">अनजान</string>
@@ -140,11 +140,12 @@
     <string name="msg_team_communication">ओपन सोर्स कम्युनिकेशन</string>
     <string name="msg_login_with_email">ई-मेल के साथ लॉगिन करें</string>
     <string name="msg_create_account">खाता बनाएं</string>
-    <string name="msg_continue_with_facebook">Facebook के साथ जारी रखें</string>
-    <string name="msg_continue_with_github">Github के साथ जारी रखें</string>
-    <string name="msg_continue_with_google">Google के साथ जारी रखें</string>
-    <string name="msg_continue_with_linkedin">Linkedin के साथ जारी रखें</string>
-    <string name="msg_continue_with_gitlab">GitLab के साथ जारी रखें</string>
+    <string name="msg_continue_with_facebook"><b>Facebook</b> के साथ जारी रखें</string>
+    <string name="msg_continue_with_github"><b>Github</b> के साथ जारी रखें</string>
+    <string name="msg_continue_with_google"><b>Google</b> के साथ जारी रखें</string>
+    <string name="msg_continue_with_linkedin"><b>Linkedin</b> के साथ जारी रखें</string>
+    <string name="msg_continue_with_gitlab"><b>GitLab</b> के साथ जारी रखें</string>
+    <string name="msg_continue_with_wordpress"><b>WordPress</b> के साथ जारी रखें</string>
     <string name="msg_two_factor_authentication">दो तरीकों से प्रमाणीकरण</string>
     <string name="msg__your_2fa_code">आपका 2FA कोड क्या है?</string>
 
