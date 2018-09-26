@@ -13,10 +13,12 @@ import chat.rocket.android.chatroom.uimodel.RoomUiModel
 import chat.rocket.android.chatroom.uimodel.UiModelMapper
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
+import chat.rocket.android.chatroom.uimodel.suggestion.EmojiSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
 import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
@@ -34,7 +36,6 @@ import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extension.compressImageAndGetByteArray
-import chat.rocket.android.util.extension.compressImageAndGetInputStream
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
@@ -80,9 +81,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.threeten.bp.Instant
 import timber.log.Timber
-import java.io.InputStream
 import java.util.*
-import java.util.zip.DeflaterInputStream
 import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(
@@ -1006,6 +1005,20 @@ class ChatRoomPresenter @Inject constructor(
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
             }
+        }
+    }
+
+    fun loadEmojis() {
+        launchUI(strategy) {
+            val emojiSuggestionUiModels = EmojiRepository.getAll().map {
+                EmojiSuggestionUiModel(
+                    text = it.shortname.replaceFirst(":", ""),
+                    pinned = false,
+                    emoji = it,
+                    searchList = listOf(it.shortname)
+                )
+            }
+            view.populateEmojiSuggestions(emojis = emojiSuggestionUiModels)
         }
     }
 

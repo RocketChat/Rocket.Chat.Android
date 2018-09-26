@@ -44,4 +44,6 @@
     <dimen name="viewer_toolbar_padding">16dp</dimen>
     <dimen name="viewer_toolbar_title">16sp</dimen>
 
+    <dimen name="quote_collapsed_height">32dp</dimen>
+
 </resources>
