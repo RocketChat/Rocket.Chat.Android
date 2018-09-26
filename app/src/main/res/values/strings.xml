@@ -19,7 +19,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_reset_password">Reset password</string>
     <string name="title_sign_up">Sign up</string>
     <string name="title_authentication">Authentication</string>
-    <string name="title_legal_terms">Legal Terms</string>
     <string name="title_chats">Chats</string>
     <string name="title_profile">Profile</string>
     <string name="title_members">Members (%d)</string>
@@ -27,7 +26,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_preferences">Preferences</string>
     <string name="title_change_password">Change Password</string>
     <string name="title_admin_panel">Admin panel</string>
-    <string name="title_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
     <string name="title_about">About</string>
     <string name="title_create_channel">Create Channel</string>
@@ -40,7 +38,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_privacy_policy">Privacy Policy</string>
     <string name="action_search">Search</string>
     <string name="action_update">Update</string>
-    <string name="action_settings">Settings</string>
     <string name="action_create_channel">Create channel</string>
     <string name="action_create">Create</string>
     <string name="action_logout">Logout</string>
@@ -79,14 +76,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_password">Password</string>
     <string name="msg_name">Name</string>
     <string name="msg_email">Email</string>
-    <string name="msg_avatar_url">avatar URL</string>
-    <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
-    <string name="msg_new_user">New user? %1$s</string>
     <string name="msg_forgot__your_password">Forgot your password?</string>
-    <string name="msg_reset">Reset</string>
     <string name="msg_check_your_email_to_reset_your_password">Email sent! Check your inbox to reset your password.</string>
-    <string name="msg_invalid_email">Please type a valid e-mail</string>
-    <string name="msg_new_user_agreement">By proceeding you are agreeing to our\n%1$s and %2$s</string>
     <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
     <string name="msg_yesterday">Yesterday</string>
     <string name="msg_today">Today</string>
@@ -95,25 +86,15 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_invalid_2fa_code">Invalid 2FA Code</string>
     <string name="msg_invalid_file">Invalid file</string>
     <string name="msg_invalid_server_url">Invalid server URL</string>
-    <string name="msg_content_description_log_in_using_facebook">Login using Facebook</string>
-    <string name="msg_content_description_log_in_using_github">Login using Github</string>
-    <string name="msg_content_description_log_in_using_google">Login using Google</string>
-    <string name="msg_content_description_log_in_using_linkedin">Login using Linkedin</string>
-    <string name="msg_content_description_log_in_using_meteor">Login using Meteor</string>
-    <string name="msg_content_description_log_in_using_twitter">Login using Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">Login using Gitlab</string>
-    <string name="msg_content_description_log_in_using_wordpress">Login using WordPress</string>
     <string name="msg_content_description_send_message">Send message</string>
     <string name="msg_content_description_show_more_login_options">Show more login options</string>
     <string name="msg_content_description_show_attachment_options">Show attachment options</string>
     <string name="msg_you">You</string>
-    <string name="msg_unknown">Unknown</string>
     <string name="msg_email_address">E-mail address</string>
     <string name="msg_utc_offset">UTC offset</string>
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
     <string name="msg_channel_name">Channel name</string>
-    <string name="msg_search">Search</string>
     <string name="msg_unread_messages">Unread messages</string>
     <string name="msg_preview_video">Video</string>
     <string name="msg_preview_audio">Audio</string>
@@ -157,8 +138,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string>
     <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string>
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string>
-    <string name="msg_two_factor_authentication">Two-factor Authentication</string>
-    <string name="msg__your_2fa_code">What’s your 2FA code?</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Private</string>
@@ -187,7 +166,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="message_user_removed_by">User %1$s removed by %2$s</string>
     <string name="message_user_left">Has left the channel.</string>
     <string name="message_user_joined_channel">Has joined the channel.</string>
-    <string name="message_welcome">Welcome %s</string>
     <string name="message_removed">Message removed</string>
     <string name="message_pinned">Pinned a message:</string>
     <string name="message_muted">User %1$s muted by %2$s</string>
@@ -207,13 +185,11 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_msg_unpin">Unpin Message</string>
     <string name="action_msg_star">Star Message</string>
     <string name="action_msg_unstar">Unstar Message</string>
-    <string name="action_msg_share">Share</string>
     <string name="action_title_editing">Editing Message</string>
     <string name="action_msg_add_reaction">Add reaction</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Editing is not allowed</string>
-    <string name="permission_deleting_not_allowed">Deleting is not allowed</string>
     <string name="permission_pinning_not_allowed">Pinning is not allowed</string>
     <string name="permission_starring_not_allowed">Starring is not allowed</string>
 
@@ -264,27 +240,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="suggest_here_description">Notify active users in this room</string>
 
     <!-- Slash Commands -->
-    <string name="Slash_Gimme_Description">Displays ༼ つ ◕_◕ ༽つ before your message</string>
-    <string name="Slash_LennyFace_Description">Displays ( ͡° ͜ʖ ͡°) after your message</string>
-    <string name="Slash_Shrug_Description">Displays ¯\_(ツ)_/¯ after your message</string>
-    <string name="Slash_Tableflip_Description">Displays (╯°□°）╯︵ ┻━┻</string>
-    <string name="Slash_TableUnflip_Description">Displays ┬─┬ ノ( ゜-゜ノ)</string>
-    <string name="Create_A_New_Channel">Create a new channel</string>
-    <string name="Show_the_keyboard_shortcut_list">Show the keyboard shortcut list</string>
-    <string name="Invite_user_to_join_channel_all_from">Invite all users from [#channel] to join this channel</string>
-    <string name="Invite_user_to_join_channel_all_to">Invite all users from this channel to join [#channel]</string>
-    <string name="Archive">Archive</string>
-    <string name="Remove_someone_from_room">Remove someone from the room</string>
-    <string name="Leave_the_current_channel">Leave the current channel</string>
-    <string name="Displays_action_text">Displays action text</string>
-    <string name="Direct_message_someone">Direct message someone</string>
-    <string name="Mute_someone_in_room">Mute someone in the room</string>
-    <string name="Unmute_someone_in_room">Unmute someone in the room</string>
-    <string name="Invite_user_to_join_channel">Invite one user to join this channel</string>
-    <string name="Unarchive">Unarchive</string>
-    <string name="Join_the_given_channel">Join the given channel</string>
-    <string name="Guggy_Command_Description">Generates a gif based upon the provided text</string>
-    <string name="Slash_Topic_Description">Set topic</string>
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">No recent emojis</string>
@@ -296,7 +251,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="dialog_sort_by_alphabet">Alphabetical</string>
     <string name="dialog_sort_by_activity">Activity</string>
     <string name="dialog_group_by_type">Group by type</string>
-    <string name="dialog_group_favourites">Group favourites</string>
     <string name="dialog_button_done">Done</string>
     <string name="chatroom_header">Header</string>
 
@@ -308,14 +262,11 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="header_unknown">Unknown</string>
 
     <!--Notifications-->
-    <string name="share_label">Edit shared message</string>
     <string name="notif_action_reply_hint">REPLY</string>
     <string name="notif_error_sending">Reply has failed. Please try again.</string>
     <string name="notif_success_sending">Message sent to %1$s!</string>
     <string name="read_by">Read by</string>
     <string name="message_information_title">Message information</string>
-
-    <string name="foss" tools:ignore="MissingTranslation">(FOSS)</string>
 
     <!-- Community Server-->
 

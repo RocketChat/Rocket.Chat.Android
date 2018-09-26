@@ -7,8 +7,6 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.internal.http.HttpHeaders
-import okhttp3.internal.platform.Platform
-import okhttp3.internal.platform.Platform.INFO
 import okio.Buffer
 import okio.GzipSource
 import java.io.EOFException

@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/button_open_gallery"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +15,6 @@
         android:text="@string/action_select_photo_from_gallery" />
 
     <Button
-        android:id="@+id/button_take_photo"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +24,6 @@
         android:text="@string/action_take_photo" />
 
     <Button
-        android:id="@+id/button_reset_avatar"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

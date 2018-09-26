@@ -32,7 +32,6 @@ import kotlinx.coroutines.experimental.selects.select
 import timber.log.Timber
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.coroutines.experimental.CoroutineContext
-import kotlin.math.absoluteValue
 
 class ConnectionManager(
     internal val client: RocketChatClient,

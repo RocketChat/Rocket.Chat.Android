@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/attachment_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
@@ -12,20 +11,17 @@
 
 
     <TextView
-        android:id="@+id/file_name"
         style="@style/Message.TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="Filename.png" />
 
     <TextView
-        android:id="@+id/file_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="Some description" />
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/image_attachment"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:visibility="visible"
@@ -48,7 +44,6 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/file_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="Some text" />

@@ -7,7 +7,6 @@
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/composer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -21,7 +20,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/text_room_is_read_only"
             android:layout_width="0dp"
             android:layout_height="45dp"
             android:background="@color/colorWhite"
@@ -34,7 +32,6 @@
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <Button
-            android:id="@+id/button_join_chat"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@color/colorWhite"
@@ -46,7 +43,6 @@
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <LinearLayout
-            android:id="@+id/input_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -59,7 +55,6 @@
             app:layout_constraintTop_toBottomOf="@+id/divider">
 
             <ImageButton
-                android:id="@+id/button_add_reaction"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="bottom"
@@ -69,7 +64,6 @@
                 android:src="@drawable/ic_reaction_24dp" />
 
             <chat.rocket.android.emoji.ComposerEditText
-                android:id="@+id/text_message"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -85,7 +79,6 @@
                 android:scrollbars="vertical" />
 
             <ImageButton
-                android:id="@+id/button_show_attachment_options"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="bottom"
@@ -107,7 +100,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
-        android:id="@+id/emoji_fragment_placeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

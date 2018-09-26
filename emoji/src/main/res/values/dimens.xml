@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Emoji -->
-    <dimen name="picker_padding_bottom">16dp</dimen>
     <dimen name="supposed_keyboard_height">252dp</dimen>
     <dimen name="picker_popup_height">250dp</dimen>
-    <dimen name="picker_popup_width">300dp</dimen>
     <dimen name="custom_emoji_large">32dp</dimen>
     <dimen name="custom_emoji_small">22dp</dimen>
 </resources>

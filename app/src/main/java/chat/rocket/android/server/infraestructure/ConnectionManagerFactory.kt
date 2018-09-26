@@ -1,7 +1,6 @@
 package chat.rocket.android.server.infraestructure
 
 import chat.rocket.android.db.DatabaseManagerFactory
-import chat.rocket.android.infrastructure.LocalRepository
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton

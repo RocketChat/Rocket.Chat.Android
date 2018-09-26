@@ -8,7 +8,6 @@
     tools:context="preferences.ui.PreferencesFragment">
 
     <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/view_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -41,7 +40,6 @@
         app:layout_constraintTop_toBottomOf="@+id/text_analytics_tracking" />
 
     <Switch
-        android:id="@+id/switch_analytics_tracking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="true"

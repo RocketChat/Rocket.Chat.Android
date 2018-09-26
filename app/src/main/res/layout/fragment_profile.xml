@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
@@ -13,7 +12,6 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/profile_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -22,7 +20,6 @@
             tools:visibility="visible">
 
             <include
-                android:id="@+id/layout_avatar_profile"
                 layout="@layout/avatar_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -56,7 +53,6 @@
     </ScrollView>
 
     <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/view_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -64,14 +60,12 @@
         app:indicatorName="BallPulseIndicator" />
 
     <View
-        android:id="@+id/view_dim"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorDim"
         android:visibility="gone" />
 
     <include
-        android:id="@+id/layout_update_avatar_options"
         layout="@layout/update_avatar_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -7,7 +7,6 @@
     android:showDividers="end">
 
     <TextView
-        android:id="@+id/text_online"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="8dp"
@@ -20,7 +19,6 @@
         android:background="?selectableItemBackground"/>
 
     <TextView
-        android:id="@+id/text_away"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="8dp"
@@ -33,7 +31,6 @@
         android:background="?selectableItemBackground"/>
 
     <TextView
-        android:id="@+id/text_busy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="8dp"
@@ -46,7 +43,6 @@
         android:background="?selectableItemBackground"/>
 
     <TextView
-        android:id="@+id/text_invisible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="8dp"

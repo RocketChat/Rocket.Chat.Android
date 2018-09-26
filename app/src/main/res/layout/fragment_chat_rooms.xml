@@ -13,7 +13,6 @@
         android:layout_height="match_parent" />
 
     <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/view_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -22,7 +21,6 @@
         app:indicatorName="BallPulseIndicator" />
 
     <TextView
-        android:id="@+id/text_no_data_to_display"
         style="@style/TextAppearance.AppCompat.Subhead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,7 +45,6 @@
         tools:visibility="visible" />
 
     <TextView
-        android:id="@+id/text_no_result_found"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

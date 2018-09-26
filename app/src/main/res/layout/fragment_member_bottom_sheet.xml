@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/member_bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="16dp"
@@ -18,7 +17,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/name_and_username_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorBackgroundMemberContainer"
@@ -30,7 +28,6 @@
         app:layout_constraintLeft_toLeftOf="parent">
 
         <TextView
-            android:id="@+id/text_bottom_sheet_member_name"
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,7 +35,6 @@
             tools:text="Ronald Perkins" />
 
         <TextView
-            android:id="@+id/text_bottom_sheet_member_username"
             style="@style/Sender.Name.TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +75,6 @@
         app:layout_constraintTop_toBottomOf="@+id/text_member_email_address" />
 
     <TextView
-        android:id="@+id/text_member_utc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

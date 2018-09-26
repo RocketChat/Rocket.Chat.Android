@@ -7,7 +7,6 @@
     <string name="title_reset_password">Сброс пароля</string>
     <string name="title_sign_up">Зарегистрироваться</string>
     <string name="title_authentication">Аутентификация</string>
-    <string name="title_legal_terms">Юридические условия</string>
     <string name="title_chats">Чаты</string>
     <string name="title_profile">Профиль</string>
     <string name="title_members">Пользователи (%d)</string>
@@ -15,7 +14,6 @@
     <string name="title_preferences">Персональные</string>
     <string name="title_change_password">Изменить пароль</string>
     <string name="title_admin_panel">Панель админа</string>
-    <string name="title_password">Изменить пароль</string>
     <string name="title_update_profile">Обновить профиль</string>
     <string name="title_about">О программе</string>
     <string name="title_create_channel">Создать новый канал</string>
@@ -28,7 +26,6 @@
     <string name="action_privacy_policy">Политика конфиденциальности</string>
     <string name="action_search">Поиск</string>
     <string name="action_update">Обновить</string>
-    <string name="action_settings">Настройки</string>
     <string name="action_create_channel">Создать канал</string>
     <string name="action_create">Создать</string>
     <string name="action_logout">Выйти</string>
@@ -67,14 +64,8 @@
     <string name="msg_password">пароль</string>
     <string name="msg_name">Имя</string>
     <string name="msg_email">e-mail</string>
-    <string name="msg_avatar_url">URL аватара</string>
-    <string name="msg_or_continue_using_social_accounts">Или продолжить, используя социальные учетные записи</string>
-    <string name="msg_new_user">Новый пользователь? %1$s</string>
     <string name="msg_forgot__your_password">Забыли пароль?</string>
-    <string name="msg_reset">Сброс</string>
     <string name="msg_check_your_email_to_reset_your_password">Письмо отправлено! Проверьте свой почтовый ящик, чтобы сбросить пароль.</string>
-    <string name="msg_invalid_email">Введите действующий e-mail</string>
-    <string name="msg_new_user_agreement">Продолжая, вы принимаете\n%1$s и %2$s</string>
     <string name="msg_yesterday">Вчера</string>
     <string name="msg_today">Сегодня</string>
     <string name="msg_message">Сообщение</string>
@@ -82,19 +73,10 @@
     <string name="msg_invalid_2fa_code">Неверный код 2FA</string>
     <string name="msg_invalid_file">Неверный файл</string>
     <string name="msg_invalid_server_url">Неверный URL-адрес сервера.</string>
-    <string name="msg_content_description_log_in_using_facebook">Войти с помощью Facebook</string>
-    <string name="msg_content_description_log_in_using_github">Войти с помощью Github</string>
-    <string name="msg_content_description_log_in_using_google">Войти с помощью Google</string>
-    <string name="msg_content_description_log_in_using_linkedin">Войти с помощью Linkedin</string>
-    <string name="msg_content_description_log_in_using_meteor">Войти с помощью Meteor</string>
-    <string name="msg_content_description_log_in_using_twitter">Войти с помощью Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">Войти с помощью Gitlab</string>
-    <string name="msg_content_description_log_in_using_wordpress">Войти с помощью WordPress</string>
     <string name="msg_content_description_send_message">Отправить сообщение</string>
     <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Translate-->
     <string name="msg_content_description_show_attachment_options">Показать параметры вложения</string>
     <string name="msg_you">Вы</string>
-    <string name="msg_unknown">Неизвестный</string>
     <string name="msg_email_address">E-mail адрес</string>
     <string name="msg_utc_offset">Смещение UTC</string>
     <string name="msg_new_password">Введите новый пароль</string>
@@ -132,7 +114,6 @@
     <string name="msg_delete_message">Удалить сообщение</string>
     <string name="msg_delete_description">Вы уверены, что хотите удалить это сообщение?</string>
     <string name="msg_channel_name">Название канала</string>
-    <string name="msg_search">Поиск</string>
     <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string> <!-- TODO Add translation -->
     <string name="msg_team_communication">Open Source Communication</string> <!-- TODO Add translation -->
     <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->
@@ -143,8 +124,8 @@
     <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
-    <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
-    <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+    <!-- TODO Add translation -->
+    <!-- TODO Add translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>
@@ -170,7 +151,6 @@
     <string name="message_user_removed_by">Пользователь %1$s удален пользователем %2$s</string>
     <string name="message_user_left">Покинул канал.</string>
     <string name="message_user_joined_channel">Присоединился к каналу.</string>
-    <string name="message_welcome">Привет, %s</string>
     <string name="message_removed">Сообщение удалено</string>
     <string name="message_pinned">Прикрепленное сообщение:</string>
     <string name="message_muted">Пользователь %2$s лишил %1$s дара речи</string>
@@ -190,13 +170,11 @@
     <string name="action_msg_unpin">Открепить сообщение</string>
     <string name="action_msg_star">В избранное</string>
     <string name="action_msg_unstar">Из избранного</string>
-    <string name="action_msg_share">Поделиться</string>
     <string name="action_title_editing">Редактирование сообщения</string>
     <string name="action_msg_add_reaction">Отреагировать</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редактирование запрещено</string>
-    <string name="permission_deleting_not_allowed">Удаление запрещено</string>
     <string name="permission_pinning_not_allowed">Нельзя закрепить</string>
     <string name="permission_starring_not_allowed">Нельзя отметить</string>
 
@@ -247,27 +225,6 @@
     <string name="suggest_here_description">Уведомить всех активных пользователей в этом чате</string>
 
     <!-- Slash Commands -->
-    <string name="Slash_Gimme_Description">Показывает ༼ つ ◕_◕ ༽つ перед вашим сообщением</string>
-    <string name="Slash_LennyFace_Description">Показывает ( ͡° ͜ʖ ͡°) после вашего сообщения</string>
-    <string name="Slash_Shrug_Description">Показывает ¯\_(ツ)_/¯ после вашего сообщения</string>
-    <string name="Slash_Tableflip_Description">Показывает (╯°□°）╯︵ ┻━┻</string>
-    <string name="Slash_TableUnflip_Description">Показывает ┬─┬ ノ( ゜-゜ノ)</string>
-    <string name="Create_A_New_Channel">Создать новый канал</string>
-    <string name="Show_the_keyboard_shortcut_list">Показать список горячих клавиш</string>
-    <string name="Invite_user_to_join_channel_all_from">Пригласить всех пользователей из [#channel] присоединиться к этому каналу</string>
-    <string name="Invite_user_to_join_channel_all_to">Пригласить всех пользователей присоединиться к [#channel]</string>
-    <string name="Archive">Архивировать</string>
-    <string name="Remove_someone_from_room">Удалить кого-либо с канала</string>
-    <string name="Leave_the_current_channel">Покинуть текущий канал</string>
-    <string name="Displays_action_text">Отображает текст действия</string>
-    <string name="Direct_message_someone">Личное сообщение</string>
-    <string name="Mute_someone_in_room">Заглушить кого-либо на канале</string>
-    <string name="Unmute_someone_in_room">Отменить заглушивание кого-либо на канале</string>
-    <string name="Invite_user_to_join_channel">Пригласить пользователя на канал</string>
-    <string name="Unarchive">Разархивировать</string>
-    <string name="Join_the_given_channel">Присоединиться к этому каналу</string>
-    <string name="Guggy_Command_Description">Создает gif на основе предоставленного текста</string>
-    <string name="Slash_Topic_Description">Задать тему</string>
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Пусто</string>
@@ -279,7 +236,6 @@
     <string name="dialog_sort_by_alphabet">По алфавиту</string>
     <string name="dialog_sort_by_activity">По активности</string>
     <string name="dialog_group_by_type">Группировать по типу</string>
-    <string name="dialog_group_favourites">Группировать избранное</string>
     <string name="dialog_button_done">Ок</string>
     <string name="chatroom_header">Заголовок</string>
 
@@ -291,7 +247,6 @@
     <string name="header_unknown">Неизвестные</string>
 
     <!--Notifications-->
-    <string name="share_label">Редактировать сообщение</string>
     <string name="notif_action_reply_hint">ОТВЕТИТЬ</string>
     <string name="notif_error_sending">Не удалось ответить. Пожалуйста, попробуйте еще раз.</string>
     <string name="notif_success_sending">Сообщение отправлено %1$s!</string>

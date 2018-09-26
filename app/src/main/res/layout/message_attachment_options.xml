@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/button_files"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +15,6 @@
         android:text="@string/action_files" />
 
     <Button
-        android:id="@+id/button_drawing"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

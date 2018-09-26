@@ -20,14 +20,12 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/image_file_thumbnail"
             android:layout_width="80dp"
             android:layout_height="70dp"
             android:visibility="gone"
             app:roundedCornerRadius="3dp" />
 
         <ImageView
-            android:id="@+id/image_file_media_thumbnail"
             android:layout_width="80dp"
             android:layout_height="70dp"
             android:visibility="gone" />
@@ -48,7 +46,6 @@
         tools:text="File.mp3" />
 
     <TextView
-        android:id="@+id/text_uploader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
