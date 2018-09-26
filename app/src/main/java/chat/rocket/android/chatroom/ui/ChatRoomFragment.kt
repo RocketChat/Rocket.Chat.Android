@@ -35,6 +35,7 @@ import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.adapter.CommandSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.EmojiSuggestionsAdapter
 import chat.rocket.android.chatroom.adapter.PEOPLE
 import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter
 import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter
@@ -45,6 +46,7 @@ import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
+import chat.rocket.android.chatroom.uimodel.suggestion.EmojiSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
 import chat.rocket.android.draw.main.ui.DRAWING_BYTE_ARRAY_EXTRA_DATA
 import chat.rocket.android.draw.main.ui.DrawingActivity
@@ -556,11 +558,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun showReplyingAction(
-        username: String,
-        replyMarkdown: String,
-        quotedMessage: String
-    ) {
+    override fun showReplyingAction(username: String, replyMarkdown: String, quotedMessage: String) {
         ui {
             citation = replyMarkdown
             actionSnackbar.title = username
@@ -607,6 +605,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun populateCommandSuggestions(commands: List<CommandSuggestionUiModel>) {
         ui {
             suggestions_view.addItems("/", commands)
+        }
+    }
+
+    override fun populateEmojiSuggestions(emojis: List<EmojiSuggestionUiModel>) {
+        ui {
+            suggestions_view.addItems(":", emojis)
         }
     }
 
@@ -769,10 +773,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_show_attachment_options.alpha = 1f
             button_show_attachment_options.isVisible = true
 
-            activity?.supportFragmentManager?.addOnBackStackChangedListener {
-                println("attach")
-            }
-
             activity?.supportFragmentManager?.registerFragmentLifecycleCallbacks(
                 object : FragmentManager.FragmentLifecycleCallbacks() {
                     override fun onFragmentAttached(
@@ -837,16 +837,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }, 400)
             }
 
-            button_add_reaction.setOnClickListener { view ->
+            button_add_reaction.setOnClickListener { _ ->
                 openEmojiKeyboardPopup()
             }
 
             button_drawing.setOnClickListener {
-                activity?.let {
-                    if (!ImageHelper.canWriteToExternalStorage(it)) {
-                        ImageHelper.checkWritingPermission(it)
+                activity?.let { fragmentActivity ->
+                    if (!ImageHelper.canWriteToExternalStorage(fragmentActivity)) {
+                        ImageHelper.checkWritingPermission(fragmentActivity)
                     } else {
-                        val intent = Intent(it, DrawingActivity::class.java)
+                        val intent = Intent(fragmentActivity, DrawingActivity::class.java)
                         startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
                     }
                 }
@@ -877,6 +877,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             .addTokenAdapter(PeopleSuggestionsAdapter(context!!))
             .addTokenAdapter(CommandSuggestionsAdapter())
             .addTokenAdapter(RoomSuggestionsAdapter())
+            .addTokenAdapter(EmojiSuggestionsAdapter())
             .addSuggestionProviderAction("@") { query ->
                 if (query.isNotEmpty()) {
                     presenter.spotlight(query, PEOPLE, true)
@@ -887,10 +888,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                     presenter.loadChatRooms()
                 }
             }
-            .addSuggestionProviderAction("/") { _ ->
+            .addSuggestionProviderAction("/") {
                 presenter.loadCommands()
             }
+            .addSuggestionProviderAction(":") {
+                presenter.loadEmojis()
+            }
 
+        presenter.loadEmojis()
         presenter.loadCommands()
     }
 
