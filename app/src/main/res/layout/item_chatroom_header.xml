@@ -10,6 +10,7 @@
         android:background="@color/darkGray" />-->
 
     <TextView
+        android:id="@+id/text_chatroom_header"
         style="@style/ChatRooms.Header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

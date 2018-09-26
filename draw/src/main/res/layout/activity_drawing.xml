@@ -7,6 +7,7 @@
     tools:context=".main.ui.DrawingActivity">
 
     <chat.rocket.android.draw.widget.CustomDrawView
+        android:id="@+id/custom_draw_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/color_white"
@@ -16,6 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/image_close_drawing"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:background="@color/color_white"
@@ -27,6 +29,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/image_send_drawing"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:background="@color/color_white"
@@ -38,6 +41,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/draw_tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/color_white"
@@ -121,6 +125,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <SeekBar
+            android:id="@+id/seekBar_width"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:paddingStart="16dp"
@@ -133,6 +138,7 @@
             app:layout_constraintTop_toBottomOf="@id/image_draw_eraser" />
 
         <SeekBar
+            android:id="@+id/seekBar_opacity"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:paddingStart="16dp"
@@ -145,6 +151,7 @@
             app:layout_constraintTop_toBottomOf="@id/image_draw_eraser" />
 
         <include
+            android:id="@+id/draw_color_palette"
             layout="@layout/color_palette_view"
             android:layout_width="0dp"
             android:layout_height="56dp"

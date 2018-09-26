@@ -174,7 +174,7 @@ class UiModelMapper @Inject constructor(
                     broadcast = broadcast ?: false,
                     alert = alert,
                     fullName = fullname,
-                    name = name,
+                    name = name ?: "",
                     favorite = favorite ?: false,
                     default = isDefault ?: false,
                     readonly = readonly,

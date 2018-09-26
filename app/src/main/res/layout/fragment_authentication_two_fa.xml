@@ -25,6 +25,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_two_factor_authentication" />
 
     <Button
+        android:id="@+id/button_confirm"
         style="@style/Authentication.Button.Flat"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/colorAuthenticationButtonDisabled"
@@ -35,6 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_two_factor_authentication_code" />
 
     <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/view_loading"
         style="@style/Authentication.AVLoadingIndicatorView"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/text_total_unread_messages"
         style="@style/TextAppearance.AppCompat.Caption"
         android:layout_width="18dp"
         android:layout_height="18dp"

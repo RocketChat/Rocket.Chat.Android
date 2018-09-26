@@ -7,6 +7,7 @@
     <string name="title_reset_password">Passwort zurücksetzen</string>
     <string name="title_sign_up">registrieren</string>
     <string name="title_authentication">Login Daten prüfen</string>
+    <string name="title_legal_terms">Legal Terms</string>
     <string name="title_chats">Chats</string>
     <string name="title_profile">Profil</string>
     <string name="title_members">Benutzer (%d)</string>
@@ -14,6 +15,7 @@
     <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
     <string name="title_change_password">Ändere Passwort</string>
     <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
+    <string name="title_password">Ändere Passwort</string>
     <string name="title_update_profile">Update Profil</string>
     <string name="title_about">Über</string>
     <string name="title_create_channel">Erstelle Raum</string>
@@ -26,6 +28,7 @@
     <string name="action_privacy_policy">Datenschutz</string>
     <string name="action_search">Suche</string>
     <string name="action_update">Updaten</string>
+    <string name="action_settings">Einstellungen</string>
     <string name="action_create_channel">Erstelle Raum</string>
     <string name="action_create">Erstelle</string>
     <string name="action_logout">Abmelden</string>
@@ -64,8 +67,14 @@
     <string name="msg_password">Passwort</string>
     <string name="msg_name">Name</string> <!-- TODO Add translation -->
     <string name="msg_email">EMail</string> <!-- TODO Add translation -->
+    <string name="msg_avatar_url">Avatar URL</string>
+    <string name="msg_or_continue_using_social_accounts">Oder weiter mit einem Social Account</string>
+    <string name="msg_new_user">Neuer Benutzer? %1$s</string>
     <string name="msg_forgot__your_password">Passwort vergessen?</string>
+    <string name="msg_reset">Zurücksetzen</string>
     <string name="msg_check_your_email_to_reset_your_password">E-Mail gesendet! Prüfe dein E-Mail Posteingang um dein Passwort zurückzusetzen.</string>
+    <string name="msg_invalid_email">Bitte eine korrekte E-Mail Adresse eingeben</string>
+    <string name="msg_new_user_agreement">Beim weitergehen akzeptieren Sie usere\n%1$s und %2$s</string>
     <string name="msg_yesterday">Gestern</string>
     <string name="msg_today">Heute</string>
     <string name="msg_message">Nachricht</string>
@@ -73,15 +82,25 @@
     <string name="msg_invalid_2fa_code">Falscher 2FA Code</string>
     <string name="msg_invalid_file">Falsche Datei</string>
     <string name="msg_invalid_server_url">Falsche Server URL</string>
+    <string name="msg_content_description_log_in_using_facebook">Login mit Facebook</string>
+    <string name="msg_content_description_log_in_using_github">Login mit Github</string>
+    <string name="msg_content_description_log_in_using_google">Login mit Google</string>
+    <string name="msg_content_description_log_in_using_linkedin">Login mit Linkedin</string>
+    <string name="msg_content_description_log_in_using_meteor">Login mit Meteor</string>
+    <string name="msg_content_description_log_in_using_twitter">Login mit Twitter</string>
+    <string name="msg_content_description_log_in_using_gitlab">Login mit Gitlab</string>
+    <string name="msg_content_description_log_in_using_wordpress">Login mit WordPress</string>
     <string name="msg_content_description_send_message">Sende Nachricht</string>
     <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Translate-->
     <string name="msg_content_description_show_attachment_options">Zeige Anhang Optionen</string>
     <string name="msg_you">Du</string>
+    <string name="msg_unknown">Unbekannt</string>
     <string name="msg_email_address">E-Mail Addresse</string>
     <string name="msg_utc_offset">UTC Offset</string>
     <string name="msg_new_password">Neues Passwort eingeben</string>
     <string name="msg_confirm_password">Bestätige neues Passwort</string>
     <string name="msg_channel_name">Raum Name</string>
+    <string name="msg_search">Suche</string>
     <string name="msg_unread_messages">Ungelesene Nachrichten</string>
     <string name="msg_preview_video">Video</string>
     <string name="msg_preview_audio">Audio</string>
@@ -121,8 +140,8 @@
     <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
-    <!-- TODO Add translation -->
-    <!-- TODO Add translation -->
+    <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
+    <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privat</string>
@@ -151,6 +170,7 @@
     <string name="message_user_removed_by">Benutzer %1$s entfernt von %2$s</string>
     <string name="message_user_left">Hat den Raum verlassen.</string>
     <string name="message_user_joined_channel">Hat den Raum betreten.</string>
+    <string name="message_welcome">Willkommen %s</string>
     <string name="message_removed">Nachricht entfernt</string>
     <string name="message_pinned">Nachricht angeheftet:</string>
     <string name="message_muted">Benutzer %1$s stumm geschaltet von %2$s</string>
@@ -170,11 +190,13 @@
     <string name="action_msg_unpin">Nachricht nicht mehr anheften</string>
     <string name="action_msg_star">Nachricht favorisieren</string>
     <string name="action_msg_unstar">Nachricht nicht mehr favorisieren</string>
+    <string name="action_msg_share">Teilen</string>
     <string name="action_title_editing">Nachricht bearbeiten</string>
     <string name="action_msg_add_reaction">Reaktion hinzufügen</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Bearbeiten nicht erlaubt</string>
+    <string name="permission_deleting_not_allowed">Löschen nicht erlaubt</string>
     <string name="permission_pinning_not_allowed">Anheften nicht erlaubt</string>
     <string name="permission_starring_not_allowed">Favorisieren nicht erlaubt</string>
 
@@ -225,6 +247,27 @@
     <string name="suggest_here_description">Benachrichtige aktive Benutzer in diesem Raum</string>
 
     <!-- Slash Commands -->
+    <string name="Slash_Gimme_Description">Zeige ༼ つ ◕_◕ ༽つ vor deiner Nachricht</string>
+    <string name="Slash_LennyFace_Description">Zeige ( ͡° ͜ʖ ͡°) nach deiner Nachricht</string>
+    <string name="Slash_Shrug_Description">Zeige ¯\_(ツ)_/¯ nach deiner Nachricht</string>
+    <string name="Slash_Tableflip_Description">Zeige (╯°□°）╯︵ ┻━┻</string>
+    <string name="Slash_TableUnflip_Description">Zeige ┬─┬ ノ( ゜-゜ノ)</string>
+    <string name="Create_A_New_Channel">Erstelle einen neuen Raum</string>
+    <string name="Show_the_keyboard_shortcut_list">Zeige Tasterturkürzel</string>
+    <string name="Invite_user_to_join_channel_all_from">Lade alle Benutzer von [#channel] in diesen Raum ein</string>
+    <string name="Invite_user_to_join_channel_all_to">Lade alle Benutzer von diesem Raum in [#channel] ein</string>
+    <string name="Archive">Archivieren</string>
+    <string name="Remove_someone_from_room">Entferne jemanden vom Raum</string>
+    <string name="Leave_the_current_channel">Verlasse diesen Raum</string>
+    <string name="Displays_action_text">Zeige Aktions Text</string>
+    <string name="Direct_message_someone">Schicke eine Direktnachricht an jemanden</string>
+    <string name="Mute_someone_in_room">Schalte jemanden im Raum auf Stumm</string>
+    <string name="Unmute_someone_in_room">Schalte jemanden im Raum nicht mehr auf Stumm</string>
+    <string name="Invite_user_to_join_channel">Lade jemanden in diesen Raum ein</string>
+    <string name="Unarchive">Dearchivieren</string>
+    <string name="Join_the_given_channel">Trete diesem Raum bei</string>
+    <string name="Guggy_Command_Description">Erstelle ein Gif, basierend auf den eingegebenen Text</string>
+    <string name="Slash_Topic_Description">Setze Topic</string>
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Keine letzten Emojis</string>
@@ -236,6 +279,7 @@
     <string name="dialog_sort_by_alphabet">Alphabetisch</string>
     <string name="dialog_sort_by_activity">Aktivität</string>
     <string name="dialog_group_by_type">Räume nach Typ</string>
+    <string name="dialog_group_favourites">Räume nach Favoriten</string>
     <string name="dialog_button_done">Done</string><!-- TODO Add translation -->
     <string name="chatroom_header">Kopf</string>
 
@@ -247,6 +291,7 @@
     <string name="header_unknown">Unbekannt</string>
 
     <!--Notifications-->
+    <string name="share_label">Bearbeite geteilte Nachricht</string>
     <string name="notif_action_reply_hint">Antworten</string>
     <string name="notif_error_sending">Antworten fehlgeschlagen. Bitte versuchen Sie es noch einmal.</string>
     <string name="notif_success_sending">Nachricht gesendet nach %1$s!</string>

@@ -6,6 +6,7 @@
     android:orientation="horizontal">
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/action_button"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,6 +16,7 @@
         android:textSize="12sp" />
 
     <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/action_image_button"
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:layout_marginBottom="10dp"

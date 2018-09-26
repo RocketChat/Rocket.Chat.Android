@@ -9,6 +9,7 @@
     <string name="title_reset_password">パスワードリセット</string>
     <string name="title_sign_up">サインアップ</string>
     <string name="title_authentication">認証</string>
+    <string name="title_legal_terms">Legal Terms</string>
     <string name="title_chats">チャット</string>
     <string name="title_profile">プロフィール</string>
     <string name="title_members">メンバー (%d)</string>
@@ -16,6 +17,7 @@
     <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
     <string name="title_change_password">Change Password</string> <!-- TODO Add translation -->
     <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
+    <string name="title_password">パスワードの変更</string>
     <string name="title_update_profile">プロフィールの更新</string>
     <string name="title_about">About</string>
     <string name="title_create_channel">新しいチャネルを作成します</string>
@@ -28,6 +30,7 @@
     <string name="action_privacy_policy">プライバシーポリシー</string>
     <string name="action_search">検索</string>
     <string name="action_update">更新</string>
+    <string name="action_settings">設定</string>
     <string name="action_create_channel">チャンネル作成</string>
     <string name="action_create">作ります</string>
     <string name="action_logout">ログアウト</string>
@@ -66,8 +69,14 @@
     <string name="msg_password">パスワード</string>
     <string name="msg_name">名前</string>
     <string name="msg_email">メール</string>
+    <string name="msg_avatar_url">アバター URL</string>
+    <string name="msg_or_continue_using_social_accounts">またはソーシャルアカウントを使用する</string>
+    <string name="msg_new_user">新規ユーザー? %1$s</string>
     <string name="msg_forgot__your_password">パスワードをお忘れですか? %1$s</string>
+    <string name="msg_reset">リセット</string>
     <string name="msg_check_your_email_to_reset_your_password">メールが送信されました! パスワードを変更するためには、受信ボックスを確認してください。</string>
+    <string name="msg_invalid_email">有効なメールアドレスを入力してください</string>
+    <string name="msg_new_user_agreement">サインアップすることで、\n%1$s と %2$s に同意したとみなします。</string>
     <string name="msg_today">Today</string> <!-- TODO Add translation -->
     <string name="msg_yesterday">昨日</string>
     <string name="msg_message">メッセージ</string>
@@ -75,23 +84,25 @@
     <string name="msg_invalid_2fa_code">無効な 2FA コード</string>
     <string name="msg_invalid_file">無効なファイル</string>
     <string name="msg_invalid_server_url">無効なサーバー URL</string>
-    <!-- TODO Add translation -->
-    <!-- TODO Add translation -->
-    <!-- TODO Add translation -->
-    <!-- TODO Add translation -->
-    <!-- TODO Add translation -->
-    <!-- TODO Add translation -->
-    <!-- TODO Add translation -->
-    <!-- TODO Add translation -->
+    <string name="msg_content_description_log_in_using_facebook">Login using Facebook</string> <!-- TODO Add translation -->
+    <string name="msg_content_description_log_in_using_github">Login using Github</string> <!-- TODO Add translation -->
+    <string name="msg_content_description_log_in_using_google">Login using Google</string> <!-- TODO Add translation -->
+    <string name="msg_content_description_log_in_using_linkedin">Login using Linkedin</string> <!-- TODO Add translation -->
+    <string name="msg_content_description_log_in_using_meteor">Login using Meteor</string> <!-- TODO Add translation -->
+    <string name="msg_content_description_log_in_using_twitter">Login using Twitter</string> <!-- TODO Add translation -->
+    <string name="msg_content_description_log_in_using_gitlab">Login using Gitlab</string> <!-- TODO Add translation -->
+    <string name="msg_content_description_log_in_using_wordpress">Login using WordPress</string> <!-- TODO Add translation -->
     <string name="msg_content_description_send_message">メッセージを送信</string> <!-- TODO Add translation -->
     <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Translate-->
     <string name="msg_content_description_show_attachment_options">添付ファイルオプションを表示する</string>
     <string name="msg_you">あなた</string>
+    <string name="msg_unknown">不明</string>
     <string name="msg_email_address">電子メールアドレス</string>
     <string name="msg_utc_offset">UTC offset</string>
     <string name="msg_new_password">新しいパスワード</string>
     <string name="msg_confirm_password">新しいパスワードの確認</string>
     <string name="msg_channel_name">チャンネル名</string>
+    <string name="msg_search">検索</string>
     <string name="msg_unread_messages">未読メッセージ</string>
     <string name="msg_preview_video">ビデオ</string>
     <string name="msg_preview_audio">音声</string>
@@ -134,8 +145,8 @@
     <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
-    <!-- TODO Add translation -->
-    <!-- TODO Add translation -->
+    <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
+    <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">プライベート</string>
@@ -164,6 +175,7 @@
     <string name="message_user_removed_by">%1$s がユーザー %2$s を削除しました。</string>
     <string name="message_user_left">チャンネルを退去しました。</string>
     <string name="message_user_joined_channel">チャンネルへ参加しました。</string>
+    <string name="message_welcome">ようこそ %s</string>
     <string name="message_removed">メッセージを削除しました。</string>
     <string name="message_pinned">メッセージをピン留めしました:</string>
     <string name="message_muted">%2$sでミュートされたユーザー %1$s</string>
@@ -183,11 +195,13 @@
     <string name="action_msg_unpin">ピン留を外す</string>
     <string name="action_msg_star">スターをつける</string>
     <string name="action_msg_unstar">スターを外す</string>
+    <string name="action_msg_share">Share</string>
     <string name="action_title_editing">メッセージの編集</string>
     <string name="action_msg_add_reaction">リアクションする</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">編集は許可されていません</string>
+    <string name="permission_deleting_not_allowed">削除は許可されていません</string>
     <string name="permission_pinning_not_allowed">ピン留めは許可されていません</string>
     <string name="permission_starring_not_allowed">閲覧は許可されていません</string>
 
@@ -238,6 +252,27 @@
     <string name="suggest_here_description">この部屋のアクティブユーザーに通知する</string>
 
     <!-- Slash Commands -->
+    <string name="Slash_Gimme_Description">あなたのメッセージの前に表示（つ◕_◕）つ</string>
+    <string name="Slash_LennyFace_Description">あなたのメッセージの後に表示（͡°͜ʖ͡°）</string>
+    <string name="Slash_Shrug_Description">あなたのメッセージの後に表示¯\\ _（ツ）_ /¯</string>
+    <string name="Slash_Tableflip_Description">表示（╯°□°）╯(┻━┻</string>
+    <string name="Slash_TableUnflip_Description">表示┬─┬ノ（゜ - ゜ノ）</string>
+    <string name="Create_A_New_Channel">新しいチャネルを作成します</string>
+    <string name="Show_the_keyboard_shortcut_list">キーボードショートカットリストを表示する</string>
+    <string name="Invite_user_to_join_channel_all_from">[#channel]のすべてのユーザーをこのチャンネルに招待する</string>
+    <string name="Invite_user_to_join_channel_all_to">このチャンネルのすべてのユーザーを[#channel]に招待する</string>
+    <string name="Archive">アーカイブ</string>
+    <string name="Remove_someone_from_room">誰かをルームから削除</string>
+    <string name="Leave_the_current_channel">現在のチャンネルを残す</string>
+    <string name="Displays_action_text">操作テキストを表示</string>
+    <string name="Direct_message_someone">誰かへダイレクトメッセージ</string>
+    <string name="Mute_someone_in_room">誰かをルームでミュートにする</string>
+    <string name="Unmute_someone_in_room">誰かをルームでミュートを解除されました</string>
+    <string name="Invite_user_to_join_channel">ユーザーをこのチャンネルへ招待します</string>
+    <string name="Unarchive">アーカイブを解除</string>
+    <string name="Join_the_given_channel">チャンネルへ参加する</string>
+    <string name="Guggy_Command_Description">提供されたテキストに基づいてgifを生成する</string>
+    <string name="Slash_Topic_Description">設定トピック</string>
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">最近の絵文字はありません</string>
@@ -249,6 +284,7 @@
     <string name="dialog_sort_by_alphabet">アルファベット順</string>
     <string name="dialog_sort_by_activity">アクティビティで並べ替える</string>
     <string name="dialog_group_by_type">グループ別</string>
+    <string name="dialog_group_favourites">お気に入りのグループ</string>
     <string name="chatroom_header">ヘッダ</string>
     <string name="dialog_button_done">完了</string>
 
@@ -261,7 +297,7 @@
     <string name="header_unknown">不明</string>
 
     <!--Notifications-->
-    <!-- TODO Add translation -->
+    <string name="share_label">Edit shared message</string> <!-- TODO Add translation -->
     <string name="notif_action_reply_hint">返信</string>
     <string name="notif_error_sending">送信に失敗しました。もう一度お試しください。</string>
     <string name="notif_success_sending">メッセージは %1$s に送信されました!</string>

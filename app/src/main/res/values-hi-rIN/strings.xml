@@ -7,6 +7,7 @@
     <string name="title_reset_password">पासवर्ड रीसेट करें</string>
     <string name="title_sign_up">साइन अप करें</string>
     <string name="title_authentication">प्रमाणीकरण</string>
+    <string name="title_legal_terms">कानूनी शर्तें</string>
     <string name="title_chats">चैट</string>
     <string name="title_profile">प्रोफाइल</string>
     <string name="title_members">सदस्य (%d)</string>
@@ -14,6 +15,7 @@
     <string name="title_preferences">प्राथमिकताएँ</string>
     <string name="title_change_password">पासवर्ड बदलें</string>
     <string name="title_admin_panel">एडमिन पैनल</string>
+    <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
     <string name="title_create_channel">चैनल बनाएं</string>
@@ -26,6 +28,7 @@
     <string name="action_privacy_policy">गोपनीयता नीति</string>
     <string name="action_search">खोजें</string>
     <string name="action_update">अद्यतन करें</string>
+    <string name="action_settings">सेटिंग्स</string>
     <string name="action_create_channel">चैनल बनाएं</string>
     <string name="action_create">बनाएं</string>
     <string name="action_logout">लोग आउट करें</string>
@@ -64,8 +67,14 @@
     <string name="msg_password">पासवर्ड</string>
     <string name="msg_name">नाम</string>
     <string name="msg_email">ईमेल</string>
+    <string name="msg_avatar_url">अवतार यूआरएल</string>
+    <string name="msg_or_continue_using_social_accounts">या सामाजिक खाते का उपयोग करना जारी रखें</string>
+    <string name="msg_new_user">नया उपयोगकर्ता? %1$s</string>
     <string name="msg_forgot__your_password">पासवर्ड भूल गए?</string>
+    <string name="msg_reset">रीसेट करें</string>
     <string name="msg_check_your_email_to_reset_your_password">ईमेल गया गया है! अपना पासवर्ड रीसेट करने के लिए अपने इनबॉक्स की जांच करें।</string>
+    <string name="msg_invalid_email">कृपया एक वैध ई-मेल टाइप करें</string>
+    <string name="msg_new_user_agreement">आगे बढ़कर आप हमारे %1$s और %2$s से सहमत हो रहे हैं</string>
     <string name="msg_yesterday">कल</string>
     <string name="msg_today">आज</string>
     <string name="msg_message">संदेश</string>
@@ -73,10 +82,19 @@
     <string name="msg_invalid_2fa_code">अमान्य 2FA कोड</string>
     <string name="msg_invalid_file">अवैध फाइल</string>
     <string name="msg_invalid_server_url">अमान्य सर्वर यूआरL</string>
+    <string name="msg_content_description_log_in_using_facebook">Facebook द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_github">Github द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_google">Google द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_linkedin">Linkedin द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_meteor">Meteor द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_twitter">Twitter द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_gitlab">Gitlab द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_wordpress">WordPress द्वारा लॉगिन करें</string>
     <string name="msg_content_description_send_message">मेसेज भेजें</string>
     <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Translate-->
     <string name="msg_content_description_show_attachment_options">अटैचमेंट विकल्प दिखाएं</string>
     <string name="msg_you">आप</string>
+    <string name="msg_unknown">अनजान</string>
     <string name="msg_email_address">ई-मेल एड्रेस</string>
     <string name="msg_utc_offset">यूटीसी ऑफ़सेट</string>
     <string name="msg_new_password">नया पासवर्ड दर्ज करें</string>
@@ -110,6 +128,7 @@
     <string name="msg_several_users_are_typing">कई उपयोगकर्ता टाइप कर रहे हैं…</string>
     <string name="msg_no_search_found">कोई परिणाम नहीं मिला</string>
     <string name="msg_channel_name">चैनल का नाम</string>
+    <string name="msg_search">खोजें</string>
     <string name="msg_message_copied">संदेश कॉपी किया गया</string>
     <string name="msg_upload_file">फाइल अपलोड करें</string>
     <string name="msg_file_description">फाइल विवरण</string>
@@ -127,6 +146,8 @@
     <string name="msg_continue_with_linkedin"><b>Linkedin</b> के साथ जारी रखें</string>
     <string name="msg_continue_with_gitlab"><b>GitLab</b> के साथ जारी रखें</string>
     <string name="msg_continue_with_wordpress"><b>WordPress</b> के साथ जारी रखें</string>
+    <string name="msg_two_factor_authentication">दो तरीकों से प्रमाणीकरण</string>
+    <string name="msg__your_2fa_code">आपका 2FA कोड क्या है?</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">प्राइवेट</string>
@@ -152,6 +173,7 @@
     <string name="message_user_removed_by">उपयोगकर्ता %1$s द्वारा %2$s को निकाला गया</string>
     <string name="message_user_left">ने चैनल को छोड़ दिया है</string>
     <string name="message_user_joined_channel">चैनल में शामिल हो गया है</string>
+    <string name="message_welcome">%s का स्वागत करते हैं</string>
     <string name="message_removed">संदेश हटाया गया</string>
     <string name="message_pinned">एक संदेश पिन किया:</string>
     <string name="message_muted">उपयोगकर्ता %1$s %2$s द्वारा म्यूट किया गया</string>
@@ -172,11 +194,13 @@
     <string name="action_msg_unpin">संदेश को पिन से हटाएँ</string>
     <string name="action_msg_star">संदेश को स्टार करें</string>
     <string name="action_msg_unstar">सन्देश अतारांकित करें</string>
+    <string name="action_msg_share">शेयर करें</string>
     <string name="action_title_editing">संपादन संदेश</string>
     <string name="action_msg_add_reaction">प्रतिक्रिया जोड़ें</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">संपादन की अनुमति नहीं है</string>
+    <string name="permission_deleting_not_allowed">हटाने की अनुमति नहीं है</string>
     <string name="permission_pinning_not_allowed">पिनि करने की अनुमति नहीं है</string>
     <string name="permission_starring_not_allowed">तारांकित की अनुमति नहीं है</string>
 
@@ -227,6 +251,27 @@
     <string name="suggest_here_description">इस कमरे में सक्रिय उपयोगकर्ताओं को सूचित करना</string>
 
     <!-- Slash Commands -->
+    <string name="Slash_Gimme_Description">आपके संदेश से पहले ༼ つ ◕_◕ ༽つ दिखाता है</string>
+    <string name="Slash_LennyFace_Description">आपके संदेश के बाद ( ͡° ͜ʖ ͡°) दिखाता है</string>
+    <string name="Slash_Shrug_Description">आपके संदेश के बाद ¯\_(ツ)_/¯ दिखाता है</string>
+    <string name="Slash_Tableflip_Description">(╯°□°）╯︵ ┻━┻ दिखाता है</string>
+    <string name="Slash_TableUnflip_Description">┬─┬ ノ( ゜-゜ノ) दिखाता है</string>
+    <string name="Create_A_New_Channel">एक नया चैनल बनाएं</string>
+    <string name="Show_the_keyboard_shortcut_list">कीबोर्ड शॉर्टकट सूची दिखाएं</string>
+    <string name="Invite_user_to_join_channel_all_from">इस चैनल में शामिल होने के लिए [#channel] से सभी उपयोगकर्ताओं को आमंत्रित करें</string>
+    <string name="Invite_user_to_join_channel_all_to">[# चैनल] में शामिल होने के लिए सभी उपयोगकर्ताओं को इस चैनल पर आमंत्रित करें</string>
+    <string name="Archive">संग्रहित करें</string>
+    <string name="Remove_someone_from_room">रूम से किसी को निकालें</string>
+    <string name="Leave_the_current_channel">मौजूदा चैनल को छोड़ दें</string>
+    <string name="Displays_action_text">कार्रवाई पाठ प्रदर्शित करता है</string>
+    <string name="Direct_message_someone">किसी को प्रत्यक्ष संदेश भेजें</string>
+    <string name="Mute_someone_in_room">रूम में किसी को म्यूट करें</string>
+    <string name="Unmute_someone_in_room">रूम में किसी को अनम्यूट करें</string>
+    <string name="Invite_user_to_join_channel">इस चैनल में शामिल होने के लिए एक उपयोगकर्ता को आमंत्रित करें</string>
+    <string name="Unarchive">असंग्रहित करें</string>
+    <string name="Join_the_given_channel">दिए गए चैनल से जुड़ें</string>
+    <string name="Guggy_Command_Description">दिए गए पाठ पर आधारित gif उत्पन्न करता</string>
+    <string name="Slash_Topic_Description">विषय सेट करें</string>
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji"> कोई नया इमोजी नहीं</string>
@@ -238,6 +283,7 @@
     <string name="dialog_sort_by_alphabet">वर्णानुक्रम</string>
     <string name="dialog_sort_by_activity">गतिविधि</string>
     <string name="dialog_group_by_type">प्रकार के आधार पर समूह</string>
+    <string name="dialog_group_favourites">पसंदीदा समूह</string>
     <string name="dialog_button_done">पूर्ण</string>
     <string name="chatroom_header">हैडर</string>
 
@@ -249,6 +295,7 @@
     <string name="header_unknown">अज्ञात</string>
 
     <!--Notifications-->
+    <string name="share_label">साझा संदेश संपादित करें</string>
     <string name="notif_action_reply_hint">जवाब</string>
     <string name="notif_error_sending">उत्तर विफल हुआ है। कृपया फिर से प्रयास करें।</string>
     <string name="notif_success_sending">संदेश भेजा गया %1$s!</string>

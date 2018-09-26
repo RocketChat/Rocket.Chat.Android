@@ -130,6 +130,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/create_server_container"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginTop="10dp"
@@ -160,6 +161,7 @@
     </RelativeLayout>
 
     <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/view_loading"
         style="@style/Authentication.AVLoadingIndicatorView"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

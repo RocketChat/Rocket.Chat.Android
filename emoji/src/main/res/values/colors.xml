@@ -2,6 +2,7 @@
 <resources>
     <color name="colorWhite">#FFFFFFFF</color>
 
+    <color name="darkGray">#FFa0a0a0</color>
     <color name="whitesmoke">#FFf1f1f1</color>
 
     <color name="colorEmojiIcon">#FF767676</color>

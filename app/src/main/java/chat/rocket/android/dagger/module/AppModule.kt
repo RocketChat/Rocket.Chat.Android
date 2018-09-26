@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
+import chat.rocket.android.analytics.Analytics
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.AnswersAnalytics
 import chat.rocket.android.analytics.GoogleAnalyticsForFirebase
@@ -152,13 +153,13 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(context: Application): SharedPreferences =
+    fun provideSharedPreferences(context: Application) =
         context.getSharedPreferences("rocket.chat", Context.MODE_PRIVATE)
 
 
     @Provides
     @ForMessages
-    fun provideMessagesSharedPreferences(context: Application): SharedPreferences =
+    fun provideMessagesSharedPreferences(context: Application) =
         context.getSharedPreferences("messages", Context.MODE_PRIVATE)
 
     @Provides

@@ -2,11 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".chatroom.ui.ChatRoomFragment">
 
     <FrameLayout
+        android:id="@+id/message_list_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/text_typing_status"
@@ -15,6 +17,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_connection_status">
 
         <include
+            android:id="@+id/layout_message_list"
             layout="@layout/message_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -62,6 +65,7 @@
         app:layout_constraintTop_toBottomOf="@id/text_chat_title" />
 
     <androidx.constraintlayout.widget.Group
+        android:id="@+id/empty_chat_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -71,6 +75,7 @@
         tools:visibility="visible" />
 
     <chat.rocket.android.widget.autocompletion.ui.SuggestionsView
+        android:id="@+id/suggestions_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/suggestion_background_color"
@@ -101,6 +106,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <View
+        android:id="@+id/view_dim"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorDim"
@@ -111,6 +117,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
+        android:id="@+id/layout_message_attachment_options"
         layout="@layout/message_attachment_options"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -139,6 +146,7 @@
         tools:visibility="visible" />
 
     <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/view_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"

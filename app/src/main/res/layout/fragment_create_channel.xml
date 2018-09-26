@@ -9,6 +9,7 @@
     tools:context="createchannel.ui.CreateChannelFragment">
 
     <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/view_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -41,6 +42,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_channel_type" />
 
     <Switch
+        android:id="@+id/switch_channel_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/text_channel_type_description"
@@ -69,6 +71,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_read_only" />
 
     <Switch
+        android:id="@+id/switch_read_only"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/text_read_only_description"
@@ -126,6 +129,7 @@
         app:layout_constraintTop_toTopOf="@+id/image_invite_member" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/view_member_suggestion"
         android:layout_width="0dp"
         android:layout_height="100dp"
         android:layout_marginStart="12dp"
@@ -149,6 +153,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/view_member_suggestion_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -160,6 +165,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/text_member_not_found"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/msg_member_not_found"
@@ -171,6 +177,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group_member"
         style="@style/Widget.MaterialComponents.Chip.Entry"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

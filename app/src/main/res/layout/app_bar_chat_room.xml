@@ -8,6 +8,7 @@
     android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:layout_scrollFlags="scroll|enterAlways"
@@ -16,6 +17,7 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <TextView
+            android:id="@+id/text_room_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="@dimen/text_view_drawable_padding"

@@ -12,6 +12,10 @@
     <color name="colorSecondaryTextLight">#FFC1C1C1</color>
 
     <!-- User status colors -->
+    <color name="colorUserStatusOnline">#2FE1A8</color>
+    <color name="colorUserStatusBusy">#F33E5B</color>
+    <color name="colorUserStatusAway">#FDD236</color>
+    <color name="colorUserStatusOffline">#d9d9d9</color>
 
     <!-- Normal colors -->
     <color name="colorWhite">#FFFFFFFF</color>
@@ -24,6 +28,7 @@
     <color name="colorAuthenticationChevronAndExpandIcon">#FFCBCED1</color>
     <color name="colorAuthenticationSecondaryText">#FF9EA2A8</color>
 
+    <color name="darkGray">#FFa0a0a0</color>
     <color name="actionMenuColor">#FF727272</color>
     <color name="whitesmoke">#FFf1f1f1</color>
 
@@ -38,6 +43,8 @@
     <color name="colorDim">#99000000</color>
 
     <color name="colorBackgroundMemberContainer">#4D000000</color>
+
+    <color name="translucent_white">#70F1F1F1</color>
 
     <color name="colorEmojiIcon">#FF767676</color>
 

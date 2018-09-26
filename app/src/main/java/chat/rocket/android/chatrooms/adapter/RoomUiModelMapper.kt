@@ -8,6 +8,8 @@ import androidx.core.text.color
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.db.model.ChatRoom
+import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.android.infrastructure.checkIfMyself
 import chat.rocket.android.server.domain.GetCurrentUserInteractor
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.showLastMessage

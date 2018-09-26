@@ -7,6 +7,7 @@
     <string name="title_reset_password">Відновлення паролю</string>
     <string name="title_sign_up">Зареєструватися</string>
     <string name="title_authentication">Аутентифікація</string>
+    <string name="title_legal_terms">Юридичні умови</string>
     <string name="title_chats">Чати</string>
     <string name="title_profile">Профіль</string>
     <string name="title_members">Користувачі (%d)</string>
@@ -14,6 +15,7 @@
     <string name="title_preferences">Персональні</string>
     <string name="title_change_password">Змінити пароль</string>
     <string name="title_admin_panel">Панель адміністратора</string>
+    <string name="title_password">Змінити пароль</string>
     <string name="title_update_profile">Оновити профіль</string>
     <string name="title_about">"Про програму"</string>
     <string name="title_create_channel">Створити новий канал</string>
@@ -26,6 +28,7 @@
     <string name="action_privacy_policy">Політика конфіденційності</string>
     <string name="action_search">Пошук</string>
     <string name="action_update">Оновити</string>
+    <string name="action_settings">Налаштування</string>
     <string name="action_create_channel">Створити канал</string>
     <string name="action_create">Створити</string>
     <string name="action_logout">Вийти</string>
@@ -64,8 +67,14 @@
     <string name="msg_password">пароль</string>
     <string name="msg_name">ім\'я</string>
     <string name="msg_email">e-mail</string>
+    <string name="msg_avatar_url">URL аватара</string>
+    <string name="msg_or_continue_using_social_accounts">Або продовжити, за допомогою акаунта у соціальних мережах</string>
+    <string name="msg_new_user">Новий користувач? %1$s</string>
     <string name="msg_forgot__your_password">Забули пароль? %1$s</string>
+    <string name="msg_reset">Скинути</string>
     <string name="msg_check_your_email_to_reset_your_password">Лист було відправлено! Перевірте свою поштову скриньку, щоб скинути пароль.</string>
+    <string name="msg_invalid_email">Введіть діючий e-mail</string>
+    <string name="msg_new_user_agreement">Продовжуючи, ви погоджуєтеся з %1$s і %2$s</string>
     <string name="msg_yesterday">Вчора</string>
     <string name="msg_today">Сьогодні</string>
     <string name="msg_message">"Повідомлення "</string>
@@ -73,10 +82,19 @@
     <string name="msg_invalid_2fa_code">Неправильний код 2FA</string>
     <string name="msg_invalid_file">Неправильний файл</string>
     <string name="msg_invalid_server_url">Неправильний URL-адреса сервера.</string>
+    <string name="msg_content_description_log_in_using_facebook">Увійти за допомогою Facebook</string>
+    <string name="msg_content_description_log_in_using_github">Увійти за допомогою Github</string>
+    <string name="msg_content_description_log_in_using_google">Увійти за допомогою Google</string>
+    <string name="msg_content_description_log_in_using_linkedin">Увійти за допомогою Linkedin</string>
+    <string name="msg_content_description_log_in_using_meteor">Увійти за допомогою Meteor</string>
+    <string name="msg_content_description_log_in_using_twitter">Увійти за допомогою Twitter</string>
+    <string name="msg_content_description_log_in_using_gitlab">Увійти за допомогою Gitlab</string>
+    <string name="msg_content_description_log_in_using_wordpress">Увійти за допомогою Wordpress</string>
     <string name="msg_content_description_send_message">Надіслати повідомлення</string>
     <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Translate-->
     <string name="msg_content_description_show_attachment_options">Показати параметри долучення</string>
     <string name="msg_you">Ви</string>
+    <string name="msg_unknown">Невідомий</string>
     <string name="msg_email_address">E-mail адреса</string>
     <string name="msg_utc_offset">UTC зсув</string>
     <string name="msg_new_password">Введіть новий пароль</string>
@@ -107,6 +125,7 @@
     <string name="msg_several_users_are_typing">Декілька користувачів друкують…</string>
     <string name="msg_no_search_found">Результатів не знайдено</string>
     <string name="msg_channel_name">Назва каналу</string>
+    <string name="msg_search">Пошук</string>
     <string name="msg_message_copied">Повідомлення було скопійовано</string>
     <string name="msg_upload_file">Завантажити файл</string>
     <string name="msg_file_description">Опис файлу</string>
@@ -123,8 +142,8 @@
     <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
-    <!-- TODO Add translation -->
-    <!-- TODO Add translation -->
+    <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
+    <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватний</string>
@@ -150,6 +169,7 @@
     <string name="message_user_removed_by">Користувач %2$s видалив користувача %1$s</string>
     <string name="message_user_left">Залишив канал.</string>
     <string name="message_user_joined_channel">Приєднався до каналу.</string>
+    <string name="message_welcome">Привіт, %s</string>
     <string name="message_removed">"Повідомлення видалено "</string>
     <string name="message_pinned">Зафіксоване повідомлення:</string>
     <string name="message_muted">Користувач %2$s позбавив %1$s дару мови</string>
@@ -169,11 +189,13 @@
     <string name="action_msg_unpin">Відмінити фіксацію повідомлення</string>
     <string name="action_msg_star">До обраного</string>
     <string name="action_msg_unstar">Видалити з обраного</string>
+    <string name="action_msg_share">Поділитися</string>
     <string name="action_title_editing">Редагування повідомлення</string>
     <string name="action_msg_add_reaction">Відреагувати</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редагування заборонено</string>
+    <string name="permission_deleting_not_allowed">Видалення заборонено</string>
     <string name="permission_pinning_not_allowed">Неможливо зафіксувати</string>
     <string name="permission_starring_not_allowed">Неможливо додати до обраного</string>
 
@@ -224,6 +246,27 @@
     <string name="suggest_here_description">Повідомити всіх активних користувачів у цьому чаті</string>
 
     <!-- Slash Commands -->
+    <string name="Slash_Gimme_Description">Показує ༼ つ ◕_◕ ༽つ перед вашим повідомленням</string>
+    <string name="Slash_LennyFace_Description">Показує ( ͡° ͜ʖ ͡°) після Вашого повідомлення</string>
+    <string name="Slash_Shrug_Description">Показує ¯_(ツ)_/¯ після Вашого повідомлення</string>
+    <string name="Slash_Tableflip_Description">Показує (╯°□°）╯︵ ┻━┻</string>
+    <string name="Slash_TableUnflip_Description">Показує ┬─┬ ノ( ゜-゜ノ)</string>
+    <string name="Create_A_New_Channel">Створити новий канал</string>
+    <string name="Show_the_keyboard_shortcut_list">Показати список гарячих клавіш</string>
+    <string name="Invite_user_to_join_channel_all_from">Запросити всіх користувачів з [#channel] приєднатися до цього каналу</string>
+    <string name="Invite_user_to_join_channel_all_to">Запросити всіх користувачів приєднатися до [#channel]</string>
+    <string name="Archive">Архівувати</string>
+    <string name="Remove_someone_from_room">Видалити когось з каналу</string>
+    <string name="Leave_the_current_channel">Покинути цей канал</string>
+    <string name="Direct_message_someone">Особисте повідомлення</string>
+    <string name="Displays_action_text">Відображає текст дії</string>
+    <string name="Mute_someone_in_room">Позбавити користувача дару мови на каналі</string>
+    <string name="Unmute_someone_in_room">Повернути користувачу дар мови на каналі</string>
+    <string name="Invite_user_to_join_channel">Запросити користувача на канал</string>
+    <string name="Unarchive">Розархівувати</string>
+    <string name="Join_the_given_channel">Приєднатися до цього каналу</string>
+    <string name="Guggy_Command_Description">Створює gif використовуючи наданий текст</string>
+    <string name="Slash_Topic_Description">Встановити тему</string>
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Пусто</string>
@@ -235,6 +278,7 @@
     <string name="dialog_sort_by_alphabet">За алфавітом</string>
     <string name="dialog_sort_by_activity">За активністю</string>
     <string name="dialog_group_by_type">Групувати за типом</string>
+    <string name="dialog_group_favourites">Групувати обране</string>
     <string name="dialog_button_done">Ок</string>
     <string name="chatroom_header">Заголовок</string>
 
@@ -246,6 +290,7 @@
     <string name="header_unknown">Невідомі</string>
 
     <!--Notifications-->
+    <string name="share_label">Редагувати повідомлення</string>
     <string name="notif_action_reply_hint">ВІДПОВІСТИ</string>
     <string name="notif_error_sending">Не вдалося відповісти. Будь ласка, спробуйте ще раз.</string>
     <string name="notif_success_sending">Повідомлення надіслано %1$s!</string>

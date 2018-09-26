@@ -1,6 +1,7 @@
 package chat.rocket.android.db
 
 import android.app.Application
+import androidx.room.migration.Migration
 import chat.rocket.android.R
 import chat.rocket.android.db.model.BaseUserEntity
 import chat.rocket.android.db.model.ChatRoomEntity
@@ -25,18 +26,6 @@ import kotlinx.coroutines.experimental.newSingleThreadContext
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import java.util.HashSet
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import kotlin.collections.LinkedHashMap
-import kotlin.collections.List
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.filterNot
-import kotlin.collections.forEach
-import kotlin.collections.isNotEmpty
-import kotlin.collections.map
-import kotlin.collections.set
-import kotlin.collections.toList
 
 class DatabaseManager(val context: Application,
                       val serverUrl: String) {
