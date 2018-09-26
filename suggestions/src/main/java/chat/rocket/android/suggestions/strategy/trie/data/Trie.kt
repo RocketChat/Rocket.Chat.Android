@@ -34,10 +34,7 @@ internal class Trie {
         val sanitizedWord = word.trim().toLowerCase()
         var current = root
         sanitizedWord.forEach { ch ->
-            val child = current.getChild(ch)
-            if (child == null) {
-                return false
-            }
+            val child = current.getChild(ch) ?: return false
             current = child
         }
         if (current.isLeaf) {
@@ -63,7 +60,7 @@ internal class Trie {
             lastNode = lastNode?.getChild(ch)
             if (lastNode == null) return emptyList()
         }
-        return lastNode!!.getItems()
+        return lastNode!!.getItems().take(5).toList()
     }
 
     fun getCount() = count
