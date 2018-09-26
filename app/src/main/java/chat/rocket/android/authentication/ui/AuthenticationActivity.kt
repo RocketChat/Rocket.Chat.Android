@@ -9,14 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.authentication.onboarding.ui.OnBoardingFragment
+import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
+import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
 import chat.rocket.android.util.extensions.addFragment
+import chat.rocket.common.util.ifNull
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.app_bar.*
+import kotlinx.coroutines.experimental.Job
 import javax.inject.Inject
 
 class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
@@ -24,12 +27,14 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
     lateinit var presenter: AuthenticationPresenter
+    val job = Job()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication)
         setupToolbar()
+        loadCredentials()
     }
 
     private fun setupToolbar() {
@@ -39,11 +44,6 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
             setNavigationOnClickListener { onBackPressed() }
         }
         supportActionBar?.setDisplayShowTitleEnabled(false)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        loadCredentials()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -69,23 +69,41 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun loadCredentials() {
-        val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
-        presenter.loadCredentials(newServer) { isAuthenticated ->
-            if (!isAuthenticated) {
-                showOnBoarding()
+        intent.getLoginDeepLinkInfo()?.let {
+            showServerFragment(it)
+        }.ifNull {
+            val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
+            presenter.loadCredentials(newServer) { isAuthenticated ->
+                if (isAuthenticated) {
+                    showChatList()
+                } else {
+                    showOnBoardingFragment()
+                }
             }
         }
     }
 
-    private fun showOnBoarding() {
+    private fun showOnBoardingFragment() {
         addFragment(
             ScreenViewEvent.OnBoarding.screenName,
             R.id.fragment_container,
             allowStateLoss = true
         ) {
-            OnBoardingFragment.newInstance()
+            chat.rocket.android.authentication.onboarding.ui.newInstance()
         }
     }
+
+    private fun showServerFragment(deepLinkInfo: LoginDeepLinkInfo) {
+        addFragment(
+            ScreenViewEvent.Server.screenName,
+            R.id.fragment_container,
+            allowStateLoss = true
+        ) {
+            chat.rocket.android.authentication.server.ui.newInstance(deepLinkInfo)
+        }
+    }
+
+    private fun showChatList() = presenter.toChatList()
 }
 
 const val INTENT_ADD_NEW_SERVER = "INTENT_ADD_NEW_SERVER"

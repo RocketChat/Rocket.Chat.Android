@@ -33,9 +33,11 @@
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
 
             <Button
                 android:id="@+id/button_github"
@@ -53,9 +55,11 @@
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_facebook" />
+                app:layout_constraintTop_toBottomOf="@+id/button_facebook"
+                tools:visibility="visible" />
 
             <Button
                 android:id="@+id/button_google"
@@ -73,9 +77,11 @@
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_github" />
+                app:layout_constraintTop_toBottomOf="@+id/button_github"
+                tools:visibility="visible" />
 
             <Button
                 android:id="@+id/button_linkedin"

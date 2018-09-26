@@ -27,7 +27,8 @@ fun View.fadeIn(startValue: Float = 0f, finishValue: Float = 1f, duration: Long 
             animate()
                 .alpha(finishValue)
                 .setDuration(duration / 2)
-                .setInterpolator(AccelerateInterpolator()).start()
+                .setInterpolator(AccelerateInterpolator())
+                .start()
         }.start()
 
     isVisible = true
@@ -47,7 +48,8 @@ fun View.fadeOut(startValue: Float = 1f, finishValue: Float = 0f, duration: Long
             animate()
                 .alpha(finishValue)
                 .setDuration(duration)
-                .setInterpolator(AccelerateInterpolator()).start()
+                .setInterpolator(AccelerateInterpolator())
+                .start()
         }.start()
 
     isVisible = false

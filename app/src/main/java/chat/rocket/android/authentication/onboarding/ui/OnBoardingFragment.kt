@@ -22,6 +22,8 @@ import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_authentication_on_boarding.*
 import javax.inject.Inject
 
+fun newInstance() = OnBoardingFragment()
+
 class OnBoardingFragment : Fragment(), OnBoardingView {
     @Inject
     lateinit var presenter: OnBoardingPresenter
@@ -101,9 +103,5 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
             getString(R.string.default_protocol) +
                     getString(R.string.create_server_url)
         )
-    }
-
-    companion object {
-        fun newInstance() = OnBoardingFragment()
     }
 }

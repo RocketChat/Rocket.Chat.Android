@@ -5,7 +5,6 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.authentication.ui.newServerIntent
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.util.extensions.addFragmentBackStack
@@ -81,11 +80,6 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
 
     fun toChatList(serverUrl: String) {
         activity.startActivity(activity.changeServerIntent(serverUrl))
-        activity.finish()
-    }
-
-    fun toServerScreen() {
-        activity.startActivity(activity.newServerIntent())
         activity.finish()
     }
 }

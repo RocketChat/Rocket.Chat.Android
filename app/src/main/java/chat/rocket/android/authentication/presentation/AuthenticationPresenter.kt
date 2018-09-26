@@ -42,7 +42,6 @@ class AuthenticationPresenter @Inject constructor(
                 callback(false)
             } else {
                 callback(true)
-                navigator.toChatList()
             }
         }
     }
@@ -52,4 +51,6 @@ class AuthenticationPresenter @Inject constructor(
 
     fun privacyPolicy(toolbarTitle: String) =
         serverInteractor.get()?.let { navigator.toWebPage(it.privacyPolicyUrl(), toolbarTitle) }
+
+    fun toChatList() = navigator.toChatList()
 }
