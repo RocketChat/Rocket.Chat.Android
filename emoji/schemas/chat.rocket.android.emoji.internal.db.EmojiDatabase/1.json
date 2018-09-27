@@ -1,0 +1,81 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "5d591429a85289a5fe608ab2c4d77b0b",
+    "entities": [
+      {
+        "tableName": "Emoji",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shortname` TEXT NOT NULL, `shortnameAlternates` TEXT NOT NULL, `unicode` TEXT NOT NULL, `category` TEXT NOT NULL, `count` INTEGER NOT NULL, `siblings` TEXT NOT NULL, `fitzpatrick` TEXT NOT NULL, `url` TEXT, `isDefault` INTEGER NOT NULL, PRIMARY KEY(`shortname`))",
+        "fields": [
+          {
+            "fieldPath": "shortname",
+            "columnName": "shortname",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shortnameAlternates",
+            "columnName": "shortnameAlternates",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "unicode",
+            "columnName": "unicode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "category",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "count",
+            "columnName": "count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "siblings",
+            "columnName": "siblings",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fitzpatrick",
+            "columnName": "fitzpatrick",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isDefault",
+            "columnName": "isDefault",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "shortname"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"5d591429a85289a5fe608ab2c4d77b0b\")"
+    ]
+  }
+}

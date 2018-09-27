@@ -34,8 +34,8 @@ class FileUiModel(
     }
 
     private fun getUserDisplayName(): String {
-        val username = "@${genericAttachment.user?.username}"
-        val realName = genericAttachment.user?.name
+        val username = "@${genericAttachment.user.username}"
+        val realName = genericAttachment.user.name
         val uploaderName = if (settings.useRealName()) realName else username
         return uploaderName ?: username
     }

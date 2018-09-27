@@ -1,3 +1,14 @@
+<!--
+REMARK:
+
+When adding a new string in this file do not forget to add a proper translation for the
+corresponding supported language - if applicable.
+
+Please, follow the rules as shown here (by adding a new string in the correct section).
+
+Coding style:
+https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strings
+-->
 <resources xmlns:tools="http://schemas.android.com/tools">
      <string name="app_name" translatable="false">Veranda</string>
 
@@ -150,6 +161,8 @@
     <string name="msg_message_copied">Message copied</string>
     <string name="msg_delete_message">Delete Message</string>
     <string name="msg_delete_description">Are you sure you want to delete this message</string>
+    <string name="msg_view_more">view more</string>
+    <string name="msg_view_less">view less</string>
     
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string>

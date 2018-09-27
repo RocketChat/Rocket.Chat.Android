@@ -7,18 +7,18 @@ import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.registerPushToken
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 
-suspend fun RocketChatClient.registerPushToken(
+suspend fun RocketChatClientFactory.registerPushToken(
     token: String,
-    accounts: List<Account>,
-    factory: RocketChatClientFactory
+    accounts: List<Account>
 ) {
-    launch(CommonPool) {
+    withContext(CommonPool) {
         accounts.forEach { account ->
             try {
                 retryIO(description = "register push token: ${account.serverUrl}") {
-                    factory.create(account.serverUrl).registerPushToken(token)
+                    create(account.serverUrl).registerPushToken(token)
                 }
             } catch (ex: Exception) {
                 Timber.d(ex, "Error registering Push token for ${account.serverUrl}")
