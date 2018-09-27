@@ -172,13 +172,16 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     override fun setupExpandAccountsView() {
         ui {
             expand_more_accounts_container.isVisible = true
+            var isAccountsCollapsed = true
             button_expand_collapse_accounts.setOnClickListener { view ->
-                if (view.rotation == 0F) {
+                if (isAccountsCollapsed) {
                     button_expand_collapse_accounts.rotateBy(180F, 400)
                     expandAccountsView()
+                    isAccountsCollapsed = false
                 } else {
                     button_expand_collapse_accounts.rotateBy(180F, 400)
                     collapseAccountsView()
+                    isAccountsCollapsed = true
                 }
             }
         }
@@ -312,16 +315,15 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     private fun expandAccountsView() {
         (0..accounts_container.childCount)
             .mapNotNull { accounts_container.getChildAt(it) as? Button }
-            .filter { it.isClickable }
+            .filter { it.isClickable && !it.isVisible }
             .forEach { it.isVisible = true }
     }
 
     private fun collapseAccountsView() {
         (0..accounts_container.childCount)
             .mapNotNull { accounts_container.getChildAt(it) as? Button }
-            .filter { it.isVisible }
+            .filter { it.isClickable && it.isVisible }
             .drop(3)
             .forEach { it.isVisible = false }
     }
-
 }
