@@ -1,42 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginEnd="2dp"
-    android:layout_marginRight="2dp"
-    android:layout_marginTop="2dp"
-    android:layout_marginBottom="2dp"
-    android:descendantFocusability="beforeDescendants"
-    android:background="@drawable/rounded_background"
-    android:orientation="horizontal">
+    android:background="@drawable/rounded_background">
 
-    <TextView
-        android:id="@+id/text_emoji"
+    <ViewFlipper
+        android:id="@+id/view_flipper_reaction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:paddingLeft="4dp"
-        android:paddingStart="4dp"
-        android:textColor="#868585"
-        android:textSize="16sp"
-        tools:text=":)" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/text_count"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/text_emoji"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
+            android:textColor="#868585"
+            android:textSize="16sp"
+            tools:text=":)" />
+
+        <ImageView
+            android:id="@+id/image_emoji"
+            android:layout_width="@dimen/custom_emoji_small"
+            android:layout_height="@dimen/custom_emoji_small"
+            android:layout_gravity="center"
+            tools:src="@tools:sample/avatars" />
+
+    </ViewFlipper>
 
     <TextView
         android:id="@+id/text_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingBottom="4dp"
-        android:paddingEnd="4dp"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
         android:paddingStart="4dp"
+        android:paddingLeft="4dp"
         android:paddingTop="4dp"
+        android:paddingEnd="4dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="4dp"
         android:textColor="#868585"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/view_flipper_reaction"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="12" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,8 @@
-package chat.rocket.android.widget.autocompletion.strategy.trie
+package chat.rocket.android.suggestions.strategy.trie
 
-import chat.rocket.android.widget.autocompletion.model.SuggestionModel
-import chat.rocket.android.widget.autocompletion.strategy.CompletionStrategy
-import chat.rocket.android.widget.autocompletion.strategy.trie.data.Trie
+import chat.rocket.android.suggestions.model.SuggestionModel
+import chat.rocket.android.suggestions.strategy.CompletionStrategy
+import chat.rocket.android.suggestions.strategy.trie.data.Trie
 
 class TrieCompletionStrategy : CompletionStrategy {
     private val items = mutableListOf<SuggestionModel>()
@@ -18,7 +18,9 @@ class TrieCompletionStrategy : CompletionStrategy {
         return item
     }
 
-    override fun autocompleteItems(prefix: String) = trie.autocompleteItems(prefix)
+    override fun autocompleteItems(prefix: String): List<SuggestionModel> {
+        return trie.autocompleteItems(prefix)
+    }
 
     override fun addAll(list: List<SuggestionModel>) {
         items.addAll(list)
@@ -28,7 +30,6 @@ class TrieCompletionStrategy : CompletionStrategy {
     }
 
     override fun addPinned(list: List<SuggestionModel>) {
-
     }
 
     override fun size() = items.size

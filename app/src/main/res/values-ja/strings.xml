@@ -147,6 +147,10 @@
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
     <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
     <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+    <!-- TODO - Add proper translation -->
+    <string name="msg_view_more">view more</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_view_less">view less</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">プライベート</string>

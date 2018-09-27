@@ -43,11 +43,9 @@
     <dimen name="padding_mention">4dp</dimen>
     <dimen name="radius_mention">6dp</dimen>
 
-    <!-- Autocomplete Popup -->
-    <dimen name="popup_max_height">150dp</dimen>
-    <dimen name="suggestions_box_max_height">250dp</dimen>
-
     <dimen name="viewer_toolbar_padding">16dp</dimen>
     <dimen name="viewer_toolbar_title">16sp</dimen>
+
+    <dimen name="quote_collapsed_height">32dp</dimen>
 
 </resources>

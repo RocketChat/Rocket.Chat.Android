@@ -1,26 +1,18 @@
-package chat.rocket.android.widget.autocompletion.ui
+package chat.rocket.android.suggestions.ui
 
 import androidx.recyclerview.widget.RecyclerView
-import chat.rocket.android.widget.autocompletion.model.SuggestionModel
-import chat.rocket.android.widget.autocompletion.strategy.CompletionStrategy
-import chat.rocket.android.widget.autocompletion.strategy.regex.StringMatchingCompletionStrategy
+import chat.rocket.android.suggestions.model.SuggestionModel
+import chat.rocket.android.suggestions.strategy.CompletionStrategy
+import chat.rocket.android.suggestions.strategy.regex.StringMatchingCompletionStrategy
 import java.lang.reflect.Type
 import kotlin.properties.Delegates
 
 abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(
         val token: String,
         val constraint: Int = CONSTRAINT_UNBOUND,
-        threshold: Int = MAX_RESULT_COUNT) : RecyclerView.Adapter<VH>() {
-    companion object {
-        // Any number of results.
-        const val RESULT_COUNT_UNLIMITED = -1
-        // Trigger suggestions only if on the line start.
-        const val CONSTRAINT_BOUND_TO_START = 0
-        // Trigger suggestions from anywhere.
-        const val CONSTRAINT_UNBOUND = 1
-        // Maximum number of results to display by default.
-        private const val MAX_RESULT_COUNT = 5
-    }
+        completionStrategy: CompletionStrategy? = null,
+        threshold: Int = MAX_RESULT_COUNT
+) : RecyclerView.Adapter<VH>() {
 
     private var itemType: Type? = null
     private var itemClickListener: ItemClickListener? = null
@@ -30,12 +22,12 @@ abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(
     // Maximum number of results/suggestions to display.
     private var resultsThreshold: Int = if (threshold > 0) threshold else RESULT_COUNT_UNLIMITED
     // The strategy used for suggesting completions.
-    private val strategy: CompletionStrategy = StringMatchingCompletionStrategy(resultsThreshold)
+    private val strategy: CompletionStrategy = completionStrategy ?: StringMatchingCompletionStrategy(resultsThreshold)
     // Current input term to look up for suggestions.
-    private var currentTerm: String by Delegates.observable("", { _, _, newTerm ->
+    private var currentTerm: String by Delegates.observable("") { _, _, newTerm ->
         val items = strategy.autocompleteItems(newTerm)
         notifyDataSetChanged()
-    })
+    }
 
     init {
         setHasStableIds(true)
@@ -104,5 +96,16 @@ abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(
 
     interface ItemClickListener {
         fun onClick(item: SuggestionModel)
+    }
+
+    companion object {
+        // Any number of results.
+        const val RESULT_COUNT_UNLIMITED = -1
+        // Trigger suggestions only if on the line start.
+        const val CONSTRAINT_BOUND_TO_START = 0
+        // Trigger suggestions from anywhere.
+        const val CONSTRAINT_UNBOUND = 1
+        // Maximum number of results to display by default.
+        private const val MAX_RESULT_COUNT = 5
     }
 }
