@@ -61,7 +61,6 @@ class LoginFragment : Fragment(), LoginView {
         subscribeEditTexts()
         setupOnClickListener()
 
-        image_key.isVisible = hasCredentialsSupport()
         analyticsManager.logScreenView(ScreenViewEvent.Login)
     }
 
@@ -86,9 +85,8 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun onResume() {
         super.onResume()
-        image_key.setOnClickListener {
+        if (hasCredentialsSupport()) {
             requestStoredCredentials()
-            image_key.isVisible = false
         }
     }
 
