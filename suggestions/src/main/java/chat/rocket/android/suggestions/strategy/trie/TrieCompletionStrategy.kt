@@ -18,7 +18,9 @@ class TrieCompletionStrategy : CompletionStrategy {
         return item
     }
 
-    override fun autocompleteItems(prefix: String) = trie.autocompleteItems(prefix)
+    override fun autocompleteItems(prefix: String): List<SuggestionModel> {
+        return trie.autocompleteItems(prefix)
+    }
 
     override fun addAll(list: List<SuggestionModel>) {
         items.addAll(list)
