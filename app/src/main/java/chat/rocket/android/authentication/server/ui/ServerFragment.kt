@@ -55,7 +55,7 @@ class ServerFragment : Fragment(), ServerView {
     private lateinit var serverUrlDisposable: Disposable
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         text_server_url.isCursorVisible =
-                KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)
+                KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +72,7 @@ class ServerFragment : Fragment(), ServerView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        constraint_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+        scroll_view.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
         setupToolbar()
         setupSpinner()
         setupOnClickListener()
@@ -88,7 +88,7 @@ class ServerFragment : Fragment(), ServerView {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+        scroll_view.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
         // Reset deep link info, so user can come back and log to another server...
         deepLinkInfo = null
         unsubscribeEditText()

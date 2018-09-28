@@ -12,6 +12,8 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.isValidUrl
+import kotlinx.coroutines.experimental.DefaultDispatcher
+import kotlinx.coroutines.experimental.withContext
 import javax.inject.Inject
 
 class ServerPresenter @Inject constructor(
@@ -74,30 +76,33 @@ class ServerPresenter @Inject constructor(
         }
     }
 
-    private fun connectToServer(server: String, block: () -> Unit) {
-        if (!server.isValidUrl()) {
+    private fun connectToServer(serverUrl: String, block: () -> Unit) {
+        if (!serverUrl.isValidUrl()) {
             view.showInvalidServerUrlMessage()
         } else {
             launchUI(strategy) {
                 // Check if we already have an account for this server...
-                val account = getAccountsInteractor.get().firstOrNull { it.serverUrl == server }
+                val account = getAccountsInteractor.get().firstOrNull { it.serverUrl == serverUrl }
                 if (account != null) {
-                    navigator.toChatList(server)
+                    navigator.toChatList(serverUrl)
                     return@launchUI
                 }
                 view.showLoading()
                 try {
-                    refreshSettingsInteractor.refresh(server)
-                    serverInteractor.save(server)
+                    withContext(DefaultDispatcher) {
+                        refreshSettingsInteractor.refresh(serverUrl)
 
-                    setupConnectionInfo(server)
+                        setupConnectionInfo(serverUrl)
 
-                    // preparing next fragment before showing it
-                    checkEnabledAccounts(server)
-                    checkIfLoginFormIsEnabled()
-                    checkIfCreateNewAccountIsEnabled()
+                        // preparing next fragment before showing it
+                        checkEnabledAccounts(serverUrl)
+                        checkIfLoginFormIsEnabled()
+                        checkIfCreateNewAccountIsEnabled()
 
-                    block()
+                        serverInteractor.save(serverUrl)
+
+                        block()
+                    }
                 } catch (ex: Exception) {
                     view.showMessage(ex)
                 } finally {

@@ -73,6 +73,8 @@ class OnBoardingPresenter @Inject constructor(
             view.showLoading()
             try {
                 withContext(DefaultDispatcher) {
+                    refreshSettingsInteractor.refresh(serverUrl)
+
                     setupConnectionInfo(serverUrl)
 
                     // preparing next fragment before showing it
@@ -80,7 +82,6 @@ class OnBoardingPresenter @Inject constructor(
                     checkIfLoginFormIsEnabled()
                     checkIfCreateNewAccountIsEnabled()
 
-                    refreshSettingsInteractor.refresh(serverUrl)
                     serverInteractor.save(serverUrl)
 
                     block()

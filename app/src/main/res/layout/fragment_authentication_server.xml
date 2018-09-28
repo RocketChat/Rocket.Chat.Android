@@ -1,83 +1,86 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraint_layout"
+    android:id="@+id/scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    android:focusableInTouchMode="true"
     android:padding="@dimen/screen_edge_left_and_right_margins"
     tools:context=".authentication.server.ui.ServerFragment">
 
-    <ImageView
-        android:id="@+id/image_server"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_server"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/text_sign_in_to_your_server"
-        style="@style/Authentication.Headline.TextView"
-        android:layout_marginTop="8dp"
-        android:text="@string/title_sign_in_your_server"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_server" />
-
-    <RelativeLayout
-        android:id="@+id/server_url_container"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/rounded_border"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_sign_in_to_your_server">
-
-        <Spinner
-            android:id="@+id/spinner_server_protocol"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:popupBackground="@color/colorWhite" />
-
-        <EditText
-            android:id="@+id/text_server_url"
-            style="@style/Authentication.Text.Hint"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/image_server"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="6dp"
-            android:layout_marginEnd="16dp"
-            android:layout_toEndOf="@+id/spinner_server_protocol"
-            android:background="@color/colorWhite"
-            android:cursorVisible="false"
-            android:hint="@string/server_hint_url"
-            android:imeOptions="actionDone"
-            android:inputType="text|textUri" />
-    </RelativeLayout>
+            android:src="@drawable/ic_server"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
-    <Button
-        android:id="@+id/button_connect"
-        style="@style/Authentication.Button.Flat"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/colorAuthenticationButtonDisabled"
-        android:enabled="false"
-        android:text="@string/action_connect"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/server_url_container" />
+        <TextView
+            android:id="@+id/text_sign_in_to_your_server"
+            style="@style/Authentication.Headline.TextView"
+            android:layout_marginTop="8dp"
+            android:text="@string/title_sign_in_your_server"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_server" />
 
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/view_loading"
-        style="@style/Authentication.AVLoadingIndicatorView"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <RelativeLayout
+            android:id="@+id/server_url_container"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/rounded_border"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_sign_in_to_your_server">
+
+            <Spinner
+                android:id="@+id/spinner_server_protocol"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:popupBackground="@color/colorWhite" />
+
+            <EditText
+                android:id="@+id/text_server_url"
+                style="@style/Authentication.Text.Hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="16dp"
+                android:layout_toEndOf="@+id/spinner_server_protocol"
+                android:background="@color/colorWhite"
+                android:cursorVisible="false"
+                android:hint="@string/server_hint_url"
+                android:imeOptions="actionDone"
+                android:inputType="text|textUri" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/button_connect"
+            style="@style/Authentication.Button.Flat"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/colorAuthenticationButtonDisabled"
+            android:enabled="false"
+            android:text="@string/action_connect"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/server_url_container" />
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/view_loading"
+            style="@style/Authentication.AVLoadingIndicatorView"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
