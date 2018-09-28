@@ -1,4 +1,5 @@
 <resources>
+
     <!-- Titles -->
     <string name="title_sign_in_your_server">Anmelden am Server</string>
     <string name="title_log_in">Anmelden</string>
@@ -70,7 +71,6 @@
     <string name="msg_invalid_email">Bitte eine korrekte E-Mail Adresse eingeben</string>
     <string name="msg_new_user_agreement">Beim weitergehen akzeptieren Sie usere\n%1$s und %2$s</string>
     <string name="msg_2fa_code">2FA Code</string>
-    <!-- <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string> -->
     <string name="msg_yesterday">Gestern</string>
     <string name="msg_today">Heute</string>
     <string name="msg_message">Nachricht</string>
@@ -104,11 +104,8 @@
     <string name="msg_no_messages_yet">Noch keine Nachrichten</string>
     <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">Server Version veraltet. Bitte kontaktieren Sie ihren Server Administrator.</string>
-    <string name="msg_ver_not_recommended">
-        Die Server Version scheint älter als die empfolene Version %1$s zu sein.\nSie können sich trotzdem einloggen, aber es kann zu einem unerwartetem Verhalten kommen.</string>
-    <string name="msg_ver_not_minimum">
-        Die Server Version scheint älter als die minimale Version %1$s zu sein.\nBitte updaten Sie Ihren Server um sich einloggen zu können!
-    </string>
+    <string name="msg_ver_not_recommended">Die Server Version scheint älter als die empfolene Version %1$s zu sein.\nSie können sich trotzdem einloggen, aber es kann zu einem unerwartetem Verhalten kommen.</string>
+    <string name="msg_ver_not_minimum">Die Server Version scheint älter als die minimale Version %1$s zu sein.\nBitte updaten Sie Ihren Server um sich einloggen zu können!</string>
     <string name="msg_no_chat_title">Keine Chat Nachrichten</string>
     <string name="msg_no_chat_description">Starte die Konversation um Ihre \nNachrichten hier zu sehen.</string>
     <string name="msg_proceed">WEITER</string>
@@ -145,6 +142,10 @@
     <string name="msg_message_copied">Nachricht kopiert</string>
     <string name="msg_delete_message">Lösche Nachricht</string>
     <string name="msg_delete_description">Sind Sie sicher, dass Sie diese Nachricht löschen wollen?</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_view_more">view more</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_view_less">view less</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->

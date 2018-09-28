@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="popup_max_height">150dp</dimen>
+    <dimen name="suggestions_box_max_height">250dp</dimen>
+</resources>

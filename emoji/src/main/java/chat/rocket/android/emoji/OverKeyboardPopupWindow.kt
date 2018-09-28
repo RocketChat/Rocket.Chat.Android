@@ -57,9 +57,6 @@ abstract class OverKeyboardPopupWindow(
 
     init {
         setBackgroundDrawable(null)
-        if (BuildConfig.VERSION_CODE >= Build.VERSION_CODES.LOLLIPOP) {
-            elevation = 0f
-        }
         val view = onCreateView(LayoutInflater.from(context))
         onViewCreated(view)
         contentView = view
@@ -89,7 +86,7 @@ abstract class OverKeyboardPopupWindow(
     /**
      * Call this function to resize the emoji popup according to your soft keyboard size
      */
-    fun setSizeForSoftKeyboard() {
+    private fun setSizeForSoftKeyboard() {
         val viewTreeObserver = rootView.viewTreeObserver
         viewTreeObserver.addOnGlobalLayoutListener(this)
     }

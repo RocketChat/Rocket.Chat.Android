@@ -74,7 +74,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-    <chat.rocket.android.widget.autocompletion.ui.SuggestionsView
+    <chat.rocket.android.suggestions.ui.SuggestionsView
         android:id="@+id/suggestions_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

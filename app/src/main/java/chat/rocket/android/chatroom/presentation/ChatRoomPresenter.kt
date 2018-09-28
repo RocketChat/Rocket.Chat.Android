@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.presentation
 
+import android.graphics.Bitmap
 import android.net.Uri
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
@@ -12,10 +13,12 @@ import chat.rocket.android.chatroom.uimodel.RoomUiModel
 import chat.rocket.android.chatroom.uimodel.UiModelMapper
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
+import chat.rocket.android.chatroom.uimodel.suggestion.EmojiSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
 import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
@@ -32,7 +35,7 @@ import chat.rocket.android.server.domain.uploadMimeTypeFilter
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.state
-import chat.rocket.android.util.extension.compressImageAndGetInputStream
+import chat.rocket.android.util.extension.compressImageAndGetByteArray
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
@@ -78,7 +81,6 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.threeten.bp.Instant
 import timber.log.Timber
-import java.io.InputStream
 import java.util.*
 import javax.inject.Inject
 
@@ -177,12 +179,13 @@ class ChatRoomPresenter @Inject constructor(
                     val localMessages = messagesRepository.getByRoomId(chatRoomId)
                     val oldMessages = mapper.map(
                         localMessages, RoomUiModel(
-                            roles = chatRoles,
-                            // FIXME: Why are we fixing isRoom attribute to true here?
-                            isBroadcast = chatIsBroadcast, isRoom = true
-                        )
+                        roles = chatRoles,
+                        // FIXME: Why are we fixing isRoom attribute to true here?
+                        isBroadcast = chatIsBroadcast, isRoom = true
                     )
-                    if (oldMessages.isNotEmpty()) {
+                    )
+                    val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
+                    if (oldMessages.isNotEmpty() && lastSyncDate != null) {
                         view.showMessages(oldMessages, clearDataSet)
                         loadMissingMessages()
                     } else {
@@ -224,6 +227,19 @@ class ChatRoomPresenter @Inject constructor(
                 client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
             }
         messagesRepository.saveAll(messages)
+
+        //we are saving last sync date of latest synced chat room message
+        if (offset == 0L) {
+            //if success - saving last synced time
+            if (messages.isEmpty()) {
+                //chat history is empty - just saving current date
+                messagesRepository.saveLastSyncDate(chatRoomId, System.currentTimeMillis())
+            } else {
+                //assume that BE returns ordered messages, the first message is the latest one
+                messagesRepository.saveLastSyncDate(chatRoomId, messages.first().timestamp)
+            }
+        }
+
         view.showMessages(
             mapper.map(
                 messages,
@@ -273,7 +289,7 @@ class ChatRoomPresenter @Inject constructor(
                         timestamp = Instant.now().toEpochMilli(),
                         sender = SimpleUser(null, username, username),
                         attachments = null,
-                        avatar = currentServer.avatarUrl(username!!),
+                        avatar = currentServer.avatarUrl(username ?: ""),
                         channels = null,
                         editedAt = null,
                         editedBy = null,
@@ -331,14 +347,15 @@ class ChatRoomPresenter @Inject constructor(
         view.showFileSelection(settings.uploadMimeTypeFilter())
     }
 
-    fun uploadFile(roomId: String, uri: Uri, msg: String) {
+    fun uploadFile(roomId: String, uri: Uri, msg: String, bitmap: Bitmap? = null) {
         launchUI(strategy) {
             view.showLoading()
             try {
                 withContext(DefaultDispatcher) {
                     val fileName = uriInteractor.getFileName(uri) ?: uri.toString()
-                    val fileSize = uriInteractor.getFileSize(uri)
                     val mimeType = uriInteractor.getMimeType(uri)
+                    val byteArray = bitmap?.compressImageAndGetByteArray(mimeType)
+                    val fileSize = byteArray?.size ?: uriInteractor.getFileSize(uri)
                     val maxFileSizeAllowed = settings.uploadMaxFileSize()
 
                     when {
@@ -346,16 +363,6 @@ class ChatRoomPresenter @Inject constructor(
                         fileSize > maxFileSizeAllowed && maxFileSizeAllowed !in -1..0 ->
                             view.showInvalidFileSize(fileSize, maxFileSizeAllowed)
                         else -> {
-                            var inputStream: InputStream? = uriInteractor.getInputStream(uri)
-
-                            if (mimeType.contains("image")) {
-                                uriInteractor.getBitmap(uri)?.let {
-                                    it.compressImageAndGetInputStream(mimeType)?.let {
-                                        inputStream = it
-                                    }
-                                }
-                            }
-
                             retryIO("uploadFile($roomId, $fileName, $mimeType") {
                                 client.uploadFile(
                                     roomId,
@@ -364,7 +371,7 @@ class ChatRoomPresenter @Inject constructor(
                                     msg,
                                     description = fileName
                                 ) {
-                                    inputStream
+                                    byteArray?.inputStream() ?: uriInteractor.getInputStream(uri)
                                 }
                             }
                             logMediaUploaded(mimeType)
@@ -411,11 +418,12 @@ class ChatRoomPresenter @Inject constructor(
                         }
                     }
                 }
-            } catch (ex: Exception) {
-                Timber.d(ex, "Error uploading file")
-                when (ex) {
-                    is RocketChatException -> view.showMessage(ex)
-                    else -> view.showGenericErrorMessage()
+            } catch (ex: RocketChatException) {
+                Timber.d(ex)
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
                 }
             } finally {
                 view.hideLoading()
@@ -485,45 +493,49 @@ class ChatRoomPresenter @Inject constructor(
 
     private fun loadMissingMessages() {
         launch(parent = strategy.jobs) {
-            if (chatRoomId != null && chatRoomType != null) {
-                val roomType = roomTypeOf(chatRoomType!!)
-                messagesRepository.getByRoomId(chatRoomId!!)
-                    .sortedByDescending { it.timestamp }.firstOrNull()?.let { lastMessage ->
-                        val instant = Instant.ofEpochMilli(lastMessage.timestamp).toString()
-                        try {
-                            val messages =
-                                retryIO(description = "history($chatRoomId, $roomType, $instant)") {
-                                    client.history(
-                                        chatRoomId!!, roomType, count = 50,
-                                        oldest = instant
-                                    )
-                                }
-                            Timber.d("History: $messages")
+            chatRoomId?.let { chatRoomId ->
+                val roomType = roomTypeOf(chatRoomType)
+                val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
+                // lastSyncDate or 0. LastSyncDate could be in case when we sent some messages offline(and saved them locally),
+                // but never has obtained chatMessages(or history) from remote. In this case we should sync all chat history from beginning
+                val instant = Instant.ofEpochMilli(lastSyncDate ?: 0).toString()
+                //
+                try {
+                    val messages =
+                        retryIO(description = "history($chatRoomId, $roomType, $instant)") {
+                            client.history(
+                                chatRoomId!!, roomType, count = 50,
+                                oldest = instant
+                            )
+                        }
+                    Timber.d("History: $messages")
 
-                            if (messages.result.isNotEmpty()) {
-                                val models = mapper.map(messages.result, RoomUiModel(
-                                    roles = chatRoles,
-                                    isBroadcast = chatIsBroadcast,
-                                    // FIXME: Why are we fixing isRoom attribute to true here?
-                                    isRoom = true
-                                ))
-                                messagesRepository.saveAll(messages.result)
+                    if (messages.result.isNotEmpty()) {
+                        val models = mapper.map(messages.result, RoomUiModel(
+                            roles = chatRoles,
+                            isBroadcast = chatIsBroadcast,
+                            // FIXME: Why are we fixing isRoom attribute to true here?
+                            isRoom = true
+                        ))
+                        messagesRepository.saveAll(messages.result)
+                        //if success - saving last synced time
+                        //assume that BE returns ordered messages, the first message is the latest one
+                        messagesRepository.saveLastSyncDate(chatRoomId, messages.result.first().timestamp)
 
-                                launchUI(strategy) {
-                                    view.showNewMessage(models, true)
-                                }
+                        launchUI(strategy) {
+                            view.showNewMessage(models, true)
+                        }
 
-                                if (messages.result.size == 50) {
-                                    // we loaded at least count messages, try one more to fetch more messages
-                                    loadMissingMessages()
-                                }
-                            }
-                        } catch (ex: Exception) {
-                            // TODO - we need to better treat connection problems here, but no let gaps
-                            // on the messages list
-                            Timber.d(ex, "Error fetching channel history")
+                        if (messages.result.size == 50) {
+                            // we loaded at least count messages, try one more to fetch more messages
+                            loadMissingMessages()
                         }
                     }
+                } catch (ex: Exception) {
+                    // TODO - we need to better treat connection problems here, but no let gaps
+                    // on the messages list
+                    Timber.d(ex, "Error fetching channel history")
+                }
             }
         }
     }
@@ -585,9 +597,9 @@ class ChatRoomPresenter @Inject constructor(
                     replyMarkdown = "[ ]($currentServer/$chatRoomType/$room?msg=$id) $mention ",
                     quotedMessage = mapper.map(
                         message, RoomUiModel(
-                            roles = chatRoles,
-                            isBroadcast = chatIsBroadcast
-                        )
+                        roles = chatRoles,
+                        isBroadcast = chatIsBroadcast
+                    )
                     ).last().preview?.message ?: ""
                 )
             }
@@ -856,7 +868,7 @@ class ChatRoomPresenter @Inject constructor(
             }
             it.chatRoom.name == name || it.chatRoom.fullname == name
         }.map {
-            with (it.chatRoom) {
+            with(it.chatRoom) {
                 ChatRoom(
                     id = id,
                     subscriptionId = subscriptionId,
@@ -996,6 +1008,20 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
+    fun loadEmojis() {
+        launchUI(strategy) {
+            val emojiSuggestionUiModels = EmojiRepository.getAll().map {
+                EmojiSuggestionUiModel(
+                    text = it.shortname.replaceFirst(":", ""),
+                    pinned = false,
+                    emoji = it,
+                    searchList = listOf(it.shortname)
+                )
+            }
+            view.populateEmojiSuggestions(emojis = emojiSuggestionUiModels)
+        }
+    }
+
     fun runCommand(text: String, roomId: String) {
         launchUI(strategy) {
             try {
@@ -1091,8 +1117,8 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             val viewModelStreamedMessage = mapper.map(
                 streamedMessage, RoomUiModel(
-                    roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
-                )
+                roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
+            )
             )
 
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
@@ -1113,5 +1139,34 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             navigator.toMessageInformation(messageId = messageId)
         }
+    }
+
+    /**
+     * Save unfinished message, when user left chat room without sending a message. It also clears
+     * saved message from local repository when unfinishedMessage is blank.
+     *
+     * @param chatRoomId Chat room Id.
+     * @param unfinishedMessage The unfinished message to save.
+     */
+    fun saveUnfinishedMessage(chatRoomId: String, unfinishedMessage: String) {
+        val key = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$chatRoomId"
+        if (unfinishedMessage.isNotBlank()) {
+            localRepository.save(key, unfinishedMessage)
+        } else {
+            localRepository.clear(key)
+        }
+    }
+
+    /**
+     * Get unfinished message from local repository, when user left chat room without
+     * sending a message and now the user is back.
+     *
+     * @param chatRoomId Chat room Id.
+     *
+     * @return Returns the unfinished message.
+     */
+    fun getUnfinishedMessage(chatRoomId: String): String {
+        val key = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$chatRoomId"
+        return localRepository.get(key) ?: ""
     }
 }

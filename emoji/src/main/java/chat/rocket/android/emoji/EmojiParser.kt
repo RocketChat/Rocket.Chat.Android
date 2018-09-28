@@ -79,10 +79,10 @@ class EmojiParser {
 
             val px = context.resources.getDimensionPixelSize(R.dimen.custom_emoji_small)
 
-            return spannable.also {
+            return spannable.also { sp ->
                 regex.findAll(spannable).iterator().forEach { match ->
-                    customEmojis.find { it.shortname.toLowerCase() == match.value.toLowerCase() }?.let {
-                        it.url?.let { url ->
+                    customEmojis.find { it.shortname.toLowerCase() == match.value.toLowerCase() }?.let { emoji ->
+                        emoji.url?.let { url ->
                             try {
                                 val glideRequest = if (url.endsWith("gif", true)) {
                                     GlideApp.with(context).asGif()
