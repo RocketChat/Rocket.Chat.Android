@@ -15,11 +15,13 @@ import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
+import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.helper.getCredentials
 import chat.rocket.android.helper.hasCredentialsSupport
 import chat.rocket.android.helper.requestStoredCredentials
 import chat.rocket.android.helper.saveCredentials
 import chat.rocket.android.util.extension.asObservable
+import chat.rocket.android.util.extensions.clearLightStatusBar
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
@@ -27,25 +29,40 @@ import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
+import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
+
+private const val SERVER_NAME = "server_name"
 
 internal const val REQUEST_CODE_FOR_SIGN_IN_REQUIRED = 1
 internal const val REQUEST_CODE_FOR_MULTIPLE_ACCOUNTS_RESOLUTION = 2
 internal const val REQUEST_CODE_FOR_SAVE_RESOLUTION = 3
 
-fun newInstance() = LoginFragment()
+fun newInstance(serverName: String): Fragment {
+    return LoginFragment().apply {
+        arguments = Bundle(1).apply {
+            putString(SERVER_NAME, serverName)
+        }
+    }
+}
 
 class LoginFragment : Fragment(), LoginView {
     @Inject
     lateinit var presenter: LoginPresenter
     @Inject
     lateinit var analyticsManager: AnalyticsManager
+    private var serverName: String? = null
     private val editTextsDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+
+        val bundle = arguments
+        if (bundle != null) {
+            serverName = bundle.getString(SERVER_NAME)
+        }
     }
 
     override fun onCreateView(
@@ -56,11 +73,10 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
         presenter.setupView()
-
         subscribeEditTexts()
         setupOnClickListener()
-
         analyticsManager.logScreenView(ScreenViewEvent.Login)
     }
 
@@ -94,6 +110,15 @@ class LoginFragment : Fragment(), LoginView {
         super.onDestroyView()
         unsubscribeEditTexts()
     }
+
+    private fun setupToolbar() {
+        with(activity as AuthenticationActivity) {
+            this.clearLightStatusBar()
+            toolbar.isVisible = true
+            toolbar.title = serverName?.replace(getString(R.string.default_protocol), "")
+        }
+    }
+
 
     override fun showLoading() {
         ui {

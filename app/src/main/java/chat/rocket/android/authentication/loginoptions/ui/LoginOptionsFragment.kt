@@ -28,14 +28,34 @@ import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
 import chat.rocket.android.webview.sso.ui.INTENT_SSO_TOKEN
 import chat.rocket.android.webview.sso.ui.ssoWebViewIntent
-import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_authentication_login_options.*
 import javax.inject.Inject
 
-private const val BUNDLE_SERVER_NAME = "BUNDLE_SERVER_NAME"
-private const val DEEP_LINK_INFO = "DeepLinkInfo"
+private const val SERVER_NAME = "server_name"
+private const val STATE = "state"
+private const val FACEBOOK_OAUTH_URL = "facebook_oauth_url"
+private const val GITHUB_OAUTH_URL = "github_oauth_url"
+private const val GOOGLE_OAUTH_URL = "google_oauth_url"
+private const val LINKEDIN_OAUTH_URL = "linkedin_oauth_url"
+private const val GITLAB_OAUTH_URL = "gitlab_oauth_url"
+private const val WORDPRESS_OAUTH_URL = "wordpress_oauth_url"
+private const val CAS_LOGIN_URL = "cas_login_url"
+private const val CAS_TOKEN = "cas_token"
+private const val CUSTOM_OAUTH_URL = "custom_oauth_url"
+private const val CUSTOM_OAUTH_SERVICE_NAME = "custom_oauth_service_name"
+private const val CUSTOM_OAUTH_SERVICE_NAME_TEXT_COLOR = "custom_oauth_service_name_text_color"
+private const val CUSTOM_OAUTH_SERVICE_BUTTON_COLOR = "custom_oauth_service_button_color"
+private const val SAML_URL = "saml_url"
+private const val SAML_TOKEN = "saml_token"
+private const val SAML_SERVICE_NAME = "saml_service_name"
+private const val SAML_SERVICE_NAME_TEXT_COLOR = "saml_service_name_text_color"
+private const val SAML_SERVICE_BUTTON_COLOR = "saml_service_button_color"
+private const val TOTAL_SOCIAL_ACCOUNTS = "total_social_accounts"
+private const val IS_LOGIN_FORM_ENABLED = "is_login_form_enabled"
+private const val IS_NEW_ACCOUNT_CREATION_ENABLED = "is_new_account_creation_enabled"
+private const val DEEP_LINK_INFO = "deep-link-info"
 
 internal const val REQUEST_CODE_FOR_OAUTH = 1
 internal const val REQUEST_CODE_FOR_CAS = 2
@@ -43,11 +63,53 @@ internal const val REQUEST_CODE_FOR_SAML = 3
 
 fun newInstance(
     serverName: String,
+    state: String? = null,
+    facebookOauthUrl: String? = null,
+    githubOauthUrl: String? = null,
+    googleOauthUrl: String? = null,
+    linkedinOauthUrl: String? = null,
+    gitlabOauthUrl: String? = null,
+    wordpressOauthUrl: String? = null,
+    casLoginUrl: String? = null,
+    casToken: String? = null,
+    customOauthUrl: String? = null,
+    customOauthServiceName: String? = null,
+    customOauthServiceNameTextColor: Int = 0,
+    customOauthServiceButtonColor: Int = 0,
+    samlUrl: String? = null,
+    samlToken: String? = null,
+    samlServiceName: String? = null,
+    samlServiceNameTextColor: Int = 0,
+    samlServiceButtonColor: Int = 0,
+    totalSocialAccountsEnabled: Int = 0,
+    isLoginFormEnabled: Boolean,
+    isNewAccountCreationEnabled: Boolean,
     deepLinkInfo: LoginDeepLinkInfo? = null
 ): Fragment {
     return LoginOptionsFragment().apply {
-        arguments = Bundle(2).apply {
-            putString(BUNDLE_SERVER_NAME, serverName)
+        arguments = Bundle(19).apply {
+            putString(SERVER_NAME, serverName)
+            putString(STATE, state)
+            putString(FACEBOOK_OAUTH_URL, facebookOauthUrl)
+            putString(GITHUB_OAUTH_URL, githubOauthUrl)
+            putString(GOOGLE_OAUTH_URL, googleOauthUrl)
+            putString(LINKEDIN_OAUTH_URL, linkedinOauthUrl)
+            putString(GITLAB_OAUTH_URL, gitlabOauthUrl)
+            putString(WORDPRESS_OAUTH_URL, wordpressOauthUrl)
+            putString(CAS_LOGIN_URL, casLoginUrl)
+            putString(CAS_TOKEN, casToken)
+            putString(CUSTOM_OAUTH_URL, customOauthUrl)
+            putString(CUSTOM_OAUTH_SERVICE_NAME, customOauthServiceName)
+            putInt(CUSTOM_OAUTH_SERVICE_NAME_TEXT_COLOR, customOauthServiceNameTextColor)
+            putInt(CUSTOM_OAUTH_SERVICE_BUTTON_COLOR, customOauthServiceButtonColor)
+            putString(SAML_URL, samlUrl)
+            putString(SAML_TOKEN, samlToken)
+            putString(SAML_SERVICE_NAME, samlServiceName)
+            putInt(SAML_SERVICE_NAME_TEXT_COLOR, samlServiceNameTextColor)
+            putInt(SAML_SERVICE_BUTTON_COLOR, samlServiceButtonColor)
+            putInt(TOTAL_SOCIAL_ACCOUNTS, totalSocialAccountsEnabled)
+            putBoolean(IS_LOGIN_FORM_ENABLED, isLoginFormEnabled)
+            putBoolean(IS_NEW_ACCOUNT_CREATION_ENABLED, isNewAccountCreationEnabled)
             putParcelable(DEEP_LINK_INFO, deepLinkInfo)
         }
     }
@@ -58,8 +120,29 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     lateinit var presenter: LoginOptionsPresenter
     @Inject
     lateinit var analyticsManager: AnalyticsManager
-    private var deepLinkInfo: LoginDeepLinkInfo? = null
     private var serverName: String? = null
+    private var state: String? = null
+    private var facebookOauthUrl: String? = null
+    private var githubOauthUrl: String? = null
+    private var googleOauthUrl: String? = null
+    private var linkedinOauthUrl: String? = null
+    private var gitlabOauthUrl: String? = null
+    private var wordpressOauthUrl: String? = null
+    private var casLoginUrl: String? = null
+    private var casToken: String? = null
+    private var customOauthUrl: String? = null
+    private var customOauthServiceName: String? = null
+    private var customOauthServiceTextColor: Int = 0
+    private var customOauthServiceButtonColor: Int = 0
+    private var samlUrl: String? = null
+    private var samlToken: String? = null
+    private var samlServiceName: String? = null
+    private var samlServiceTextColor: Int = 0
+    private var samlServiceButtonColor: Int = 0
+    private var totalSocialAccountsEnabled = 0
+    private var isLoginFormEnabled = false
+    private var isNewAccountCreationEnabled = false
+    private var deepLinkInfo: LoginDeepLinkInfo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +150,28 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
 
         val bundle = arguments
         if (bundle != null) {
-            serverName = bundle.getString(BUNDLE_SERVER_NAME)
+            serverName = bundle.getString(SERVER_NAME)
+            state = bundle.getString(STATE)
+            facebookOauthUrl = bundle.getString(FACEBOOK_OAUTH_URL)
+            githubOauthUrl = bundle.getString(GITHUB_OAUTH_URL)
+            googleOauthUrl = bundle.getString(GOOGLE_OAUTH_URL)
+            linkedinOauthUrl = bundle.getString(LINKEDIN_OAUTH_URL)
+            gitlabOauthUrl = bundle.getString(GITLAB_OAUTH_URL)
+            wordpressOauthUrl = bundle.getString(WORDPRESS_OAUTH_URL)
+            casLoginUrl = bundle.getString(CAS_LOGIN_URL)
+            casToken = bundle.getString(CAS_TOKEN)
+            customOauthUrl = bundle.getString(CUSTOM_OAUTH_URL)
+            customOauthServiceName = bundle.getString(CUSTOM_OAUTH_SERVICE_NAME)
+            customOauthServiceTextColor = bundle.getInt(CUSTOM_OAUTH_SERVICE_NAME_TEXT_COLOR)
+            customOauthServiceButtonColor = bundle.getInt(CUSTOM_OAUTH_SERVICE_BUTTON_COLOR)
+            samlUrl = bundle.getString(SAML_URL)
+            samlToken = bundle.getString(SAML_TOKEN)
+            samlServiceName = bundle.getString(SAML_SERVICE_NAME)
+            samlServiceTextColor = bundle.getInt(SAML_SERVICE_NAME_TEXT_COLOR)
+            samlServiceButtonColor = bundle.getInt(SAML_SERVICE_BUTTON_COLOR)
+            totalSocialAccountsEnabled = bundle.getInt(TOTAL_SOCIAL_ACCOUNTS)
+            isLoginFormEnabled = bundle.getBoolean(IS_LOGIN_FORM_ENABLED)
+            isNewAccountCreationEnabled = bundle.getBoolean(IS_NEW_ACCOUNT_CREATION_ENABLED)
             deepLinkInfo = bundle.getParcelable(DEEP_LINK_INFO)
         }
     }
@@ -81,14 +185,9 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
-        presenter.setupView()
+        setupAccounts()
         analyticsManager.logScreenView(ScreenViewEvent.LoginOptions)
-
-        deepLinkInfo?.let {
-            presenter.authenticateWithDeepLink(it)
-        }.ifNull {
-            presenter.setupView()
-        }
+        deepLinkInfo?.let { presenter.authenticateWithDeepLink(it) }
     }
 
     private fun setupToolbar() {
@@ -98,6 +197,99 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
             toolbar.title = serverName?.replace(getString(R.string.default_protocol), "")
         }
     }
+
+    private fun setupAccounts() {
+        setupSocialAccounts()
+        setupCas()
+        setupCustomOauth()
+        setupSaml()
+        setupLoginWithEmailView()
+        setupCreateNewAccountView()
+    }
+
+    private fun setupSocialAccounts() {
+        if (facebookOauthUrl != null && state != null) {
+            setupFacebookButtonListener(facebookOauthUrl.toString(), state.toString())
+            enableLoginByFacebook()
+        }
+
+        if (githubOauthUrl != null && state != null) {
+            setupGithubButtonListener(githubOauthUrl.toString(), state.toString())
+            enableLoginByGithub()
+        }
+
+        if (googleOauthUrl != null && state != null) {
+            setupGoogleButtonListener(googleOauthUrl.toString(), state.toString())
+            enableLoginByGoogle()
+        }
+
+        if (linkedinOauthUrl != null && state != null) {
+            setupLinkedinButtonListener(linkedinOauthUrl.toString(), state.toString())
+            enableLoginByLinkedin()
+        }
+
+
+        if (gitlabOauthUrl != null && state != null) {
+            setupGitlabButtonListener(gitlabOauthUrl.toString(), state.toString())
+            enableLoginByGitlab()
+        }
+
+        if (wordpressOauthUrl != null && state != null) {
+            setupWordpressButtonListener(wordpressOauthUrl.toString(), state.toString())
+            enableLoginByWordpress()
+        }
+
+        if (totalSocialAccountsEnabled > 0) {
+            showAccountsView()
+            if (totalSocialAccountsEnabled > 3) {
+                setupExpandAccountsView()
+            }
+        }
+    }
+
+    private fun setupCas() {
+        if (casLoginUrl != null && casToken != null) {
+            setupCasButtonListener(casLoginUrl.toString(), casToken.toString())
+            enableLoginByCas()
+        }
+    }
+
+    private fun setupCustomOauth() {
+        if (customOauthUrl != null && state != null && customOauthServiceName != null) {
+            addCustomOauthButton(
+                customOauthUrl.toString(),
+                state.toString(),
+                customOauthServiceName.toString(),
+                customOauthServiceTextColor,
+                customOauthServiceButtonColor
+            )
+        }
+    }
+
+    private fun setupSaml() {
+        if (samlUrl != null && samlToken != null && samlServiceName != null) {
+            addSamlButton(
+                samlUrl.toString(),
+                samlToken.toString(),
+                samlServiceName.toString(),
+                samlServiceTextColor,
+                samlServiceButtonColor
+            )
+        }
+    }
+
+    private fun setupLoginWithEmailView() {
+        if (isLoginFormEnabled) {
+            showLoginWithEmailButton()
+        }
+    }
+
+    private fun setupCreateNewAccountView() {
+        if (isNewAccountCreationEnabled) {
+            showCreateNewAccountButton()
+        }
+    }
+
 
     // OAuth Accounts.
     override fun enableLoginByFacebook() = enableAccountButton(button_facebook)
@@ -170,18 +362,18 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     }
 
     override fun setupExpandAccountsView() {
-        ui {
+        ui { _ ->
             expand_more_accounts_container.isVisible = true
             var isAccountsCollapsed = true
-            button_expand_collapse_accounts.setOnClickListener { view ->
-                if (isAccountsCollapsed) {
+            button_expand_collapse_accounts.setOnClickListener {
+                isAccountsCollapsed = if (isAccountsCollapsed) {
                     button_expand_collapse_accounts.rotateBy(180F, 400)
                     expandAccountsView()
-                    isAccountsCollapsed = false
+                    false
                 } else {
                     button_expand_collapse_accounts.rotateBy(180F, 400)
                     collapseAccountsView()
-                    isAccountsCollapsed = true
+                    true
                 }
             }
         }

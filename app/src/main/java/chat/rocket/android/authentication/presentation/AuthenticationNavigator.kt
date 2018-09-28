@@ -13,18 +13,66 @@ import chat.rocket.android.webview.ui.webViewIntent
 
 class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
 
-    fun toConnectWithAServer(deepLinkInfo: LoginDeepLinkInfo?) {
+    fun toSignInToYourServer() {
         activity.addFragmentBackStack(ScreenViewEvent.Server.screenName, R.id.fragment_container) {
-            chat.rocket.android.authentication.server.ui.newInstance(deepLinkInfo)
+            chat.rocket.android.authentication.server.ui.newInstance()
         }
     }
 
-    fun toLoginOptions(server: String, deepLinkInfo: LoginDeepLinkInfo? = null) {
+    fun toLoginOptions(
+        serverUrl: String,
+        state: String? = null,
+        facebookOauthUrl: String? = null,
+        githubOauthUrl: String? = null,
+        googleOauthUrl: String? = null,
+        linkedinOauthUrl: String? = null,
+        gitlabOauthUrl: String? = null,
+        wordpressOauthUrl: String? = null,
+        casLoginUrl: String? = null,
+        casToken: String? = null,
+        customOauthUrl: String? = null,
+        customOauthServiceName: String? = null,
+        customOauthServiceNameTextColor: Int = 0,
+        customOauthServiceButtonColor: Int = 0,
+        samlUrl: String? = null,
+        samlToken: String? = null,
+        samlServiceName: String? = null,
+        samlServiceNameTextColor: Int = 0,
+        samlServiceButtonColor: Int = 0,
+        totalSocialAccountsEnabled: Int = 0,
+        isLoginFormEnabled: Boolean = true,
+        isNewAccountCreationEnabled: Boolean = true,
+        deepLinkInfo: LoginDeepLinkInfo? = null
+    ) {
         activity.addFragmentBackStack(
             ScreenViewEvent.LoginOptions.screenName,
             R.id.fragment_container
         ) {
-            chat.rocket.android.authentication.loginoptions.ui.newInstance(server, deepLinkInfo)
+            chat.rocket.android.authentication.loginoptions.ui.newInstance(
+                serverUrl,
+                state,
+                facebookOauthUrl,
+                githubOauthUrl,
+                googleOauthUrl,
+                linkedinOauthUrl,
+                gitlabOauthUrl,
+                wordpressOauthUrl,
+                casLoginUrl,
+                casToken,
+                customOauthUrl,
+                customOauthServiceName,
+                customOauthServiceNameTextColor,
+                customOauthServiceButtonColor,
+                samlUrl,
+                samlToken,
+                samlServiceName,
+                samlServiceNameTextColor,
+                samlServiceButtonColor,
+                totalSocialAccountsEnabled,
+                isLoginFormEnabled,
+                isNewAccountCreationEnabled,
+                deepLinkInfo
+            )
         }
     }
 
@@ -40,9 +88,9 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
         }
     }
 
-    fun toLogin() {
+    fun toLogin(serverUrl: String) {
         activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
-            chat.rocket.android.authentication.login.ui.newInstance()
+            chat.rocket.android.authentication.login.ui.newInstance(serverUrl)
         }
     }
 

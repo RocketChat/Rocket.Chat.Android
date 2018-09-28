@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
 import chat.rocket.android.authentication.onboarding.presentation.OnBoardingPresenter
 import chat.rocket.android.authentication.onboarding.presentation.OnBoardingView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
@@ -42,13 +41,12 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToobar()
+        setupToolbar()
         setupOnClickListener()
-
         analyticsManager.logScreenView(ScreenViewEvent.OnBoarding)
     }
 
-    private fun setupToobar() {
+    private fun setupToolbar() {
         with(activity as AuthenticationActivity) {
             view?.let { this.setLightStatusBar(it) }
             toolbar.isVisible = false
@@ -56,7 +54,7 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
     }
 
     private fun setupOnClickListener() {
-        connect_with_a_server_container.setOnClickListener { connectWithAServer() }
+        connect_with_a_server_container.setOnClickListener { signInToYourServer() }
         join_community_container.setOnClickListener { joinInTheCommunity() }
         create_server_container.setOnClickListener { createANewServer() }
     }
@@ -87,21 +85,19 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
-    private fun connectWithAServer() = ui {
-        presenter.toConnectWithAServer(activity?.intent?.getLoginDeepLinkInfo())
+    private fun signInToYourServer() = ui {
+        presenter.toSignInToYourServer()
     }
 
     private fun joinInTheCommunity() = ui {
         presenter.connectToCommunityServer(
-            getString(R.string.default_protocol) +
-                    getString(R.string.community_server_url)
+            getString(R.string.default_protocol) + getString(R.string.community_server_url)
         )
     }
 
     private fun createANewServer() = ui {
         presenter.toCreateANewServer(
-            getString(R.string.default_protocol) +
-                    getString(R.string.create_server_url)
+            getString(R.string.default_protocol) + getString(R.string.create_server_url)
         )
     }
 }

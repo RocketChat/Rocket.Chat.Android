@@ -41,13 +41,7 @@ import okhttp3.HttpUrl
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-fun newInstance(deepLinkInfo: LoginDeepLinkInfo?): Fragment {
-    return ServerFragment().apply {
-        arguments = Bundle(1).apply {
-            putParcelable(DEEP_LINK_INFO, deepLinkInfo)
-        }
-    }
-}
+fun newInstance() = ServerFragment()
 
 private const val DEEP_LINK_INFO = "DeepLinkInfo"
 

@@ -99,7 +99,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
             R.id.fragment_container,
             allowStateLoss = true
         ) {
-            chat.rocket.android.authentication.server.ui.newInstance(deepLinkInfo)
+            chat.rocket.android.authentication.server.ui.newInstance()
         }
     }
 
