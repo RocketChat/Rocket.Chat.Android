@@ -135,7 +135,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_border"
                 android:clickable="false"
-                android:drawableStart="@drawable/ic_gitlab_24dp"
+                android:drawableStart="@drawable/ic_wordpress_24dp"
                 android:foreground="?selectableItemBackground"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
