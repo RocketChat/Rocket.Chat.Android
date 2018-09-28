@@ -184,7 +184,7 @@
     <string name="action_msg_unpin">ピン留を外す</string>
     <string name="action_msg_star">スターをつける</string>
     <string name="action_msg_unstar">スターを外す</string>
-    <string name="action_msg_share">Share</string>
+    <string name="action_msg_invite">Invite</string>
     <string name="action_title_editing">メッセージの編集</string>
     <string name="action_msg_add_reaction">リアクションする</string>
 
@@ -286,7 +286,7 @@
     <string name="header_unknown">不明</string>
 
     <!--Notifications-->
-    <string name="share_label">Edit shared message</string> <!-- TODO Add translation -->
+    <string name="invite_label">Edit invite message</string> <!-- TODO Add translation -->
     <string name="notif_action_reply_hint">返信</string>
     <string name="notif_error_sending">送信に失敗しました。もう一度お試しください。</string>
     <string name="notif_success_sending">メッセージは %1$s に送信されました!</string>

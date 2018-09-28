@@ -178,7 +178,7 @@
     <string name="action_msg_unpin">Відмінити фіксацію повідомлення</string>
     <string name="action_msg_star">До обраного</string>
     <string name="action_msg_unstar">Видалити з обраного</string>
-    <string name="action_msg_share">Поділитися</string>
+    <string name="action_msg_invite">Поділитися</string>
     <string name="action_title_editing">Редагування повідомлення</string>
     <string name="action_msg_add_reaction">Відреагувати</string>
 
@@ -279,7 +279,7 @@
     <string name="header_unknown">Невідомі</string>
 
     <!--Notifications-->
-    <string name="share_label">Редагувати повідомлення</string>
+    <string name="invite_label">Редагувати повідомлення</string>
     <string name="notif_action_reply_hint">ВІДПОВІСТИ</string>
     <string name="notif_error_sending">Не вдалося відповісти. Будь ласка, спробуйте ще раз.</string>
     <string name="notif_success_sending">Повідомлення надіслано %1$s!</string>
