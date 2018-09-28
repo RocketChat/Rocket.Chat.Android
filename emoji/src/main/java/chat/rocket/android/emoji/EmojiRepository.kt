@@ -146,7 +146,7 @@ object EmojiRepository {
      *
      * @return All emojis for all categories.
      */
-    internal suspend fun getAll(): List<Emoji> = withContext(CommonPool) {
+    suspend fun getAll(): List<Emoji> = withContext(CommonPool) {
         return@withContext db.emojiDao().loadAllEmojis()
     }
 

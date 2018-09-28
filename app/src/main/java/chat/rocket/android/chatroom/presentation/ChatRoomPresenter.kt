@@ -13,10 +13,12 @@ import chat.rocket.android.chatroom.uimodel.RoomUiModel
 import chat.rocket.android.chatroom.uimodel.UiModelMapper
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
+import chat.rocket.android.chatroom.uimodel.suggestion.EmojiSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
 import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
@@ -34,7 +36,6 @@ import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extension.compressImageAndGetByteArray
-import chat.rocket.android.util.extension.compressImageAndGetInputStream
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
@@ -80,9 +81,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.threeten.bp.Instant
 import timber.log.Timber
-import java.io.InputStream
 import java.util.*
-import java.util.zip.DeflaterInputStream
 import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(
@@ -180,10 +179,10 @@ class ChatRoomPresenter @Inject constructor(
                     val localMessages = messagesRepository.getByRoomId(chatRoomId)
                     val oldMessages = mapper.map(
                         localMessages, RoomUiModel(
-                            roles = chatRoles,
-                            // FIXME: Why are we fixing isRoom attribute to true here?
-                            isBroadcast = chatIsBroadcast, isRoom = true
-                        )
+                        roles = chatRoles,
+                        // FIXME: Why are we fixing isRoom attribute to true here?
+                        isBroadcast = chatIsBroadcast, isRoom = true
+                    )
                     )
                     val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
                     if (oldMessages.isNotEmpty() && lastSyncDate != null) {
@@ -420,11 +419,12 @@ class ChatRoomPresenter @Inject constructor(
                         }
                     }
                 }
-            } catch (ex: Exception) {
-                Timber.d(ex, "Error uploading file")
-                when (ex) {
-                    is RocketChatException -> view.showMessage(ex)
-                    else -> view.showGenericErrorMessage()
+            } catch (ex: RocketChatException) {
+                Timber.d(ex)
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
                 }
             } finally {
                 view.hideLoading()
@@ -600,9 +600,9 @@ class ChatRoomPresenter @Inject constructor(
                     replyMarkdown = "[ ]($currentServer/$chatRoomType/$room?msg=$id) $mention ",
                     quotedMessage = mapper.map(
                         message, RoomUiModel(
-                            roles = chatRoles,
-                            isBroadcast = chatIsBroadcast
-                        )
+                        roles = chatRoles,
+                        isBroadcast = chatIsBroadcast
+                    )
                     ).last().preview?.message ?: ""
                 )
             }
@@ -871,7 +871,7 @@ class ChatRoomPresenter @Inject constructor(
             }
             it.chatRoom.name == name || it.chatRoom.fullname == name
         }.map {
-            with (it.chatRoom) {
+            with(it.chatRoom) {
                 ChatRoom(
                     id = id,
                     subscriptionId = subscriptionId,
@@ -1011,6 +1011,20 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
+    fun loadEmojis() {
+        launchUI(strategy) {
+            val emojiSuggestionUiModels = EmojiRepository.getAll().map {
+                EmojiSuggestionUiModel(
+                    text = it.shortname.replaceFirst(":", ""),
+                    pinned = false,
+                    emoji = it,
+                    searchList = listOf(it.shortname)
+                )
+            }
+            view.populateEmojiSuggestions(emojis = emojiSuggestionUiModels)
+        }
+    }
+
     fun runCommand(text: String, roomId: String) {
         launchUI(strategy) {
             try {
@@ -1106,8 +1120,8 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             val viewModelStreamedMessage = mapper.map(
                 streamedMessage, RoomUiModel(
-                    roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
-                )
+                roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
+            )
             )
 
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
@@ -1128,5 +1142,34 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             navigator.toMessageInformation(messageId = messageId)
         }
+    }
+
+    /**
+     * Save unfinished message, when user left chat room without sending a message. It also clears
+     * saved message from local repository when unfinishedMessage is blank.
+     *
+     * @param chatRoomId Chat room Id.
+     * @param unfinishedMessage The unfinished message to save.
+     */
+    fun saveUnfinishedMessage(chatRoomId: String, unfinishedMessage: String) {
+        val key = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$chatRoomId"
+        if (unfinishedMessage.isNotBlank()) {
+            localRepository.save(key, unfinishedMessage)
+        } else {
+            localRepository.clear(key)
+        }
+    }
+
+    /**
+     * Get unfinished message from local repository, when user left chat room without
+     * sending a message and now the user is back.
+     *
+     * @param chatRoomId Chat room Id.
+     *
+     * @return Returns the unfinished message.
+     */
+    fun getUnfinishedMessage(chatRoomId: String): String {
+        val key = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$chatRoomId"
+        return localRepository.get(key) ?: ""
     }
 }

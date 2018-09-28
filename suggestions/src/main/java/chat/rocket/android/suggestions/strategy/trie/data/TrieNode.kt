@@ -1,11 +1,15 @@
 package chat.rocket.android.suggestions.strategy.trie.data
 
 import chat.rocket.android.suggestions.model.SuggestionModel
+import kotlin.coroutines.experimental.buildSequence
 
-internal class TrieNode(internal var data: Char,
-                                            internal var parent: TrieNode? = null,
-                                            internal var isLeaf: Boolean = false,
-                                            internal var item: SuggestionModel? = null) {
+internal class TrieNode(
+    internal var data: Char,
+    internal var parent: TrieNode? = null,
+    internal var isLeaf: Boolean = false,
+    internal var item: SuggestionModel? = null
+) {
+
     val children = hashMapOf<Char, TrieNode>()
 
     fun getChild(c: Char): TrieNode? {
@@ -28,19 +32,17 @@ internal class TrieNode(internal var data: Char,
         return list
     }
 
-    class X : SuggestionModel("")
+    fun getItems(): Sequence<SuggestionModel> = buildSequence {
 
-    fun getItems(): List<SuggestionModel> {
-        val list = arrayListOf<SuggestionModel>()
         if (isLeaf) {
-            list.add(item!!)
+            yield(item!!)
         }
+
         children.forEach { node ->
             node.value.let {
-                list.addAll(it.getItems())
+                yieldAll(it.getItems())
             }
         }
-        return list
     }
 
     override fun toString(): String = if (parent == null) "" else "${parent.toString()}$data"
