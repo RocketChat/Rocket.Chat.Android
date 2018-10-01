@@ -51,7 +51,6 @@ import chat.rocket.android.server.infraestructure.MemoryChatRoomsRepository
 import chat.rocket.android.server.infraestructure.MemoryRoomRepository
 import chat.rocket.android.server.infraestructure.MemoryUsersRepository
 import chat.rocket.android.server.infraestructure.SharedPreferencesAccountsRepository
-import chat.rocket.android.server.infraestructure.SharedPreferencesMessagesRepository
 import chat.rocket.android.server.infraestructure.SharedPreferencesPermissionsRepository
 import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsAnalyticsTrackingRepository
