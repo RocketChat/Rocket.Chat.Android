@@ -22,5 +22,5 @@ data class UrlEntity(
     val imageUrl: String?
 ) : BaseMessageEntity {
     @PrimaryKey(autoGenerate = true)
-    var id: Long? = null
+    var urlId: Long? = null
 }

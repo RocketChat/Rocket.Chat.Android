@@ -133,6 +133,13 @@ class ConnectionManager(
                 maxSize = 100, maxTime = 500) { messages ->
             Timber.d("Processing Messages batch: ${messages.size}")
             dbManager.processMessagesBatch(messages.distinctBy { it.id })
+
+            launch {
+                messages.forEach { message ->
+                    val channel = roomMessagesChannels[message.roomId]
+                    channel?.send(message)
+                }
+            }
         }
 
         // stream-notify-user - ${userId}/rooms-changed
@@ -161,8 +168,6 @@ class ConnectionManager(
             for (message in client.messagesChannel) {
                 Timber.d("Received new Message for room ${message.roomId}")
                 messagesActor.send(message)
-                val channel = roomMessagesChannels[message.roomId]
-                channel?.send(message)
             }
         }
 

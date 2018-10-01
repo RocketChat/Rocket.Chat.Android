@@ -5,12 +5,11 @@ import chat.rocket.android.R
 import chat.rocket.android.db.model.BaseMessageEntity
 import chat.rocket.android.db.model.BaseUserEntity
 import chat.rocket.android.db.model.ChatRoomEntity
-import chat.rocket.android.db.model.MessageChannelsRelation
+import chat.rocket.android.db.model.MessageChannels
 import chat.rocket.android.db.model.MessageEntity
 import chat.rocket.android.db.model.MessageFavoritesRelation
 import chat.rocket.android.db.model.MessageMentionsRelation
 import chat.rocket.android.db.model.ReactionEntity
-import chat.rocket.android.db.model.ReactionMessageRelation
 import chat.rocket.android.db.model.UrlEntity
 import chat.rocket.android.db.model.UserEntity
 import chat.rocket.android.db.model.UserStatus
@@ -31,6 +30,7 @@ import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
 import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.userId
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.newSingleThreadContext
 import kotlinx.coroutines.experimental.withContext
@@ -44,7 +44,7 @@ class DatabaseManager(val context: Application,
             RCDatabase::class.java, serverUrl.databaseName())
             .fallbackToDestructiveMigration()
             .build()
-    private val dbContext = newSingleThreadContext("$serverUrl-db-context")
+    val dbContext = newSingleThreadContext("$serverUrl-db-context")
 
     private val insertSubs = HashMap<String, Subscription>()
     private val insertRooms = HashMap<String, Room>()
@@ -58,6 +58,11 @@ class DatabaseManager(val context: Application,
     fun clearUsersStatus() {
         launch(dbContext) {
             userDao().clearStatus()
+
+            val message = messageDao().getMessageById("Ne6Wm9LqvZuBFiyME")
+            message?.let {
+                Timber.d("MESSAGE FROM DB: $it")
+            }
         }
     }
 
@@ -153,8 +158,8 @@ class DatabaseManager(val context: Application,
         }
     }
 
-    fun processMessagesBatch(messages: List<Message>) {
-        launch(dbContext) {
+    fun processMessagesBatch(messages: List<Message>): Job {
+        return launch(dbContext) {
             val dao = messageDao()
             val list = mutableListOf<Pair<MessageEntity, List<BaseMessageEntity>>>()
             messages.forEach { message ->
@@ -190,11 +195,9 @@ class DatabaseManager(val context: Application,
 
         val list = mutableListOf<BaseMessageEntity>()
         reactions.keys.forEach { reaction ->
-            list.add(ReactionEntity(reaction))
-
             val users = reactions[reaction]
-            users?.size?.let { size ->
-                list.add(ReactionMessageRelation(reaction, message.id, size))
+            users?.let { users ->
+                list.add(ReactionEntity(reaction, message.id, users.size, users.joinToString()))
             }
         }
 
@@ -220,9 +223,9 @@ class DatabaseManager(val context: Application,
             return null
         }
 
-        val list = mutableListOf<MessageChannelsRelation>()
+        val list = mutableListOf<MessageChannels>()
         message.channels!!.forEach { channel ->
-            list.add(MessageChannelsRelation(message.id, channel.id, channel.name))
+            list.add(MessageChannels(message.id, channel.id, channel.name))
         }
 
         return list

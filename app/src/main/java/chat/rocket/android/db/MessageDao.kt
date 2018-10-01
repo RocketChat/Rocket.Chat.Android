@@ -8,15 +8,17 @@ import androidx.room.Transaction
 import chat.rocket.android.db.model.AttachmentEntity
 import chat.rocket.android.db.model.AttachmentFieldEntity
 import chat.rocket.android.db.model.BaseMessageEntity
-import chat.rocket.android.db.model.MessageChannelsRelation
+import chat.rocket.android.db.model.FullMessage
+import chat.rocket.android.db.model.PartialMessage
+import chat.rocket.android.db.model.MessageChannels
 import chat.rocket.android.db.model.MessageEntity
 import chat.rocket.android.db.model.MessageFavoritesRelation
 import chat.rocket.android.db.model.MessageMentionsRelation
+import chat.rocket.android.db.model.MessagesSync
 import chat.rocket.android.db.model.ReactionEntity
-import chat.rocket.android.db.model.ReactionMessageRelation
 import chat.rocket.android.db.model.UrlEntity
+import chat.rocket.android.db.model.UserEntity
 import timber.log.Timber
-
 @Dao
 abstract class  MessageDao {
     @Insert
@@ -29,7 +31,7 @@ abstract class  MessageDao {
     abstract fun insert(relation: MessageMentionsRelation)
 
     @Insert
-    abstract fun insert(relation: MessageChannelsRelation)
+    abstract fun insert(relation: MessageChannels)
 
     @Insert
     abstract fun insert(attachment: AttachmentEntity)
@@ -41,13 +43,13 @@ abstract class  MessageDao {
     abstract fun insert(reaction: ReactionEntity)
 
     @Insert
-    abstract fun insert(relation: ReactionMessageRelation)
-
-    @Insert
     abstract fun insert(url: UrlEntity)
 
     @Query("DELETE FROM messages WHERE id = :id")
     abstract fun delete(id: String)
+
+    @Query("DELETE FROM messages WHERE roomId = :roomId")
+    abstract fun deleteByRoomId(roomId: String)
 
     @Transaction
     open fun insert(message: MessageEntity, entities: List<BaseMessageEntity>) {
@@ -68,11 +70,10 @@ abstract class  MessageDao {
             is MessageEntity -> insert(entity)
             is MessageFavoritesRelation -> insert(entity)
             is MessageMentionsRelation -> insert(entity)
-            is MessageChannelsRelation -> insert(entity)
+            is MessageChannels -> insert(entity)
             is AttachmentEntity -> insert(entity)
             is AttachmentFieldEntity -> insert(entity)
             is ReactionEntity -> insert(entity)
-            is ReactionMessageRelation -> insert(entity)
             is UrlEntity -> insert(entity)
         }
     }
@@ -82,5 +83,106 @@ abstract class  MessageDao {
         list.forEach { (message, entities) ->
             insertInternal(message, entities)
         }
+    }
+
+    //@Query("SELECT * FROM messages WHERE id = :id")
+    @Query("""
+        $BASE_MESSAGE_QUERY
+        WHERE messages.id = :id
+        """)
+    abstract fun internalGetMessageById(id: String): PartialMessage?
+
+    @Transaction
+    open fun getMessageById(id: String): FullMessage? {
+        return internalGetMessageById(id)?.let { message ->
+            retrieveFullMessage(message)
+        }
+    }
+
+    @Query("""
+        $BASE_MESSAGE_QUERY
+        WHERE messages.roomId = :roomId
+        ORDER BY messages.timestamp DESC
+        """
+    )
+    abstract fun internalGetMessagesByRoomId(roomId: String): List<PartialMessage>
+
+    @Query("""
+        $BASE_MESSAGE_QUERY
+        WHERE messages.roomId = :roomId
+        ORDER BY messages.timestamp DESC
+        LIMIT :count
+        """
+    )
+    abstract fun internalGetRecentMessagesByRoomId(roomId: String, count: Long): List<PartialMessage>
+
+    @Transaction
+    open fun getMessagesByRoomId(roomId: String): List<FullMessage> {
+        return internalGetMessagesByRoomId(roomId).map { message ->
+            retrieveFullMessage(message)
+        }
+    }
+
+    @Transaction
+    open fun getRecentMessagesByRoomId(roomId: String, count: Long): List<FullMessage> {
+        return internalGetRecentMessagesByRoomId(roomId, count).map { message ->
+            retrieveFullMessage(message)
+        }
+    }
+
+    @Query("""
+        SELECT * FROM users WHERE users.id IN
+            (SELECT userId FROM message_favorites WHERE messageId = :messageId)
+        """)
+    abstract fun getFavoritesByMessage(messageId: String): List<UserEntity>
+
+    @Query("""
+        SELECT * FROM users WHERE users.id IN
+            (SELECT userId FROM message_mentions WHERE messageId = :messageId)
+        """)
+    abstract fun getMentionsByMessage(messageId: String): List<UserEntity>
+
+    @Query("""
+            $BASE_MESSAGE_QUERY
+            WHERE synced = 0
+            ORDER BY messages.timestamp DESC
+        """)
+    abstract fun internalUnsetMessages(): List<PartialMessage>
+
+    @Transaction
+    open fun getUnsentMessages(): List<FullMessage> {
+        return internalUnsetMessages().map { message ->
+            retrieveFullMessage(message)
+        }
+    }
+
+    internal fun retrieveFullMessage(message: PartialMessage): FullMessage {
+        val favorites = getFavoritesByMessage(message.message.id)
+        val mentions = getFavoritesByMessage(message.message.id)
+        return FullMessage(message, favorites, mentions)
+    }
+
+    @Query("SELECT * FROM messages_sync WHERE roomId = :roomId")
+    abstract fun getLastSync(roomId: String): MessagesSync?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun saveLastSync(entity: MessagesSync)
+
+    companion object {
+        const val BASE_MESSAGE_QUERY = """
+            SELECT
+                messages.*,
+			    senderBy.name as senderName,
+			    senderBy.username as senderUsername,
+    		    editBy.name as editName,
+			    editBy.username as editUsername
+            FROM messages
+            LEFT JOIN urls as u ON u.messageId = messages.id
+            LEFT JOIN attachments as attachment ON attachment.message_id = messages.id
+            LEFT JOIN reactions ON reactions.messageId = messages.id
+            LEFT JOIN message_channels ON message_channels.messageId = messages.id
+			LEFT JOIN users as senderBy ON messages.senderId = senderBy.id
+			LEFT JOIN users as editBy ON messages.editedBy = editBy.id
+        """
     }
 }

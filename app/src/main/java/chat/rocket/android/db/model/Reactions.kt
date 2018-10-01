@@ -5,15 +5,8 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "reactions")
-data class ReactionEntity(
-    @PrimaryKey val reaction: String
-) : BaseMessageEntity
-
-@Entity(tableName = "reactions_message_relations",
+@Entity(tableName = "reactions",
         foreignKeys = [
-            ForeignKey(entity = ReactionEntity::class, parentColumns = ["reaction"],
-                    childColumns = ["reactionId"]),
             ForeignKey(entity = MessageEntity::class, parentColumns = ["id"],
                     childColumns = ["messageId"], onDelete = ForeignKey.CASCADE)
         ],
@@ -21,11 +14,9 @@ data class ReactionEntity(
             Index(value = ["messageId"])
         ]
 )
-data class ReactionMessageRelation(
-    val reactionId: String,
+data class ReactionEntity(
+    @PrimaryKey val reaction: String,
     val messageId: String,
-    val count: Int
-) : BaseMessageEntity {
-    @PrimaryKey(autoGenerate = true)
-    var id: Long? = null
-}
+    val count: Int,
+    val usernames: String
+) : BaseMessageEntity

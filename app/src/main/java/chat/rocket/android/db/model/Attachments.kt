@@ -21,7 +21,7 @@ import timber.log.Timber
         ])
 data class AttachmentEntity(
     @PrimaryKey
-    var id: String,
+    var _id: String,
     @ColumnInfo(name = "message_id")
     val messageId: String,
     val title: String? = null,
@@ -66,7 +66,7 @@ data class AttachmentEntity(
 
 @Entity(tableName = "attachment_fields",
         foreignKeys = [
-            ForeignKey(entity = AttachmentEntity::class, parentColumns = ["id"],
+            ForeignKey(entity = AttachmentEntity::class, parentColumns = ["_id"],
                     childColumns = ["attachmentId"], onDelete = ForeignKey.CASCADE)
         ])
 data class AttachmentFieldEntity(
@@ -96,7 +96,7 @@ fun Attachment.asEntity(msgId: String): List<BaseMessageEntity> {
 
 fun ImageAttachment.asEntity(msgId: String): AttachmentEntity =
     AttachmentEntity(
-        id = "${msgId}_${hashCode()}",
+        _id = "${msgId}_${hashCode()}",
         messageId = msgId,
         title = title,
         description =  description,
@@ -110,7 +110,7 @@ fun ImageAttachment.asEntity(msgId: String): AttachmentEntity =
 
 fun VideoAttachment.asEntity(msgId: String): AttachmentEntity =
     AttachmentEntity(
-        id = "${msgId}_${hashCode()}",
+        _id = "${msgId}_${hashCode()}",
         messageId = msgId,
         title = title,
         description =  description,
@@ -124,7 +124,7 @@ fun VideoAttachment.asEntity(msgId: String): AttachmentEntity =
 
 fun AudioAttachment.asEntity(msgId: String): AttachmentEntity =
     AttachmentEntity(
-        id = "${msgId}_${hashCode()}",
+        _id = "${msgId}_${hashCode()}",
         messageId = msgId,
         title = title,
         description =  description,
@@ -139,7 +139,7 @@ fun AudioAttachment.asEntity(msgId: String): AttachmentEntity =
 fun AuthorAttachment.asEntity(msgId: String): List<BaseMessageEntity> {
     val list = mutableListOf<BaseMessageEntity>()
     val attachment = AttachmentEntity(
-        id = "${msgId}_${hashCode()}",
+        _id = "${msgId}_${hashCode()}",
         messageId = msgId,
         authorLink = url,
         authorIcon = authorIcon,
@@ -149,7 +149,7 @@ fun AuthorAttachment.asEntity(msgId: String): List<BaseMessageEntity> {
 
     fields?.forEach { field ->
         val entity = AttachmentFieldEntity(
-            attachmentId = attachment.id,
+            attachmentId = attachment._id,
             title = field.title,
             value = field.value
         )
@@ -161,7 +161,7 @@ fun AuthorAttachment.asEntity(msgId: String): List<BaseMessageEntity> {
 
 fun ColorAttachment.asEntity(msgId: String): AttachmentEntity =
     AttachmentEntity(
-        id = "${msgId}_${hashCode()}",
+        _id = "${msgId}_${hashCode()}",
         messageId = msgId,
         color = color.rawColor
     )
@@ -169,7 +169,7 @@ fun ColorAttachment.asEntity(msgId: String): AttachmentEntity =
 // TODO - how to model An message attachment with attachments???
 fun MessageAttachment.asEntity(msgId: String): AttachmentEntity =
     AttachmentEntity(
-        id = "${msgId}_${hashCode()}",
+        _id = "${msgId}_${hashCode()}",
         messageId = msgId,
         authorName = author,
         authorIcon = icon,

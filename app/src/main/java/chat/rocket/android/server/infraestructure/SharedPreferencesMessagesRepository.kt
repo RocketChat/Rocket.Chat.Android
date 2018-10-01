@@ -68,19 +68,6 @@ class SharedPreferencesMessagesRepository(
             .distinctBy { it.sender }.take(count.toInt())
     }
 
-    override suspend fun getAll(): List<Message> = withContext(CommonPool) {
-        val adapter = moshi.adapter<Message>(Message::class.java)
-        if (prefs.all.values.isEmpty()) {
-            return@withContext emptyList<Message>()
-        }
-        currentServerInteractor.get()?.also { server ->
-            val values = prefs.all.entries.filter { it.key.startsWith(server) }
-                .map { it.value } as Collection<String>
-            return@withContext values.mapNotNull { adapter.fromJson(it) }
-        }
-        return@withContext emptyList<Message>()
-    }
-
     override suspend fun getAllUnsent(): List<Message> = withContext(CommonPool) {
         if (prefs.all.values.isEmpty()) {
             return@withContext emptyList<Message>()
@@ -90,17 +77,9 @@ class SharedPreferencesMessagesRepository(
                 .map { it.value } as Collection<String>
             val adapter = moshi.adapter<Message>(Message::class.java)
             return@withContext values.mapNotNull { adapter.fromJson(it) }
-                .filter { it.isTemporary ?: false }
+                .filterNot { it.synced ?: false }
         }
         return@withContext emptyList<Message>()
-    }
-
-    override suspend fun getUnsentByRoomId(roomId: String): List<Message> = withContext(CommonPool) {
-        val allByRoomId = getByRoomId(roomId)
-        if (allByRoomId.isEmpty()) {
-            return@withContext emptyList<Message>()
-        }
-        return@withContext allByRoomId.filter { it.isTemporary ?: false }
     }
 
     override suspend fun save(message: Message) {
@@ -123,10 +102,6 @@ class SharedPreferencesMessagesRepository(
                 editor.apply()
             }
         }
-    }
-
-    override suspend fun clear() = withContext(CommonPool) {
-        prefs.edit().clear().apply()
     }
 
     override suspend fun removeById(id: String) {

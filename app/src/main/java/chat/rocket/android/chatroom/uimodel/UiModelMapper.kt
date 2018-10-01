@@ -477,7 +477,7 @@ class UiModelMapper @Inject constructor(
         val time = getTime(message.timestamp)
         val avatar = getUserAvatar(message)
         val preview = mapMessagePreview(message)
-        val isTemp = message.isTemporary ?: false
+        val synced = message.synced ?: true
         val unread = if (settings.messageReadReceiptEnabled()) {
             message.unread ?: false
         } else {
@@ -492,7 +492,7 @@ class UiModelMapper @Inject constructor(
             messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
             content = content, isPinned = message.pinned, currentDayMarkerText = dayMarkerText,
             showDayMarker = false, reactions = getReactions(message), isFirstUnread = false,
-            preview = preview, isTemporary = isTemp, unread = unread)
+            preview = preview, isTemporary = !synced, unread = unread)
     }
 
     private fun mapMessagePreview(message: Message): Message {

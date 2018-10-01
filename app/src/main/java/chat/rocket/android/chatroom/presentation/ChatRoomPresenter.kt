@@ -226,7 +226,6 @@ class ChatRoomPresenter @Inject constructor(
             retryIO("loadAndShowMessages($chatRoomId, $chatRoomType, $offset") {
                 client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
             }
-        dbManager.processMessagesBatch(messages)
         messagesRepository.saveAll(messages)
 
         //we are saving last sync date of latest synced chat room message
@@ -304,7 +303,7 @@ class ChatRoomPresenter @Inject constructor(
                         type = null,
                         updatedAt = null,
                         urls = null,
-                        isTemporary = true,
+                        synced = false,
                         unread = true
                     )
                     try {
@@ -316,6 +315,7 @@ class ChatRoomPresenter @Inject constructor(
                             ), false
                         )
                         client.sendMessage(id, chatRoomId, text)
+                        messagesRepository.save(newMessage.copy(synced = true))
                         logMessageSent()
                     } catch (ex: Exception) {
                         // Ok, not very beautiful, but the backend sends us a not valid response
@@ -510,8 +510,6 @@ class ChatRoomPresenter @Inject constructor(
                             )
                         }
                     Timber.d("History: $messages")
-
-                    dbManager.processMessagesBatch(messages.result)
 
                     if (messages.result.isNotEmpty()) {
                         val models = mapper.map(messages.result, RoomUiModel(
@@ -1128,11 +1126,11 @@ class ChatRoomPresenter @Inject constructor(
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
             if (index > -1) {
                 Timber.d("Updating message at $index")
-                messagesRepository.save(streamedMessage)
+                //messagesRepository.save(streamedMessage)
                 view.dispatchUpdateMessage(index, viewModelStreamedMessage)
             } else {
                 Timber.d("Adding new message")
-                messagesRepository.save(streamedMessage)
+                //messagesRepository.save(streamedMessage)
                 view.showNewMessage(viewModelStreamedMessage, true)
             }
         }

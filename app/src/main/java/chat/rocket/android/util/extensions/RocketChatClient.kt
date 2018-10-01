@@ -31,20 +31,21 @@ suspend fun RocketChatClientFactory.registerPushToken(
 
 fun Message.toEntity(): MessageEntity {
     return MessageEntity(
-            id = id,
-            roomId = roomId,
-            message = message,
-            timestamp = timestamp,
-            senderId = sender?.id,
-            updatedAt = updatedAt,
-            editedAt = editedAt,
-            editedBy = editedBy?.id,
-            senderAlias = senderAlias,
-            avatar = avatar,
-            type = type.asString(),
-            groupable = groupable,
-            parseUrls = parseUrls,
-            pinned = pinned,
-            role = role
+        id = id,
+        roomId = roomId,
+        message = message,
+        timestamp = timestamp,
+        senderId = sender?.id,
+        updatedAt = updatedAt,
+        editedAt = editedAt,
+        editedBy = editedBy?.id,
+        senderAlias = senderAlias,
+        avatar = avatar,
+        type = type.asString(),
+        groupable = groupable,
+        parseUrls = parseUrls,
+        pinned = pinned,
+        role = role,
+        synced = synced
     )
 }

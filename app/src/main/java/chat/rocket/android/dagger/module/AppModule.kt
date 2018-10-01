@@ -43,6 +43,8 @@ import chat.rocket.android.server.domain.RoomRepository
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.UsersRepository
+import chat.rocket.android.server.infraestructure.DatabaseMessageMapper
+import chat.rocket.android.server.infraestructure.DatabaseMessagesRepository
 import chat.rocket.android.server.infraestructure.JobSchedulerInteractorImpl
 import chat.rocket.android.server.infraestructure.MemoryActiveUsersRepository
 import chat.rocket.android.server.infraestructure.MemoryChatRoomsRepository
@@ -253,7 +255,7 @@ class AppModule {
         return SharedPreferencesMultiServerTokenRepository(repository, moshi)
     }
 
-    @Provides
+    /*@Provides
     @Singleton
     fun provideMessageRepository(
         @ForMessages preferences: SharedPreferences,
@@ -261,6 +263,11 @@ class AppModule {
         currentServerInteractor: GetCurrentServerInteractor
     ): MessagesRepository {
         return SharedPreferencesMessagesRepository(preferences, moshi, currentServerInteractor)
+    }*/
+
+    @Provides
+    fun provideMessageRepository(databaseManager: DatabaseManager): MessagesRepository {
+        return DatabaseMessagesRepository(databaseManager, DatabaseMessageMapper())
     }
 
     @Provides

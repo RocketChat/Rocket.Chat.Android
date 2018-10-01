@@ -1,8 +1,10 @@
 package chat.rocket.android.db.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 
 interface BaseMessageEntity
 
@@ -26,7 +28,9 @@ data class MessageEntity(
     val groupable: Boolean = false,
     val parseUrls: Boolean = false,
     val pinned: Boolean = false,
-    val role: String?
+    val role: String?,
+    val synced: Boolean = true,
+    val unread: Boolean? = null
 ) : BaseMessageEntity
 
 @Entity(tableName = "message_favorites",
@@ -60,8 +64,43 @@ data class MessageMentionsRelation(
                     childColumns = ["messageId"], onDelete = ForeignKey.CASCADE)
         ]
 )
-data class MessageChannelsRelation(
+data class MessageChannels(
     val messageId: String,
     val roomId: String,
     val roomName: String?
 ) : BaseMessageEntity
+
+@Entity(tableName = "messages_sync")
+data class MessagesSync(
+    @PrimaryKey val roomId: String,
+    val timestamp: Long
+)
+
+data class PartialMessage(
+    @Embedded val message: MessageEntity,
+    val senderName: String?,
+    val senderUsername: String?,
+    val editName: String?,
+    val editUsername: String?
+) {
+    @Relation(parentColumn = "id", entityColumn = "messageId")
+    var urls: List<UrlEntity>? = null
+    @Relation(parentColumn = "id", entityColumn = "message_id")
+    var attachments: List<AttachmentEntity>? = null
+    @Relation(parentColumn = "id", entityColumn = "messageId")
+    var reactions: List<ReactionEntity>? = null
+    @Relation(parentColumn = "id", entityColumn = "messageId")
+    var channels: List<MessageChannels>? = null
+
+    override fun toString(): String {
+        return "PartialMessage(message=$message, senderName=$senderName, senderUsername=$senderUsername, editName=$editName, editUsername=$editUsername, urls=$urls, attachments=$attachments, reactions=$reactions, channels=$channels)"
+    }
+
+
+}
+
+data class FullMessage(
+    val message: PartialMessage,
+    val favorites: List<UserEntity>,
+    val mentions: List<UserEntity>
+)
