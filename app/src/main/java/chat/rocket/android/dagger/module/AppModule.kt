@@ -255,16 +255,6 @@ class AppModule {
         return SharedPreferencesMultiServerTokenRepository(repository, moshi)
     }
 
-    /*@Provides
-    @Singleton
-    fun provideMessageRepository(
-        @ForMessages preferences: SharedPreferences,
-        moshi: Moshi,
-        currentServerInteractor: GetCurrentServerInteractor
-    ): MessagesRepository {
-        return SharedPreferencesMessagesRepository(preferences, moshi, currentServerInteractor)
-    }*/
-
     @Provides
     fun provideMessageRepository(databaseManager: DatabaseManager): MessagesRepository {
         return DatabaseMessagesRepository(databaseManager, DatabaseMessageMapper(databaseManager))
