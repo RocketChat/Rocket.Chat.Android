@@ -58,11 +58,6 @@ class DatabaseManager(val context: Application,
     fun clearUsersStatus() {
         launch(dbContext) {
             userDao().clearStatus()
-
-            val message = messageDao().getMessageById("Ne6Wm9LqvZuBFiyME")
-            message?.let {
-                Timber.d("MESSAGE FROM DB: $it")
-            }
         }
     }
 
