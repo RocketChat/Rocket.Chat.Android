@@ -44,7 +44,7 @@ class MessageService : JobService() {
 
     private suspend fun retrySendingMessages(params: JobParameters?, serverUrl: String) {
         val dbManager = dbFactory.create(serverUrl)
-        val messageRepository = DatabaseMessagesRepository(dbManager, DatabaseMessageMapper())
+        val messageRepository = DatabaseMessagesRepository(dbManager, DatabaseMessageMapper(dbManager))
         val temporaryMessages = messageRepository.getAllUnsent()
             .sortedWith(compareBy(Message::timestamp))
         if (temporaryMessages.isNotEmpty()) {

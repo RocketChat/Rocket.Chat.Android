@@ -9,6 +9,7 @@ import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.attachment.AudioAttachment
 import chat.rocket.core.model.attachment.AuthorAttachment
 import chat.rocket.core.model.attachment.ColorAttachment
+import chat.rocket.core.model.attachment.GenericFileAttachment
 import chat.rocket.core.model.attachment.ImageAttachment
 import chat.rocket.core.model.attachment.MessageAttachment
 import chat.rocket.core.model.attachment.VideoAttachment
@@ -37,6 +38,7 @@ data class AttachmentEntity(
     @ColumnInfo(name = "thumb_url")
     val thumbUrl: String? = null,
     val color: String? = null,
+    val fallback: String? = null,
     @ColumnInfo(name = "title_link")
     val titleLink: String? = null,
     @ColumnInfo(name = "title_link_download")
@@ -86,6 +88,7 @@ fun Attachment.asEntity(msgId: String): List<BaseMessageEntity> {
         is AuthorAttachment -> asEntity(msgId)
         is ColorAttachment -> listOf(asEntity(msgId))
         is MessageAttachment -> listOf(asEntity(msgId))
+        is GenericFileAttachment -> listOf(asEntity(msgId))
         // TODO - Action Attachments
         else -> {
             Timber.d("Missing conversion for: ${javaClass.canonicalName}")
@@ -163,7 +166,8 @@ fun ColorAttachment.asEntity(msgId: String): AttachmentEntity =
     AttachmentEntity(
         _id = "${msgId}_${hashCode()}",
         messageId = msgId,
-        color = color.rawColor
+        color = color.rawColor,
+        fallback = fallback
     )
 
 // TODO - how to model An message attachment with attachments???
@@ -178,4 +182,15 @@ fun MessageAttachment.asEntity(msgId: String): AttachmentEntity =
         color = color?.rawColor,
         messageLink = url,
         timestamp = timestamp
+    )
+
+fun GenericFileAttachment.asEntity(msgId: String): AttachmentEntity =
+    AttachmentEntity(
+        _id = "${msgId}_${hashCode()}",
+        messageId = msgId,
+        title = title,
+        description = description,
+        text = text,
+        titleLink = titleLink,
+        titleLinkDownload = titleLinkDownload ?: false
     )

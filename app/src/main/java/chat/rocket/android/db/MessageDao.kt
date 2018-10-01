@@ -168,6 +168,9 @@ abstract class  MessageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun saveLastSync(entity: MessagesSync)
 
+    @Query("SELECT * FROM attachment_fields WHERE attachmentId = :id")
+    abstract fun getAttachmentFields(id: String): List<AttachmentFieldEntity>
+
     companion object {
         const val BASE_MESSAGE_QUERY = """
             SELECT

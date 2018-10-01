@@ -267,7 +267,7 @@ class AppModule {
 
     @Provides
     fun provideMessageRepository(databaseManager: DatabaseManager): MessagesRepository {
-        return DatabaseMessagesRepository(databaseManager, DatabaseMessageMapper())
+        return DatabaseMessagesRepository(databaseManager, DatabaseMessageMapper(databaseManager))
     }
 
     @Provides
