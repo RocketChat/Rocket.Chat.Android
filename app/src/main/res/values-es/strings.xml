@@ -18,7 +18,7 @@
     <string name="title_update_profile">Actualización del perfil</string>
     <string name="title_about">Acerca de</string>
     <string name="title_create_channel">Crear canal</string>
-
+    <string name="title_confirmation">Are You Sure?</string> <!-- TODO Add translation -->
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
     <string name="action_use_this_username">Usa este nombre de usuario</string>
@@ -31,6 +31,7 @@
     <string name="action_create_channel">Crear canal</string>
     <string name="action_create">Create</string>
     <string name="action_logout">Cerrar sesión</string>
+    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">Archivos</string>
     <string name="action_confirm_password">Confirmar cambio de contraseña</string>
     <string name="action_join_chat">Unirse al chat</string>
