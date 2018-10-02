@@ -14,7 +14,7 @@
     <string name="title_settings">Einstellungen</string>
     <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
     <string name="title_change_password">Ändere Passwort</string>
-    <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
+    <string name="title_admin_panel">Administrationsmenü</string>
     <string name="title_password">Ändere Passwort</string>
     <string name="title_update_profile">Update Profil</string>
     <string name="title_about">Über</string>
@@ -42,9 +42,9 @@
     <string name="action_invisible">Unsichtbar</string>
     <string name="action_drawing">Zeichnung</string>
     <string name="action_save_to_gallery">Sichern in Gallerie</string>
-    <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
-    <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
-    <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
+    <string name="action_select_photo_from_gallery">Wählen Sie ein Foto aus der Galerie</string>
+    <string name="action_take_photo">Foto machen</string>
+    <string name="action_reset_avatar">Zurücksetzen Avatar</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -142,16 +142,14 @@
     <string name="msg_message_copied">Nachricht kopiert</string>
     <string name="msg_delete_message">Lösche Nachricht</string>
     <string name="msg_delete_description">Sind Sie sicher, dass Sie diese Nachricht löschen wollen?</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_more">view more</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_less">view less</string>
+    <string name="msg_view_more">Mehr sehen</string>
+    <string name="msg_view_less">Weniger anzeigen</string>
 
     <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
-    <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
-    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string> <!-- TODO Add translation -->
+    <string name="msg_analytics_tracking">Analytics-Verfolgung</string>
+    <string name="msg_send_analytics_tracking">Senden Sie anonyme Statistiken, um diese App zu verbessern</string>
+    <string name="msg_do_not_send_analytics_tracking">Senden Sie keine anonymen Statistiken, um diese App zu verbessern</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Nicht zutreffend, da es sich um eine FOSS-Version handelt</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Raum Namen geändert zu: %1$s von %2$s</string>
@@ -269,7 +267,7 @@
     <string name="dialog_sort_by_activity">Aktivität</string>
     <string name="dialog_group_by_type">Räume nach Typ</string>
     <string name="dialog_group_favourites">Räume nach Favoriten</string>
-    <string name="dialog_button_done">Done</string><!-- TODO Add translation -->
+    <string name="dialog_button_done">Erledigt</string>
     <string name="chatroom_header">Kopf</string>
 
     <!--ChatRooms Headers-->

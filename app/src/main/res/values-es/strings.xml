@@ -11,9 +11,9 @@
     <string name="title_profile">Perfil</string>
     <string name="title_members">Miembros (%d)</string>
     <string name="title_settings">Configuraciones</string>
-    <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
+    <string name="title_preferences">Preferencias</string>
     <string name="title_change_password">Cambia la contraseña</string>
-    <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
+    <string name="title_admin_panel">Panel de administrador</string>
     <string name="title_password">Cambia la contraseña</string>
     <string name="title_update_profile">Actualización del perfil</string>
     <string name="title_about">Acerca de</string>
@@ -41,13 +41,13 @@
     <string name="action_invisible">Invisible</string>
     <string name="action_drawing">Dibujo</string>
     <string name="action_save_to_gallery">Guardar en la galería</string>
-    <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
-    <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
-    <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
+    <string name="action_select_photo_from_gallery">Seleccionar foto de la galería</string>
+    <string name="action_take_photo">Tomar foto</string>
+    <string name="action_reset_avatar">Restablecer avatar</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
-        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
+        <item name="item_preferences">Preferencias</item>
         <item name="item_password">Cambia la contraseña</item>
         <item name="item_password">Acerca de</item>
     </string-array>
@@ -84,7 +84,7 @@
     <string name="msg_content_description_log_in_using_meteor">Inicia sesión usando Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Inicia sesión usando Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Inicia sesión usando Gitlab</string>
-    <string name="msg_content_description_log_in_using_wordpress">Login using WordPress</string> <!-- TODO Translate-->
+    <string name="msg_content_description_log_in_using_wordpress">Inicia sesión usando WordPress</string>
     <string name="msg_content_description_send_message">Enviar mensaje</string>
     <string name="msg_content_description_show_attachment_options">Mostrar opciones de archivo adjunto</string>
     <string name="msg_you">Tú</string>
@@ -139,16 +139,14 @@
     <string name="msg_member_already_added">Ya has seleccionado este usuario</string>
     <string name="msg_member_not_found">Miembro no encontrado</string>
     <string name="msg_channel_created_successfully">Canal creado con éxito</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_more">view more</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_less">view less</string>
+    <string name="msg_view_more">Ver más</string>
+    <string name="msg_view_less">Ver menos</string>
 
     <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
-    <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
-    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string> <!-- TODO Add translation -->
+    <string name="msg_analytics_tracking">Seguimiento analítico</string>
+    <string name="msg_send_analytics_tracking">Envía estadísticas anónimas para ayudar a mejorar esta aplicación.</string>
+    <string name="msg_do_not_send_analytics_tracking">No envíe estadísticas anónimas para ayudar a mejorar esta aplicación</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">No aplica ya que es una versión FOSS.</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nombre de la sala cambiado para: %1$s por %2$s</string>
@@ -184,8 +182,7 @@
     <string name="permission_editing_not_allowed">La edición no és permitida</string>
     <string name="permission_deleting_not_allowed">Eliminar no és permitido</string>
     <string name="permission_pinning_not_allowed">Fijar no és permitido</string>
-    <!-- TODO Add translation -->
-    <string name="permission_starring_not_allowed">Starring is not allowed</string>
+    <string name="permission_starring_not_allowed">No está permitido protagonizar</string>
 
     <!-- Search message -->
     <string name="title_search_message">Búsqueda de mensajes</string>
@@ -267,7 +264,7 @@
     <string name="dialog_sort_by_activity">Actividad</string>
     <string name="dialog_group_by_type">Agrupar por tipo</string>
     <string name="dialog_group_favourites">Agrupar favoritos</string>
-    <string name="dialog_button_done">Done</string><!-- TODO Add translation -->
+    <string name="dialog_button_done">Fin</string>
     <string name="chatroom_header">Cabezazo</string>
 
     <!--ChatRooms Headers-->
