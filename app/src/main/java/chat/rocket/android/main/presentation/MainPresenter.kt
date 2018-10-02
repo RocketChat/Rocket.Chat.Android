@@ -2,6 +2,7 @@ package chat.rocket.android.main.presentation
 
 import android.app.AlertDialog
 import android.content.Context
+import chat.rocket.android.R
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.emoji.Emoji
@@ -165,9 +166,9 @@ class MainPresenter @Inject constructor(
 
     fun showLogoutDialog(context: Context) {
         val builder = AlertDialog.Builder(context)
-        builder.setMessage("Are you sure ?")
-        builder.setPositiveButton("LogOut") { _, _ -> logout()}
-            .setNegativeButton("Stay") { dialog, _ -> dialog.cancel() }
+        builder.setMessage(R.string.title_confirmation)
+        builder.setPositiveButton(R.string.action_logout) { _, _ -> logout()}
+            .setNegativeButton(R.string.action_stay) { dialog, _ -> dialog.cancel() }
         builder.create().show()
     }
     /**

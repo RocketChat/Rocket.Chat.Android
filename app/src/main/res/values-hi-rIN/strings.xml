@@ -20,6 +20,8 @@
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
     <string name="title_create_channel">चैनल बनाएं</string>
+    <string name="title_confirmation">Are You Sure?</string> <!-- TODO Add translation -->
+
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
@@ -33,6 +35,7 @@
     <string name="action_create_channel">चैनल बनाएं</string>
     <string name="action_create">बनाएं</string>
     <string name="action_logout">लोग आउट करें</string>
+    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">फ़ाइलें</string>
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
     <string name="action_join_chat">चैट में शामिल हों</string>

@@ -20,6 +20,8 @@
     <string name="title_update_profile">Оновити профіль</string>
     <string name="title_about">"Про програму"</string>
     <string name="title_create_channel">Створити новий канал</string>
+    <string name="title_confirmation">Are You Sure?</string> <!-- TODO Add translation -->
+
 
     <!-- Actions -->
     <string name="action_connect">Підключитися</string>
@@ -33,6 +35,7 @@
     <string name="action_create_channel">Створити канал</string>
     <string name="action_create">Створити</string>
     <string name="action_logout">Вийти</string>
+    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">Файли</string>
     <string name="action_confirm_password">Підтвердження зміни пароля</string>
     <string name="action_join_chat">Приєднатися до чату</string>
