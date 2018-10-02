@@ -2,6 +2,7 @@ package chat.rocket.android.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import chat.rocket.android.db.model.AttachmentActionEntity
 import chat.rocket.android.db.model.AttachmentEntity
 import chat.rocket.android.db.model.AttachmentFieldEntity
 import chat.rocket.android.db.model.ChatRoomEntity
@@ -19,10 +20,10 @@ import chat.rocket.android.db.model.UserEntity
         UserEntity::class, ChatRoomEntity::class, MessageEntity::class,
         MessageFavoritesRelation::class, MessageMentionsRelation::class,
         MessageChannels::class, AttachmentEntity::class,
-        AttachmentFieldEntity::class, UrlEntity::class, ReactionEntity::class,
-        MessagesSync::class
+        AttachmentFieldEntity::class, AttachmentActionEntity::class, UrlEntity::class,
+        ReactionEntity::class, MessagesSync::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = true
 )
 abstract class RCDatabase : RoomDatabase() {

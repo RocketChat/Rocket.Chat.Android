@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import chat.rocket.android.db.model.AttachmentActionEntity
 import chat.rocket.android.db.model.AttachmentEntity
 import chat.rocket.android.db.model.AttachmentFieldEntity
 import chat.rocket.android.db.model.BaseMessageEntity
@@ -170,6 +171,9 @@ abstract class  MessageDao {
 
     @Query("SELECT * FROM attachment_fields WHERE attachmentId = :id")
     abstract fun getAttachmentFields(id: String): List<AttachmentFieldEntity>
+
+    @Query("SELECT * FROM attachment_action WHERE attachmentId = :id")
+    abstract fun getAttachmentActions(id: String): List<AttachmentActionEntity>
 
     companion object {
         const val BASE_MESSAGE_QUERY = """

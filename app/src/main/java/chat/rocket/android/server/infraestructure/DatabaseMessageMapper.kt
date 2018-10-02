@@ -1,6 +1,7 @@
 package chat.rocket.android.server.infraestructure
 
 import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.db.model.AttachmentActionEntity
 import chat.rocket.android.db.model.AttachmentEntity
 import chat.rocket.android.db.model.FullMessage
 import chat.rocket.android.db.model.ReactionEntity
@@ -20,6 +21,9 @@ import chat.rocket.core.model.attachment.GenericFileAttachment
 import chat.rocket.core.model.attachment.ImageAttachment
 import chat.rocket.core.model.attachment.MessageAttachment
 import chat.rocket.core.model.attachment.VideoAttachment
+import chat.rocket.core.model.attachment.actions.Action
+import chat.rocket.core.model.attachment.actions.ActionsAttachment
+import chat.rocket.core.model.attachment.actions.ButtonAction
 import chat.rocket.core.model.messageTypeOf
 import chat.rocket.core.model.url.Meta
 import chat.rocket.core.model.url.ParsedUrl
@@ -160,11 +164,33 @@ class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
                     authorLink != null -> {
                         mapAuthorAttachment(this)
                     }
+                    hasActions -> {
+                        mapActionAttachment(this)
+                    }
                     else -> null
                 }?.let { list.add(it) }
             }
         }
         return list
+    }
+
+    private suspend fun mapActionAttachment(attachment: AttachmentEntity): ActionsAttachment {
+        val actions = withContext(CommonPool) {
+            dbManager.messageDao().getAttachmentActions(attachment._id)
+        }.mapNotNull { mapAction(it) }
+        return with(attachment) {
+            // TODO - remove the default "vertical" value from here...
+            ActionsAttachment(title, actions, buttonAlignment ?: "vertical")
+        }
+    }
+
+    private fun mapAction(action: AttachmentActionEntity): Action? {
+        return when (action.type) {
+            "button" -> ButtonAction(action.type, action.text, action.url, action.isWebView,
+                    action.webViewHeightRatio, action.imageUrl, action.message,
+                    action.isMessageInChatWindow)
+            else -> null
+        }
     }
 
     private suspend fun mapAuthorAttachment(attachment: AttachmentEntity): AuthorAttachment {
