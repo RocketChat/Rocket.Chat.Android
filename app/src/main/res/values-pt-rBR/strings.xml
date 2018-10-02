@@ -151,7 +151,7 @@
     <string name="msg_analytics_tracking">Rastreamento de análises</string>
     <string name="msg_send_analytics_tracking">Envie estatísticas anônimas para ajudar a melhorar este app</string>
     <string name="msg_do_not_send_analytics_tracking">Não envie estatísticas anônimas para ajudar a melhorar este app</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Not aplicável devido a versão do aplicativo ser FOSS</string> <!-- TODO Add translation -->
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Not aplicável devido a versão do aplicativo ser FOSS</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
@@ -270,7 +270,7 @@
     <string name="dialog_sort_by_activity">Atividade</string>
     <string name="dialog_group_by_type">Agrupar por tipo</string>
     <string name="dialog_group_favourites">Grupos favoritos</string>
-    <string name="dialog_button_done">Done</string><!-- TODO Add translation -->
+    <string name="dialog_button_done">Feito</string>
     <string name="chatroom_header">Cabeçalho</string>
 
     <!--ChatRooms Headers-->

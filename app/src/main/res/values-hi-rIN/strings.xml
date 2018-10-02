@@ -145,10 +145,8 @@
     <string name="msg_member_already_added">आपने पहले से ही इस यूजर को चुन चुके है।</string>
     <string name="msg_member_not_found">सदस्य नहीं मिला</string>
     <string name="msg_channel_created_successfully">चैनल सफलतापूर्वक बनाया गया</string>
-    <!--  TODO - Add proper translation -->
-    <string name="msg_view_more">view more</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_less">view less</string>
+    <string name="msg_view_more">और देखें</string>
+    <string name="msg_view_less">कम देखें</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">एनालिटिक्स ट्रैकिंग</string>
