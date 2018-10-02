@@ -291,4 +291,5 @@
     <string name="read_by">द्वारा पढ़ें</string>
     <string name="message_information_title">संदेश की जानकारी</string>
     <string name="msg_log_out">लॉग आउट कर रहा हूं…</string>
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 </resources>
