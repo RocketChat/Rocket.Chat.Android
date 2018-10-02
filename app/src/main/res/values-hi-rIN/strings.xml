@@ -145,7 +145,7 @@
     <string name="msg_member_already_added">आपने पहले से ही इस यूजर को चुन चुके है।</string>
     <string name="msg_member_not_found">सदस्य नहीं मिला</string>
     <string name="msg_channel_created_successfully">चैनल सफलतापूर्वक बनाया गया</string>
-    <string name="msg_view_more">और  देखें</string>
+    <string name="msg_view_more">और देखें</string>
     <string name="msg_view_less">कम देखें</string>
 
     <!-- Preferences messages -->
