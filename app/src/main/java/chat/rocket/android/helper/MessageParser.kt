@@ -143,23 +143,19 @@ class MessageParser @Inject constructor(
 
         override fun visit(document: Document) {
             val text = builder.text()
-            val mentionsList = mentions.toMutableList().also {
-                it.add("@all")
-                it.add("@here")
-            }.distinct()
 
-            mentionsList.forEach {
+            var offset = 0
+            mentions.forEach {
                 val mentionMe = it == currentUser || it == "@all" || it == "@here"
-                var offset = text.indexOf(string = it, startIndex = 0, ignoreCase = false)
+                offset = text.indexOf(string = it, startIndex = offset, ignoreCase = false)
                 while (offset > -1) {
                     val textColor = if (mentionMe) myselfTextColor else othersTextColor
                     val backgroundColor = if (mentionMe) myselfBackgroundColor else othersBackgroundColor
                     val usernameSpan = MentionSpan(backgroundColor, textColor, radius, padding,
                         mentionMe)
-                    // Add 1 to end offset to include the @.
                     val end = offset + it.length
                     builder.setSpan(usernameSpan, offset, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    offset = text.indexOf(string = "@$it", startIndex = end, ignoreCase = false)
+                    offset = text.indexOf(string = it, startIndex = end, ignoreCase = false)
                 }
             }
         }
