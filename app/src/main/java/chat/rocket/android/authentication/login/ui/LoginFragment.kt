@@ -102,7 +102,9 @@ class LoginFragment : Fragment(), LoginView {
     override fun onResume() {
         super.onResume()
         if (hasCredentialsSupport()) {
-            requestStoredCredentials()
+            // NOTE: Disabling the GLS feature for now.
+            // TODO Improve it behaviour.
+//            requestStoredCredentials()
         }
     }
 
