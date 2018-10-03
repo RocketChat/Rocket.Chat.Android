@@ -87,7 +87,7 @@ fun newInstance(
     deepLinkInfo: LoginDeepLinkInfo? = null
 ): Fragment {
     return LoginOptionsFragment().apply {
-        arguments = Bundle(19).apply {
+        arguments = Bundle(23).apply {
             putString(SERVER_NAME, serverName)
             putString(STATE, state)
             putString(FACEBOOK_OAUTH_URL, facebookOauthUrl)
