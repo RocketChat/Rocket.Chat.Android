@@ -175,7 +175,7 @@ class UiModelMapper @Inject constructor(
                     broadcast = broadcast ?: false,
                     alert = alert,
                     fullName = fullname,
-                    name = name ?: "",
+                    name = name,
                     favorite = favorite ?: false,
                     default = isDefault ?: false,
                     readonly = readonly,
@@ -477,7 +477,7 @@ class UiModelMapper @Inject constructor(
         val time = getTime(message.timestamp)
         val avatar = getUserAvatar(message)
         val preview = mapMessagePreview(message)
-        val synced = message.synced ?: true
+        val synced = message.synced
         val unread = if (settings.messageReadReceiptEnabled()) {
             message.unread ?: false
         } else {
