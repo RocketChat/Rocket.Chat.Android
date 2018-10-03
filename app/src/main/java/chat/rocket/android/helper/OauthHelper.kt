@@ -10,9 +10,9 @@ object OauthHelper {
      * Returns an unguessable random string used to protect against forgery attacks.
      */
     fun getState() =
-        "{\"loginStyle\":\"popup\"," +
+        ("{\"loginStyle\":\"popup\"," +
                 "\"credentialToken\":\"${generateRandomString(40)}\"," +
-                "\"isCordova\":true}".encodeToBase64()
+                "\"isCordova\":true}").encodeToBase64()
 
     /**
      * Returns the Github Oauth URL.
