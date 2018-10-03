@@ -36,6 +36,7 @@ import kotlinx.coroutines.experimental.newSingleThreadContext
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import java.util.HashSet
+import kotlin.system.measureTimeMillis
 
 class DatabaseManager(val context: Application,
                       val serverUrl: String) {
@@ -73,13 +74,17 @@ class DatabaseManager(val context: Application,
         launch(dbContext) {
             val dao = userDao()
             val list = ArrayList<BaseUserEntity>(users.size)
-            users.forEach { user ->
-                user.toEntity()?.let { entity ->
-                    list.add(entity)
+            var time = measureTimeMillis {
+                users.forEach { user ->
+                    user.toEntity()?.let { entity ->
+                        list.add(entity)
+                    }
                 }
             }
+            Timber.d("Converted users batch(${users.size}) in $time MS")
 
-            dao.upsert(list)
+            time = measureTimeMillis { dao.upsert(list) }
+            Timber.d("Upserted users batch(${users.size}) in $time MS")
         }
     }
 
@@ -523,7 +528,7 @@ class DatabaseManager(val context: Application,
 }
 
 fun User.toEntity(): BaseUserEntity? {
-    return if (name == null && username == null && utcOffset == null && status != null) {
+    return if ((name == null || username == null) && status != null) {
         UserStatus(id = id, status = status.toString())
     } else if (username != null) {
         UserEntity(id, username, name, status?.toString() ?: "offline", utcOffset)
