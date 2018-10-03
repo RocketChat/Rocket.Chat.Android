@@ -13,14 +13,14 @@
 
         <TextView
             android:id="@+id/text_sign_up"
-            style="@style/Authentication.Headline.TextView"
+            style="@style/Authentication.TextView.Headline"
             android:text="@string/title_sign_up"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/text_name"
-            style="@style/Authentication.EditText"
+            style="@style/Authentication.EditText.Border"
             android:layout_marginTop="16dp"
             android:drawableStart="@drawable/ic_person_black_20dp"
             android:hint="@string/msg_name"
@@ -32,7 +32,7 @@
 
         <EditText
             android:id="@+id/text_username"
-            style="@style/Authentication.EditText"
+            style="@style/Authentication.EditText.Border"
             android:layout_marginTop="10dp"
             android:drawableStart="@drawable/ic_at_black_20dp"
             android:hint="@string/msg_username"
@@ -44,7 +44,7 @@
 
         <EditText
             android:id="@+id/text_password"
-            style="@style/Authentication.EditText"
+            style="@style/Authentication.EditText.Border"
             android:layout_marginTop="10dp"
             android:drawableStart="@drawable/ic_key_black_20dp"
             android:hint="@string/msg_password"
@@ -56,7 +56,7 @@
 
         <EditText
             android:id="@+id/text_email"
-            style="@style/Authentication.EditText"
+            style="@style/Authentication.EditText.Border"
             android:layout_marginTop="10dp"
             android:drawableStart="@drawable/ic_email_black_20dp"
             android:hint="@string/msg_email"
@@ -68,7 +68,7 @@
 
         <Button
             android:id="@+id/button_register"
-            style="@style/Authentication.Button.Flat"
+            style="@style/Authentication.Button"
             android:layout_marginTop="20dp"
             android:backgroundTint="@color/colorAuthenticationButtonDisabled"
             android:enabled="false"

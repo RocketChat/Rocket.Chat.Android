@@ -33,12 +33,10 @@ import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
 import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_authentication_server.*
 import okhttp3.HttpUrl
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 fun newInstance() = ServerFragment()
@@ -242,7 +240,6 @@ class ServerFragment : Fragment(), ServerView {
 
     private fun subscribeEditText() {
         serverUrlDisposable = text_server_url.asObservable()
-            .debounce(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
             .filter { it.isNotBlank() }
             .subscribe {
                 if (it.toString().isValidUrl()) {

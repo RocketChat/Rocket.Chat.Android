@@ -10,14 +10,14 @@
 
     <TextView
         android:id="@+id/text_login"
-        style="@style/Authentication.Headline.TextView"
+        style="@style/Authentication.TextView.Headline"
         android:text="@string/title_log_in"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/text_username_or_email"
-        style="@style/Authentication.EditText"
+        style="@style/Authentication.EditText.Border"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_at_black_20dp"
         android:hint="@string/msg_username_or_email"
@@ -29,7 +29,7 @@
 
     <EditText
         android:id="@+id/text_password"
-        style="@style/Authentication.EditText"
+        style="@style/Authentication.EditText.Border"
         android:layout_marginTop="10dp"
         android:drawableStart="@drawable/ic_key_black_20dp"
         android:hint="@string/msg_password"
@@ -41,7 +41,7 @@
 
     <Button
         android:id="@+id/button_log_in"
-        style="@style/Authentication.Button.Flat"
+        style="@style/Authentication.Button"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/colorAuthenticationButtonDisabled"
         android:enabled="false"
@@ -52,15 +52,9 @@
 
     <Button
         android:id="@+id/button_forgot_your_password"
-        style="?borderlessButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        style="@style/Authentication.Button.Borderless"
         android:layout_marginTop="10dp"
         android:text="@string/msg_forgot__your_password"
-        android:textAllCaps="false"
-        android:textColor="@color/colorAccent"
-        android:textSize="18sp"
-        android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -25,4 +25,14 @@ interface LoginView : LoadingView, MessageView {
      * the user (i.e. The fields are empty/blank)
      */
     fun disableButtonLogin()
+
+    /**
+     * Enables the forget password button after requesting a processing to log in.
+     */
+    fun enableButtonForgetPassword()
+
+    /**
+     * Disables the forget password button when requesting a processing to log in.
+     */
+    fun disableButtonForgetPassword()
 }

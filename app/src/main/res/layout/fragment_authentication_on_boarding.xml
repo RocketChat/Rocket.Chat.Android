@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/text_on_boarding_title"
-        style="@style/Authentication.Headline.TextView"
+        style="@style/Authentication.TextView.Headline"
         android:layout_marginTop="32dp"
         android:text="@string/msg_welcome_to_rocket_chat"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,7 +28,7 @@
 
     <TextView
         android:id="@+id/text_on_boarding_description"
-        style="@style/Authentication.Description.TextView"
+        style="@style/Authentication.TextView.Description"
         android:text="@string/msg_team_communication"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

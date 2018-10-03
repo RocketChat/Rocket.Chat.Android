@@ -186,6 +186,24 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
 
+    override fun enableButtonForgetPassword() {
+        context?.let {
+            button_forgot_your_password.isEnabled = true
+            button_forgot_your_password.setTextColor(
+                ContextCompat.getColorStateList(it, R.color.colorAccent)
+            )
+        }
+    }
+
+    override fun disableButtonForgetPassword() {
+        context?.let {
+            button_forgot_your_password.isEnabled = false
+            button_forgot_your_password.setTextColor(
+                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+            )
+        }
+    }
+
     private fun requestStoredCredentials() {
         activity?.requestStoredCredentials()?.let { credentials ->
             onCredentialRetrieved(credentials.first, credentials.second)
@@ -223,6 +241,7 @@ class LoginFragment : Fragment(), LoginView {
     private fun enableUserInput() {
         ui {
             enableButtonLogin()
+            enableButtonForgetPassword()
             text_username_or_email.isEnabled = true
             text_password.isEnabled = true
         }
@@ -231,6 +250,7 @@ class LoginFragment : Fragment(), LoginView {
     private fun disableUserInput() {
         ui {
             disableButtonLogin()
+            disableButtonForgetPassword()
             text_username_or_email.isEnabled = false
             text_password.isEnabled = false
         }

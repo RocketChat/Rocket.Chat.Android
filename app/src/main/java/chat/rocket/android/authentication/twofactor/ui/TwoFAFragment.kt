@@ -21,10 +21,8 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_authentication_two_fa.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 fun newInstance(username: String, password: String): Fragment {
@@ -162,7 +160,6 @@ class TwoFAFragment : Fragment(), TwoFAView {
 
     private fun subscribeEditText() {
         twoFaCodeDisposable = text_two_factor_authentication_code.asObservable()
-            .debounce(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
             .subscribe {
                 if (it.isNotBlank()) {
                     enableButtonConfirm()
