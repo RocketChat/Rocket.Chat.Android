@@ -149,11 +149,11 @@ class SignupFragment : Fragment(), SignupView {
                 text_email.asObservable()
             ) { text_name, text_username, text_password, text_email ->
                 return@combineLatest (
-                        (text_name.isNotBlank() &&
+                        text_name.isNotBlank() &&
                                 text_username.isNotBlank() &&
                                 text_password.isNotBlank() &&
-                                text_email.isNotBlank()) ||
-                                !text_email.toString().isEmail()
+                                text_email.isNotBlank() &&
+                                text_email.toString().isEmail()
                         )
             }.subscribe { isValid ->
                 if (isValid) {
