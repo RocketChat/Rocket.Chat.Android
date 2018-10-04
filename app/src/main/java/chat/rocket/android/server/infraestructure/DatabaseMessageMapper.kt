@@ -16,6 +16,7 @@ import chat.rocket.core.model.attachment.AudioAttachment
 import chat.rocket.core.model.attachment.AuthorAttachment
 import chat.rocket.core.model.attachment.Color
 import chat.rocket.core.model.attachment.ColorAttachment
+import chat.rocket.core.model.attachment.DEFAULT_COLOR_STR
 import chat.rocket.core.model.attachment.Field
 import chat.rocket.core.model.attachment.GenericFileAttachment
 import chat.rocket.core.model.attachment.ImageAttachment
@@ -61,7 +62,7 @@ class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
                 }
                 val urls = this.urls?.let { mapUrl(it) }
                 val reactions = this.reactions?.let { mapReactions(it) }
-                val attachments = this.attachments?.let { mapAttachments(it) }
+                val attachments = this.attachments?.let { mapAttachments(it).asReversed() }
                 val messageType = messageTypeOf(this.message.type)
 
                 list.add(Message(
@@ -164,6 +165,9 @@ class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
                     authorLink != null -> {
                         mapAuthorAttachment(this)
                     }
+                    hasFields -> {
+                        mapColorAttachmentWithFields(this)
+                    }
                     hasActions -> {
                         mapActionAttachment(this)
                     }
@@ -172,6 +176,19 @@ class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
             }
         }
         return list
+    }
+
+    private suspend fun mapColorAttachmentWithFields(entity: AttachmentEntity): ColorAttachment {
+        val fields = withContext(CommonPool) {
+            dbManager.messageDao().getAttachmentFields(entity._id)
+        }.map { Field(it.title, it.value) }
+        return with(entity) {
+            ColorAttachment(
+                color = Color.Custom(color ?: DEFAULT_COLOR_STR),
+                text = text ?: "",
+                fallback = fallback,
+                fields = fields)
+        }
     }
 
     private suspend fun mapActionAttachment(attachment: AttachmentEntity): ActionsAttachment {

@@ -42,6 +42,7 @@ import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.attachment.AudioAttachment
 import chat.rocket.core.model.attachment.AuthorAttachment
 import chat.rocket.core.model.attachment.ColorAttachment
+import chat.rocket.core.model.attachment.Field
 import chat.rocket.core.model.attachment.FileAttachment
 import chat.rocket.core.model.attachment.GenericFileAttachment
 import chat.rocket.core.model.attachment.ImageAttachment
@@ -129,14 +130,14 @@ class UiModelMapper @Inject constructor(
         withContext(CommonPool) {
             val list = ArrayList<BaseUiModel<*>>()
 
-            message.urls?.forEach {
-                val url = mapUrl(message, it)
-                url?.let { list.add(url) }
+            message.urls?.forEach { url ->
+                mapUrl(message, url)?.let { list.add(it) }
             }
 
-            message.attachments?.forEach {
-                val attachment = mapAttachment(message, it)
-                attachment?.let { list.add(attachment) }
+            message.attachments?.mapNotNull { attachment ->
+                mapAttachment(message, attachment)
+            }?.asReversed()?.let {
+                list.addAll(it)
             }
 
             mapMessage(message).let {
@@ -334,12 +335,31 @@ class UiModelMapper @Inject constructor(
 
             val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
             val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+            val fieldsText = mapFields(fields)
 
             ColorAttachmentUiModel(attachmentUrl = url, id = id, color = color.color,
-                text = text, message = message, rawData = attachment,
+                text = text, fields = fieldsText, message = message, rawData = attachment,
                 messageId = message.id, reactions = getReactions(message),
                 preview = message.copy(message = content.message), unread = message.unread,
                 showDayMarker = false, currentDayMarkerText = dayMarkerText)
+        }
+    }
+
+    private fun mapFields(fields: List<Field>?): CharSequence? {
+        return fields?.let {
+            buildSpannedString {
+                it.forEachIndexed { index, field ->
+                    bold { append(field.title) }
+                    append("\n")
+                    if (field.value.isNotEmpty()) {
+                        append(field.value)
+                    }
+
+                    if (index != it.size - 1) { // it is not the last one, append a new line
+                        append("\n\n")
+                    }
+                }
+            }
         }
     }
 
@@ -347,21 +367,7 @@ class UiModelMapper @Inject constructor(
         return with(attachment) {
             val content = stripMessageQuotes(message)
 
-            val fieldsText = fields?.let {
-                buildSpannedString {
-                    it.forEachIndexed { index, field ->
-                        bold { append(field.title) }
-                        append("\n")
-                        if (field.value.isNotEmpty()) {
-                            append(field.value)
-                        }
-
-                        if (index != it.size - 1) { // it is not the last one, append a new line
-                            append("\n\n")
-                        }
-                    }
-                }
-            }
+            val fieldsText = mapFields(fields)
             val id = attachmentId(message, attachment)
 
             val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)

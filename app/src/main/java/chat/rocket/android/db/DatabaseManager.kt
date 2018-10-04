@@ -56,8 +56,8 @@ class DatabaseManager(val context: Application,
     fun userDao(): UserDao = database.userDao()
     fun messageDao(): MessageDao = database.messageDao()
 
-    fun clearUsersStatus() {
-        launch(dbContext) {
+    suspend fun clearUsersStatus() {
+        withContext(dbContext) {
             userDao().clearStatus()
         }
     }

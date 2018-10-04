@@ -69,6 +69,8 @@ data class AttachmentEntity(
     val timestamp: Long? = null,
     @ColumnInfo(name = "has_actions")
     val hasActions: Boolean = false,
+    @ColumnInfo(name = "has_fields")
+    val hasFields: Boolean = false,
     @ColumnInfo(name = "button_alignment")
     val buttonAlignment: String? = null
 ) : BaseMessageEntity
@@ -119,7 +121,7 @@ fun Attachment.asEntity(msgId: String): List<BaseMessageEntity> {
         is VideoAttachment -> listOf(asEntity(msgId))
         is AudioAttachment -> listOf(asEntity(msgId))
         is AuthorAttachment -> asEntity(msgId)
-        is ColorAttachment -> listOf(asEntity(msgId))
+        is ColorAttachment -> asEntity(msgId)
         is MessageAttachment -> listOf(asEntity(msgId))
         is GenericFileAttachment -> listOf(asEntity(msgId))
         is ActionsAttachment -> asEntity(msgId)
@@ -179,7 +181,8 @@ fun AuthorAttachment.asEntity(msgId: String): List<BaseMessageEntity> {
         messageId = msgId,
         authorLink = url,
         authorIcon = authorIcon,
-        authorName = authorName
+        authorName = authorName,
+        hasFields = fields?.isNotEmpty() == true
     )
     list.add(attachment)
 
@@ -195,13 +198,28 @@ fun AuthorAttachment.asEntity(msgId: String): List<BaseMessageEntity> {
     return list
 }
 
-fun ColorAttachment.asEntity(msgId: String): AttachmentEntity =
-    AttachmentEntity(
+fun ColorAttachment.asEntity(msgId: String): List<BaseMessageEntity> {
+    val list = mutableListOf<BaseMessageEntity>()
+    val attachment = AttachmentEntity(
         _id = "${msgId}_${hashCode()}",
         messageId = msgId,
         color = color.rawColor,
-        fallback = fallback
+        fallback = fallback,
+        hasFields = fields?.isNotEmpty() == true
     )
+    list.add(attachment)
+
+    fields?.forEach { field ->
+        val entity = AttachmentFieldEntity(
+            attachmentId = attachment._id,
+            title = field.title,
+            value = field.value
+        )
+        list.add(entity)
+    }
+
+    return list
+}
 
 // TODO - how to model An message attachment with attachments???
 fun MessageAttachment.asEntity(msgId: String): AttachmentEntity =

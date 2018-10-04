@@ -23,7 +23,7 @@ import chat.rocket.android.db.model.UserEntity
         AttachmentFieldEntity::class, AttachmentActionEntity::class, UrlEntity::class,
         ReactionEntity::class, MessagesSync::class
     ],
-    version = 8,
+    version = 9,
     exportSchema = true
 )
 abstract class RCDatabase : RoomDatabase() {
