@@ -187,6 +187,18 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             .create()
             .show()
     }
+    
+    override fun alertLogoutConfirmation() {
+        AlertDialog.Builder(this)
+            .setMessage(
+                getString(
+                    R.string.msg_logout_confirmation
+                )
+            )
+            .setPositiveButton(R.string.msg_ok, { presenter.logout()})
+            .create()
+            .show()
+    }
 
     override fun blockAndAlertNotRequiredVersion() {
         AlertDialog.Builder(this)

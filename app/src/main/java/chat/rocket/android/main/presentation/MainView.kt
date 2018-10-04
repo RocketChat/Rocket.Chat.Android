@@ -30,6 +30,8 @@ interface MainView : MessageView, VersionCheckView {
     fun setupServerAccountList(serverAccountList: List<Account>)
 
     fun closeServerSelection()
+    
+    fun alertLogoutConfirmation()
 
     fun invalidateToken(token: String)
 
