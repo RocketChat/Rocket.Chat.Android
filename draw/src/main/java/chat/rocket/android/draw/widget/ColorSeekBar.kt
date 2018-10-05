@@ -16,7 +16,7 @@ import chat.rocket.android.draw.R
 class ColorSeekBar(context: Context, attributeSet: AttributeSet): View(context, attributeSet){
 
     private val minThumbRadius = 16f
-    private var colorSeeds = intArrayOf(Color.parseColor("#000000"), Color.parseColor("#FF5252"), Color.parseColor("#FFEB3B"), Color.parseColor("#00C853"), Color.parseColor("#00B0FF"), Color.parseColor("#D500F9"), Color.parseColor("#8D6E63"))
+    private lateinit var colorSeeds : IntArray
     private var canvasHeight: Int = 60
     private var barHeight: Int = 20
     private var rectf: RectF = RectF()
@@ -41,7 +41,11 @@ class ColorSeekBar(context: Context, attributeSet: AttributeSet): View(context, 
         attributeSet.let {
             val typedArray = context.obtainStyledAttributes(it, R.styleable.ColorSeekBar)
             val colorsId = typedArray.getResourceId(R.styleable.ColorSeekBar_colorSeeds, 0)
-            if (colorsId != 0) colorSeeds = getColorsById(colorsId)
+            if (colorsId != 0) {
+                colorSeeds = getColorsById(colorsId)
+            } else {
+                colorSeeds = getColorsById(R.array.drawColors)
+            }
             barCornerRadius = typedArray.getDimension(R.styleable.ColorSeekBar_cornerRadius, 8f)
             barHeight = typedArray.getDimension(R.styleable.ColorSeekBar_barHeight, 20f).toInt()
             thumbBorder = typedArray.getDimension(R.styleable.ColorSeekBar_thumbBorder, 4f)

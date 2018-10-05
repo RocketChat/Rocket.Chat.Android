@@ -73,9 +73,9 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
         }
 
         image_draw_width.setOnClickListener {
-            if (seekBar_width.isVisible){
+            if (seekBar_width.isVisible) {
                 closeDrawTools()
-            }else{
+            } else {
                 seekBar_width.isVisible = true
                 seekBar_opacity.isVisible = false
                 draw_color_palette.isVisible = false
@@ -83,9 +83,9 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
         }
 
         image_draw_opacity.setOnClickListener {
-            if (seekBar_opacity.isVisible){
+            if (seekBar_opacity.isVisible) {
                 closeDrawTools()
-            }else{
+            } else {
                 seekBar_width.isVisible = false
                 seekBar_opacity.isVisible = true
                 draw_color_palette.isVisible = false
@@ -93,9 +93,9 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
         }
 
         image_draw_color.setOnClickListener {
-            if (draw_color_palette.isVisible){
+            if (draw_color_palette.isVisible) {
                 closeDrawTools()
-            }else{
+            } else {
                 seekBar_width.isVisible = false
                 seekBar_opacity.isVisible = false
                 draw_color_palette.isVisible = true
