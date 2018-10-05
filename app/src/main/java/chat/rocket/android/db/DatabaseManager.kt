@@ -1,16 +1,25 @@
 package chat.rocket.android.db
 
 import android.app.Application
-import androidx.room.migration.Migration
 import chat.rocket.android.R
+import chat.rocket.android.db.model.BaseMessageEntity
 import chat.rocket.android.db.model.BaseUserEntity
 import chat.rocket.android.db.model.ChatRoomEntity
+import chat.rocket.android.db.model.MessageChannels
+import chat.rocket.android.db.model.MessageEntity
+import chat.rocket.android.db.model.MessageFavoritesRelation
+import chat.rocket.android.db.model.MessageMentionsRelation
+import chat.rocket.android.db.model.ReactionEntity
+import chat.rocket.android.db.model.UrlEntity
 import chat.rocket.android.db.model.UserEntity
 import chat.rocket.android.db.model.UserStatus
+import chat.rocket.android.db.model.asEntity
 import chat.rocket.android.util.extensions.removeTrailingSlash
+import chat.rocket.android.util.extensions.toEntity
 import chat.rocket.android.util.extensions.userId
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.SimpleUser
 import chat.rocket.common.model.User
 import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.socket.model.StreamMessage
@@ -21,21 +30,22 @@ import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
 import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.userId
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.newSingleThreadContext
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import java.util.HashSet
+import kotlin.system.measureTimeMillis
 
 class DatabaseManager(val context: Application,
                       val serverUrl: String) {
 
     private val database: RCDatabase = androidx.room.Room.databaseBuilder(context,
             RCDatabase::class.java, serverUrl.databaseName())
-            .addMigrations(RCDatabase.MIGRATION_4_5)
             .fallbackToDestructiveMigration()
             .build()
-    private val dbContext = newSingleThreadContext("$serverUrl-db-context")
+    val dbContext = newSingleThreadContext("$serverUrl-db-context")
 
     private val insertSubs = HashMap<String, Subscription>()
     private val insertRooms = HashMap<String, Room>()
@@ -44,9 +54,10 @@ class DatabaseManager(val context: Application,
 
     fun chatRoomDao(): ChatRoomDao = database.chatRoomDao()
     fun userDao(): UserDao = database.userDao()
+    fun messageDao(): MessageDao = database.messageDao()
 
-    fun clearUsersStatus() {
-        launch(dbContext) {
+    suspend fun clearUsersStatus() {
+        withContext(dbContext) {
             userDao().clearStatus()
         }
     }
@@ -61,19 +72,26 @@ class DatabaseManager(val context: Application,
 
     fun processUsersBatch(users: List<User>) {
         launch(dbContext) {
-            val dao = database.userDao()
+            val dao = userDao()
             val list = ArrayList<BaseUserEntity>(users.size)
-            users.forEach { user ->
-                user.toEntity()?.let { entity ->
-                    list.add(entity)
+            var time = measureTimeMillis {
+                users.forEach { user ->
+                    user.toEntity()?.let { entity ->
+                        list.add(entity)
+                    }
                 }
             }
+            Timber.d("Converted users batch(${users.size}) in $time MS")
 
-            dao.upsert(list)
+            time = measureTimeMillis { dao.upsert(list) }
+            Timber.d("Upserted users batch(${users.size}) in $time MS")
         }
     }
 
-    fun processStreamBatch(batch: List<StreamMessage<BaseRoom>>) {
+    /*
+     * Creates a list of data base operations
+     */
+    fun processChatRoomsBatch(batch: List<StreamMessage<BaseRoom>>) {
         launch(dbContext) {
             val toRemove = HashSet<String>()
             val toInsert = ArrayList<ChatRoomEntity>(batch.size / 2)
@@ -100,11 +118,22 @@ class DatabaseManager(val context: Application,
 
                 Timber.d("Running ChatRooms transaction: remove: $toRemove - insert: $toInsert - update: $filteredUpdate")
 
-                chatRoomDao().update(toRemove.toList(), filteredInsert, filteredUpdate)
+                chatRoomDao().update(filteredInsert, filteredUpdate, toRemove.toList())
+
+                //updateMessages(batch)
             } catch (ex: Exception) {
                 Timber.d(ex, "Error updating chatrooms")
             }
         }
+    }
+
+    private fun updateMessages(batch: List<StreamMessage<BaseRoom>>) {
+        val list = batch.filterNot { it.type == Type.Removed }
+                .filter { it.data is Room }
+                .filterNot { (it.data as Room).lastMessage == null }
+                .map { (it.data as Room).lastMessage!! }
+
+        processMessagesBatch(list)
     }
 
     fun updateSelfUser(myself: Myself) {
@@ -127,6 +156,121 @@ class DatabaseManager(val context: Application,
             val entities = rooms.map { mapChatRoom(it) }
             chatRoomDao().insertOrReplace(entities)
         }
+    }
+
+    fun processMessagesBatch(messages: List<Message>): Job {
+        return launch(dbContext) {
+            val dao = messageDao()
+            val list = mutableListOf<Pair<MessageEntity, List<BaseMessageEntity>>>()
+            messages.forEach { message ->
+                val pair = createMessageEntities(message)
+                list.add(pair)
+            }
+
+            dao.insert(list)
+        }
+    }
+
+    private suspend fun createMessageEntities(message: Message): Pair<MessageEntity, List<BaseMessageEntity>> {
+        val messageEntity = message.toEntity()
+        val list = mutableListOf<BaseMessageEntity>()
+        createAttachments(message)?.let { list.addAll(it)  }
+        createFavoriteRelations(message)?.let { list.addAll(it) }
+        createMentionRelations(message)?.let { list.addAll(it) }
+        createChannelRelations(message)?.let { list.addAll(it) }
+        createUrlEntities(message)?.let { list.addAll(it) }
+        createReactions(message)?.let { list.addAll(it) }
+
+        insertUserIfMissing(message.sender)
+        insertUserIfMissing(message.editedBy)
+        return Pair(messageEntity, list)
+    }
+
+    private fun createReactions(message: Message): List<BaseMessageEntity>? {
+        if (message.reactions == null || message.reactions!!.isEmpty()) {
+            return null
+        }
+
+        val reactions = message.reactions!!
+
+        val list = mutableListOf<BaseMessageEntity>()
+        reactions.keys.forEach { reaction ->
+            val users = reactions[reaction]
+            users?.let { users ->
+                list.add(ReactionEntity(reaction, message.id, users.size, users.joinToString()))
+            }
+        }
+
+        return list
+    }
+
+    private fun createUrlEntities(message: Message): List<BaseMessageEntity>? {
+        if (message.urls == null || message.urls!!.isEmpty()) {
+            return null
+        }
+
+        val list = mutableListOf<UrlEntity>()
+        message.urls!!.forEach { url ->
+            list.add(UrlEntity(message.id, url.url, url.parsedUrl?.host, url.meta?.title,
+                    url.meta?.description, url.meta?.imageUrl))
+        }
+
+        return list
+    }
+
+    private fun createChannelRelations(message: Message): List<BaseMessageEntity>? {
+        if (message.channels == null || message.channels!!.isEmpty()) {
+            return null
+        }
+
+        val list = mutableListOf<MessageChannels>()
+        message.channels!!.forEach { channel ->
+            list.add(MessageChannels(message.id, channel.id, channel.name))
+        }
+
+        return list
+    }
+
+    private suspend fun createMentionRelations(message: Message): List<BaseMessageEntity>? {
+        if (message.mentions == null || message.mentions!!.isEmpty()) {
+            return null
+        }
+
+        val list = mutableListOf<MessageMentionsRelation>()
+        message.mentions!!.filterNot { user -> user.id.isNullOrEmpty() }.forEach { mention ->
+            insertUserIfMissing(mention)
+            list.add(MessageMentionsRelation(message.id, mention.id!!))
+        }
+
+        return list
+    }
+
+    private suspend fun createFavoriteRelations(message: Message): List<BaseMessageEntity>? {
+        if (message.starred == null || message.starred!!.isEmpty()) {
+            return null
+        }
+
+        val list = mutableListOf<MessageFavoritesRelation>()
+        message.starred!!.filterNot { user -> user.id.isNullOrEmpty() }.forEach { userId ->
+            insertUserIfMissing(userId)
+            list.add(MessageFavoritesRelation(message.id, userId.id!!))
+        }
+
+        return list
+    }
+
+    private fun createAttachments(message: Message): List<BaseMessageEntity>? {
+        if (message.attachments == null || message.attachments!!.isEmpty()) {
+            return null
+        }
+
+        val list = ArrayList<BaseMessageEntity>(message.attachments!!.size)
+
+        message.attachments!!.forEach { attachment ->
+            list.addAll(attachment.asEntity(message.id))
+        }
+
+        return list
     }
 
     private suspend fun createUpdates(): List<ChatRoomEntity> {
@@ -183,21 +327,8 @@ class DatabaseManager(val context: Application,
             with(data) {
                 val chatRoom = current.chatRoom
 
-                lastMessage?.sender?.let { user ->
-                    user.id?.let { id ->
-                        if (findUser(id) == null) {
-                            Timber.d("Missing last message user, inserting: $id")
-                            insert(UserEntity(id, user.username, user.name))
-                        }
-                    }
-                }
-
-                user?.id?.let { id ->
-                    if (findUser(id) == null) {
-                        Timber.d("Missing owner user, inserting: $id")
-                        insert(UserEntity(id, user!!.username, user!!.name))
-                    }
-                }
+                insertUserIfMissing(lastMessage?.sender)
+                insertUserIfMissing(user)
 
                 chatRoom.copy(
                         name = name ?: chatRoom.name,
@@ -238,13 +369,9 @@ class DatabaseManager(val context: Application,
                     null
                 }
 
-                if (userId != null && findUser(userId) == null) {
-                    Timber.d("Missing user, inserting: $userId")
-                    insert(UserEntity(userId))
-                }
+                insertUserIfMissing(userId)
 
                 val chatRoom = current.chatRoom
-
                 chatRoom.copy(
                         id = roomId,
                         subscriptionId = id,
@@ -303,28 +430,9 @@ class DatabaseManager(val context: Application,
             null
         }
 
-        if (userId != null && findUser(userId) == null) {
-            Timber.d("Missing user, inserting: $userId")
-            insert(UserEntity(userId))
-        }
-
-        room.lastMessage?.sender?.let { user ->
-            user.id?.let { id ->
-                if (findUser(id) == null) {
-                    Timber.d("Missing last message user, inserting: $id")
-                    insert(UserEntity(id, user.username, user.name))
-                }
-            }
-        }
-
-        room.user?.let { user ->
-            user.id?.let { id ->
-                if (findUser(id) == null) {
-                    Timber.d("Missing owner user, inserting: $id")
-                    insert(UserEntity(id, user.username, user.name))
-                }
-            }
-        }
+        insertUserIfMissing(userId)
+        insertUserIfMissing(room.lastMessage?.sender)
+        insertUserIfMissing(room.user)
 
         return ChatRoomEntity(
             id = room.id,
@@ -360,21 +468,8 @@ class DatabaseManager(val context: Application,
                 insert(UserEntity(userId))
             }
 
-            lastMessage?.sender?.let { user ->
-                user.id?.let { id ->
-                    if (findUser(id) == null) {
-                        Timber.d("Missing last message user, inserting: $id")
-                        insert(UserEntity(id, user.username, user.name))
-                    }
-                }
-            }
-
-            user?.id?.let { id ->
-                if (findUser(id) == null) {
-                    Timber.d("Missing owner user, inserting: $id")
-                    insert(UserEntity(id, user?.username, user?.name))
-                }
-            }
+            insertUserIfMissing(lastMessage?.sender)
+            insertUserIfMissing(user)
 
             return ChatRoomEntity(
                 id = id,
@@ -415,11 +510,25 @@ class DatabaseManager(val context: Application,
         }
     }
 
+    private suspend fun insertUserIfMissing(id: String?) {
+        if (id != null && findUser(id) == null) {
+            Timber.d("Missing user, inserting: $id")
+            insert(UserEntity(id))
+        }
+    }
+
+    private suspend fun insertUserIfMissing(user: SimpleUser?) {
+        if (user?.id != null && findUser(user.id!!) == null) {
+            Timber.d("Missing user, inserting: ${user.id}")
+            insert(UserEntity(user.id!!, user.username, user.name))
+        }
+    }
+
     fun findUser(userId: String): String? = userDao().findUser(userId)
 }
 
 fun User.toEntity(): BaseUserEntity? {
-    return if (name == null && username == null && utcOffset == null && status != null) {
+    return if ((name == null || username == null) && status != null) {
         UserStatus(id = id, status = status.toString())
     } else if (username != null) {
         UserEntity(id, username, name, status?.toString() ?: "offline", utcOffset)
