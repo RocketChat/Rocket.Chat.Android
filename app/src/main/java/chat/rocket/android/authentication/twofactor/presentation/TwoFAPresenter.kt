@@ -17,12 +17,14 @@ import chat.rocket.android.server.domain.wideTile
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.isEmail
 import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.login
+import chat.rocket.core.internal.rest.loginWithEmail
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.model.Myself
 import javax.inject.Inject
@@ -54,7 +56,15 @@ class TwoFAPresenter @Inject constructor(
             try {
                 // The token is saved via the client TokenProvider
                 val token = retryIO("login") {
-                    client.login(usernameOrEmail, password, twoFactorAuthenticationCode)
+                    if (usernameOrEmail.isEmail()) {
+                        client.loginWithEmail(
+                            usernameOrEmail,
+                            password,
+                            twoFactorAuthenticationCode
+                        )
+                    } else {
+                        client.login(usernameOrEmail, password, twoFactorAuthenticationCode)
+                    }
                 }
                 val me = retryIO("me") { client.me() }
                 saveAccount(me)
@@ -62,8 +72,7 @@ class TwoFAPresenter @Inject constructor(
                 tokenRepository.save(currentServer, token)
                 localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
                 analyticsManager.logLogin(
-                    AuthenticationEvent.AuthenticationWithUserAndPassword,
-                    true
+                    AuthenticationEvent.AuthenticationWithUserAndPassword, true
                 )
                 navigator.toChatList()
             } catch (exception: RocketChatException) {
@@ -71,8 +80,7 @@ class TwoFAPresenter @Inject constructor(
                     view.alertInvalidTwoFactorAuthenticationCode()
                 } else {
                     analyticsManager.logLogin(
-                        AuthenticationEvent.AuthenticationWithUserAndPassword,
-                        false
+                        AuthenticationEvent.AuthenticationWithUserAndPassword, false
                     )
                     exception.message?.let {
                         view.showMessage(it)

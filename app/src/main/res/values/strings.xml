@@ -316,9 +316,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="notif_success_sending">Message sent to %1$s!</string>
     <string name="read_by">Read by</string>
     <string name="message_information_title">Message information</string>
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 
     <string name="foss" tools:ignore="MissingTranslation">(FOSS)</string>
-
-    <!-- Community Server-->
-
 </resources>

@@ -307,4 +307,6 @@
     <string name="notif_success_sending">メッセージは %1$s に送信されました!</string>
     <string name="read_by">読者</string>
     <string name="message_information_title">メッセージ情報</string>
+    <!--TODO - Add proper translation-->
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 </resources>

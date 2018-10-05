@@ -304,5 +304,7 @@
     <string name="msg_file_description">Descripción del archivo</string>
     <string name="msg_send">Enviar</string>
     <string name="msg_sent_attachment">Envió un archivo</string>
+    <!--TODO - Add proper translation-->
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 
 </resources>

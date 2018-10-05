@@ -300,4 +300,6 @@
     <string name="read_by">Прочитано</string>
     <string name="message_information_title">Информация о прочтении</string>
     <string name="msg_log_out">Выходим…</string>
+    <!--TODO - Add proper translation-->
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 </resources>
