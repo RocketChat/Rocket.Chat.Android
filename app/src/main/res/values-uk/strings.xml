@@ -287,5 +287,6 @@
     <string name="message_information_title">Інформація про прочитання</string>
     <string name="msg_log_out">Виходимо…</string>
     <string name="msg_sent_attachment">Долучення відправлено</string>
+    <!--TODO - Add proper translation-->
     <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 </resources>

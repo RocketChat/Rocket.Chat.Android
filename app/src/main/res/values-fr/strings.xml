@@ -290,5 +290,6 @@
     <string name="message_information_title">Informations sur le message</string>
     <string name="msg_log_out">Déconnecter…</string>
     <string name="msg_sent_attachment">Envoyé un fichier</string>
+    <!--TODO - Add proper translation-->
     <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 </resources>

@@ -288,6 +288,7 @@
     <string name="notif_success_sending">Mesaj %1$s\'a gönderildi!</string>
     <string name="read_by">ile oku</string>
     <string name="message_information_title">Mesaj bilgisi</string>
+    <!--TODO - Add proper translation-->
     <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 
 </resources>
