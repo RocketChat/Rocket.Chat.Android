@@ -195,7 +195,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                     R.string.msg_logout_confirmation
                 )
             )
-            .setPositiveButton(R.string.msg_ok, { presenter.logout()})
+            .setPositiveButton(R.string.msg_ok) { _,_-> presenter.logout() }
             .create()
             .show()
     }
