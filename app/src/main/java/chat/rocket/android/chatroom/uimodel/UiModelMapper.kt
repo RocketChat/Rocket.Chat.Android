@@ -321,10 +321,10 @@ class UiModelMapper @Inject constructor(
             val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
 
             ActionsAttachmentUiModel(attachmentUrl = url, title = title,
-                    actions = actions, buttonAlignment = buttonAlignment, message = message, rawData = attachment,
-                    messageId = message.id, reactions = getReactions(message),
-                    preview = message.copy(message = content.message), unread = message.unread,
-                    showDayMarker = false, currentDayMarkerText = dayMarkerText)
+                actions = actions, buttonAlignment = buttonAlignment, message = message, rawData = attachment,
+                messageId = message.id, reactions = getReactions(message),
+                preview = message.copy(message = content.message), unread = message.unread,
+                showDayMarker = false, currentDayMarkerText = dayMarkerText)
         }
     }
 
@@ -580,7 +580,7 @@ class UiModelMapper @Inject constructor(
 
     private fun getSystemMessage(message: Message): CharSequence {
         val content = when (message.type) {
-        //TODO: Add implementation for Welcome type.
+            //TODO: Add implementation for Welcome type.
             is MessageType.MessageRemoved -> context.getString(R.string.message_removed)
             is MessageType.UserJoined -> context.getString(R.string.message_user_joined_channel)
             is MessageType.UserLeft -> context.getString(R.string.message_user_left)
@@ -592,6 +592,7 @@ class UiModelMapper @Inject constructor(
             is MessageType.UserUnMuted -> context.getString(R.string.message_unmuted, message.message, message.sender?.username)
             is MessageType.SubscriptionRoleAdded -> context.getString(R.string.message_role_add, message.message, message.role, message.sender?.username)
             is MessageType.SubscriptionRoleRemoved -> context.getString(R.string.message_role_removed, message.message, message.role, message.sender?.username)
+            is MessageType.RoomChangedPrivacy -> context.getString(R.string.message_room_changed_privacy, message.message, message.sender?.username)
             else -> {
                 throw InvalidParameterException("Invalid message type: ${message.type}")
             }
