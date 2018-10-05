@@ -545,9 +545,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun dispatchUpdateMessage(index: Int, message: List<BaseUiModel<*>>) {
         ui {
-            adapter.updateItem(message.last())
-            if (message.size > 1) {
-                adapter.prependData(listOf(message.first()))
+            if (adapter.updateItem(message.last())) {
+                if (message.size > 1) {
+                    adapter.prependData(listOf(message.first()))
+                }
+            } else {
+                showNewMessage(message, true)
             }
         }
     }

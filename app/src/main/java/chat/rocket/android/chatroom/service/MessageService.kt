@@ -2,9 +2,11 @@ package chat.rocket.android.chatroom.service
 
 import android.app.job.JobParameters
 import android.app.job.JobService
-import chat.rocket.android.server.domain.CurrentServerRepository
-import chat.rocket.android.server.domain.MessagesRepository
+import chat.rocket.android.db.DatabaseManagerFactory
+import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
+import chat.rocket.android.server.infraestructure.DatabaseMessageMapper
+import chat.rocket.android.server.infraestructure.DatabaseMessagesRepository
 import chat.rocket.core.internal.rest.sendMessage
 import chat.rocket.core.model.Message
 import dagger.android.AndroidInjection
@@ -17,9 +19,9 @@ class MessageService : JobService() {
     @Inject
     lateinit var factory: ConnectionManagerFactory
     @Inject
-    lateinit var currentServerRepository: CurrentServerRepository
+    lateinit var dbFactory: DatabaseManagerFactory
     @Inject
-    lateinit var messageRepository: MessagesRepository
+    lateinit var getAccountsInteractor: GetAccountsInteractor
 
     override fun onCreate() {
         super.onCreate()
@@ -32,21 +34,21 @@ class MessageService : JobService() {
 
     override fun onStartJob(params: JobParameters?): Boolean {
         launch(CommonPool) {
-            val currentServer = currentServerRepository.get()
-            if (currentServer != null) {
-                retrySendingMessages(params, currentServer)
-                jobFinished(params, false)
+            getAccountsInteractor.get().forEach { account ->
+                retrySendingMessages(params, account.serverUrl)
             }
+            jobFinished(params, false)
         }
         return true
     }
 
-    private suspend fun retrySendingMessages(params: JobParameters?, currentServer: String) {
+    private suspend fun retrySendingMessages(params: JobParameters?, serverUrl: String) {
+        val dbManager = dbFactory.create(serverUrl)
+        val messageRepository = DatabaseMessagesRepository(dbManager, DatabaseMessageMapper(dbManager))
         val temporaryMessages = messageRepository.getAllUnsent()
             .sortedWith(compareBy(Message::timestamp))
         if (temporaryMessages.isNotEmpty()) {
-            val connectionManager = factory.create(currentServer)
-            val client = connectionManager.client
+            val client = factory.create(serverUrl).client
             temporaryMessages.forEach { message ->
                 try {
                     client.sendMessage(
@@ -57,7 +59,7 @@ class MessageService : JobService() {
                         attachments = message.attachments,
                         alias = message.senderAlias
                     )
-                    messageRepository.save(message.copy(isTemporary = false))
+                    messageRepository.save(message.copy(synced = true))
                     Timber.d("Sent scheduled message given by id: ${message.id}")
                 } catch (ex: Exception) {
                     Timber.e(ex)
@@ -71,7 +73,7 @@ class MessageService : JobService() {
                         // some other error
                         if (ex.message?.contains("E11000", true) == true) {
                             // XXX: Temporary solution. We need proper error codes from the api.
-                            messageRepository.save(message.copy(isTemporary = false))
+                            messageRepository.save(message.copy(synced = false))
                         }
                         jobFinished(params, true)
                     }
