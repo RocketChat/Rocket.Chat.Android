@@ -163,6 +163,18 @@ class MainPresenter @Inject constructor(
         }
     }
 
+
+
+/**
+* confirm dialog for logout
+*/
+    fun logoutConfirmation()
+    {
+        launchUI(strategy){
+            view.alertLogoutConfirmation()
+        }
+    }
+
     /**
      * Logout from current server.
      */
