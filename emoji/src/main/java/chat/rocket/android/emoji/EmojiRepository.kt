@@ -146,7 +146,7 @@ object EmojiRepository {
      *
      * @return All emojis for all categories.
      */
-    internal suspend fun getAll(): List<Emoji> = withContext(CommonPool) {
+    suspend fun getAll(): List<Emoji> = withContext(CommonPool) {
         return@withContext db.emojiDao().loadAllEmojis()
     }
 
@@ -210,7 +210,7 @@ object EmojiRepository {
         }
     }
 
-    internal fun getCustomEmojis(): List<Emoji> = customEmojis
+    fun getCustomEmojis(): List<Emoji> = customEmojis
 
     /**
      * Get all recently used emojis ordered by usage count.

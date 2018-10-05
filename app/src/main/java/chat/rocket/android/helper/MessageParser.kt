@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
+import android.text.Spannable
 import android.text.Spanned
 import android.text.style.ClickableSpan
 import android.text.style.ImageSpan
@@ -13,6 +14,7 @@ import android.util.Patterns
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.ui.StrikethroughDelimiterProcessor
 import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.emoji.EmojiTypefaceSpan
@@ -21,16 +23,23 @@ import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.openTabbedUrl
 import chat.rocket.common.model.SimpleUser
 import chat.rocket.core.model.Message
+import org.commonmark.Extension
+import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension
+import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.node.AbstractVisitor
 import org.commonmark.node.Document
+import org.commonmark.node.Emphasis
 import org.commonmark.node.ListItem
 import org.commonmark.node.Node
 import org.commonmark.node.OrderedList
+import org.commonmark.node.StrongEmphasis
 import org.commonmark.node.Text
-import ru.noties.markwon.Markwon
+import org.commonmark.parser.Parser
 import ru.noties.markwon.SpannableBuilder
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.renderer.SpannableMarkdownVisitor
+import ru.noties.markwon.tasklist.TaskListExtension
+import java.util.*
 import javax.inject.Inject
 
 class MessageParser @Inject constructor(
@@ -38,8 +47,6 @@ class MessageParser @Inject constructor(
     private val configuration: SpannableConfiguration,
     private val settings: PublicSettings
 ) {
-
-    private val parser = Markwon.createParser()
 
     /**
      * Render markdown and other rules on message to rich text with spans.
@@ -52,6 +59,16 @@ class MessageParser @Inject constructor(
     fun render(message: Message, selfUsername: String? = null): CharSequence {
         var text: String = message.message
         val mentions = mutableListOf<String>()
+
+        val parser = Parser.Builder()
+            .extensions(Arrays.asList<Extension>(
+                StrikethroughExtension.create(),
+                TablesExtension.create(),
+                TaskListExtension.create()
+            ))
+            .customDelimiterProcessor(StrikethroughDelimiterProcessor())
+            .build()
+
         message.mentions?.forEach {
             val mention = getMention(it)
             mentions.add(mention)
@@ -59,12 +76,17 @@ class MessageParser @Inject constructor(
                 text = text.replace("@${it.username}", mention)
             }
         }
+
         val builder = SpannableBuilder()
         val content = EmojiRepository.shortnameToUnicode(text)
-        val parentNode = parser.parse(toLenientMarkdown(content))
+        val parentNode = parser.parse(content)
+
+        parentNode.accept(EmphasisVisitor())
+        parentNode.accept(StrongEmphasisVisitor())
         parentNode.accept(MarkdownVisitor(configuration, builder))
         parentNode.accept(LinkVisitor(builder))
         parentNode.accept(EmojiVisitor(context, configuration, builder))
+
         message.mentions?.let {
             parentNode.accept(MentionVisitor(context, builder, mentions, selfUsername))
         }
@@ -72,18 +94,36 @@ class MessageParser @Inject constructor(
         return builder.text()
     }
 
-    // Convert to a lenient markdown consistent with Rocket.Chat web markdown instead of the official specs.
-    private fun toLenientMarkdown(text: String): String {
-        return text.trim().replace("\\*(.+)\\*".toRegex()) { "**${it.groupValues[1].trim()}**" }
-            .replace("\\~(.+)\\~".toRegex()) { "~~${it.groupValues[1].trim()}~~" }
-            .replace("\\_(.+)\\_".toRegex()) { "_${it.groupValues[1].trim()}_" }
-    }
-
     private fun getMention(user: SimpleUser): String {
         return if (settings.useRealName()) {
             user.name ?: "@${user.username}"
         } else {
             "@${user.username}"
+        }
+    }
+
+    class EmphasisVisitor : AbstractVisitor() {
+
+        override fun visit(emphasis: Emphasis) {
+            if (emphasis.openingDelimiter == "*" && emphasis.firstChild != null) {
+                val child = emphasis.firstChild
+                val strongEmphasis = StrongEmphasis()
+                strongEmphasis.appendChild(child)
+                emphasis.insertBefore(strongEmphasis)
+                emphasis.unlink()
+            }
+        }
+    }
+
+    class StrongEmphasisVisitor : AbstractVisitor() {
+        override fun visit(strongEmphasis: StrongEmphasis) {
+            if (strongEmphasis.openingDelimiter == "__" && strongEmphasis.firstChild != null) {
+                val child = strongEmphasis.firstChild
+                val emphasis = Emphasis()
+                emphasis.appendChild(child)
+                strongEmphasis.insertBefore(emphasis)
+                strongEmphasis.unlink()
+            }
         }
     }
 
@@ -98,28 +138,24 @@ class MessageParser @Inject constructor(
         private val othersBackgroundColor = ResourcesCompat.getColor(context.resources, android.R.color.transparent, context.theme)
         private val myselfTextColor = ResourcesCompat.getColor(context.resources, R.color.colorWhite, context.theme)
         private val myselfBackgroundColor = ResourcesCompat.getColor(context.resources, R.color.colorAccent, context.theme)
-        private val mentionPadding = context.resources.getDimensionPixelSize(R.dimen.padding_mention).toFloat()
-        private val mentionRadius = context.resources.getDimensionPixelSize(R.dimen.radius_mention).toFloat()
+        private val padding = context.resources.getDimensionPixelSize(R.dimen.padding_mention).toFloat()
+        private val radius = context.resources.getDimensionPixelSize(R.dimen.radius_mention).toFloat()
 
-        override fun visit(t: Text) {
-            val text = t.literal
-            val mentionsList = mentions.toMutableList().also {
-                it.add("@all")
-                it.add("@here")
-            }.toList()
+        override fun visit(document: Document) {
+            val text = builder.text()
 
-            mentionsList.forEach {
+            var offset = 0
+            mentions.forEach {
                 val mentionMe = it == currentUser || it == "@all" || it == "@here"
-                var offset = text.indexOf(it, 0, true)
+                offset = text.indexOf(string = it, startIndex = offset, ignoreCase = false)
                 while (offset > -1) {
                     val textColor = if (mentionMe) myselfTextColor else othersTextColor
                     val backgroundColor = if (mentionMe) myselfBackgroundColor else othersBackgroundColor
-                    val usernameSpan = MentionSpan(backgroundColor, textColor, mentionRadius, mentionPadding,
+                    val usernameSpan = MentionSpan(backgroundColor, textColor, radius, padding,
                         mentionMe)
-                    // Add 1 to end offset to include the @.
-                    val end = offset + it.length + 1
-                    builder.setSpan(usernameSpan, offset, end, 0)
-                    offset = text.indexOf("@$it", end, true)
+                    val end = offset + it.length
+                    builder.setSpan(usernameSpan, offset, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    offset = text.indexOf(string = it, startIndex = end, ignoreCase = false)
                 }
             }
         }
@@ -179,7 +215,7 @@ class MessageParser @Inject constructor(
         }
 
         private fun newLine() {
-            if (builder.length() > 0 && '\n' != builder.lastChar()) {
+            if (builder.isNotEmpty() && '\n' != builder.lastChar()) {
                 builder.append('\n')
             }
         }
@@ -204,7 +240,6 @@ class MessageParser @Inject constructor(
                     consumed.add(link)
                 }
             }
-            visitChildren(text)
         }
     }
 

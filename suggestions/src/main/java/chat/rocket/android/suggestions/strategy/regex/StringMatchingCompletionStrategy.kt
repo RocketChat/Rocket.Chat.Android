@@ -1,8 +1,8 @@
-package chat.rocket.android.widget.autocompletion.strategy.regex
+package chat.rocket.android.suggestions.strategy.regex
 
-import chat.rocket.android.widget.autocompletion.model.SuggestionModel
-import chat.rocket.android.widget.autocompletion.strategy.CompletionStrategy
-import chat.rocket.android.widget.autocompletion.ui.SuggestionsAdapter.Companion.RESULT_COUNT_UNLIMITED
+import chat.rocket.android.suggestions.model.SuggestionModel
+import chat.rocket.android.suggestions.strategy.CompletionStrategy
+import chat.rocket.android.suggestions.ui.SuggestionsAdapter.Companion.RESULT_COUNT_UNLIMITED
 import java.util.concurrent.CopyOnWriteArrayList
 
 internal class StringMatchingCompletionStrategy(private val threshold: Int = RESULT_COUNT_UNLIMITED) : CompletionStrategy {

@@ -130,6 +130,8 @@
     <string name="msg_delete_description">Вы уверены, что хотите удалить это сообщение?</string>
     <string name="msg_channel_name">Название канала</string>
     <string name="msg_search">Поиск</string>
+    <string name="msg_view_more">больше</string>
+    <string name="msg_view_less">меньше</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>

@@ -1,27 +1,27 @@
-package chat.rocket.android.widget.autocompletion.ui
+package chat.rocket.android.suggestions.ui
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import androidx.annotation.DrawableRes
-import androidx.transition.Slide
-import androidx.transition.TransitionManager
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.transition.Slide
+import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
-import chat.rocket.android.R
-import chat.rocket.android.widget.autocompletion.model.SuggestionModel
-import chat.rocket.android.widget.autocompletion.ui.SuggestionsAdapter.Companion.CONSTRAINT_BOUND_TO_START
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import chat.rocket.android.suggestions.R
+import chat.rocket.android.suggestions.model.SuggestionModel
+import chat.rocket.android.suggestions.ui.SuggestionsAdapter.Companion.CONSTRAINT_BOUND_TO_START
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -103,7 +103,8 @@ class SuggestionsView : FrameLayout, TextWatcher {
 
         val prefixEndIndex = this.editor?.get()?.selectionStart ?: NO_STATE_INDEX
         if (prefixEndIndex == NO_STATE_INDEX || prefixEndIndex < completionOffset.get()) return
-        val prefix = s.subSequence(completionOffset.get(), this.editor?.get()?.selectionStart ?: completionOffset.get()).toString()
+        val prefix = s.subSequence(completionOffset.get(), this.editor?.get()?.selectionStart
+            ?: completionOffset.get()).toString()
         recyclerView.adapter?.let {
             it as SuggestionsAdapter
             // we need to look up only after the '@'
@@ -148,15 +149,14 @@ class SuggestionsView : FrameLayout, TextWatcher {
     }
 
     fun addTokenAdapter(adapter: SuggestionsAdapter<*>): SuggestionsView {
-        adaptersByToken.getOrPut(adapter.token, { adapter })
+        adaptersByToken.getOrPut(adapter.token) { adapter }
         return this
     }
 
     fun addItems(token: String, list: List<SuggestionModel>): SuggestionsView {
         if (list.isNotEmpty()) {
             val adapter = adapter(token)
-            localProvidersByToken.getOrPut(token, { hashMapOf() })
-                    .put(adapter.term(), list)
+            localProvidersByToken.getOrPut(token) { hashMapOf() }.put(adapter.term(), list)
             if (completionOffset.get() > NO_STATE_INDEX && adapter.itemCount == 0) expand()
             adapter.addItems(list)
         }
@@ -192,7 +192,8 @@ class SuggestionsView : FrameLayout, TextWatcher {
     }
 
     private fun adapter(token: String): SuggestionsAdapter<*> {
-        return adaptersByToken[token] ?: throw IllegalStateException("no adapter binds to token \"$token\"")
+        return adaptersByToken[token]
+            ?: throw IllegalStateException("no adapter binds to token \"$token\"")
     }
 
     private fun cancelSuggestions(haltCompletion: Boolean) {

@@ -11,9 +11,9 @@ import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter.PeopleSuggestionViewHolder
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
 import chat.rocket.android.util.extensions.setVisible
-import chat.rocket.android.widget.autocompletion.model.SuggestionModel
-import chat.rocket.android.widget.autocompletion.ui.BaseSuggestionViewHolder
-import chat.rocket.android.widget.autocompletion.ui.SuggestionsAdapter
+import chat.rocket.android.suggestions.model.SuggestionModel
+import chat.rocket.android.suggestions.ui.BaseSuggestionViewHolder
+import chat.rocket.android.suggestions.ui.SuggestionsAdapter
 import com.facebook.drawee.view.SimpleDraweeView
 
 class PeopleSuggestionsAdapter(context: Context) : SuggestionsAdapter<PeopleSuggestionViewHolder>("@") {

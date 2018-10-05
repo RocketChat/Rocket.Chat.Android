@@ -10,8 +10,8 @@ android {
     defaultConfig {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 2042
-        versionName "2.6.0"
+        versionCode 2043
+        versionName "2.6.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
@@ -65,6 +65,7 @@ dependencies {
     implementation project(':draw')
     implementation project(':util')
     implementation project(':core')
+    implementation project(':suggestions')
 
     implementation libraries.kotlin
     implementation libraries.coroutines
