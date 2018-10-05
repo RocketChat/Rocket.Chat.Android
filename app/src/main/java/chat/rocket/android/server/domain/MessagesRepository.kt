@@ -16,27 +16,20 @@ interface MessagesRepository {
     /**
      * Get all messages from the current room id.
      *
-     * @param rid The room id.
+     * @param roomId The room id.
      * @return A list of Message objects for the room with given room id or an empty list.
      */
-    suspend fun getByRoomId(rid: String): List<Message>
+    suspend fun getByRoomId(roomId: String): List<Message>
 
     /**
      * Get most recent messages up to count different users.
      *
-     * @param rid The id of the room the messages are.
+     * @param roomId The id of the room the messages are.
      * @param count The count last messages to get.
      *
      * @return List of last count messages.
      */
-    suspend fun getRecentMessages(rid: String, count: Long): List<Message>
-
-    /**
-     * Get all messages. Use carefully!
-     *
-     * @return All messages or an empty list.
-     */
-    suspend fun getAll(): List<Message>
+    suspend fun getRecentMessages(roomId: String, count: Long): List<Message>
 
     /**
      * Save a single message object.
@@ -51,11 +44,6 @@ interface MessagesRepository {
     suspend fun saveAll(newMessages: List<Message>)
 
     /**
-     * Removes all messages.
-     */
-    suspend fun clear()
-
-    /**
      * Remove message by id.
      *
      * @param id The id of the message to remove.
@@ -65,29 +53,27 @@ interface MessagesRepository {
     /**
      * Remove all messages from a given room.
      *
-     * @param rid The room id where messages are to be removed.
+     * @param roomId The room id where messages are to be removed.
      */
-    suspend fun removeByRoomId(rid: String)
+    suspend fun removeByRoomId(roomId: String)
 
     suspend fun getAllUnsent(): List<Message>
-
-    suspend fun getUnsentByRoomId(roomId: String): List<Message>
 
     /**
      * Save time of the latest room messages sync.
      * Call this fun only when the latest messages list being received via /history or /messages network calls
      *
-     * @param rid The id of the room the messages are.
+     * @param roomId The id of the room the messages are.
      * @param timeMillis time of room messages sync or the latest room message timestamp(which came with /history request)
      */
-    suspend fun saveLastSyncDate(rid: String, timeMillis: Long)
+    suspend fun saveLastSyncDate(roomId: String, timeMillis: Long)
 
     /**
      * Get time when the room chat history has been loaded last time.
      *
-     * @param rid The id of the room the messages are.
+     * @param roomId The id of the room the messages are.
      *
      * @return Last Sync time or Null.
      */
-    suspend fun getLastSyncDate(rid: String): Long?
+    suspend fun getLastSyncDate(roomId: String): Long?
 }

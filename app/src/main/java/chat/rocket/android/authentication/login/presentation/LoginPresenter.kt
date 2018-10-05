@@ -326,7 +326,7 @@ class LoginPresenter @Inject constructor(
                                             getCustomOauthScope(serviceMap) ?: "openid"
                                         )
                                     }
-                                wordpressOauthUrl?.let {
+                                wordpressOauthUrl.let {
                                     view.setupWordpressButtonListener(it, state)
                                     view.enableLoginByWordpress()
                                     totalSocialAccountsEnabled++
