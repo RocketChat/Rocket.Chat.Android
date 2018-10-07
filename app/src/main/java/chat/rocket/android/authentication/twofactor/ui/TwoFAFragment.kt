@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
@@ -15,7 +16,6 @@ import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAPresenter
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
 import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.shake
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
@@ -82,13 +82,13 @@ class TwoFAFragment : Fragment(), TwoFAView {
     override fun showLoading() {
         ui {
             enableUserInput(false)
-            view_loading.setVisible(true)
+            view_loading.isVisible = true
         }
     }
 
     override fun hideLoading() {
         ui {
-            view_loading.setVisible(false)
+            view_loading.isVisible = false
             enableUserInput(true)
         }
     }

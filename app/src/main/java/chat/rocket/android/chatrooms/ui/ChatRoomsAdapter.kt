@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.checkIfMyself
@@ -53,13 +54,13 @@ class ChatRoomsAdapter(
             bindName(chatRoom, text_chat_name)
             bindIcon(chatRoom, image_chat_icon)
             if (settings.showLastMessage()) {
-                text_last_message.setVisible(true)
-                text_last_message_date_time.setVisible(true)
+                text_last_message.isVisible = true
+                text_last_message_date_time.isVisible = true
                 bindLastMessageDateTime(chatRoom, text_last_message_date_time)
                 bindLastMessage(chatRoom, text_last_message)
             } else {
-                text_last_message.setVisible(false)
-                text_last_message_date_time.setVisible(false)
+                text_last_message.isVisible = false
+                text_last_message_date_time.isVisible = false
             }
             bindUnreadMessages(chatRoom, text_total_unread_messages)
 
@@ -178,13 +179,13 @@ class ChatRoomsAdapter(
             when {
                 totalUnreadMessage in 1..99 -> {
                     textView.textContent = totalUnreadMessage.toString()
-                    textView.setVisible(true)
+                    textView.isVisible = true
                 }
                 totalUnreadMessage > 99 -> {
                     textView.textContent = context.getString(R.string.msg_more_than_ninety_nine_unread_messages)
-                    textView.setVisible(true)
+                    textView.isVisible = true
                 }
-                else -> textView.setVisible(false)
+                else -> textView.isVisible = false
             }
         }
     }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.R.string.message_credentials_saved_successfully
@@ -20,7 +21,6 @@ import chat.rocket.android.authentication.signup.presentation.SignupView
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.helper.saveCredentials
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.shake
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
@@ -40,11 +40,11 @@ class SignupFragment : Fragment(), SignupView {
     lateinit var analyticsManager: AnalyticsManager
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         if (KeyboardHelper.isSoftKeyboardShown(relative_layout.rootView)) {
-            bottom_container.setVisible(false)
+            bottom_container.isVisible = false
         } else {
             bottom_container.apply {
                 postDelayed({
-                    ui { setVisible(true) }
+                    ui { isVisible = true }
                 }, 3)
             }
         }
@@ -134,13 +134,13 @@ class SignupFragment : Fragment(), SignupView {
     override fun showLoading() {
         ui {
             enableUserInput(false)
-            view_loading.setVisible(true)
+            view_loading.isVisible = true
         }
     }
 
     override fun hideLoading() {
         ui {
-            view_loading.setVisible(false)
+            view_loading.isVisible = false
             enableUserInput(true)
         }
     }

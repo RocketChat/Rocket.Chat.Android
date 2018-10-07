@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
@@ -22,7 +23,6 @@ import chat.rocket.android.util.extensions.hintContent
 import chat.rocket.android.util.extensions.ifEmpty
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.sanitize
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
@@ -118,13 +118,13 @@ class ServerFragment : Fragment(), ServerView {
     override fun showLoading() {
         ui {
             enableUserInput(false)
-            view_loading.setVisible(true)
+            view_loading.isVisible = true
         }
     }
 
     override fun hideLoading() {
         ui {
-            view_loading.setVisible(false)
+            view_loading.isVisible = false
             enableUserInput(true)
         }
     }

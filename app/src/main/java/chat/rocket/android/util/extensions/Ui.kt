@@ -19,19 +19,6 @@ import androidx.appcompat.view.menu.MenuBuilder
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 
-// TODO: Remove. Use KTX instead.
-fun View.setVisible(visible: Boolean) {
-    visibility = if (visible) {
-        View.VISIBLE
-    } else {
-        View.GONE
-    }
-}
-
-fun View.isVisible(): Boolean {
-    return visibility == View.VISIBLE
-}
-
 fun ViewGroup.inflate(@LayoutRes resource: Int, attachToRoot: Boolean = false): View =
     LayoutInflater.from(context).inflate(resource, this, attachToRoot)
 

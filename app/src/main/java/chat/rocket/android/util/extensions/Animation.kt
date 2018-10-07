@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 
 fun View.rotateBy(value: Float, duration: Long = 100) {
@@ -23,7 +24,7 @@ fun View.rotateBy(value: Float, duration: Long = 100) {
 
 fun View.fadeIn(startValue: Float = 0f, finishValue: Float = 1f, duration: Long = 200) {
     if (alpha == finishValue) {
-        setVisible(true)
+        isVisible = true
         return
     }
 
@@ -38,12 +39,12 @@ fun View.fadeIn(startValue: Float = 0f, finishValue: Float = 1f, duration: Long 
                 .setInterpolator(AccelerateInterpolator()).start()
         }.start()
 
-    setVisible(true)
+    isVisible = true
 }
 
 fun View.fadeOut(startValue: Float = 1f, finishValue: Float = 0f, duration: Long = 200) {
     if (alpha == finishValue) {
-        setVisible(false)
+        isVisible = false
         return
     }
 
@@ -58,7 +59,7 @@ fun View.fadeOut(startValue: Float = 1f, finishValue: Float = 0f, duration: Long
                 .setInterpolator(AccelerateInterpolator()).start()
         }.start()
 
-    setVisible(false)
+    isVisible = false
 }
 
 fun View.circularRevealOrUnreveal(
@@ -72,11 +73,7 @@ fun View.circularRevealOrUnreveal(
         ViewAnimationUtils.createCircularReveal(this, centerX, centerY, startRadius, endRadius)
     anim.duration = duration
 
-    if (startRadius < endRadius) {
-        setVisible(true)
-    } else {
-        setVisible(false)
-    }
+    isVisible = startRadius < endRadius
 
     anim.start()
 }
