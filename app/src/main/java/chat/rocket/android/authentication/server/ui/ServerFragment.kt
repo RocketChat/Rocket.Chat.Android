@@ -242,7 +242,7 @@ class ServerFragment : Fragment(), ServerView {
         serverUrlDisposable = text_server_url.asObservable()
             .filter { it.isNotBlank() }
             .subscribe {
-                if (it.toString().isValidUrl()) {
+                if ("$protocol${it.toString()}".isValidUrl()) {
                     enableButtonConnect()
                 } else {
                     disableButtonConnect()
