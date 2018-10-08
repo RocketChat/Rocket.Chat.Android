@@ -125,7 +125,7 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
 
     private fun disableUserInput() {
         disableButtonConnect()
-        text_email.isEnabled = true
+        text_email.isEnabled = false
     }
 
     private fun setupOnClickListener() =
