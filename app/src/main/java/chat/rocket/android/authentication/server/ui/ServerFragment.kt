@@ -224,7 +224,7 @@ class ServerFragment : Fragment(), ServerView {
             }
 
             protocol = "${url.scheme()}://"
-            text_server_url.textContent = url.toString().removePrefix("${url.scheme()}://")
+            text_server_url.textContent = url.toString().removePrefix(protocol)
         }
     }
 
