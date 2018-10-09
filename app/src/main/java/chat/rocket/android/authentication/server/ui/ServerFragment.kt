@@ -1,7 +1,5 @@
 package chat.rocket.android.authentication.server.ui
 
-import android.app.AlertDialog
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +7,11 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
@@ -17,22 +20,28 @@ import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
+import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.helper.KeyboardHelper
+import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.hintContent
-import chat.rocket.android.util.extensions.ifEmpty
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.isValidUrl
 import chat.rocket.android.util.extensions.sanitize
-import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.setLightStatusBar
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
 import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
+import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_authentication_server.*
 import okhttp3.HttpUrl
 import javax.inject.Inject
 
-internal const val TAG_SERVER_FRAGMENT = "ServerFragment"
+fun newInstance() = ServerFragment()
+
+private const val DEEP_LINK_INFO = "DeepLinkInfo"
 
 class ServerFragment : Fragment(), ServerView {
     @Inject
@@ -40,67 +49,36 @@ class ServerFragment : Fragment(), ServerView {
     @Inject
     lateinit var analyticsManager: AnalyticsManager
     private var deepLinkInfo: LoginDeepLinkInfo? = null
-    private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        text_server_url.isCursorVisible = KeyboardHelper.isSoftKeyboardShown(relative_layout.rootView)
-    }
     private var protocol = "https://"
-    private var ignoreChange = false
+    private lateinit var serverUrlDisposable: Disposable
+    private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+        text_server_url.isCursorVisible =
+                KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-
         deepLinkInfo = arguments?.getParcelable(DEEP_LINK_INFO)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        container?.inflate(R.layout.fragment_authentication_server)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = container?.inflate(R.layout.fragment_authentication_server)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        relative_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+        scroll_view.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+        setupToolbar()
+        setupSpinner()
         setupOnClickListener()
+        subscribeEditText()
 
         deepLinkInfo?.let {
-            val uri = Uri.parse(it.url)
-            uri?.let { text_server_url.hintContent = it.host }
+            it.url.toUri().host?.let { host -> text_server_url.hintContent = host }
             presenter.deepLink(it)
-        }
-
-        text_server_protocol.adapter = ArrayAdapter<String>(activity,
-                android.R.layout.simple_dropdown_item_1line, arrayOf("https://", "http://"))
-        text_server_protocol.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                when(position) {
-                    0 -> {
-                        protocol = "https://"
-                    }
-                    1 -> {
-                        if (ignoreChange) {
-                            protocol = "http://"
-                        } else {
-                            ui {
-                                AlertDialog.Builder(it)
-                                        .setTitle(R.string.msg_warning)
-                                        .setMessage(R.string.msg_http_insecure)
-                                        .setPositiveButton(R.string.msg_proceed) { _, _ ->
-                                            protocol = "http://"
-                                        }
-                                        .setNegativeButton(R.string.msg_cancel) { _, _ ->
-                                            text_server_protocol.setSelection(0)
-                                        }
-                                        .setCancelable(false)
-                                        .create()
-                                        .show()
-                            }
-                        }
-                    }
-                }
-                ignoreChange = false
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
         }
 
         analyticsManager.logScreenView(ScreenViewEvent.Server)
@@ -108,24 +86,87 @@ class ServerFragment : Fragment(), ServerView {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // reset deep link info, so user can come back and log to another server...
+        scroll_view.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+        // Reset deep link info, so user can come back and log to another server...
         deepLinkInfo = null
-        relative_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+        unsubscribeEditText()
     }
 
-    override fun showInvalidServerUrlMessage() = showMessage(getString(R.string.msg_invalid_server_url))
+    private fun setupToolbar() {
+        with(activity as AuthenticationActivity) {
+            view?.let { setLightStatusBar(it) }
+            toolbar.isVisible = false
+        }
+    }
+
+    private fun setupSpinner() {
+        context?.let {
+            spinner_server_protocol.adapter = ArrayAdapter<String>(
+                it,
+                android.R.layout.simple_dropdown_item_1line, arrayOf("https://", "http://")
+            )
+
+            spinner_server_protocol.onItemSelectedListener =
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>?, view: View?, position: Int,
+                            id: Long
+                        ) {
+                            when (position) {
+                                0 -> protocol = "https://"
+                                1 -> {
+                                    protocol = "http://"
+                                    showToast(R.string.msg_http_insecure, Toast.LENGTH_LONG)
+                                }
+                            }
+                        }
+
+                        override fun onNothingSelected(parent: AdapterView<*>?) {}
+                    }
+
+        }
+    }
+
+    private fun setupOnClickListener() =
+        ui { _ ->
+            button_connect.setOnClickListener {
+                presenter.checkServer("$protocol${text_server_url.textContent.sanitize()}")
+            }
+        }
+
+    override fun showInvalidServerUrlMessage() =
+        showMessage(getString(R.string.msg_invalid_server_url))
+
+    override fun enableButtonConnect() {
+        context?.let {
+            ViewCompat.setBackgroundTintList(
+                button_connect, ContextCompat.getColorStateList(it, R.color.colorAccent)
+            )
+            button_connect.isEnabled = true
+        }
+    }
+
+    override fun disableButtonConnect() {
+        context?.let {
+            ViewCompat.setBackgroundTintList(
+                button_connect,
+                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+            )
+            button_connect.isEnabled = false
+        }
+    }
 
     override fun showLoading() {
         ui {
-            enableUserInput(false)
-            view_loading.setVisible(true)
+            disableUserInput()
+            view_loading.isVisible = true
         }
     }
 
     override fun hideLoading() {
         ui {
-            view_loading.setVisible(false)
-            enableUserInput(true)
+            view_loading.isVisible = false
+            enableUserInput()
         }
     }
 
@@ -141,41 +182,28 @@ class ServerFragment : Fragment(), ServerView {
         }
     }
 
-    override fun showGenericErrorMessage() {
-        showMessage(getString(R.string.msg_generic_error))
-    }
+    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun alertNotRecommendedVersion() {
         ui {
             hideLoading()
-            AlertDialog.Builder(it)
-                .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
-                .setPositiveButton(R.string.msg_ok) { _, _ ->
-                    performConnect()
-                }
-                .create()
-                .show()
+            showToast(
+                getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION)
+            )
+            performConnect()
         }
     }
 
     override fun blockAndAlertNotRequiredVersion() {
         ui {
             hideLoading()
-            AlertDialog.Builder(it)
-                .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
-                .setPositiveButton(R.string.msg_ok, null)
-                .setOnDismissListener {
-                    // reset the deeplink info, so the user can log to another server...
-                    deepLinkInfo = null
-                }
-                .create()
-                .show()
+            showToast(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
+            // reset the deeplink info, so the user can log to another server...
+            deepLinkInfo = null
         }
     }
 
-    override fun versionOk() {
-        performConnect()
-    }
+    override fun versionOk() = performConnect()
 
     override fun errorCheckingServerVersion() {
         hideLoading()
@@ -188,47 +216,49 @@ class ServerFragment : Fragment(), ServerView {
     }
 
     override fun updateServerUrl(url: HttpUrl) {
-        if (activity != null && view != null) {
-            if (url.scheme() == "https") text_server_protocol.setSelection(0) else text_server_protocol.setSelection(1)
-            protocol = "${url.scheme()}://"
+        ui {
+            if (url.scheme() == "https") {
+                spinner_server_protocol.setSelection(0)
+            } else {
+                spinner_server_protocol.setSelection(1)
+            }
 
-            val serverUrl = url.toString().removePrefix("${url.scheme()}://")
-            text_server_url.textContent = serverUrl
+            protocol = "${url.scheme()}://"
+            text_server_url.textContent = url.toString().removePrefix(protocol)
         }
     }
 
     private fun performConnect() {
         ui {
-            deepLinkInfo?.let {
-                presenter.deepLink(it)
+            deepLinkInfo?.let { loginDeepLinkInfo ->
+                presenter.deepLink(loginDeepLinkInfo)
             }.ifNull {
-                val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
-                presenter.connect("$protocol${url.sanitize()}")
+                presenter.connect("$protocol${text_server_url.textContent.sanitize()}")
             }
         }
     }
 
-    private fun enableUserInput(value: Boolean) {
-        button_connect.isEnabled = value
-        text_server_url.isEnabled = value
+    private fun subscribeEditText() {
+        serverUrlDisposable = text_server_url.asObservable()
+            .filter { it.isNotBlank() }
+            .subscribe {
+                if (it.toString().isValidUrl()) {
+                    enableButtonConnect()
+                } else {
+                    disableButtonConnect()
+                }
+            }
     }
 
-    private fun setupOnClickListener() {
-        ui {
-            button_connect.setOnClickListener {
-                val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
-                presenter.checkServer("${protocol}${url.sanitize()}")
-            }
-        }
+    private fun unsubscribeEditText() = serverUrlDisposable.dispose()
+
+    private fun enableUserInput() {
+        enableButtonConnect()
+        text_server_url.isEnabled = true
     }
 
-    companion object {
-        private const val DEEP_LINK_INFO = "DeepLinkInfo"
-
-        fun newInstance(deepLinkInfo: LoginDeepLinkInfo?) = ServerFragment().apply {
-            arguments = Bundle().apply {
-                putParcelable(DEEP_LINK_INFO, deepLinkInfo)
-            }
-        }
+    private fun disableUserInput() {
+        disableButtonConnect()
+        text_server_url.isEnabled = false
     }
 }
