@@ -6,25 +6,39 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.registerusername.presentation.RegisterUsernamePresenter
 import chat.rocket.android.authentication.registerusername.presentation.RegisterUsernameView
+import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
-import chat.rocket.android.util.extensions.shake
 import chat.rocket.android.util.extensions.showKeyboard
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.util.extensions.vibrateSmartPhone
 import dagger.android.support.AndroidSupportInjection
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_authentication_register_username.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-internal const val TAG_REGISTER_USERNAME_FRAGMENT = "RegisterUsernameFragment"
+private const val BUNDLE_USER_ID = "user_id"
+private const val BUNDLE_AUTH_TOKEN = "auth_token"
+
+fun newInstance(userId: String, authToken: String): Fragment {
+    return RegisterUsernameFragment().apply {
+        arguments = Bundle(2).apply {
+            putString(BUNDLE_USER_ID, userId)
+            putString(BUNDLE_AUTH_TOKEN, authToken)
+        }
+    }
+}
 
 class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
     @Inject
@@ -33,26 +47,19 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
     lateinit var analyticsManager: AnalyticsManager
     private lateinit var userId: String
     private lateinit var authToken: String
-
-    companion object {
-        private const val USER_ID = "user_id"
-        private const val AUTH_TOKEN = "auth_token"
-
-        fun newInstance(userId: String, authToken: String) = RegisterUsernameFragment().apply {
-            arguments = Bundle(1).apply {
-                putString(USER_ID, userId)
-                putString(AUTH_TOKEN, authToken)
-            }
-        }
-    }
+    private lateinit var usernameDisposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        // TODO - research a better way to initialize parameters on fragments.
-        userId = arguments?.getString(USER_ID) ?: ""
-        authToken = arguments?.getString(AUTH_TOKEN) ?: ""
+        val bundle = arguments
+        if (bundle != null) {
+            userId = bundle.getString(BUNDLE_USER_ID)
+            authToken = bundle.getString(BUNDLE_AUTH_TOKEN)
+        } else {
+            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
+        }
     }
 
     override fun onCreateView(
@@ -74,14 +81,32 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
         }
 
         setupOnClickListener()
+        subscribeEditText()
 
         analyticsManager.logScreenView(ScreenViewEvent.RegisterUsername)
     }
 
-    override fun alertBlankUsername() {
-        ui {
-            vibrateSmartPhone()
-            text_username.shake()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        unsubscribeEditText()
+    }
+
+    override fun enableButtonUseThisUsername() {
+        context?.let {
+            ViewCompat.setBackgroundTintList(
+                button_use_this_username, ContextCompat.getColorStateList(it, R.color.colorAccent)
+            )
+            button_use_this_username.isEnabled = true
+        }
+    }
+
+    override fun disableButtonUseThisUsername() {
+        context?.let {
+            ViewCompat.setBackgroundTintList(
+                button_use_this_username,
+                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+            )
+            button_use_this_username.isEnabled = false
         }
     }
 
@@ -117,7 +142,7 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
 
     private fun tintEditTextDrawableStart() {
         ui {
-            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, it)
+            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_20dp, it)
             DrawableHelper.wrapDrawable(atDrawable)
             DrawableHelper.tintDrawable(atDrawable, it, R.color.colorDrawableTintGrey)
             DrawableHelper.compoundDrawable(text_username, atDrawable)
@@ -125,12 +150,12 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
     }
 
     private fun enableUserInput() {
-        button_use_this_username.isEnabled = true
+        enableButtonUseThisUsername()
         text_username.isEnabled = true
     }
 
     private fun disableUserInput() {
-        button_use_this_username.isEnabled = false
+        disableButtonUseThisUsername()
         text_username.isEnabled = true
     }
 
@@ -139,4 +164,18 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
             presenter.registerUsername(text_username.textContent, userId, authToken)
         }
     }
+
+    private fun subscribeEditText() {
+        usernameDisposable = text_username.asObservable()
+            .debounce(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+            .subscribe {
+                if (it.isNotBlank()) {
+                    enableButtonUseThisUsername()
+                } else {
+                    disableButtonUseThisUsername()
+                }
+            }
+    }
+
+    private fun unsubscribeEditText() = usernameDisposable.dispose()
 }
