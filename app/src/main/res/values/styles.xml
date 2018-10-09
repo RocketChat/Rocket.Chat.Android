@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -6,56 +6,104 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="windowActionModeOverlay">true</item>
-
         <item name="searchViewStyle">@style/ChatRoom.SearchView</item>
-    </style>
-
-    <style name="AuthenticationTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
-        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="actionModeBackground">@color/colorPrimary</item>
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
     </style>
 
     <!-- Widget styles. -->
-    <style name="Authentication.TextView" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">50dp</item>
-        <item name="android:layout_marginStart">@dimen/screen_edge_left_and_right_margins</item>
-        <item name="android:paddingStart">@dimen/edit_text_margin</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:drawablePadding">@dimen/edit_text_drawable_padding</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:background">@drawable/style_edit_text_authentication</item>
-    </style>
-
-    <style name="Authentication.Headline.TextView" parent="TextAppearance.AppCompat.Headline">
+    <!-- Authentication -->
+    <style name="Authentication.TextView.Headline" parent="TextAppearance.AppCompat">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">20dp</item>
-        <item name="android:layout_marginStart">@dimen/screen_edge_left_and_right_margins</item>
-        <item name="android:layout_marginEnd">@dimen/screen_edge_left_and_right_margins</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Authentication.EditText" parent="Widget.AppCompat.EditText">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">50dp</item>
-        <item name="android:layout_marginStart">@dimen/screen_edge_left_and_right_margins</item>
-        <item name="android:layout_marginEnd">@dimen/screen_edge_left_and_right_margins</item>
+    <style name="Authentication.TextView.Description" parent="TextAppearance.AppCompat">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:textColor">#FF54585E</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="Authentication.Button.Title" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
+    <style name="Authentication.Button.Title.White" parent="Authentication.Button.Title">
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="Authentication.Button.Description" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorAuthenticationSecondaryText</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
+    <style name="Authentication.EditText.Hint" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColorHint">@color/colorAuthenticationSecondaryText</item>
+        <item name="android:lineSpacingExtra">3sp</item>
+    </style>
+
+    <style name="Authentication.EditText.Border" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">48dp</item>
         <item name="android:paddingStart">@dimen/edit_text_margin</item>
         <item name="android:paddingEnd">@dimen/edit_text_margin</item>
         <item name="android:maxLines">1</item>
         <item name="android:drawablePadding">@dimen/edit_text_drawable_padding</item>
-        <item name="android:drawableTint" tools:ignore="NewApi">@color/colorDrawableTintGrey</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textColorHint">@color/colorAuthenticationSecondaryText</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:background">@drawable/style_edit_text_authentication</item>
+        <item name="android:background">@drawable/rounded_border</item>
     </style>
 
-    <style name="Authentication.Button" parent="Widget.AppCompat.Button">
-        <item name="android:layout_width">match_parent</item>
+    <style name="Authentication.Button" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:foreground">?selectableItemBackground</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:lineSpacingExtra">2sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:background">@drawable/rounded_color_accent</item>
+    </style>
+
+    <style name="Authentication.Button.Borderless" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:lineSpacingExtra">2sp</item>
+    </style>
+
+    <style name="Authentication.AVLoadingIndicatorView" parent="AVLoadingIndicatorView">
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/effect_ripple</item>
+        <item name="indicatorColor">@color/colorPrimary</item>
+        <item name="indicatorName">BallPulseIndicator</item>
     </style>
 
     <style name="EditText.Password" parent="TextAppearance.AppCompat">
@@ -115,7 +163,8 @@
         <item name="android:textSize">10sp</item>
     </style>
 
-    <style name="Profile.EditText" parent="Authentication.EditText">
+    // REMARK: To be removed.
+    <style name="Profile.EditText" parent="Authentication.EditText.Border">
         <item name="android:background">@drawable/style_edit_text_profile</item>
     </style>
 

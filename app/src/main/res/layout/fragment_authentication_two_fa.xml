@@ -1,40 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/screen_edge_left_and_right_margins"
     tools:context=".authentication.twofactor.ui.TwoFAFragment">
 
     <TextView
-        android:id="@+id/text_headline"
-        style="@style/Authentication.Headline.TextView"
-        android:layout_centerHorizontal="true"
-        android:text="@string/title_log_in" />
+        android:id="@+id/text_two_factor_authentication"
+        style="@style/Authentication.TextView.Headline"
+        android:text="Two-factor Authentication"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/text_two_factor_auth"
-        style="@style/Authentication.EditText"
-        android:layout_below="@id/text_headline"
-        android:layout_marginTop="32dp"
-        android:drawableStart="@drawable/ic_vpn_key_black_24dp"
-        android:hint="@string/msg_2fa_code"
+        android:id="@+id/text_two_factor_authentication_code"
+        style="@style/Authentication.EditText.Border"
+        android:layout_marginTop="16dp"
         android:imeOptions="actionDone"
-        android:inputType="text" />
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_two_factor_authentication" />
+
+    <Button
+        android:id="@+id/button_confirm"
+        style="@style/Authentication.Button"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/colorAuthenticationButtonDisabled"
+        android:enabled="false"
+        android:text="@string/action_confirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_two_factor_authentication_code" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        style="@style/Authentication.AVLoadingIndicatorView"
         android:visibility="gone"
-        app:indicatorName="BallPulseIndicator"
-        tools:visibility="visible" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_log_in"
-        style="@style/Authentication.Button"
-        android:layout_alignParentBottom="true"
-        android:text="@string/title_log_in" />
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

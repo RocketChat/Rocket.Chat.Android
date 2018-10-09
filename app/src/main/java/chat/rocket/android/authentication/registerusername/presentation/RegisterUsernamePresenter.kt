@@ -30,48 +30,44 @@ class RegisterUsernamePresenter @Inject constructor(
     private val strategy: CancelStrategy,
     private val navigator: AuthenticationNavigator,
     private val tokenRepository: TokenRepository,
-    factory: RocketChatClientFactory,
     private val saveAccountInteractor: SaveAccountInteractor,
     private val analyticsManager: AnalyticsManager,
-    serverInteractor: GetConnectingServerInteractor,
     private val saveCurrentServer: SaveCurrentServerInteractor,
-    settingsInteractor: GetSettingsInteractor
+    val serverInteractor: GetConnectingServerInteractor,
+    val factory: RocketChatClientFactory,
+    val settingsInteractor: GetSettingsInteractor
 ) {
     private val currentServer = serverInteractor.get()!!
     private val client: RocketChatClient = factory.create(currentServer)
     private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
 
     fun registerUsername(username: String, userId: String, authToken: String) {
-        if (username.isBlank()) {
-            view.alertBlankUsername()
-        } else {
-            launchUI(strategy) {
-                view.showLoading()
-                try {
-                    val me = retryIO("updateOwnBasicInformation(username = $username)") {
-                        client.updateOwnBasicInformation(username = username)
-                    }
-                    val registeredUsername = me.username
-                    if (registeredUsername != null) {
-                        saveAccount(registeredUsername)
-                        saveCurrentServer.save(currentServer)
-                        tokenRepository.save(currentServer, Token(userId, authToken))
-                        analyticsManager.logSignUp(
-                            AuthenticationEvent.AuthenticationWithOauth,
-                            true
-                        )
-                        navigator.toChatList()
-                    }
-                } catch (exception: RocketChatException) {
-                    analyticsManager.logSignUp(AuthenticationEvent.AuthenticationWithOauth, false)
-                    exception.message?.let {
-                        view.showMessage(it)
-                    }.ifNull {
-                        view.showGenericErrorMessage()
-                    }
-                } finally {
-                    view.hideLoading()
+        launchUI(strategy) {
+            view.showLoading()
+            try {
+                val me = retryIO("updateOwnBasicInformation(username = $username)") {
+                    client.updateOwnBasicInformation(username = username)
                 }
+                val registeredUsername = me.username
+                if (registeredUsername != null) {
+                    saveAccount(registeredUsername)
+                    saveCurrentServer.save(currentServer)
+                    tokenRepository.save(currentServer, Token(userId, authToken))
+                    analyticsManager.logSignUp(
+                        AuthenticationEvent.AuthenticationWithOauth,
+                        true
+                    )
+                    navigator.toChatList()
+                }
+            } catch (exception: RocketChatException) {
+                analyticsManager.logSignUp(AuthenticationEvent.AuthenticationWithOauth, false)
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideLoading()
             }
         }
     }
