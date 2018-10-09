@@ -44,57 +44,37 @@ class SignupPresenter @Inject constructor(
     private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
 
     fun signup(name: String, username: String, password: String, email: String) {
-        val server = serverInteractor.get()
-        when {
-            server == null -> {
-                navigator.toServerScreen()
-            }
-            name.isBlank() -> {
-                view.alertBlankName()
-            }
-            username.isBlank() -> {
-                view.alertBlankUsername()
-            }
-            password.isEmpty() -> {
-                view.alertEmptyPassword()
-            }
-            email.isBlank() -> {
-                view.alertBlankEmail()
-            }
-            else -> {
-                val client = factory.create(server)
-                launchUI(strategy) {
-                    view.showLoading()
-                    try {
-                        // TODO This function returns a user so should we save it?
-                        retryIO("signup") { client.signup(email, name, username, password) }
-                        // TODO This function returns a user token so should we save it?
-                        retryIO("login") { client.login(username, password) }
-                        val me = retryIO("me") { client.me() }
-                        saveCurrentServerInteractor.save(currentServer)
-                        localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
-                        saveAccount(me)
-                        analyticsManager.logSignUp(
-                            AuthenticationEvent.AuthenticationWithUserAndPassword,
-                            true
-                        )
-                        view.saveSmartLockCredentials(username, password)
-                        navigator.toChatList()
-                    } catch (exception: RocketChatException) {
-                        analyticsManager.logSignUp(
-                            AuthenticationEvent.AuthenticationWithUserAndPassword,
-                            false
-                        )
-                        exception.message?.let {
-                            view.showMessage(it)
-                        }.ifNull {
-                            view.showGenericErrorMessage()
-                        }
-                    } finally {
-                        view.hideLoading()
-
-                    }
+        val client = factory.create(currentServer)
+        launchUI(strategy) {
+            view.showLoading()
+            try {
+                // TODO This function returns a user so should we save it?
+                retryIO("signup") { client.signup(email, name, username, password) }
+                // TODO This function returns a user token so should we save it?
+                retryIO("login") { client.login(username, password) }
+                val me = retryIO("me") { client.me() }
+                saveCurrentServerInteractor.save(currentServer)
+                localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
+                saveAccount(me)
+                analyticsManager.logSignUp(
+                    AuthenticationEvent.AuthenticationWithUserAndPassword,
+                    true
+                )
+                view.saveSmartLockCredentials(username, password)
+                navigator.toChatList()
+            } catch (exception: RocketChatException) {
+                analyticsManager.logSignUp(
+                    AuthenticationEvent.AuthenticationWithUserAndPassword,
+                    false
+                )
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
                 }
+            } finally {
+                view.hideLoading()
+
             }
         }
     }

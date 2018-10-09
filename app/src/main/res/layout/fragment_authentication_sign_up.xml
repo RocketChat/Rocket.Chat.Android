@@ -1,99 +1,91 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusableInTouchMode="true"
+    android:background="@color/colorWhite"
+    android:padding="@dimen/screen_edge_left_and_right_margins"
     tools:context=".authentication.signup.ui.SignupFragment">
 
-    <ScrollView
-        android:id="@+id/scroll_view"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/text_headline"
-                style="@style/Authentication.Headline.TextView"
-                android:layout_gravity="center"
-                android:text="@string/title_sign_up" />
-
-            <EditText
-                android:id="@+id/text_name"
-                style="@style/Authentication.EditText"
-                android:layout_marginTop="32dp"
-                android:drawableStart="@drawable/ic_person_black_24dp"
-                android:hint="@string/msg_name"
-                android:imeOptions="actionNext"
-                android:inputType="textCapWords" />
-
-            <EditText
-                android:id="@+id/text_username"
-                style="@style/Authentication.EditText"
-                android:layout_marginTop="16dp"
-                android:drawableStart="@drawable/ic_at_black_24dp"
-                android:hint="@string/msg_username"
-                android:imeOptions="actionNext"
-                android:inputType="text" />
-
-            <EditText
-                android:id="@+id/text_password"
-                style="@style/Authentication.EditText"
-                android:layout_marginTop="16dp"
-                android:drawableStart="@drawable/ic_lock_black_24dp"
-                android:hint="@string/msg_password"
-                android:imeOptions="actionNext"
-                android:inputType="textPassword" />
-
-            <EditText
-                android:id="@+id/text_email"
-                style="@style/Authentication.EditText"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
-                android:drawableStart="@drawable/ic_email_black_24dp"
-                android:hint="@string/msg_email"
-                android:imeOptions="actionDone"
-                android:inputType="textEmailAddress" />
-        </LinearLayout>
-    </ScrollView>
-
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/view_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/scroll_view"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:visibility="gone"
-        app:indicatorName="BallPulseIndicator"
-        tools:visibility="visible" />
-
-    <LinearLayout
-        android:id="@+id/bottom_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
-
         <TextView
-            android:id="@+id/text_new_user_agreement"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/screen_edge_left_and_right_margins"
-            android:gravity="center"
-            android:textColorLink="@color/colorAccent" />
+            android:id="@+id/text_sign_up"
+            style="@style/Authentication.TextView.Headline"
+            android:text="@string/title_sign_up"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/text_name"
+            style="@style/Authentication.EditText.Border"
+            android:layout_marginTop="16dp"
+            android:drawableStart="@drawable/ic_person_black_20dp"
+            android:hint="@string/msg_name"
+            android:imeOptions="actionNext"
+            android:inputType="textCapWords"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_sign_up" />
+
+        <EditText
+            android:id="@+id/text_username"
+            style="@style/Authentication.EditText.Border"
+            android:layout_marginTop="10dp"
+            android:drawableStart="@drawable/ic_at_black_20dp"
+            android:hint="@string/msg_username"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_name" />
+
+        <EditText
+            android:id="@+id/text_password"
+            style="@style/Authentication.EditText.Border"
+            android:layout_marginTop="10dp"
+            android:drawableStart="@drawable/ic_key_black_20dp"
+            android:hint="@string/msg_password"
+            android:imeOptions="actionNext"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_username" />
+
+        <EditText
+            android:id="@+id/text_email"
+            style="@style/Authentication.EditText.Border"
+            android:layout_marginTop="10dp"
+            android:drawableStart="@drawable/ic_email_black_20dp"
+            android:hint="@string/msg_email"
+            android:imeOptions="actionDone"
+            android:inputType="textEmailAddress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_password" />
 
         <Button
-            android:id="@+id/button_sign_up"
+            android:id="@+id/button_register"
             style="@style/Authentication.Button"
-            android:text="@string/title_sign_up" />
-    </LinearLayout>
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/colorAuthenticationButtonDisabled"
+            android:enabled="false"
+            android:text="@string/action_register"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_email" />
 
-</RelativeLayout>
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/view_loading"
+            style="@style/Authentication.AVLoadingIndicatorView"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

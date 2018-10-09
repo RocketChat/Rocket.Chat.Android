@@ -226,8 +226,10 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     private fun setupRecyclerView() {
         ui {
             recycler_view.layoutManager =
-                LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            recycler_view.addItemDecoration(DividerItemDecoration(it, DividerItemDecoration.HORIZONTAL))
+                    LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            recycler_view.addItemDecoration(
+                DividerItemDecoration(it, DividerItemDecoration.HORIZONTAL)
+            )
             recycler_view.adapter = adapter
         }
     }
