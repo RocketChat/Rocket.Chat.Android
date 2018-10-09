@@ -44,6 +44,11 @@
     <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
     <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
     <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
+    <string name="action_connect_server">Connect with a server</string> <!-- TODO Add translation -->
+    <string name="action_join_community">Join in the community</string> <!-- TODO Add translation -->
+    <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
+    <string name="action_register">Register</string> <!-- TODO Add translation -->
+    <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -57,19 +62,18 @@
     <string name="msg_no_data_to_display">No hay información para mostrar</string>
     <string name="msg_profile_update_successfully">Actualización de perfil con éxito</string>
     <string name="msg_username">usuario</string>
-    <string name="msg_username_or_email">nombre de usuario o correo electrónico</string>
-    <string name="msg_password">contraseña</string>
-    <string name="msg_name">nombre</string>
-    <string name="msg_email">correo electrónico</string>
+    <string name="msg_username_or_email">Nombre de usuario o correo electrónico</string>
+    <string name="msg_password">Contraseña</string>
+    <string name="msg_name">Nombre</string>
+    <string name="msg_email">Correo electrónico</string>
     <string name="msg_avatar_url">URL del avatar</string>
     <string name="msg_or_continue_using_social_accounts">O continuar usando cuentas sociales</string>
     <string name="msg_new_user">Nuevo usuario? %1$s</string>
-    <string name="msg_forgot_password">Se te olvidó tu contraseña? %1$s</string>
+    <string name="msg_forgot__your_password">Se te olvidó tu contraseña?</string>
     <string name="msg_reset">reiniciar</string>
     <string name="msg_check_your_email_to_reset_your_password">¡Email enviado! Verifique su bandeja de entrada para restablecer su contraseña.</string>
     <string name="msg_invalid_email">Por favor escriba un correo electrónico válido</string>
     <string name="msg_new_user_agreement">Al continuar estás aceptando nuestra\n%1$s y %2$s</string>
-    <string name="msg_2fa_code">Código 2FA</string>
     <string name="msg_yesterday">Ayer</string>
     <string name="msg_today">Hoy</string>
     <string name="msg_message">Mensaje</string>
@@ -86,6 +90,7 @@
     <string name="msg_content_description_log_in_using_gitlab">Inicia sesión usando Gitlab</string>
     <string name="msg_content_description_log_in_using_wordpress">Login using WordPress</string> <!-- TODO Translate-->
     <string name="msg_content_description_send_message">Enviar mensaje</string>
+    <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Translate-->
     <string name="msg_content_description_show_attachment_options">Mostrar opciones de archivo adjunto</string>
     <string name="msg_you">Tú</string>
     <string name="msg_unknown">Desconocido</string>
@@ -106,9 +111,7 @@
     <string name="msg_ver_not_minimum">
         Parece que la versión del servidor está por debajo de la versión mínima requerida %1$s.\nActualice su servidor para iniciar sesión!
     </string>
-    <string name="msg_proceed">PROCEDER</string>
     <string name="msg_cancel">CANCELAR</string>
-    <string name="msg_warning">ADVERTENCIA</string>
     <string name="msg_http_insecure">Al usar HTTP, te estás conectando a un servidor inseguro. No te recomendamos que hagas eso.</string>
     <string name="msg_error_checking_server_version">Se ha producido un error al verificar la versión de su servidor, intente de nuevo</string>
     <string name="msg_invalid_server_protocol">El protocolo seleccionado no es aceptado por este servidor, intente usar HTTPS</string>
@@ -127,6 +130,18 @@
     <string name="msg_delete_message">Borrar mensaje</string>
     <string name="msg_delete_description">Seguro que quieres borrar este mensaje</string>
     <string name="msg_no_search_found">No se han encontrado resultados</string>
+    <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string> <!-- TODO Add translation -->
+    <string name="msg_team_communication">Open Source Communication</string> <!-- TODO Add translation -->
+    <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->
+    <string name="msg_create_account">Create an account</string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_github">Continue with <b>Github</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_google">Continue with <b>Google</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
+    <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
+    <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
@@ -139,6 +154,10 @@
     <string name="msg_member_already_added">Ya has seleccionado este usuario</string>
     <string name="msg_member_not_found">Miembro no encontrado</string>
     <string name="msg_channel_created_successfully">Canal creado con éxito</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_view_more">view more</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_view_less">view less</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
@@ -285,5 +304,7 @@
     <string name="msg_file_description">Descripción del archivo</string>
     <string name="msg_send">Enviar</string>
     <string name="msg_sent_attachment">Envió un archivo</string>
+    <!--TODO - Add proper translation-->
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 
 </resources>

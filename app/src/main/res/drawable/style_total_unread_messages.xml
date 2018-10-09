@@ -3,5 +3,4 @@
     android:shape="oval">
 
     <solid android:color="@color/colorAccent" />
-
 </shape>

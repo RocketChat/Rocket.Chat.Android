@@ -1,6 +1,6 @@
 package chat.rocket.android.chatroom.uimodel.suggestion
 
-import chat.rocket.android.widget.autocompletion.model.SuggestionModel
+import chat.rocket.android.suggestions.model.SuggestionModel
 
 class CommandSuggestionUiModel(text: String,
                                val description: String,
