@@ -3,6 +3,7 @@ package chat.rocket.android.util.extensions
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -16,8 +17,25 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.SupportMenuInflater
 import androidx.appcompat.view.menu.MenuBuilder
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import chat.rocket.android.R
+
+fun FragmentActivity.setLightStatusBar(view: View) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        var flags = view.systemUiVisibility
+        flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        view.systemUiVisibility = flags
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
+    }
+}
+
+fun FragmentActivity.clearLightStatusBar() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+    }
+}
 
 // TODO: Remove. Use KTX instead.
 fun View.setVisible(visible: Boolean) {
@@ -35,11 +53,13 @@ fun View.isVisible(): Boolean {
 fun ViewGroup.inflate(@LayoutRes resource: Int, attachToRoot: Boolean = false): View =
     LayoutInflater.from(context).inflate(resource, this, attachToRoot)
 
-fun AppCompatActivity.addFragment(tag: String, layoutId: Int, allowStateLoss: Boolean = false,
-                                  newInstance: () -> Fragment) {
+fun AppCompatActivity.addFragment(
+    tag: String, layoutId: Int, allowStateLoss: Boolean = false,
+    newInstance: () -> Fragment
+) {
     val fragment = supportFragmentManager.findFragmentByTag(tag) ?: newInstance()
     val transaction = supportFragmentManager.beginTransaction()
-            .replace(layoutId, fragment, tag)
+        .replace(layoutId, fragment, tag)
     if (allowStateLoss) {
         transaction.commitAllowingStateLoss()
     } else {

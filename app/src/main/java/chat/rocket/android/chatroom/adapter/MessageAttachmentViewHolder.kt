@@ -3,6 +3,7 @@ package chat.rocket.android.chatroom.adapter
 import android.animation.ValueAnimator
 import android.text.method.LinkMovementMethod
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import androidx.core.view.isVisible
 import chat.rocket.android.R
@@ -15,8 +16,6 @@ class MessageAttachmentViewHolder(
     listener: ActionsListener,
     reactionListener: EmojiReactionListener? = null
 ) : BaseViewHolder<MessageAttachmentUiModel>(itemView, listener, reactionListener) {
-
-    private var expanded = true
 
     init {
         with(itemView) {
@@ -33,7 +32,11 @@ class MessageAttachmentViewHolder(
             text_message_time.text = data.time
             text_sender.text = data.senderName
             text_content.text = data.content
-            text_view_more.text = viewLess
+            text_view_more.isVisible = true
+            text_view_more.text = if (isExpanded())viewLess else viewMore
+            val lp = text_content.layoutParams
+            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            text_content.layoutParams = lp
             text_content.addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
 
                 override fun onLayoutChange(v: View, left: Int, top: Int, right: Int, bottom: Int,
@@ -45,8 +48,6 @@ class MessageAttachmentViewHolder(
                         return
                     }
 
-                    text_view_more.isVisible = true
-
                     val expandAnimation = ValueAnimator
                         .ofInt(collapsedHeight, textMeasuredHeight)
                         .setDuration(300)
@@ -57,18 +58,15 @@ class MessageAttachmentViewHolder(
                         .setDuration(300)
                     collapseAnimation.interpolator = LinearInterpolator()
 
-                    val lp = text_content.layoutParams
-
                     expandAnimation.addUpdateListener {
                         val value = it.animatedValue as Int
                         lp.height = value
                         text_content.layoutParams = lp
-                        expanded = if (value == textMeasuredHeight) {
+                        if (value == textMeasuredHeight) {
                             text_view_more.text = viewLess
-                            true
+                            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
                         } else {
                             text_view_more.text = viewMore
-                            false
                         }
                     }
 
@@ -76,19 +74,18 @@ class MessageAttachmentViewHolder(
                         val value = it.animatedValue as Int
                         lp.height = value
                         text_content.layoutParams = lp
-                        expanded = if (value == textMeasuredHeight) {
+                        if (value == textMeasuredHeight) {
                             text_view_more.text = viewLess
-                            true
+                            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
                         } else {
                             text_view_more.text = viewMore
-                            false
                         }
                     }
 
                     text_view_more.setOnClickListener {
                         if (expandAnimation.isRunning) return@setOnClickListener
 
-                        if (expanded) {
+                        if (isExpanded()) {
                             collapseAnimation.start()
                         } else {
                             expandAnimation.start()
@@ -98,6 +95,13 @@ class MessageAttachmentViewHolder(
                     text_content.removeOnLayoutChangeListener(this)
                 }
             })
+        }
+    }
+
+    private fun isExpanded(): Boolean {
+        with(itemView) {
+            val lp = text_content.layoutParams
+            return lp.height == ViewGroup.LayoutParams.WRAP_CONTENT
         }
     }
 }
