@@ -6,15 +6,24 @@ import chat.rocket.android.core.behaviours.MessageView
 interface SignupView : LoadingView, MessageView {
 
     /**
-     * Enables the button to register when the user enters all the required fields.
+     * Alerts the user about a blank name.
      */
-    fun enableButtonRegister()
+    fun alertBlankName()
 
     /**
-     * Disables the button to register when the user doesn't enter all the required fields.
+     * Alerts the user about a blank username.
      */
-    fun disableButtonRegister()
+    fun alertBlankUsername()
 
+    /**
+     * Alerts the user about a empty password.
+     */
+    fun alertEmptyPassword()
+
+    /**
+     * Alerts the user about a blank email.
+     */
+    fun alertBlankEmail()
 
     /**
      * Saves Google Smart Lock credentials.

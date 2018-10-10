@@ -6,14 +6,9 @@ import chat.rocket.android.core.behaviours.MessageView
 interface TwoFAView : LoadingView, MessageView {
 
     /**
-     * Enables the button to set the username if the user entered at least one character.
+     * Alerts the user about a blank Two Factor Authentication code.
      */
-    fun enableButtonConfirm()
-
-    /**
-     * Disables the button to set the username when there is no character entered by the user.
-     */
-    fun disableButtonConfirm()
+    fun alertBlankTwoFactorAuthenticationCode()
 
     /**
      * Alerts the user about an invalid inputted Two Factor Authentication code.

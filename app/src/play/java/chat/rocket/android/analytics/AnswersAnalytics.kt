@@ -65,6 +65,4 @@ class AnswersAnalytics : Analytics {
                     .putCustomAttribute("server_url", serverUrl)
                     .putCustomAttribute("server_count", serverCount)
             )
-
-    override fun logOpenAdmin() = Answers.getInstance().logCustom(CustomEvent("open_admin"))
 }

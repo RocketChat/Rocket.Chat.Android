@@ -84,7 +84,7 @@
             android:id="@+id/image_account_expand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_expand_more_black_24dp"
+            android:src="@drawable/ic_expand_more_24dp"
             android:tint="@color/colorWhite"
             app:layout_constraintBottom_toBottomOf="@+id/text_server_url"
             app:layout_constraintEnd_toEndOf="parent" />

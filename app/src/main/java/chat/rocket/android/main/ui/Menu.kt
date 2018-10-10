@@ -26,7 +26,7 @@ internal fun MainActivity.setupMenu(menu: Menu) {
             R.id.menu_action_profile,
             Menu.NONE,
             R.string.title_profile
-        ).setIcon(R.drawable.ic_person_black_20dp)
+        ).setIcon(R.drawable.ic_person_black_24dp)
 
         add(
             R.id.menu_section_two,

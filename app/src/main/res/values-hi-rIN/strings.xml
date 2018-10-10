@@ -10,8 +10,7 @@
     <string name="title_legal_terms">कानूनी शर्तें</string>
     <string name="title_chats">चैट</string>
     <string name="title_profile">प्रोफाइल</string>
-    <string name="title_members">सदस्य</string>
-    <string name="title_counted_members">सदस्य (%d)</string>
+    <string name="title_members">सदस्य (%d)</string>
     <string name="title_settings">सेटिंग्स</string>
     <string name="title_preferences">प्राथमिकताएँ</string>
     <string name="title_change_password">पासवर्ड बदलें</string>
@@ -46,11 +45,6 @@
     <string name="action_select_photo_from_gallery">गैलरी से फोटो का चयन करें</string>
     <string name="action_take_photo">फोटो खेचिये</string>
     <string name="action_reset_avatar">अवतार रीसेट करें</string>
-    <string name="action_connect_server">सर्वर से कनेक्ट करें</string>
-    <string name="action_join_community">समुदाय में शामिल हों</string>
-    <string name="action_create_server">नया सर्वर बनाएं</string>
-    <string name="action_register">रजिस्टर</string>
-    <string name="action_confirm">पुष्टि करें</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -71,11 +65,12 @@
     <string name="msg_avatar_url">अवतार यूआरएल</string>
     <string name="msg_or_continue_using_social_accounts">या सामाजिक खाते का उपयोग करना जारी रखें</string>
     <string name="msg_new_user">नया उपयोगकर्ता? %1$s</string>
-    <string name="msg_forgot__your_password">पासवर्ड भूल गए?</string>
+    <string name="msg_forgot_password">पासवर्ड भूल गए? %1$s</string>
     <string name="msg_reset">रीसेट करें</string>
     <string name="msg_check_your_email_to_reset_your_password">ईमेल गया गया है! अपना पासवर्ड रीसेट करने के लिए अपने इनबॉक्स की जांच करें।</string>
     <string name="msg_invalid_email">कृपया एक वैध ई-मेल टाइप करें</string>
     <string name="msg_new_user_agreement">आगे बढ़कर आप हमारे %1$s और %2$s से सहमत हो रहे हैं</string>
+    <string name="msg_2fa_code">कोड 2FA</string>
     <string name="msg_yesterday">कल</string>
     <string name="msg_today">आज</string>
     <string name="msg_message">संदेश</string>
@@ -92,7 +87,6 @@
     <string name="msg_content_description_log_in_using_gitlab">Gitlab द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_wordpress">WordPress द्वारा लॉगिन करें</string>
     <string name="msg_content_description_send_message">मेसेज भेजें</string>
-    <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Translate-->
     <string name="msg_content_description_show_attachment_options">अटैचमेंट विकल्प दिखाएं</string>
     <string name="msg_you">आप</string>
     <string name="msg_unknown">अनजान</string>
@@ -114,7 +108,9 @@
     <string name="msg_ver_not_minimum">
         ऐसा लगता है कि आपका सर्वर संस्करण न्यूनतम आवश्यक संस्करण %1$s से कम है।\nकृपया लॉगिन करने के लिए अपने सर्वर को अपग्रेड करें!
     </string>
+    <string name="msg_proceed">आगे बढ़ें</string>
     <string name="msg_cancel">रद्द करना</string>
+    <string name="msg_warning">चेतावनी</string>
     <string name="msg_http_insecure">HTTP का उपयोग करते समय, आप एक असुरक्षित सर्वर से कनेक्ट हो रहे हैं। हम आपको ऐसा करने की सलाह नहीं देते हैं।</string>
     <string name="msg_error_checking_server_version">आपके सर्वर संस्करण की जांच करते समय एक त्रुटि आई है, कृपया पुनः प्रयास करें</string>
     <string name="msg_invalid_server_protocol">चयनित प्रोटोकॉल इस सर्वर द्वारा स्वीकार नहीं किया गया है, HTTPS का उपयोग करने का प्रयास करें</string>
@@ -137,18 +133,6 @@
     <string name="msg_sent_attachment">एक अनुलग्नक भेजा</string>
     <string name="msg_delete_message">संदेश को हटाएं</string>
     <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
-    <string name="msg_welcome_to_rocket_chat">Rocket.Chat में आपका स्वागत है</string>
-    <string name="msg_team_communication">ओपन सोर्स कम्युनिकेशन</string>
-    <string name="msg_login_with_email">ई-मेल के साथ लॉगिन करें</string>
-    <string name="msg_create_account">खाता बनाएं</string>
-    <string name="msg_continue_with_facebook"><b>Facebook</b> के साथ जारी रखें</string>
-    <string name="msg_continue_with_github"><b>Github</b> के साथ जारी रखें</string>
-    <string name="msg_continue_with_google"><b>Google</b> के साथ जारी रखें</string>
-    <string name="msg_continue_with_linkedin"><b>Linkedin</b> के साथ जारी रखें</string>
-    <string name="msg_continue_with_gitlab"><b>GitLab</b> के साथ जारी रखें</string>
-    <string name="msg_continue_with_wordpress"><b>WordPress</b> के साथ जारी रखें</string>
-    <string name="msg_two_factor_authentication">दो तरीकों से प्रमाणीकरण</string>
-    <string name="msg__your_2fa_code">आपका 2FA कोड क्या है?</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">प्राइवेट</string>
@@ -161,10 +145,6 @@
     <string name="msg_member_already_added">आपने पहले से ही इस यूजर को चुन चुके है।</string>
     <string name="msg_member_not_found">सदस्य नहीं मिला</string>
     <string name="msg_channel_created_successfully">चैनल सफलतापूर्वक बनाया गया</string>
-    <!--  TODO - Add proper translation -->
-    <string name="msg_view_more">view more</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_less">view less</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">एनालिटिक्स ट्रैकिंग</string>
@@ -307,6 +287,4 @@
     <string name="read_by">द्वारा पढ़ें</string>
     <string name="message_information_title">संदेश की जानकारी</string>
     <string name="msg_log_out">लॉग आउट कर रहा हूं…</string>
-    <!--TODO - Add proper translation-->
-    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 </resources>

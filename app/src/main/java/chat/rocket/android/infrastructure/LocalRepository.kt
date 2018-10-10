@@ -27,7 +27,6 @@ interface LocalRepository {
         const val SETTINGS_KEY = "settings_"
         const val PERMISSIONS_KEY = "permissions_"
         const val USER_KEY = "user_"
-        const val UNFINISHED_MSG_KEY = "unfinished_msg_"
         const val CURRENT_USERNAME_KEY = "username_"
         const val LAST_CHATROOMS_REFRESH = "_chatrooms_refresh"
     }

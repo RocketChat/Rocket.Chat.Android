@@ -16,8 +16,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 2044
-        versionName "3.0.0"
+        versionCode 2043
+        versionName "2.6.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -93,7 +93,6 @@ dependencies {
     implementation project(':draw')
     implementation project(':util')
     implementation project(':core')
-    implementation project(':suggestions')
 
     implementation libraries.kotlin
     implementation libraries.coroutines
@@ -151,8 +150,6 @@ dependencies {
     implementation libraries.aVLoadingIndicatorView
 
     implementation libraries.livedataKtx
-
-    implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
     // Proprietary libraries
     playImplementation libraries.fcm

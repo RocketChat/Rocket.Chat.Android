@@ -13,7 +13,9 @@ class MessageReplyViewHolder(
 ) : BaseViewHolder<MessageReplyUiModel>(itemView, listener, reactionListener) {
 
     init {
-        setupActionMenu(itemView)
+        with(itemView) {
+            setupActionMenu(itemView)
+        }
     }
 
     override fun bindViews(data: MessageReplyUiModel) {

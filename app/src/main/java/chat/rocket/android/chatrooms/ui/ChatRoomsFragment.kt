@@ -30,6 +30,7 @@ import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModel
 import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModelFactory
 import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.chatrooms.viewmodel.Query
+import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
@@ -56,10 +57,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     @Inject
     lateinit var factory: ChatRoomsViewModelFactory
     @Inject
+    lateinit var dbManager: DatabaseManager // TODO - remove when moving ChatRoom screen to DB
+    @Inject
     lateinit var analyticsManager: AnalyticsManager
-
-    private lateinit var viewModel: ChatRoomsViewModel
-
+    lateinit var viewModel: ChatRoomsViewModel
     private var searchView: SearchView? = null
     private var sortView: MenuItem? = null
     private val handler = Handler()

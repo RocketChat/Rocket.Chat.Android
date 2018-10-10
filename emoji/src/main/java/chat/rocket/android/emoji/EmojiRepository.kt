@@ -146,7 +146,7 @@ object EmojiRepository {
      *
      * @return All emojis for all categories.
      */
-    suspend fun getAll(): List<Emoji> = withContext(CommonPool) {
+    internal suspend fun getAll(): List<Emoji> = withContext(CommonPool) {
         return@withContext db.emojiDao().loadAllEmojis()
     }
 
@@ -210,7 +210,7 @@ object EmojiRepository {
         }
     }
 
-    fun getCustomEmojis(): List<Emoji> = customEmojis
+    internal fun getCustomEmojis(): List<Emoji> = customEmojis
 
     /**
      * Get all recently used emojis ordered by usage count.
@@ -267,7 +267,7 @@ object EmojiRepository {
 
     private fun loadEmojis(stream: InputStream): MutableList<Emoji> {
         val emojisJSON = JSONArray(inputStreamToString(stream))
-        val emojis = ArrayList<Emoji>(emojisJSON.length())
+        val emojis = ArrayList<Emoji>(emojisJSON.length());
         for (i in 0 until emojisJSON.length()) {
             val emoji = buildEmojiFromJSON(emojisJSON.getJSONObject(i))
             emoji?.let {

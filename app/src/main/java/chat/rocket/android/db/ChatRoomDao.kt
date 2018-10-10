@@ -99,7 +99,7 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
     abstract fun update(list: List<ChatRoomEntity>)
 
     @Transaction
-    open fun update(toInsert: List<ChatRoomEntity>, toUpdate: List<ChatRoomEntity>, toRemove: List<String>) {
+    open fun update(toRemove: List<String>, toInsert: List<ChatRoomEntity>, toUpdate: List<ChatRoomEntity>) {
         insertOrReplace(toInsert)
         update(toUpdate)
         toRemove.forEach { id ->

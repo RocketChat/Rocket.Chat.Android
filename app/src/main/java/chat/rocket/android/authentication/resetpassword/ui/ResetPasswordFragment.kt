@@ -1,40 +1,37 @@
 package chat.rocket.android.authentication.resetpassword.ui
 
+import DrawableHelper
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.resetpassword.presentation.ResetPasswordPresenter
 import chat.rocket.android.authentication.resetpassword.presentation.ResetPasswordView
-import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.isEmail
 import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.shake
 import chat.rocket.android.util.extensions.showKeyboard
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.vibrateSmartPhone
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_authentication_reset_password.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-fun newInstance(): Fragment = ResetPasswordFragment()
+internal const val TAG_RESET_PASSWORD_FRAGMENT = "ResetPasswordFragment"
 
 class ResetPasswordFragment : Fragment(), ResetPasswordView {
     @Inject
     lateinit var presenter: ResetPasswordPresenter
     @Inject
     lateinit var analyticsManager: AnalyticsManager
-    private lateinit var emailAddressDisposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,39 +52,34 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
             showKeyboard(text_email)
         }
 
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            tintEditTextDrawableStart()
+        }
+
         setupOnClickListener()
-        subscribeEditText()
 
         analyticsManager.logScreenView(ScreenViewEvent.ResetPassword)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unsubscribeEditText()
+    override fun alertBlankEmail() {
+        ui {
+            vibrateShakeAndRequestFocusForTextEmail()
+        }
     }
 
-    override fun emailSent() = showMessage(R.string.msg_check_your_email_to_reset_your_password)
+    override fun alertInvalidEmail() {
+        ui {
+            vibrateShakeAndRequestFocusForTextEmail()
+            showMessage(R.string.msg_invalid_email)
+        }
+    }
 
-    override fun updateYourServerVersion() =
+    override fun emailSent() {
+        showToast(R.string.msg_check_your_email_to_reset_your_password, Toast.LENGTH_LONG)
+    }
+
+    override fun updateYourServerVersion() {
         showMessage(R.string.msg_update_app_version_in_order_to_continue)
-
-    override fun enableButtonConnect() {
-        context?.let {
-            ViewCompat.setBackgroundTintList(
-                button_reset_password, ContextCompat.getColorStateList(it, R.color.colorAccent)
-            )
-            button_reset_password.isEnabled = true
-        }
-    }
-
-    override fun disableButtonConnect() {
-        context?.let {
-            ViewCompat.setBackgroundTintList(
-                button_reset_password,
-                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
-            )
-            button_reset_password.isEnabled = false
-        }
     }
 
     override fun showLoading() {
@@ -116,35 +108,42 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
         }
     }
 
-    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+    override fun showGenericErrorMessage() {
+        showMessage(getString(R.string.msg_generic_error))
+    }
+
+    private fun tintEditTextDrawableStart() {
+        ui {
+            val emailDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_24dp, it)
+            DrawableHelper.wrapDrawable(emailDrawable)
+            DrawableHelper.tintDrawable(emailDrawable, it, R.color.colorDrawableTintGrey)
+            DrawableHelper.compoundDrawable(text_email, emailDrawable)
+        }
+    }
 
     private fun enableUserInput() {
-        enableButtonConnect()
+        button_reset_password.isEnabled = true
         text_email.isEnabled = true
     }
 
     private fun disableUserInput() {
-        disableButtonConnect()
-        text_email.isEnabled = false
+        button_reset_password.isEnabled = false
+        text_email.isEnabled = true
     }
 
-    private fun setupOnClickListener() =
+    private fun vibrateShakeAndRequestFocusForTextEmail() {
+        vibrateSmartPhone()
+        text_email.shake()
+        text_email.requestFocus()
+    }
+
+    private fun setupOnClickListener() {
         button_reset_password.setOnClickListener {
             presenter.resetPassword(text_email.textContent)
         }
-
-    private fun subscribeEditText() {
-        emailAddressDisposable = text_email.asObservable()
-            .debounce(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-            .filter { it.isNotBlank() }
-            .subscribe {
-                if (it.toString().isEmail()) {
-                    enableButtonConnect()
-                } else {
-                    disableButtonConnect()
-                }
-            }
     }
 
-    private fun unsubscribeEditText() = emailAddressDisposable.dispose()
+    companion object {
+        fun newInstance() = ResetPasswordFragment()
+    }
 }

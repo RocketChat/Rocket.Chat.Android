@@ -59,9 +59,4 @@ interface Analytics {
      * @param serverCount The number of server(s) the use own.
      */
     fun logServerSwitch(serverUrl: String, serverCount: Int)
-
-    /**
-     * Logs the admin opening.
-     */
-    fun logOpenAdmin()
 }

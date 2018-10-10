@@ -5,6 +5,5 @@ data class ReactionUiModel(
     val shortname: String,
     val unicode: CharSequence,
     val count: Int,
-    val usernames: List<String> = emptyList(),
-    var url: String? = null
+    val usernames: List<String> = emptyList()
 )
