@@ -9,7 +9,8 @@
     <string name="title_legal_terms">Términos legales</string>
     <string name="title_chats">Chats</string>
     <string name="title_profile">Perfil</string>
-    <string name="title_members">Miembros (%d)</string>
+    <string name="title_members">Miembros)</string>
+    <string name="title_counted_members">Miembros (%d)</string>
     <string name="title_settings">Configuraciones</string>
     <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
     <string name="title_change_password">Cambia la contraseña</string>
