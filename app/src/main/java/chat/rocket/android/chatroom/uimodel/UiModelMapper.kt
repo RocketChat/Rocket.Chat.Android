@@ -42,6 +42,7 @@ import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.attachment.AudioAttachment
 import chat.rocket.core.model.attachment.AuthorAttachment
 import chat.rocket.core.model.attachment.ColorAttachment
+import chat.rocket.core.model.attachment.Field
 import chat.rocket.core.model.attachment.FileAttachment
 import chat.rocket.core.model.attachment.GenericFileAttachment
 import chat.rocket.core.model.attachment.ImageAttachment
@@ -129,14 +130,14 @@ class UiModelMapper @Inject constructor(
         withContext(CommonPool) {
             val list = ArrayList<BaseUiModel<*>>()
 
-            message.urls?.forEach {
-                val url = mapUrl(message, it)
-                url?.let { list.add(url) }
+            message.urls?.forEach { url ->
+                mapUrl(message, url)?.let { list.add(it) }
             }
 
-            message.attachments?.forEach {
-                val attachment = mapAttachment(message, it)
-                attachment?.let { list.add(attachment) }
+            message.attachments?.mapNotNull { attachment ->
+                mapAttachment(message, attachment)
+            }?.asReversed()?.let {
+                list.addAll(it)
             }
 
             mapMessage(message).let {
@@ -175,7 +176,7 @@ class UiModelMapper @Inject constructor(
                     broadcast = broadcast ?: false,
                     alert = alert,
                     fullName = fullname,
-                    name = name ?: "",
+                    name = name,
                     favorite = favorite ?: false,
                     default = isDefault ?: false,
                     readonly = readonly,
@@ -320,10 +321,10 @@ class UiModelMapper @Inject constructor(
             val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
 
             ActionsAttachmentUiModel(attachmentUrl = url, title = title,
-                    actions = actions, buttonAlignment = buttonAlignment, message = message, rawData = attachment,
-                    messageId = message.id, reactions = getReactions(message),
-                    preview = message.copy(message = content.message), unread = message.unread,
-                    showDayMarker = false, currentDayMarkerText = dayMarkerText)
+                actions = actions, buttonAlignment = buttonAlignment, message = message, rawData = attachment,
+                messageId = message.id, reactions = getReactions(message),
+                preview = message.copy(message = content.message), unread = message.unread,
+                showDayMarker = false, currentDayMarkerText = dayMarkerText)
         }
     }
 
@@ -334,12 +335,31 @@ class UiModelMapper @Inject constructor(
 
             val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
             val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+            val fieldsText = mapFields(fields)
 
             ColorAttachmentUiModel(attachmentUrl = url, id = id, color = color.color,
-                text = text, message = message, rawData = attachment,
+                text = text, fields = fieldsText, message = message, rawData = attachment,
                 messageId = message.id, reactions = getReactions(message),
                 preview = message.copy(message = content.message), unread = message.unread,
                 showDayMarker = false, currentDayMarkerText = dayMarkerText)
+        }
+    }
+
+    private fun mapFields(fields: List<Field>?): CharSequence? {
+        return fields?.let {
+            buildSpannedString {
+                it.forEachIndexed { index, field ->
+                    bold { append(field.title) }
+                    append("\n")
+                    if (field.value.isNotEmpty()) {
+                        append(field.value)
+                    }
+
+                    if (index != it.size - 1) { // it is not the last one, append a new line
+                        append("\n\n")
+                    }
+                }
+            }
         }
     }
 
@@ -347,21 +367,7 @@ class UiModelMapper @Inject constructor(
         return with(attachment) {
             val content = stripMessageQuotes(message)
 
-            val fieldsText = fields?.let {
-                buildSpannedString {
-                    it.forEachIndexed { index, field ->
-                        bold { append(field.title) }
-                        append("\n")
-                        if (field.value.isNotEmpty()) {
-                            append(field.value)
-                        }
-
-                        if (index != it.size - 1) { // it is not the last one, append a new line
-                            append("\n\n")
-                        }
-                    }
-                }
-            }
+            val fieldsText = mapFields(fields)
             val id = attachmentId(message, attachment)
 
             val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
@@ -477,7 +483,7 @@ class UiModelMapper @Inject constructor(
         val time = getTime(message.timestamp)
         val avatar = getUserAvatar(message)
         val preview = mapMessagePreview(message)
-        val isTemp = message.isTemporary ?: false
+        val synced = message.synced
         val unread = if (settings.messageReadReceiptEnabled()) {
             message.unread ?: false
         } else {
@@ -492,7 +498,7 @@ class UiModelMapper @Inject constructor(
             messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
             content = content, isPinned = message.pinned, currentDayMarkerText = dayMarkerText,
             showDayMarker = false, reactions = getReactions(message), isFirstUnread = false,
-            preview = preview, isTemporary = isTemp, unread = unread)
+            preview = preview, isTemporary = !synced, unread = unread)
     }
 
     private fun mapMessagePreview(message: Message): Message {
@@ -574,7 +580,7 @@ class UiModelMapper @Inject constructor(
 
     private fun getSystemMessage(message: Message): CharSequence {
         val content = when (message.type) {
-        //TODO: Add implementation for Welcome type.
+            //TODO: Add implementation for Welcome type.
             is MessageType.MessageRemoved -> context.getString(R.string.message_removed)
             is MessageType.UserJoined -> context.getString(R.string.message_user_joined_channel)
             is MessageType.UserLeft -> context.getString(R.string.message_user_left)
@@ -586,6 +592,7 @@ class UiModelMapper @Inject constructor(
             is MessageType.UserUnMuted -> context.getString(R.string.message_unmuted, message.message, message.sender?.username)
             is MessageType.SubscriptionRoleAdded -> context.getString(R.string.message_role_add, message.message, message.role, message.sender?.username)
             is MessageType.SubscriptionRoleRemoved -> context.getString(R.string.message_role_removed, message.message, message.role, message.sender?.username)
+            is MessageType.RoomChangedPrivacy -> context.getString(R.string.message_room_changed_privacy, message.message, message.sender?.username)
             else -> {
                 throw InvalidParameterException("Invalid message type: ${message.type}")
             }

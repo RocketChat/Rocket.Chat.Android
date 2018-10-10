@@ -1,8 +1,18 @@
 package chat.rocket.android.helper
 
+import chat.rocket.android.util.extensions.encodeToBase64
+import chat.rocket.android.util.extensions.generateRandomString
 import chat.rocket.android.util.extensions.removeTrailingSlash
 
 object OauthHelper {
+
+    /**
+     * Returns an unguessable random string used to protect against forgery attacks.
+     */
+    fun getState() =
+        ("{\"loginStyle\":\"popup\"," +
+                "\"credentialToken\":\"${generateRandomString(40)}\"," +
+                "\"isCordova\":true}").encodeToBase64()
 
     /**
      * Returns the Github Oauth URL.

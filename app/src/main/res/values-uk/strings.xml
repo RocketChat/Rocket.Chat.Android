@@ -45,6 +45,11 @@
     <string name="action_select_photo_from_gallery">Вибрати з галереї</string>
     <string name="action_take_photo">Зробити знімок</string>
     <string name="action_reset_avatar">Відновити аватар</string>
+    <string name="action_connect_server">Connect with a server</string> <!-- TODO Add translation -->
+    <string name="action_join_community">Join in the community</string> <!-- TODO Add translation -->
+    <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
+    <string name="action_register">Register</string> <!-- TODO Add translation -->
+    <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -65,12 +70,11 @@
     <string name="msg_avatar_url">URL аватара</string>
     <string name="msg_or_continue_using_social_accounts">Або продовжити, за допомогою акаунта у соціальних мережах</string>
     <string name="msg_new_user">Новий користувач? %1$s</string>
-    <string name="msg_forgot_password">Забули пароль? %1$s</string>
+    <string name="msg_forgot__your_password">Забули пароль? %1$s</string>
     <string name="msg_reset">Скинути</string>
     <string name="msg_check_your_email_to_reset_your_password">Лист було відправлено! Перевірте свою поштову скриньку, щоб скинути пароль.</string>
     <string name="msg_invalid_email">Введіть діючий e-mail</string>
     <string name="msg_new_user_agreement">Продовжуючи, ви погоджуєтеся з %1$s і %2$s</string>
-    <string name="msg_2fa_code">Код 2FA</string>
     <string name="msg_yesterday">Вчора</string>
     <string name="msg_today">Сьогодні</string>
     <string name="msg_message">"Повідомлення "</string>
@@ -87,6 +91,7 @@
     <string name="msg_content_description_log_in_using_gitlab">Увійти за допомогою Gitlab</string>
     <string name="msg_content_description_log_in_using_wordpress">Увійти за допомогою Wordpress</string>
     <string name="msg_content_description_send_message">Надіслати повідомлення</string>
+    <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Translate-->
     <string name="msg_content_description_show_attachment_options">Показати параметри долучення</string>
     <string name="msg_you">Ви</string>
     <string name="msg_unknown">Невідомий</string>
@@ -105,9 +110,7 @@
     <string name="msg_update_app_version_in_order_to_continue">Версія сервера застаріла. Будь ласка, зв\'яжіться з адміністратором, щоб оновити сервер.</string>
     <string name="msg_ver_not_recommended">Здається, версія сервера менше ніж рекомендована %1$s. \nМожна увійти, але можуть виникнути ті чи інші проблеми під час роботи.</string>
     <string name="msg_ver_not_minimum">Здається, версія сервера менше ніж мінімально необхідна %1$s.\nДля роботи потрібно оновити сервер!</string>
-    <string name="msg_proceed">ПРОДОВЖИТИ</string>
     <string name="msg_cancel">ВІДМІНА</string>
-    <string name="msg_warning">ПОПЕРЕДЖЕННЯ</string>
     <string name="msg_http_insecure">При використанні HTTP ви підключаєтеся до потенційно небезпечного сервера. Ми не радимо вам це робити.</string>
     <string name="msg_error_checking_server_version">Під час перевірки версії вашого сервера сталася помилка, спробуйте ще раз.</string>
     <string name="msg_invalid_server_protocol">Використання обраного протоколу не дозволено на цьому сервері, спробуйте використати HTTPS</string>
@@ -129,6 +132,18 @@
     <string name="msg_send">Надіслати</string>
     <string name="msg_delete_message">Видалити повідомлення</string>
     <string name="msg_delete_description">Ви впевнені, що хочете видалити це повідомлення?</string>
+    <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string> <!-- TODO Add translation -->
+    <string name="msg_team_communication">Team Communication</string> <!-- TODO Add translation -->
+    <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->
+    <string name="msg_create_account">Create an account</string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_github">Continue with <b>Github</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_google">Continue with <b>Google</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
+    <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
+    <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
     <!-- TODO - Add proper translation -->
     <string name="msg_view_more">view more</string>
     <!-- TODO - Add proper translation -->
@@ -287,4 +302,6 @@
     <string name="message_information_title">Інформація про прочитання</string>
     <string name="msg_log_out">Виходимо…</string>
     <string name="msg_sent_attachment">Долучення відправлено</string>
+    <!--TODO - Add proper translation-->
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 </resources>

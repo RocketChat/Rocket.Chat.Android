@@ -3,6 +3,7 @@ package chat.rocket.android.authentication.server.presentation
 import okhttp3.HttpUrl
 
 interface VersionCheckView {
+
     /**
      * Alerts the user about the server version not meeting the recommended server version.
      */
