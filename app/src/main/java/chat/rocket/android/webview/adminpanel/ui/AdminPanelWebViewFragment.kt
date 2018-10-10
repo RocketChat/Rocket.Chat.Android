@@ -10,9 +10,11 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.ui
 import kotlinx.android.synthetic.main.fragment_admin_panel_web_view.*
+import javax.inject.Inject
 
 private const val BUNDLE_WEB_PAGE_URL = "web_page_url"
 private const val BUNDLE_USER_TOKEN = "user_token"
@@ -20,6 +22,8 @@ private const val BUNDLE_USER_TOKEN = "user_token"
 class AdminPanelWebViewFragment : Fragment() {
     private lateinit var webPageUrl: String
     private lateinit var userToken: String
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +46,8 @@ class AdminPanelWebViewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupWebView()
+
+        analyticsManager.logOpenAdmin()
     }
 
     private fun setupToolbar() {
