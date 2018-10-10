@@ -51,7 +51,7 @@ class ActionsListAdapter(actions: List<Action>, var actionAttachmentOnClickListe
                     action_button.isVisible = true
                     action_image_button.isVisible = false
 
-                    this.action_button.setText(action.text)
+                    this.action_button.text = action.text
                 }
             }
         }

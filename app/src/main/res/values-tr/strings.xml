@@ -1,0 +1,310 @@
+<resources>
+
+    <!-- Titles -->
+    <string name="title_sign_in_your_server">Sunucunuza Bağlantı Kurun</string>
+    <string name="title_log_in">Giriş Yapın</string>
+    <string name="title_register_username">Kullanıcı Adıyla Kaydolun</string>
+    <string name="title_reset_password">Şifre Sıfırlama</string>
+    <string name="title_sign_up">Kayıt Olun</string>
+    <string name="title_authentication">Doğrulama</string>
+    <string name="title_legal_terms">Yasal Şartlar</string>
+    <string name="title_chats">Sohbetler</string>
+    <string name="title_profile">Profil</string>
+    <string name="title_members">Üyeler</string>
+    <string name="title_counted_members">Üyeler (%d)</string>
+    <string name="title_settings">Ayarlar</string>
+    <string name="title_preferences">Tercihler</string>
+    <string name="title_change_password">Şifre Değişikliği</string>
+    <string name="title_admin_panel">Yönetici Paneli</string>
+    <string name="title_password">Şifrenizi Değiştirin</string>
+    <string name="title_update_profile">Profilinizi Düzenleyin</string>
+    <string name="title_about">Hakkında</string>
+    <string name="title_create_channel">Yeni Kanal Oluştur</string>
+
+    <!-- Actions -->
+    <string name="action_connect">Bağlan</string>
+    <string name="action_use_this_username">Bu kullanıcı adını kullan</string>
+    <string name="action_login_or_sign_up">Giriş yapmak veya yeni hesap oluşturmak için buraya tıklayın.</string>
+    <string name="action_terms_of_service">Kullanım Şartları</string>
+    <string name="action_privacy_policy">Gizlilik Sözleşmesi</string>
+    <string name="action_search">Ara</string>
+    <string name="action_update">Güncelle</string>
+    <string name="action_settings">Ayarlar</string>
+    <string name="action_create_channel">Yeni Kanal Oluştur</string>
+    <string name="action_create">Oluştur</string>
+    <string name="action_logout">Çıkış Yap</string>
+    <string name="action_files">Dosyalar</string>
+    <string name="action_confirm_password">Şifre Değişikliğini Onaylayın</string>
+    <string name="action_join_chat">Sohbete Bağlan</string>
+    <string name="action_add_account">Hesap Ekle</string>
+    <string name="action_online">Çevrimiçi</string>
+    <string name="action_away">Uzakta</string>
+    <string name="action_busy">Meşgul</string>
+    <string name="action_invisible">Görünmez</string>
+    <string name="action_drawing">Çizim</string>
+    <string name="action_save_to_gallery">Galeriye kaydet</string>
+    <string name="action_select_photo_from_gallery">Galeriden resim seç</string>
+    <string name="action_take_photo">Fotoğraf çek</string>
+    <string name="action_reset_avatar">Avatarı kaldır</string>
+    <string name="action_connect_server">Connect with a server</string> <!-- TODO Add translation -->
+    <string name="action_join_community">Join in the community</string> <!-- TODO Add translation -->
+    <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
+    <string name="action_register">Register</string> <!-- TODO Add translation -->
+    <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
+
+    <!-- Settings List -->
+    <string-array name="settings_actions">
+        <item name="item_preferences">Tercihler</item>
+        <item name="item_password">Şifre Değiştir</item>
+        <item name="item_password">Hakkında</item>
+    </string-array>
+
+    <!-- Regular information messages -->
+    <string name="msg_generic_error">Üzgünüz! bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.</string>
+    <string name="msg_no_data_to_display">Görüntülenecek veri bulunmamaktadır.</string>
+    <string name="msg_profile_update_successfully">Profil bilgileri başarıyla güncellenmiştir.</string>
+    <string name="msg_username">kullanıcı adı</string>
+    <string name="msg_username_or_email">kullanıcı adı veya eposta</string>
+    <string name="msg_password">şifre</string>
+    <string name="msg_name">isim</string>
+    <string name="msg_email">eposta</string>
+    <string name="msg_avatar_url">avatar URL</string>
+    <string name="msg_or_continue_using_social_accounts">Veya sosyal medya hesaplarınızdan birini kullanarak devam edin</string>
+    <string name="msg_new_user">Yeni kullanıcı? %1$s</string>
+    <string name="msg_forgot__your_password">Forgot your password?</string> <!-- TODO Add translation -->
+    <string name="msg_reset">Sıfırla</string>
+    <string name="msg_check_your_email_to_reset_your_password">Eposta gönderilmiştir! Şifrenizi sıfırlamak için eposta kutunuzu kontrol ediniz.</string>
+    <string name="msg_invalid_email">Lütfen, geçerli bir eposta adresi giriniz</string>
+    <string name="msg_new_user_agreement">Devam ederek \n%1$s ve %2$s kabul ediyorsunuz</string>
+    <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
+    <string name="msg_yesterday">Dün</string>
+    <string name="msg_today">Bugün</string>
+    <string name="msg_message">Mesaj</string>
+    <string name="msg_this_room_is_read_only">Bu oda sadece okunabilir modundadır</string>
+    <string name="msg_invalid_2fa_code">Geçersiz 2FA Kodu</string>
+    <string name="msg_invalid_file">Geçersiz dosya</string>
+    <string name="msg_invalid_server_url">Geçersiz sunucu adresi</string>
+    <string name="msg_content_description_log_in_using_facebook">Facebook Hesabı ile Giriş Yap</string>
+    <string name="msg_content_description_log_in_using_github">Github Hesabı ile Giriş Yap</string>
+    <string name="msg_content_description_log_in_using_google">Google Hesabı ile Giriş Yap</string>
+    <string name="msg_content_description_log_in_using_linkedin">LinkedIn Hesabı ile Giriş Yap</string>
+    <string name="msg_content_description_log_in_using_meteor">Meteor Hesabı ile Giriş Yap</string>
+    <string name="msg_content_description_log_in_using_twitter">Twitter Hesabı ile Giriş Yap</string>
+    <string name="msg_content_description_log_in_using_gitlab">Gitlab Hesabı ile Giriş Yap</string>
+    <string name="msg_content_description_log_in_using_wordpress">Wordpress Hesabı ile Giriş Yap</string>
+    <string name="msg_content_description_send_message">Mesaj gönder</string>
+    <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Add translation -->
+    <string name="msg_content_description_show_attachment_options">Dosya eki seçeneklerini göster</string>
+    <string name="msg_you">Siz</string>
+    <string name="msg_unknown">Bilinmeyen</string>
+    <string name="msg_email_address">E-posta adresi</string>
+    <string name="msg_utc_offset">UTC ofseti</string>
+    <string name="msg_new_password">Yeni Şifrenizi Girin</string>
+    <string name="msg_confirm_password">Yeni Şifrenizi Doğrulayın</string>
+    <string name="msg_channel_name">Kanal ismi</string>
+    <string name="msg_search">Arama</string>
+    <string name="msg_unread_messages">Okunmamış mesajlar</string>
+    <string name="msg_preview_video">Video</string>
+    <string name="msg_preview_audio">Ses Kaydı</string>
+    <string name="msg_preview_photo">Fotoğraf</string>
+    <string name="msg_preview_file">Dosya</string>
+    <string name="msg_no_messages_yet">Henüz mesaj gönderilmedi</string>
+    <string name="msg_ok">Tamam</string>
+    <string name="msg_update_app_version_in_order_to_continue">Geçerliliğini yitirmiş uygulamanızın sürümü. Lütfen, sistem yöneticisine bildiriniz.</string>
+    <string name="msg_ver_not_recommended">
+        Görünüşe göre uygulamanızın sürümü önerilen %1$s sürümünden daha düşük.\nBuna rağmen sisteme giriş yapıp kullanabilirsiniz, fakat beklenmeyen hatalarla karşılaşabilirsiniz.</string>
+    <string name="msg_ver_not_minimum">
+        Görünüşe göre uygulamanızın sürümü desteklenen en eski %1$s sürümünden daha düşük.\nGiriş yapabilmek için uygulamanızın güncelleyiniz!
+    </string>
+    <string name="msg_no_chat_title">Mesaj bulunmamaktadır</string>
+    <string name="msg_no_chat_description">Mesajlarınızı burada görmek için \nyazışmaya başlayın.</string>
+    <string name="msg_cancel">İPTAL</string>
+    <string name="msg_http_insecure">HTTP kullanırken güvensiz bir sunucuya bağlanıyorsunuz, bunu önermiyoruz.</string>
+    <string name="msg_error_checking_server_version">Sunucu sürümünüzü kontrol ederken bir hata oluştu, lütfen tekrar deneyiniz</string>
+    <string name="msg_invalid_server_protocol">Seçilen protokol bu sunucu tarafından kabul edilmiyor, lütfen HTTPS kullanın</string>
+    <string name="msg_image_saved_successfully">Resim galeriye kaydedilmiştir</string>
+    <string name="msg_image_saved_failed">Resim galeriye kaydedilemedi</string>
+    <string name="msg_edited">(düzenlendi)</string>
+    <string name="msg_and">\u0020ve\u0020</string>
+    <string name="msg_is_typing">\u0020yazıyor…</string>
+    <string name="msg_are_typing">\u0020yazıyorlar…</string>
+    <string name="msg_several_users_are_typing">Çok sayıda kullanıcı yazıyor…</string>
+    <string name="msg_no_search_found">Hiç sonuç bulunamadı</string>
+    <string name="msg_log_out">Çıkış yapılıyor…</string>
+    <string name="msg_upload_file">Dosya yükleyin</string>
+    <string name="msg_file_description">Dosya açıklaması</string>
+    <string name="msg_send">Gönder</string>
+    <string name="msg_sent_attachment">Bir dosya eki gönderildi</string>
+    <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string> <!-- TODO Add translation -->
+    <string name="msg_team_communication">Team Communication</string> <!-- TODO Add translation -->
+    <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->
+    <string name="msg_create_account">Create an account</string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_github">Continue with <b>Github</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_google">Continue with <b>Google</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
+    <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
+    <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+
+    <!-- Create channel messages -->
+    <string name="msg_private_channel">Özel</string>
+    <string name="msg_public_channel">Herkese Açık</string>
+    <string name="msg_private_channel_description">Sadece siz ve davet edilen kullanıcılar bu kanalı görebilir</string>
+    <string name="msg_public_channel_description">Tüm kullanıcılar bu kanalı görebilir</string>
+    <string name="msg_ready_only_channel">Sadece okunabilir kanal</string>
+    <string name="msg_ready_only_channel_description">Sadece yönetici yeni mesaj yazabilir</string>
+    <string name="msg_invite_members">Kanala başka kullanıcıları davet et</string>
+    <string name="msg_member_already_added">Bu kullanıcıyı zaten seçtiniz</string>
+    <string name="msg_member_not_found">Kullanıcı bulunamadı</string>
+    <string name="msg_channel_created_successfully">Kanal başarıyla oluşturuldu</string>
+    <string name="msg_message_copied">Mesaj kopyalandı</string>
+    <string name="msg_delete_message">Mesajı Sil</string>
+    <string name="msg_delete_description">Bu mesajı silmek istediğinizden emin misiniz</string>
+    <string name="msg_view_more">Daha fazla göster</string>
+    <string name="msg_view_less">Daha az göster</string>
+    
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">İstatistik takibi</string>
+    <string name="msg_send_analytics_tracking">Uygulamanın gelişmesine katkıda bulunmak için anonim istatistik bilgisi gönder</string>
+    <string name="msg_do_not_send_analytics_tracking">Uygulamanın gelişmesine katkıda bulunmak için anonim istatistik bilgisi gönderme</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">FOSS sürümü olduğundan uygulanabilir değil</string>
+
+    <!-- System messages -->
+    <string name="message_room_name_changed">Oda ismi %2$s\'dan %1$s\'a değiştirildi</string>
+    <string name="message_user_added_by">%1$s kullanıcısı %2$s tarafından eklendi</string>
+    <string name="message_user_removed_by">%1$s kullanıcısı %2$s tarafından çıkarıldı</string>
+    <string name="message_user_left">Kanaldan çıktı.</string>
+    <string name="message_user_joined_channel">Kanala katıldı.</string>
+    <string name="message_welcome">Hoşgeldin %s</string>
+    <string name="message_removed">Mesaj silindi</string>
+    <string name="message_pinned">Bir mesajı sabitledi:</string>
+    <string name="message_muted">%1$s kullanıcısı %2$s tarafından sessize alındı</string>
+    <string name="message_unmuted">%1$s kullanıcısı %2$s tarafından sessizden çıkarıldı</string>
+    <string name="message_role_add">%1$s, %3$s tarafından %2$s olacak şekilde değiştirildi</string>
+    <string name="message_role_removed">%1$s, artık %2$s olmayacak şekilde %3$s tarafından değiştirildi</string>
+    <string name="message_credentials_saved_successfully">Kimlik bilgileri başarıyla kaydedildi</string>
+
+    <!-- Message actions -->
+    <string name="action_msg_reply">Kaydet</string>
+    <string name="action_msg_info">Mesaj bilgisi</string>
+    <string name="action_msg_edit">Dzenle</string>
+    <string name="action_msg_copy">Kopyala</string>
+    <string name="action_msg_quote">Alıntıla</string>
+    <string name="action_msg_delete">Sil</string>
+    <string name="action_msg_pin">Mesajı Sabitle</string>
+    <string name="action_msg_unpin">Mesajı Sabitleme</string>
+    <string name="action_msg_star">Mesajı Yıldızla</string>
+    <string name="action_msg_unstar">Mesajı Yıldızlama</string>
+    <string name="action_msg_share">Paylaş</string>
+    <string name="action_title_editing">Mesaj Düzenleniyor</string>
+    <string name="action_msg_add_reaction">Tepki Ekle</string>
+
+    <!-- Permission messages -->
+    <string name="permission_editing_not_allowed">Düzenlemeye izin verilmiyor</string>
+    <string name="permission_deleting_not_allowed">Silmeye izin verilmiyor</string>
+    <string name="permission_pinning_not_allowed">Sabitlemeye izin verilmiyor</string>
+    <string name="permission_starring_not_allowed">Yıldızlamaya izin verilmiyor</string>
+
+    <!-- Search message -->
+    <string name="title_search_message">Mesajlarda arayın</string>
+
+    <!-- Favorite/Unfavorite chat room -->
+    <string name="title_favorite_chat">Sohbeti favorilerime ekle</string>
+    <string name="title_unfavorite_chat">Sohbeti favorilerimden kaldır</string>
+
+    <!-- Members List -->
+    <string name="title_members_list">Üyeler</string>
+
+    <!-- Mentions -->
+    <string name="msg_mentions">Bahsedilenler</string>
+    <string name="msg_no_mention">Bahsedilen kimse yok</string>
+    <string name="msg_all_the_mentions_appear_here">Tüm bahsedilenler\nburada gözükür</string>
+
+    <!-- Pinned Messages -->
+    <string name="title_pinned_messages">Sabitlenen Mesajlar</string>
+    <string name="no_pinned_messages">Sabitlenen mesaj bulunmamaktadır</string>
+    <string name="no_pinned_description">Tüm sabitlenen mesajlar\nburada gözükür</string>
+
+    <!-- Favorite Messages -->
+    <string name="title_favorite_messages">Favori Mesajlarım</string>
+    <string name="no_favorite_messages">Favori mesajınız bulunmamaktadır</string>
+    <string name="no_favorite_description">Tüm favori mesajlarınız\nburada gözükür</string>
+
+    <!-- Files -->
+    <string name="title_files">Dosyalar</string>
+    <string name="title_files_total">Dosyalar (%d)</string>
+    <string name="msg_no_files">Dosya bulunmamaktadır</string>
+    <string name="msg_all_files_appear_here">Tüm dosyalar burada gözükür</string>
+
+    <!-- Upload Messages -->
+    <string name="max_file_size_exceeded">Yüklediğiniz dosya boyutu %1$d, maksimum %2$d byte sınırını geçmiştir</string>
+
+    <!-- Socket status -->
+    <string name="status_connected">Bağlandı</string>
+    <string name="status_disconnected">Bağlantı kesildi</string>
+    <string name="status_connecting">Bağlanıyor</string>
+    <string name="status_authenticating">Doğrulanıyor</string>
+    <string name="status_disconnecting">Bağlantı kesiliyor</string>
+    <string name="status_waiting">%d saniye içinde bağlanılacak</string>
+
+    <!--Suggestions-->
+    <string name="suggest_all_description">Bu odadaki herkese bildir</string>
+    <string name="suggest_here_description">Bu odadaki aktif kullanıcılara bildir</string>
+
+    <!-- Slash Commands -->
+    <string name="Slash_Gimme_Description">Mesjaınızdan önce ༼ つ ◕_◕ ༽つ görüntüler</string>
+    <string name="Slash_LennyFace_Description">Mesajınızdan sonra ( ͡° ͜ʖ ͡°) görüntüler</string>
+    <string name="Slash_Shrug_Description">Mesajınızdan sonra ¯\_(ツ)_/¯ görüntüler</string>
+    <string name="Slash_Tableflip_Description">(╯°□°）╯︵ ┻━┻ Displays</string>
+    <string name="Slash_TableUnflip_Description">┬─┬ ノ( ゜-゜ノ) görüntüler</string>
+    <string name="Create_A_New_Channel">Yeni kanal oluştur</string>
+    <string name="Show_the_keyboard_shortcut_list">Klavye kısa yolu listesini göster</string>
+    <string name="Invite_user_to_join_channel_all_from">[#channel] kanalındaki tüm üyeleri bu kanala davet et</string>
+    <string name="Invite_user_to_join_channel_all_to">Tüm kullanıcıları [#channel] kanalına davet et</string>
+    <string name="Archive">Arşivle</string>
+    <string name="Remove_someone_from_room">Bu kanaldan bazı üyeleri çıkar</string>
+    <string name="Leave_the_current_channel">Mevcut kanaldan ayrıl</string>
+    <string name="Displays_action_text">Olay bilgisini görüntüler</string>
+    <string name="Direct_message_someone">Birilerine direkt mesaj gönder</string>
+    <string name="Mute_someone_in_room">Bu kanaldaki birilerini sessize al</string>
+    <string name="Unmute_someone_in_room">Bu kanaldaki birilerini sessizden çıkar</string>
+    <string name="Invite_user_to_join_channel">Bu kanala başka bir kullanıcıyı davet et</string>
+    <string name="Unarchive">Arşivden çıkar</string>
+    <string name="Join_the_given_channel">Verilen kanala bağlan</string>
+    <string name="Guggy_Command_Description">Belirlenen yazıya göre gif oluşturur</string>
+    <string name="Slash_Topic_Description">Konuyu belirle</string>
+
+    <!-- Emoji message-->
+    <string name="msg_no_recent_emoji">Son kullanılan emoji bulunmamaktadır</string>
+    <string name="alert_title_default_skin_tone">Varsayılan tasarım tonu</string>
+
+    <!-- Sorting and grouping-->
+    <string name="menu_chatroom_sort">Sırala</string>
+    <string name="dialog_sort_title">Sırala</string>
+    <string name="dialog_sort_by_alphabet">Alfabetik</string>
+    <string name="dialog_sort_by_activity">Aktiviteye Göre</string>
+    <string name="dialog_group_by_type">Türüne göre grupla</string>
+    <string name="dialog_group_favourites">Favorileri grupla</string>
+    <string name="dialog_button_done">Tamam</string>
+    <string name="chatroom_header">Başlık</string>
+
+    <!--ChatRooms Headers-->
+    <string name="header_channel">Kanallar</string>
+    <string name="header_private_groups">Gizli Gruplar</string>
+    <string name="header_direct_messages">Direkt Mesajlar</string>
+    <string name="header_live_chats">Canlı Sohbetler</string>
+    <string name="header_unknown">Bilinmeyen</string>
+
+    <!--Notifications-->
+    <string name="share_label">Paylaşılan mesajı düzenle</string>
+    <string name="notif_action_reply_hint">YANITLA</string>
+    <string name="notif_error_sending">Yanıtlama başarısız oldu. Lütfen, tekrar deneyiniz.</string>
+    <string name="notif_success_sending">Mesaj %1$s\'a gönderildi!</string>
+    <string name="read_by">ile oku</string>
+    <string name="message_information_title">Mesaj bilgisi</string>
+    <!--TODO - Add proper translation-->
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
+
+</resources>

@@ -32,7 +32,7 @@
         android:id="@+id/image_mention"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/ic_at_black_24dp"
+        android:src="@drawable/ic_at_black_20dp"
         android:tint="@color/icon_grey"
         app:layout_constraintBottom_toTopOf="@+id/text_no_mention"
         app:layout_constraintEnd_toEndOf="parent"

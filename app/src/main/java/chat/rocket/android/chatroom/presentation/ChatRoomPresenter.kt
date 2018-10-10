@@ -13,10 +13,12 @@ import chat.rocket.android.chatroom.uimodel.RoomUiModel
 import chat.rocket.android.chatroom.uimodel.UiModelMapper
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
+import chat.rocket.android.chatroom.uimodel.suggestion.EmojiSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
 import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
@@ -26,7 +28,6 @@ import chat.rocket.android.server.domain.JobSchedulerInteractor
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.PublicSettings
-import chat.rocket.android.server.domain.RoomRepository
 import chat.rocket.android.server.domain.UsersRepository
 import chat.rocket.android.server.domain.uploadMaxFileSize
 import chat.rocket.android.server.domain.uploadMimeTypeFilter
@@ -34,7 +35,6 @@ import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extension.compressImageAndGetByteArray
-import chat.rocket.android.util.extension.compressImageAndGetInputStream
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
@@ -80,9 +80,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.threeten.bp.Instant
 import timber.log.Timber
-import java.io.InputStream
 import java.util.*
-import java.util.zip.DeflaterInputStream
 import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(
@@ -93,7 +91,6 @@ class ChatRoomPresenter @Inject constructor(
     private val uriInteractor: UriInteractor,
     private val messagesRepository: MessagesRepository,
     private val usersRepository: UsersRepository,
-    private val roomsRepository: RoomRepository,
     private val localRepository: LocalRepository,
     private val analyticsManager: AnalyticsManager,
     private val userHelper: UserHelper,
@@ -180,10 +177,10 @@ class ChatRoomPresenter @Inject constructor(
                     val localMessages = messagesRepository.getByRoomId(chatRoomId)
                     val oldMessages = mapper.map(
                         localMessages, RoomUiModel(
-                            roles = chatRoles,
-                            // FIXME: Why are we fixing isRoom attribute to true here?
-                            isBroadcast = chatIsBroadcast, isRoom = true
-                        )
+                        roles = chatRoles,
+                        // FIXME: Why are we fixing isRoom attribute to true here?
+                        isBroadcast = chatIsBroadcast, isRoom = true
+                    )
                     )
                     val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
                     if (oldMessages.isNotEmpty() && lastSyncDate != null) {
@@ -304,7 +301,7 @@ class ChatRoomPresenter @Inject constructor(
                         type = null,
                         updatedAt = null,
                         urls = null,
-                        isTemporary = true,
+                        synced = false,
                         unread = true
                     )
                     try {
@@ -316,6 +313,7 @@ class ChatRoomPresenter @Inject constructor(
                             ), false
                         )
                         client.sendMessage(id, chatRoomId, text)
+                        messagesRepository.save(newMessage.copy(synced = true))
                         logMessageSent()
                     } catch (ex: Exception) {
                         // Ok, not very beautiful, but the backend sends us a not valid response
@@ -419,11 +417,12 @@ class ChatRoomPresenter @Inject constructor(
                         }
                     }
                 }
-            } catch (ex: Exception) {
-                Timber.d(ex, "Error uploading file")
-                when (ex) {
-                    is RocketChatException -> view.showMessage(ex)
-                    else -> view.showGenericErrorMessage()
+            } catch (ex: RocketChatException) {
+                Timber.d(ex)
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
                 }
             } finally {
                 view.hideLoading()
@@ -504,7 +503,7 @@ class ChatRoomPresenter @Inject constructor(
                     val messages =
                         retryIO(description = "history($chatRoomId, $roomType, $instant)") {
                             client.history(
-                                chatRoomId!!, roomType, count = 50,
+                                    chatRoomId, roomType, count = 50,
                                 oldest = instant
                             )
                         }
@@ -597,9 +596,9 @@ class ChatRoomPresenter @Inject constructor(
                     replyMarkdown = "[ ]($currentServer/$chatRoomType/$room?msg=$id) $mention ",
                     quotedMessage = mapper.map(
                         message, RoomUiModel(
-                            roles = chatRoles,
-                            isBroadcast = chatIsBroadcast
-                        )
+                        roles = chatRoles,
+                        isBroadcast = chatIsBroadcast
+                    )
                     ).last().preview?.message ?: ""
                 )
             }
@@ -713,6 +712,7 @@ class ChatRoomPresenter @Inject constructor(
                     client.getMembers(chatRoomId, roomTypeOf(chatRoomType), offset, 50).result
                 }.take(50) // Get only 50, the backend is returning 7k+ users
                 usersRepository.saveAll(members)
+                dbManager.processUsersBatch(members)
                 val self = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
                 // Take at most the 100 most recent messages distinguished by user. Can return less.
                 val recentMessages = messagesRepository.getRecentMessages(chatRoomId, 100)
@@ -785,9 +785,6 @@ class ChatRoomPresenter @Inject constructor(
                         }.filterNot { filterSelfOut && self != null && self == it.text })
                     }
                     ROOMS -> {
-                        if (rooms.isNotEmpty()) {
-                            roomsRepository.saveAll(rooms)
-                        }
                         view.populateRoomSuggestions(rooms.map {
                             val fullName = it.fullName ?: ""
                             val name = it.name ?: ""
@@ -868,7 +865,7 @@ class ChatRoomPresenter @Inject constructor(
             }
             it.chatRoom.name == name || it.chatRoom.fullname == name
         }.map {
-            with (it.chatRoom) {
+            with(it.chatRoom) {
                 ChatRoom(
                     id = id,
                     subscriptionId = subscriptionId,
@@ -1008,6 +1005,20 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
+    fun loadEmojis() {
+        launchUI(strategy) {
+            val emojiSuggestionUiModels = EmojiRepository.getAll().map {
+                EmojiSuggestionUiModel(
+                    text = it.shortname.replaceFirst(":", ""),
+                    pinned = false,
+                    emoji = it,
+                    searchList = listOf(it.shortname)
+                )
+            }
+            view.populateEmojiSuggestions(emojis = emojiSuggestionUiModels)
+        }
+    }
+
     fun runCommand(text: String, roomId: String) {
         launchUI(strategy) {
             try {
@@ -1103,19 +1114,19 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             val viewModelStreamedMessage = mapper.map(
                 streamedMessage, RoomUiModel(
-                    roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
-                )
+                roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
+            )
             )
 
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
             if (index > -1) {
                 Timber.d("Updating message at $index")
-                messagesRepository.save(streamedMessage)
+                //messagesRepository.save(streamedMessage)
                 view.dispatchUpdateMessage(index, viewModelStreamedMessage)
             } else {
                 Timber.d("Adding new message")
-                messagesRepository.save(streamedMessage)
+                //messagesRepository.save(streamedMessage)
                 view.showNewMessage(viewModelStreamedMessage, true)
             }
         }
@@ -1125,5 +1136,34 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             navigator.toMessageInformation(messageId = messageId)
         }
+    }
+
+    /**
+     * Save unfinished message, when user left chat room without sending a message. It also clears
+     * saved message from local repository when unfinishedMessage is blank.
+     *
+     * @param chatRoomId Chat room Id.
+     * @param unfinishedMessage The unfinished message to save.
+     */
+    fun saveUnfinishedMessage(chatRoomId: String, unfinishedMessage: String) {
+        val key = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$chatRoomId"
+        if (unfinishedMessage.isNotBlank()) {
+            localRepository.save(key, unfinishedMessage)
+        } else {
+            localRepository.clear(key)
+        }
+    }
+
+    /**
+     * Get unfinished message from local repository, when user left chat room without
+     * sending a message and now the user is back.
+     *
+     * @param chatRoomId Chat room Id.
+     *
+     * @return Returns the unfinished message.
+     */
+    fun getUnfinishedMessage(chatRoomId: String): String {
+        val key = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$chatRoomId"
+        return localRepository.get(key) ?: ""
     }
 }

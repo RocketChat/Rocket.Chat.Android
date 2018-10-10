@@ -13,12 +13,13 @@
     android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
     android:paddingBottom="@dimen/message_item_top_and_bottom_padding">
 
-    <View
+    <ImageView
         android:id="@+id/quote_bar"
         android:layout_width="4dp"
         android:layout_height="0dp"
         android:layout_marginStart="56dp"
-        android:background="@drawable/quote_vertical_gray_bar"
+        android:src="@drawable/quote_vertical_gray_bar"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toTopOf="@id/recycler_view_reactions"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -35,11 +36,24 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="#5571 - User profile from SSO must not have password change option" />
 
+    <TextView
+        android:id="@+id/text_fields"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/attachment_text"
+        app:layout_constraintStart_toEndOf="@id/quote_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible"
+        tools:text="line1\nline2\n\nline3\nline4"/>
+
     <include
         layout="@layout/layout_reactions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/quote_bar"
-        app:layout_constraintTop_toBottomOf="@id/attachment_text" />
+        app:layout_constraintTop_toBottomOf="@id/text_fields" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
