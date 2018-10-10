@@ -5,20 +5,20 @@ ext {
             compileSdk            : 28,
             targetSdk             : 28,
             minSdk                : 21,
-            buildTools            : '28.0.2',
+            buildTools            : '28.0.3',
             dokka                 : '0.9.16',
 
             // For app
             kotlin                : '1.2.61',
             coroutine             : '0.25.0',
 
-            appCompat             : '1.0.0-rc02',
-            recyclerview          : '1.0.0-rc02',
+            appCompat             : '1.0.0',
+            recyclerview          : '1.0.0',
             constraintLayout      : '2.0.0-alpha2',
-            cardview              : '1.0.0-rc02',
-            browser               : '1.0.0-rc02',
-            androidKtx            : '1.0.0-rc02',
-            workmanager           : '1.0.0-alpha08',
+            cardview              : '1.0.0',
+            browser               : '1.0.0',
+            androidKtx            : '1.0.0',
+            workmanager           : '1.0.0-alpha09',
 
             dagger                : '2.16',
             firebaseCloudMessage  : '17.3.0',
@@ -26,10 +26,10 @@ ext {
             playServices          : '16.0.0',
             exoPlayer             : '2.8.2',
             flexbox               : '1.0.0',
-            material              : '1.0.0-beta01',
+            material              : '1.0.0',
 
-            room                  : '2.0.0-rc01',
-            lifecycle             : '2.0.0-rc01',
+            room                  : '2.0.0',
+            lifecycle             : '2.0.0',
 
             livedataKtx           : '2.0.1',
 
