@@ -159,7 +159,7 @@ abstract class  MessageDao {
 
     internal fun retrieveFullMessage(message: PartialMessage): FullMessage {
         val favorites = getFavoritesByMessage(message.message.id)
-        val mentions = getFavoritesByMessage(message.message.id)
+        val mentions = getMentionsByMessage(message.message.id)
         return FullMessage(message, favorites, mentions)
     }
 

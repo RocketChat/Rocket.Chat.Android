@@ -10,7 +10,8 @@
     <string name="title_legal_terms">Termos Legais</string>
     <string name="title_chats">Chats</string>
     <string name="title_profile">Perfil</string>
-    <string name="title_members">Membros (%d)</string>
+    <string name="title_members">Membros</string>
+    <string name="title_counted_members">Membros (%d)</string>
     <string name="title_settings">Configurações</string>
     <string name="title_preferences">Preferencias</string>
     <string name="title_change_password">Alterar senha</string>
