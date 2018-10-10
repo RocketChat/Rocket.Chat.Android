@@ -64,4 +64,10 @@ class AnalyticsManager @Inject constructor(
             analytics.forEach { it.logServerSwitch(serverUrl, accounts.size) }
         }
     }
+
+    fun logOpenAdmin() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logOpenAdmin() }
+        }
+    }
 }
