@@ -16,7 +16,7 @@ ext {
             recyclerview          : '1.0.0',
             constraintLayout      : '2.0.0-alpha2',
             cardview              : '1.0.0',
-            browser               : '1.0.0-rc01',
+            browser               : '1.0.0',
             androidKtx            : '1.0.0',
             workmanager           : '1.0.0-alpha09',
 

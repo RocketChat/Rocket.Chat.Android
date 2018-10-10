@@ -83,12 +83,6 @@ android {
         exclude 'META-INF/core.kotlin_module'
         exclude 'META-INF/main.kotlin_module'
     }
-
-    configurations.all {
-        resolutionStrategy {
-            force 'androidx.browser:browser:1.0.0-rc01'
-        }
-    }
 }
 
 dependencies {
