@@ -17,12 +17,14 @@ import chat.rocket.android.server.domain.wideTile
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.isEmail
 import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.login
+import chat.rocket.core.internal.rest.loginWithEmail
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.model.Myself
 import javax.inject.Inject
@@ -33,72 +35,64 @@ class TwoFAPresenter @Inject constructor(
     private val navigator: AuthenticationNavigator,
     private val tokenRepository: TokenRepository,
     private val localRepository: LocalRepository,
-    private val serverInteractor: GetConnectingServerInteractor,
     private val saveCurrentServerInteractor: SaveCurrentServerInteractor,
     private val analyticsManager: AnalyticsManager,
     private val factory: RocketChatClientFactory,
     private val saveAccountInteractor: SaveAccountInteractor,
-    settingsInteractor: GetSettingsInteractor
+    val serverInteractor: GetConnectingServerInteractor,
+    val settingsInteractor: GetSettingsInteractor
 ) {
     private val currentServer = serverInteractor.get()!!
     private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
 
-    // TODO: If the usernameOrEmail and password was informed by the user on the previous screen, then we should pass only the pin, like this: fun authenticate(pin: EditText)
     fun authenticate(
         usernameOrEmail: String,
         password: String,
         twoFactorAuthenticationCode: String
     ) {
-        val server = serverInteractor.get()
-        when {
-            server == null -> {
-                navigator.toServerScreen()
-            }
-            twoFactorAuthenticationCode.isBlank() -> {
-                view.alertBlankTwoFactorAuthenticationCode()
-            }
-            else -> {
-                launchUI(strategy) {
-                    val client = factory.create(server)
-                    view.showLoading()
-                    try {
-                        // The token is saved via the client TokenProvider
-                        val token = retryIO("login") {
-                            client.login(usernameOrEmail, password, twoFactorAuthenticationCode)
-                        }
-                        val me = retryIO("me") { client.me() }
-                        saveAccount(me)
-                        saveCurrentServerInteractor.save(currentServer)
-                        tokenRepository.save(server, token)
-                        localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
-                        analyticsManager.logLogin(
-                            AuthenticationEvent.AuthenticationWithUserAndPassword,
-                            true
+        launchUI(strategy) {
+            val client = factory.create(currentServer)
+            view.showLoading()
+            try {
+                // The token is saved via the client TokenProvider
+                val token = retryIO("login") {
+                    if (usernameOrEmail.isEmail()) {
+                        client.loginWithEmail(
+                            usernameOrEmail,
+                            password,
+                            twoFactorAuthenticationCode
                         )
-                        navigator.toChatList()
-                    } catch (exception: RocketChatException) {
-                        if (exception is RocketChatAuthException) {
-                            view.alertInvalidTwoFactorAuthenticationCode()
-                        } else {
-                            analyticsManager.logLogin(
-                                AuthenticationEvent.AuthenticationWithUserAndPassword,
-                                false
-                            )
-                            exception.message?.let {
-                                view.showMessage(it)
-                            }.ifNull {
-                                view.showGenericErrorMessage()
-                            }
-                        }
-                    } finally {
-                        view.hideLoading()
+                    } else {
+                        client.login(usernameOrEmail, password, twoFactorAuthenticationCode)
                     }
                 }
+                val me = retryIO("me") { client.me() }
+                saveAccount(me)
+                saveCurrentServerInteractor.save(currentServer)
+                tokenRepository.save(currentServer, token)
+                localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
+                analyticsManager.logLogin(
+                    AuthenticationEvent.AuthenticationWithUserAndPassword, true
+                )
+                navigator.toChatList()
+            } catch (exception: RocketChatException) {
+                if (exception is RocketChatAuthException) {
+                    view.alertInvalidTwoFactorAuthenticationCode()
+                } else {
+                    analyticsManager.logLogin(
+                        AuthenticationEvent.AuthenticationWithUserAndPassword, false
+                    )
+                    exception.message?.let {
+                        view.showMessage(it)
+                    }.ifNull {
+                        view.showGenericErrorMessage()
+                    }
+                }
+            } finally {
+                view.hideLoading()
             }
         }
     }
-
-    fun signup() = navigator.toSignUp()
 
     private suspend fun saveAccount(me: Myself) {
         val icon = settings.favicon()?.let {

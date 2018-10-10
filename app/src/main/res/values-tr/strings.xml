@@ -46,6 +46,11 @@
     <string name="action_select_photo_from_gallery">Galeriden resim seç</string>
     <string name="action_take_photo">Fotoğraf çek</string>
     <string name="action_reset_avatar">Avatarı kaldır</string>
+    <string name="action_connect_server">Connect with a server</string> <!-- TODO Add translation -->
+    <string name="action_join_community">Join in the community</string> <!-- TODO Add translation -->
+    <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
+    <string name="action_register">Register</string> <!-- TODO Add translation -->
+    <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -66,12 +71,11 @@
     <string name="msg_avatar_url">avatar URL</string>
     <string name="msg_or_continue_using_social_accounts">Veya sosyal medya hesaplarınızdan birini kullanarak devam edin</string>
     <string name="msg_new_user">Yeni kullanıcı? %1$s</string>
-    <string name="msg_forgot_password">Şifremi unuttum? %1$s</string>
+    <string name="msg_forgot__your_password">Forgot your password?</string> <!-- TODO Add translation -->
     <string name="msg_reset">Sıfırla</string>
     <string name="msg_check_your_email_to_reset_your_password">Eposta gönderilmiştir! Şifrenizi sıfırlamak için eposta kutunuzu kontrol ediniz.</string>
     <string name="msg_invalid_email">Lütfen, geçerli bir eposta adresi giriniz</string>
     <string name="msg_new_user_agreement">Devam ederek \n%1$s ve %2$s kabul ediyorsunuz</string>
-    <string name="msg_2fa_code">2FA Kodu</string>
     <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
     <string name="msg_yesterday">Dün</string>
     <string name="msg_today">Bugün</string>
@@ -89,6 +93,7 @@
     <string name="msg_content_description_log_in_using_gitlab">Gitlab Hesabı ile Giriş Yap</string>
     <string name="msg_content_description_log_in_using_wordpress">Wordpress Hesabı ile Giriş Yap</string>
     <string name="msg_content_description_send_message">Mesaj gönder</string>
+    <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Add translation -->
     <string name="msg_content_description_show_attachment_options">Dosya eki seçeneklerini göster</string>
     <string name="msg_you">Siz</string>
     <string name="msg_unknown">Bilinmeyen</string>
@@ -113,9 +118,7 @@
     </string>
     <string name="msg_no_chat_title">Mesaj bulunmamaktadır</string>
     <string name="msg_no_chat_description">Mesajlarınızı burada görmek için \nyazışmaya başlayın.</string>
-    <string name="msg_proceed">İLERLE</string>
     <string name="msg_cancel">İPTAL</string>
-    <string name="msg_warning">UYARI</string>
     <string name="msg_http_insecure">HTTP kullanırken güvensiz bir sunucuya bağlanıyorsunuz, bunu önermiyoruz.</string>
     <string name="msg_error_checking_server_version">Sunucu sürümünüzü kontrol ederken bir hata oluştu, lütfen tekrar deneyiniz</string>
     <string name="msg_invalid_server_protocol">Seçilen protokol bu sunucu tarafından kabul edilmiyor, lütfen HTTPS kullanın</string>
@@ -132,6 +135,18 @@
     <string name="msg_file_description">Dosya açıklaması</string>
     <string name="msg_send">Gönder</string>
     <string name="msg_sent_attachment">Bir dosya eki gönderildi</string>
+    <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string> <!-- TODO Add translation -->
+    <string name="msg_team_communication">Team Communication</string> <!-- TODO Add translation -->
+    <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->
+    <string name="msg_create_account">Create an account</string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_github">Continue with <b>Github</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_google">Continue with <b>Google</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
+    <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
+    <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Özel</string>
@@ -289,5 +304,7 @@
     <string name="notif_success_sending">Mesaj %1$s\'a gönderildi!</string>
     <string name="read_by">ile oku</string>
     <string name="message_information_title">Mesaj bilgisi</string>
+    <!--TODO - Add proper translation-->
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 
 </resources>
