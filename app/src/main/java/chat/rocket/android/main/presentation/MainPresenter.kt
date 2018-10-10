@@ -35,7 +35,6 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.adminPanelUrl
-import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
