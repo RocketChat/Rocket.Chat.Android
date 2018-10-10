@@ -10,7 +10,8 @@
     <string name="title_legal_terms">कानूनी शर्तें</string>
     <string name="title_chats">चैट</string>
     <string name="title_profile">प्रोफाइल</string>
-    <string name="title_members">सदस्य (%d)</string>
+    <string name="title_members">सदस्य</string>
+    <string name="title_counted_members">सदस्य (%d)</string>
     <string name="title_settings">सेटिंग्स</string>
     <string name="title_preferences">प्राथमिकताएँ</string>
     <string name="title_change_password">पासवर्ड बदलें</string>
