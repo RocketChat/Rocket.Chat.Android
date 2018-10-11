@@ -11,7 +11,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
-import chat.rocket.android.R.string.message_credentials_saved_successfully
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.signup.presentation.SignupPresenter
@@ -64,7 +63,7 @@ class SignupFragment : Fragment(), SignupView {
         if (resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 if (requestCode == SAVE_CREDENTIALS) {
-                    showMessage(getString(message_credentials_saved_successfully))
+                    showMessage(getString(R.string.message_credentials_saved_successfully))
                 }
             }
         }
