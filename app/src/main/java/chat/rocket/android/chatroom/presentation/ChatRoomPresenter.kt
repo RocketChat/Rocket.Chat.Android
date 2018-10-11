@@ -719,9 +719,9 @@ class ChatRoomPresenter @Inject constructor(
                     .filterNot { filterSelfOut && it.sender?.username == self }
                 val activeUsers = mutableListOf<PeopleSuggestionUiModel>()
                 recentMessages.forEach {
-                    val sender = it.sender!!
-                    val username = sender.username ?: ""
-                    val name = sender.name ?: ""
+                    val sender = it.sender
+                    val username = sender?.username ?: ""
+                    val name = sender?.name ?: ""
                     val avatarUrl = currentServer.avatarUrl(username)
                     val found = members.firstOrNull { member -> member.username == username }
                     val status = if (found != null) found.status else UserStatus.Offline()
