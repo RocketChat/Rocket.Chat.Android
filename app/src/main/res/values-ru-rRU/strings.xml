@@ -47,7 +47,7 @@
     <string name="action_take_photo">Сделать снимок</string>
     <string name="action_reset_avatar">Восстановить аватар</string>
     <string name="action_connect_server">Соединиться с сервером</string>
-    <string name="action_join_community">Присоединиться к сообществу</string>
+    <string name="action_join_community">Сообщество</string>
     <string name="action_create_server">Создать новый сервер</string>
     <string name="action_register">Зарегистрировать</string>
     <string name="action_confirm">Подтвердить</string>
@@ -134,8 +134,8 @@
     <string name="msg_delete_description">Вы уверены, что хотите удалить это сообщение?</string>
     <string name="msg_channel_name">Название канала</string>
     <string name="msg_search">Поиск</string>
-    <string name="msg_welcome_to_rocket_chat">Добро пожаловать в Rocket.Chat</string>
-    <string name="msg_team_communication">Средство общения с открытым исходным кодом</string>
+    <string name="msg_welcome_to_rocket_chat">Rocket.Chat</string>
+    <string name="msg_team_communication">Чат с открытым исходным кодом</string>
     <string name="msg_login_with_email">Войти с помощью <b>e-mail</b></string>
     <string name="msg_create_account">Создать аккаунт</string>
     <string name="msg_continue_with_facebook">Войти с помощью <b>Facebook</b></string>
