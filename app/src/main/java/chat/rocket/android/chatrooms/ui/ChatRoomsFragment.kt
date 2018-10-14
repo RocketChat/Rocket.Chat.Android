@@ -109,6 +109,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         subscribeUi()
 
         setupToolbar()
+        setupFab()
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
     }
@@ -179,11 +180,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 // Simply setting sortView to visible won't work, so we invalidate the options
                 // to recreate the entire menu...
                 activity?.invalidateOptionsMenu()
+                create_new_channel_fab.isVisible = true
                 return true
             }
 
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 sortView?.isVisible = false
+                create_new_channel_fab.isVisible = false
                 return true
             }
         }
@@ -350,5 +353,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             viewModel.setQuery(Query.Search(name!!))
         }
         return true
+    }
+
+    private fun setupFab() {
+        create_new_channel_fab.setOnClickListener {
+            showToast("fab click")
+        }
     }
 }
