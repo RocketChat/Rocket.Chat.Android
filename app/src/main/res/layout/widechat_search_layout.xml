@@ -11,16 +11,17 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/profile_image_avatar"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginRight="24dp"
         android:foregroundGravity="center"
+        android:background="@drawable/widechat_circle_shadow"
         app:roundedCornerRadius="3dp"
-        fresco:roundAsCircle="true"
         fresco:actualImageScaleType="centerCrop"
-        fresco:roundingBorderWidth="2dp"
+        fresco:roundAsCircle="true"
+        fresco:roundingBorderColor="@color/colorWhite"
         fresco:roundingBorderPadding="2dp"
-        fresco:roundingBorderColor="@color/colorWhite"/>
+        fresco:roundingBorderWidth="2dp" />
 
    <androidx.appcompat.widget.SearchView
        android:layout_width="wrap_content"
