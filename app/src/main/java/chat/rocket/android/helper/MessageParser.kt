@@ -223,7 +223,16 @@ class MessageParser @Inject constructor(
 
     class LinkVisitor(private val builder: SpannableBuilder) : AbstractVisitor() {
 
+        var parsed = false
+
         override fun visit(text: Text) {
+            // XXX - Gambiarra ahead.
+            // This visitor visitis the text line by line, but we process all the document.
+            // So we don't parse again if it visited at least one line.
+            if (parsed) {
+                return
+            }
+
             // Replace all url links to markdown url syntax.
             val matcher = PatternsCompat.AUTOLINK_WEB_URL.matcher(builder.text())
             val consumed = mutableListOf<String>()
@@ -240,6 +249,8 @@ class MessageParser @Inject constructor(
                     consumed.add(link)
                 }
             }
+
+            parsed = true
         }
     }
 
