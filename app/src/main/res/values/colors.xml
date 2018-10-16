@@ -2,8 +2,14 @@
 <resources>
 
     <!-- Main colors -->
-    <color name="colorPrimary">#FF2F343D</color>
     <color name="colorPrimaryDark">#FF2F343D</color>
+    <!-- <color name="colorPrimary">##FF2F343D</color> -->
+
+    <!-- Widechat Colors -->
+    <color name="colorPrimary">#008085</color>
+    <color name="widechatStatusBar">#0E7075</color>
+    <color name="widechat_fab">#00C1B7</color>
+    <!-- End Widchat Colors -->
     <color name="colorAccent">#FF1D74F5</color>
 
     <!-- Text colors -->

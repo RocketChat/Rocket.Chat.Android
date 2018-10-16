@@ -6,8 +6,15 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/widechatStatusBar</item>
+
         <item name="windowActionModeOverlay">true</item>
         <item name="searchViewStyle">@style/ChatRoom.SearchView</item>
+    </style>
+
+    <style name="AuthenticationTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:statusBarColor">@color/widechatStatusBar</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="actionModeBackground">@color/colorPrimary</item>
         <item name="android:actionModeBackground">@color/colorPrimary</item>
     </style>
@@ -17,9 +24,13 @@
     <style name="Authentication.TextView.Headline" parent="TextAppearance.AppCompat">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/screen_edge_left_and_right_margins</item>
+        <item name="android:paddingStart">@dimen/edit_text_margin</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:drawablePadding">@dimen/edit_text_drawable_padding</item>
+        <item name="android:fontFamily">@fonts/font_fontFamily_widechat</item>
         <item name="android:textSize">24sp</item>
         <item name="android:lineSpacingExtra">4sp</item>
-        <item name="android:fontFamily">sans-serif</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -69,9 +80,9 @@
         <item name="android:paddingEnd">@dimen/edit_text_margin</item>
         <item name="android:maxLines">1</item>
         <item name="android:drawablePadding">@dimen/edit_text_drawable_padding</item>
+        <item name="android:fontFamily">@fonts/font_fontFamily_widechat</item>
         <item name="android:textColor">@color/colorPrimaryText</item>
         <item name="android:textColorHint">@color/colorAuthenticationSecondaryText</item>
-        <item name="android:fontFamily">sans-serif</item>
         <item name="android:background">@drawable/rounded_border</item>
     </style>
 
@@ -152,7 +163,7 @@
     <style name="Message.DayMarker" parent="TextAppearance.AppCompat">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorPrimaryText</item>
-        <item name="android:fontFamily">@string/font_fontFamily_medium</item>
+        <item name="android:fontFamily">@fonts/font_fontFamily_widechat</item>
     </style>
 
     <style name="Message.Quote.TextView" parent="Message.TextView">

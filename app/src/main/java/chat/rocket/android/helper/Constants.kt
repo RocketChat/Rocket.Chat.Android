@@ -10,6 +10,9 @@ object Constants {
     const val CHATROOM_PRIVATE_GROUP = 1
     const val CHATROOM_DM = 2
     const val CHATROOM_LIVE_CHAT = 3
+
+    // Enables/disables WIDECHAT specific features, functionality and views
+    const val WIDECHAT = true
 }
 
 object ChatRoomsSortOrder {

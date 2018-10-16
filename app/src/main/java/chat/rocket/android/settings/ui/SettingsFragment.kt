@@ -25,6 +25,10 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
+// WIDECHAT
+import chat.rocket.android.helper.Constants
+import kotlinx.android.synthetic.main.app_bar.* // need this for back button in setupToolbar
+
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
 class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListener {
@@ -51,7 +55,10 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
 
     override fun onResume() {
         // FIXME - gambiarra ahead. will fix when moving to new androidx Navigation
-        (activity as? MainActivity)?.setupNavigationView()
+        // WIDECHAT - do not recreate the nav drawer upon resume
+        if (!Constants.WIDECHAT) {
+            (activity as? MainActivity)?.setupNavigationView()
+        }
         super.onResume()
     }
 
@@ -83,8 +90,21 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     }
 
     private fun setupToolbar() {
-        (activity as AppCompatActivity?)?.supportActionBar?.title =
+        if (Constants.WIDECHAT){
+            // WIDECHAT - added this to get the back button
+            with((activity as MainActivity).toolbar) {
+                title = getString(R.string.title_settings)
+                setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+                setNavigationOnClickListener {
+                    activity?.onBackPressed()
+                }
+                (activity as AppCompatActivity?)?.supportActionBar?.setDisplayShowCustomEnabled(false)
+            }
+        } else {
+            (activity as AppCompatActivity?)?.supportActionBar?.title =
                 getString(R.string.title_settings)
+        }
+
     }
 
     private fun startNewActivity(classType: KClass<out AppCompatActivity>) {

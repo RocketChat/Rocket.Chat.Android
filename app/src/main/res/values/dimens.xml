@@ -48,4 +48,7 @@
 
     <dimen name="quote_collapsed_height">32dp</dimen>
 
+    <!-- WIDECHAT Toolbar -->
+    <dimen name="widechat_toolbar_height">81dp</dimen>
+
 </resources>

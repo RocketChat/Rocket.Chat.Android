@@ -8,8 +8,9 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="@dimen/toolbar_height"
-        android:background="@color/colorPrimary"
+        android:layout_height="@dimen/widechat_toolbar_height"
+        android:background="@drawable/widechat_green_gradient"
+        android:minHeight="@dimen/widechat_toolbar_height"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

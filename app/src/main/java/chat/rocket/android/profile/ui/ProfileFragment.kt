@@ -38,6 +38,10 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.update_avatar_options.*
 import javax.inject.Inject
 
+// WIDECHAT
+import chat.rocket.android.helper.Constants
+import kotlinx.android.synthetic.main.app_bar.* // need this for back button in setupToolbar
+
 internal const val TAG_PROFILE_FRAGMENT = "ProfileFragment"
 
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 1
@@ -177,8 +181,19 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun setupToolbar() {
-        (activity as AppCompatActivity?)?.supportActionBar?.title =
+        if (Constants.WIDECHAT){
+            // WIDECHAT - added this to get the back button
+            with((activity as MainActivity).toolbar) {
+                title = getString(R.string.title_profile)
+                setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+                setNavigationOnClickListener { activity?.onBackPressed() }
+            }
+            (activity as AppCompatActivity?)?.supportActionBar?.setDisplayShowCustomEnabled(false)
+
+        } else {
+            (activity as AppCompatActivity?)?.supportActionBar?.title =
                 getString(R.string.title_profile)
+        }
     }
 
     private fun setupListeners() {

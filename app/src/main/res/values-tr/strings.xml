@@ -196,7 +196,7 @@
     <string name="action_msg_unpin">Mesajı Sabitleme</string>
     <string name="action_msg_star">Mesajı Yıldızla</string>
     <string name="action_msg_unstar">Mesajı Yıldızlama</string>
-    <string name="action_msg_share">Paylaş</string>
+    <string name="action_msg_invite">Paylaş</string>
     <string name="action_title_editing">Mesaj Düzenleniyor</string>
     <string name="action_msg_add_reaction">Tepki Ekle</string>
 
@@ -297,7 +297,7 @@
     <string name="header_unknown">Bilinmeyen</string>
 
     <!--Notifications-->
-    <string name="share_label">Paylaşılan mesajı düzenle</string>
+    <string name="invite_label">Paylaşılan mesajı düzenle</string>
     <string name="notif_action_reply_hint">YANITLA</string>
     <string name="notif_error_sending">Yanıtlama başarısız oldu. Lütfen, tekrar deneyiniz.</string>
     <string name="notif_success_sending">Mesaj %1$s\'a gönderildi!</string>
