@@ -17,6 +17,7 @@ import chat.rocket.android.chatinformation.presentation.MessageInfoView
 import chat.rocket.android.chatinformation.viewmodel.ReadReceiptViewModel
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_message_info.*
 import javax.inject.Inject
@@ -84,16 +85,22 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
     }
 
     override fun showLoading() {
-        view_loading.setVisible(true)
-        view_loading.show()
+        ui {
+            view_loading.setVisible(true)
+            view_loading.show()
+        }
     }
 
     override fun hideLoading() {
-        view_loading.hide()
-        view_loading.setVisible(false)
+        ui {
+            view_loading.hide()
+            view_loading.setVisible(false)
+        }
     }
 
     override fun showReadReceipts(messageReceipts: List<ReadReceiptViewModel>) {
-        adapter.addAll(messageReceipts)
+        ui {
+            adapter.addAll(messageReceipts)
+        }
     }
 }
