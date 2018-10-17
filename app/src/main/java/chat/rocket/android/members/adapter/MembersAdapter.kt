@@ -44,6 +44,8 @@ class MembersAdapter(private val listener: (MemberUiModel) -> Unit) :
             image_avatar.setImageURI(memberUiModel.avatarUri)
             text_member.content = memberUiModel.displayName
             setOnClickListener { listener(memberUiModel) }
+            val statusDrawable = DrawableHelper.getUserStatusDrawable(memberUiModel.status, context)
+            image_member_status.setImageDrawable(statusDrawable)
         }
     }
 }
