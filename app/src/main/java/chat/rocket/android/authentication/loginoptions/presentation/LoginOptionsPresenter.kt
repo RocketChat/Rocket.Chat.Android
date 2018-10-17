@@ -71,18 +71,21 @@ class LoginOptionsPresenter @Inject constructor(
         credentialToken = oauthToken
         credentialSecret = oauthSecret
         loginMethod = AuthenticationEvent.AuthenticationWithOauth
+        setupConnectionInfo(currentServer)
         doAuthentication(TYPE_LOGIN_OAUTH)
     }
 
     fun authenticateWithCas(casToken: String) {
         credentialToken = casToken
         loginMethod = AuthenticationEvent.AuthenticationWithCas
+        setupConnectionInfo(currentServer)
         doAuthentication(TYPE_LOGIN_CAS)
     }
 
     fun authenticateWithSaml(samlToken: String) {
         credentialToken = samlToken
         loginMethod = AuthenticationEvent.AuthenticationWithSaml
+        setupConnectionInfo(currentServer)
         doAuthentication(TYPE_LOGIN_SAML)
     }
 

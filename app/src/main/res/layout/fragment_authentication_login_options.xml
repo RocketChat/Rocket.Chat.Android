@@ -12,18 +12,19 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/accounts_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="vertical"
             android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible">
 
             <Button
                 android:id="@+id/button_facebook"
                 style="?borderlessButtonStyle"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/rounded_border"
                 android:clickable="false"
@@ -36,15 +37,12 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible" />
 
             <Button
                 android:id="@+id/button_github"
                 style="?borderlessButtonStyle"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_border"
@@ -58,15 +56,12 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_facebook"
                 tools:visibility="visible" />
 
             <Button
                 android:id="@+id/button_google"
                 style="?borderlessButtonStyle"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_border"
@@ -80,15 +75,12 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_github"
                 tools:visibility="visible" />
 
             <Button
                 android:id="@+id/button_linkedin"
                 style="?borderlessButtonStyle"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_border"
@@ -102,15 +94,12 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_google"
                 tools:visibility="visible" />
 
             <Button
                 android:id="@+id/button_gitlab"
                 style="?borderlessButtonStyle"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_border"
@@ -124,15 +113,12 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_linkedin"
                 tools:visibility="visible" />
 
             <Button
                 android:id="@+id/button_wordpress"
                 style="?borderlessButtonStyle"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_border"
@@ -146,9 +132,6 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_gitlab"
                 tools:visibility="visible" />
 
             <Button
@@ -158,11 +141,8 @@
                 android:clickable="false"
                 android:text="@string/action_login_or_sign_up"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_wordpress"
                 tools:visibility="visible" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/expand_more_accounts_container"

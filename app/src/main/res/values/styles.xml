@@ -80,7 +80,7 @@
     </style>
 
     <style name="Authentication.Button" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">48dp</item>
         <item name="android:foreground">?selectableItemBackground</item>
         <item name="android:textSize">18sp</item>
