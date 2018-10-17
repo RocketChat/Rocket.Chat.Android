@@ -33,7 +33,6 @@ import org.commonmark.node.ListItem
 import org.commonmark.node.Node
 import org.commonmark.node.OrderedList
 import org.commonmark.node.StrongEmphasis
-import org.commonmark.node.Text
 import org.commonmark.parser.Parser
 import ru.noties.markwon.SpannableBuilder
 import ru.noties.markwon.SpannableConfiguration
@@ -223,7 +222,7 @@ class MessageParser @Inject constructor(
 
     class LinkVisitor(private val builder: SpannableBuilder) : AbstractVisitor() {
 
-        override fun visit(text: Text) {
+        override fun visit(document: Document) {
             // Replace all url links to markdown url syntax.
             val matcher = PatternsCompat.AUTOLINK_WEB_URL.matcher(builder.text())
             val consumed = mutableListOf<String>()
