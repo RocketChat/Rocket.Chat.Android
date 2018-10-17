@@ -13,6 +13,7 @@ import android.text.style.ReplacementSpan
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.util.PatternsCompat
+import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.StrikethroughDelimiterProcessor
 import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiRepository
@@ -33,6 +34,10 @@ import org.commonmark.node.Node
 import org.commonmark.node.OrderedList
 import org.commonmark.node.StrongEmphasis
 import org.commonmark.parser.Parser
+import ru.noties.markwon.SpannableBuilder
+import ru.noties.markwon.SpannableConfiguration
+import ru.noties.markwon.renderer.SpannableMarkdownVisitor
+import ru.noties.markwon.tasklist.TaskListExtension
 import java.util.*
 import javax.inject.Inject
 
