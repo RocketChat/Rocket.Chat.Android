@@ -72,6 +72,7 @@ class LoginOptionsPresenter @Inject constructor(
         credentialToken = oauthToken
         credentialSecret = oauthSecret
         loginMethod = AuthenticationEvent.AuthenticationWithOauth
+        setupConnectionInfo(currentServer)
         doAuthentication(TYPE_LOGIN_OAUTH)
     }
 
@@ -79,6 +80,7 @@ class LoginOptionsPresenter @Inject constructor(
         setupConnectionInfo(currentServer)
         credentialToken = casToken
         loginMethod = AuthenticationEvent.AuthenticationWithCas
+        setupConnectionInfo(currentServer)
         doAuthentication(TYPE_LOGIN_CAS)
     }
 
@@ -86,6 +88,7 @@ class LoginOptionsPresenter @Inject constructor(
         setupConnectionInfo(currentServer)
         credentialToken = samlToken
         loginMethod = AuthenticationEvent.AuthenticationWithSaml
+        setupConnectionInfo(currentServer)
         doAuthentication(TYPE_LOGIN_SAML)
     }
 
