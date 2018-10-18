@@ -115,6 +115,7 @@ class MessageParser @Inject constructor(
     }
 
     class StrongEmphasisVisitor : AbstractVisitor() {
+
         override fun visit(strongEmphasis: StrongEmphasis) {
             if (strongEmphasis.openingDelimiter == "__" && strongEmphasis.firstChild != null) {
                 val child = strongEmphasis.firstChild
@@ -145,7 +146,7 @@ class MessageParser @Inject constructor(
 
             var offset = 0
             mentions.forEach {
-                val mentionMe = it == currentUser || it == "@all" || it == "@here"
+                val mentionMe = it == "@$currentUser" || it == "@all" || it == "@here"
                 offset = text.indexOf(string = it, startIndex = offset, ignoreCase = false)
                 while (offset > -1) {
                     val textColor = if (mentionMe) myselfTextColor else othersTextColor
