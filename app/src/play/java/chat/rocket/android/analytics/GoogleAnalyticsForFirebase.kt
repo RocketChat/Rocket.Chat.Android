@@ -58,4 +58,6 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
             putInt("server_count", serverCount)
         })
     }
+
+    override fun logOpenAdmin() = firebaseAnalytics.logEvent("open_admin", null)
 }
