@@ -68,6 +68,7 @@ class LoginOptionsPresenter @Inject constructor(
     fun toLoginWithEmail() = navigator.toLogin(currentServer)
 
     fun authenticateWithOauth(oauthToken: String, oauthSecret: String) {
+        setupConnectionInfo(currentServer)
         credentialToken = oauthToken
         credentialSecret = oauthSecret
         loginMethod = AuthenticationEvent.AuthenticationWithOauth
@@ -75,12 +76,14 @@ class LoginOptionsPresenter @Inject constructor(
     }
 
     fun authenticateWithCas(casToken: String) {
+        setupConnectionInfo(currentServer)
         credentialToken = casToken
         loginMethod = AuthenticationEvent.AuthenticationWithCas
         doAuthentication(TYPE_LOGIN_CAS)
     }
 
     fun authenticateWithSaml(samlToken: String) {
+        setupConnectionInfo(currentServer)
         credentialToken = samlToken
         loginMethod = AuthenticationEvent.AuthenticationWithSaml
         doAuthentication(TYPE_LOGIN_SAML)

@@ -12,7 +12,8 @@
     <string name="title_legal_terms">Legal Terms</string>
     <string name="title_chats">チャット</string>
     <string name="title_profile">プロフィール</string>
-    <string name="title_members">メンバー (%d)</string>
+    <string name="title_members">メンバー</string>
+    <string name="title_counted_members">メンバー (%d)</string>
     <string name="title_settings">設定</string>
     <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
     <string name="title_change_password">Change Password</string> <!-- TODO Add translation -->
