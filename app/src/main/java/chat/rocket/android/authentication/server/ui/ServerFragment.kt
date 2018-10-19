@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -52,8 +53,10 @@ class ServerFragment : Fragment(), ServerView {
     private var protocol = "https://"
     private lateinit var serverUrlDisposable: Disposable
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        text_server_url.isCursorVisible =
-                KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)
+        if (KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)) {
+            scroll_view.fullScroll(ScrollView.FOCUS_DOWN)
+            text_server_url.isCursorVisible = true
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

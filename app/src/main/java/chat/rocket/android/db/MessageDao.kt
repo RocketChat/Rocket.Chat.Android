@@ -25,25 +25,25 @@ abstract class  MessageDao {
     @Insert
     abstract fun insert(message: MessageEntity)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insert(relation: MessageFavoritesRelation)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insert(relation: MessageMentionsRelation)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insert(relation: MessageChannels)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insert(attachment: AttachmentEntity)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insert(field: AttachmentFieldEntity)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insert(reaction: ReactionEntity)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insert(url: UrlEntity)
 
     @Query("DELETE FROM messages WHERE id = :id")
@@ -159,7 +159,7 @@ abstract class  MessageDao {
 
     internal fun retrieveFullMessage(message: PartialMessage): FullMessage {
         val favorites = getFavoritesByMessage(message.message.id)
-        val mentions = getFavoritesByMessage(message.message.id)
+        val mentions = getMentionsByMessage(message.message.id)
         return FullMessage(message, favorites, mentions)
     }
 
