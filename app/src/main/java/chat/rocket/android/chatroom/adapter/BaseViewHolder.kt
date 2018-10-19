@@ -65,7 +65,9 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
                 val manager = FlexboxLayoutManager(context, FlexDirection.ROW)
                 recyclerView.layoutManager = manager
                 recyclerView.adapter = adapter
-                adapter.addReactions(it.reactions.filterNot { it.unicode.startsWith(":") })
+                adapter.addReactions(it.reactions.filterNot { reactionUiModel ->
+                    reactionUiModel.unicode.startsWith(":") && reactionUiModel.url.isNullOrEmpty()
+                })
             }
         }
     }

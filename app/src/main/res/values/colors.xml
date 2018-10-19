@@ -2,9 +2,9 @@
 <resources>
 
     <!-- Main colors -->
-    <color name="colorPrimary">#FF303030</color> <!-- Material Grey 850 -->
-    <color name="colorPrimaryDark">#FF212121</color> <!-- Material Grey 900 -->
-    <color name="colorAccent">#FF1976D2</color> <!-- Material Blue 700 -->
+    <color name="colorPrimary">#FF2F343D</color>
+    <color name="colorPrimaryDark">#FF2F343D</color>
+    <color name="colorAccent">#FF1D74F5</color>
 
     <!-- Text colors -->
     <color name="colorPrimaryText">#DE000000</color>
@@ -21,6 +21,12 @@
     <color name="colorWhite">#FFFFFFFF</color>
     <color name="colorBlack">#FF000000</color>
     <color name="colorRed">#FFFF0000</color>
+
+    <!-- Authentication colors -->
+    <color name="colorAuthenticationButtonBorderAndDivider">#FFE1E5E8</color>
+    <color name="colorAuthenticationButtonDisabled">#FFE1E5E8</color>
+    <color name="colorAuthenticationChevronAndExpandIcon">#FFCBCED1</color>
+    <color name="colorAuthenticationSecondaryText">#FF9EA2A8</color>
 
     <color name="darkGray">#FFa0a0a0</color>
     <color name="actionMenuColor">#FF727272</color>
