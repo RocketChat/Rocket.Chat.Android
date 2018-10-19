@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +16,6 @@ import chat.rocket.android.chatinformation.adapter.ReadReceiptAdapter
 import chat.rocket.android.chatinformation.presentation.MessageInfoPresenter
 import chat.rocket.android.chatinformation.presentation.MessageInfoView
 import chat.rocket.android.chatinformation.viewmodel.ReadReceiptViewModel
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
@@ -86,15 +86,15 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
 
     override fun showLoading() {
         ui {
-            view_loading.setVisible(true)
+            view_loading.isVisible = true
             view_loading.show()
         }
     }
 
     override fun hideLoading() {
         ui {
+            view_loading.isVisible = false
             view_loading.hide()
-            view_loading.setVisible(false)
         }
     }
 
