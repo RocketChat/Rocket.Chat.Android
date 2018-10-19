@@ -21,6 +21,7 @@
         android:layout_marginStart="56dp"
         android:layout_marginTop="2dp"
         android:textDirection="locale"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />

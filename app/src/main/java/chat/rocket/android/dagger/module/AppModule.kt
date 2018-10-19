@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
-import chat.rocket.android.analytics.Analytics
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.AnswersAnalytics
 import chat.rocket.android.analytics.GoogleAnalyticsForFirebase
@@ -26,7 +25,6 @@ import chat.rocket.android.infrastructure.SharedPreferencesLocalRepository
 import chat.rocket.android.push.GroupedPush
 import chat.rocket.android.push.PushManager
 import chat.rocket.android.server.domain.AccountsRepository
-import chat.rocket.android.server.domain.ActiveUsersRepository
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.server.domain.AnalyticsTrackingRepository
 import chat.rocket.android.server.domain.ChatRoomsRepository
@@ -39,17 +37,15 @@ import chat.rocket.android.server.domain.JobSchedulerInteractor
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.domain.MultiServerTokenRepository
 import chat.rocket.android.server.domain.PermissionsRepository
-import chat.rocket.android.server.domain.RoomRepository
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.UsersRepository
+import chat.rocket.android.server.infraestructure.DatabaseMessageMapper
+import chat.rocket.android.server.infraestructure.DatabaseMessagesRepository
 import chat.rocket.android.server.infraestructure.JobSchedulerInteractorImpl
-import chat.rocket.android.server.infraestructure.MemoryActiveUsersRepository
 import chat.rocket.android.server.infraestructure.MemoryChatRoomsRepository
-import chat.rocket.android.server.infraestructure.MemoryRoomRepository
 import chat.rocket.android.server.infraestructure.MemoryUsersRepository
 import chat.rocket.android.server.infraestructure.SharedPreferencesAccountsRepository
-import chat.rocket.android.server.infraestructure.SharedPreferencesMessagesRepository
 import chat.rocket.android.server.infraestructure.SharedPreferencesPermissionsRepository
 import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsAnalyticsTrackingRepository
@@ -203,20 +199,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideRoomRepository(): RoomRepository {
-        return MemoryRoomRepository()
-    }
-
-    @Provides
-    @Singleton
     fun provideChatRoomRepository(): ChatRoomsRepository {
         return MemoryChatRoomsRepository()
-    }
-
-    @Provides
-    @Singleton
-    fun provideActiveUsersRepository(): ActiveUsersRepository {
-        return MemoryActiveUsersRepository()
     }
 
     @Provides
@@ -254,13 +238,8 @@ class AppModule {
     }
 
     @Provides
-    @Singleton
-    fun provideMessageRepository(
-        @ForMessages preferences: SharedPreferences,
-        moshi: Moshi,
-        currentServerInteractor: GetCurrentServerInteractor
-    ): MessagesRepository {
-        return SharedPreferencesMessagesRepository(preferences, moshi, currentServerInteractor)
+    fun provideMessageRepository(databaseManager: DatabaseManager): MessagesRepository {
+        return DatabaseMessagesRepository(databaseManager, DatabaseMessageMapper(databaseManager))
     }
 
     @Provides

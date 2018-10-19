@@ -9,6 +9,7 @@ data class ColorAttachmentUiModel(
     val id: Long,
     val color: Int,
     val text: CharSequence,
+    val fields: CharSequence? = null,
     override val message: Message,
     override val rawData: ColorAttachment,
     override val messageId: String,
