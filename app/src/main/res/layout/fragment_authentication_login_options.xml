@@ -1,0 +1,223 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:padding="@dimen/screen_edge_left_and_right_margins"
+    tools:context="authentication.loginoptions.ui.LoginOptionsFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/accounts_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible">
+
+            <Button
+                android:id="@+id/button_facebook"
+                style="?borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/rounded_border"
+                android:clickable="false"
+                android:drawableStart="@drawable/ic_facebook_24dp"
+                android:foreground="?selectableItemBackground"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/msg_continue_with_facebook"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/button_github"
+                style="?borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rounded_border"
+                android:clickable="false"
+                android:drawableStart="@drawable/ic_github_24dp"
+                android:foreground="?selectableItemBackground"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/msg_continue_with_github"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/button_google"
+                style="?borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rounded_border"
+                android:clickable="false"
+                android:drawableStart="@drawable/ic_google_24dp"
+                android:foreground="?selectableItemBackground"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/msg_continue_with_google"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/button_linkedin"
+                style="?borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rounded_border"
+                android:clickable="false"
+                android:drawableStart="@drawable/ic_linkedin_24dp"
+                android:foreground="?selectableItemBackground"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/msg_continue_with_linkedin"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/button_gitlab"
+                style="?borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rounded_border"
+                android:clickable="false"
+                android:drawableStart="@drawable/ic_gitlab_24dp"
+                android:foreground="?selectableItemBackground"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/msg_continue_with_gitlab"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/button_wordpress"
+                style="?borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rounded_border"
+                android:clickable="false"
+                android:drawableStart="@drawable/ic_wordpress_24dp"
+                android:foreground="?selectableItemBackground"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/msg_continue_with_wordpress"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/button_cas"
+                style="@style/Authentication.Button"
+                android:layout_marginTop="10dp"
+                android:clickable="false"
+                android:text="@string/action_login_or_sign_up"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/expand_more_accounts_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/accounts_container"
+            tools:visibility="visible">
+
+            <ImageButton
+                android:id="@+id/button_expand_collapse_accounts"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/circle_background_grey"
+                android:contentDescription="@string/msg_content_description_show_more_login_options"
+                android:src="@drawable/ic_expand_more_black_24dp"
+                android:tint="@color/colorWhite"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/colorAuthenticationButtonBorderAndDivider"
+                app:layout_constraintBottom_toBottomOf="@+id/button_expand_collapse_accounts"
+                app:layout_constraintEnd_toStartOf="@+id/button_expand_collapse_accounts"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/button_expand_collapse_accounts" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="8dp"
+                android:background="@color/colorAuthenticationButtonBorderAndDivider"
+                app:layout_constraintBottom_toBottomOf="@+id/button_expand_collapse_accounts"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/button_expand_collapse_accounts"
+                app:layout_constraintTop_toTopOf="@+id/button_expand_collapse_accounts" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/button_login_with_email"
+            style="@style/Authentication.Button"
+            android:layout_marginTop="32dp"
+            android:text="@string/msg_login_with_email"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/expand_more_accounts_container"
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/button_create_an_account"
+            style="@style/Authentication.Button.Borderless"
+            android:layout_marginTop="10dp"
+            android:text="@string/msg_create_account"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_login_with_email"
+            tools:visibility="visible" />
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/view_loading"
+            style="@style/Authentication.AVLoadingIndicatorView"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

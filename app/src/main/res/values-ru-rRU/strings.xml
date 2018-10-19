@@ -10,7 +10,8 @@
     <string name="title_legal_terms">Юридические условия</string>
     <string name="title_chats">Чаты</string>
     <string name="title_profile">Профиль</string>
-    <string name="title_members">Пользователи (%d)</string>
+    <string name="title_members">Пользователи</string>
+    <string name="title_counted_members">Пользователи (%d)</string>
     <string name="title_settings">Настройки</string>
     <string name="title_preferences">Персональные</string>
     <string name="title_change_password">Изменить пароль</string>
@@ -45,6 +46,11 @@
     <string name="action_select_photo_from_gallery">Выбрать из галереи</string>
     <string name="action_take_photo">Сделать снимок</string>
     <string name="action_reset_avatar">Восстановить аватар</string>
+    <string name="action_connect_server">Соединиться с сервером</string>
+    <string name="action_join_community">Сообщество</string>
+    <string name="action_create_server">Создать новый сервер</string>
+    <string name="action_register">Зарегистрировать</string>
+    <string name="action_confirm">Подтвердить</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -65,12 +71,11 @@
     <string name="msg_avatar_url">URL аватара</string>
     <string name="msg_or_continue_using_social_accounts">Или продолжить, используя социальные учетные записи</string>
     <string name="msg_new_user">Новый пользователь? %1$s</string>
-    <string name="msg_forgot_password">Забыли пароль? %1$s</string>
+    <string name="msg_forgot__your_password">Забыли пароль?</string>
     <string name="msg_reset">Сброс</string>
     <string name="msg_check_your_email_to_reset_your_password">Письмо отправлено! Проверьте свой почтовый ящик, чтобы сбросить пароль.</string>
     <string name="msg_invalid_email">Введите действующий e-mail</string>
     <string name="msg_new_user_agreement">Продолжая, вы принимаете\n%1$s и %2$s</string>
-    <string name="msg_2fa_code">Код 2FA</string>
     <string name="msg_yesterday">Вчера</string>
     <string name="msg_today">Сегодня</string>
     <string name="msg_message">Сообщение</string>
@@ -87,6 +92,7 @@
     <string name="msg_content_description_log_in_using_gitlab">Войти с помощью Gitlab</string>
     <string name="msg_content_description_log_in_using_wordpress">Войти с помощью WordPress</string>
     <string name="msg_content_description_send_message">Отправить сообщение</string>
+    <string name="msg_content_description_show_more_login_options">Больше параметров входа</string>
     <string name="msg_content_description_show_attachment_options">Показать параметры вложения</string>
     <string name="msg_you">Вы</string>
     <string name="msg_unknown">Неизвестный</string>
@@ -107,9 +113,7 @@
     <string name="msg_ver_not_minimum">Похоже, версия сервера меньше минимально необходимой %1$s.\nДля работы потребуется обновить сервер!</string>
     <string name="msg_no_chat_title">Нет сообщений</string>
     <string name="msg_no_chat_description">Начните общаться, чтобы увидеть\nтут сообщения.</string>
-    <string name="msg_proceed">ПРОДОЛЖИТЬ</string>
     <string name="msg_cancel">ОТМЕНА</string>
-    <string name="msg_warning">ПРЕДУПРЕЖДЕНИЕ</string>
     <string name="msg_http_insecure">При использовании HTTP вы подключаетесь к небезопасному серверу. Мы не рекомендуем вам это делать.</string>
     <string name="msg_error_checking_server_version">При проверке версии вашего сервера произошла ошибка, повторите попытку.</string>
     <string name="msg_invalid_server_protocol">Выбранный протокол не разрешен на этом сервере, попробуйте использовать HTTPS</string>
@@ -130,6 +134,18 @@
     <string name="msg_delete_description">Вы уверены, что хотите удалить это сообщение?</string>
     <string name="msg_channel_name">Название канала</string>
     <string name="msg_search">Поиск</string>
+    <string name="msg_welcome_to_rocket_chat">Rocket.Chat</string>
+    <string name="msg_team_communication">Чат с открытым исходным кодом</string>
+    <string name="msg_login_with_email">Войти с помощью <b>e-mail</b></string>
+    <string name="msg_create_account">Создать аккаунт</string>
+    <string name="msg_continue_with_facebook">Войти с помощью <b>Facebook</b></string>
+    <string name="msg_continue_with_github">Войти с помощью <b>Github</b></string>
+    <string name="msg_continue_with_google">Войти с помощью <b>Google</b></string>
+    <string name="msg_continue_with_linkedin">Войти с помощью <b>Linkedin</b></string>
+    <string name="msg_continue_with_gitlab">Войти с помощью <b>GitLab</b></string>
+    <string name="msg_continue_with_wordpress">Войти с помощью <b>WordPress</b></string>
+    <string name="msg_two_factor_authentication">Двухфакторная аутентификация</string>
+    <string name="msg__your_2fa_code">Ваш код 2FA?</string>
     <string name="msg_view_more">больше</string>
     <string name="msg_view_less">меньше</string>
 
@@ -285,4 +301,5 @@
     <string name="read_by">Прочитано</string>
     <string name="message_information_title">Информация о прочтении</string>
     <string name="msg_log_out">Выходим…</string>
+    <string name="message_room_changed_privacy">Тип канала изменен на: %1$s пользователем %2$s</string>
 </resources>

@@ -28,7 +28,6 @@ import chat.rocket.android.server.domain.JobSchedulerInteractor
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.PublicSettings
-import chat.rocket.android.server.domain.RoomRepository
 import chat.rocket.android.server.domain.UsersRepository
 import chat.rocket.android.server.domain.uploadMaxFileSize
 import chat.rocket.android.server.domain.uploadMimeTypeFilter
@@ -92,7 +91,6 @@ class ChatRoomPresenter @Inject constructor(
     private val uriInteractor: UriInteractor,
     private val messagesRepository: MessagesRepository,
     private val usersRepository: UsersRepository,
-    private val roomsRepository: RoomRepository,
     private val localRepository: LocalRepository,
     private val analyticsManager: AnalyticsManager,
     private val userHelper: UserHelper,
@@ -143,7 +141,7 @@ class ChatRoomPresenter @Inject constructor(
                     broadcast
                 } ?: false
                 view.onRoomUpdated(userCanPost, chatIsBroadcast, userCanMod)
-                loadMessages(roomId, roomType)
+                loadMessages(roomId, roomType, clearDataSet = true)
                 chatRoomMessage?.let { messageHelper.messageIdFromPermalink(it) }
                     ?.let { messageId ->
                         val name = messageHelper.roomNameFromPermalink(chatRoomMessage)
@@ -303,7 +301,7 @@ class ChatRoomPresenter @Inject constructor(
                         type = null,
                         updatedAt = null,
                         urls = null,
-                        isTemporary = true,
+                        synced = false,
                         unread = true
                     )
                     try {
@@ -315,6 +313,7 @@ class ChatRoomPresenter @Inject constructor(
                             ), false
                         )
                         client.sendMessage(id, chatRoomId, text)
+                        messagesRepository.save(newMessage.copy(synced = true))
                         logMessageSent()
                     } catch (ex: Exception) {
                         // Ok, not very beautiful, but the backend sends us a not valid response
@@ -504,7 +503,7 @@ class ChatRoomPresenter @Inject constructor(
                     val messages =
                         retryIO(description = "history($chatRoomId, $roomType, $instant)") {
                             client.history(
-                                chatRoomId!!, roomType, count = 50,
+                                    chatRoomId, roomType, count = 50,
                                 oldest = instant
                             )
                         }
@@ -713,15 +712,16 @@ class ChatRoomPresenter @Inject constructor(
                     client.getMembers(chatRoomId, roomTypeOf(chatRoomType), offset, 50).result
                 }.take(50) // Get only 50, the backend is returning 7k+ users
                 usersRepository.saveAll(members)
+                dbManager.processUsersBatch(members)
                 val self = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
                 // Take at most the 100 most recent messages distinguished by user. Can return less.
                 val recentMessages = messagesRepository.getRecentMessages(chatRoomId, 100)
                     .filterNot { filterSelfOut && it.sender?.username == self }
                 val activeUsers = mutableListOf<PeopleSuggestionUiModel>()
                 recentMessages.forEach {
-                    val sender = it.sender!!
-                    val username = sender.username ?: ""
-                    val name = sender.name ?: ""
+                    val sender = it.sender
+                    val username = sender?.username ?: ""
+                    val name = sender?.name ?: ""
                     val avatarUrl = currentServer.avatarUrl(username)
                     val found = members.firstOrNull { member -> member.username == username }
                     val status = if (found != null) found.status else UserStatus.Offline()
@@ -785,9 +785,6 @@ class ChatRoomPresenter @Inject constructor(
                         }.filterNot { filterSelfOut && self != null && self == it.text })
                     }
                     ROOMS -> {
-                        if (rooms.isNotEmpty()) {
-                            roomsRepository.saveAll(rooms)
-                        }
                         view.populateRoomSuggestions(rooms.map {
                             val fullName = it.fullName ?: ""
                             val name = it.name ?: ""
@@ -1125,11 +1122,11 @@ class ChatRoomPresenter @Inject constructor(
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
             if (index > -1) {
                 Timber.d("Updating message at $index")
-                messagesRepository.save(streamedMessage)
+                //messagesRepository.save(streamedMessage)
                 view.dispatchUpdateMessage(index, viewModelStreamedMessage)
             } else {
                 Timber.d("Adding new message")
-                messagesRepository.save(streamedMessage)
+                //messagesRepository.save(streamedMessage)
                 view.showNewMessage(viewModelStreamedMessage, true)
             }
         }

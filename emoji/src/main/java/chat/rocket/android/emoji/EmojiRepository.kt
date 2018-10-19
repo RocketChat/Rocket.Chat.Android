@@ -267,7 +267,7 @@ object EmojiRepository {
 
     private fun loadEmojis(stream: InputStream): MutableList<Emoji> {
         val emojisJSON = JSONArray(inputStreamToString(stream))
-        val emojis = ArrayList<Emoji>(emojisJSON.length());
+        val emojis = ArrayList<Emoji>(emojisJSON.length())
         for (i in 0 until emojisJSON.length()) {
             val emoji = buildEmojiFromJSON(emojisJSON.getJSONObject(i))
             emoji?.let {

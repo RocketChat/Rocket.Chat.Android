@@ -16,6 +16,7 @@
             android:id="@+id/profile_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/screen_edge_left_and_right_margins"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone"
@@ -31,25 +32,31 @@
             <EditText
                 android:id="@+id/text_name"
                 style="@style/Profile.EditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginTop="32dp"
-                android:drawableStart="@drawable/ic_person_black_24dp"
+                android:drawableStart="@drawable/ic_person_black_20dp"
                 android:hint="@string/msg_name"
                 android:inputType="textCapWords" />
 
             <EditText
                 android:id="@+id/text_username"
                 style="@style/Profile.EditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginTop="16dp"
-                android:drawableStart="@drawable/ic_at_black_24dp"
+                android:drawableStart="@drawable/ic_at_black_20dp"
                 android:hint="@string/msg_username"
                 android:inputType="text" />
 
             <EditText
                 android:id="@+id/text_email"
                 style="@style/Profile.EditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:drawableStart="@drawable/ic_email_black_24dp"
+                android:drawableStart="@drawable/ic_email_black_20dp"
                 android:hint="@string/msg_email"
                 android:inputType="textEmailAddress" />
         </LinearLayout>
