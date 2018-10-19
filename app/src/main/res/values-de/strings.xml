@@ -10,7 +10,8 @@
     <string name="title_legal_terms">Legal Terms</string>
     <string name="title_chats">Chats</string>
     <string name="title_profile">Profil</string>
-    <string name="title_members">Benutzer (%d)</string>
+    <string name="title_members">Benutzer</string>
+    <string name="title_counted_members">Benutzer (%d)</string>
     <string name="title_settings">Einstellungen</string>
     <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
     <string name="title_change_password">Ändere Passwort</string>

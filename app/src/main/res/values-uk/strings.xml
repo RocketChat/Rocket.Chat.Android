@@ -10,7 +10,8 @@
     <string name="title_legal_terms">Юридичні умови</string>
     <string name="title_chats">Чати</string>
     <string name="title_profile">Профіль</string>
-    <string name="title_members">Користувачі (%d)</string>
+    <string name="title_members">Користувачі</string>
+    <string name="title_counted_members">Користувачі (%d)</string>
     <string name="title_settings">Налаштування</string>
     <string name="title_preferences">Персональні</string>
     <string name="title_change_password">Змінити пароль</string>

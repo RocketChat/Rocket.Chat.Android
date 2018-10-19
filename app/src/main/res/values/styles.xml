@@ -40,6 +40,8 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:letterSpacing">0.04</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="Authentication.Button.Title.White" parent="Authentication.Button.Title">
@@ -52,6 +54,8 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/colorAuthenticationSecondaryText</item>
         <item name="android:letterSpacing">0.04</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="Authentication.EditText.Hint" parent="TextAppearance.AppCompat">
@@ -76,7 +80,7 @@
     </style>
 
     <style name="Authentication.Button" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">48dp</item>
         <item name="android:foreground">?selectableItemBackground</item>
         <item name="android:textSize">18sp</item>

@@ -10,9 +10,9 @@ import android.text.Spanned
 import android.text.style.ClickableSpan
 import android.text.style.ImageSpan
 import android.text.style.ReplacementSpan
-import android.util.Patterns
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.util.PatternsCompat
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.StrikethroughDelimiterProcessor
 import chat.rocket.android.emoji.EmojiParser
@@ -33,7 +33,6 @@ import org.commonmark.node.ListItem
 import org.commonmark.node.Node
 import org.commonmark.node.OrderedList
 import org.commonmark.node.StrongEmphasis
-import org.commonmark.node.Text
 import org.commonmark.parser.Parser
 import ru.noties.markwon.SpannableBuilder
 import ru.noties.markwon.SpannableConfiguration
@@ -116,6 +115,7 @@ class MessageParser @Inject constructor(
     }
 
     class StrongEmphasisVisitor : AbstractVisitor() {
+
         override fun visit(strongEmphasis: StrongEmphasis) {
             if (strongEmphasis.openingDelimiter == "__" && strongEmphasis.firstChild != null) {
                 val child = strongEmphasis.firstChild
@@ -146,7 +146,7 @@ class MessageParser @Inject constructor(
 
             var offset = 0
             mentions.forEach {
-                val mentionMe = it == currentUser || it == "@all" || it == "@here"
+                val mentionMe = it == "@$currentUser" || it == "@all" || it == "@here"
                 offset = text.indexOf(string = it, startIndex = offset, ignoreCase = false)
                 while (offset > -1) {
                     val textColor = if (mentionMe) myselfTextColor else othersTextColor
@@ -223,9 +223,9 @@ class MessageParser @Inject constructor(
 
     class LinkVisitor(private val builder: SpannableBuilder) : AbstractVisitor() {
 
-        override fun visit(text: Text) {
+        override fun visit(document: Document) {
             // Replace all url links to markdown url syntax.
-            val matcher = Patterns.WEB_URL.matcher(builder.text())
+            val matcher = PatternsCompat.AUTOLINK_WEB_URL.matcher(builder.text())
             val consumed = mutableListOf<String>()
 
             while (matcher.find()) {
