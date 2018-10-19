@@ -66,6 +66,7 @@ class MembersFragment : Fragment(), MembersView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
         setupRecyclerView()
         presenter.loadChatRoomsMembers(chatRoomId)
 
@@ -125,9 +126,13 @@ class MembersFragment : Fragment(), MembersView {
         }
     }
 
-    private fun setupToolbar(totalMembers: Long) {
+    private fun setupToolbar(totalMembers: Long? = null) {
         (activity as ChatRoomActivity).let {
-            it.showToolbarTitle(getString(R.string.title_members, totalMembers))
+            if (totalMembers != null) {
+                it.showToolbarTitle(getString(R.string.title_counted_members, totalMembers))
+            } else {
+                it.showToolbarTitle(getString(R.string.title_members))
+            }
             it.hideToolbarChatRoomIcon()
         }
     }
