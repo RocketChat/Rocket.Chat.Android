@@ -85,9 +85,10 @@ class UiModelMapper @Inject constructor(
     suspend fun map(
         message: Message,
         roomUiModel: RoomUiModel = RoomUiModel(roles = emptyList(), isBroadcast = true)
-    ): List<BaseUiModel<*>> {
-        return translate(message, roomUiModel)
-    }
+    ): List<BaseUiModel<*>> =
+        withContext(CommonPool) {
+            return@withContext translate(message, roomUiModel)
+        }
 
     suspend fun map(
         messages: List<Message>,

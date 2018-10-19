@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
@@ -16,7 +17,6 @@ import chat.rocket.android.authentication.registerusername.presentation.Register
 import chat.rocket.android.authentication.registerusername.presentation.RegisterUsernameView
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showKeyboard
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
@@ -113,13 +113,13 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
     override fun showLoading() {
         ui {
             disableUserInput()
-            view_loading.setVisible(true)
+            view_loading.isVisible = true
         }
     }
 
     override fun hideLoading() {
         ui {
-            view_loading.setVisible(false)
+            view_loading.isVisible = false
             enableUserInput()
         }
     }
