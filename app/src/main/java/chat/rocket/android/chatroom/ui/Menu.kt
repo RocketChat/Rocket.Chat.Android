@@ -79,6 +79,14 @@ private fun ChatRoomFragment.setupSearchMessageMenuItem(menu: Menu, context: Con
         .setShowAsActionFlags(
             MenuItem.SHOW_AS_ACTION_IF_ROOM or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
         )
+        .setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                dismissEmojiKeyboard()
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?) = true
+        })
 
     (searchItem?.actionView as? SearchView)?.let {
         // TODO: Check why we need to stylize the search text programmatically instead of by defining it in the styles.xml (ChatRoom.SearchView)

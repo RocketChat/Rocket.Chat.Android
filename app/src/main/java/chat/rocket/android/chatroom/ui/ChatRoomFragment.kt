@@ -271,7 +271,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         activity?.invalidateOptionsMenu()
     }
 
-    private fun dismissEmojiKeyboard() {
+    fun dismissEmojiKeyboard() {
         // Check if the keyboard was ever initialized.
         // It may be the case when you are looking a not joined room
         if (::emojiKeyboardPopup.isInitialized) {
