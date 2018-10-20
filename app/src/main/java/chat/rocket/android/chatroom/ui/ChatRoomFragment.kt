@@ -266,7 +266,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun onPause() {
         super.onPause()
-        setReactionButtonIcon(R.drawable.ic_reaction_24dp)
         dismissEmojiKeyboard()
         activity?.invalidateOptionsMenu()
     }
@@ -276,6 +275,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         // It may be the case when you are looking a not joined room
         if (::emojiKeyboardPopup.isInitialized) {
             emojiKeyboardPopup.dismiss()
+            setReactionButtonIcon(R.drawable.ic_reaction_24dp)
         }
     }
 
@@ -784,8 +784,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                         context: Context
                     ) {
                         if (f is MessageActionsBottomSheet) {
-                            setReactionButtonIcon(R.drawable.ic_reaction_24dp)
-                            emojiKeyboardPopup.dismiss()
+                            dismissEmojiKeyboard()
                         }
                     }
                 },
@@ -805,9 +804,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                             it.onBackPressed()
                         }
                         KeyboardHelper.hideSoftKeyboard(it)
-                        emojiKeyboardPopup.dismiss()
+                        dismissEmojiKeyboard()
                     }
-                    setReactionButtonIcon(R.drawable.ic_reaction_24dp)
                 }
             }
 
@@ -917,8 +915,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             setReactionButtonIcon(R.drawable.ic_keyboard_black_24dp)
         } else {
             // If popup is showing, simply dismiss it to show the underlying text keyboard
-            emojiKeyboardPopup.dismiss()
-            setReactionButtonIcon(R.drawable.ic_reaction_24dp)
+            dismissEmojiKeyboard()
         }
     }
 
