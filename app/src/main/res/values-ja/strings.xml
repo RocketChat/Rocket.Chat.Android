@@ -22,7 +22,7 @@
     <string name="title_update_profile">プロフィールの更新</string>
     <string name="title_about">About</string>
     <string name="title_create_channel">新しいチャネルを作成します</string>
-    <string name="title_confirmation">Are You Sure?</string> <!-- TODO Add translation -->
+    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
 
 
     <!-- Actions -->

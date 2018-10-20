@@ -20,7 +20,7 @@
     <string name="title_update_profile">Profilinizi Düzenleyin</string>
     <string name="title_about">Hakkında</string>
     <string name="title_create_channel">Yeni Kanal Oluştur</string>
-    <string name="title_confirmation">Are You Sure?</string> <!-- TODO Add translation -->
+    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
 
 
     <!-- Actions -->

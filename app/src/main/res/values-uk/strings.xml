@@ -20,7 +20,7 @@
     <string name="title_update_profile">Оновити профіль</string>
     <string name="title_about">"Про програму"</string>
     <string name="title_create_channel">Створити новий канал</string>
-    <string name="title_confirmation">Are You Sure?</string> <!-- TODO Add translation -->
+    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
 
 
     <!-- Actions -->

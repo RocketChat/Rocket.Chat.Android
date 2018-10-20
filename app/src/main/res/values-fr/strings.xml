@@ -20,7 +20,7 @@
     <string name="title_update_profile">Mettre à jour le profil</string>
     <string name="title_about">À propos</string>
     <string name="title_create_channel">Créer salon</string>
-    <string name="title_confirmation">Are You Sure?</string> <!-- TODO Add translation -->
+    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
 
 
 

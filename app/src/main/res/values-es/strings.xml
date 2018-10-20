@@ -19,7 +19,7 @@
     <string name="title_update_profile">Actualización del perfil</string>
     <string name="title_about">Acerca de</string>
     <string name="title_create_channel">Crear canal</string>
-    <string name="title_confirmation">Are You Sure?</string> <!-- TODO Add translation -->
+    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
     <string name="action_use_this_username">Usa este nombre de usuario</string>
