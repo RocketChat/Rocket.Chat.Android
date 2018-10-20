@@ -85,7 +85,10 @@ private fun ChatRoomFragment.setupSearchMessageMenuItem(menu: Menu, context: Con
                 return true
             }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?) = true
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                dismissEmojiKeyboard()
+                return true
+            }
         })
 
     (searchItem?.actionView as? SearchView)?.let {
