@@ -282,6 +282,9 @@
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">最近の絵文字はありません</string>
     <string name="alert_title_default_skin_tone">デフォルトスキントークン</string>
+    <string name="And_more">さらに %1$d</string>
+    <string name="and">と</string>
+    <string name="Reacted_with">がリアクションしています</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">ソート</string>

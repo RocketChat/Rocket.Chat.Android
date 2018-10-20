@@ -275,6 +275,9 @@
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Пусто</string>
     <string name="alert_title_default_skin_tone">Тон кожи по умолчанию</string>
+    <string name="And_more">И еще %1$d</string>
+    <string name="and">и</string>
+    <string name="Reacted_with">Реагирует с</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Сортировать</string>

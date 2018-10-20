@@ -60,6 +60,10 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
                             reactionListener?.onReactionAdded(messageId, emoji)
                         }
                     }
+
+                    override fun onReactionLongClicked(emojiShortname: String, usernames: List<String>) {
+                        reactionListener?.onReactionLongClicked(emojiShortname, usernames)
+                    }
                 }
                 val context = itemView.context
                 val manager = FlexboxLayoutManager(context, FlexDirection.ROW)

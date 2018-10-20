@@ -16,4 +16,12 @@ interface EmojiReactionListener {
      * @param emojiShortname The shortname of the emoji (:grin:, :smiley:, etc).
      */
     fun onReactionTouched(messageId: String, emojiShortname: String)
+
+    /**
+     * Callback when an added reaction is long-clicked.
+     *
+     * @param emojiShortname The shortname of the emoji (:grin:, :smiley:, etc).
+     * @param usernames The list of usernames of users who added the reaction.
+     */
+    fun onReactionLongClicked(emojiShortname: String, usernames: List<String>)
 }

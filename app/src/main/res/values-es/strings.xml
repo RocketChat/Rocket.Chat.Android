@@ -275,6 +275,9 @@
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Sin emojis recientes</string>
     <string name="alert_title_default_skin_tone">Tono de piel predeterminado</string>
+    <string name="And_more">Y %1$d mas</string>
+    <string name="and">y</string>
+    <string name="Reacted_with">Reacciono con</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Ordenar</string>

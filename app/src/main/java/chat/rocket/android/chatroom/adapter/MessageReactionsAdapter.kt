@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
@@ -76,7 +75,7 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
     class SingleReactionViewHolder(
         view: View,
         private val listener: EmojiReactionListener?
-    ) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    ) : RecyclerView.ViewHolder(view), View.OnClickListener, View.OnLongClickListener {
 
         @Inject
         lateinit var localRepository: LocalRepository
@@ -119,6 +118,8 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
 
                 view_flipper_reaction.setOnClickListener(this@SingleReactionViewHolder)
                 text_count.setOnClickListener(this@SingleReactionViewHolder)
+                view_flipper_reaction.setOnLongClickListener(this@SingleReactionViewHolder)
+                text_count.setOnLongClickListener(this@SingleReactionViewHolder)
             }
         }
 
@@ -129,6 +130,11 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
                     listener?.onReactionTouched(reaction.messageId, reaction.shortname)
                 }
             }
+        }
+
+        override fun onLongClick(v: View?): Boolean {
+            listener?.onReactionLongClicked(reaction.shortname, reaction.usernames)
+            return true
         }
     }
 

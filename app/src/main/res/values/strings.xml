@@ -292,6 +292,9 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">No recent emojis</string>
     <string name="alert_title_default_skin_tone">Default skin tone</string>
+    <string name="And_more">And %1$d more</string>
+    <string name="and">and</string>
+    <string name="Reacted_with">Reacted with</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Sort</string>

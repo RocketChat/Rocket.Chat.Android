@@ -22,6 +22,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.core.text.bold
 import androidx.core.view.isVisible
@@ -663,6 +664,33 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun onReactionAdded(messageId: String, emoji: Emoji) {
         presenter.react(messageId, emoji.shortname)
+    }
+
+    override fun onReactionLongClicked(emojiShortname: String, usernames: List<String>) {
+        presenter.showReactionsSummary(emojiShortname, usernames)
+    }
+
+    override fun showReactionsSummary(emojiShortname: String, usernames: List<String>, currentLoggedUsername: String?) {
+        var usernamesString = usernames.asSequence()
+            .take(15)
+            .joinToString { username ->
+                if (username == currentLoggedUsername) {
+                    getString(R.string.msg_you).toLowerCase()
+                } else {
+                    "@$username"
+                }
+            }
+        if (usernames.size > 15) {
+            usernamesString += " " + getString(R.string.And_more, usernames.size - 15).toLowerCase()
+        } else {
+            usernamesString = usernamesString.replace(""",([^,]+)$""".toRegex()) {
+                " ${getString(R.string.and)}${it.groupValues[1]}"
+            }
+        }
+        if (usernamesString[0] != '@') {
+            usernamesString = usernamesString.capitalize()
+        }
+        showToast("$usernamesString ${getString(R.string.Reacted_with).toLowerCase()} $emojiShortname", Toast.LENGTH_LONG)
     }
 
     override fun showReactionsPopup(messageId: String) {

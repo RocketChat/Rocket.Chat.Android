@@ -277,6 +277,9 @@
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Keine letzten Emojis</string>
     <string name="alert_title_default_skin_tone">Standart Hautton</string>
+    <string name="And_more">Und %1$d mehr</string>
+    <string name="and">und</string>
+    <string name="Reacted_with">Reagierte mit</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Sortiere</string>
