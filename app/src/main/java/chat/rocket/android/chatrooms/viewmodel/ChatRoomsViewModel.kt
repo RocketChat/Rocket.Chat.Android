@@ -30,6 +30,7 @@ import timber.log.Timber
 import java.security.InvalidParameterException
 import kotlin.coroutines.experimental.coroutineContext
 
+
 class ChatRoomsViewModel(
     private val connectionManager: ConnectionManager,
     private val interactor: FetchChatRoomsInteractor,
@@ -41,9 +42,11 @@ class ChatRoomsViewModel(
     private val runContext = newSingleThreadContext("chat-rooms-view-model")
     private val client = connectionManager.client
     private var loaded = false
+    var showLastMessage = true
 
     fun getChatRooms(): LiveData<RoomsModel> {
         return Transformations.switchMap(query) { query ->
+
             return@switchMap if (query.isSearch()) {
                 this@ChatRoomsViewModel.query.wrap(runContext) { _, data: MutableLiveData<RoomsModel> ->
                     val string = (query as Query.Search).query
@@ -53,11 +56,13 @@ class ChatRoomsViewModel(
                     // TODO - find a better way for cancellation checking
                     if (!coroutineContext.isActive) return@wrap
 
-                    val rooms = repository.search(string).let { mapper.map(it) }
+                    val rooms = repository.search(string).let { mapper.map(it, showLastMessage = this.showLastMessage) }
                     data.postValue(rooms.toMutableList() + LoadingItemHolder())
+
+
                     if (!coroutineContext.isActive) return@wrap
 
-                    val spotlight = spotlight(query.query)?.let { mapper.map(it) }
+                    val spotlight = spotlight(query.query)?.let { mapper.map(it, showLastMessage = this.showLastMessage) }
                     if (!coroutineContext.isActive) return@wrap
 
                     spotlight?.let {
@@ -72,7 +77,7 @@ class ChatRoomsViewModel(
                         .distinct()
                         .transform(runContext) { rooms ->
                             val mappedRooms = rooms?.let {
-                                mapper.map(rooms, query.isGrouped())
+                                mapper.map(rooms, query.isGrouped(), this.showLastMessage)
                             }
                             if (loaded && mappedRooms?.isEmpty() == true) {
                                 loadingState.postValue(LoadingState.Loaded(0))
