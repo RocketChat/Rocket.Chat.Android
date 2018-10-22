@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
@@ -18,11 +19,7 @@ import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.loginoptions.presentation.LoginOptionsPresenter
 import chat.rocket.android.authentication.loginoptions.presentation.LoginOptionsView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.util.extensions.clearLightStatusBar
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.rotateBy
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
@@ -290,7 +287,6 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         }
     }
 
-
     // OAuth Accounts.
     override fun enableLoginByFacebook() = enableAccountButton(button_facebook)
 
@@ -337,8 +333,8 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         buttonColor: Int
     ) {
         val button = getCustomServiceButton(serviceName, serviceNameColor, buttonColor)
-        accounts_container.addView(button)
         setupButtonListener(button, customOauthUrl, state, REQUEST_CODE_FOR_OAUTH)
+        accounts_container.addView(button)
     }
 
     // SAML account.
@@ -350,8 +346,8 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         buttonColor: Int
     ) {
         val button = getCustomServiceButton(serviceName, serviceNameColor, buttonColor)
-        accounts_container.addView(button)
         setupButtonListener(button, samlUrl, samlToken, REQUEST_CODE_FOR_SAML)
+        accounts_container.addView(button)
     }
 
     override fun showAccountsView() {
@@ -487,7 +483,11 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         val marginTop = resources.getDimensionPixelSize(R.dimen.button_account_margin_top)
         params.setMargins(0, marginTop, 0, 0)
 
-        val button = Button(context)
+        val button = Button(
+            ContextThemeWrapper(context, R.style.Authentication_Button),
+            null,
+            R.style.Authentication_Button
+        )
         button.layoutParams = params
         button.text = buttonText
         button.setTextColor(buttonTextColor)

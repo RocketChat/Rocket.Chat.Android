@@ -11,6 +11,7 @@ import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.UserStatus
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
+import ru.noties.markwon.Markwon
 
 class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit) : ViewHolder<RoomItemHolder>(itemView) {
 
@@ -32,7 +33,7 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
 
             if (room.lastMessage != null) {
                 text_last_message.isVisible = true
-                text_last_message.text = room.lastMessage
+                text_last_message.text = Markwon.markdown(context, room.lastMessage.toString()).toString()
             } else {
                 text_last_message.isGone = true
             }

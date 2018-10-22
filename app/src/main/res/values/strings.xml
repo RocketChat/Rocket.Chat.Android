@@ -23,7 +23,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_chats">Veranda</string>
     <string name="title_home">Home</string>
     <string name="title_profile">Profile</string>
-    <string name="title_members">Members (%d)</string>
+    <string name="title_members">Members</string>
+    <string name="title_counted_members">Members (%d)</string>
     <string name="title_settings">Settings</string>
     <string name="title_preferences">Preferences</string>
     <string name="title_change_password">Change Password</string>
