@@ -241,6 +241,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 viewModel.showLastMessage = true
                 activity?.invalidateOptionsMenu()
                 create_new_channel_fab.isVisible = true
+                queryChatRoomsByName(null)
                 return true
             }
 
@@ -466,10 +467,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
                 val serverUrl = serverInteractor.get()
                 val myselfUsername = userHelper.username() as String
-                val avatarUrl = serverUrl?.avatarUrl(myselfUsername)
+                val myAvatarUrl = serverUrl?.avatarUrl(myselfUsername)
 
                 profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
-                profileButton?.setImageURI(avatarUrl)
+                profileButton?.setImageURI(myAvatarUrl)
                 profileButton?.setOnClickListener { v ->
 
                     searchView?.clearFocus()

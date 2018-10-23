@@ -35,6 +35,7 @@ import chat.rocket.android.server.ui.ChangeServerActivity
 import chat.rocket.android.settings.di.SettingsFragmentProvider
 import chat.rocket.android.settings.password.di.PasswordFragmentProvider
 import chat.rocket.android.settings.password.ui.PasswordActivity
+import chat.rocket.android.webview.adminpanel.di.AdminPanelWebViewFragmentProvider
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -64,7 +65,8 @@ abstract class ActivityBuilder {
             ProfileFragmentProvider::class,
             SettingsFragmentProvider::class,
             AboutFragmentProvider::class,
-            PreferencesFragmentProvider::class
+            PreferencesFragmentProvider::class,
+            AdminPanelWebViewFragmentProvider::class
         ]
     )
     abstract fun bindMainActivity(): MainActivity
