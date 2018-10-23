@@ -24,13 +24,13 @@
         android:layout_width="12dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/contact_name"
+        app:layout_constraintBottom_toBottomOf="@+id/text_chat_name"
         app:layout_constraintStart_toEndOf="@+id/image_avatar"
-        app:layout_constraintTop_toTopOf="@+id/contact_name"
+        app:layout_constraintTop_toTopOf="@+id/text_chat_name"
         tools:src="@drawable/ic_hashtag_unread_12dp" />
 
     <TextView
-        android:id="@+id/phone_number"
+        android:id="@+id/text_last_message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -43,12 +43,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/image_chat_icon"
-        app:layout_constraintTop_toBottomOf="@+id/contact_name"
+        app:layout_constraintTop_toBottomOf="@+id/text_chat_name"
         tools:text="Filipe de Lima Brito: Type something that is very big and need at least to lines, or maybe even more" />
 
 
     <TextView
-        android:id="@+id/contact_name"
+        android:id="@+id/text_chat_name"
         style="@style/ChatRoom.Name.TextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
         android:maxLines="1"
         android:textDirection="locale"
         android:textColor="@color/colorSecondaryText"
-        app:layout_constraintBottom_toTopOf="@+id/phone_number"
+        app:layout_constraintBottom_toTopOf="@+id/text_last_message"
         app:layout_constraintEnd_toStartOf="@+id/text_last_message_date_time"
         app:layout_constraintStart_toEndOf="@+id/image_chat_icon"
         app:layout_constraintTop_toTopOf="parent"
@@ -77,7 +77,7 @@
         android:maxLines="2"
         android:textDirection="locale"
         app:layout_constraintEnd_toStartOf="@+id/layout_unread_messages_badge"
-        app:layout_constraintTop_toTopOf="@+id/contact_name"
+        app:layout_constraintTop_toTopOf="@+id/text_chat_name"
         tools:text="11:45 AM" />
 
     <include
@@ -86,6 +86,6 @@
         android:layout_width="18dp"
         android:layout_height="18dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/contact_name" />
+        app:layout_constraintTop_toTopOf="@+id/text_chat_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
