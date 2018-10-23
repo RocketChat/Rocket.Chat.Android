@@ -109,6 +109,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         subscribeUi()
 
         setupToolbar()
+        setupFab()
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
     }
@@ -180,6 +181,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 // to recreate the entire menu...
                 viewModel.showLastMessage = true
                 activity?.invalidateOptionsMenu()
+                create_new_channel_fab.isVisible = true
                 queryChatRoomsByName(null)
                 return true
             }
@@ -187,6 +189,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 viewModel.showLastMessage = false
                 sortView?.isVisible = false
+                create_new_channel_fab.isVisible = false
                 return true
             }
         }
@@ -353,5 +356,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             viewModel.setQuery(Query.Search(name!!))
         }
         return true
+    }
+
+    private fun setupFab() {
+        create_new_channel_fab.setOnClickListener {
+            showToast("fab click")
+        }
     }
 }

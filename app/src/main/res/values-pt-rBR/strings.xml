@@ -9,6 +9,7 @@
     <string name="title_authentication">Autenticação</string>
     <string name="title_legal_terms">Termos Legais</string>
     <string name="title_chats">Chats</string>
+    <string name="title_contacts">Contacts</string>
     <string name="title_profile">Perfil</string>
     <string name="title_members">Membros</string>
     <string name="title_counted_members">Membros (%d)</string>

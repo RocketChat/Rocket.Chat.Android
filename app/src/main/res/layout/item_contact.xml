@@ -19,20 +19,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:roundedCornerRadius="3dp" />
 
-    <ImageView
-        android:id="@+id/image_chat_icon"
-        android:layout_width="12dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/contact_name"
-        app:layout_constraintStart_toEndOf="@+id/image_avatar"
-        app:layout_constraintTop_toTopOf="@+id/contact_name"
-        tools:src="@drawable/ic_hashtag_unread_12dp" />
-
     <TextView
         android:id="@+id/phone_number"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/text_view_drawable_padding"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="2dp"
         android:layout_weight="0.8"
@@ -40,11 +31,10 @@
         android:maxLines="2"
         android:textDirection="locale"
         android:visibility="visible"
+        app:layout_constraintLeft_toRightOf="@id/image_avatar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/image_chat_icon"
         app:layout_constraintTop_toBottomOf="@+id/contact_name"
-        tools:text="Filipe de Lima Brito: Type something that is very big and need at least to lines, or maybe even more" />
+        tools:text="Phone number goes here" />
 
 
     <TextView
@@ -58,34 +48,8 @@
         android:maxLines="1"
         android:textDirection="locale"
         android:textColor="@color/colorSecondaryText"
-        app:layout_constraintBottom_toTopOf="@+id/phone_number"
-        app:layout_constraintEnd_toStartOf="@+id/text_last_message_date_time"
-        app:layout_constraintStart_toEndOf="@+id/image_chat_icon"
+        app:layout_constraintLeft_toRightOf="@id/image_avatar"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="general" />
-
-    <TextView
-        android:id="@+id/text_last_message_date_time"
-        style="@style/Timestamp.TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/layout_unread_messages_badge"
-        android:layout_marginTop="2dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textDirection="locale"
-        app:layout_constraintEnd_toStartOf="@+id/layout_unread_messages_badge"
-        app:layout_constraintTop_toTopOf="@+id/contact_name"
-        tools:text="11:45 AM" />
-
-    <include
-        android:id="@+id/layout_unread_messages_badge"
-        layout="@layout/unread_messages_badge"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/contact_name" />
+        tools:text="Name goes here" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

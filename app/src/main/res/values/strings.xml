@@ -21,6 +21,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_authentication">Authentication</string>
     <string name="title_legal_terms">Legal Terms</string>
     <string name="title_chats">Chats</string>
+    <string name="title_contacts">Contacts</string>
     <string name="title_profile">Profile</string>
     <string name="title_members">Members</string>
     <string name="title_counted_members">Members (%d)</string>
