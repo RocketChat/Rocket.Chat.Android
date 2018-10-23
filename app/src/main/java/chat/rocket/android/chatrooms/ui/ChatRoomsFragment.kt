@@ -30,9 +30,11 @@ import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModel
 import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModelFactory
 import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.chatrooms.viewmodel.Query
+import chat.rocket.android.contacts.ContactListFragment
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
+import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
@@ -359,8 +361,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     private fun setupFab() {
-        create_new_channel_fab.setOnClickListener {
-            showToast("fab click")
+        create_new_channel_fab.setOnClickListener { view ->
+            var mainActivity: MainActivity = activity as MainActivity
+            var contactsListFragment: ContactListFragment = ContactListFragment()
+            activity?.getSupportFragmentManager()?.beginTransaction()?.replace(this.id, contactsListFragment, "contactListFragment")?.addToBackStack(null)?.commit();
         }
     }
 }
