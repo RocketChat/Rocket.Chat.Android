@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.provider.ContactsContract
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -44,27 +45,28 @@ class ContactRecyclerViewAdapter(
 
     }
 
-    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         var contact: Contact? = null
         var status: String? = null
 
         var contactName: TextView
         var phoneNumber: TextView
+        var inviteButton: Button
 
         init {
-            this.view.setOnClickListener(this)
             this.contactName = view.findViewById(R.id.contact_name) as TextView
             this.phoneNumber = view.findViewById(R.id.phone_number) as TextView
-        }
+            this.inviteButton = view.findViewById(R.id.invite_contact) as Button
 
-        override fun onClick(view: View) {
-                Toast.makeText(
-                        context,
-                        "Contact was clicked: ${this.contact!!.getName()!!}",
-                        Toast.LENGTH_LONG
-                ).show()
-//            Handle the click on the contact
-
+            this.inviteButton.setOnClickListener { view ->
+                run {
+                    Toast.makeText(
+                            context,
+                            "Contact invite button was clicked: ${this.contact!!.getName()!!}",
+                            Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
         }
     }
 }

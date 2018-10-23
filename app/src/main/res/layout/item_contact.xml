@@ -52,4 +52,13 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Name goes here" />
 
+    <Button
+        android:id="@+id/invite_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="INVITE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/image_avatar"
+        tools:layout_editor_absoluteY="4dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
