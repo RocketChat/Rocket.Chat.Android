@@ -21,6 +21,10 @@ import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_authentication_on_boarding.*
 import javax.inject.Inject
 
+// WIDECHAT
+import chat.rocket.android.helper.Constants
+import kotlinx.android.synthetic.main.fragment_authentication_widechat_on_boarding.*
+
 fun newInstance() = OnBoardingFragment()
 
 class OnBoardingFragment : Fragment(), OnBoardingView {
@@ -29,26 +33,41 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
     @Inject
     lateinit var analyticsManager: AnalyticsManager
 
+    // WIDECHAT
+    private var auth_fragment: Int = R.layout.fragment_authentication_widechat_on_boarding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+
+        if (!Constants.WIDECHAT) {
+            auth_fragment = R.layout.fragment_authentication_on_boarding
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = container?.inflate(R.layout.fragment_authentication_on_boarding)
+    ): View? = container?.inflate(auth_fragment)
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
-        setupOnClickListener()
+
+        if (Constants.WIDECHAT) {
+            joinWidechatServer()
+        } else {
+            setupOnClickListener()
+        }
         analyticsManager.logScreenView(ScreenViewEvent.OnBoarding)
     }
 
     private fun setupToolbar() {
         with(activity as AuthenticationActivity) {
-            view?.let { this.setLightStatusBar(it) }
+            if (!Constants.WIDECHAT) {
+                view?.let { this.setLightStatusBar(it) }
+            }
             toolbar.isVisible = false
         }
     }
@@ -61,13 +80,21 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
 
     override fun showLoading() {
         ui {
-            view_loading.isVisible = true
+            if (Constants.WIDECHAT) {
+                widechat_view_loading.isVisible = true
+            } else {
+                view_loading.isVisible = true
+            }
         }
     }
 
     override fun hideLoading() {
         ui {
-            view_loading.isVisible = false
+            if (Constants.WIDECHAT) {
+                widechat_view_loading.isVisible = false
+            } else {
+                view_loading.isVisible = false
+            }
         }
     }
 
@@ -87,6 +114,12 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
 
     private fun signInToYourServer() = ui {
         presenter.toSignInToYourServer()
+    }
+
+    private fun joinWidechatServer() = ui {
+        presenter.connectToCommunityServer(
+                getString(R.string.default_protocol) + getString(R.string.widechat_server_url)
+        )
     }
 
     private fun joinInTheCommunity() = ui {

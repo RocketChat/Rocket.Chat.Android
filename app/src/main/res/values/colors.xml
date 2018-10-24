@@ -9,6 +9,7 @@
     <color name="colorPrimary">#008085</color>
     <color name="widechatStatusBar">#0E7075</color>
     <color name="widechat_fab">#00C1B7</color>
+    <color name="widechat_login_button">#08364A</color>
     <!-- End Widchat Colors -->
     <color name="colorAccent">#FF1D74F5</color>
 

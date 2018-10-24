@@ -8,7 +8,8 @@
 
     <include
         android:id="@+id/layout_app_bar"
-        layout="@layout/app_bar" />
+        layout="@layout/app_bar_widechat_auth"
+        />
 
     <FrameLayout
         android:id="@+id/fragment_container"

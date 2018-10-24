@@ -28,7 +28,7 @@
         <item name="android:paddingStart">@dimen/edit_text_margin</item>
         <item name="android:maxLines">1</item>
         <item name="android:drawablePadding">@dimen/edit_text_drawable_padding</item>
-        <item name="android:fontFamily">@fonts/font_fontFamily_widechat</item>
+        <item name="android:fontFamily">@string/font_fontFamily_widechat</item>
         <item name="android:textSize">24sp</item>
         <item name="android:lineSpacingExtra">4sp</item>
         <item name="android:textColor">@color/colorPrimary</item>
