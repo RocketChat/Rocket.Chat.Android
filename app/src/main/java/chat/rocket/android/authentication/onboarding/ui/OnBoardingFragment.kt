@@ -33,7 +33,7 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
     @Inject
     lateinit var analyticsManager: AnalyticsManager
 
-    // WIDECHAT
+    // WIDECHAT - replace the orignal RC onboarding screen with a blank loading screen while we by default sign in to our default server
     private var auth_fragment: Int = R.layout.fragment_authentication_widechat_on_boarding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +56,8 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
         setupToolbar()
 
         if (Constants.WIDECHAT) {
+            // WIDECHAT - this is where we bypass the original RC onboarding sequence,
+            // sign on to our server, and provide the login buttons inside LoginOptionsFragment.kt
             joinWidechatServer()
         } else {
             setupOnClickListener()

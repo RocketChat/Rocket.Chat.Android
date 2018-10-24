@@ -31,7 +31,6 @@ import kotlinx.android.synthetic.main.fragment_authentication_login_options.*
 import javax.inject.Inject
 
 // WIDECHAT
-import android.widget.ImageButton
 import chat.rocket.android.helper.Constants
 import kotlinx.android.synthetic.main.fragment_authentication_widechat_login_options.*
 
@@ -146,7 +145,7 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     private var isNewAccountCreationEnabled = false
     private var deepLinkInfo: LoginDeepLinkInfo? = null
 
-    // WIDECHAT
+    // WIDECHAT - replace the RC login screen with our welcome and login buttons view
     private var auth_fragment: Int = R.layout.fragment_authentication_widechat_login_options
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -356,8 +355,8 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
             customOauthUrl: String,
             state: String
     ) {
-        setupWidechatButtonListener(widechat_login_button, customOauthUrl, state, REQUEST_CODE_FOR_OAUTH)
-        setupWidechatButtonListener(widechat_signup_button, customOauthUrl, state, REQUEST_CODE_FOR_OAUTH)
+        setupButtonListener(widechat_login_button, customOauthUrl, state, REQUEST_CODE_FOR_OAUTH)
+        setupButtonListener(widechat_signup_button, customOauthUrl, state, REQUEST_CODE_FOR_OAUTH)
     }
 
     // Custom OAuth account.
@@ -483,31 +482,6 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     private fun enableAccountButton(button: Button) {
         ui {
             button.isClickable = true
-        }
-    }
-
-    private fun setupWidechatButtonListener(
-        button: Button,
-        accountUrl: String,
-        argument: String,
-        requestCode: Int
-        ) {
-        ui { activity ->
-            button.setOnClickListener {
-                when (requestCode) {
-                    REQUEST_CODE_FOR_OAUTH -> startActivityForResult(
-                            activity.oauthWebViewIntent(accountUrl, argument), REQUEST_CODE_FOR_OAUTH
-                    )
-                    REQUEST_CODE_FOR_CAS -> startActivityForResult(
-                            activity.ssoWebViewIntent(accountUrl, argument), REQUEST_CODE_FOR_CAS
-                    )
-                    REQUEST_CODE_FOR_SAML -> startActivityForResult(
-                            activity.ssoWebViewIntent(accountUrl, argument), REQUEST_CODE_FOR_SAML
-                    )
-                }
-
-                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
-            }
         }
     }
 

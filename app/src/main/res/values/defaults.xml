@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="default_protocol" translatable="false">https://</string>
-    <string name="server_hint_url" translatable="false">dev.veranda.viasat.io</string>
     <string name="widechat_server_url" translatable="false">dev.veranda.viasat.io</string>
     <string name="community_server_url" translatable="false">open.rocket.chat</string>
     <string name="create_server_url" translatable="false">cloud.rocket.chat/trial</string>
