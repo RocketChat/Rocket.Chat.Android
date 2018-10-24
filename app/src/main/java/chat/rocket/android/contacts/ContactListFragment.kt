@@ -65,12 +65,13 @@ class ContactListFragment : Fragment() {
                         contactHashMap[phoneNo] = "INDETERMINATE"
                     }
                     pCur.close()
-                    contactArrayList.sortWith(Comparator { o1, o2 -> o1.getName()!!.compareTo(o2.getName()!!)
-                    })
+
                 }
             }
         }
         cur?.close()
+        contactArrayList.sortWith(Comparator { o1, o2 -> o1.getName()!!.compareTo(o2.getName()!!)
+        })
     }
 
 
