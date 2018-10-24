@@ -2,6 +2,7 @@ package chat.rocket.android.chatrooms.ui
 
 import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -31,6 +32,8 @@ import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModelFactory
 import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.chatrooms.viewmodel.Query
 import chat.rocket.android.contacts.ContactListFragment
+import chat.rocket.android.contacts.ContactsFragment
+import chat.rocket.android.contacts.NewChatActivity
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
@@ -362,9 +365,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun setupFab() {
         create_new_channel_fab.setOnClickListener { view ->
-            var mainActivity: MainActivity = activity as MainActivity
-            var contactsListFragment: ContactListFragment = ContactListFragment()
-            activity?.getSupportFragmentManager()?.beginTransaction()?.replace(this.id, contactsListFragment, "contactListFragment")?.addToBackStack(null)?.commit();
+            val intent = Intent(this.activity, NewChatActivity::class.java)
+            startActivity(intent)
         }
+
     }
 }

@@ -7,8 +7,9 @@ import android.os.Parcelable
 class Contact() : Parcelable {
     private var id: Int = 0
     private var name: String? = null
-
     private var phoneNumber: String? = null
+    private var emailAddress: String? = null
+    private var isPhone: Boolean = true
 
     fun getName(): String? {
         return name
@@ -24,6 +25,19 @@ class Contact() : Parcelable {
 
     fun setPhoneNumber(phoneNumber: String) {
         this.phoneNumber = phoneNumber
+    }
+
+    fun getEmailAddress(): String? {
+        return emailAddress
+    }
+
+    fun setEmailAddress(emailAddress: String) {
+        this.emailAddress = emailAddress
+        this.isPhone = false
+    }
+
+    fun isPhone(): Boolean {
+        return this.isPhone
     }
 
     constructor(parcel: Parcel) : this() {

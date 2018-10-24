@@ -29,105 +29,22 @@ class ContactListFragment : Fragment() {
     /**
      * The list of contacts to load in the recycler view
      */
-    private var contactArrayList: ArrayList<Contact> = ArrayList()
+    private var contactArrayList: ArrayList<Contact?>? = null
 
     /**
      *  The mapping of contacts with their registration status
      */
     private var contactHashMap: HashMap<String, String> = HashMap()
 
-    private val MY_PERMISSIONS_REQUEST_RW_CONTACTS = 0
-
-    private fun getContactList() {
-        val cr = context!!.contentResolver
-        val cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
-
-        if ((cur?.count ?: 0) > 0) {
-            while (cur != null && cur.moveToNext()) {
-                val id = cur.getString(
-                        cur.getColumnIndex(ContactsContract.Contacts._ID))
-                val name = cur.getString(cur.getColumnIndex(
-                        ContactsContract.Contacts.DISPLAY_NAME))
-
-                if (cur.getInt(cur.getColumnIndex(
-                                ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-                    val pCur = cr.query(
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                            arrayOf<String>(id), null)
-                    while (pCur!!.moveToNext()) {
-                        val phoneNo = pCur.getString(pCur.getColumnIndex(
-                                ContactsContract.CommonDataKinds.Phone.NUMBER))
-                        val contact: Contact = Contact()
-                        contact.setName(name)
-                        contact.setPhoneNumber(phoneNo)
-                        contactArrayList.add(contact)
-                        contactHashMap[phoneNo] = "INDETERMINATE"
-                    }
-                    pCur.close()
-
-                }
-            }
-        }
-        cur?.close()
-        contactArrayList.sortWith(Comparator { o1, o2 -> o1.getName()!!.compareTo(o2.getName()!!)
-        })
-    }
-
-
-    private fun setupToolbar() {
-        (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_contacts)
-    }
-
-    private fun populateContacts(actualContacts: Boolean) {
-        if (actualContacts) {
-            getContactList()
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<String>,
-            grantResults: IntArray
-    ) {
-        when (requestCode) {
-            MY_PERMISSIONS_REQUEST_RW_CONTACTS -> {
-                if (
-                        grantResults.isNotEmpty()
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[1] == PackageManager.PERMISSION_GRANTED
-                ) {
-                    // Permission granted
-                    populateContacts(true)
-                } else {
-                    populateContacts(false)
-                }
-                return
-            }
-            else -> {
-                // Ignore all other requests.
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (
-                ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED
-        ) {
-            populateContacts(true)
-        } else {
-            ActivityCompat.requestPermissions(
-                    this.activity as Activity,
-                    arrayOf(
-                            Manifest.permission.READ_CONTACTS,
-                            Manifest.permission.WRITE_CONTACTS
-                    ),
-                    MY_PERMISSIONS_REQUEST_RW_CONTACTS
-            )
+        val bundle = arguments
+        if (bundle != null) {
+            contactArrayList = bundle.getParcelableArrayList("CONTACT_ARRAY_LIST")
+            contactHashMap= bundle.getSerializable("CONTACT_HASH_MAP") as HashMap<String, String>
         }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -137,7 +54,7 @@ class ContactListFragment : Fragment() {
         val recyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         val emptyTextView = view.findViewById(R.id.text_no_data_to_display) as TextView
 
-        if (contactArrayList.size == 0) {
+        if (contactArrayList!!.size == 0) {
             emptyTextView.visibility = View.VISIBLE
             recyclerView.visibility = View.GONE
         } else {
@@ -146,9 +63,8 @@ class ContactListFragment : Fragment() {
 
             recyclerView.setHasFixedSize(true)
             recyclerView.layoutManager = LinearLayoutManager(context)
-            recyclerView.adapter = ContactRecyclerViewAdapter(context, contactArrayList, contactHashMap)
+            recyclerView.adapter = ContactRecyclerViewAdapter(context, contactArrayList!!, contactHashMap)
         }
-        setupToolbar()
 
         return view
     }

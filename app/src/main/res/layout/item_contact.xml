@@ -20,7 +20,7 @@
         app:roundedCornerRadius="3dp" />
 
     <TextView
-        android:id="@+id/phone_number"
+        android:id="@+id/contact_detail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/text_view_drawable_padding"

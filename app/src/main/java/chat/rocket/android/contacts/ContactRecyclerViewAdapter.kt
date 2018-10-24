@@ -4,7 +4,6 @@ import android.content.Context
 import timber.log.Timber
 import android.view.LayoutInflater
 import android.view.View
-import android.provider.ContactsContract
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
@@ -12,13 +11,12 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.contacts.models.Contact
-import com.facebook.drawee.view.DraweeView
 import java.util.*
 import kotlin.collections.HashMap
 
 class ContactRecyclerViewAdapter(
         private val context: Context,
-        private val contactArrayList: ArrayList<Contact>,
+        private val contactArrayList: ArrayList<Contact?>,
         private val contactHashMap: HashMap<String, String>
 ) : RecyclerView.Adapter<ContactRecyclerViewAdapter.ViewHolder>() {
 
@@ -38,7 +36,11 @@ class ContactRecyclerViewAdapter(
         holder.status = contactHashMap.get(holder.contact!!.getPhoneNumber())
         try {
             holder.contactName.text = holder.contact!!.getName()
-            holder.phoneNumber.text = holder.contact!!.getPhoneNumber()
+            if (holder.contact!!.isPhone()) {
+                holder.contactDetail.text = holder.contact!!.getPhoneNumber()
+            } else {
+                holder.contactDetail.text = holder.contact!!.getEmailAddress()
+            }
         } catch (exception: NullPointerException) {
             Timber.e("Failed to send resolution. Exception is: $exception")
         }
@@ -50,20 +52,20 @@ class ContactRecyclerViewAdapter(
         var status: String? = null
 
         var contactName: TextView
-        var phoneNumber: TextView
+        var contactDetail: TextView
         var inviteButton: Button
 
         init {
             this.contactName = view.findViewById(R.id.contact_name) as TextView
-            this.phoneNumber = view.findViewById(R.id.phone_number) as TextView
+            this.contactDetail = view.findViewById(R.id.contact_detail) as TextView
             this.inviteButton = view.findViewById(R.id.invite_contact) as Button
 
             this.inviteButton.setOnClickListener { view ->
                 run {
                     Toast.makeText(
                             context,
-                            "Contact invite button was clicked: ${this.contact!!.getName()!!}",
-                            Toast.LENGTH_LONG
+                            "${contact!!.getName()!!}: ${contactDetail.text}",
+                            Toast.LENGTH_SHORT
                     ).show()
                 }
             }

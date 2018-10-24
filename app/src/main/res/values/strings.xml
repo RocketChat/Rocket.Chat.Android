@@ -21,7 +21,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_authentication">Authentication</string>
     <string name="title_legal_terms">Legal Terms</string>
     <string name="title_chats">Chats</string>
-    <string name="title_contacts">Contacts</string>
+    <string name="title_contacts">New Chat</string>
     <string name="title_profile">Profile</string>
     <string name="title_members">Members</string>
     <string name="title_counted_members">Members (%d)</string>
@@ -178,7 +178,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_delete_description">Are you sure you want to delete this message</string>
     <string name="msg_view_more">view more</string>
     <string name="msg_view_less">view less</string>
-    
+
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string>
     <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string>
