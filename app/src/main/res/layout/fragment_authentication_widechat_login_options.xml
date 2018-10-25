@@ -9,9 +9,8 @@
     <TextView
         android:id="@+id/text_widechat_on_boarding_title"
         style="@style/Authentication.TextView.Headline"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
         android:layout_marginBottom="24dp"
         android:gravity="left"
         android:text="@string/msg_welcome_to_widechat"
