@@ -1,5 +1,7 @@
 package chat.rocket.android.main.ui
 
+import android.app.AlertDialog
+import android.content.Context
 import android.view.Menu
 import android.view.MenuItem
 import chat.rocket.android.R
@@ -64,6 +66,6 @@ internal fun MainActivity.onNavDrawerItemSelected(menuItem: MenuItem) {
         R.id.menu_action_profile -> presenter.toUserProfile()
         R.id.menu_action_settings -> presenter.toSettings()
         R.id.menu_action_admin_panel -> presenter.toAdminPanel()
-        R.id.menu_action_logout -> presenter.showLogoutDialog(this)
+        R.id.menu_action_logout -> showLogoutDialog()
     }
 }

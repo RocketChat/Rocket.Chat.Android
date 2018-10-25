@@ -164,14 +164,6 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    fun showLogoutDialog(context: Context) {
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle(R.string.action_logout)
-        builder.setMessage(R.string.title_confirmation)
-        builder.setPositiveButton(R.string.action_logout) { _, _ -> logout()}
-            .setNegativeButton(R.string.action_stay) { dialog, _ -> dialog.cancel() }
-        builder.create().show()
-    }
     /**
      * Logout from current server.
      */
