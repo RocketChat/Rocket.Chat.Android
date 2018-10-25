@@ -46,6 +46,6 @@ class NewChatActivity : AppCompatActivity() {
 
     private fun finishActivity() {
         super.onBackPressed()
-        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right)
+        overridePendingTransition(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom)
     }
 }

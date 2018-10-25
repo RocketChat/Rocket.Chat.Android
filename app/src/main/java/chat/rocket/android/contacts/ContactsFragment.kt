@@ -258,8 +258,9 @@ class ContactsFragment : Fragment() {
 
         createNewChannelLink = view.findViewById(R.id.create_new_channel_button)
         createNewChannelLink!!.setOnClickListener {
-            val createChannelFragment = CreateChannelFragment()
-            activity?.supportFragmentManager?.beginTransaction()?.replace(this.id, createChannelFragment, "createChannelFragment")?.addToBackStack(null)?.commit();
+//            val createChannelFragment = CreateChannelFragment()
+//            activity?.supportFragmentManager?.beginTransaction()?.replace(this.id, createChannelFragment, "createChannelFragment")?.addToBackStack(null)?.commit();
+            showToast("Clicked")
         }
 
         return view
