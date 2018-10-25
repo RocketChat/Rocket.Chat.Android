@@ -1,6 +1,5 @@
 package chat.rocket.android.main.presentation
 
-import android.app.AlertDialog
 import android.content.Context
 import chat.rocket.android.R
 import chat.rocket.android.core.lifecycle.CancelStrategy

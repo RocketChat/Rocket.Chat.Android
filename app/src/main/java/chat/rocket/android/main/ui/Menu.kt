@@ -1,7 +1,5 @@
 package chat.rocket.android.main.ui
 
-import android.app.AlertDialog
-import android.content.Context
 import android.view.Menu
 import android.view.MenuItem
 import chat.rocket.android.R
