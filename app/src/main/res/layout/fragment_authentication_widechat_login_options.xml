@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/widechat_green_gradient"
-    android:padding="@dimen/screen_edge_left_and_right_margins"
     tools:context="authentication.onboarding.ui.OnBoardingFragment">
 
     <TextView
