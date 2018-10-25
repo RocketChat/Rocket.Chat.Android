@@ -303,4 +303,9 @@
     <string name="message_information_title">Информация о прочтении</string>
     <string name="msg_log_out">Выходим…</string>
     <string name="message_room_changed_privacy">Тип канала изменен на: %1$s пользователем %2$s</string>
+
+    <!-- WIDECHAT -->
+    <string name="msg_welcome_to_widechat">Welcome to Viasat Connect</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="log_in">Log In</string>
 </resources>

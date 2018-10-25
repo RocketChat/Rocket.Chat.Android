@@ -307,4 +307,9 @@
     <string name="message_information_title">संदेश की जानकारी</string>
     <string name="msg_log_out">लॉग आउट कर रहा हूं…</string>
     <string name="message_room_changed_privacy">%2$s ने रूम का प्रकार बदलकर %1$s किया </string>
+
+    <!-- WIDECHAT -->
+    <string name="msg_welcome_to_widechat">Welcome to Viasat Connect</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="log_in">Log In</string>
 </resources>
