@@ -1,10 +1,13 @@
 version: 2
+build:
+  machine:
+    java: oraclejdk8
 jobs:
   build-kotlin-sdk:
     docker:
       - image: circleci/android:api-27-alpha
     environment:
-      JVM_OPTS: -Xmx3200m
+      JAVA_TOOL_OPTIONS: -Xmx3200m
     steps:
       - checkout
       - run:
@@ -37,7 +40,10 @@ jobs:
       - checkout
       - run:
           name: ANDROID_HOME
-          command: echo "sdk.dir="$ANDROID_HOME > local.properties 
+          command: echo "sdk.dir="$ANDROID_HOME > local.properties
+      - run:
+          name: Accept licenses
+          command: echo y | $ANDROID_HOME/tools/android update sdk --no-ui --all --filter build-tools-28.0.3,android-28
       - run:
           name: checkout Rocket.Chat.Kotlin.SDK
           command: git clone https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK.git ../Rocket.Chat.Kotlin.SDK
@@ -66,11 +72,17 @@ jobs:
           destination: reports
   build-play-apk:
     docker:
-      - image: circleci/android:api-27-alpha
+      - image: circleci/android:api-28-alpha
     environment:
       JVM_OPTS: -Xmx3200m
     steps:
       - checkout
+      - run:
+          name: ANDROID_HOME
+          command: echo "sdk.dir="$ANDROID_HOME > local.properties
+      - run:
+          name: Accept licenses
+          command: echo y | $ANDROID_HOME/tools/android update sdk --no-ui --all --filter build-tools-28.0.3,android-28
       - run:
           name: restore files from ENV
           command: |
@@ -104,6 +116,12 @@ jobs:
       JVM_OPTS: -Xmx3200m
     steps:
       - checkout
+      - run:
+          name: ANDROID_HOME
+          command: echo "sdk.dir="$ANDROID_HOME > local.properties
+      - run:
+          name: Accept licenses
+          command: echo y | $ANDROID_HOME/tools/android update sdk --no-ui --all --filter build-tools-28.0.3,android-28
       - run:
           name: restore files from ENV
           command: |
