@@ -30,6 +30,10 @@ import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_authentication_login_options.*
 import javax.inject.Inject
 
+// WIDECHAT
+import chat.rocket.android.helper.Constants
+import kotlinx.android.synthetic.main.fragment_authentication_widechat_login_options.*
+
 private const val SERVER_NAME = "server_name"
 private const val STATE = "state"
 private const val FACEBOOK_OAUTH_URL = "facebook_oauth_url"
@@ -141,9 +145,16 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     private var isNewAccountCreationEnabled = false
     private var deepLinkInfo: LoginDeepLinkInfo? = null
 
+    // WIDECHAT - replace the RC login screen with our welcome and login buttons view
+    private var auth_fragment: Int = R.layout.fragment_authentication_widechat_login_options
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+
+        if (!Constants.WIDECHAT) {
+            auth_fragment = R.layout.fragment_authentication_login_options
+        }
 
         val bundle = arguments
         if (bundle != null) {
@@ -177,7 +188,7 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = container?.inflate(R.layout.fragment_authentication_login_options)
+    ): View? = container?.inflate(auth_fragment)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -189,19 +200,28 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
 
     private fun setupToolbar() {
         with(activity as AuthenticationActivity) {
-            this.clearLightStatusBar()
             toolbar.isVisible = true
-            toolbar.title = serverName?.replace(getString(R.string.default_protocol), "")
+            if (Constants.WIDECHAT) {
+                toolbar.title = null
+                toolbar.navigationIcon = null
+            } else {
+                this.clearLightStatusBar()
+                toolbar.title = serverName?.replace(getString(R.string.default_protocol), "")
+            }
         }
     }
 
     private fun setupAccounts() {
-        setupSocialAccounts()
-        setupCas()
-        setupCustomOauth()
-        setupSaml()
-        setupLoginWithEmailView()
-        setupCreateNewAccountView()
+        if (Constants.WIDECHAT) {
+            setupCustomOauth()
+        } else {
+            setupSocialAccounts()
+            setupCas()
+            setupCustomOauth()
+            setupSaml()
+            setupLoginWithEmailView()
+            setupCreateNewAccountView()
+        }
     }
 
     private fun setupSocialAccounts() {
@@ -253,13 +273,20 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
 
     private fun setupCustomOauth() {
         if (customOauthUrl != null && state != null && customOauthServiceName != null) {
-            addCustomOauthButton(
-                customOauthUrl.toString(),
-                state.toString(),
-                customOauthServiceName.toString(),
-                customOauthServiceTextColor,
-                customOauthServiceButtonColor
-            )
+            if (Constants.WIDECHAT) {
+                addWidechatOauthButtons(
+                    customOauthUrl.toString(),
+                    state.toString()
+                )
+            } else {
+                addCustomOauthButton(
+                    customOauthUrl.toString(),
+                    state.toString(),
+                    customOauthServiceName.toString(),
+                    customOauthServiceTextColor,
+                    customOauthServiceButtonColor
+                )
+            }
         }
     }
 
@@ -323,6 +350,14 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
 
     override fun setupCasButtonListener(casUrl: String, casToken: String) =
         setupButtonListener(button_cas, casUrl, casToken, REQUEST_CODE_FOR_CAS)
+
+    private fun addWidechatOauthButtons(
+            customOauthUrl: String,
+            state: String
+    ) {
+        setupButtonListener(widechat_login_button, customOauthUrl, state, REQUEST_CODE_FOR_OAUTH)
+        setupButtonListener(widechat_signup_button, customOauthUrl, state, REQUEST_CODE_FOR_OAUTH)
+    }
 
     // Custom OAuth account.
     override fun addCustomOauthButton(
@@ -410,13 +445,21 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
 
     override fun showLoading() {
         ui {
-            view_loading.isVisible = true
+            if (Constants.WIDECHAT) {
+                widechat_view_loading.isVisible = true
+            } else {
+                view_loading.isVisible = true
+            }
         }
     }
 
     override fun hideLoading() {
         ui {
-            view_loading.isVisible = false
+            if (Constants.WIDECHAT) {
+                widechat_view_loading.isVisible = false
+            } else {
+                view_loading.isVisible = false
+            }
         }
     }
 

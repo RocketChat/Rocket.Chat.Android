@@ -322,4 +322,10 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 
     <string name="foss" tools:ignore="MissingTranslation">(FOSS)</string>
+
+    <!-- WIDECHAT -->
+    <string name="msg_welcome_to_widechat">Welcome to Viasat Connect</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="log_in">Log In</string>
+
 </resources>

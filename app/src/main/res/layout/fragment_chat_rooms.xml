@@ -66,5 +66,5 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
         android:src="@drawable/ic_add_white_24dp"
-        app:backgroundTint="@color/widechat_fab" />
+        app:backgroundTint="@color/widechatFab" />
 </RelativeLayout>
