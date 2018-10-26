@@ -7,6 +7,19 @@
     android:padding="@dimen/screen_edge_left_and_right_margins"
     tools:context="authentication.onboarding.ui.OnBoardingFragment">
 
+    <TextView
+        android:id="@+id/text_widechat_loading"
+        style="@style/Authentication.TextView.Headline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:gravity="left"
+        android:text="Connecting to your server.."
+        android:textColor="@color/colorWhite"
+        android:autoSizeTextType="uniform"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/widechat_view_loading"/>
+
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/widechat_view_loading"
         style="@style/Authentication.AVLoadingIndicatorView"
