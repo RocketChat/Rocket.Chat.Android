@@ -6,19 +6,6 @@
     android:background="@drawable/widechat_green_gradient"
     tools:context="authentication.onboarding.ui.OnBoardingFragment">
 
-    <TextView
-        android:id="@+id/text_widechat_on_boarding_title"
-        style="@style/Authentication.TextView.Headline"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:gravity="left"
-        android:text="@string/msg_welcome_to_widechat"
-        android:textColor="@color/colorWhite"
-        android:autoSizeTextType="uniform"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/widechat_login_button_container" />
-
     <LinearLayout
         android:id="@+id/widechat_login_button_container"
         android:layout_width="match_parent"
@@ -51,6 +38,19 @@
             android:text="@string/sign_up"
             android:textColor="@color/colorWhite"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_widechat_on_boarding_title"
+        style="@style/Authentication.TextView.Headline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:gravity="left"
+        android:text="@string/msg_welcome_to_widechat"
+        android:textColor="@color/colorWhite"
+        android:autoSizeTextType="uniform"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/widechat_login_button_container" />
 
     <ImageView
         android:id="@+id/image_widechat_on_boarding"
