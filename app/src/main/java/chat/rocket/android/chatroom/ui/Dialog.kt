@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import chat.rocket.android.emoji.internal.GlideApp
 import chat.rocket.android.util.extensions.getFileName
 import chat.rocket.android.util.extensions.getMimeType
+import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 
@@ -21,22 +22,32 @@ fun ChatRoomFragment.showFileAttachmentDialog(uri: Uri) {
             description.text.clear()
             when {
                 mimeType.startsWith("image") -> {
-                    GlideApp
-                        .with(context)
-                        .asBitmap()
-                        .load(uri)
-                        .override(imagePreview.width, imagePreview.height)
-                        .fitCenter()
-                        .into(object : SimpleTarget<Bitmap>() {
-                            override fun onResourceReady(
-                                resource: Bitmap,
-                                transition: Transition<in Bitmap>?
-                            ) {
-                                bitmap = resource
-                                imagePreview.setImageBitmap(resource)
-                                imagePreview.isVisible = true
-                            }
-                        })
+                    if (mimeType.contains("gif")) {
+                        GlideApp
+                            .with(context)
+                            .asGif()
+                            .load(uri)
+                            .override(imagePreview.width, imagePreview.height)
+                            .fitCenter()
+                            .into(imagePreview)
+                    } else {
+                        GlideApp
+                            .with(context)
+                            .asBitmap()
+                            .load(uri)
+                            .override(imagePreview.width, imagePreview.height)
+                            .fitCenter()
+                            .into(object : SimpleTarget<Bitmap>() {
+                                override fun onResourceReady(
+                                    resource: Bitmap,
+                                    transition: Transition<in Bitmap>?
+                                ) {
+                                    bitmap = resource
+                                    imagePreview.setImageBitmap(resource)
+                                }
+                            })
+                    }
+                    imagePreview.isVisible = true
                 }
                 mimeType.startsWith("video") -> audioVideoAttachment.isVisible = true
                 else -> {
