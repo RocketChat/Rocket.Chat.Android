@@ -43,6 +43,7 @@ class MembersAdapter(private val listener: (MemberUiModel) -> Unit) :
         fun bind(memberUiModel: MemberUiModel, listener: (MemberUiModel) -> Unit) = with(itemView) {
             image_avatar.setImageURI(memberUiModel.avatarUri)
             text_member.content = memberUiModel.displayName
+            text_member.setCompoundDrawablesRelativeWithIntrinsicBounds(DrawableHelper.getUserStatusDrawable(memberUiModel.status, context), null, null, null)
             setOnClickListener { listener(memberUiModel) }
         }
     }

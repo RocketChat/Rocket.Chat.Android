@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
-    android:paddingBottom="@dimen/member_item_top_and_bottom_padding"
-    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
     android:paddingStart="@dimen/screen_edge_left_and_right_padding"
-    android:paddingTop="@dimen/member_item_top_and_bottom_padding">
+    android:paddingTop="@dimen/member_item_top_and_bottom_padding"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+    android:paddingBottom="@dimen/member_item_top_and_bottom_padding">
 
     <include
         android:id="@+id/layout_avatar"
@@ -24,9 +24,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:drawablePadding="@dimen/text_view_drawable_padding"
         app:layout_constraintBottom_toBottomOf="@+id/layout_avatar"
         app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
         app:layout_constraintTop_toTopOf="@+id/layout_avatar"
+        tools:drawableStart="@drawable/ic_status_invisible_12dp"
         tools:text="Ronald Perkins" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
