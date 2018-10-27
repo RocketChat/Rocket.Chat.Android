@@ -42,27 +42,28 @@ class RoomUiModelMapper(
         userInteractor.get()
     }
 
-    fun map(rooms: List<ChatRoom>, grouped: Boolean = false): List<ItemHolder<*>> {
+    fun map(rooms: List<ChatRoom>, grouped: Boolean = false, showLastMessage: Boolean = true): List<ItemHolder<*>> {
         val list = ArrayList<ItemHolder<*>>(rooms.size + 4)
         var lastType: String? = null
         rooms.forEach { room ->
             if (grouped && lastType != room.chatRoom.type) {
                 list.add(HeaderItemHolder(roomType(room.chatRoom.type)))
             }
-            list.add(RoomItemHolder(map(room)))
+            list.add(RoomItemHolder(map(room, showLastMessage)))
             lastType = room.chatRoom.type
         }
 
         return list
     }
 
-    fun map(spotlight: SpotlightResult): List<ItemHolder<*>> {
+    fun map(spotlight: SpotlightResult, showLastMessage: Boolean = true): List<ItemHolder<*>> {
+
         val list = ArrayList<ItemHolder<*>>(spotlight.users.size + spotlight.rooms.size)
         spotlight.users.filterNot { it.username.isNullOrEmpty() }.forEach { user ->
             list.add(RoomItemHolder(mapUser(user)))
         }
         spotlight.rooms.filterNot { it.name.isNullOrEmpty() }.forEach { room ->
-            list.add(RoomItemHolder(mapRoom(room)))
+            list.add(RoomItemHolder(mapRoom(room, showLastMessage)))
         }
 
         return list
@@ -86,21 +87,21 @@ class RoomUiModelMapper(
         }
     }
 
-    private fun mapRoom(room: Room): RoomUiModel {
+    private fun mapRoom(room: Room, showLastMessage:Boolean = true): RoomUiModel {
         return with(room) {
             RoomUiModel(
                 id = id,
                 name = name!!,
                 type = type,
                 avatar = serverUrl.avatarUrl(name!!, isGroupOrChannel = true),
-                lastMessage = mapLastMessage(lastMessage?.sender?.id, lastMessage?.sender?.username,
+                lastMessage = if(showLastMessage) { mapLastMessage(lastMessage?.sender?.id, lastMessage?.sender?.username,
                         lastMessage?.sender?.name, lastMessage?.message,
-                        isDirectMessage = type is RoomType.DirectMessage)
+                        isDirectMessage = type is RoomType.DirectMessage)} else { null }
             )
         }
     }
 
-    fun map(chatRoom: ChatRoom): RoomUiModel {
+    fun map(chatRoom: ChatRoom, showLastMessage:Boolean = true): RoomUiModel {
         return with(chatRoom.chatRoom) {
             val isUnread = alert || unread > 0
             val type = roomTypeOf(type)
@@ -113,9 +114,9 @@ class RoomUiModelMapper(
                 serverUrl.avatarUrl(name, isGroupOrChannel = true)
             }
             val unread = mapUnread(unread)
-            val lastMessage = mapLastMessage(lastMessageUserId, chatRoom.lastMessageUserName,
+            val lastMessage = if(showLastMessage) { mapLastMessage(lastMessageUserId, chatRoom.lastMessageUserName,
                     chatRoom.lastMessageUserFullName, lastMessageText, isUnread,
-                    type is RoomType.DirectMessage)
+                    type is RoomType.DirectMessage) } else { null }
             val open = open
 
             RoomUiModel(
@@ -148,6 +149,7 @@ class RoomUiModelMapper(
     private fun mapLastMessage(userId: String?, name: String?, fullName: String?, text: String?,
                                unread: Boolean = false,
                                isDirectMessage: Boolean = false): CharSequence? {
+
         return if (!settings.showLastMessage()) {
             null
         } else if (name != null && text != null) {
