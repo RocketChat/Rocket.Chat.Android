@@ -24,21 +24,30 @@ fun ChatRoomFragment.showFileAttachmentDialog(uri: Uri) {
             description.text.clear()
             when {
                 mimeType.startsWith("image") -> {
-                    GlideApp
-                        .with(context)
-                        .asBitmap()
-                        .load(uri)
-                        .fitCenter()
-                        .into(object : SimpleTarget<Bitmap>() {
-                            override fun onResourceReady(
-                                resource: Bitmap,
-                                transition: Transition<in Bitmap>?
-                            ) {
-                                bitmap = resource
-                                imagePreview.setImageBitmap(resource)
-                                imagePreview.isVisible = true
-                            }
-                        })
+                    if (mimeType.contains("gif")) {
+                        GlideApp
+                            .with(context)
+                            .asGif()
+                            .load(uri)
+                            .fitCenter()
+                            .into(imagePreview)
+                    } else {
+                        GlideApp
+                            .with(context)
+                            .asBitmap()
+                            .load(uri)
+                            .fitCenter()
+                            .into(object : SimpleTarget<Bitmap>() {
+                                override fun onResourceReady(
+                                    resource: Bitmap,
+                                    transition: Transition<in Bitmap>?
+                                ) {
+                                    bitmap = resource
+                                    imagePreview.setImageBitmap(resource)
+                                }
+                            })
+                    }
+                    imagePreview.isVisible = true
                 }
                 mimeType.startsWith("video") -> audioVideoAttachment.isVisible = true
                 else -> {

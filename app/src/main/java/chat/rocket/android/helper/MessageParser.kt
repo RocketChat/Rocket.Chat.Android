@@ -13,7 +13,6 @@ import android.text.style.ReplacementSpan
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.util.PatternsCompat
-import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.StrikethroughDelimiterProcessor
 import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiRepository
@@ -32,6 +31,7 @@ import org.commonmark.node.Emphasis
 import org.commonmark.node.ListItem
 import org.commonmark.node.Node
 import org.commonmark.node.OrderedList
+import org.commonmark.node.SoftLineBreak
 import org.commonmark.node.StrongEmphasis
 import org.commonmark.parser.Parser
 import ru.noties.markwon.SpannableBuilder
@@ -218,6 +218,11 @@ class MessageParser @Inject constructor(
             if (builder.isNotEmpty() && '\n' != builder.lastChar()) {
                 builder.append('\n')
             }
+        }
+
+        override fun visit(softLineBreak: SoftLineBreak) {
+            super.visit(softLineBreak)
+            builder.append("\n")
         }
     }
 
