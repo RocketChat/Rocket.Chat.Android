@@ -20,7 +20,8 @@ data class ColorAttachmentUiModel(
     override var unread: Boolean?,
     override var menuItemsToHide: MutableList<Int> = mutableListOf(),
     override var currentDayMarkerText: String,
-    override var showDayMarker: Boolean
+    override var showDayMarker: Boolean,
+    override var permalink: String
 ) : BaseAttachmentUiModel<ColorAttachment> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.COLOR_ATTACHMENT.viewType

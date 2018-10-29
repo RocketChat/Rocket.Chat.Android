@@ -19,7 +19,8 @@ data class MessageAttachmentUiModel(
     override var unread: Boolean? = null,
     override var menuItemsToHide: MutableList<Int> = mutableListOf(),
     override var currentDayMarkerText: String,
-    override var showDayMarker: Boolean
+    override var showDayMarker: Boolean,
+    override var permalink: String
 ) : BaseUiModel<Message> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.MESSAGE_ATTACHMENT.viewType

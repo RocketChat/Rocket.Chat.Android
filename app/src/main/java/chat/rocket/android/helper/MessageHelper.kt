@@ -17,7 +17,7 @@ class MessageHelper @Inject constructor(
     private val currentServer = serverInteractor.get()!!
     private val settings: PublicSettings = getSettingsInteractor.get(currentServer)
 
-    fun createPermalink(message: Message, chatRoom: ChatRoom): String {
+    fun createPermalink(message: Message, chatRoom: ChatRoom, markdownSyntax: Boolean = true): String {
         val type = when (chatRoom.type) {
             is RoomType.PrivateGroup -> "group"
             is RoomType.Channel -> "channel"
@@ -30,7 +30,8 @@ class MessageHelper @Inject constructor(
         } else {
             chatRoom.name
         }
-        return "[ ]($currentServer/$type/$name?msg=${message.id}) "
+        val permalink = "$currentServer/$type/$name?msg=${message.id}"
+        return if (markdownSyntax) "[ ]($permalink) " else permalink
     }
 
     fun messageIdFromPermalink(permalink: String): String? {
