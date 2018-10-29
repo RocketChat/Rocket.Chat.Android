@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter.PeopleSuggestionViewHolder
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.suggestions.model.SuggestionModel
 import chat.rocket.android.suggestions.ui.BaseSuggestionViewHolder
 import chat.rocket.android.suggestions.ui.SuggestionsAdapter
@@ -58,9 +58,9 @@ class PeopleSuggestionsAdapter(context: Context) : SuggestionsAdapter<PeopleSugg
                 username.text = item.username
                 name.text = item.name
                 if (item.imageUri?.isEmpty() != false) {
-                    avatar.setVisible(false)
+                    avatar.isVisible = false
                 } else {
-                    avatar.setVisible(true)
+                    avatar.isVisible = true
                     avatar.setImageURI(item.imageUri)
                 }
                 val status = item.status
@@ -68,7 +68,7 @@ class PeopleSuggestionsAdapter(context: Context) : SuggestionsAdapter<PeopleSugg
                     val statusDrawable = DrawableHelper.getUserStatusDrawable(status, itemView.context)
                     statusView.setImageDrawable(statusDrawable)
                 } else {
-                    statusView.setVisible(false)
+                    statusView.isVisible = false
                 }
                 setOnClickListener {
                     itemClickListener?.onClick(item)
