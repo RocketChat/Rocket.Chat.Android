@@ -200,6 +200,8 @@
     <string name="action_msg_share">Paylaş</string>
     <string name="action_title_editing">Mesaj Düzenleniyor</string>
     <string name="action_msg_add_reaction">Tepki Ekle</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_copy_permalink">Copy permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Düzenlemeye izin verilmiyor</string>

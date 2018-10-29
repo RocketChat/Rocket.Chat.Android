@@ -15,7 +15,7 @@
     <item
         android:id="@+id/action_message_permalink"
         android:icon="@drawable/ic_action_message_reply_24dp"
-        android:title="@string/action_msg_permalink" />
+        android:title="@string/action_msg_copy_permalink" />
 
     <item
         android:id="@+id/action_message_quote"

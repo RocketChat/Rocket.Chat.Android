@@ -195,6 +195,7 @@
     <string name="action_msg_share">Compartir</string>
     <string name="action_title_editing">Edición de mensaje</string>
     <string name="action_msg_add_reaction">Añadir una reacción</string>
+    <string name="action_msg_copy_permalink">Copiar permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">La edición no és permitida</string>

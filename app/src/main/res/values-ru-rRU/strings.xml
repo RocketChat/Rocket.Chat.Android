@@ -196,6 +196,8 @@
     <string name="action_msg_share">Поделиться</string>
     <string name="action_title_editing">Редактирование сообщения</string>
     <string name="action_msg_add_reaction">Отреагировать</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_copy_permalink">Copy permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редактирование запрещено</string>
