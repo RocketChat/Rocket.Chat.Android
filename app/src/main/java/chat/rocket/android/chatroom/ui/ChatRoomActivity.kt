@@ -21,9 +21,6 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import javax.inject.Inject
 
-// WIDECHAT
-import android.view.MenuItem
-
 fun Context.chatRoomIntent(
     chatRoomId: String,
     chatRoomName: String,
