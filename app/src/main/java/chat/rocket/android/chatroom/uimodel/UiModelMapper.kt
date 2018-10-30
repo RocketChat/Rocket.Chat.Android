@@ -39,16 +39,7 @@ import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
 import chat.rocket.core.model.ReadReceipt
 import chat.rocket.core.model.attachment.Attachment
-import chat.rocket.core.model.attachment.AudioAttachment
-import chat.rocket.core.model.attachment.AuthorAttachment
-import chat.rocket.core.model.attachment.ColorAttachment
 import chat.rocket.core.model.attachment.Field
-import chat.rocket.core.model.attachment.FileAttachment
-import chat.rocket.core.model.attachment.GenericFileAttachment
-import chat.rocket.core.model.attachment.ImageAttachment
-import chat.rocket.core.model.attachment.MessageAttachment
-import chat.rocket.core.model.attachment.VideoAttachment
-import chat.rocket.core.model.attachment.actions.ActionsAttachment
 import chat.rocket.core.model.isSystemMessage
 import chat.rocket.core.model.url.Url
 import kotlinx.coroutines.experimental.CommonPool
@@ -304,17 +295,60 @@ class UiModelMapper @Inject constructor(
     }
 
     private fun mapAttachment(message: Message, attachment: Attachment): BaseUiModel<*>? {
-        return when (attachment) {
-            is FileAttachment -> mapFileAttachment(message, attachment)
-            is MessageAttachment -> mapMessageAttachment(message, attachment)
-            is AuthorAttachment -> mapAuthorAttachment(message, attachment)
-            is ColorAttachment -> mapColorAttachment(message, attachment)
-            is ActionsAttachment -> mapActionsAttachment(message, attachment)
-            else -> null
+        return with(attachment) {
+            val content = stripMessageQuotes(message)
+            val id = attachmentId(message, attachment)
+
+            val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
+            val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+            val fieldsText = mapFields(fields)
+
+            val attachmentAuthor = attachment.authorName
+            val time = attachment.timestamp?.let { getTime(it) }
+
+            val imageUrl = attachmentUrl(attachment.imageUrl)
+            val videoUrl = attachmentUrl(attachment.videoUrl)
+            val audioUrl = attachmentUrl(attachment.audioUrl)
+            val titleLink = attachmentUrl(attachment.titleLink)
+
+            val attachmentTitle = attachmentTitle(attachment.title, imageUrl, videoUrl, audioUrl, titleLink)
+
+            val attachmentText = attachmentText(attachment)
+            val attachmentDescription = attachmentDescription(attachment)
+
+            AttachmentUiModel(
+                message = message,
+                rawData = this,
+                messageId = message.id,
+                reactions = getReactions(message),
+                preview = message.copy(message = content.message),
+                isTemporary = !message.synced,
+                unread = message.unread,
+                currentDayMarkerText = dayMarkerText,
+                showDayMarker = false,
+                id = id,
+                title = attachmentTitle,
+                description = attachmentDescription,
+                authorName = attachmentAuthor,
+                text = attachmentText,
+                color = color?.color,
+                imageUrl = imageUrl,
+                videoUrl = videoUrl,
+                audioUrl = audioUrl,
+                titleLink = titleLink,
+                type = type,
+                messageLink = messageLink,
+                timestamp = time,
+                authorIcon = authorIcon,
+                authorLink = authorLink,
+                fields = fieldsText,
+                buttonAlignment = buttonAlignment,
+                actions = actions
+            )
         }
     }
 
-    private fun mapActionsAttachment(message: Message, attachment: ActionsAttachment): BaseUiModel<*>? {
+    /*private fun mapActionsAttachment(message: Message, attachment: ActionsAttachment): BaseUiModel<*>? {
         return with(attachment) {
             val content = stripMessageQuotes(message)
 
@@ -344,7 +378,7 @@ class UiModelMapper @Inject constructor(
                 preview = message.copy(message = content.message), unread = message.unread,
                 showDayMarker = false, currentDayMarkerText = dayMarkerText)
         }
-    }
+    }*/
 
     private fun mapFields(fields: List<Field>?): CharSequence? {
         return fields?.let {
@@ -364,7 +398,7 @@ class UiModelMapper @Inject constructor(
         }
     }
 
-    private fun mapAuthorAttachment(message: Message, attachment: AuthorAttachment): AuthorAttachmentUiModel {
+    /*private fun mapAuthorAttachment(message: Message, attachment: AuthorAttachment): AuthorAttachmentUiModel {
         return with(attachment) {
             val content = stripMessageQuotes(message)
 
@@ -434,48 +468,47 @@ class UiModelMapper @Inject constructor(
                 showDayMarker = false, currentDayMarkerText = dayMarkerText)
             else -> null
         }
-    }
+    }*/
 
     private fun attachmentId(message: Message, attachment: Attachment): Long {
-        return "${message.id}_${attachment.url}".hashCode().toLong()
+        return "${message.id}_${attachment.hashCode()}".hashCode().toLong()
     }
 
-    private fun attachmentTitle(attachment: FileAttachment): CharSequence {
-        return with(attachment) {
-            title?.let { return@with it }
+    private fun attachmentTitle(title: String?, vararg url: String?): CharSequence {
+        title?.let { return it }
 
-            val fileUrl = HttpUrl.parse(url)
-            fileUrl?.let {
-                return@with it.pathSegments().last()
+        url.filterNotNull().forEach {
+            val fileUrl = HttpUrl.parse(it)
+            fileUrl?.let { httpUrl ->
+                return httpUrl.pathSegments().last()
             }
-
-            return@with ""
         }
+
+        return ""
     }
 
-    private fun attachmentUrl(attachment: FileAttachment): String {
-        return with(attachment) {
-            if (url.startsWith("http")) return@with url
+    private fun attachmentUrl(url: String?): String? {
+        if (url.isNullOrEmpty()) return null
+        if (url!!.startsWith("http")) return url
 
-            val fullUrl = "$baseUrl$url"
-            val httpUrl = HttpUrl.parse(fullUrl)
-            httpUrl?.let {
-                return@with it.newBuilder().apply {
-                    addQueryParameter("rc_uid", token?.userId)
-                    addQueryParameter("rc_token", token?.authToken)
-                }.build().toString()
-            }
-
-            // Fallback to baseUrl + url
-            return@with fullUrl
+        val fullUrl = "$baseUrl$url"
+        val httpUrl = HttpUrl.parse(fullUrl)
+        httpUrl?.let {
+            return it.newBuilder().apply {
+                addQueryParameter("rc_uid", token?.userId)
+                addQueryParameter("rc_token", token?.authToken)
+            }.build().toString()
         }
+
+        // Fallback to baseUrl + url
+        return fullUrl
     }
 
-    private fun attachmentText(attachment: FileAttachment): String? {
+    private fun attachmentText(attachment: Attachment): String? {
         return attachment.text
     }
 
-    private fun attachmentDescription(attachment: FileAttachment): String? {
+    private fun attachmentDescription(attachment: Attachment): String? {
         return attachment.description
     }
 

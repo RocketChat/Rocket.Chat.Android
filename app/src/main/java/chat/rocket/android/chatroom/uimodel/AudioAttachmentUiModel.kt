@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.uimodel
 
+/*
 import chat.rocket.android.R
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.attachment.AudioAttachment
@@ -24,4 +25,4 @@ data class AudioAttachmentUiModel(
         get() = BaseUiModel.ViewType.AUDIO_ATTACHMENT.viewType
     override val layoutId: Int
         get() = R.layout.message_attachment
-}
+}*/

@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.uimodel
 
+/*
 import chat.rocket.android.R
 import chat.rocket.core.model.Message
 
@@ -26,4 +27,4 @@ data class MessageAttachmentUiModel(
 
     override val layoutId: Int
         get() = R.layout.item_message_attachment
-}
+}*/

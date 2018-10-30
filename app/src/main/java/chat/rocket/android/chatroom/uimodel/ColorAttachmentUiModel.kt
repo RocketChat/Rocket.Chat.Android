@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.uimodel
 
+/*
 import chat.rocket.android.R
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.attachment.ColorAttachment
@@ -8,7 +9,7 @@ data class ColorAttachmentUiModel(
     override val attachmentUrl: String,
     val id: Long,
     val color: Int,
-    val text: CharSequence,
+    val text: CharSequence?,
     val fields: CharSequence? = null,
     override val message: Message,
     override val rawData: ColorAttachment,
@@ -26,4 +27,4 @@ data class ColorAttachmentUiModel(
         get() = BaseUiModel.ViewType.COLOR_ATTACHMENT.viewType
     override val layoutId: Int
         get() = R.layout.item_color_attachment
-}
+}*/

@@ -1,6 +1,6 @@
 package chat.rocket.android.chatroom.adapter
 
-import android.animation.ValueAnimator
+/*import android.animation.ValueAnimator
 import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +9,7 @@ import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.uimodel.MessageAttachmentUiModel
 import chat.rocket.android.emoji.EmojiReactionListener
-import kotlinx.android.synthetic.main.item_message_attachment.view.*
+import kotlinx.android.synthetic.main.item_message_attachment_old.view.*
 
 class MessageAttachmentViewHolder(
     itemView: View,
@@ -104,4 +104,4 @@ class MessageAttachmentViewHolder(
             return lp.height == ViewGroup.LayoutParams.WRAP_CONTENT
         }
     }
-}
+}*/

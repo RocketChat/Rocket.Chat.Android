@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.adapter
 
+/*
 import android.content.Intent
 import android.view.View
 import androidx.core.net.toUri
@@ -28,4 +29,4 @@ class GenericFileAttachmentViewHolder(itemView: View,
             }
         }
     }
-}
+}*/

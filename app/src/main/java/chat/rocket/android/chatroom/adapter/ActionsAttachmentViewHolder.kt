@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.adapter
 
+/*
 import android.view.View
 import chat.rocket.android.chatroom.uimodel.ActionsAttachmentUiModel
 import chat.rocket.android.emoji.EmojiReactionListener
@@ -40,4 +41,4 @@ class ActionsAttachmentViewHolder(
 
 interface ActionAttachmentOnClickListener {
     fun onActionClicked(view: View, action: Action)
-}
+}*/

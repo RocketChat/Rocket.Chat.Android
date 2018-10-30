@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.adapter
 
+/*
 import android.view.View
 import chat.rocket.android.chatroom.uimodel.ImageAttachmentUiModel
 import chat.rocket.android.helper.ImageHelper
@@ -39,4 +40,4 @@ class ImageAttachmentViewHolder(
             }
         }
     }
-}
+}*/

@@ -1,9 +1,8 @@
 package chat.rocket.android.chatroom.uimodel
 
-import chat.rocket.android.R
+/*import chat.rocket.android.R
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.attachment.actions.Action
-import chat.rocket.core.model.attachment.actions.ActionsAttachment
 
 data class ActionsAttachmentUiModel(
 	override val attachmentUrl: String,
@@ -26,4 +25,4 @@ data class ActionsAttachmentUiModel(
 		get() = BaseUiModel.ViewType.ACTIONS_ATTACHMENT.viewType
 	override val layoutId: Int
 		get() = R.layout.item_actions_attachment
-}
+}*/

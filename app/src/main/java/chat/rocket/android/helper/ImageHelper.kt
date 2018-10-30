@@ -35,7 +35,7 @@ object ImageHelper {
 
     // TODO - implement a proper image viewer with a proper Transition
     // TODO - We should definitely write our own ImageViewer
-    fun openImage(context: Context, imageUrl: String, imageName: String) {
+    fun openImage(context: Context, imageUrl: String, imageName: String? = "") {
         var imageViewer: ImageViewer? = null
         val request =
             ImageRequestBuilder.newBuilderWithSource(imageUrl.toUri())

@@ -7,16 +7,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import chat.rocket.android.util.extension.orFalse
 import chat.rocket.core.model.attachment.Attachment
-import chat.rocket.core.model.attachment.AudioAttachment
-import chat.rocket.core.model.attachment.AuthorAttachment
-import chat.rocket.core.model.attachment.ColorAttachment
-import chat.rocket.core.model.attachment.GenericFileAttachment
-import chat.rocket.core.model.attachment.ImageAttachment
-import chat.rocket.core.model.attachment.MessageAttachment
-import chat.rocket.core.model.attachment.VideoAttachment
-import chat.rocket.core.model.attachment.actions.ActionsAttachment
 import chat.rocket.core.model.attachment.actions.ButtonAction
-import timber.log.Timber
 
 @Entity(tableName = "attachments",
         foreignKeys = [
@@ -116,149 +107,51 @@ data class AttachmentActionEntity(
 }
 
 fun Attachment.asEntity(msgId: String): List<BaseMessageEntity> {
-    return when(this) {
-        is ImageAttachment -> listOf(asEntity(msgId))
-        is VideoAttachment -> listOf(asEntity(msgId))
-        is AudioAttachment -> listOf(asEntity(msgId))
-        is AuthorAttachment -> asEntity(msgId)
-        is ColorAttachment -> asEntity(msgId)
-        is MessageAttachment -> listOf(asEntity(msgId))
-        is GenericFileAttachment -> listOf(asEntity(msgId))
-        is ActionsAttachment -> asEntity(msgId)
-        else -> {
-            Timber.d("Missing conversion for: ${javaClass.canonicalName}")
-            emptyList()
-        }
-    }
-}
-
-fun ImageAttachment.asEntity(msgId: String): AttachmentEntity =
-    AttachmentEntity(
-        _id = "${msgId}_${hashCode()}",
-        messageId = msgId,
-        title = title,
-        description =  description,
-        text = text,
-        titleLink = titleLink,
-        titleLinkDownload = titleLinkDownload.orFalse(),
-        imageUrl = url,
-        imageType = type,
-        imageSize = size
-    )
-
-fun VideoAttachment.asEntity(msgId: String): AttachmentEntity =
-    AttachmentEntity(
-        _id = "${msgId}_${hashCode()}",
-        messageId = msgId,
-        title = title,
-        description =  description,
-        text = text,
-        titleLink = titleLink,
-        titleLinkDownload = titleLinkDownload.orFalse(),
-        videoUrl = url,
-        videoType = type,
-        videoSize = size
-    )
-
-fun AudioAttachment.asEntity(msgId: String): AttachmentEntity =
-    AttachmentEntity(
-        _id = "${msgId}_${hashCode()}",
-        messageId = msgId,
-        title = title,
-        description =  description,
-        text = text,
-        titleLink = titleLink,
-        titleLinkDownload = titleLinkDownload.orFalse(),
-        audioUrl = url,
-        audioType = type,
-        audioSize = size
-    )
-
-fun AuthorAttachment.asEntity(msgId: String): List<BaseMessageEntity> {
-    val list = mutableListOf<BaseMessageEntity>()
-    val attachment = AttachmentEntity(
-        _id = "${msgId}_${hashCode()}",
-        messageId = msgId,
-        authorLink = url,
-        authorIcon = authorIcon,
-        authorName = authorName,
-        hasFields = fields?.isNotEmpty() == true
-    )
-    list.add(attachment)
-
-    fields?.forEach { field ->
-        val entity = AttachmentFieldEntity(
-            attachmentId = attachment._id,
-            title = field.title,
-            value = field.value
-        )
-        list.add(entity)
-    }
-
-    return list
-}
-
-fun ColorAttachment.asEntity(msgId: String): List<BaseMessageEntity> {
-    val list = mutableListOf<BaseMessageEntity>()
-    val attachment = AttachmentEntity(
-        _id = "${msgId}_${hashCode()}",
-        messageId = msgId,
-        color = color.rawColor,
-        fallback = fallback,
-        hasFields = fields?.isNotEmpty() == true
-    )
-    list.add(attachment)
-
-    fields?.forEach { field ->
-        val entity = AttachmentFieldEntity(
-            attachmentId = attachment._id,
-            title = field.title,
-            value = field.value
-        )
-        list.add(entity)
-    }
-
-    return list
-}
-
-// TODO - how to model An message attachment with attachments???
-fun MessageAttachment.asEntity(msgId: String): AttachmentEntity =
-    AttachmentEntity(
-        _id = "${msgId}_${hashCode()}",
-        messageId = msgId,
-        authorName = author,
-        authorIcon = icon,
-        text = text,
-        thumbUrl = thumbUrl,
-        color = color?.rawColor,
-        messageLink = url,
-        timestamp = timestamp
-    )
-
-fun GenericFileAttachment.asEntity(msgId: String): AttachmentEntity =
-    AttachmentEntity(
-        _id = "${msgId}_${hashCode()}",
-        messageId = msgId,
-        title = title,
-        description = description,
-        text = text,
-        titleLink = titleLink,
-        titleLinkDownload = titleLinkDownload ?: false
-    )
-
-fun ActionsAttachment.asEntity(msgId: String): List<BaseMessageEntity> {
-    val list = mutableListOf<BaseMessageEntity>()
     val attachmentId = "${msgId}_${hashCode()}"
-    val attachment = AttachmentEntity(
+    val list = mutableListOf<BaseMessageEntity>()
+
+    val entity = AttachmentEntity(
             _id = attachmentId,
             messageId = msgId,
             title = title,
-            hasActions = true,
-            buttonAlignment = buttonAlignment
+            type = type,
+            description =  description,
+            text = text,
+            titleLink = titleLink,
+            titleLinkDownload = titleLinkDownload.orFalse(),
+            imageUrl = imageUrl,
+            imageType = imageType,
+            imageSize = imageSize,
+            videoUrl = videoUrl,
+            videoType = videoType,
+            videoSize = videoSize,
+            audioUrl = audioUrl,
+            audioType = audioType,
+            audioSize = audioSize,
+            authorLink = authorLink,
+            authorIcon = authorIcon,
+            authorName = authorName,
+            color = color?.rawColor,
+            fallback = fallback,
+            thumbUrl = thumbUrl,
+            messageLink = messageLink,
+            timestamp = timestamp,
+            buttonAlignment = buttonAlignment,
+            hasActions = actions?.isNotEmpty() == true,
+            hasFields = fields?.isNotEmpty() == true
     )
-    list.add(attachment)
+    list.add(entity)
 
-    actions.forEach { action ->
+    fields?.forEach { field ->
+        val entity = AttachmentFieldEntity(
+                attachmentId = attachmentId,
+                title = field.title,
+                value = field.value
+        )
+        list.add(entity)
+    }
+
+    actions?.forEach { action ->
         when (action) {
             is ButtonAction -> AttachmentActionEntity(
                 attachmentId = attachmentId,

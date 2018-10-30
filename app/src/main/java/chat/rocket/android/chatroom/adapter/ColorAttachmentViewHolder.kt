@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.adapter
 
+/*
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
@@ -30,11 +31,11 @@ class ColorAttachmentViewHolder(itemView: View,
     override fun bindViews(data: ColorAttachmentUiModel) {
         with(itemView) {
                 quote_bar.setColorFilter(data.color)
-                if (data.text.isNotEmpty()) {
+                if (data.text.isNullOrEmpty()) {
+                    attachment_text.isVisible = false
+                } else {
                     attachment_text.isVisible = true
                     attachment_text.text = data.text
-                } else {
-                    attachment_text.isVisible = false
                 }
 
                 if (data.fields.isNullOrEmpty()) {
@@ -46,4 +47,4 @@ class ColorAttachmentViewHolder(itemView: View,
         }
     }
 
-}
+}*/

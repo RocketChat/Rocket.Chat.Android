@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.uimodel
 
+/*
 import chat.rocket.android.R
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.attachment.AuthorAttachment
@@ -26,4 +27,4 @@ data class AuthorAttachmentUiModel(
         get() = BaseUiModel.ViewType.AUTHOR_ATTACHMENT.viewType
     override val layoutId: Int
         get() = R.layout.item_author_attachment
-}
+}*/

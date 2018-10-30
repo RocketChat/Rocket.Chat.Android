@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.uimodel
 
+/*
 import chat.rocket.android.R
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.attachment.VideoAttachment
@@ -24,4 +25,4 @@ data class VideoAttachmentUiModel(
         get() = BaseUiModel.ViewType.VIDEO_ATTACHMENT.viewType
     override val layoutId: Int
         get() = R.layout.message_attachment
-}
+}*/

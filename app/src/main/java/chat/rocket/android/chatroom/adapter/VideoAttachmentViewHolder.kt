@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.adapter
 
+/*
 import android.view.View
 import androidx.core.view.isVisible
 import chat.rocket.android.chatroom.uimodel.VideoAttachmentUiModel
@@ -30,4 +31,4 @@ class VideoAttachmentViewHolder(itemView: View,
             }
         }
     }
-}
+}*/
