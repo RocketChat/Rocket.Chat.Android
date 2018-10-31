@@ -94,8 +94,8 @@ if ! check_git_dirty && ! check_last_commit && [ -f "${CURRENT_DIR}"/libs/common
 	exit 0
 fi
 
-cd "${SDK_DIR}" && ./gradlew common:assemble && cd "${CURRENT_DIR}"
-cd "${SDK_DIR}" && ./gradlew core:assemble && cd "${CURRENT_DIR}"
+cd "${SDK_DIR}" && ./gradlew --no-daemon common:assemble && cd "${CURRENT_DIR}"
+cd "${SDK_DIR}" && ./gradlew --no-daemon core:assemble && cd "${CURRENT_DIR}"
 
 rm "${CURRENT_DIR}"/libs/common* "${CURRENT_DIR}"/libs/core*
 
