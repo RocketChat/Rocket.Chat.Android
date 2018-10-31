@@ -248,6 +248,9 @@ class ChatRoomAdapter(
                     R.id.action_menu_msg_react -> {
                         actionSelectListener?.showReactions(id)
                     }
+                    R.id.action_message_permalink -> {
+                        actionSelectListener?.copyPermalink(id)
+                    }
                     else -> {
                         TODO("Not implemented")
                     }
@@ -267,5 +270,6 @@ class ChatRoomAdapter(
         fun showReactions(id: String)
         fun openDirectMessage(roomName: String, message: String)
         fun sendMessage(chatRoomId: String, text: String)
+        fun copyPermalink(id: String)
     }
 }

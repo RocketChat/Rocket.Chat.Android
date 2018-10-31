@@ -123,22 +123,25 @@ class UiModelMapper @Inject constructor(
         withContext(CommonPool) {
             val list = ArrayList<BaseUiModel<*>>()
 
-            message.urls?.forEach { url ->
-                mapUrl(message, url)?.let { list.add(it) }
-            }
-
-            message.attachments?.mapNotNull { attachment ->
-                mapAttachment(message, attachment)
-            }?.asReversed()?.let {
-                list.addAll(it)
-            }
-
-            mapMessage(message).let {
-                if (list.isNotEmpty()) {
-                    it.preview = list.first().preview
+            getChatRoomAsync(message.roomId)?.let { chatRoom ->
+                message.urls?.forEach { url ->
+                    mapUrl(message, url, chatRoom)?.let { list.add(it) }
                 }
-                list.add(it)
+
+                message.attachments?.mapNotNull { attachment ->
+                    mapAttachment(message, attachment, chatRoom)
+                }?.asReversed()?.let {
+                    list.addAll(it)
+                }
+
+                mapMessage(message, chatRoom).let {
+                    if (list.isNotEmpty()) {
+                        it.preview = list.first().preview
+                    }
+                    list.add(it)
+                }
             }
+
 
             for (i in list.size - 1 downTo 0) {
                 val next = if (i - 1 < 0) null else list[i - 1]
@@ -206,24 +209,26 @@ class UiModelMapper @Inject constructor(
         withContext(CommonPool) {
             val list = ArrayList<BaseUiModel<*>>()
 
-            mapMessage(message).let {
-                if (list.isNotEmpty()) {
-                    it.preview = list.first().preview
+            getChatRoomAsync(message.roomId)?.let { chatRoom ->
+                mapMessage(message, chatRoom).let {
+                    if (list.isNotEmpty()) {
+                        it.preview = list.first().preview
+                    }
+                    list.add(it)
                 }
-                list.add(it)
-            }
 
-            message.attachments?.forEach {
-                val attachment = mapAttachment(message, it)
-                attachment?.let {
-                    list.add(attachment)
+                message.attachments?.forEach {
+                    val attachment = mapAttachment(message, it, chatRoom)
+                    attachment?.let {
+                        list.add(attachment)
+                    }
                 }
-            }
 
-            message.urls?.forEach {
-                val url = mapUrl(message, it)
-                url?.let {
-                    list.add(url)
+                message.urls?.forEach {
+                    val url = mapUrl(message, it, chatRoom)
+                    url?.let {
+                        list.add(url)
+                    }
                 }
             }
 
@@ -275,11 +280,12 @@ class UiModelMapper @Inject constructor(
             nextDownStreamMessage = null,
             unread = message.unread,
             currentDayMarkerText = dayMarkerText,
-            showDayMarker = false
+            showDayMarker = false,
+            permalink = messageHelper.createPermalink(message, chatRoom, false)
         )
     }
 
-    private fun mapUrl(message: Message, url: Url): BaseUiModel<*>? {
+    private fun mapUrl(message: Message, url: Url, chatRoom: ChatRoom): BaseUiModel<*>? {
         if (url.ignoreParse || url.meta == null) return null
 
         val hostname = url.parsedUrl?.hostname ?: ""
@@ -289,13 +295,14 @@ class UiModelMapper @Inject constructor(
 
         val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
         val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+        val permalink = messageHelper.createPermalink(message, chatRoom, false)
 
         return UrlPreviewUiModel(message, url, message.id, title, hostname, description, thumb,
             getReactions(message), preview = message.copy(message = url.url), unread = message.unread,
-            showDayMarker = false, currentDayMarkerText = dayMarkerText)
+            showDayMarker = false, currentDayMarkerText = dayMarkerText, permalink = permalink)
     }
 
-    private fun mapAttachment(message: Message, attachment: Attachment): BaseUiModel<*>? {
+    private fun mapAttachment(message: Message, attachment: Attachment, chatRoom: ChatRoom): BaseUiModel<*>? {
         return with(attachment) {
             val content = stripMessageQuotes(message)
             val id = attachmentId(message, attachment)
@@ -303,6 +310,7 @@ class UiModelMapper @Inject constructor(
             val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
             val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
             val fieldsText = mapFields(fields)
+            val permalink = messageHelper.createPermalink(message, chatRoom, false)
 
             val attachmentAuthor = attachment.authorName
             val time = attachment.timestamp?.let { getTime(it) }
@@ -327,6 +335,7 @@ class UiModelMapper @Inject constructor(
                 unread = message.unread,
                 currentDayMarkerText = dayMarkerText,
                 showDayMarker = false,
+                permalink = permalink,
                 id = id,
                 title = attachmentTitle,
                 description = attachmentDescription,
@@ -421,7 +430,10 @@ class UiModelMapper @Inject constructor(
         return attachment.description
     }
 
-    private suspend fun mapMessage(message: Message): MessageUiModel = withContext(CommonPool) {
+    private suspend fun mapMessage(
+        message: Message,
+        chatRoom: ChatRoom
+    ): MessageUiModel = withContext(CommonPool) {
         val sender = getSenderName(message)
         val time = getTime(message.timestamp)
         val avatar = getUserAvatar(message)
@@ -435,13 +447,14 @@ class UiModelMapper @Inject constructor(
 
         val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
         val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+        val permalink = messageHelper.createPermalink(message, chatRoom, false)
 
         val content = getContent(stripMessageQuotes(message))
         MessageUiModel(message = stripMessageQuotes(message), rawData = message,
             messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
             content = content, isPinned = message.pinned, currentDayMarkerText = dayMarkerText,
             showDayMarker = false, reactions = getReactions(message), isFirstUnread = false,
-            preview = preview, isTemporary = !synced, unread = unread)
+            preview = preview, isTemporary = !synced, unread = unread, permalink = permalink)
     }
 
     private fun mapMessagePreview(message: Message): Message {

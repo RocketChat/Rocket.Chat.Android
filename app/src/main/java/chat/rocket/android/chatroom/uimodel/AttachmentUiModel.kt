@@ -17,6 +17,7 @@ data class AttachmentUiModel(
         override var currentDayMarkerText: String,
         override var showDayMarker: Boolean,
         override var menuItemsToHide: MutableList<Int> = mutableListOf(),
+        override var permalink: String,
         val id: Long,
         val title: CharSequence?,
         val description: CharSequence?,

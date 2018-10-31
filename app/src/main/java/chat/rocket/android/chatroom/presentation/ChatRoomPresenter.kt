@@ -505,7 +505,7 @@ class ChatRoomPresenter @Inject constructor(
                     val messages =
                         retryIO(description = "history($chatRoomId, $roomType, $instant)") {
                             client.history(
-                                    chatRoomId, roomType, count = 50,
+                                chatRoomId, roomType, count = 50,
                                 oldest = instant
                             )
                         }
@@ -622,6 +622,7 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 messagesRepository.getById(messageId)?.let { m ->
                     view.copyToClipboard(m.message)
+                    view.showMessage(R.string.msg_message_copied)
                 }
             } catch (e: RocketChatException) {
                 Timber.e(e)
@@ -860,6 +861,42 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
+    private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(CommonPool) {
+        return@withContext dbManager.chatRoomDao().get(roomId)?.let {
+            with(it.chatRoom) {
+                ChatRoom(
+                    id = id,
+                    subscriptionId = subscriptionId,
+                    type = roomTypeOf(type),
+                    unread = unread,
+                    broadcast = broadcast ?: false,
+                    alert = alert,
+                    fullName = fullname,
+                    name = name,
+                    favorite = favorite ?: false,
+                    default = isDefault ?: false,
+                    readonly = readonly,
+                    open = open,
+                    lastMessage = null,
+                    archived = false,
+                    status = null,
+                    user = null,
+                    userMentions = userMentions,
+                    client = client,
+                    announcement = null,
+                    description = null,
+                    groupMentions = groupMentions,
+                    roles = null,
+                    topic = null,
+                    lastSeen = this.lastSeen,
+                    timestamp = timestamp,
+                    updatedAt = updatedAt
+                )
+            }
+        }
+    }
+
+    // TODO: move this to new interactor or FetchChatRoomsInteractor?
     private suspend fun getChatRoomsAsync(name: String? = null): List<ChatRoom> = withContext(CommonPool) {
         return@withContext dbManager.chatRoomDao().getAllSync().filter {
             if (name == null) {
@@ -937,6 +974,24 @@ class ChatRoomPresenter @Inject constructor(
             } catch (ex: Exception) {
                 Timber.e(ex)
                 view.showMessage(ex.message!!)
+            }
+        }
+    }
+
+    fun copyPermalink(messageId: String) {
+        launchUI(strategy) {
+            try {
+                messagesRepository.getById(messageId)?.let { message ->
+                    getChatRoomAsync(message.roomId)?.let { chatRoom ->
+                        val models = mapper.map(message)
+                        models.firstOrNull()?.permalink?.let {
+                            view.copyToClipboard(it)
+                            view.showMessage(R.string.msg_permalink_copied)
+                        }
+                    }
+                }
+            } catch (ex: Exception) {
+                Timber.e(ex)
             }
         }
     }
