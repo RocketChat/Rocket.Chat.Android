@@ -12,6 +12,7 @@ import android.text.style.ImageSpan
 import android.text.style.ReplacementSpan
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
+import chat.rocket.android.R
 import androidx.core.util.PatternsCompat
 import chat.rocket.android.chatroom.ui.StrikethroughDelimiterProcessor
 import chat.rocket.android.emoji.EmojiParser
