@@ -25,7 +25,7 @@ ext {
             firebaseAnalytics     : '16.0.3',
             playServices          : '16.0.0',
             exoPlayer             : '2.8.2',
-            flexbox               : '1.0.0',
+            flexbox               : '1.1.0',
             material              : '1.0.0-beta01',
 
             room                  : '2.0.0',
