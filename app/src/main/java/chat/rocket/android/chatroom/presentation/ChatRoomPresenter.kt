@@ -35,6 +35,7 @@ import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extension.compressImageAndGetByteArray
+import chat.rocket.android.util.extension.getByteArray
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
@@ -80,6 +81,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.threeten.bp.Instant
 import timber.log.Timber
+import java.io.InputStream
 import java.util.*
 import javax.inject.Inject
 
@@ -348,15 +350,51 @@ class ChatRoomPresenter @Inject constructor(
         view.showFileSelection(settings.uploadMimeTypeFilter())
     }
 
-    fun uploadFile(roomId: String, uri: Uri, msg: String, bitmap: Bitmap? = null) {
+    fun uploadImage(roomId: String, mimeType: String, uri: Uri, bitmap: Bitmap, msg: String) {
         launchUI(strategy) {
             view.showLoading()
             try {
                 withContext(DefaultDispatcher) {
                     val fileName = uriInteractor.getFileName(uri) ?: uri.toString()
-                    val mimeType = uriInteractor.getMimeType(uri)
-                    val byteArray = bitmap?.compressImageAndGetByteArray(mimeType)
-                    val fileSize = byteArray?.size ?: uriInteractor.getFileSize(uri)
+                    if (fileName.isEmpty()) {
+                        view.showInvalidFileMessage()
+                    } else {
+                        val byteArray =
+                            bitmap.getByteArray(mimeType, 100, settings.uploadMaxFileSize())
+                        retryIO("uploadFile($roomId, $fileName, $mimeType") {
+                            client.uploadFile(
+                                roomId,
+                                fileName,
+                                mimeType,
+                                msg,
+                                description = fileName
+                            ) {
+                                byteArray.inputStream()
+                            }
+                        }
+
+                        logMediaUploaded(mimeType)
+                    }
+                }
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error uploading image")
+                when (ex) {
+                    is RocketChatException -> view.showMessage(ex)
+                    else -> view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideLoading()
+            }
+        }
+    }
+
+    fun uploadFile(roomId: String, mimeType: String, uri: Uri, msg: String) {
+        launchUI(strategy) {
+            view.showLoading()
+            try {
+                withContext(DefaultDispatcher) {
+                    val fileName = uriInteractor.getFileName(uri) ?: uri.toString()
+                    val fileSize = uriInteractor.getFileSize(uri)
                     val maxFileSizeAllowed = settings.uploadMaxFileSize()
 
                     when {
@@ -372,7 +410,7 @@ class ChatRoomPresenter @Inject constructor(
                                     msg,
                                     description = fileName
                                 ) {
-                                    byteArray?.inputStream() ?: uriInteractor.getInputStream(uri)
+                                    uriInteractor.getInputStream(uri)
                                 }
                             }
                             logMediaUploaded(mimeType)
