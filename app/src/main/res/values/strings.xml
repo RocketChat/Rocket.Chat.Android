@@ -73,6 +73,13 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
         <item name="item_password">About</item>
     </string-array>
 
+    <!--WIDECHAT Settings List-->
+    <string-array name="widechat_settings_actions">
+        <item name="item_preferences">Preferences</item>
+        <item name="item_about">About</item>
+        <item name="item_logout">Log Out</item>
+    </string-array>
+
     <!-- Regular information messages -->
     <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
     <string name="msg_no_data_to_display">No data to display</string>
@@ -327,5 +334,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_welcome_to_widechat">Welcome to Viasat Connect</string>
     <string name="sign_up">Sign Up</string>
     <string name="log_in">Log In</string>
+    <string name="log_out">Log Out</string>
 
 </resources>
