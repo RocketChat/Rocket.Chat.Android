@@ -164,6 +164,8 @@
     <string name="msg_delete_description">Bu mesajı silmek istediğinizden emin misiniz</string>
     <string name="msg_view_more">Daha fazla göster</string>
     <string name="msg_view_less">Daha az göster</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string>
     
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">İstatistik takibi</string>
@@ -200,6 +202,8 @@
     <string name="action_msg_share">Paylaş</string>
     <string name="action_title_editing">Mesaj Düzenleniyor</string>
     <string name="action_msg_add_reaction">Tepki Ekle</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_copy_permalink">Copy permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Düzenlemeye izin verilmiyor</string>
