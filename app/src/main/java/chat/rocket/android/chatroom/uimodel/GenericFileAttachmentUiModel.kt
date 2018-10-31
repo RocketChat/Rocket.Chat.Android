@@ -18,7 +18,8 @@ data class GenericFileAttachmentUiModel(
     override var unread: Boolean? = null,
     override var menuItemsToHide: MutableList<Int> = mutableListOf(),
     override var currentDayMarkerText: String,
-    override var showDayMarker: Boolean
+    override var showDayMarker: Boolean,
+    override var permalink: String
 ) : BaseFileAttachmentUiModel<GenericFileAttachment> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.GENERIC_FILE_ATTACHMENT.viewType

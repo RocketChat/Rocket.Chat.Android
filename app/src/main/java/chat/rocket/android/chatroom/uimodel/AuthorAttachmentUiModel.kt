@@ -20,7 +20,7 @@ data class AuthorAttachmentUiModel(
     override var unread: Boolean? = null,
     override var menuItemsToHide: MutableList<Int> = mutableListOf(),
     override var currentDayMarkerText: String,
-    override var showDayMarker: Boolean
+    override var showDayMarker: Boolean, override var permalink: String
 ) : BaseAttachmentUiModel<AuthorAttachment> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.AUTHOR_ATTACHMENT.viewType
