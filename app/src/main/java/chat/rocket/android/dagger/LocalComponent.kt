@@ -19,7 +19,7 @@ interface LocalComponent {
         fun build(): LocalComponent
     }
 
-    fun inject(adapter: MessageReactionsAdapter.SingleReactionViewHolder)
+    fun inject(adapter: MessageReactionsAdapter.ReactionViewHolder)
     fun inject(adapter: MessageReactionsAdapter.AddReactionViewHolder)
 
     /*@Component.Builder
