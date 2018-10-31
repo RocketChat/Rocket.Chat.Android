@@ -150,6 +150,8 @@
     <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
     <string name="msg_view_more">visualizar mais</string>
     <string name="msg_view_less">visualizar menos</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copiado</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>

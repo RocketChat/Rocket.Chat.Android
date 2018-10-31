@@ -984,6 +984,7 @@ class ChatRoomPresenter @Inject constructor(
                         val models = mapper.map(message)
                         models.firstOrNull()?.permalink?.let {
                             view.copyToClipboard(it)
+                            view.showMessage(R.string.msg_permalink_copied)
                         }
                     }
                 }
