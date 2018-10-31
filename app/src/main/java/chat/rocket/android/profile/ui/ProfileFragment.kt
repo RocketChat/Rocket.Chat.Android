@@ -245,6 +245,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
         if (Constants.WIDECHAT) {
             widechat_view_dim.setOnClickListener { hideUpdateAvatarOptions() }
+            edit_profile_button.setOnClickListener { showToast("Edit Profile Button Clicked") }
+            delete_account_button.setOnClickListener { showToast("Delete Account Button Clicked") }
         } else {
             view_dim.setOnClickListener { hideUpdateAvatarOptions() }
         }
