@@ -40,7 +40,7 @@ abstract class  MessageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insert(field: AttachmentFieldEntity)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insert(reaction: ReactionEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
