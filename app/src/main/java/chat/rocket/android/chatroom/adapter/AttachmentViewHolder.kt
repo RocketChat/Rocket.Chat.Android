@@ -53,63 +53,71 @@ class AttachmentViewHolder(
 
     override fun bindViews(data: AttachmentUiModel) {
         with(itemView) {
-            val showQuoteBar = shouldShowQuoteBar(data)
             file_name.isVisible = false
-
-            image_attachment.isVisible = data.hasImage
-            audio_video_attachment.isVisible = data.hasAudioOrVideo
             text_file_name.isVisible = false
 
             // Media attachments
+            image_attachment.isVisible = data.hasImage
+            audio_video_attachment.isVisible = data.hasAudioOrVideo
             when {
                 data.hasImage -> bindImage(data)
                 data.hasAudioOrVideo -> bindAudioOrVideo(data)
                 data.hasFile -> bindFile(data)
             }
 
+            // File description - self describing
             file_description.isVisible = data.hasDescription
             file_description.text = data.description
 
+            // Message attachment
             messageViews.isVisible = data.hasMessage
             if (data.hasMessage) {
                 bindMessage(data)
             }
 
+            // Author
             author_icon.isInvisible = !(data.hasAuthorIcon && data.hasAuthorLink && data.hasAuthorName)
             text_author_name.isVisible = data.hasAuthorLink && data.hasAuthorName
             if (data.hasAuthorLink && data.hasAuthorName) {
                 bindAuthorLink(data)
             }
 
+            // If not media or message, show the text with quote bar
             attachment_text.isVisible = !data.hasMedia && !data.hasMessage && data.hasText
             attachment_text.text = data.text
 
+            // If it has titleLink and is not "type = file" show the title/titleLink on this field.
             file_name_not_file_type.isVisible = !data.hasFile && data.hasTitleLink
             if (!data.hasFile && data.hasTitleLink) {
                 bindTitleLink(data)
             }
 
+            // Fields
             text_fields.isVisible = data.hasFields
             if (data.hasFields) {
                 bindFields(data)
             }
 
-            quote_bar.isVisible = showQuoteBar
+            // Actions
+            actions_list.isVisible = data.hasActions
+            if (data.hasActions) {
+                bindActions(data)
+            }
+
+            // Quote bar
+            quote_bar.isVisible = shouldShowQuoteBar(data)
             if (data.color != null) {
                 quote_bar.setColorFilter(data.color)
             } else {
                 quote_bar.setColorFilter(quoteBarColor)
             }
-
-            actions_list.isVisible = data.hasActions
-            if (data.hasActions) {
-                bindActions(data)
-            }
         }
     }
 
     private fun shouldShowQuoteBar(data: AttachmentUiModel): Boolean {
-        return data.hasFields || (data.hasAuthorLink && data.hasAuthorName) || data.hasMessage || (!data.hasFile && data.hasTitleLink)
+        return data.hasFields || data.hasActions || (data.hasAuthorLink && data.hasAuthorName)
+                || data.hasMessage || (!data.hasFile && data.hasTitleLink)
+                || (!data.hasMedia && !data.hasMessage && data.hasText)
     }
 
     private fun bindImage(data: AttachmentUiModel) {

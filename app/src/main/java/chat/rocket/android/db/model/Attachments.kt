@@ -1,11 +1,14 @@
 package chat.rocket.android.db.model
 
+import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import chat.rocket.android.R
 import chat.rocket.android.util.extension.orFalse
+import chat.rocket.android.util.extensions.isNotNullNorEmpty
 import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.attachment.actions.ButtonAction
 
@@ -106,9 +109,11 @@ data class AttachmentActionEntity(
     var id: Long? = null
 }
 
-fun Attachment.asEntity(msgId: String): List<BaseMessageEntity> {
+fun Attachment.asEntity(msgId: String, context: Context): List<BaseMessageEntity> {
     val attachmentId = "${msgId}_${hashCode()}"
     val list = mutableListOf<BaseMessageEntity>()
+
+    val text = mapAttachmentText(text, attachments?.firstOrNull(), context)
 
     val entity = AttachmentEntity(
             _id = attachmentId,
@@ -168,4 +173,20 @@ fun Attachment.asEntity(msgId: String): List<BaseMessageEntity> {
         }?.let { list.add(it) }
     }
     return list
+}
+
+fun mapAttachmentText(text: String?, attachment: Attachment?, context: Context): String? {
+    return if (attachment != null) {
+        when {
+            attachment.imageUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_photo)
+            attachment.videoUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_video)
+            attachment.audioUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_audio)
+            attachment.titleLink.isNotNullNorEmpty() &&
+                    attachment.type?.contentEquals("file") == true ->
+                context.getString(R.string.msg_preview_file)
+            else -> text
+        }
+    } else {
+        text
+    }
 }

@@ -267,7 +267,7 @@ class DatabaseManager(val context: Application,
         val list = ArrayList<BaseMessageEntity>(message.attachments!!.size)
 
         message.attachments!!.forEach { attachment ->
-            list.addAll(attachment.asEntity(message.id))
+            list.addAll(attachment.asEntity(message.id, context))
         }
 
         return list
