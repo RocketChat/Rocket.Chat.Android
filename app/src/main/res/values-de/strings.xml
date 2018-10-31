@@ -162,6 +162,8 @@
     <string name="msg_view_more">view more</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_view_less">view less</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
