@@ -10,6 +10,9 @@ import chat.rocket.android.R
 import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.common.model.RoomType
 
+// WIDECHAT
+import chat.rocket.android.helper.Constants
+
 internal fun ChatRoomFragment.setupMenu(menu: Menu) {
     setupSearchMessageMenuItem(menu, requireContext())
     setupFavoriteMenuItem(menu)
@@ -69,6 +72,14 @@ internal fun ChatRoomFragment.setOnMenuItemClickListener(item: MenuItem) {
 }
 
 private fun ChatRoomFragment.setupSearchMessageMenuItem(menu: Menu, context: Context) {
+
+    var actionFlags: Int? = null
+    if (!Constants.WIDECHAT) {
+        actionFlags = MenuItem.SHOW_AS_ACTION_IF_ROOM or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
+    } else {
+        actionFlags = MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
+    }
+
     val searchItem = menu.add(
         Menu.NONE,
         Menu.NONE,
@@ -77,7 +88,8 @@ private fun ChatRoomFragment.setupSearchMessageMenuItem(menu: Menu, context: Con
     ).setActionView(SearchView(context))
         .setIcon(R.drawable.ic_search_white_24dp)
         .setShowAsActionFlags(
-            MenuItem.SHOW_AS_ACTION_IF_ROOM or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
+                // WIDECHAT - all items in the overflow menu
+            actionFlags
         )
         .setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
@@ -122,6 +134,13 @@ private fun ChatRoomFragment.setupSearchViewTextListener(searchView: SearchView)
 }
 
 private fun ChatRoomFragment.setupFavoriteMenuItem(menu: Menu) {
+
+    var actionFlags: Int? = null
+    if (!Constants.WIDECHAT) {
+        actionFlags = MenuItem.SHOW_AS_ACTION_IF_ROOM or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
+    } else {
+        actionFlags = MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
+    }
     if (isFavorite) {
         menu.add(
             Menu.NONE,
@@ -137,6 +156,7 @@ private fun ChatRoomFragment.setupFavoriteMenuItem(menu: Menu) {
             Menu.NONE,
             R.string.title_favorite_chat
         ).setIcon(R.drawable.ic_star_border_white_24dp)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+            // WIDECHAT - all items in the overflow menu
+                .setShowAsAction(actionFlags)
     }
 }

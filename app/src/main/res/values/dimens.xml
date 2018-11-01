@@ -50,5 +50,6 @@
 
     <!-- WIDECHAT Toolbar -->
     <dimen name="widechat_toolbar_height">81dp</dimen>
+    <dimen name="widechat_chatroom_title_text_size">30sp</dimen>
 
 </resources>
