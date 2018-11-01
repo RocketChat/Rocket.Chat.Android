@@ -199,7 +199,7 @@
     <string name="action_msg_share">Поделиться</string>
     <string name="action_title_editing">Редактирование сообщения</string>
     <string name="action_msg_add_reaction">Отреагировать</string>
-    <string name="action_msg_copy_permalink">Скопировать ссылку</string>
+    <string name="action_msg_copy_permalink">Копировать ссылку</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редактирование запрещено</string>
