@@ -313,5 +313,7 @@
     <string name="msg_welcome_to_widechat">Welcome to Viasat Connect</string>
     <string name="sign_up">Sign Up</string>
     <string name="log_in">Log In</string>
+    <string name="edit_profile">Edit My Profile</string>
+    <string name="delete_account">Delete My Account</string>
     <string name="log_out">Log Out</string>
 </resources>

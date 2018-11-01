@@ -41,6 +41,7 @@ import javax.inject.Inject
 // WIDECHAT
 import chat.rocket.android.helper.Constants
 import kotlinx.android.synthetic.main.app_bar.* // need this for back button in setupToolbar
+import kotlinx.android.synthetic.main.fragment_profile_widechat.*
 
 internal const val TAG_PROFILE_FRAGMENT = "ProfileFragment"
 
@@ -58,6 +59,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private var actionMode: ActionMode? = null
     private val editTextsDisposable = CompositeDisposable()
 
+    // WIDECHAT
+    private var profileFragment: Int = R.layout.fragment_profile_widechat
+
     companion object {
         fun newInstance() = ProfileFragment()
     }
@@ -65,13 +69,17 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
+
+        if (!Constants.WIDECHAT) {
+            profileFragment = R.layout.fragment_profile
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = container?.inflate(R.layout.fragment_profile)
+    ): View? = container?.inflate(profileFragment)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -82,14 +90,18 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             tintEditTextDrawableStart()
         }
         presenter.loadUserProfile()
-        subscribeEditTexts()
+        if (!Constants.WIDECHAT) {
+            subscribeEditTexts()
+        }
 
         analyticsManager.logScreenView(ScreenViewEvent.Profile)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        unsubscribeEditTexts()
+        if (!Constants.WIDECHAT) {
+            unsubscribeEditTexts()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
@@ -102,7 +114,23 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
     }
 
+    fun showWidechatProfile(avatarUrl: String, name: String, username: String, email: String?) {
+        ui {
+            image_avatar.setImageURI(avatarUrl)
+            widechat_text_name.text = name
+            widechat_text_username.textContent = username
+            widechat_text_email.textContent = email ?: ""
+
+            widechat_profile_container.isVisible = true
+        }
+    }
+
     override fun showProfile(avatarUrl: String, name: String, username: String, email: String?) {
+        if (Constants.WIDECHAT) {
+            showWidechatProfile(avatarUrl, name, username, email)
+            return
+        }
+
         ui {
             image_avatar.setImageURI(avatarUrl)
             text_name.textContent = name
@@ -128,17 +156,29 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun showLoading() {
-        enableUserInput(false)
-        ui { view_loading.isVisible = true }
+        if (Constants.WIDECHAT) {
+            ui { widechat_view_loading.isVisible = true }
+        } else {
+            enableUserInput(false)
+            ui { view_loading.isVisible = true }
+        }
     }
 
     override fun hideLoading() {
-        ui {
-            if (view_loading != null) {
-                view_loading.isVisible = false
+        if (Constants.WIDECHAT) {
+            ui {
+                if (widechat_view_loading != null) {
+                    widechat_view_loading.isVisible = false
+                }
             }
+        } else {
+            ui {
+                if (view_loading != null) {
+                    view_loading.isVisible = false
+                }
+            }
+            enableUserInput(true)
         }
-        enableUserInput(true)
     }
 
     override fun showMessage(resId: Int) {
@@ -199,7 +239,13 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private fun setupListeners() {
         image_avatar.setOnClickListener { showUpdateAvatarOptions() }
 
-        view_dim.setOnClickListener { hideUpdateAvatarOptions() }
+        if (Constants.WIDECHAT) {
+            widechat_view_dim.setOnClickListener { hideUpdateAvatarOptions() }
+            edit_profile_button.setOnClickListener { showToast("Edit Profile Button Clicked") }
+            delete_account_button.setOnClickListener { showToast("Delete Account Button Clicked") }
+        } else {
+            view_dim.setOnClickListener { hideUpdateAvatarOptions() }
+        }
 
         button_open_gallery.setOnClickListener {
             dispatchImageSelection(REQUEST_CODE_FOR_PERFORM_SAF)
@@ -218,13 +264,23 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun showUpdateAvatarOptions() {
-        view_dim.isVisible = true
-        layout_update_avatar_options.isVisible = true
+        if (Constants.WIDECHAT) {
+            widechat_view_dim.isVisible = true
+            widechat_layout_update_avatar_options.isVisible = true
+        } else {
+            view_dim.isVisible = true
+            layout_update_avatar_options.isVisible = true
+        }
     }
 
     private fun hideUpdateAvatarOptions() {
-        layout_update_avatar_options.isVisible = false
-        view_dim.isVisible = false
+        if (Constants.WIDECHAT) {
+            widechat_layout_update_avatar_options.isVisible = false
+            widechat_view_dim.isVisible = false
+        } else {
+            layout_update_avatar_options.isVisible = false
+            view_dim.isVisible = false
+        }
     }
 
     private fun tintEditTextDrawableStart() {
