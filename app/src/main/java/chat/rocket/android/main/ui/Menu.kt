@@ -64,6 +64,6 @@ internal fun MainActivity.onNavDrawerItemSelected(menuItem: MenuItem) {
         R.id.menu_action_profile -> presenter.toUserProfile()
         R.id.menu_action_settings -> presenter.toSettings()
         R.id.menu_action_admin_panel -> presenter.toAdminPanel()
-        R.id.menu_action_logout -> presenter.logout()
+        R.id.menu_action_logout -> showLogoutDialog()
     }
 }

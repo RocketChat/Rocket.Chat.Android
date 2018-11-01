@@ -232,6 +232,15 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         toolbar.setNavigationOnClickListener { openDrawer() }
     }
 
+    fun showLogoutDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.action_logout)
+        builder.setMessage(R.string.title_confirmation)
+        builder.setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout()}
+            .setNegativeButton(R.string.action_stay) { dialog, _ -> dialog.cancel() }
+        builder.create().show()
+    }
+
     fun setAvatar(avatarUrl: String) {
         headerLayout.image_avatar.setImageURI(avatarUrl)
     }
