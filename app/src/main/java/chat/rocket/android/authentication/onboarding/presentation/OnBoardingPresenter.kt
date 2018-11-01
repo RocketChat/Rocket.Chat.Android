@@ -76,9 +76,8 @@ class OnBoardingPresenter @Inject constructor(
             view.showLoading()
             try {
                 withContext(DefaultDispatcher) {
-                    refreshSettingsInteractor.refresh(serverUrl)
-
                     setupConnectionInfo(serverUrl)
+                    refreshSettingsInteractor.refresh(serverUrl)
 
                     // preparing next fragment before showing it
                     checkEnabledAccounts(serverUrl)

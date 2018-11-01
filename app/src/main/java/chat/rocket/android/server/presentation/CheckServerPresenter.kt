@@ -82,6 +82,31 @@ abstract class CheckServerPresenter constructor(
             settings = it
         }
         client = factory.create(serverUrl)
+
+        state = ""
+        facebookOauthUrl = null
+        githubOauthUrl = null
+        googleOauthUrl = null
+        linkedinOauthUrl = null
+        gitlabOauthUrl = null
+        wordpressOauthUrl = null
+        casLoginUrl = null
+        casToken = null
+        casServiceName = null
+        casServiceNameTextColor = 0
+        casServiceButtonColor = 0
+        customOauthUrl = null
+        customOauthServiceName = null
+        customOauthServiceNameTextColor = 0
+        customOauthServiceButtonColor= 0
+        samlUrl = null
+        samlToken = null
+        samlServiceName = null
+        samlServiceNameTextColor = 0
+        samlServiceButtonColor = 0
+        totalSocialAccountsEnabled = 0
+        isLoginFormEnabled = false
+        isNewAccountCreationEnabled = false
     }
 
     internal fun checkServerInfo(serverUrl: String): Job {
@@ -263,6 +288,7 @@ abstract class CheckServerPresenter constructor(
                 val serviceNameTextColor =
                     getServiceNameColor(serviceMap)
                 val serviceButtonColor = getServiceButtonColor(serviceMap)
+
                 if (customOauthServiceName != null &&
                     host != null &&
                     authorizePath != null &&

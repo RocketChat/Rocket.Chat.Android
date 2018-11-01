@@ -95,8 +95,6 @@ class ServerPresenter @Inject constructor(
                     withContext(DefaultDispatcher) {
                         refreshSettingsInteractor.refresh(serverUrl)
 
-                        setupConnectionInfo(serverUrl)
-
                         // preparing next fragment before showing it
                         checkEnabledAccounts(serverUrl)
                         checkIfLoginFormIsEnabled()
