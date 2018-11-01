@@ -121,10 +121,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             widechat_text_username.textContent = username
             widechat_text_email.textContent = email ?: ""
 
-            currentName = name
-            currentUsername = username
-            currentEmail = email ?: ""
-
             widechat_profile_container.isVisible = true
         }
     }
