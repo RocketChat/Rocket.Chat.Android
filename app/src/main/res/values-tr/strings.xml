@@ -26,7 +26,6 @@
     <!-- Actions -->
     <string name="action_connect">Bağlan</string>
     <string name="action_use_this_username">Bu kullanıcı adını kullan</string>
-    <string name="action_login_or_sign_up">Giriş yapmak veya yeni hesap oluşturmak için buraya tıklayın.</string>
     <string name="action_terms_of_service">Kullanım Şartları</string>
     <string name="action_privacy_policy">Gizlilik Sözleşmesi</string>
     <string name="action_search">Ara</string>

@@ -26,7 +26,6 @@
     <!-- Actions -->
     <string name="action_connect">Подключиться</string>
     <string name="action_use_this_username">Использовать это имя</string>
-    <string name="action_login_or_sign_up">Нажмите эту кнопку, чтобы войти в систему или создать учетную запись</string>
     <string name="action_terms_of_service">Условия использования</string>
     <string name="action_privacy_policy">Политика конфиденциальности</string>
     <string name="action_search">Поиск</string>
