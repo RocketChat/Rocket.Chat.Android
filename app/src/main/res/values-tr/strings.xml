@@ -20,6 +20,8 @@
     <string name="title_update_profile">Profilinizi Düzenleyin</string>
     <string name="title_about">Hakkında</string>
     <string name="title_create_channel">Yeni Kanal Oluştur</string>
+    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
+
 
     <!-- Actions -->
     <string name="action_connect">Bağlan</string>
@@ -33,6 +35,7 @@
     <string name="action_create_channel">Yeni Kanal Oluştur</string>
     <string name="action_create">Oluştur</string>
     <string name="action_logout">Çıkış Yap</string>
+    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">Dosyalar</string>
     <string name="action_confirm_password">Şifre Değişikliğini Onaylayın</string>
     <string name="action_join_chat">Sohbete Bağlan</string>

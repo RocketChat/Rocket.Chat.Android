@@ -32,6 +32,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_update_profile">Update profile</string>
     <string name="title_about">About</string>
     <string name="title_create_channel">Create Channel</string>
+    <string name="title_confirmation">Are You Sure you want to logout?</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
@@ -45,6 +46,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_create_channel">Create channel</string>
     <string name="action_create">Create</string>
     <string name="action_logout">Logout</string>
+    <string name="action_stay">Stay</string>
     <string name="action_files">Files</string>
     <string name="action_confirm_password">Confirm Password Change</string>
     <string name="action_join_chat">Join Chat</string>
