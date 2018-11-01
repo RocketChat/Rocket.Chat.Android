@@ -1,6 +1,7 @@
 package chat.rocket.android.main.presentation
 
 import android.content.Context
+import chat.rocket.android.R
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.emoji.Emoji
