@@ -61,6 +61,9 @@ abstract class CheckServerPresenter constructor(
     internal var wordpressOauthUrl: String? = null
     internal var casLoginUrl: String? = null
     internal var casToken: String? = null
+    internal var casServiceName: String? = null
+    internal var casServiceNameTextColor: Int = 0
+    internal var casServiceButtonColor: Int = 0
     internal var customOauthUrl: String? = null
     internal var customOauthServiceName: String? = null
     internal var customOauthServiceNameTextColor: Int = 0
@@ -79,6 +82,31 @@ abstract class CheckServerPresenter constructor(
             settings = it
         }
         client = factory.create(serverUrl)
+
+        state = ""
+        facebookOauthUrl = null
+        githubOauthUrl = null
+        googleOauthUrl = null
+        linkedinOauthUrl = null
+        gitlabOauthUrl = null
+        wordpressOauthUrl = null
+        casLoginUrl = null
+        casToken = null
+        casServiceName = null
+        casServiceNameTextColor = 0
+        casServiceButtonColor = 0
+        customOauthUrl = null
+        customOauthServiceName = null
+        customOauthServiceNameTextColor = 0
+        customOauthServiceButtonColor= 0
+        samlUrl = null
+        samlToken = null
+        samlServiceName = null
+        samlServiceNameTextColor = 0
+        samlServiceButtonColor = 0
+        totalSocialAccountsEnabled = 0
+        isLoginFormEnabled = false
+        isNewAccountCreationEnabled = false
     }
 
     internal fun checkServerInfo(serverUrl: String): Job {
@@ -125,7 +153,7 @@ abstract class CheckServerPresenter constructor(
             if (services.isNotEmpty()) {
                 state = OauthHelper.getState()
                 checkEnabledOauthAccounts(services, serverUrl)
-                checkEnabledCasAccounts(serverUrl)
+                checkEnabledCasAccounts(services, serverUrl)
                 checkEnabledCustomOauthAccounts(services, serverUrl)
                 checkEnabledSamlAccounts(services, serverUrl)
             }
@@ -227,11 +255,25 @@ abstract class CheckServerPresenter constructor(
         }
     }
 
-    private fun checkEnabledCasAccounts(serverUrl: String) {
+    private fun checkEnabledCasAccounts(services: List<Map<String,Any>>, serverUrl: String) {
         if (settings.isCasAuthenticationEnabled()) {
             casToken = generateRandomString(17)
             casLoginUrl = settings.casLoginUrl().casUrl(serverUrl, casToken.toString())
-            totalSocialAccountsEnabled++
+            getCasServices(services).let {
+                for (serviceMap in it) {
+                    casServiceName = getServiceName(serviceMap)
+                    val serviceNameTextColor = getServiceNameColor(serviceMap)
+                    val serviceButtonColor = getServiceButtonColor(serviceMap)
+                    if (casServiceName != null &&
+                        serviceNameTextColor != null &&
+                        serviceButtonColor != null
+                    ) {
+                        casServiceNameTextColor = serviceNameTextColor
+                        casServiceButtonColor = serviceButtonColor
+                        totalSocialAccountsEnabled++
+                    }
+                }
+            }
         }
     }
 
@@ -244,8 +286,9 @@ abstract class CheckServerPresenter constructor(
                 val clientId = getOauthClientId(serviceMap)
                 val scope = getCustomOauthScope(serviceMap)
                 val serviceNameTextColor =
-                    getServiceNameColorForCustomOauthOrSaml(serviceMap)
+                    getServiceNameColor(serviceMap)
                 val serviceButtonColor = getServiceButtonColor(serviceMap)
+
                 if (customOauthServiceName != null &&
                     host != null &&
                     authorizePath != null &&
@@ -276,9 +319,9 @@ abstract class CheckServerPresenter constructor(
             samlToken = generateRandomString(17)
             for (serviceMap in it) {
                 val provider = getSamlProvider(serviceMap)
-                samlServiceName = getSamlServiceName(serviceMap)
+                samlServiceName = getServiceName(serviceMap)
                 val serviceNameTextColor =
-                    getServiceNameColorForCustomOauthOrSaml(serviceMap)
+                    getServiceNameColor(serviceMap)
                 val serviceButtonColor = getServiceButtonColor(serviceMap)
 
                 if (provider != null &&
@@ -370,6 +413,14 @@ abstract class CheckServerPresenter constructor(
         serviceMap["service"] as? String
 
     /**
+     * Returns a CAS service list.
+     *
+     * @return A CAS service list, otherwise an empty list if there is no CAS service.
+     */
+    private fun getCasServices(listMap: List<Map<String, Any>>): List<Map<String, Any>> =
+        listMap.filter { map -> map["service"] == "cas" }
+
+    /**
      * Returns a SAML OAuth service list.
      *
      * @return A SAML service list, otherwise an empty list if there is no SAML OAuth service.
@@ -388,26 +439,27 @@ abstract class CheckServerPresenter constructor(
 
     /**
      * Returns the text of the SAML service.
+     * REMARK: This can be used SAML or CAS.
      *
      * @param serviceMap The service map to get the text of the SAML service.
      * @return The text of the SAML service, otherwise null.
      */
-    private fun getSamlServiceName(serviceMap: Map<String, Any>): String? =
+    private fun getServiceName(serviceMap: Map<String, Any>): String? =
         serviceMap["buttonLabelText"] as? String
 
     /**
      * Returns the text color of the service name.
-     * REMARK: This can be used for custom OAuth or SAML.
+     * REMARK: This can be used for custom OAuth, SAML or CAS.
      *
      * @param serviceMap The service map to get the text color from.
      * @return The text color of the service (custom OAuth or SAML), otherwise null.
      */
-    private fun getServiceNameColorForCustomOauthOrSaml(serviceMap: Map<String, Any>): Int? =
+    private fun getServiceNameColor(serviceMap: Map<String, Any>): Int? =
         (serviceMap["buttonLabelColor"] as? String)?.parseColor()
 
     /**
      * Returns the button color of the service name.
-     * REMARK: This can be used for custom OAuth or SAML.
+     * REMARK: This can be used for custom OAuth, SAML or CAS.
      *
      * @param serviceMap The service map to get the button color from.
      * @return The button color of the service (custom OAuth or SAML), otherwise null.

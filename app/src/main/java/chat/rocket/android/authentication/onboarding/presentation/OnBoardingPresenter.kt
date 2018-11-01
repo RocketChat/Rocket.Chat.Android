@@ -43,6 +43,9 @@ class OnBoardingPresenter @Inject constructor(
                     wordpressOauthUrl,
                     casLoginUrl,
                     casToken,
+                    casServiceName,
+                    casServiceNameTextColor,
+                    casServiceButtonColor,
                     customOauthUrl,
                     customOauthServiceName,
                     customOauthServiceNameTextColor,
@@ -73,9 +76,8 @@ class OnBoardingPresenter @Inject constructor(
             view.showLoading()
             try {
                 withContext(DefaultDispatcher) {
-                    refreshSettingsInteractor.refresh(serverUrl)
-
                     setupConnectionInfo(serverUrl)
+                    refreshSettingsInteractor.refresh(serverUrl)
 
                     // preparing next fragment before showing it
                     checkEnabledAccounts(serverUrl)

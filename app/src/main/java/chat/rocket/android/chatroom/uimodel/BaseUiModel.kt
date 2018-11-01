@@ -17,6 +17,7 @@ interface BaseUiModel<out T> {
     var currentDayMarkerText: String
     var showDayMarker: Boolean
     var menuItemsToHide: MutableList<Int>
+    var permalink: String
 
     enum class ViewType(val viewType: Int) {
         MESSAGE(0),

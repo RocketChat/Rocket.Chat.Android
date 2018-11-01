@@ -35,6 +35,7 @@ import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extension.compressImageAndGetByteArray
+import chat.rocket.android.util.extension.getByteArray
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
@@ -80,6 +81,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.threeten.bp.Instant
 import timber.log.Timber
+import java.io.InputStream
 import java.util.*
 import javax.inject.Inject
 
@@ -346,15 +348,51 @@ class ChatRoomPresenter @Inject constructor(
         view.showFileSelection(settings.uploadMimeTypeFilter())
     }
 
-    fun uploadFile(roomId: String, uri: Uri, msg: String, bitmap: Bitmap? = null) {
+    fun uploadImage(roomId: String, mimeType: String, uri: Uri, bitmap: Bitmap, msg: String) {
         launchUI(strategy) {
             view.showLoading()
             try {
                 withContext(DefaultDispatcher) {
                     val fileName = uriInteractor.getFileName(uri) ?: uri.toString()
-                    val mimeType = uriInteractor.getMimeType(uri)
-                    val byteArray = bitmap?.compressImageAndGetByteArray(mimeType)
-                    val fileSize = byteArray?.size ?: uriInteractor.getFileSize(uri)
+                    if (fileName.isEmpty()) {
+                        view.showInvalidFileMessage()
+                    } else {
+                        val byteArray =
+                            bitmap.getByteArray(mimeType, 100, settings.uploadMaxFileSize())
+                        retryIO("uploadFile($roomId, $fileName, $mimeType") {
+                            client.uploadFile(
+                                roomId,
+                                fileName,
+                                mimeType,
+                                msg,
+                                description = fileName
+                            ) {
+                                byteArray.inputStream()
+                            }
+                        }
+
+                        logMediaUploaded(mimeType)
+                    }
+                }
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error uploading image")
+                when (ex) {
+                    is RocketChatException -> view.showMessage(ex)
+                    else -> view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideLoading()
+            }
+        }
+    }
+
+    fun uploadFile(roomId: String, mimeType: String, uri: Uri, msg: String) {
+        launchUI(strategy) {
+            view.showLoading()
+            try {
+                withContext(DefaultDispatcher) {
+                    val fileName = uriInteractor.getFileName(uri) ?: uri.toString()
+                    val fileSize = uriInteractor.getFileSize(uri)
                     val maxFileSizeAllowed = settings.uploadMaxFileSize()
 
                     when {
@@ -370,7 +408,7 @@ class ChatRoomPresenter @Inject constructor(
                                     msg,
                                     description = fileName
                                 ) {
-                                    byteArray?.inputStream() ?: uriInteractor.getInputStream(uri)
+                                    uriInteractor.getInputStream(uri)
                                 }
                             }
                             logMediaUploaded(mimeType)
@@ -503,7 +541,7 @@ class ChatRoomPresenter @Inject constructor(
                     val messages =
                         retryIO(description = "history($chatRoomId, $roomType, $instant)") {
                             client.history(
-                                    chatRoomId, roomType, count = 50,
+                                chatRoomId, roomType, count = 50,
                                 oldest = instant
                             )
                         }
@@ -620,6 +658,7 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 messagesRepository.getById(messageId)?.let { m ->
                     view.copyToClipboard(m.message)
+                    view.showMessage(R.string.msg_message_copied)
                 }
             } catch (e: RocketChatException) {
                 Timber.e(e)
@@ -858,6 +897,42 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
+    private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(CommonPool) {
+        return@withContext dbManager.chatRoomDao().get(roomId)?.let {
+            with(it.chatRoom) {
+                ChatRoom(
+                    id = id,
+                    subscriptionId = subscriptionId,
+                    type = roomTypeOf(type),
+                    unread = unread,
+                    broadcast = broadcast ?: false,
+                    alert = alert,
+                    fullName = fullname,
+                    name = name,
+                    favorite = favorite ?: false,
+                    default = isDefault ?: false,
+                    readonly = readonly,
+                    open = open,
+                    lastMessage = null,
+                    archived = false,
+                    status = null,
+                    user = null,
+                    userMentions = userMentions,
+                    client = client,
+                    announcement = null,
+                    description = null,
+                    groupMentions = groupMentions,
+                    roles = null,
+                    topic = null,
+                    lastSeen = this.lastSeen,
+                    timestamp = timestamp,
+                    updatedAt = updatedAt
+                )
+            }
+        }
+    }
+
+    // TODO: move this to new interactor or FetchChatRoomsInteractor?
     private suspend fun getChatRoomsAsync(name: String? = null): List<ChatRoom> = withContext(CommonPool) {
         return@withContext dbManager.chatRoomDao().getAllSync().filter {
             if (name == null) {
@@ -935,6 +1010,24 @@ class ChatRoomPresenter @Inject constructor(
             } catch (ex: Exception) {
                 Timber.e(ex)
                 view.showMessage(ex.message!!)
+            }
+        }
+    }
+
+    fun copyPermalink(messageId: String) {
+        launchUI(strategy) {
+            try {
+                messagesRepository.getById(messageId)?.let { message ->
+                    getChatRoomAsync(message.roomId)?.let { chatRoom ->
+                        val models = mapper.map(message)
+                        models.firstOrNull()?.permalink?.let {
+                            view.copyToClipboard(it)
+                            view.showMessage(R.string.msg_permalink_copied)
+                        }
+                    }
+                }
+            } catch (ex: Exception) {
+                Timber.e(ex)
             }
         }
     }
