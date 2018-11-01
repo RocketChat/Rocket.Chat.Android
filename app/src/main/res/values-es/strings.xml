@@ -23,7 +23,6 @@
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
     <string name="action_use_this_username">Usa este nombre de usuario</string>
-    <string name="action_login_or_sign_up">Toca en este botón para iniciar sesión o crear una cuenta</string>
     <string name="action_terms_of_service">Términos de Servicio</string>
     <string name="action_privacy_policy">Política de Privacidad</string>
     <string name="action_search">Buscar</string>

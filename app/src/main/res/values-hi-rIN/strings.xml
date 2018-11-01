@@ -24,7 +24,6 @@
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
     <string name="action_use_this_username">इस उपयोगकर्ता नाम का उपयोग करें</string>
-    <string name="action_login_or_sign_up">लॉग इन करने या खाता बनाने के लिए इस बटन को टैप करें</string>
     <string name="action_terms_of_service">सेवा की शर्तें</string>
     <string name="action_privacy_policy">गोपनीयता नीति</string>
     <string name="action_search">खोजें</string>

@@ -36,7 +36,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <!-- Actions -->
     <string name="action_connect">Connect</string>
     <string name="action_use_this_username">Use this username</string>
-    <string name="action_login_or_sign_up">Tap this button to log in or create an account</string>
     <string name="action_terms_of_service">Terms of Service</string>
     <string name="action_privacy_policy">Privacy Policy</string>
     <string name="action_search">Search</string>
