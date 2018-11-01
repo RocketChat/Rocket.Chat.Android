@@ -165,6 +165,8 @@
     <string name="msg_channel_created_successfully">चैनल सफलतापूर्वक बनाया गया</string>
     <string name="msg_view_more">और देखें</string>
     <string name="msg_view_less">कम देखें</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">एनालिटिक्स ट्रैकिंग</string>
@@ -187,7 +189,6 @@
     <string name="message_role_removed">%1$s अब %3$s द्वारा %2$s नहीं है</string>
     <string name="message_credentials_saved_successfully">प्रमाण पत्र सफलतापूर्वक सहेजे गए</string>
 
-
     <!-- Message actions -->
     <string name="action_msg_reply">जवाब दें</string>
     <string name="action_msg_info">संदेश जानकारी</string>
@@ -202,6 +203,8 @@
     <string name="action_msg_share">शेयर करें</string>
     <string name="action_title_editing">संपादन संदेश</string>
     <string name="action_msg_add_reaction">प्रतिक्रिया जोड़ें</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_copy_permalink">Copy permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">संपादन की अनुमति नहीं है</string>

@@ -14,6 +14,7 @@ import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.util.PatternsCompat
 import chat.rocket.android.R
+import androidx.core.util.PatternsCompat
 import chat.rocket.android.chatroom.ui.StrikethroughDelimiterProcessor
 import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiRepository

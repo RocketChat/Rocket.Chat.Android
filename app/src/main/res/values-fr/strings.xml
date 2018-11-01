@@ -154,6 +154,8 @@
     <string name="msg_view_more">view more</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_view_less">view less</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privé</string>
@@ -203,6 +205,8 @@
     <string name="action_msg_share">Partager</string>
     <string name="action_title_editing">Modification du message</string>
     <string name="action_msg_add_reaction">Ajouter une réaction</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_copy_permalink">Copy permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">L\'édition n\'est pas autorisée</string>

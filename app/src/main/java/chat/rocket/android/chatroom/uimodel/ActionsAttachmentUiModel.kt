@@ -20,7 +20,8 @@ data class ActionsAttachmentUiModel(
 	override var unread: Boolean? = null,
 	override var menuItemsToHide: MutableList<Int> = mutableListOf(),
 	override var currentDayMarkerText: String,
-	override var showDayMarker: Boolean
+	override var showDayMarker: Boolean,
+	override var permalink: String
 ) : BaseAttachmentUiModel<ActionsAttachment> {
 	override val viewType: Int
 		get() = BaseUiModel.ViewType.ACTIONS_ATTACHMENT.viewType

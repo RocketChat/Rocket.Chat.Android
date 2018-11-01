@@ -152,6 +152,8 @@
     <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
     <string name="msg_view_more">visualizar mais</string>
     <string name="msg_view_less">visualizar menos</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copiado</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
@@ -201,6 +203,7 @@
     <string name="action_msg_share">Compartilhar</string>
     <string name="action_title_editing">Editando mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
+    <string name="action_msg_copy_permalink">Copiar permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Edição não permitida</string>

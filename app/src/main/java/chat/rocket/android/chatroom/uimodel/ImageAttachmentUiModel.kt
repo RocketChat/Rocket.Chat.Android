@@ -20,7 +20,8 @@ data class ImageAttachmentUiModel(
     override var unread: Boolean? = null,
     override var menuItemsToHide: MutableList<Int> = mutableListOf(),
     override var currentDayMarkerText: String,
-    override var showDayMarker: Boolean
+    override var showDayMarker: Boolean,
+    override var permalink: String
 ) : BaseFileAttachmentUiModel<ImageAttachment> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.IMAGE_ATTACHMENT.viewType

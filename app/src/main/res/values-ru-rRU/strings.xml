@@ -150,6 +150,8 @@
     <string name="msg__your_2fa_code">Ваш код 2FA?</string>
     <string name="msg_view_more">больше</string>
     <string name="msg_view_less">меньше</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>
@@ -198,6 +200,8 @@
     <string name="action_msg_share">Поделиться</string>
     <string name="action_title_editing">Редактирование сообщения</string>
     <string name="action_msg_add_reaction">Отреагировать</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_copy_permalink">Copy permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редактирование запрещено</string>
