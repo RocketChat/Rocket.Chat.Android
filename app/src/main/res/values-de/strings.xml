@@ -25,7 +25,6 @@
     <!-- Actions -->
     <string name="action_connect">Verbinde</string>
     <string name="action_use_this_username">Benutze den Benutzernamen</string>
-    <string name="action_login_or_sign_up">Klick diesen Knopf um sich anzumelden oder einen Account zu erstellen</string>
     <string name="action_terms_of_service">Nutzungsbedingungen</string>
     <string name="action_privacy_policy">Datenschutz</string>
     <string name="action_search">Suche</string>

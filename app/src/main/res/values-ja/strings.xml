@@ -28,7 +28,6 @@
     <!-- Actions -->
     <string name="action_connect">接続</string>
     <string name="action_use_this_username">このユーザー名を使用する</string>
-    <string name="action_login_or_sign_up">ログインまたはアカウントを作成するにはこのボタンを押してください</string>
     <string name="action_terms_of_service">サービス利用規約</string>
     <string name="action_privacy_policy">プライバシーポリシー</string>
     <string name="action_search">検索</string>
