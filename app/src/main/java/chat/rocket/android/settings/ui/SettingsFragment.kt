@@ -28,6 +28,7 @@ import kotlin.reflect.KClass
 // WIDECHAT
 import chat.rocket.android.helper.Constants
 import kotlinx.android.synthetic.main.app_bar.* // need this for back button in setupToolbar
+import kotlinx.android.synthetic.main.fragment_settings_widechat.*
 
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
@@ -35,16 +36,23 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     @Inject
     lateinit var analyticsManager: AnalyticsManager
 
+    // WIDECHAT
+    private var settingsFragment: Int = R.layout.fragment_settings_widechat
+
    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+
+       if (!Constants.WIDECHAT) {
+           settingsFragment = R.layout.fragment_settings
+       }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = container?.inflate(R.layout.fragment_settings)
+    ): View? = container?.inflate(settingsFragment)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -82,11 +90,21 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                     AboutFragment.newInstance()
                 }
             }
+            // WIDECHAT
+            resources.getString(R.string.log_out) -> {
+                with((activity as MainActivity).presenter) {
+                    logout()
+                }
+            }
         }
     }
 
     private fun setupListView() {
-        settings_list.onItemClickListener = this
+        if (Constants.WIDECHAT) {
+            widechat_settings_list.onItemClickListener = this
+        } else {
+            settings_list.onItemClickListener = this
+        }
     }
 
     private fun setupToolbar() {
