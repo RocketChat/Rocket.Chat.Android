@@ -86,7 +86,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
         setupToolbar()
         setupListeners()
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+        if ((Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) && (!Constants.WIDECHAT)){
             tintEditTextDrawableStart()
         }
         presenter.loadUserProfile()
