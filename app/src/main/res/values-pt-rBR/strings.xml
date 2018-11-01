@@ -20,6 +20,8 @@
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
     <string name="title_create_channel">Criar chat</string>
+    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
+
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
@@ -33,6 +35,7 @@
     <string name="action_create_channel">Criar chat</string>
     <string name="action_create">Criar</string>
     <string name="action_logout">Sair</string>
+    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
     <string name="action_join_chat">Entrar no Chat</string>
