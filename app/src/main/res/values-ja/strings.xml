@@ -28,7 +28,6 @@
     <!-- Actions -->
     <string name="action_connect">接続</string>
     <string name="action_use_this_username">このユーザー名を使用する</string>
-    <string name="action_login_or_sign_up">ログインまたはアカウントを作成するにはこのボタンを押してください</string>
     <string name="action_terms_of_service">サービス利用規約</string>
     <string name="action_privacy_policy">プライバシーポリシー</string>
     <string name="action_search">検索</string>
@@ -170,6 +169,8 @@
     <string name="msg_message_copied">メッセージをコピー</string>
     <string name="msg_delete_message">メッセージを削除</string>
     <string name="msg_delete_description">このメッセージを削除してもよろしいですか?</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
@@ -206,6 +207,8 @@
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">メッセージの編集</string>
     <string name="action_msg_add_reaction">リアクションする</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_copy_permalink">Copy permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">編集は許可されていません</string>

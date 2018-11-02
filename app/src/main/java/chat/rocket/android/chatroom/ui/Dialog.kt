@@ -7,7 +7,7 @@ import androidx.core.view.isVisible
 import chat.rocket.android.emoji.internal.GlideApp
 import chat.rocket.android.util.extensions.getFileName
 import chat.rocket.android.util.extensions.getMimeType
-import com.bumptech.glide.load.resource.gif.GifDrawable
+import chat.rocket.common.util.ifNull
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 
@@ -15,10 +15,12 @@ fun ChatRoomFragment.showFileAttachmentDialog(uri: Uri) {
     imagePreview.isVisible = false
     audioVideoAttachment.isVisible = false
     textFile.isVisible = false
+    lateinit var mimeType: String
     var bitmap: Bitmap? = null
 
     activity?.let { context ->
-        uri.getMimeType(context).let { mimeType ->
+        uri.getMimeType(context).let {
+            mimeType = it
             description.text.clear()
             when {
                 mimeType.startsWith("image") -> {
@@ -27,7 +29,6 @@ fun ChatRoomFragment.showFileAttachmentDialog(uri: Uri) {
                             .with(context)
                             .asGif()
                             .load(uri)
-                            .override(imagePreview.width, imagePreview.height)
                             .fitCenter()
                             .into(imagePreview)
                     } else {
@@ -35,7 +36,6 @@ fun ChatRoomFragment.showFileAttachmentDialog(uri: Uri) {
                             .with(context)
                             .asBitmap()
                             .load(uri)
-                            .override(imagePreview.width, imagePreview.height)
                             .fitCenter()
                             .into(object : SimpleTarget<Bitmap>() {
                                 override fun onResourceReady(
@@ -59,12 +59,22 @@ fun ChatRoomFragment.showFileAttachmentDialog(uri: Uri) {
     }
 
     sendButton.setOnClickListener {
-        presenter.uploadFile(
-            chatRoomId,
-            uri,
-            (citation ?: "") + description.text.toString(),
-            bitmap
-        )
+        bitmap?.let { bitmap ->
+            presenter.uploadImage(
+                chatRoomId,
+                mimeType,
+                uri,
+                bitmap,
+                (citation ?: "") + description.text.toString()
+            )
+        }.ifNull {
+            presenter.uploadFile(
+                chatRoomId,
+                mimeType,
+                uri,
+                (citation ?: "") + description.text.toString()
+            )
+        }
         alertDialog.dismiss()
     }
     cancelButton.setOnClickListener { alertDialog.dismiss() }
