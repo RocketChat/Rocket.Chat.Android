@@ -39,7 +39,7 @@ cd Rocket.Chat.Android/app
 
 ## Bug report & Feature request
 
-Please report via [GitHub issue](https://github.com/RocketChat/Rocket.Chat.Android/issues) :)
+Are you having a technical issue trying to compile the app, or setting up Push Notifications? Please use our Community Support channel for that: https://forums.rocket.chat/c/community-support. The issues are only suppose to be used for bugs, improvements and features in the native Android application.
 
 ## Coding Style
 
