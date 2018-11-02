@@ -19,17 +19,21 @@ class RoomsAdapter(private val listener: (RoomUiModel) -> Unit) : RecyclerView.A
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> {
-        if (viewType == VIEW_TYPE_ROOM) {
-            val view = parent.inflate(R.layout.item_chat)
-            return RoomViewHolder(view, listener)
-        } else if (viewType == VIEW_TYPE_HEADER) {
-            val view = parent.inflate(R.layout.item_chatroom_header)
-            return HeaderViewHolder(view)
-        } else if (viewType == VIEW_TYPE_LOADING) {
-            val view = parent.inflate(R.layout.item_loading)
-            return LoadingViewHolder(view)
+        return when (viewType) {
+            VIEW_TYPE_ROOM -> {
+                val view = parent.inflate(R.layout.item_chat)
+                RoomViewHolder(view, listener)
+            }
+            VIEW_TYPE_HEADER -> {
+                val view = parent.inflate(R.layout.item_chatroom_header)
+                HeaderViewHolder(view)
+            }
+            VIEW_TYPE_LOADING -> {
+                val view = parent.inflate(R.layout.item_loading)
+                LoadingViewHolder(view)
+            }
+            else -> throw IllegalStateException("View type must be either Room, Header or Loading")
         }
-        throw IllegalStateException("View type must be either Room, Header or Loading")
     }
 
     override fun getItemCount() = values.size

@@ -178,11 +178,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 // Simply setting sortView to visible won't work, so we invalidate the options
                 // to recreate the entire menu...
+                viewModel.showLastMessage = true
                 activity?.invalidateOptionsMenu()
+                queryChatRoomsByName(null)
                 return true
             }
 
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+                viewModel.showLastMessage = false
                 sortView?.isVisible = false
                 return true
             }

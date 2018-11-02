@@ -1,10 +1,13 @@
 version: 2
+build:
+  machine:
+    java: oraclejdk8
 jobs:
   build-kotlin-sdk:
     docker:
-      - image: circleci/android:api-27-alpha
+      - image: circleci/android:api-28-alpha
     environment:
-      JVM_OPTS: -Xmx3200m
+      JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
       - checkout
       - run:
@@ -18,8 +21,9 @@ jobs:
           command: pushd app/ ; ./build-sdk.sh ; popd
       - save_cache:
           paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}
+            - ~/.gradle/caches
+            - ~/.gradle/wrapper
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}-{{ checksum "core/build.gradle" }}-{{ checksum "util/build.gradle" }}-{{ checksum "draw/build.gradle" }}-{{ checksum "emoji/build.gradle" }}-{{ checksum "suggestions/build.gradle" }}
       - save_cache:
           paths:
             - app/libs/
@@ -30,47 +34,51 @@ jobs:
           destination: libs
   code-analysis:
     docker:
-      - image: circleci/android:api-27-alpha
+      - image: circleci/android:api-28-alpha
     environment:
-      JVM_OPTS: -Xmx3200m
+      JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
       - checkout
       - run:
           name: ANDROID_HOME
-          command: echo "sdk.dir="$ANDROID_HOME > local.properties 
+          command: echo "sdk.dir="$ANDROID_HOME > local.properties
       - run:
           name: checkout Rocket.Chat.Kotlin.SDK
           command: git clone https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK.git ../Rocket.Chat.Kotlin.SDK
       - restore_cache:
           key: kotlin-sdk-{{ .Revision }}
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}-{{ checksum "core/build.gradle" }}-{{ checksum "util/build.gradle" }}-{{ checksum "draw/build.gradle" }}-{{ checksum "emoji/build.gradle" }}-{{ checksum "suggestions/build.gradle" }}
       - run:
           name: Download Dependencies
-          command: ./gradlew androidDependencies --quiet --console=plain
+          command: ./gradlew --no-daemon androidDependencies --quiet --console=plain
       - save_cache:
           paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}
+            - ~/.gradle/caches
+            - ~/.gradle/wrapper
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}-{{ checksum "core/build.gradle" }}-{{ checksum "util/build.gradle" }}-{{ checksum "draw/build.gradle" }}-{{ checksum "emoji/build.gradle" }}-{{ checksum "suggestions/build.gradle" }}
       - run:
           name: Run Lint #, Checkstyles, PMD, Findbugs...
-          command: ./gradlew lint
+          command: ./gradlew --no-daemon lint
       - run:
           name: Run Unit test
-          command: ./gradlew test
+          command: ./gradlew --no-daemon test
       - run:
           name: Compile Instrumentation test
-          command: ./gradlew assembleAndroidTest
+          command: ./gradlew --no-daemon assembleAndroidTest
       - store_artifacts:
           path: app/build/reports/
           destination: reports
   build-play-apk:
     docker:
-      - image: circleci/android:api-27-alpha
+      - image: circleci/android:api-28-alpha
     environment:
-      JVM_OPTS: -Xmx3200m
+      JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
       - checkout
+      - run:
+          name: ANDROID_HOME
+          command: echo "sdk.dir="$ANDROID_HOME > local.properties
       - run:
           name: restore files from ENV
           command: |
@@ -82,28 +90,32 @@ jobs:
       - restore_cache:
           key: kotlin-sdk-{{ .Revision }}
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}-{{ checksum "core/build.gradle" }}-{{ checksum "util/build.gradle" }}-{{ checksum "draw/build.gradle" }}-{{ checksum "emoji/build.gradle" }}-{{ checksum "suggestions/build.gradle" }}
       - run:
           name: Download Dependencies
-          command: ./gradlew androidDependencies --quiet --console=plain
+          command: ./gradlew --no-daemon androidDependencies --quiet --console=plain
       - save_cache:
           paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}
+            - ~/.gradle/caches
+            - ~/.gradle/wrapper
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}-{{ checksum "core/build.gradle" }}-{{ checksum "util/build.gradle" }}-{{ checksum "draw/build.gradle" }}-{{ checksum "emoji/build.gradle" }}-{{ checksum "suggestions/build.gradle" }}
       - run:
           name: Build APK
           command: |
-            ./gradlew assemblePlayRelease --info --console=plain --stacktrace
+            ./gradlew --no-daemon assemblePlayRelease --info --console=plain --stacktrace
       - store_artifacts:
           path: app/build/outputs/apk
           destination: apks
   build-foss-apk:
     docker:
-      - image: circleci/android:api-27-alpha
+      - image: circleci/android:api-28-alpha
     environment:
-      JVM_OPTS: -Xmx3200m
+      JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
       - checkout
+      - run:
+          name: ANDROID_HOME
+          command: echo "sdk.dir="$ANDROID_HOME > local.properties
       - run:
           name: restore files from ENV
           command: |
@@ -115,18 +127,19 @@ jobs:
       - restore_cache:
           key: kotlin-sdk-{{ .Revision }}
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}-{{ checksum "core/build.gradle" }}-{{ checksum "util/build.gradle" }}-{{ checksum "draw/build.gradle" }}-{{ checksum "emoji/build.gradle" }}-{{ checksum "suggestions/build.gradle" }}
       - run:
           name: Download Dependencies
-          command: ./gradlew androidDependencies --quiet --console=plain
+          command: ./gradlew --no-daemon androidDependencies --quiet --console=plain
       - save_cache:
           paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}
+            - ~/.gradle/caches
+            - ~/.gradle/wrapper
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}-{{ checksum "core/build.gradle" }}-{{ checksum "util/build.gradle" }}-{{ checksum "draw/build.gradle" }}-{{ checksum "emoji/build.gradle" }}-{{ checksum "suggestions/build.gradle" }}
       - run:
           name: Build APK
           command: |
-            ./gradlew assembleFossRelease --info --console=plain --stacktrace
+            ./gradlew --no-daemon assembleFossRelease --info --console=plain --stacktrace
       - store_artifacts:
           path: app/build/outputs/apk
           destination: apks
