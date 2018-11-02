@@ -32,6 +32,7 @@ import chat.rocket.android.server.domain.messageReadReceiptStoreUsers
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.ifNotNullNorEmpty
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.model.ChatRoom
@@ -39,16 +40,7 @@ import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
 import chat.rocket.core.model.ReadReceipt
 import chat.rocket.core.model.attachment.Attachment
-import chat.rocket.core.model.attachment.AudioAttachment
-import chat.rocket.core.model.attachment.AuthorAttachment
-import chat.rocket.core.model.attachment.ColorAttachment
 import chat.rocket.core.model.attachment.Field
-import chat.rocket.core.model.attachment.FileAttachment
-import chat.rocket.core.model.attachment.GenericFileAttachment
-import chat.rocket.core.model.attachment.ImageAttachment
-import chat.rocket.core.model.attachment.MessageAttachment
-import chat.rocket.core.model.attachment.VideoAttachment
-import chat.rocket.core.model.attachment.actions.ActionsAttachment
 import chat.rocket.core.model.isSystemMessage
 import chat.rocket.core.model.url.Url
 import kotlinx.coroutines.experimental.CommonPool
@@ -310,46 +302,7 @@ class UiModelMapper @Inject constructor(
             showDayMarker = false, currentDayMarkerText = dayMarkerText, permalink = permalink)
     }
 
-    private fun mapAttachment(
-        message: Message,
-        attachment: Attachment,
-        chatRoom: ChatRoom
-    ): BaseUiModel<*>? {
-        return when (attachment) {
-            is FileAttachment -> mapFileAttachment(message, attachment, chatRoom)
-            is MessageAttachment -> mapMessageAttachment(message, attachment, chatRoom)
-            is AuthorAttachment -> mapAuthorAttachment(message, attachment, chatRoom)
-            is ColorAttachment -> mapColorAttachment(message, attachment, chatRoom)
-            is ActionsAttachment -> mapActionsAttachment(message, attachment, chatRoom)
-            else -> null
-        }
-    }
-
-    private fun mapActionsAttachment(
-        message: Message,
-        attachment: ActionsAttachment,
-        chatRoom: ChatRoom
-    ): BaseUiModel<*>? {
-        return with(attachment) {
-            val content = stripMessageQuotes(message)
-
-            val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
-            val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
-            val permalink = messageHelper.createPermalink(message, chatRoom, false)
-
-            ActionsAttachmentUiModel(attachmentUrl = url, title = title,
-                actions = actions, buttonAlignment = buttonAlignment, message = message, rawData = attachment,
-                messageId = message.id, reactions = getReactions(message),
-                preview = message.copy(message = content.message), unread = message.unread,
-                showDayMarker = false, currentDayMarkerText = dayMarkerText, permalink = permalink)
-        }
-    }
-
-    private fun mapColorAttachment(
-        message: Message,
-        attachment: ColorAttachment,
-        chatRoom: ChatRoom
-    ): BaseUiModel<*>? {
+    private fun mapAttachment(message: Message, attachment: Attachment, chatRoom: ChatRoom): BaseUiModel<*>? {
         return with(attachment) {
             val content = stripMessageQuotes(message)
             val id = attachmentId(message, attachment)
@@ -359,11 +312,49 @@ class UiModelMapper @Inject constructor(
             val fieldsText = mapFields(fields)
             val permalink = messageHelper.createPermalink(message, chatRoom, false)
 
-            ColorAttachmentUiModel(attachmentUrl = url, id = id, color = color.color,
-                text = text, fields = fieldsText, message = message, rawData = attachment,
-                messageId = message.id, reactions = getReactions(message),
-                preview = message.copy(message = content.message), unread = message.unread,
-                showDayMarker = false, currentDayMarkerText = dayMarkerText, permalink = permalink)
+            val attachmentAuthor = attachment.authorName
+            val time = attachment.timestamp?.let { getTime(it) }
+
+            val imageUrl = attachmentUrl(attachment.imageUrl)
+            val videoUrl = attachmentUrl(attachment.videoUrl)
+            val audioUrl = attachmentUrl(attachment.audioUrl)
+            val titleLink = attachmentUrl(attachment.titleLink)
+
+            val attachmentTitle = attachmentTitle(attachment.title, imageUrl, videoUrl, audioUrl, titleLink)
+
+            val attachmentText = attachmentText(attachment.text, attachment.attachments?.firstOrNull(), context)
+            val attachmentDescription = attachmentDescription(attachment)
+
+            AttachmentUiModel(
+                message = message,
+                rawData = this,
+                messageId = message.id,
+                reactions = getReactions(message),
+                preview = message.copy(message = content.message),
+                isTemporary = !message.synced,
+                unread = message.unread,
+                currentDayMarkerText = dayMarkerText,
+                showDayMarker = false,
+                permalink = permalink,
+                id = id,
+                title = attachmentTitle,
+                description = attachmentDescription,
+                authorName = attachmentAuthor,
+                text = attachmentText,
+                color = color?.color,
+                imageUrl = imageUrl,
+                videoUrl = videoUrl,
+                audioUrl = audioUrl,
+                titleLink = titleLink,
+                type = type,
+                messageLink = messageLink,
+                timestamp = time,
+                authorIcon = authorIcon,
+                authorLink = authorLink,
+                fields = fieldsText,
+                buttonAlignment = buttonAlignment,
+                actions = actions
+            )
         }
     }
 
@@ -385,133 +376,57 @@ class UiModelMapper @Inject constructor(
         }
     }
 
-    private fun mapAuthorAttachment(
-        message: Message,
-        attachment: AuthorAttachment,
-        chatRoom: ChatRoom
-    ): AuthorAttachmentUiModel {
-        return with(attachment) {
-            val content = stripMessageQuotes(message)
-
-            val fieldsText = mapFields(fields)
-            val id = attachmentId(message, attachment)
-
-            val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
-            val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
-            val permalink = messageHelper.createPermalink(message, chatRoom, false)
-
-            AuthorAttachmentUiModel(attachmentUrl = url, id = id, name = authorName,
-                icon = authorIcon, fields = fieldsText, message = message, rawData = attachment,
-                messageId = message.id, reactions = getReactions(message),
-                preview = message.copy(message = content.message), unread = message.unread,
-                showDayMarker = false, currentDayMarkerText = dayMarkerText, permalink = permalink)
-        }
-    }
-
-    private fun mapMessageAttachment(
-        message: Message,
-        attachment: MessageAttachment,
-        chatRoom: ChatRoom
-    ): MessageAttachmentUiModel {
-        val attachmentAuthor = attachment.author
-        val time = attachment.timestamp?.let { getTime(it) }
-        val attachmentText = when (attachment.attachments.orEmpty().firstOrNull()) {
-            is ImageAttachment -> context.getString(R.string.msg_preview_photo)
-            is VideoAttachment -> context.getString(R.string.msg_preview_video)
-            is AudioAttachment -> context.getString(R.string.msg_preview_audio)
-            is GenericFileAttachment -> context.getString(R.string.msg_preview_file)
-            else -> attachment.text ?: ""
-        }
-
-        val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
-        val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
-
-        val content = stripMessageQuotes(message)
-        val permalink = messageHelper.createPermalink(message, chatRoom, false)
-
-        return MessageAttachmentUiModel(message = content, rawData = message,
-            messageId = message.id, time = time, senderName = attachmentAuthor,
-            content = attachmentText, isPinned = message.pinned, reactions = getReactions(message),
-            preview = message.copy(message = content.message), unread = message.unread,
-            currentDayMarkerText = dayMarkerText, showDayMarker = false, permalink = permalink)
-    }
-
-    private fun mapFileAttachment(
-        message: Message,
-        attachment: FileAttachment,
-        chatRoom: ChatRoom
-    ): BaseUiModel<*>? {
-        val attachmentUrl = attachmentUrl(attachment)
-        val attachmentTitle = attachmentTitle(attachment)
-        val attachmentText = attachmentText(attachment)
-        val attachmentDescription = attachmentDescription(attachment)
-        val id = attachmentId(message, attachment)
-
-        val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
-        val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
-        val permalink = messageHelper.createPermalink(message, chatRoom, false)
-
-        return when (attachment) {
-            is ImageAttachment -> ImageAttachmentUiModel(message, attachment, message.id,
-                attachmentUrl, attachmentTitle, attachmentText, attachmentDescription, id, getReactions(message),
-                preview = message.copy(message = context.getString(R.string.msg_preview_photo)), unread = message.unread,
-                showDayMarker = false, currentDayMarkerText = dayMarkerText, permalink = permalink)
-            is VideoAttachment -> VideoAttachmentUiModel(message, attachment, message.id,
-                attachmentUrl, attachmentTitle, id, getReactions(message),
-                preview = message.copy(message = context.getString(R.string.msg_preview_video)), unread = message.unread,
-                showDayMarker = false, currentDayMarkerText = dayMarkerText, permalink = permalink)
-            is AudioAttachment -> AudioAttachmentUiModel(message, attachment, message.id,
-                attachmentUrl, attachmentTitle, id, getReactions(message),
-                preview = message.copy(message = context.getString(R.string.msg_preview_audio)), unread = message.unread,
-                showDayMarker = false, currentDayMarkerText = dayMarkerText, permalink = permalink)
-            is GenericFileAttachment -> GenericFileAttachmentUiModel(message, attachment,
-                message.id, attachmentUrl, attachmentTitle, id, getReactions(message),
-                preview = message.copy(message = context.getString(R.string.msg_preview_file)), unread = message.unread,
-                showDayMarker = false, currentDayMarkerText = dayMarkerText, permalink = permalink)
-            else -> null
-        }
-    }
-
     private fun attachmentId(message: Message, attachment: Attachment): Long {
-        return "${message.id}_${attachment.url}".hashCode().toLong()
+        return "${message.id}_${attachment.hashCode()}".hashCode().toLong()
     }
 
-    private fun attachmentTitle(attachment: FileAttachment): CharSequence {
-        return with(attachment) {
-            title?.let { return@with it }
+    private fun attachmentTitle(title: String?, vararg url: String?): CharSequence {
+        title?.let { return it }
 
-            val fileUrl = HttpUrl.parse(url)
-            fileUrl?.let {
-                return@with it.pathSegments().last()
+        url.filterNotNull().forEach {
+            val fileUrl = HttpUrl.parse(it)
+            fileUrl?.let { httpUrl ->
+                return httpUrl.pathSegments().last()
             }
+        }
 
-            return@with ""
+        return ""
+    }
+
+    private fun attachmentUrl(url: String?): String? {
+        if (url.isNullOrEmpty()) return null
+        if (url!!.startsWith("http")) return url
+
+        val fullUrl = "$baseUrl$url"
+        val httpUrl = HttpUrl.parse(fullUrl)
+        httpUrl?.let {
+            return it.newBuilder().apply {
+                addQueryParameter("rc_uid", token?.userId)
+                addQueryParameter("rc_token", token?.authToken)
+            }.build().toString()
+        }
+
+        // Fallback to baseUrl + url
+        return fullUrl
+    }
+
+    private fun attachmentText(text: String?, attachment: Attachment?, context: Context): String? {
+        return if (attachment != null) {
+            when {
+                attachment.imageUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_photo)
+                attachment.videoUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_video)
+                attachment.audioUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_audio)
+                attachment.titleLink.isNotNullNorEmpty() &&
+                        attachment.type?.contentEquals("file") == true ->
+                    context.getString(R.string.msg_preview_file)
+                else -> text
+            }
+        } else {
+            text
         }
     }
 
-    private fun attachmentUrl(attachment: FileAttachment): String {
-        return with(attachment) {
-            if (url.startsWith("http")) return@with url
-
-            val fullUrl = "$baseUrl$url"
-            val httpUrl = HttpUrl.parse(fullUrl)
-            httpUrl?.let {
-                return@with it.newBuilder().apply {
-                    addQueryParameter("rc_uid", token?.userId)
-                    addQueryParameter("rc_token", token?.authToken)
-                }.build().toString()
-            }
-
-            // Fallback to baseUrl + url
-            return@with fullUrl
-        }
-    }
-
-    private fun attachmentText(attachment: FileAttachment): String? {
-        return attachment.text
-    }
-
-    private fun attachmentDescription(attachment: FileAttachment): String? {
+    private fun attachmentDescription(attachment: Attachment): String? {
         return attachment.description
     }
 
@@ -580,7 +495,7 @@ class UiModelMapper @Inject constructor(
 
     private fun getSenderName(message: Message): CharSequence {
         val username = message.sender?.username
-        message.senderAlias.isNotNullNorEmpty { alias ->
+        message.senderAlias.ifNotNullNorEmpty { alias ->
             return buildSpannedString {
                 append(alias)
                 username?.let {

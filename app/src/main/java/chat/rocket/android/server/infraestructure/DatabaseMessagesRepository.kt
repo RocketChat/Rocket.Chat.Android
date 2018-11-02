@@ -1,6 +1,7 @@
 package chat.rocket.android.server.infraestructure
 
 import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.db.Operation
 import chat.rocket.android.db.model.MessagesSync
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.core.model.Message
@@ -61,9 +62,7 @@ class DatabaseMessagesRepository(
     }
 
     override suspend fun saveLastSyncDate(roomId: String, timeMillis: Long) {
-        withContext(dbManager.dbContext) {
-            dbManager.messageDao().saveLastSync(MessagesSync(roomId, timeMillis))
-        }
+        dbManager.sendOperation(Operation.SaveLastSync(MessagesSync(roomId, timeMillis)))
     }
 
     override suspend fun getLastSyncDate(roomId: String): Long? = withContext(CommonPool) {

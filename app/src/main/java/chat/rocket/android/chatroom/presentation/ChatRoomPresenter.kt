@@ -176,7 +176,9 @@ class ChatRoomPresenter @Inject constructor(
             view.showLoading()
             try {
                 if (offset == 0L) {
-                    val localMessages = messagesRepository.getByRoomId(chatRoomId)
+                    // FIXME - load just 50 messages from DB to speed up. We will reload from Network after that
+                    // FIXME - We need to handle the pagination, first fetch from DB, then from network
+                    val localMessages = messagesRepository.getRecentMessages(chatRoomId, 50)
                     val oldMessages = mapper.map(
                         localMessages, RoomUiModel(
                         roles = chatRoles,
