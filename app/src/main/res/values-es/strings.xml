@@ -19,11 +19,10 @@
     <string name="title_update_profile">Actualización del perfil</string>
     <string name="title_about">Acerca de</string>
     <string name="title_create_channel">Crear canal</string>
-
+    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
     <string name="action_use_this_username">Usa este nombre de usuario</string>
-    <string name="action_login_or_sign_up">Toca en este botón para iniciar sesión o crear una cuenta</string>
     <string name="action_terms_of_service">Términos de Servicio</string>
     <string name="action_privacy_policy">Política de Privacidad</string>
     <string name="action_search">Buscar</string>
@@ -32,6 +31,7 @@
     <string name="action_create_channel">Crear canal</string>
     <string name="action_create">Create</string>
     <string name="action_logout">Cerrar sesión</string>
+    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">Archivos</string>
     <string name="action_confirm_password">Confirmar cambio de contraseña</string>
     <string name="action_join_chat">Unirse al chat</string>
@@ -159,6 +159,8 @@
     <string name="msg_view_more">view more</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_view_less">view less</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
@@ -195,6 +197,7 @@
     <string name="action_msg_share">Compartir</string>
     <string name="action_title_editing">Edición de mensaje</string>
     <string name="action_msg_add_reaction">Añadir una reacción</string>
+    <string name="action_msg_copy_permalink">Copiar permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">La edición no és permitida</string>

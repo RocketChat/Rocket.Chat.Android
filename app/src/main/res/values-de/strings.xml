@@ -20,11 +20,11 @@
     <string name="title_update_profile">Update Profil</string>
     <string name="title_about">Über</string>
     <string name="title_create_channel">Erstelle Raum</string>
+    <string name="title_confirmation">Are You Sure you want to logout?</string><!-- TODO Add translation -->
 
     <!-- Actions -->
     <string name="action_connect">Verbinde</string>
     <string name="action_use_this_username">Benutze den Benutzernamen</string>
-    <string name="action_login_or_sign_up">Klick diesen Knopf um sich anzumelden oder einen Account zu erstellen</string>
     <string name="action_terms_of_service">Nutzungsbedingungen</string>
     <string name="action_privacy_policy">Datenschutz</string>
     <string name="action_search">Suche</string>
@@ -33,6 +33,7 @@
     <string name="action_create_channel">Erstelle Raum</string>
     <string name="action_create">Erstelle</string>
     <string name="action_logout">Abmelden</string>
+    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">Dateien</string>
     <string name="action_confirm_password">Bestätige Passwort Änderung</string>
     <string name="action_join_chat">Trete Chat bei</string>
@@ -162,6 +163,8 @@
     <string name="msg_view_more">view more</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_view_less">view less</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
@@ -198,6 +201,8 @@
     <string name="action_msg_share">Teilen</string>
     <string name="action_title_editing">Nachricht bearbeiten</string>
     <string name="action_msg_add_reaction">Reaktion hinzufügen</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_copy_permalink">Copy permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Bearbeiten nicht erlaubt</string>

@@ -20,11 +20,12 @@
     <string name="title_update_profile">Оновити профіль</string>
     <string name="title_about">"Про програму"</string>
     <string name="title_create_channel">Створити новий канал</string>
+    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
+
 
     <!-- Actions -->
     <string name="action_connect">Підключитися</string>
     <string name="action_use_this_username">Використати це ім\'я</string>
-    <string name="action_login_or_sign_up">Натисніть цю кнопку, щоб увійти до системи або створити аккаунт</string>
     <string name="action_terms_of_service">Умови використання</string>
     <string name="action_privacy_policy">Політика конфіденційності</string>
     <string name="action_search">Пошук</string>
@@ -33,6 +34,7 @@
     <string name="action_create_channel">Створити канал</string>
     <string name="action_create">Створити</string>
     <string name="action_logout">Вийти</string>
+    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">Файли</string>
     <string name="action_confirm_password">Підтвердження зміни пароля</string>
     <string name="action_join_chat">Приєднатися до чату</string>
@@ -149,6 +151,8 @@
     <string name="msg_view_more">view more</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_view_less">view less</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватний</string>
@@ -197,6 +201,8 @@
     <string name="action_msg_share">Поділитися</string>
     <string name="action_title_editing">Редагування повідомлення</string>
     <string name="action_msg_add_reaction">Відреагувати</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_copy_permalink">Copy permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редагування заборонено</string>

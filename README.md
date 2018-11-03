@@ -11,7 +11,7 @@ This repository contains all the code related to the Android native application 
 
 ## How to build
 
-- You need to download the latest [Android Studio Preview](https://developer.android.com/studio/preview/) version since the stable IDE version does not support the [JetPack](https://developer.android.com/jetpack/) that is beeing used on this application. 
+- You need to download the latest [Android Studio Preview](https://developer.android.com/studio/preview/) version since the stable IDE version does not support the [JetPack](https://developer.android.com/jetpack/) that is being used on this application. 
 - Make sure that you have the latest **gradle** and the **android plugin** versions installed. Go to `File > Project Structure > Project` and make sure that you have the latest versions installed. Refer [this](https://developer.android.com/studio/releases/gradle-plugin.html#updating-gradle) to see the compatible versions.
 - Kotlin is already configured in the project. To check, go to `Tools > Kotlin > Configure Kotlin in project`. A message saying kotlin is already configured in the project pops up. You can update kotlin to the latest version by going to `Tools > Kotlin > Configure Kotlin updates` and download the latest version of kotlin.
 
@@ -39,7 +39,7 @@ cd Rocket.Chat.Android/app
 
 ## Bug report & Feature request
 
-Please report via [GitHub issue](https://github.com/RocketChat/Rocket.Chat.Android/issues) :)
+Are you having a technical issue trying to compile the app, or setting up Push Notifications? Please use our Community Support channel for that: https://forums.rocket.chat/c/community-support. The issues are only suppose to be used for bugs, improvements and features in the native Android application.
 
 ## Coding Style
 
