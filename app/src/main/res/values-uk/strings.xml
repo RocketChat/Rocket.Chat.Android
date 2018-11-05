@@ -282,9 +282,6 @@
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Пусто</string>
     <string name="alert_title_default_skin_tone">Тон шкіри за замовчуванням</string>
-    <string name="And_more">І ще %1$d</string>
-    <string name="and">і</string>
-    <string name="Reacted_with">реагує з</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Сортувати</string>

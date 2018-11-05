@@ -140,8 +140,6 @@ interface ChatRoomView : LoadingView, MessageView {
 
     fun showReactionsPopup(messageId: String)
 
-    fun showReactionsSummary(emojiShortname: String, usernames: List<String>, currentLoggedUsername: String?)
-
     /**
      * Show list of commands.
      *

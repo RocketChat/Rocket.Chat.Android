@@ -1084,10 +1084,6 @@ class ChatRoomPresenter @Inject constructor(
         view.showReactionsPopup(messageId)
     }
 
-    fun showReactionsSummary(emojiShortname: String, usernames: List<String>) {
-        view.showReactionsSummary(emojiShortname, usernames, currentLoggedUsername)
-    }
-
     fun loadCommands() {
         launchUI(strategy) {
             try {

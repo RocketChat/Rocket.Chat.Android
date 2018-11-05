@@ -666,30 +666,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun onReactionLongClicked(emojiShortname: String, usernames: List<String>) {
-        presenter.showReactionsSummary(emojiShortname, usernames)
-    }
-
-    override fun showReactionsSummary(emojiShortname: String, usernames: List<String>, currentLoggedUsername: String?) {
-        var usernamesString = usernames.asSequence()
-            .take(15)
-            .joinToString { username ->
-                if (username == currentLoggedUsername) {
-                    getString(R.string.msg_you).toLowerCase()
-                } else {
-                    "@$username"
-                }
-            }
-        if (usernames.size > 15) {
-            usernamesString += " " + getString(R.string.And_more, usernames.size - 15).toLowerCase()
-        } else {
-            usernamesString = usernamesString.replace(""",([^,]+)$""".toRegex()) {
-                " ${getString(R.string.and)}${it.groupValues[1]}"
-            }
-        }
-        if (usernamesString[0] != '@') {
-            usernamesString = usernamesString.capitalize()
-        }
-        showToast("$usernamesString ${getString(R.string.Reacted_with).toLowerCase()} $emojiShortname", Toast.LENGTH_LONG)
+        AlertDialog.Builder(requireContext())
+            .setTitle(EmojiParser.parse(requireContext(), getString(R.string.alert_title_reactions_by, emojiShortname)))
+            .setItems(usernames.toTypedArray(), null)
+            .setPositiveButton(R.string.msg_ok, null)
+            .show()
     }
 
     override fun showReactionsPopup(messageId: String) {
