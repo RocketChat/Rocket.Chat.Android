@@ -545,6 +545,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun dispatchUpdateMessage(index: Int, message: List<BaseUiModel<*>>) {
         ui {
+            // TODO - investigate WHY we get a empty list here
+            if (message.isEmpty()) return@ui
+
             if (adapter.updateItem(message.last())) {
                 if (message.size > 1) {
                     adapter.prependData(listOf(message.first()))
