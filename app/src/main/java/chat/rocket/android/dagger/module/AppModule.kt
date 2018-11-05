@@ -40,6 +40,10 @@ import chat.rocket.android.server.domain.PermissionsRepository
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.UsersRepository
+import chat.rocket.android.server.domain.BasicAuthRepository
+import chat.rocket.android.server.domain.GetBasicAuthInteractor
+import chat.rocket.android.server.domain.SaveBasicAuthInteractor
+import chat.rocket.android.server.infraestructure.SharedPrefsBasicAuthRepository
 import chat.rocket.android.server.infraestructure.DatabaseMessageMapper
 import chat.rocket.android.server.infraestructure.DatabaseMessagesRepository
 import chat.rocket.android.server.infraestructure.JobSchedulerInteractorImpl
@@ -53,6 +57,7 @@ import chat.rocket.android.server.infraestructure.SharedPrefsConnectingServerRep
 import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
 import chat.rocket.android.util.AppJsonAdapterFactory
 import chat.rocket.android.util.HttpLoggingInterceptor
+import chat.rocket.android.util.BasicAuthenticatorInterceptor
 import chat.rocket.android.util.TimberLogger
 import chat.rocket.common.internal.FallbackSealedClassJsonAdapter
 import chat.rocket.common.internal.ISO8601Date
@@ -106,9 +111,22 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
+    fun provideBasicAuthenticatorInterceptor(
+        getBasicAuthInteractor: GetBasicAuthInteractor,
+        saveBasicAuthInteractor: SaveBasicAuthInteractor
+    ): BasicAuthenticatorInterceptor {
+        return BasicAuthenticatorInterceptor(
+            getBasicAuthInteractor,
+            saveBasicAuthInteractor
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(logger: HttpLoggingInterceptor, basicAuthenticator: BasicAuthenticatorInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(logger)
+            .addInterceptor(basicAuthenticator)
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(20, TimeUnit.SECONDS)
             .writeTimeout(15, TimeUnit.SECONDS)
@@ -272,6 +290,14 @@ class AppModule {
         val url = serverInteractor.get()!!
         return MessageParser(context, configuration, settingsInteractor.get(url))
     }
+
+    @Provides
+    @Singleton
+    fun provideBasicAuthRepository (
+        preferences: SharedPreferences,
+        moshi: Moshi
+    ): BasicAuthRepository = 
+        SharedPrefsBasicAuthRepository(preferences, moshi)
 
     @Provides
     @Singleton

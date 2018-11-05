@@ -622,7 +622,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             val clipboard = it.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.primaryClip = ClipData.newPlainText("", message)
-            showToast(R.string.msg_message_copied)
         }
     }
 
@@ -1085,6 +1084,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 .setNegativeButton(it.getString(R.string.msg_cancel)) { _, _ -> }
                 .show()
         }
+    }
+
+    override fun copyPermalink(id: String) {
+        presenter.copyPermalink(id)
     }
 
     override fun showReactions(id: String) {

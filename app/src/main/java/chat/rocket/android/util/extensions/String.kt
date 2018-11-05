@@ -75,3 +75,5 @@ fun String.lowercaseUrl(): String? {
 
     return httpUrl?.newBuilder()?.scheme(newScheme)?.build()?.toString()
 }
+
+fun String?.isNotNullNorEmpty(): Boolean = this != null && this.isNotEmpty()
