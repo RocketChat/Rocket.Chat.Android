@@ -594,7 +594,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+    override fun showGenericErrorMessage(){
+        ui {
+            showMessage(getString(R.string.msg_generic_error))
+        }
+    }
 
     override fun populatePeopleSuggestions(members: List<PeopleSuggestionUiModel>) {
         ui {
