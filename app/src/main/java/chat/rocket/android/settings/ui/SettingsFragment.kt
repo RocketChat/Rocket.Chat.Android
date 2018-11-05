@@ -1,6 +1,8 @@
 package chat.rocket.android.settings.ui
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -75,6 +77,16 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                     AboutFragment.newInstance()
                 }
             }
+            resources.getString(R.string.title_share_the_app) ->{
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                shareIntent.type = "text/plain"
+                val shareBody = "Check This Out"
+                val shareSub = "https://play.google.com/store/apps/details?id=chat.rocket.android"
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareBody)
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareSub)
+                startActivity(Intent.createChooser(shareIntent, "Share Using"))
+            }
+
         }
     }
 
