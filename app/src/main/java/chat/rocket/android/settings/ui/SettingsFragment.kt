@@ -1,6 +1,8 @@
 package chat.rocket.android.settings.ui
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -75,6 +77,22 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                     AboutFragment.newInstance()
                 }
             }
+            resources.getString(R.string.title_rate_us) ->
+                startAppPlayStore()
+        }
+    }
+
+    fun getMarketAppLink(): String {
+        return "market://details?id=chat.rocket.android"
+    }
+    fun getMarketWebLink(): String {
+        return "https://play.google.com/store/apps/details?id=chat.rocket.android"
+    }
+    private fun startAppPlayStore() {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getMarketAppLink())))
+        } catch (error: ActivityNotFoundException) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getMarketWebLink())))
         }
     }
 
