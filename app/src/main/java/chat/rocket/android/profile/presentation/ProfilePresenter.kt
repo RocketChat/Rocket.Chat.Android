@@ -9,15 +9,19 @@ import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.compressImageAndGetByteArray
+import chat.rocket.android.util.extension.gethash
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.extension.toHex
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
+import chat.rocket.core.internal.rest.deleteOwnAccount
 import chat.rocket.core.internal.rest.resetAvatar
 import chat.rocket.core.internal.rest.setAvatar
 import chat.rocket.core.internal.rest.updateProfile
+import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
 
@@ -137,6 +141,23 @@ class ProfilePresenter @Inject constructor(
                 retryIO { client.resetAvatar(myselfId) }
                 view.reloadUserAvatar(serverUrl.avatarUrl(myselfUsername))
             } catch (exception: RocketChatException) {
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideLoading()
+            }
+        }
+    }
+
+    fun deleteAccount(password: String) {
+        launchUI(strategy) {
+            view.showLoading()
+            try {
+                retryIO { client.deleteOwnAccount(password.gethash().toHex()) }
+            } catch (exception: Exception) {
                 exception.message?.let {
                     view.showMessage(it)
                 }.ifNull {

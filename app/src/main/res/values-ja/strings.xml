@@ -22,8 +22,7 @@
     <string name="title_update_profile">プロフィールの更新</string>
     <string name="title_about">About</string>
     <string name="title_create_channel">新しいチャネルを作成します</string>
-    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
-
+    <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
     <string name="action_connect">接続</string>
@@ -36,7 +35,6 @@
     <string name="action_create_channel">チャンネル作成</string>
     <string name="action_create">作ります</string>
     <string name="action_logout">ログアウト</string>
-    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">ファイル</string>
     <string name="action_confirm_password">変更したパスワードの確認</string>
     <string name="action_join_chat">チャットに参加</string>
@@ -55,6 +53,7 @@
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
+    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">

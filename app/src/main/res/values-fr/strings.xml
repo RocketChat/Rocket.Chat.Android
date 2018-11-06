@@ -20,9 +20,7 @@
     <string name="title_update_profile">Mettre à jour le profil</string>
     <string name="title_about">À propos</string>
     <string name="title_create_channel">Créer salon</string>
-    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
-
-
+    <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
     <string name="action_connect">Se connecter</string>
@@ -35,7 +33,6 @@
     <string name="action_create_channel">Créer salon</string>
     <string name="action_create">Créer</string>
     <string name="action_logout">Se déconnecter</string>
-    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">Fichiers</string>
     <string name="action_confirm_password">Confirmer le mot de passe</string>
     <string name="action_join_chat">Rejoignez le chat</string>
@@ -54,6 +51,7 @@
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
+    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
