@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.text.Layout
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -215,21 +216,25 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         setSupportActionBar(toolbar)
     }
 
-    fun setupNavigationView() {
-        with (view_navigation.menu) {
+    fun setupNavigationView(type:String = "hamburger") {
+        with(view_navigation.menu) {
             clear()
             setupMenu(this)
         }
+        if (type == "back") {
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            toolbar.setNavigationOnClickListener { onBackPressed() }
+        }else{
+            view_navigation.setNavigationItemSelectedListener {
+                it.isChecked = true
+                closeDrawer()
+                onNavDrawerItemSelected(it)
+                true
+            }
 
-        view_navigation.setNavigationItemSelectedListener {
-            it.isChecked = true
-            closeDrawer()
-            onNavDrawerItemSelected(it)
-            true
+            toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
+            toolbar.setNavigationOnClickListener { openDrawer() }
         }
-
-        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
-        toolbar.setNavigationOnClickListener { openDrawer() }
     }
 
     fun setAvatar(avatarUrl: String) {

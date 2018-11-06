@@ -2,7 +2,6 @@ package chat.rocket.android.chatrooms.ui
 
 import android.app.AlertDialog
 import android.app.ProgressDialog
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -21,7 +20,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
@@ -32,19 +30,13 @@ import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModel
 import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModelFactory
 import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.chatrooms.viewmodel.Query
-import chat.rocket.android.contacts.ContactListFragment
 import chat.rocket.android.contacts.ContactsFragment
-import chat.rocket.android.contacts.NewChatActivity
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extension.onQueryTextListener
-import chat.rocket.android.util.extensions.fadeIn
-import chat.rocket.android.util.extensions.fadeOut
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
@@ -353,6 +345,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun setupToolbar() {
         (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_chats)
+        (activity as MainActivity).setupNavigationView("hamburger")
     }
 
     private fun queryChatRoomsByName(name: String?): Boolean {
@@ -366,9 +359,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun setupFab() {
         create_new_channel_fab.setOnClickListener { view ->
-            val intent = Intent(this.activity, NewChatActivity::class.java)
-            startActivity(intent)
+            val contactsFragment = ContactsFragment()
+            activity?.supportFragmentManager?.beginTransaction()?.replace(this.id, contactsFragment, "contactsFragment")?.addToBackStack(null)?.commit();
         }
-
     }
 }

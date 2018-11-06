@@ -8,14 +8,17 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.contacts.models.Contact
+import chat.rocket.android.main.ui.MainActivity
 import java.util.*
 import kotlin.collections.HashMap
+import chat.rocket.android.util.extensions.showToast
 
 class ContactRecyclerViewAdapter(
-        private val context: Context,
+        private val context: MainActivity,
         private val contactArrayList: ArrayList<Contact?>,
         private val contactHashMap: HashMap<String, String>
 ) : RecyclerView.Adapter<ContactRecyclerViewAdapter.ViewHolder>() {
@@ -62,11 +65,8 @@ class ContactRecyclerViewAdapter(
 
             this.inviteButton.setOnClickListener { view ->
                 run {
-                    Toast.makeText(
-                            context,
-                            "${contact!!.getName()!!}: ${contactDetail.text}",
-                            Toast.LENGTH_SHORT
-                    ).show()
+                    // Make API call using context.presenter
+                    context.showToast("${contact!!.getName()!!}: ${contactDetail.text}")
                 }
             }
         }

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.contacts.models.Contact
+import chat.rocket.android.main.ui.MainActivity
 import timber.log.Timber
 import java.util.ArrayList
 import kotlin.collections.HashMap
@@ -63,7 +64,7 @@ class ContactListFragment : Fragment() {
 
             recyclerView.setHasFixedSize(true)
             recyclerView.layoutManager = LinearLayoutManager(context)
-            recyclerView.adapter = ContactRecyclerViewAdapter(context, contactArrayList!!, contactHashMap)
+            recyclerView.adapter = ContactRecyclerViewAdapter(this.activity as MainActivity, contactArrayList!!, contactHashMap)
         }
 
         return view

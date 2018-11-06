@@ -16,9 +16,6 @@ import chat.rocket.android.contacts.models.Contact
 import chat.rocket.android.createchannel.ui.CreateChannelFragment
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extension.onQueryTextListener
-import chat.rocket.android.util.extensions.showToast
-import kotlinx.android.synthetic.main.app_bar_chat_room.*
-import timber.log.Timber
 import java.util.ArrayList
 import kotlin.Comparator
 import kotlin.collections.HashMap
@@ -226,6 +223,7 @@ class ContactsFragment : Fragment() {
 
     fun setupToolbar(){
         (this.activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_contacts)
+        (activity as MainActivity).setupNavigationView("back")
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -258,9 +256,8 @@ class ContactsFragment : Fragment() {
 
         createNewChannelLink = view.findViewById(R.id.create_new_channel_button)
         createNewChannelLink!!.setOnClickListener {
-//            val createChannelFragment = CreateChannelFragment()
-//            activity?.supportFragmentManager?.beginTransaction()?.replace(this.id, createChannelFragment, "createChannelFragment")?.addToBackStack(null)?.commit();
-            showToast("Clicked")
+            val createChannelFragment = CreateChannelFragment()
+            activity?.supportFragmentManager?.beginTransaction()?.replace(this.id, createChannelFragment, "createChannelFragment")?.addToBackStack(null)?.commit();
         }
 
         return view

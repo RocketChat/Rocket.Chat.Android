@@ -19,11 +19,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         tools:replace="android:name">
-        <activity android:name=".contacts.NewChatActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
