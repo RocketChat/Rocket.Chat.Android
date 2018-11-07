@@ -80,11 +80,11 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             resources.getString(R.string.title_share_the_app) ->{
                 val shareIntent = Intent(Intent.ACTION_SEND)
                 shareIntent.type = "text/plain"
-                val shareBody = "Check This Out"
-                val shareSub = "https://play.google.com/store/apps/details?id=chat.rocket.android"
+                val shareBody = getString(R.string.check_this_out)
+                val shareSub = getString(R.string.play_store_link)
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareBody)
                 shareIntent.putExtra(Intent.EXTRA_TEXT, shareSub)
-                startActivity(Intent.createChooser(shareIntent, "Share Using"))
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_using)))
             }
 
         }
