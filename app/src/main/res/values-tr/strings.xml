@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Sunucunuza Bağlantı Kurun</string>
     <string name="title_log_in">Giriş Yapın</string>
+    <string name="title_share_the_app">uygulamayı Paylaş</string>
     <string name="title_register_username">Kullanıcı Adıyla Kaydolun</string>
     <string name="title_reset_password">Şifre Sıfırlama</string>
     <string name="title_sign_up">Kayıt Olun</string>
@@ -59,8 +60,7 @@
         <item name="item_preferences">Tercihler</item>
         <item name="item_password">Şifre Değiştir</item>
         <item name="item_password">Hakkında</item>
-        <item name="item_share_app">uygulamayı Paylaş
-</item>
+        <item name="item_share_app">uygulamayı Paylaş</item>
     </string-array>
 
     <!-- Regular information messages -->

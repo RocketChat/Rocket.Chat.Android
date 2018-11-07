@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Anmelden am Server</string>
     <string name="title_log_in">Anmelden</string>
+    <string name="title_share_the_app">App teilen</string>
     <string name="title_register_username">Registriere Benutzernamen</string>
     <string name="title_reset_password">Passwort zurücksetzen</string>
     <string name="title_sign_up">registrieren</string>

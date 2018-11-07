@@ -5,6 +5,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">サーバーに接続</string>
     <string name="title_log_in">ログイン</string>
+    <string name="title_share_the_app">アプリを共有する</string>
     <string name="title_register_username">ユーザー名を登録する</string>
     <string name="title_reset_password">パスワードリセット</string>
     <string name="title_sign_up">サインアップ</string>

@@ -2,6 +2,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Inicia sesión en tu servidor</string>
     <string name="title_log_in">Iniciar sesión</string>
+    <string name="title_share_the_app">Compartir aplicación</string>
     <string name="title_register_username">Registrar nombre de usuario</string>
     <string name="title_reset_password">Restablecer la contraseña</string>
     <string name="title_sign_up">Regístrate</string>

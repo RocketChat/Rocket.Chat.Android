@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Ваш сервер</string>
     <string name="title_log_in">Увійти</string>
+    <string name="title_share_the_app">поділитися прикладом</string>
     <string name="title_register_username">Зареєструвати ім\'я</string>
     <string name="title_reset_password">Відновлення паролю</string>
     <string name="title_sign_up">Зареєструватися</string>
