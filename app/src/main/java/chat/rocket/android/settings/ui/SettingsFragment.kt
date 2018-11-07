@@ -80,11 +80,11 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             resources.getString(R.string.title_share_the_app) ->{
                 val shareIntent = Intent(Intent.ACTION_SEND)
                 shareIntent.type = "text/plain"
-                val shareBody = getString(R.string.check_this_out)
+                val shareBody = getString(R.string.msg_check_this_out)
                 val shareSub = getString(R.string.play_store_link)
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareBody)
                 shareIntent.putExtra(Intent.EXTRA_TEXT, shareSub)
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_using)))
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.msg_share_using)))
             }
 
         }
