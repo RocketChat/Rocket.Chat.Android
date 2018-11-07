@@ -299,6 +299,9 @@
     <string name="header_live_chats">Chats en vivo</string>
     <string name="header_unknown">Desconocido</string>
 
+    <!--Links-->
+    <string name="play_store_link">"https://play.google.com/store/apps/details?id=chat.rocket.android"</string>
+
     <!--Notifications-->
     <string name="share_label">Edita mensaje compartido</string>
     <string name="notif_action_reply_hint">RESPUESTA</string>

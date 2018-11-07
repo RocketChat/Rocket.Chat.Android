@@ -305,6 +305,9 @@
     <string name="header_live_chats">लाइव चैट</string>
     <string name="header_unknown">अज्ञात</string>
 
+    <!--Links-->
+    <string name="play_store_link">"https://play.google.com/store/apps/details?id=chat.rocket.android"</string>
+
     <!--Notifications-->
     <string name="share_label">साझा संदेश संपादित करें</string>
     <string name="notif_action_reply_hint">जवाब</string>

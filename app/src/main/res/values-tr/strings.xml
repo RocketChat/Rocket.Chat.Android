@@ -307,6 +307,9 @@
     <string name="header_live_chats">Canlı Sohbetler</string>
     <string name="header_unknown">Bilinmeyen</string>
 
+    <!--Links-->
+    <string name="play_store_link">"https://play.google.com/store/apps/details?id=chat.rocket.android"</string>
+
     <!--Notifications-->
     <string name="share_label">Paylaşılan mesajı düzenle</string>
     <string name="notif_action_reply_hint">YANITLA</string>
