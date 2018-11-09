@@ -53,6 +53,9 @@ class ServerPresenter @Inject constructor(
                     wordpressOauthUrl,
                     casLoginUrl,
                     casToken,
+                    casServiceName,
+                    casServiceNameTextColor,
+                    casServiceButtonColor,
                     customOauthUrl,
                     customOauthServiceName,
                     customOauthServiceNameTextColor,
@@ -91,8 +94,6 @@ class ServerPresenter @Inject constructor(
                 try {
                     withContext(DefaultDispatcher) {
                         refreshSettingsInteractor.refresh(serverUrl)
-
-                        setupConnectionInfo(serverUrl)
 
                         // preparing next fragment before showing it
                         checkEnabledAccounts(serverUrl)

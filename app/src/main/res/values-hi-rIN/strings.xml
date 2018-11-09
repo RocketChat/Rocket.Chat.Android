@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">अपने सर्वर में साइन इन करें</string>
     <string name="title_log_in">लॉग इन करें</string>
+    <string name="title_share_the_app">ऐप शेयर करे</string>
     <string name="title_register_username">रजिस्टर उपयोगकर्ता नाम</string>
     <string name="title_reset_password">पासवर्ड रीसेट करें</string>
     <string name="title_sign_up">साइन अप करें</string>
@@ -21,11 +22,12 @@
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
     <string name="title_create_channel">चैनल बनाएं</string>
+    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
+
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
     <string name="action_use_this_username">इस उपयोगकर्ता नाम का उपयोग करें</string>
-    <string name="action_login_or_sign_up">लॉग इन करने या खाता बनाने के लिए इस बटन को टैप करें</string>
     <string name="action_terms_of_service">सेवा की शर्तें</string>
     <string name="action_privacy_policy">गोपनीयता नीति</string>
     <string name="action_search">खोजें</string>
@@ -34,6 +36,7 @@
     <string name="action_create_channel">चैनल बनाएं</string>
     <string name="action_create">बनाएं</string>
     <string name="action_logout">लोग आउट करें</string>
+    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">फ़ाइलें</string>
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
     <string name="action_join_chat">चैट में शामिल हों</string>
@@ -58,11 +61,14 @@
         <item name="item_preferences">प्राथमिकताएँ</item>
         <item name="item_password">पासवर्ड बदलें</item>
         <item name="item_password">परिचय</item>
+        <item name="item_share_app">ऐप शेयर करें</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">क्षमा करें, एक त्रुटि हुई है, कृपया पुनः प्रयास करें</string>
     <string name="msg_no_data_to_display">डेटा प्रदर्शित करने के लिए उपलब्ध नहीं हैं</string>
+    <string name="msg_check_this_out">इसकी जांच करें</string>
+    <string name="msg_share_using">उपयोग कर साझा करें</string>
     <string name="msg_profile_update_successfully">प्रोफ़ाइल सफलतापूर्वक अपडेट हो गया है</string>
     <string name="msg_username">यूजरनेम</string>
     <string name="msg_username_or_email">यूजरनेम या ईमेल</string>
@@ -164,6 +170,8 @@
     <string name="msg_channel_created_successfully">चैनल सफलतापूर्वक बनाया गया</string>
     <string name="msg_view_more">और देखें</string>
     <string name="msg_view_less">कम देखें</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">एनालिटिक्स ट्रैकिंग</string>
@@ -186,7 +194,6 @@
     <string name="message_role_removed">%1$s अब %3$s द्वारा %2$s नहीं है</string>
     <string name="message_credentials_saved_successfully">प्रमाण पत्र सफलतापूर्वक सहेजे गए</string>
 
-
     <!-- Message actions -->
     <string name="action_msg_reply">जवाब दें</string>
     <string name="action_msg_info">संदेश जानकारी</string>
@@ -201,6 +208,8 @@
     <string name="action_msg_share">शेयर करें</string>
     <string name="action_title_editing">संपादन संदेश</string>
     <string name="action_msg_add_reaction">प्रतिक्रिया जोड़ें</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_copy_permalink">Copy permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">संपादन की अनुमति नहीं है</string>

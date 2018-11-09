@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Faça login no seu servidor</string>
     <string name="title_log_in">Entrar</string>
+    <string name="title_share_the_app">Compartilhe o aplicativo</string>
     <string name="title_register_username">Registre o nome de usuário</string>
     <string name="title_reset_password">Redefinir senha</string>
     <string name="title_sign_up">Inscreva-se</string>
@@ -21,11 +22,12 @@
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
     <string name="title_create_channel">Criar chat</string>
+    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
+
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
     <string name="action_use_this_username">Usar este nome de usuário</string>
-    <string name="action_login_or_sign_up">Toque neste botão para fazer login ou criar uma conta</string>
     <string name="action_terms_of_service">Termos de Serviço</string>
     <string name="action_privacy_policy">Política de Privacidade</string>
     <string name="action_search">Pesquisar</string>
@@ -34,6 +36,7 @@
     <string name="action_create_channel">Criar chat</string>
     <string name="action_create">Criar</string>
     <string name="action_logout">Sair</string>
+    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
     <string name="action_join_chat">Entrar no Chat</string>
@@ -58,11 +61,14 @@
         <item name="item_preferences">Preferencias</item>
         <item name="item_password">Alterar senha</item>
         <item name="item_password">Sobre</item>
+        <item name="item_share_app">Compartilhe o aplicativo</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Desculpe, ocorreu um erro, tente novamente</string>
     <string name="msg_no_data_to_display">Nenhum dado para exibir</string>
+    <string name="msg_check_this_out">Veja isso</string>
+    <string name="msg_share_using">compartilhar usando</string>
     <string name="msg_profile_update_successfully">Perfil atualizado com sucesso</string>
     <string name="msg_username">nome de usuário</string>
     <string name="msg_username_or_email">Nome de usuário ou email</string>
@@ -151,6 +157,8 @@
     <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
     <string name="msg_view_more">visualizar mais</string>
     <string name="msg_view_less">visualizar menos</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copiado</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
@@ -200,6 +208,7 @@
     <string name="action_msg_share">Compartilhar</string>
     <string name="action_title_editing">Editando mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
+    <string name="action_msg_copy_permalink">Copiar permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Edição não permitida</string>

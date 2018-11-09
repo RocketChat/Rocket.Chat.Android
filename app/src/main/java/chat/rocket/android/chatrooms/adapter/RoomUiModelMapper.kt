@@ -24,6 +24,7 @@ import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.model.userStatusOf
 import chat.rocket.core.model.Room
 import chat.rocket.core.model.SpotlightResult
+import ru.noties.markwon.Markwon
 
 class RoomUiModelMapper(
     private val context: Application,
@@ -119,6 +120,8 @@ class RoomUiModelMapper(
                     type is RoomType.DirectMessage) } else { null }
             val open = open
 
+            val lastMessageMarkdown = lastMessage?.let { Markwon.markdown(context, it.toString()).toString() }
+
             RoomUiModel(
                 id = id,
                 name = roomName,
@@ -128,7 +131,7 @@ class RoomUiModelMapper(
                 date = timestamp,
                 unread = unread,
                 alert = isUnread,
-                lastMessage = lastMessage,
+                lastMessage = lastMessageMarkdown,
                 status = status,
                 username = if (type is RoomType.DirectMessage) name else null
             )
