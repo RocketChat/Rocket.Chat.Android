@@ -345,7 +345,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun setupToolbar() {
         (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_chats)
-        (activity as MainActivity).setupNavigationView("hamburger")
+        (activity as MainActivity).setupNavigationView()
     }
 
     private fun queryChatRoomsByName(name: String?): Boolean {

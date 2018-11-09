@@ -216,25 +216,21 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         setSupportActionBar(toolbar)
     }
 
-    fun setupNavigationView(type:String = "hamburger") {
-        with(view_navigation.menu) {
+    fun setupNavigationView() {
+        with (view_navigation.menu) {
             clear()
             setupMenu(this)
         }
-        if (type == "back") {
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-            toolbar.setNavigationOnClickListener { onBackPressed() }
-        }else{
-            view_navigation.setNavigationItemSelectedListener {
-                it.isChecked = true
-                closeDrawer()
-                onNavDrawerItemSelected(it)
-                true
-            }
 
-            toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
-            toolbar.setNavigationOnClickListener { openDrawer() }
+        view_navigation.setNavigationItemSelectedListener {
+            it.isChecked = true
+            closeDrawer()
+            onNavDrawerItemSelected(it)
+            true
         }
+
+        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
+        toolbar.setNavigationOnClickListener { openDrawer() }
     }
 
     fun setAvatar(avatarUrl: String) {

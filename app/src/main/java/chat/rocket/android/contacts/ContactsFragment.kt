@@ -16,6 +16,7 @@ import chat.rocket.android.contacts.models.Contact
 import chat.rocket.android.createchannel.ui.CreateChannelFragment
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extension.onQueryTextListener
+import kotlinx.android.synthetic.main.app_bar.*
 import java.util.ArrayList
 import kotlin.Comparator
 import kotlin.collections.HashMap
@@ -222,8 +223,9 @@ class ContactsFragment : Fragment() {
     }
 
     fun setupToolbar(){
-        (this.activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_contacts)
-        (activity as MainActivity).setupNavigationView("back")
+        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_contacts)
+        (activity as MainActivity).toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        (activity as MainActivity).toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
