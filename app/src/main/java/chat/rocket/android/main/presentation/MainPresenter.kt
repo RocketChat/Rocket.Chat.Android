@@ -39,12 +39,16 @@ import chat.rocket.core.internal.rest.getCustomEmojis
 import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.unregisterPushToken
+import chat.rocket.core.internal.rest.inviteViaEmail
+import chat.rocket.core.internal.rest.inviteViaSMS
 import chat.rocket.core.model.Myself
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import javax.inject.Inject
+import chat.rocket.android.util.extensions.showToast
+
 
 class MainPresenter @Inject constructor(
     private val view: MainView,
@@ -228,6 +232,60 @@ class MainPresenter @Inject constructor(
                     view.showMessage(it)
                 }.ifNull {
                     view.showGenericErrorMessage()
+                }
+            }
+        }
+    }
+
+    fun inviteViaEmail(email:String) {
+        launchUI(strategy) {
+            try {
+                val result:Boolean = retryIO("inviteViaEmail") { client.inviteViaEmail(email) }
+                if (result) {
+                    view.showMessage("Invitation Email Sent")
+                } else{
+                    view.showMessage("Failed to send Invitation Email")
+                }
+            } catch (ex: Exception) {
+                when (ex) {
+                    is RocketChatAuthException -> {
+                        logout()
+                    }
+                    else -> {
+                        Timber.d(ex, "Error while inviting via email")
+                        ex.message?.let {
+                            view.showMessage(it)
+                        }.ifNull {
+                            view.showGenericErrorMessage()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun inviteViaSMS(phone:String) {
+        launchUI(strategy) {
+            try {
+                val result:Boolean = retryIO("inviteViaSMS") { client.inviteViaSMS(phone) }
+                if (result) {
+                    view.showMessage("Invitation SMS Sent")
+                } else{
+                    view.showMessage("Failed to send Invitation SMS")
+                }
+            } catch (ex: Exception) {
+                when (ex) {
+                    is RocketChatAuthException -> {
+                        logout()
+                    }
+                    else -> {
+                        Timber.d(ex, "Error while inviting via SMS")
+                        ex.message?.let {
+                            view.showMessage(it)
+                        }.ifNull {
+                            view.showGenericErrorMessage()
+                        }
+                    }
                 }
             }
         }

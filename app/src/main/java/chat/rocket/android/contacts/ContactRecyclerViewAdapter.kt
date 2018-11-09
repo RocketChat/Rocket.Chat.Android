@@ -66,7 +66,11 @@ class ContactRecyclerViewAdapter(
             this.inviteButton.setOnClickListener { view ->
                 run {
                     // Make API call using context.presenter
-                    context.showToast("${contact!!.getName()!!}: ${contactDetail.text}")
+                    if(contact!!.isPhone()){
+                        context.presenter.inviteViaSMS(contact!!.getPhoneNumber()!!);
+                        }else{
+                        context.presenter.inviteViaEmail(contact!!.getEmailAddress()!!);
+                    }
                 }
             }
         }
