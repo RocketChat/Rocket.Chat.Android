@@ -202,8 +202,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             .show()
     }
 
-    override fun invalidateToken(token: String) =
-        invalidateFirebaseToken(token)
+    override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
 
     override fun showMessage(resId: Int) = showToast(resId)
 

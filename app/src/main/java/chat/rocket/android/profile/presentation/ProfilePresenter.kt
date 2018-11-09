@@ -5,9 +5,15 @@ import android.net.Uri
 import chat.rocket.android.chatroom.domain.UriInteractor
 import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.helper.UserHelper
+import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.RemoveAccountInteractor
+import chat.rocket.android.server.domain.TokenRepository
+import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extension.compressImageAndGetByteArray
 import chat.rocket.android.util.extension.gethash
 import chat.rocket.android.util.extension.launchUI
@@ -21,6 +27,8 @@ import chat.rocket.core.internal.rest.deleteOwnAccount
 import chat.rocket.core.internal.rest.resetAvatar
 import chat.rocket.core.internal.rest.setAvatar
 import chat.rocket.core.internal.rest.updateProfile
+import kotlinx.coroutines.experimental.DefaultDispatcher
+import kotlinx.coroutines.experimental.withContext
 import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
@@ -30,8 +38,23 @@ class ProfilePresenter @Inject constructor(
     private val strategy: CancelStrategy,
     private val uriInteractor: UriInteractor,
     val userHelper: UserHelper,
+    navigator: MainNavigator,
     serverInteractor: GetCurrentServerInteractor,
-    factory: RocketChatClientFactory
+    factory: RocketChatClientFactory,
+    removeAccountInteractor: RemoveAccountInteractor,
+    tokenRepository: TokenRepository,
+    dbManagerFactory: DatabaseManagerFactory,
+    managerFactory: ConnectionManagerFactory
+) : CheckServerPresenter(
+    strategy = strategy,
+    factory = factory,
+    serverInteractor = serverInteractor,
+    removeAccountInteractor = removeAccountInteractor,
+    tokenRepository = tokenRepository,
+    dbManagerFactory = dbManagerFactory,
+    managerFactory = managerFactory,
+    tokenView = view,
+    navigator = navigator
 ) {
     private val serverUrl = serverInteractor.get()!!
     private val client: RocketChatClient = factory.create(serverUrl)
@@ -156,7 +179,13 @@ class ProfilePresenter @Inject constructor(
         launchUI(strategy) {
             view.showLoading()
             try {
-                retryIO { client.deleteOwnAccount(password.gethash().toHex()) }
+                withContext(DefaultDispatcher) {
+                    // REMARK: Backend API is only working with a lowercase hash.
+                    // https://github.com/RocketChat/Rocket.Chat/issues/12573
+                    retryIO { client.deleteOwnAccount(password.gethash().toHex().toLowerCase()) }
+                    setupConnectionInfo(serverUrl)
+                    logout(null)
+                }
             } catch (exception: Exception) {
                 exception.message?.let {
                     view.showMessage(it)

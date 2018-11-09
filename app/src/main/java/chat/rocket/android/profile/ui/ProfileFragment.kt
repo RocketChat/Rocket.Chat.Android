@@ -32,6 +32,7 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.invalidateFirebaseToken
 import com.facebook.drawee.backends.pipeline.Fresco
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
@@ -145,6 +146,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun showProfileUpdateSuccessfullyMessage() {
         showMessage(getString(R.string.msg_profile_update_successfully))
     }
+
+    override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
 
     override fun showLoading() {
         enableUserInput(false)
