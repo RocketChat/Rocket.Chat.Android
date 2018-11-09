@@ -16,6 +16,7 @@
     <string name="title_settings">Настройки</string>
     <string name="title_preferences">Персональные</string>
     <string name="title_change_password">Изменить пароль</string>
+    <string name="title_rate_us">оцените нас</string>
     <string name="title_admin_panel">Панель админа</string>
     <string name="title_password">Изменить пароль</string>
     <string name="title_update_profile">Обновить профиль</string>
@@ -59,8 +60,9 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Персональные</item>
         <item name="item_password">Изменить пароль</item>
-        <item name="item_password">О программе</item>
+        <item name="item_rate_us">оцените нас</item>
         <item name="item_share_app">добавить приложение</item>
+        <item name="item_password">О программе</item>
     </string-array>
 
     <!-- Regular information messages -->

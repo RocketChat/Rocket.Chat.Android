@@ -16,6 +16,7 @@
     <string name="title_settings">Ayarlar</string>
     <string name="title_preferences">Tercihler</string>
     <string name="title_change_password">Şifre Değişikliği</string>
+    <string name="title_rate_us">Bizi değerlendirin</string>
     <string name="title_admin_panel">Yönetici Paneli</string>
     <string name="title_password">Şifrenizi Değiştirin</string>
     <string name="title_update_profile">Profilinizi Düzenleyin</string>
@@ -59,8 +60,9 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Tercihler</item>
         <item name="item_password">Şifre Değiştir</item>
-        <item name="item_password">Hakkında</item>
         <item name="item_share_app">uygulamayı Paylaş</item>
+        <item name="item_rate_us">Bizi değerlendirin</item>
+        <item name="item_password">Hakkında</item>
     </string-array>
 
     <!-- Regular information messages -->

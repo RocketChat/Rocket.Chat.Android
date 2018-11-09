@@ -18,6 +18,7 @@
     <string name="title_settings">設定</string>
     <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
     <string name="title_change_password">Change Password</string> <!-- TODO Add translation -->
+    <string name="title_rate_us">私たちを評価してください</string>
     <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
     <string name="title_password">パスワードの変更</string>
     <string name="title_update_profile">プロフィールの更新</string>
@@ -61,8 +62,9 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Change Password</item> <!-- TODO Add translation -->
-        <item name="item_password">About</item> <!-- TODO Add translation -->
         <item name="item_share_app">アプリを共有する</item>
+        <item name="item_rate_us">私たちを評価してください</item>
+        <item name="item_password">About</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->

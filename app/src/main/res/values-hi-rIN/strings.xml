@@ -16,6 +16,7 @@
     <string name="title_settings">सेटिंग्स</string>
     <string name="title_preferences">प्राथमिकताएँ</string>
     <string name="title_change_password">पासवर्ड बदलें</string>
+    <string name="title_rate_us">हमें रेटिंग दें</string>
     <string name="title_admin_panel">एडमिन पैनल</string>
     <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
@@ -59,8 +60,9 @@
     <string-array name="settings_actions">
         <item name="item_preferences">प्राथमिकताएँ</item>
         <item name="item_password">पासवर्ड बदलें</item>
-        <item name="item_password">परिचय</item>
         <item name="item_share_app">ऐप शेयर करें</item>
+        <item name="item_rate_us">हमें रेटिंग दें</item>
+        <item name="item_password">परिचय</item>
     </string-array>
 
     <!-- Regular information messages -->

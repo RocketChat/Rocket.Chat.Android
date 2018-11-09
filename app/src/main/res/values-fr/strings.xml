@@ -16,6 +16,7 @@
     <string name="title_settings">Paramètres</string>
     <string name="title_preferences">Préférences</string>
     <string name="title_change_password">Changer le mot de passe</string>
+    <string name="title_rate_us">évaluez nous</string>
     <string name="title_admin_panel">Administration</string>
     <string name="title_password">Changer le mot de passe</string>
     <string name="title_update_profile">Mettre à jour le profil</string>
@@ -60,8 +61,9 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Préférences</item>
         <item name="item_password">Changer le mot de passe</item>
-        <item name="item_password">À propos</item>
         <item name="item_share_app">Partager l\'application</item>
+        <item name="item_rate_us">évaluez nous</item>
+        <item name="item_password">À propos</item>
     </string-array>
 
     <!-- Regular information messages -->
