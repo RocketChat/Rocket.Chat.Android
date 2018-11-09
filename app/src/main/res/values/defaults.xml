@@ -4,4 +4,5 @@
     <string name="server_hint_url" translatable="false">your-company.rocket.chat</string>
     <string name="community_server_url" translatable="false">open.rocket.chat</string>
     <string name="create_server_url" translatable="false">cloud.rocket.chat/trial</string>
+    <string name="play_store_link" translatable="false">https://play.google.com/store/apps/details?id=chat.rocket.android</string>
 </resources>

@@ -15,6 +15,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <!-- Titles -->
     <string name="title_sign_in_your_server">Sign in to your server</string>
     <string name="title_log_in">Login</string>
+    <string name="title_share_the_app">Share App</string>
     <string name="title_register_username">Register username</string>
     <string name="title_reset_password">Reset password</string>
     <string name="title_sign_up">Sign up</string>
@@ -70,13 +71,16 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item>
         <item name="item_password">Change Password</item>
-        <item name="item_password">About</item>
+        <item name="item_share_app">Share App</item>
         <item name="item_rate_us">Rate Us</item>
+        <item name="item_password">About</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
     <string name="msg_no_data_to_display">No data to display</string>
+    <string name="msg_check_this_out">Check this out</string>
+    <string name="msg_share_using">Share using</string>
     <string name="msg_profile_update_successfully">Profile update successfully</string>
     <string name="msg_username">username</string>
     <string name="msg_username_or_email">Username or email</string>

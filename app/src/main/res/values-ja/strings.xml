@@ -5,6 +5,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">サーバーに接続</string>
     <string name="title_log_in">ログイン</string>
+    <string name="title_share_the_app">アプリを共有する</string>
     <string name="title_register_username">ユーザー名を登録する</string>
     <string name="title_reset_password">パスワードリセット</string>
     <string name="title_sign_up">サインアップ</string>
@@ -61,11 +62,14 @@
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Change Password</item> <!-- TODO Add translation -->
         <item name="item_password">About</item> <!-- TODO Add translation -->
+        <item name="item_share_app">アプリを共有する</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">エラーが発生しました。もう一度お試しください。</string>
     <string name="msg_no_data_to_display">表示するデータがありません</string>
+    <string name="msg_check_this_out">これをチェックする</string>
+    <string name="msg_share_using">共有する</string>
     <string name="msg_profile_update_successfully">プロフィールの更新に成功しました</string>
     <string name="msg_username">ユーザー名</string>
     <string name="msg_username_or_email">メールアドレスまたはユーザー名</string>
