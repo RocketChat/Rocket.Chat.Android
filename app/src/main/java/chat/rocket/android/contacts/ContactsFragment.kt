@@ -200,7 +200,6 @@ class ContactsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        setupToolbar()
 
         if (
                 ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
@@ -220,6 +219,11 @@ class ContactsFragment : Fragment() {
 
         // Filter before sending to FrameLayout
         setupFrameLayout(contactArrayList)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
     }
 
     fun setupToolbar(){
