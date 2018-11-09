@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Ваш сервер</string>
     <string name="title_log_in">Войти</string>
+    <string name="title_share_the_app">добавить приложение</string>
     <string name="title_register_username">Зарегистрировать имя</string>
     <string name="title_reset_password">Сброс пароля</string>
     <string name="title_sign_up">Зарегистрироваться</string>
@@ -58,11 +59,14 @@
         <item name="item_preferences">Персональные</item>
         <item name="item_password">Изменить пароль</item>
         <item name="item_password">О программе</item>
+        <item name="item_share_app">добавить приложение</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Произошла ошибка, повторите попытку.</string>
     <string name="msg_no_data_to_display">Нет данных для отображения</string>
+    <string name="msg_check_this_out">Проверь это</string>
+    <string name="msg_share_using">Совместное использование</string>
     <string name="msg_profile_update_successfully">Профиль успешно обновлен</string>
     <string name="msg_username">имя пользователя</string>
     <string name="msg_username_or_email">имя пользователя или e-mail</string>
