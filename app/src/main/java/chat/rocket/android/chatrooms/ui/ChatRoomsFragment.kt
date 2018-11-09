@@ -360,7 +360,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private fun setupFab() {
         create_new_channel_fab.setOnClickListener { view ->
             val contactsFragment = ContactsFragment()
-            activity?.supportFragmentManager?.beginTransaction()?.replace(this.id, contactsFragment, "contactsFragment")?.addToBackStack(null)?.commit();
+            val transaction = activity?.supportFragmentManager?.beginTransaction();
+            transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+            transaction?.replace(this.id, contactsFragment, "contactsFragment");
+            transaction?.addToBackStack(null)?.commit();
         }
     }
 }
