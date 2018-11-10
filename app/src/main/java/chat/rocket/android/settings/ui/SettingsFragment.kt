@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.about.ui.AboutFragment
@@ -92,16 +93,16 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     }
 
     fun getMarketAppLink(): String {
-        return "market://details?id=chat.rocket.android"
+        return getString(R.string.market_link)
     }
     fun getMarketWebLink(): String {
-        return "https://play.google.com/store/apps/details?id=chat.rocket.android"
+        return getString(R.string.play_store_link)
     }
     private fun startAppPlayStore() {
         try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getMarketAppLink())))
+            startActivity(Intent(Intent.ACTION_VIEW, getMarketAppLink().toUri()))
         } catch (error: ActivityNotFoundException) {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getMarketWebLink())))
+            startActivity(Intent(Intent.ACTION_VIEW, getMarketWebLink().toUri()))
         }
     }
 
