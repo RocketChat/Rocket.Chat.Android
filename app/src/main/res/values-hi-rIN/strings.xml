@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">अपने सर्वर में साइन इन करें</string>
     <string name="title_log_in">लॉग इन करें</string>
+    <string name="title_share_the_app">ऐप शेयर करे</string>
     <string name="title_register_username">रजिस्टर उपयोगकर्ता नाम</string>
     <string name="title_reset_password">पासवर्ड रीसेट करें</string>
     <string name="title_sign_up">साइन अप करें</string>
@@ -59,11 +60,14 @@
         <item name="item_preferences">प्राथमिकताएँ</item>
         <item name="item_password">पासवर्ड बदलें</item>
         <item name="item_password">परिचय</item>
+        <item name="item_share_app">ऐप शेयर करें</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">क्षमा करें, एक त्रुटि हुई है, कृपया पुनः प्रयास करें</string>
     <string name="msg_no_data_to_display">डेटा प्रदर्शित करने के लिए उपलब्ध नहीं हैं</string>
+    <string name="msg_check_this_out">इसकी जांच करें</string>
+    <string name="msg_share_using">उपयोग कर साझा करें</string>
     <string name="msg_profile_update_successfully">प्रोफ़ाइल सफलतापूर्वक अपडेट हो गया है</string>
     <string name="msg_username">यूजरनेम</string>
     <string name="msg_username_or_email">यूजरनेम या ईमेल</string>

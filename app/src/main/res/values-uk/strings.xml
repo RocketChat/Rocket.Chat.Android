@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Ваш сервер</string>
     <string name="title_log_in">Увійти</string>
+    <string name="title_share_the_app">поділитися прикладом</string>
     <string name="title_register_username">Зареєструвати ім\'я</string>
     <string name="title_reset_password">Відновлення паролю</string>
     <string name="title_sign_up">Зареєструватися</string>
@@ -59,11 +60,14 @@
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Change Password</item> <!-- TODO Add translation -->
         <item name="item_password">About</item> <!-- TODO Add translation -->
+        <item name="item_share_app">поділитися прикладом</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Сталася помилка, спробуйте ще раз.</string>
     <string name="msg_no_data_to_display">Немає даних для відображення</string>
+    <string name="msg_check_this_out">Перевір це</string>
+    <string name="msg_share_using">поділитися використанням</string>
     <string name="msg_profile_update_successfully">"Профіль оновлено успішно "</string>
     <string name="msg_username">Ім\'я користувача</string>
     <string name="msg_username_or_email">Ім\'я користувача або e-mail</string>

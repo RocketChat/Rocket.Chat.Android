@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Connectez-vous sur votre serveur</string>
     <string name="title_log_in">S\'identifier</string>
+    <string name="title_share_the_app">Partager l\'application</string>
     <string name="title_register_username">Enregistrer le nom d\'utilisateur</string>
     <string name="title_reset_password">Réinitialiser mot de passe</string>
     <string name="title_sign_up">S\'inscrire</string>
@@ -60,11 +61,14 @@
         <item name="item_preferences">Préférences</item>
         <item name="item_password">Changer le mot de passe</item>
         <item name="item_password">À propos</item>
+        <item name="item_share_app">Partager l\'application</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Désolé, une erreur s\'est produite. Veuillez réessayer</string>
     <string name="msg_no_data_to_display">Aucune donnée à afficher</string>
+    <string name="msg_check_this_out">regarde ça</string>
+    <string name="msg_share_using">Partager en utilisant</string>
     <string name="msg_profile_update_successfully">Mise à jour du profil avec succès</string>
     <string name="msg_username">nom d\'utilisateur</string>
     <string name="msg_username_or_email">Nom d\'utilisateur ou email</string>
