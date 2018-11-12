@@ -34,7 +34,7 @@
     <string name="action_create_channel">चैनल बनाएं</string>
     <string name="action_create">बनाएं</string>
     <string name="action_logout">लोग आउट करें</string>
-    <string name="action_files">फ़ाइलें</string>
+    <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
     <string name="action_join_chat">चैट में शामिल हों</string>
     <string name="action_add_account">खाता जोड़ो</string>
@@ -45,7 +45,7 @@
     <string name="action_save_to_gallery">गैलरी में सहेजें</string>
     <string name="action_drawing">चित्रकारी</string>
     <string name="action_select_photo_from_gallery">गैलरी से फोटो का चयन करें</string>
-    <string name="action_take_photo">फोटो खेचिये</string>
+    <string name="action_take_a_photo">फोटो खेचिये</string>
     <string name="action_reset_avatar">अवतार रीसेट करें</string>
     <string name="action_connect_server">सर्वर से कनेक्ट करें</string>
     <string name="action_join_community">समुदाय में शामिल हों</string>
