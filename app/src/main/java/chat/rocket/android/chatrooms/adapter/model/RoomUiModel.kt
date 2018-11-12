@@ -14,5 +14,8 @@ data class RoomUiModel(
     val alert: Boolean = false,
     val lastMessage: CharSequence? = null,
     val status: UserStatus? = null,
-    val username: String? = null
+    val username: String? = null,
+    val broadcast: Boolean = false,
+    val canModerate: Boolean = false,
+    val canPost: Boolean = true
 )

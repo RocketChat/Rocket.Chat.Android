@@ -15,6 +15,7 @@ import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.EmojiSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
+import chat.rocket.android.chatrooms.adapter.RoomUiModelMapper
 import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
@@ -34,7 +35,6 @@ import chat.rocket.android.server.domain.uploadMimeTypeFilter
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.state
-import chat.rocket.android.util.extension.compressImageAndGetByteArray
 import chat.rocket.android.util.extension.getByteArray
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
@@ -73,6 +73,7 @@ import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.ChatRoomRole
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
+import chat.rocket.core.model.Room
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.DefaultDispatcher
 import kotlinx.coroutines.experimental.android.UI
@@ -81,7 +82,6 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.threeten.bp.Instant
 import timber.log.Timber
-import java.io.InputStream
 import java.util.*
 import javax.inject.Inject
 
@@ -97,6 +97,7 @@ class ChatRoomPresenter @Inject constructor(
     private val analyticsManager: AnalyticsManager,
     private val userHelper: UserHelper,
     private val mapper: UiModelMapper,
+    private val roomMapper: RoomUiModelMapper,
     private val jobSchedulerInteractor: JobSchedulerInteractor,
     private val messageHelper: MessageHelper,
     private val dbManager: DatabaseManager,
@@ -119,6 +120,7 @@ class ChatRoomPresenter @Inject constructor(
     private var typingStatusSubscriptionId: String? = null
     private var lastState = manager.state
     private var typingStatusList = arrayListOf<String>()
+    private val roomChangesChannel = Channel<Room>(Channel.CONFLATED)
 
     fun setupChatRoom(
         roomId: String,
@@ -126,7 +128,7 @@ class ChatRoomPresenter @Inject constructor(
         roomType: String,
         chatRoomMessage: String? = null
     ) {
-        launchUI(strategy) {
+        launch(CommonPool + strategy.jobs) {
             try {
                 chatRoles = if (roomTypeOf(roomType) !is RoomType.DirectMessage) {
                     client.chatRoomRoles(roomType = roomTypeOf(roomType), roomName = roomName)
@@ -136,13 +138,22 @@ class ChatRoomPresenter @Inject constructor(
                 chatRoles = emptyList()
             } finally {
                 // User has at least an 'owner' or 'moderator' role.
-                val userCanMod = isOwnerOrMod()
+                val canModerate = isOwnerOrMod()
                 // Can post anyway if has the 'post-readonly' permission on server.
-                val userCanPost = userCanMod || permissions.canPostToReadOnlyChannels()
-                chatIsBroadcast = dbManager.getRoom(roomId)?.chatRoom?.run {
-                    broadcast
-                } ?: false
-                view.onRoomUpdated(userCanPost, chatIsBroadcast, userCanMod)
+                val room = dbManager.getRoom(roomId)
+                val canPost = canModerate || permissions.canPostToReadOnlyChannels()
+                room?.let {
+                    chatIsBroadcast = it.chatRoom.broadcast ?: false
+                    val roomUiModel = roomMapper.map(it, true)
+                    launchUI(strategy) {
+                        view.onRoomUpdated(roomUiModel = roomUiModel.copy(
+                            broadcast = chatIsBroadcast,
+                            canModerate = canModerate,
+                            canPost = canPost
+                        ))
+                    }
+                }
+
                 loadMessages(roomId, roomType, clearDataSet = true)
                 chatRoomMessage?.let { messageHelper.messageIdFromPermalink(it) }
                     ?.let { messageId ->
@@ -154,8 +165,24 @@ class ChatRoomPresenter @Inject constructor(
                             true
                         )
                     }
+                subscribeRoomChanges()
             }
         }
+    }
+
+    private suspend fun subscribeRoomChanges() {
+        chatRoomId?.let {
+            manager.addRoomChannel(it, roomChangesChannel)
+            for (room in roomChangesChannel) {
+                dbManager.getRoom(room.id)?.let {
+                    view.onRoomUpdated(roomMapper.map(chatRoom = it, showLastMessage = true))
+                }
+            }
+        }
+    }
+
+    private fun unsubscribeRoomChanges() {
+        chatRoomId?.let { manager.removeRoomChannel(it)  }
     }
 
     private fun isOwnerOrMod(): Boolean {
@@ -980,7 +1007,12 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 retryIO("joinChat($chatRoomId)") { client.joinChat(chatRoomId) }
                 val canPost = permissions.canPostToReadOnlyChannels()
-                view.onJoined(canPost)
+                dbManager.getRoom(chatRoomId)?.let {
+                    val roomUiModel = roomMapper.map(it, true).copy(
+                        canPost = canPost)
+                    view.onJoined(roomUiModel = roomUiModel)
+                    view.onRoomUpdated(roomUiModel = roomUiModel)
+                }
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
             }
@@ -1150,6 +1182,7 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     fun disconnect() {
+        unsubscribeRoomChanges()
         unsubscribeTypingStatus()
         if (chatRoomId != null) {
             unsubscribeMessages(chatRoomId.toString())
