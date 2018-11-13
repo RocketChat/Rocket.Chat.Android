@@ -157,6 +157,7 @@
     <string name="msg_view_less">visualizar menos</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copiado</string>
+    <string name="msg_muted_on_this_channel">Você está silenciado neste canal</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
@@ -185,8 +186,8 @@
     <string name="message_welcome">Bem-vindo, %s</string>
     <string name="message_removed">Mensagem removida</string>
     <string name="message_pinned">Pinou uma mensagem:</string>
-    <string name="message_muted">Usuário %1$s entrou no modo mudo por %2$s</string>
-    <string name="message_unmuted">Usuário %1$s saiu do modo mudo por %2$s</string>
+    <string name="message_muted">Usuário %1$s foi silenciado por %2$s</string>
+    <string name="message_unmuted">Usuário %1$s saiu do modo silenciado por %2$s</string>
     <string name="message_role_add">%1$s foi definido %2$s por %3$s</string>
     <string name="message_role_removed">%1$s não é mais %2$s por %3$s</string>
     // TODO:Add proper translation.
