@@ -19,17 +19,17 @@ internal fun ChatRoomFragment.setupMenu(menu: Menu) {
         setupFavoriteMenuItem(menu)
 
         menu.add(
-                Menu.NONE,
-                MENU_ACTION_PINNED_MESSAGES,
-                Menu.NONE,
-                R.string.title_pinned_messages
+            Menu.NONE,
+            MENU_ACTION_PINNED_MESSAGES,
+            Menu.NONE,
+            R.string.title_pinned_messages
         )
 
         menu.add(
-                Menu.NONE,
-                MENU_ACTION_FAVORITE_MESSAGES,
-                Menu.NONE,
-                R.string.title_favorite_messages
+            Menu.NONE,
+            MENU_ACTION_FAVORITE_MESSAGES,
+            Menu.NONE,
+            R.string.title_favorite_messages
         )
     }
 
