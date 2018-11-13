@@ -15,21 +15,23 @@ import chat.rocket.android.helper.Constants
 
 internal fun ChatRoomFragment.setupMenu(menu: Menu) {
     setupSearchMessageMenuItem(menu, requireContext())
-    setupFavoriteMenuItem(menu)
+    if (!Constants.WIDECHAT) {
+        setupFavoriteMenuItem(menu)
 
-    menu.add(
-        Menu.NONE,
-        MENU_ACTION_PINNED_MESSAGES,
-        Menu.NONE,
-        R.string.title_pinned_messages
-    )
+        menu.add(
+            Menu.NONE,
+            MENU_ACTION_PINNED_MESSAGES,
+            Menu.NONE,
+            R.string.title_pinned_messages
+        )
 
-    menu.add(
-        Menu.NONE,
-        MENU_ACTION_FAVORITE_MESSAGES,
-        Menu.NONE,
-        R.string.title_favorite_messages
-    )
+        menu.add(
+            Menu.NONE,
+            MENU_ACTION_FAVORITE_MESSAGES,
+            Menu.NONE,
+            R.string.title_favorite_messages
+        )
+    }
 
     if (chatRoomType != RoomType.DIRECT_MESSAGE && !disableMenu) {
         menu.add(
