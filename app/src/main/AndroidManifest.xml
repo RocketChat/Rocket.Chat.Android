@@ -43,7 +43,7 @@
                 <data
                     android:host="auth"
                     android:scheme="rocketchat" />
-                
+
                 <data
                     android:host="go.rocket.chat"
                     android:path="/auth"
@@ -83,9 +83,9 @@
         <activity
             android:name=".chatinformation.ui.MessageInfoActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" /> 
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
-        <!-- TODO: Change to fragment -->
+        <!-- TODO: Change to fragment-->
         <activity
             android:name=".settings.password.ui.PasswordActivity"
             android:theme="@style/AppTheme" />
