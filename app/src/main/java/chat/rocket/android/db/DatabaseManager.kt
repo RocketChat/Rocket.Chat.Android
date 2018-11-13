@@ -19,6 +19,7 @@ import chat.rocket.android.util.extensions.exhaustive
 import chat.rocket.android.util.extensions.removeTrailingSlash
 import chat.rocket.android.util.extensions.toEntity
 import chat.rocket.android.util.extensions.userId
+import chat.rocket.android.util.retryDB
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.SimpleUser
@@ -96,7 +97,9 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     }
 
     suspend fun getRoom(id: String) = withContext(dbManagerContext) {
-        chatRoomDao().get(id)
+        retryDB("getRoom($id)") {
+            chatRoomDao().get(id)
+        }
     }
 
     fun processUsersBatch(users: List<User>) {
@@ -151,7 +154,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
 
     fun updateSelfUser(myself: Myself) {
         launch(dbManagerContext) {
-            val user = userDao().getUser(myself.id)
+            val user = retryDB("getUser(${myself.id})") { userDao().getUser(myself.id) }
             val entity = user?.copy(
                 name = myself.name ?: user.name,
                 username = myself.username ?: user.username,
@@ -335,7 +338,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     }
 
     private suspend fun updateRoom(data: Room): ChatRoomEntity? {
-        return chatRoomDao().get(data.id)?.let { current ->
+        return retryDB("getChatRoom(${data.id})") { chatRoomDao().get(data.id) }?.let { current ->
             with(data) {
                 val chatRoom = current.chatRoom
 
@@ -373,7 +376,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         context.getString(R.string.msg_sent_attachment)
 
     private suspend fun updateSubscription(data: Subscription): ChatRoomEntity? {
-        return chatRoomDao().get(data.roomId)?.let { current ->
+        return retryDB("getRoom(${data.roomId}") { chatRoomDao().get(data.roomId) }?.let { current ->
             with(data) {
 
                 val userId = if (type is RoomType.DirectMessage) {
@@ -539,39 +542,42 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         }
     }
 
-    private fun findUser(userId: String): String? = userDao().findUser(userId)
+    private suspend fun findUser(userId: String): String? =
+        retryDB("findUser($userId)") { userDao().findUser(userId) }
 
-    private fun doOperation(operation: Operation) {
-        when (operation) {
-            is Operation.ClearStatus -> userDao().clearStatus()
-            is Operation.UpdateRooms -> {
-                Timber.d("Running ChatRooms transaction: remove: ${operation.toRemove} - insert: ${operation.toInsert} - update: ${operation.toUpdate}")
+    private suspend fun doOperation(operation: Operation) {
+        retryDB(description = "doOperation($operation)") {
+            when (operation) {
+                is Operation.ClearStatus -> userDao().clearStatus()
+                is Operation.UpdateRooms -> {
+                    Timber.d("Running ChatRooms transaction: remove: ${operation.toRemove} - insert: ${operation.toInsert} - update: ${operation.toUpdate}")
 
-                chatRoomDao().update(operation.toInsert, operation.toUpdate, operation.toRemove)
-            }
-            is Operation.InsertRooms -> {
-                chatRoomDao().insertOrReplace(operation.chatRooms)
-            }
-            is Operation.CleanInsertRooms -> {
-                chatRoomDao().cleanInsert(operation.chatRooms)
-            }
-            is Operation.InsertUsers -> {
-                val time = measureTimeMillis { userDao().upsert(operation.users) }
-                Timber.d("Upserted users batch(${operation.users.size}) in $time MS")
-            }
-            is Operation.InsertUser -> {
-                userDao().insert(operation.user)
-            }
-            is Operation.UpsertUser -> {
-                userDao().upsert(operation.user)
-            }
-            is Operation.InsertMessages -> {
-                messageDao().insert(operation.list)
-            }
-            is Operation.SaveLastSync -> {
-                messageDao().saveLastSync(operation.sync)
-            }
-        }.exhaustive
+                    chatRoomDao().update(operation.toInsert, operation.toUpdate, operation.toRemove)
+                }
+                is Operation.InsertRooms -> {
+                    chatRoomDao().insertOrReplace(operation.chatRooms)
+                }
+                is Operation.CleanInsertRooms -> {
+                    chatRoomDao().cleanInsert(operation.chatRooms)
+                }
+                is Operation.InsertUsers -> {
+                    val time = measureTimeMillis { userDao().upsert(operation.users) }
+                    Timber.d("Upserted users batch(${operation.users.size}) in $time MS")
+                }
+                is Operation.InsertUser -> {
+                    userDao().insert(operation.user)
+                }
+                is Operation.UpsertUser -> {
+                    userDao().upsert(operation.user)
+                }
+                is Operation.InsertMessages -> {
+                    messageDao().insert(operation.list)
+                }
+                is Operation.SaveLastSync -> {
+                    messageDao().saveLastSync(operation.sync)
+                }
+            }.exhaustive
+        }
     }
 }
 
