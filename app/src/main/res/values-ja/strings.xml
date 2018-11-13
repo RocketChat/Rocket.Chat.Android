@@ -158,6 +158,8 @@
     <string name="msg_view_more">更に表示</string>
 
     <string name="msg_view_less">隠す</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">プライベート</string>
