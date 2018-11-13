@@ -5,6 +5,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">サーバーに接続</string>
     <string name="title_log_in">ログイン</string>
+    <string name="title_share_the_app">アプリを共有する</string>
     <string name="title_register_username">ユーザー名を登録する</string>
     <string name="title_reset_password">パスワードリセット</string>
     <string name="title_sign_up">サインアップ</string>
@@ -22,13 +23,11 @@
     <string name="title_update_profile">プロフィールの更新</string>
     <string name="title_about">About</string>
     <string name="title_create_channel">新しいチャネルを作成します</string>
-    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
-
+    <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
     <string name="action_connect">接続</string>
     <string name="action_use_this_username">このユーザー名を使用する</string>
-    <string name="action_login_or_sign_up">ログインまたはアカウントを作成するにはこのボタンを押してください</string>
     <string name="action_terms_of_service">サービス利用規約</string>
     <string name="action_privacy_policy">プライバシーポリシー</string>
     <string name="action_search">検索</string>
@@ -37,7 +36,6 @@
     <string name="action_create_channel">チャンネル作成</string>
     <string name="action_create">作ります</string>
     <string name="action_logout">ログアウト</string>
-    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">ファイル</string>
     <string name="action_confirm_password">変更したパスワードの確認</string>
     <string name="action_join_chat">チャットに参加</string>
@@ -56,17 +54,21 @@
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
+    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Change Password</item> <!-- TODO Add translation -->
         <item name="item_password">About</item> <!-- TODO Add translation -->
+        <item name="item_share_app">アプリを共有する</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">エラーが発生しました。もう一度お試しください。</string>
     <string name="msg_no_data_to_display">表示するデータがありません</string>
+    <string name="msg_check_this_out">これをチェックする</string>
+    <string name="msg_share_using">共有する</string>
     <string name="msg_profile_update_successfully">プロフィールの更新に成功しました</string>
     <string name="msg_username">ユーザー名</string>
     <string name="msg_username_or_email">メールアドレスまたはユーザー名</string>
@@ -139,22 +141,25 @@
     <string name="msg_file_description">ファイルの説明</string>
     <string name="msg_send">送信</string>
     <string name="msg_sent_attachment">添付ファイルを送信しました</string>
-    <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string> <!-- TODO Add translation -->
-    <string name="msg_team_communication">Team Communication</string> <!-- TODO Add translation -->
-    <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->
-    <string name="msg_create_account">Create an account</string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_github">Continue with <b>Github</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_google">Continue with <b>Google</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
-    <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
-    <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+
+    <string name="msg_welcome_to_rocket_chat">Rocket.Chatへようこそ</string>
+    <string name="msg_team_communication">チームコミュニケーション</string>
+    <string name="msg_login_with_email"><b>e-mail</b>でログイン</string>
+    <string name="msg_create_account">アカウントを作成</string>
+    <string name="msg_continue_with_facebook"><b>Facebook</b>でログイン</string>
+    <string name="msg_continue_with_github"><b>Github</b>でログイン</string>
+    <string name="msg_continue_with_google"><b>Google</b>でログイン</string>
+    <string name="msg_continue_with_linkedin"><b>Linkedin</b>でログイン</string>
+    <string name="msg_continue_with_gitlab"><b>GitLab</b>でログイン</string>
+    <string name="msg_continue_with_wordpress"><b>WordPress</b>でログイン</string>
+    <string name="msg_two_factor_authentication">二要素認証</string>
+    <string name="msg__your_2fa_code">あなたの 2FA コードは何ですか?</string>
+
+    <string name="msg_view_more">更に表示</string>
+
+    <string name="msg_view_less">隠す</string>
     <!-- TODO - Add proper translation -->
-    <string name="msg_view_more">view more</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_less">view less</string>
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">プライベート</string>
@@ -170,6 +175,8 @@
     <string name="msg_message_copied">メッセージをコピー</string>
     <string name="msg_delete_message">メッセージを削除</string>
     <string name="msg_delete_description">このメッセージを削除してもよろしいですか?</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
@@ -206,6 +213,8 @@
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">メッセージの編集</string>
     <string name="action_msg_add_reaction">リアクションする</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_copy_permalink">Copy permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">編集は許可されていません</string>

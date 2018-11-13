@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Ваш сервер</string>
     <string name="title_log_in">Увійти</string>
+    <string name="title_share_the_app">поділитися прикладом</string>
     <string name="title_register_username">Зареєструвати ім\'я</string>
     <string name="title_reset_password">Відновлення паролю</string>
     <string name="title_sign_up">Зареєструватися</string>
@@ -20,13 +21,11 @@
     <string name="title_update_profile">Оновити профіль</string>
     <string name="title_about">"Про програму"</string>
     <string name="title_create_channel">Створити новий канал</string>
-    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
-
+    <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
     <string name="action_connect">Підключитися</string>
     <string name="action_use_this_username">Використати це ім\'я</string>
-    <string name="action_login_or_sign_up">Натисніть цю кнопку, щоб увійти до системи або створити аккаунт</string>
     <string name="action_terms_of_service">Умови використання</string>
     <string name="action_privacy_policy">Політика конфіденційності</string>
     <string name="action_search">Пошук</string>
@@ -35,7 +34,6 @@
     <string name="action_create_channel">Створити канал</string>
     <string name="action_create">Створити</string>
     <string name="action_logout">Вийти</string>
-    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">Файли</string>
     <string name="action_confirm_password">Підтвердження зміни пароля</string>
     <string name="action_join_chat">Приєднатися до чату</string>
@@ -54,17 +52,21 @@
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
+    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Change Password</item> <!-- TODO Add translation -->
         <item name="item_password">About</item> <!-- TODO Add translation -->
+        <item name="item_share_app">поділитися прикладом</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Сталася помилка, спробуйте ще раз.</string>
     <string name="msg_no_data_to_display">Немає даних для відображення</string>
+    <string name="msg_check_this_out">Перевір це</string>
+    <string name="msg_share_using">поділитися використанням</string>
     <string name="msg_profile_update_successfully">"Профіль оновлено успішно "</string>
     <string name="msg_username">Ім\'я користувача</string>
     <string name="msg_username_or_email">Ім\'я користувача або e-mail</string>
@@ -152,6 +154,10 @@
     <string name="msg_view_more">view more</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_view_less">view less</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватний</string>
@@ -200,6 +206,8 @@
     <string name="action_msg_share">Поділитися</string>
     <string name="action_title_editing">Редагування повідомлення</string>
     <string name="action_msg_add_reaction">Відреагувати</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_copy_permalink">Copy permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редагування заборонено</string>

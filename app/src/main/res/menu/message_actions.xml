@@ -13,6 +13,11 @@
         android:title="@string/action_msg_reply" />
 
     <item
+        android:id="@+id/action_message_permalink"
+        android:icon="@drawable/ic_action_message_link_24dp"
+        android:title="@string/action_msg_copy_permalink" />
+
+    <item
         android:id="@+id/action_message_quote"
         android:icon="@drawable/ic_action_message_quote_24dp"
         android:title="@string/action_msg_quote" />
