@@ -87,21 +87,16 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                 shareIntent.putExtra(Intent.EXTRA_TEXT, shareSub)
                 startActivity(Intent.createChooser(shareIntent, getString(R.string.msg_share_using)))
             }
-            resources.getString(R.string.title_rate_us) ->
-                startAppPlayStore()
+            resources.getString(R.string.title_rate_us) -> startAppPlayStore()
         }
     }
 
-    fun getMarketAppLink(): String {
-        return getString(R.string.market_link)
-    }
-    fun getMarketWebLink(): String {
-        return getString(R.string.play_store_link)
-    }
     private fun startAppPlayStore() {
         try {
+            fun getMarketAppLink()= getString(R.string.market_link)
             startActivity(Intent(Intent.ACTION_VIEW, getMarketAppLink().toUri()))
         } catch (error: ActivityNotFoundException) {
+            fun getMarketWebLink() = getString(R.string.play_store_link)
             startActivity(Intent(Intent.ACTION_VIEW, getMarketWebLink().toUri()))
         }
     }
