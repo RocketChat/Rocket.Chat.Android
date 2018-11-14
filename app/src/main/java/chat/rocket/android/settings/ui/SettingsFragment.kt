@@ -93,11 +93,9 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
 
     private fun startAppPlayStore() {
         try {
-            fun getMarketAppLink()= getString(R.string.market_link)
-            startActivity(Intent(Intent.ACTION_VIEW, getMarketAppLink().toUri()))
+            startActivity(Intent(Intent.ACTION_VIEW, getString(R.string.market_link).toUri()))
         } catch (error: ActivityNotFoundException) {
-            fun getMarketWebLink() = getString(R.string.play_store_link)
-            startActivity(Intent(Intent.ACTION_VIEW, getMarketWebLink().toUri()))
+            startActivity(Intent(Intent.ACTION_VIEW, getString(R.string.play_store_link).toUri()))
         }
     }
 
