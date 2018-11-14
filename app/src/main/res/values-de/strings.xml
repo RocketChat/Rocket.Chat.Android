@@ -22,7 +22,7 @@
     <string name="title_update_profile">Update Profil</string>
     <string name="title_about">Über</string>
     <string name="title_create_channel">Erstelle Raum</string>
-    <string name="title_confirmation">Are You Sure you want to logout?</string><!-- TODO Add translation -->
+    <string name="title_are_you_sure">Are you sure?</string><!-- TODO Add translation -->
 
     <!-- Actions -->
     <string name="action_connect">Verbinde</string>
@@ -35,7 +35,6 @@
     <string name="action_create_channel">Erstelle Raum</string>
     <string name="action_create">Erstelle</string>
     <string name="action_logout">Abmelden</string>
-    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">Dateien</string>
     <string name="action_confirm_password">Bestätige Passwort Änderung</string>
     <string name="action_join_chat">Trete Chat bei</string>
@@ -54,6 +53,7 @@
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
+    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -150,6 +150,8 @@
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
     <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
     <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+    <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privat</string>

@@ -22,8 +22,7 @@
     <string name="title_update_profile">Обновить профиль</string>
     <string name="title_about">О программе</string>
     <string name="title_create_channel">Создать новый канал</string>
-    <string name="title_confirmation">Вы действительно хотите выйти?</string>
-
+    <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
     <string name="action_connect">Подключиться</string>
@@ -36,7 +35,6 @@
     <string name="action_create_channel">Создать канал</string>
     <string name="action_create">Создать</string>
     <string name="action_logout">Выйти</string>
-    <string name="action_stay">Остаться</string>
     <string name="action_files">Файлы</string>
     <string name="action_confirm_password">Подтверждение изменения пароля</string>
     <string name="action_join_chat">Присоединиться к чату</string>
@@ -55,6 +53,7 @@
     <string name="action_create_server">Создать новый сервер</string>
     <string name="action_register">Зарегистрировать</string>
     <string name="action_confirm">Подтвердить</string>
+    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -157,6 +156,8 @@
     <string name="msg_view_more">больше</string>
     <string name="msg_view_less">меньше</string>
     <string name="msg_permalink_copied">Ссылка скопирована</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>

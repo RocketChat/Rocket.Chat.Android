@@ -27,6 +27,7 @@
     <string name="title_confirmation">ログアウトしますか?</string>
 
 
+
     <!-- Actions -->
     <string name="action_connect">接続</string>
     <string name="action_use_this_username">このユーザー名を使用する</string>
@@ -57,6 +58,7 @@
     <string name="action_create_server">新規サーバーを作成</string>
     <string name="action_register">登録</string>
     <string name="action_confirm">確認</string>
+    <string name="action_delete_account">アカウントを削除する</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -156,10 +158,10 @@
     <string name="msg_continue_with_wordpress"><b>WordPress</b>でログイン</string>
     <string name="msg_two_factor_authentication">二要素認証</string>
     <string name="msg__your_2fa_code">あなたの 2FA コードは何ですか?</string>
-
     <string name="msg_view_more">更に表示</string>
-
     <string name="msg_view_less">隠す</string>
+    <string name="msg_muted_on_this_channel">あなたはこのチャンネルでミュートされています</string>
+
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">プライベート</string>
@@ -213,7 +215,6 @@
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">メッセージの編集</string>
     <string name="action_msg_add_reaction">リアクションする</string>
-    <!-- TODO - Add proper translation -->
     <string name="action_msg_copy_permalink">パーマリンクのコピー</string>
 
     <!-- Permission messages -->

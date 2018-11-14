@@ -22,8 +22,7 @@
     <string name="title_update_profile">Profilinizi Düzenleyin</string>
     <string name="title_about">Hakkında</string>
     <string name="title_create_channel">Yeni Kanal Oluştur</string>
-    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
-
+    <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
     <string name="action_connect">Bağlan</string>
@@ -36,7 +35,6 @@
     <string name="action_create_channel">Yeni Kanal Oluştur</string>
     <string name="action_create">Oluştur</string>
     <string name="action_logout">Çıkış Yap</string>
-    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">Dosyalar</string>
     <string name="action_confirm_password">Şifre Değişikliğini Onaylayın</string>
     <string name="action_join_chat">Sohbete Bağlan</string>
@@ -55,6 +53,7 @@
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
+    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -174,6 +173,8 @@
     <string name="msg_view_less">Daha az göster</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copied</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
     
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">İstatistik takibi</string>

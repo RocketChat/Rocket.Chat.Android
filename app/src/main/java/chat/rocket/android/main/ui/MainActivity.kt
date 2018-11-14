@@ -202,8 +202,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             .show()
     }
 
-    override fun invalidateToken(token: String) =
-        invalidateFirebaseToken(token)
+    override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
 
     override fun showMessage(resId: Int) = showToast(resId)
 
@@ -234,11 +233,11 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     fun showLogoutDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.action_logout)
-        builder.setMessage(R.string.title_confirmation)
-        builder.setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout()}
-            .setNegativeButton(R.string.action_stay) { dialog, _ -> dialog.cancel() }
-        builder.create().show()
+        builder.setTitle(R.string.title_are_you_sure)
+            .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout()}
+            .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
+            .create()
+            .show()
     }
 
     fun setAvatar(avatarUrl: String) {
