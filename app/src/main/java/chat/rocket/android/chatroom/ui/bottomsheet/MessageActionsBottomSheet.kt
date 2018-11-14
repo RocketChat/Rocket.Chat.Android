@@ -85,12 +85,12 @@ class MessageActionsBottomSheet : BottomSheetDialogFragment() {
 
         fun bind(item: MenuItem, itemClickListener: ActionItemClickListener) {
             with(itemView) {
-                    message_action_title.text = item.title
-                    message_action_icon.setImageDrawable(item.icon)
-                    setOnClickListener {
-                        itemClickListener.itemClickListener.onMenuItemClick(item)
-                        itemClickListener.dismissAction.invoke()
-                    }
+                message_action_title.text = item.title
+                message_action_icon.setImageDrawable(item.icon)
+                setOnClickListener {
+                    itemClickListener.itemClickListener.onMenuItemClick(item)
+                    itemClickListener.dismissAction.invoke()
+                }
             }
         }
     }
