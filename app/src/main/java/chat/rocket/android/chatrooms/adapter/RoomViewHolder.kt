@@ -33,7 +33,7 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
 
             if (room.lastMessage != null) {
                 text_last_message.isVisible = true
-                text_last_message.text = Markwon.markdown(context, room.lastMessage.toString()).toString()
+                text_last_message.text = room.lastMessage
             } else {
                 text_last_message.isGone = true
             }

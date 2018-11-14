@@ -25,7 +25,13 @@ class ServerPresenter @Inject constructor(
     private val getAccountsInteractor: GetAccountsInteractor,
     val settingsInteractor: GetSettingsInteractor,
     val factory: RocketChatClientFactory
-) : CheckServerPresenter(strategy, factory, settingsInteractor, view) {
+) : CheckServerPresenter(
+    strategy = strategy,
+    factory = factory,
+    settingsInteractor = settingsInteractor,
+    versionCheckView = view,
+    refreshSettingsInteractor = refreshSettingsInteractor
+) {
 
     fun checkServer(server: String) {
         if (!server.isValidUrl()) {
@@ -53,6 +59,9 @@ class ServerPresenter @Inject constructor(
                     wordpressOauthUrl,
                     casLoginUrl,
                     casToken,
+                    casServiceName,
+                    casServiceNameTextColor,
+                    casServiceButtonColor,
                     customOauthUrl,
                     customOauthServiceName,
                     customOauthServiceNameTextColor,
@@ -90,11 +99,8 @@ class ServerPresenter @Inject constructor(
                 view.showLoading()
                 try {
                     withContext(DefaultDispatcher) {
-                        refreshSettingsInteractor.refresh(serverUrl)
-
-                        setupConnectionInfo(serverUrl)
-
                         // preparing next fragment before showing it
+                        refreshServerAccounts()
                         checkEnabledAccounts(serverUrl)
                         checkIfLoginFormIsEnabled()
                         checkIfCreateNewAccountIsEnabled()
@@ -111,5 +117,4 @@ class ServerPresenter @Inject constructor(
             }
         }
     }
-
 }

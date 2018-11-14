@@ -19,7 +19,8 @@ data class UrlPreviewUiModel(
     override var unread: Boolean? = null,
     override var menuItemsToHide: MutableList<Int> = mutableListOf(),
     override var currentDayMarkerText: String,
-    override var showDayMarker: Boolean
+    override var showDayMarker: Boolean,
+    override var permalink: String
 ) : BaseUiModel<Url> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.URL_PREVIEW.viewType

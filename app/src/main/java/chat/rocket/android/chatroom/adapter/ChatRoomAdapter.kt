@@ -36,47 +36,19 @@ class ChatRoomAdapter(
                 val view = parent.inflate(R.layout.item_message)
                 MessageViewHolder(view, actionsListener, reactionListener)
             }
-            BaseUiModel.ViewType.IMAGE_ATTACHMENT -> {
-                val view = parent.inflate(R.layout.message_attachment)
-                ImageAttachmentViewHolder(view, actionsListener, reactionListener)
-            }
-            BaseUiModel.ViewType.AUDIO_ATTACHMENT -> {
-                val view = parent.inflate(R.layout.message_attachment)
-                AudioAttachmentViewHolder(view, actionsListener, reactionListener)
-            }
-            BaseUiModel.ViewType.VIDEO_ATTACHMENT -> {
-                val view = parent.inflate(R.layout.message_attachment)
-                VideoAttachmentViewHolder(view, actionsListener, reactionListener)
-            }
             BaseUiModel.ViewType.URL_PREVIEW -> {
                 val view = parent.inflate(R.layout.message_url_preview)
                 UrlPreviewViewHolder(view, actionsListener, reactionListener)
             }
-            BaseUiModel.ViewType.MESSAGE_ATTACHMENT -> {
+            BaseUiModel.ViewType.ATTACHMENT -> {
                 val view = parent.inflate(R.layout.item_message_attachment)
-                MessageAttachmentViewHolder(view, actionsListener, reactionListener)
-            }
-            BaseUiModel.ViewType.AUTHOR_ATTACHMENT -> {
-                val view = parent.inflate(R.layout.item_author_attachment)
-                AuthorAttachmentViewHolder(view, actionsListener, reactionListener)
-            }
-            BaseUiModel.ViewType.COLOR_ATTACHMENT -> {
-                val view = parent.inflate(R.layout.item_color_attachment)
-                ColorAttachmentViewHolder(view, actionsListener, reactionListener)
-            }
-            BaseUiModel.ViewType.GENERIC_FILE_ATTACHMENT -> {
-                val view = parent.inflate(R.layout.item_file_attachment)
-                GenericFileAttachmentViewHolder(view, actionsListener, reactionListener)
+                AttachmentViewHolder(view, actionsListener, reactionListener, actionAttachmentOnClickListener)
             }
             BaseUiModel.ViewType.MESSAGE_REPLY -> {
                 val view = parent.inflate(R.layout.item_message_reply)
                 MessageReplyViewHolder(view, actionsListener, reactionListener) { roomName, permalink ->
                     actionSelectListener?.openDirectMessage(roomName, permalink)
                 }
-            }
-            BaseUiModel.ViewType.ACTIONS_ATTACHMENT -> {
-                val view = parent.inflate(R.layout.item_actions_attachment)
-                ActionsAttachmentViewHolder(view, actionsListener, reactionListener, actionAttachmentOnClickListener)
             }
             else -> {
                 throw InvalidParameterException("TODO - implement for ${viewType.toViewType()}")
@@ -113,26 +85,12 @@ class ChatRoomAdapter(
         when (holder) {
             is MessageViewHolder ->
                 holder.bind(dataSet[position] as MessageUiModel)
-            is ImageAttachmentViewHolder ->
-                holder.bind(dataSet[position] as ImageAttachmentUiModel)
-            is AudioAttachmentViewHolder ->
-                holder.bind(dataSet[position] as AudioAttachmentUiModel)
-            is VideoAttachmentViewHolder ->
-                holder.bind(dataSet[position] as VideoAttachmentUiModel)
             is UrlPreviewViewHolder ->
                 holder.bind(dataSet[position] as UrlPreviewUiModel)
-            is MessageAttachmentViewHolder ->
-                holder.bind(dataSet[position] as MessageAttachmentUiModel)
-            is AuthorAttachmentViewHolder ->
-                holder.bind(dataSet[position] as AuthorAttachmentUiModel)
-            is ColorAttachmentViewHolder ->
-                holder.bind(dataSet[position] as ColorAttachmentUiModel)
-            is GenericFileAttachmentViewHolder ->
-                holder.bind(dataSet[position] as GenericFileAttachmentUiModel)
             is MessageReplyViewHolder ->
                 holder.bind(dataSet[position] as MessageReplyUiModel)
-            is ActionsAttachmentViewHolder ->
-                holder.bind(dataSet[position] as ActionsAttachmentUiModel)
+            is AttachmentViewHolder ->
+                holder.bind(dataSet[position] as AttachmentUiModel)
         }
     }
 
@@ -140,8 +98,7 @@ class ChatRoomAdapter(
         val model = dataSet[position]
         return when (model) {
             is MessageUiModel -> model.messageId.hashCode().toLong()
-            is BaseFileAttachmentUiModel -> model.id
-            is AuthorAttachmentUiModel -> model.id
+            is AttachmentUiModel -> model.id
             else -> return position.toLong()
         }
     }
@@ -291,6 +248,9 @@ class ChatRoomAdapter(
                     R.id.action_menu_msg_react -> {
                         actionSelectListener?.showReactions(id)
                     }
+                    R.id.action_message_permalink -> {
+                        actionSelectListener?.copyPermalink(id)
+                    }
                     else -> {
                         TODO("Not implemented")
                     }
@@ -310,5 +270,6 @@ class ChatRoomAdapter(
         fun showReactions(id: String)
         fun openDirectMessage(roomName: String, message: String)
         fun sendMessage(chatRoomId: String, text: String)
+        fun copyPermalink(id: String)
     }
 }

@@ -10,8 +10,8 @@ android {
     defaultConfig {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 2048
-        versionName "3.0.0"
+        versionCode 2050
+        versionName "3.1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
