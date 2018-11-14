@@ -16,6 +16,7 @@
     <string name="title_settings">Налаштування</string>
     <string name="title_preferences">Персональні</string>
     <string name="title_change_password">Змінити пароль</string>
+    <string name="title_rate_us">Оцініть нас</string>
     <string name="title_admin_panel">Панель адміністратора</string>
     <string name="title_password">Змінити пароль</string>
     <string name="title_update_profile">Оновити профіль</string>
@@ -62,8 +63,9 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Change Password</item> <!-- TODO Add translation -->
-        <item name="item_password">About</item> <!-- TODO Add translation -->
         <item name="item_share_app">поділитися прикладом</item>
+        <item name="item_rate_us">Оцініть нас</item>
+        <item name="item_password">About</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->

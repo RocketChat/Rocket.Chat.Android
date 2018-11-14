@@ -16,6 +16,7 @@
     <string name="title_settings">Configurações</string>
     <string name="title_preferences">Preferencias</string>
     <string name="title_change_password">Alterar senha</string>
+    <string name="title_rate_us">nos avalie</string>
     <string name="title_admin_panel">Painel administrativo</string>
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
@@ -62,8 +63,9 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferencias</item>
         <item name="item_password">Alterar senha</item>
-        <item name="item_password">Sobre</item>
         <item name="item_share_app">Compartilhe o aplicativo</item>
+        <item name="item_rate_us">nos avalie</item>
+        <item name="item_password">Sobre</item>
     </string-array>
 
     <!-- Regular information messages -->
