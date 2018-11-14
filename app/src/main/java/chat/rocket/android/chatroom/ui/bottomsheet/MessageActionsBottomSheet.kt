@@ -12,6 +12,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.message_action_item.view.*
 import kotlinx.android.synthetic.main.message_bottomsheet.*
 
+// WIDECHAT
+import chat.rocket.android.helper.Constants
+
 class MessageActionsBottomSheet : BottomSheetDialogFragment() {
 
     private val adapter = MessageActionAdapter()
@@ -56,6 +59,24 @@ class MessageActionsBottomSheet : BottomSheetDialogFragment() {
             this.itemClickListener = itemClickListener
             menuItems.clear()
             menuItems.addAll(items)
+
+            if (Constants.WIDECHAT) {
+                var starIndex: Int? = null
+                var unpinIndex: Int? = null
+                val iterate = menuItems.listIterator()
+                while (iterate.hasNext()) {
+                    val item = iterate.next()
+                    if (item.itemId == R.id.action_message_star) {
+                        starIndex = menuItems.indexOf(item)
+                    }
+                    if (item.itemId == R.id.action_message_unpin) {
+                        unpinIndex = menuItems.indexOf(item)
+                    }
+                }
+                menuItems.removeAt(starIndex!!.toInt())
+                menuItems.removeAt(unpinIndex!!.toInt() - 1)
+            }
+
             notifyDataSetChanged()
         }
     }
@@ -64,12 +85,12 @@ class MessageActionsBottomSheet : BottomSheetDialogFragment() {
 
         fun bind(item: MenuItem, itemClickListener: ActionItemClickListener) {
             with(itemView) {
-                message_action_title.text = item.title
-                message_action_icon.setImageDrawable(item.icon)
-                setOnClickListener {
-                    itemClickListener.itemClickListener.onMenuItemClick(item)
-                    itemClickListener.dismissAction.invoke()
-                }
+                    message_action_title.text = item.title
+                    message_action_icon.setImageDrawable(item.icon)
+                    setOnClickListener {
+                        itemClickListener.itemClickListener.onMenuItemClick(item)
+                        itemClickListener.dismissAction.invoke()
+                    }
             }
         }
     }
