@@ -21,7 +21,6 @@ import java.util.ArrayList
 import kotlin.Comparator
 import kotlin.collections.HashMap
 
-
 /**
  * Load a list of contacts in a recycler view
  */
