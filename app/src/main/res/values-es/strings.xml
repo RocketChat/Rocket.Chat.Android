@@ -21,6 +21,10 @@
     <string name="title_about">Acerca de</string>
     <string name="title_create_channel">Crear canal</string>
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
+    <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
+    <string name="title_topic">Tema</string>
+    <string name="title_announcement">Anuncio</string>
+    <string name="title_description">Descripción</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
@@ -168,6 +172,9 @@
     <string name="msg_permalink_copied">Permalink copied</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
+    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
@@ -317,5 +324,4 @@
     <string name="msg_sent_attachment">Envió un archivo</string>
     <!--TODO - Add proper translation-->
     <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
-
 </resources>

@@ -96,7 +96,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     }
 
     suspend fun getRoom(id: String) = withContext(dbManagerContext) {
-        chatRoomDao().get(id)
+        chatRoomDao().getSync(id)
     }
 
     fun processUsersBatch(users: List<User>) {
@@ -335,7 +335,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     }
 
     private suspend fun updateRoom(data: Room): ChatRoomEntity? {
-        return chatRoomDao().get(data.id)?.let { current ->
+        return chatRoomDao().getSync(data.id)?.let { current ->
             with(data) {
                 val chatRoom = current.chatRoom
 
@@ -348,10 +348,13 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                     ownerId = user?.id ?: chatRoom.ownerId,
                     readonly = readonly,
                     updatedAt = updatedAt ?: chatRoom.updatedAt,
+                    topic = topic,
+                    announcement = announcement,
+                    description = description,
                     lastMessageText = mapLastMessageText(lastMessage),
                     lastMessageUserId = lastMessage?.sender?.id,
                     lastMessageTimestamp = lastMessage?.timestamp,
-                    muted = muted
+                    muted = chatRoom.muted
                 )
             }
         }
@@ -373,7 +376,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         context.getString(R.string.msg_sent_attachment)
 
     private suspend fun updateSubscription(data: Subscription): ChatRoomEntity? {
-        return chatRoomDao().get(data.roomId)?.let { current ->
+        return chatRoomDao().getSync(data.roomId)?.let { current ->
             with(data) {
 
                 val userId = if (type is RoomType.DirectMessage) {
@@ -396,6 +399,9 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                     readonly = readonly ?: chatRoom.readonly,
                     isDefault = isDefault,
                     favorite = isFavorite,
+                    topic = chatRoom.topic,
+                    announcement = chatRoom.announcement,
+                    description = chatRoom.description,
                     open = open,
                     alert = alert,
                     unread = unread,
@@ -461,6 +467,9 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
             readonly = subscription.readonly,
             isDefault = subscription.isDefault,
             favorite = subscription.isFavorite,
+            topic = room.topic,
+            announcement = room.announcement,
+            description = room.description,
             open = subscription.open,
             alert = subscription.alert,
             unread = subscription.unread,
@@ -498,6 +507,9 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                 readonly = readonly,
                 isDefault = default,
                 favorite = favorite,
+                topic = topic,
+                announcement = announcement,
+                description = description,
                 open = open,
                 alert = alert,
                 unread = unread,

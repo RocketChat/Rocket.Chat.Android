@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.chatdetails.ui.ChatDetailsActivity
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
@@ -122,9 +123,9 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
     }
 
     private fun setupToolbar() {
-        (activity as ChatRoomActivity).let {
-            it.showToolbarTitle(getString(R.string.title_pinned_messages))
-            it.hideToolbarChatRoomIcon()
+        with(activity as ChatDetailsActivity) {
+            setToolbarTitle(getString(R.string.title_pinned_messages))
+            setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         }
     }
 }

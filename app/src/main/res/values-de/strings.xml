@@ -22,6 +22,10 @@
     <string name="title_about">Über</string>
     <string name="title_create_channel">Erstelle Raum</string>
     <string name="title_are_you_sure">Are you sure?</string><!-- TODO Add translation -->
+    <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
+    <string name="title_topic">Thema</string>
+    <string name="title_announcement">Ankündigung</string>
+    <string name="title_description">Beschreibung</string>
 
     <!-- Actions -->
     <string name="action_connect">Verbinde</string>
@@ -171,6 +175,9 @@
     <string name="msg_view_less">view less</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copied</string>
+    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
@@ -313,5 +320,6 @@
     <string name="notif_success_sending">Nachricht gesendet nach %1$s!</string>
     <string name="read_by">Gelesen von</string>
     <string name="message_information_title">Nachricht Information</string>
-    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>     <!--TODO - Add proper translation-->
+    <!--TODO - Add proper translation-->
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 </resources>

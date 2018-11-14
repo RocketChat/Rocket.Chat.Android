@@ -22,6 +22,10 @@
     <string name="title_about">О программе</string>
     <string name="title_create_channel">Создать новый канал</string>
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
+    <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
+    <string name="title_topic">Тема</string>
+    <string name="title_announcement">Объявление</string>
+    <string name="title_description">Описание</string>
 
     <!-- Actions -->
     <string name="action_connect">Подключиться</string>
@@ -156,6 +160,9 @@
     <string name="msg_permalink_copied">Ссылка скопирована</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
+    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>

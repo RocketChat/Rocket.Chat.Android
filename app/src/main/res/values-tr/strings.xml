@@ -22,6 +22,10 @@
     <string name="title_about">Hakkında</string>
     <string name="title_create_channel">Yeni Kanal Oluştur</string>
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
+    <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
+    <string name="title_topic">konu</string>
+    <string name="title_announcement">duyuru</string>
+    <string name="title_description">Açıklama</string>
 
     <!-- Actions -->
     <string name="action_connect">Bağlan</string>
@@ -173,6 +177,9 @@
     <string name="msg_permalink_copied">Permalink copied</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
+    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
     
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">İstatistik takibi</string>
@@ -317,5 +324,4 @@
     <string name="message_information_title">Mesaj bilgisi</string>
     <!--TODO - Add proper translation-->
     <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
-
 </resources>

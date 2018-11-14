@@ -8,50 +8,11 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.res.ResourcesCompat
 import chat.rocket.android.R
 import chat.rocket.android.util.extension.onQueryTextListener
-import chat.rocket.common.model.RoomType
 
 internal fun ChatRoomFragment.setupMenu(menu: Menu) {
     setupSearchMessageMenuItem(menu, requireContext())
     setupFavoriteMenuItem(menu)
-
-    menu.add(
-        Menu.NONE,
-        MENU_ACTION_PINNED_MESSAGES,
-        Menu.NONE,
-        R.string.title_pinned_messages
-    )
-
-    menu.add(
-        Menu.NONE,
-        MENU_ACTION_FAVORITE_MESSAGES,
-        Menu.NONE,
-        R.string.title_favorite_messages
-    )
-
-    if (chatRoomType != RoomType.DIRECT_MESSAGE && !disableMenu) {
-        menu.add(
-            Menu.NONE,
-            MENU_ACTION_MEMBER,
-            Menu.NONE,
-            R.string.title_members_list
-        )
-
-        menu.add(
-            Menu.NONE,
-            MENU_ACTION_MENTIONS,
-            Menu.NONE,
-            R.string.msg_mentions
-        )
-    }
-
-    if (!disableMenu) {
-        menu.add(
-            Menu.NONE,
-            MENU_ACTION_FILES,
-            Menu.NONE,
-            R.string.title_files
-        )
-    }
+    setupDetailsMenuItem(menu)
 }
 
 internal fun ChatRoomFragment.setOnMenuItemClickListener(item: MenuItem) {
@@ -60,11 +21,12 @@ internal fun ChatRoomFragment.setOnMenuItemClickListener(item: MenuItem) {
             chatRoomId,
             isFavorite
         )
-        MENU_ACTION_MEMBER -> presenter.toMembersList(chatRoomId)
-        MENU_ACTION_MENTIONS -> presenter.toMentions(chatRoomId)
-        MENU_ACTION_PINNED_MESSAGES -> presenter.toPinnedMessageList(chatRoomId)
-        MENU_ACTION_FAVORITE_MESSAGES -> presenter.toFavoriteMessageList(chatRoomId)
-        MENU_ACTION_FILES -> presenter.toFileList(chatRoomId)
+        MENU_ACTION_SHOW_DETAILS -> presenter.toChatDetails(
+            chatRoomId,
+            chatRoomType,
+            isSubscribed,
+            disableMenu
+        )
     }
 }
 
@@ -139,4 +101,14 @@ private fun ChatRoomFragment.setupFavoriteMenuItem(menu: Menu) {
         ).setIcon(R.drawable.ic_star_border_white_24dp)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
     }
+}
+
+private fun ChatRoomFragment.setupDetailsMenuItem(menu: Menu) {
+    menu.add(
+            Menu.NONE,
+            MENU_ACTION_SHOW_DETAILS,
+            Menu.NONE,
+            "Channel Details"
+    ).setIcon(R.drawable.ic_info_outline_white_24dp)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
 }
