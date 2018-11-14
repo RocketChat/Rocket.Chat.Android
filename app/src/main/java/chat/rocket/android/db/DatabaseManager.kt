@@ -354,7 +354,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                     lastMessageText = mapLastMessageText(lastMessage),
                     lastMessageUserId = lastMessage?.sender?.id,
                     lastMessageTimestamp = lastMessage?.timestamp,
-                    muted = chatRoom.muted
+                    muted = muted ?: chatRoom.muted
                 )
             }
         }
