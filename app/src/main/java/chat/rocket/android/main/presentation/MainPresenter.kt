@@ -61,7 +61,7 @@ class MainPresenter @Inject constructor(
     private val getAccountsInteractor: GetAccountsInteractor,
     private val getAccountInteractor: GetAccountInteractor,
     private val groupedPush: GroupedPush,
-    serverInteractor: GetCurrentServerInteractor,
+    private val serverInteractor: GetCurrentServerInteractor,
     localRepository: LocalRepository,
     removeAccountInteractor: RemoveAccountInteractor,
     factory: RocketChatClientFactory,
