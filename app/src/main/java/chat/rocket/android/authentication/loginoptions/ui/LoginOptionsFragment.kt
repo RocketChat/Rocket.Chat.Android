@@ -44,6 +44,9 @@ private const val GITLAB_OAUTH_URL = "gitlab_oauth_url"
 private const val WORDPRESS_OAUTH_URL = "wordpress_oauth_url"
 private const val CAS_LOGIN_URL = "cas_login_url"
 private const val CAS_TOKEN = "cas_token"
+private const val CAS_SERVICE_NAME = "cas_service_name"
+private const val CAS_SERVICE_NAME_TEXT_COLOR = "cas_service_name_text_color"
+private const val CAS_SERVICE_BUTTON_COLOR = "cas_service_button_color"
 private const val CUSTOM_OAUTH_URL = "custom_oauth_url"
 private const val CUSTOM_OAUTH_SERVICE_NAME = "custom_oauth_service_name"
 private const val CUSTOM_OAUTH_SERVICE_NAME_TEXT_COLOR = "custom_oauth_service_name_text_color"
@@ -73,6 +76,9 @@ fun newInstance(
     wordpressOauthUrl: String? = null,
     casLoginUrl: String? = null,
     casToken: String? = null,
+    casServiceName: String? = null,
+    casServiceNameTextColor: Int = 0,
+    casServiceButtonColor: Int = 0,
     customOauthUrl: String? = null,
     customOauthServiceName: String? = null,
     customOauthServiceNameTextColor: Int = 0,
@@ -99,6 +105,9 @@ fun newInstance(
             putString(WORDPRESS_OAUTH_URL, wordpressOauthUrl)
             putString(CAS_LOGIN_URL, casLoginUrl)
             putString(CAS_TOKEN, casToken)
+            putString(CAS_SERVICE_NAME, casServiceName)
+            putInt(CAS_SERVICE_NAME_TEXT_COLOR, casServiceNameTextColor)
+            putInt(CAS_SERVICE_BUTTON_COLOR, casServiceButtonColor)
             putString(CUSTOM_OAUTH_URL, customOauthUrl)
             putString(CUSTOM_OAUTH_SERVICE_NAME, customOauthServiceName)
             putInt(CUSTOM_OAUTH_SERVICE_NAME_TEXT_COLOR, customOauthServiceNameTextColor)
@@ -131,6 +140,9 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     private var wordpressOauthUrl: String? = null
     private var casLoginUrl: String? = null
     private var casToken: String? = null
+    private var casServiceName: String? = null
+    private var casServiceNameTextColor: Int = 0
+    private var casServiceButtonColor: Int = 0
     private var customOauthUrl: String? = null
     private var customOauthServiceName: String? = null
     private var customOauthServiceTextColor: Int = 0
@@ -168,6 +180,9 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
             wordpressOauthUrl = bundle.getString(WORDPRESS_OAUTH_URL)
             casLoginUrl = bundle.getString(CAS_LOGIN_URL)
             casToken = bundle.getString(CAS_TOKEN)
+            casServiceName = bundle.getString(CAS_SERVICE_NAME)
+            casServiceNameTextColor = bundle.getInt(CAS_SERVICE_NAME_TEXT_COLOR)
+            casServiceButtonColor = bundle.getInt(CAS_SERVICE_BUTTON_COLOR)
             customOauthUrl = bundle.getString(CUSTOM_OAUTH_URL)
             customOauthServiceName = bundle.getString(CUSTOM_OAUTH_SERVICE_NAME)
             customOauthServiceTextColor = bundle.getInt(CUSTOM_OAUTH_SERVICE_NAME_TEXT_COLOR)
@@ -219,6 +234,7 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
             setupCas()
             setupCustomOauth()
             setupSaml()
+            setupAccountsView()
             setupLoginWithEmailView()
             setupCreateNewAccountView()
         }
@@ -255,19 +271,17 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
             setupWordpressButtonListener(wordpressOauthUrl.toString(), state.toString())
             enableLoginByWordpress()
         }
-
-        if (totalSocialAccountsEnabled > 0) {
-            showAccountsView()
-            if (totalSocialAccountsEnabled > 3) {
-                setupExpandAccountsView()
-            }
-        }
     }
 
     private fun setupCas() {
-        if (casLoginUrl != null && casToken != null) {
-            setupCasButtonListener(casLoginUrl.toString(), casToken.toString())
-            enableLoginByCas()
+        if (casLoginUrl != null && casToken != null && casServiceName != null) {
+            addCasButton(
+                casLoginUrl.toString(),
+                casToken.toString(),
+                casServiceName.toString(),
+                casServiceNameTextColor,
+                casServiceButtonColor
+            )
         }
     }
 
@@ -299,6 +313,15 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
                 samlServiceTextColor,
                 samlServiceButtonColor
             )
+        }
+    }
+
+    private fun setupAccountsView() {
+        if (totalSocialAccountsEnabled > 0) {
+            showAccountsView()
+            if (totalSocialAccountsEnabled > 3) {
+                setupExpandAccountsView()
+            }
         }
     }
 
@@ -346,10 +369,17 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         setupButtonListener(button_wordpress, wordpressUrl, state, REQUEST_CODE_FOR_OAUTH)
 
     // CAS service account.
-    override fun enableLoginByCas() = enableAccountButton(button_cas)
-
-    override fun setupCasButtonListener(casUrl: String, casToken: String) =
-        setupButtonListener(button_cas, casUrl, casToken, REQUEST_CODE_FOR_CAS)
+    override fun addCasButton(
+        caslUrl: String,
+        casToken: String,
+        serviceName: String,
+        serviceNameColor: Int,
+        buttonColor: Int
+    ) {
+        val button = getCustomServiceButton(serviceName, serviceNameColor, buttonColor)
+        setupButtonListener(button, caslUrl, casToken, REQUEST_CODE_FOR_CAS)
+        accounts_container.addView(button)
+    }
 
     private fun addWidechatOauthButtons(
             customOauthUrl: String,
