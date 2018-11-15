@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Faça login no seu servidor</string>
     <string name="title_log_in">Entrar</string>
+    <string name="title_share_the_app">Compartilhe o aplicativo</string>
     <string name="title_register_username">Registre o nome de usuário</string>
     <string name="title_reset_password">Redefinir senha</string>
     <string name="title_sign_up">Inscreva-se</string>
@@ -16,16 +17,17 @@
     <string name="title_settings">Configurações</string>
     <string name="title_preferences">Preferencias</string>
     <string name="title_change_password">Alterar senha</string>
+    <string name="title_rate_us">nos avalie</string>
     <string name="title_admin_panel">Painel administrativo</string>
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
     <string name="title_create_channel">Criar chat</string>
+    <string name="title_are_you_sure">Você tem certeza?</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
     <string name="action_use_this_username">Usar este nome de usuário</string>
-    <string name="action_login_or_sign_up">Toque neste botão para fazer login ou criar uma conta</string>
     <string name="action_terms_of_service">Termos de Serviço</string>
     <string name="action_privacy_policy">Política de Privacidade</string>
     <string name="action_search">Pesquisar</string>
@@ -48,22 +50,27 @@
     <string name="action_select_photo_from_gallery">Escolher foto da galeria</string>
     <string name="action_take_photo">Tirar foto</string>
     <string name="action_reset_avatar">Resetar avatar</string>
-    <string name="action_connect_server">Connect with a server</string> <!-- TODO Add translation -->
-    <string name="action_join_community">Join in the community</string> <!-- TODO Add translation -->
-    <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
-    <string name="action_register">Register</string> <!-- TODO Add translation -->
-    <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
+    <string name="action_connect_server">Conectar com um servidor</string>
+    <string name="action_join_community">Junte-se à comunidade</string>
+    <string name="action_create_server">Criar um novo servidor</string>
+    <string name="action_register">Registrar</string>
+    <string name="action_confirm">Confirmar</string>
+    <string name="action_delete_account">Deletar conta</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_preferences">Preferencias</item>
         <item name="item_password">Alterar senha</item>
+        <item name="item_share_app">Compartilhe o aplicativo</item>
+        <item name="item_rate_us">nos avalie</item>
         <item name="item_password">Sobre</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Desculpe, ocorreu um erro, tente novamente</string>
     <string name="msg_no_data_to_display">Nenhum dado para exibir</string>
+    <string name="msg_check_this_out">Veja isso</string>
+    <string name="msg_share_using">compartilhar usando</string>
     <string name="msg_profile_update_successfully">Perfil atualizado com sucesso</string>
     <string name="msg_username">nome de usuário</string>
     <string name="msg_username_or_email">Nome de usuário ou email</string>
@@ -152,6 +159,9 @@
     <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
     <string name="msg_view_more">visualizar mais</string>
     <string name="msg_view_less">visualizar menos</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copiado</string>
+    <string name="msg_muted_on_this_channel">Você está silenciado neste canal</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
@@ -180,8 +190,8 @@
     <string name="message_welcome">Bem-vindo, %s</string>
     <string name="message_removed">Mensagem removida</string>
     <string name="message_pinned">Pinou uma mensagem:</string>
-    <string name="message_muted">Usuário %1$s entrou no modo mudo por %2$s</string>
-    <string name="message_unmuted">Usuário %1$s saiu do modo mudo por %2$s</string>
+    <string name="message_muted">Usuário %1$s foi silenciado por %2$s</string>
+    <string name="message_unmuted">Usuário %1$s saiu do modo silenciado por %2$s</string>
     <string name="message_role_add">%1$s foi definido %2$s por %3$s</string>
     <string name="message_role_removed">%1$s não é mais %2$s por %3$s</string>
     // TODO:Add proper translation.
@@ -201,6 +211,7 @@
     <string name="action_msg_invite">Compartilhar</string>
     <string name="action_title_editing">Editando mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
+    <string name="action_msg_copy_permalink">Copiar permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Edição não permitida</string>

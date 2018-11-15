@@ -2,6 +2,7 @@ package chat.rocket.android.profile.ui
 
 import DrawableHelper
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
@@ -11,6 +12,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.MenuInflater
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.net.toUri
@@ -29,6 +32,7 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.invalidateFirebaseToken
 import com.facebook.drawee.backends.pipeline.Fresco
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
@@ -73,12 +77,13 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         if (!Constants.WIDECHAT) {
             profileFragment = R.layout.fragment_profile
         }
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = container?.inflate(profileFragment)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -86,7 +91,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
         setupToolbar()
         setupListeners()
-        if ((Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) && (!Constants.WIDECHAT)){
+        if ((Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) && (!Constants.WIDECHAT)) {
             tintEditTextDrawableStart()
         }
         presenter.loadUserProfile()
@@ -125,6 +130,25 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        if (actionMode != null) {
+            menu.clear()
+        }
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.profile, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_delete_account -> showDeleteAccountDialog()
+        }
+        return true
+    }
+
     override fun showProfile(avatarUrl: String, name: String, username: String, email: String?) {
         if (Constants.WIDECHAT) {
             showWidechatProfile(avatarUrl, name, username, email)
@@ -154,6 +178,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun showProfileUpdateSuccessfullyMessage() {
         showMessage(getString(R.string.msg_profile_update_successfully))
     }
+
+    override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
 
     override fun showLoading() {
         if (Constants.WIDECHAT) {
@@ -192,7 +218,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-        mode.menuInflater.inflate(R.menu.profile, menu)
+        mode.menuInflater.inflate(R.menu.action_mode_profile, menu)
         mode.title = getString(R.string.title_update_profile)
         return true
     }
@@ -203,9 +229,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         return when (menuItem.itemId) {
             R.id.action_update_profile -> {
                 presenter.updateUserProfile(
-                    text_email.textContent,
-                    text_name.textContent,
-                    text_username.textContent
+                        text_email.textContent,
+                        text_name.textContent,
+                        text_username.textContent
                 )
                 mode.finish()
                 true
@@ -221,7 +247,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun setupToolbar() {
-        if (Constants.WIDECHAT){
+        if (Constants.WIDECHAT) {
             // WIDECHAT - added this to get the back button
             with((activity as MainActivity).toolbar) {
                 title = getString(R.string.title_profile)
@@ -232,7 +258,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
         } else {
             (activity as AppCompatActivity?)?.supportActionBar?.title =
-                getString(R.string.title_profile)
+                    getString(R.string.title_profile)
         }
     }
 
@@ -286,30 +312,31 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private fun tintEditTextDrawableStart() {
         (activity as MainActivity).apply {
             val personDrawable =
-                DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_20dp, this)
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_20dp, this)
             val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_20dp, this)
             val emailDrawable =
-                DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_20dp, this)
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_20dp, this)
 
             val drawables = arrayOf(personDrawable, atDrawable, emailDrawable)
             DrawableHelper.wrapDrawables(drawables)
             DrawableHelper.tintDrawables(drawables, this, R.color.colorDrawableTintGrey)
             DrawableHelper.compoundDrawables(
-                arrayOf(text_name, text_username, text_email), drawables
+                    arrayOf(text_name, text_username, text_email), drawables
             )
         }
     }
 
     private fun subscribeEditTexts() {
         editTextsDisposable.add(Observables.combineLatest(
-            text_name.asObservable(),
-            text_username.asObservable(),
-            text_email.asObservable()
+                text_name.asObservable(),
+                text_username.asObservable(),
+                text_email.asObservable()
         ) { text_name, text_username, text_email ->
             return@combineLatest (text_name.toString() != currentName ||
                     text_username.toString() != currentUsername ||
                     text_email.toString() != currentEmail)
         }.subscribe { isValid ->
+            activity?.invalidateOptionsMenu()
             if (isValid) {
                 startActionMode()
             } else {
@@ -334,5 +361,20 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             text_username.isEnabled = value
             text_email.isEnabled = value
         }
+    }
+
+    fun showDeleteAccountDialog() {
+        val passwordEditText = EditText(context)
+        passwordEditText.hint = getString(R.string.msg_password)
+
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(R.string.title_are_you_sure)
+                .setView(passwordEditText)
+                .setPositiveButton(R.string.action_delete_account) { _, _ ->
+                    presenter.deleteAccount(passwordEditText.text.toString())
+                }
+                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
+                .create()
+                .show()
     }
 }

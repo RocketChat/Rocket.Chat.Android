@@ -66,4 +66,6 @@
 
     <!-- Default Background Color -->
     <color name="default_background">#FAFAFA</color>
+
+    <color name="reaction_text">#868585</color>
 </resources>
