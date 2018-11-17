@@ -246,6 +246,7 @@ class ContactsFragment : Fragment() {
                 profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
                 profileButton?.visibility = View.GONE
                 widechatSearchView = this?.getCustomView()?.findViewById(R.id.action_widechat_search)
+                widechatSearchView?.visibility = View.VISIBLE
                 widechatSearchView?.onQueryTextListener { queryContacts(it) }
             }
         } else {

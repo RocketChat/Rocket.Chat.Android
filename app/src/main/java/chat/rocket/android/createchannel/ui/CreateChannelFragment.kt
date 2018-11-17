@@ -36,6 +36,10 @@ import kotlinx.android.synthetic.main.fragment_create_channel.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+// WIDECHAT
+import androidx.appcompat.widget.SearchView
+import chat.rocket.android.helper.Constants
+
 internal const val TAG_CREATE_CHANNEL_FRAGMENT = "CreateChannelFragment"
 
 class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback {
@@ -53,6 +57,9 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     private var channelType: String = RoomType.CHANNEL
     private var isChannelReadOnly: Boolean = false
     private var memberList = arrayListOf<String>()
+
+    // WIDECHAT
+    private var widechatSearchView: SearchView? = null
 
     companion object {
         fun newInstance() = CreateChannelFragment()
@@ -193,8 +200,15 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     }
 
     private fun setupToolBar() {
+        if (Constants.WIDECHAT) {
+            with((activity as AppCompatActivity?)?.supportActionBar) {
+                widechatSearchView = this?.getCustomView()?.findViewById(R.id.action_widechat_search)
+                widechatSearchView?.visibility = View.GONE
+                this?.setDisplayShowTitleEnabled(true)
+            }
+        }
         (activity as AppCompatActivity?)?.supportActionBar?.title =
-            getString(R.string.title_create_channel)
+                getString(R.string.title_create_channel)
     }
 
     private fun setupViewListeners() {
