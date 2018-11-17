@@ -9,8 +9,8 @@
     <string name="title_sign_up">Inscreva-se</string>
     <string name="title_authentication">Autenticação</string>
     <string name="title_legal_terms">Termos Legais</string>
-    <string name="title_chats">Veranda</string>
-    <string name="title_home">Tela Inicial</string>
+    <string name="title_chats">Chats</string>
+    <string name="title_contacts">New Chat</string>
     <string name="title_profile">Perfil</string>
     <string name="title_members">Membros</string>
     <string name="title_counted_members">Membros (%d)</string>

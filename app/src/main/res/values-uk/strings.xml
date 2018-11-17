@@ -10,6 +10,7 @@
     <string name="title_authentication">Аутентифікація</string>
     <string name="title_legal_terms">Юридичні умови</string>
     <string name="title_chats">Чати</string>
+    <string name="title_contacts">New Chat</string>
     <string name="title_profile">Профіль</string>
     <string name="title_members">Користувачі</string>
     <string name="title_counted_members">Користувачі (%d)</string>
