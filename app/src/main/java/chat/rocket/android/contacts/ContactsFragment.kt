@@ -119,10 +119,6 @@ class ContactsFragment : Fragment() {
         searchView?.maxWidth = Integer.MAX_VALUE
         searchView?.onQueryTextListener { queryContacts(it) }
 
-        if (Constants.WIDECHAT) {
-            searchItem?.isVisible = false
-        }
-
         val expandListener = object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 // Simply setting sortView to visible won't work, so we invalidate the options
@@ -240,17 +236,18 @@ class ContactsFragment : Fragment() {
     fun setupToolbar(){
         (activity as MainActivity).toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         (activity as MainActivity).toolbar.setNavigationOnClickListener { activity?.onBackPressed()}
+        with((activity as AppCompatActivity?)?.supportActionBar) {
+            this?.setDisplayShowTitleEnabled(true)
+            this?.title = getString(R.string.title_contacts)
+        }
 
         if (Constants.WIDECHAT) {
             with((activity as AppCompatActivity?)?.supportActionBar) {
                 profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
                 profileButton?.visibility = View.GONE
                 widechatSearchView = this?.getCustomView()?.findViewById(R.id.action_widechat_search)
-                widechatSearchView?.visibility = View.VISIBLE
-                widechatSearchView?.onQueryTextListener { queryContacts(it) }
+                widechatSearchView?.visibility = View.GONE
             }
-        } else {
-            (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_contacts)
         }
     }
 
