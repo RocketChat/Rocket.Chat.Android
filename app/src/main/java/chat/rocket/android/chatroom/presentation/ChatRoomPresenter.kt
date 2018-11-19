@@ -38,7 +38,6 @@ import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extension.getByteArray
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
-import chat.rocket.android.util.extensions.exhaustive
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -142,7 +141,6 @@ class ChatRoomPresenter @Inject constructor(
                 val canModerate = isOwnerOrMod()
                 // Can post anyway if has the 'post-readonly' permission on server.
                 val room = dbManager.getRoom(roomId)
-                val canPost = canModerate || permissions.canPostToReadOnlyChannels()
                 room?.let {
                     chatIsBroadcast = it.chatRoom.broadcast ?: false
                     val roomUiModel = roomMapper.map(it, true)
@@ -150,7 +148,7 @@ class ChatRoomPresenter @Inject constructor(
                         view.onRoomUpdated(roomUiModel = roomUiModel.copy(
                             broadcast = chatIsBroadcast,
                             canModerate = canModerate,
-                            canPost = canPost
+                            writable = roomUiModel.writable || canModerate
                         ))
                     }
                 }
@@ -1010,7 +1008,7 @@ class ChatRoomPresenter @Inject constructor(
                 val canPost = permissions.canPostToReadOnlyChannels()
                 dbManager.getRoom(chatRoomId)?.let {
                     val roomUiModel = roomMapper.map(it, true).copy(
-                        canPost = canPost)
+                        writable = canPost)
                     view.onJoined(roomUiModel = roomUiModel)
                     view.onRoomUpdated(roomUiModel = roomUiModel)
                 }
