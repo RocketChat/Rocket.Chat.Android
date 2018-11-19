@@ -60,4 +60,9 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
     }
 
     override fun logOpenAdmin() = firebaseAnalytics.logEvent("open_admin", null)
+
+    override fun logResetPassword(resetPasswordSucceeded: Boolean) =
+        firebaseAnalytics.logEvent("reset_password", Bundle(1).apply {
+            putBoolean("resetPasswordSucceeded", resetPasswordSucceeded)
+        })
 }
