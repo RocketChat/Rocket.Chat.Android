@@ -35,16 +35,14 @@ class FavoriteMessagesPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 view.showLoading()
-                retryDB("getRoom($roomId)") {
-                    dbManager.getRoom(roomId)?.let {
-                        val favoriteMessages =
-                                client.getFavoriteMessages(roomId, roomTypeOf(it.chatRoom.type), offset)
-                        val messageList = mapper.map(favoriteMessages.result, asNotReversed = true)
-                        view.showFavoriteMessages(messageList)
-                        offset += 1 * 30
-                    }.ifNull {
-                        Timber.e("Couldn't find a room with id: $roomId at current server.")
-                    }
+                dbManager.getRoom(roomId)?.let {
+                    val favoriteMessages =
+                            client.getFavoriteMessages(roomId, roomTypeOf(it.chatRoom.type), offset)
+                    val messageList = mapper.map(favoriteMessages.result, asNotReversed = true)
+                    view.showFavoriteMessages(messageList)
+                    offset += 1 * 30
+                }.ifNull {
+                    Timber.e("Couldn't find a room with id: $roomId at current server.")
                 }
             } catch (exception: RocketChatException) {
                 Timber.e(exception)

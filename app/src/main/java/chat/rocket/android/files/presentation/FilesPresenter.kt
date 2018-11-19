@@ -37,15 +37,13 @@ class FilesPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 view.showLoading()
-                retryDB("getRoom($roomId)") {
-                    dbManager.getRoom(roomId)?.let {
-                        val files = client.getFiles(roomId, roomTypeOf(it.chatRoom.type), offset)
-                        val filesUiModel = mapper.mapToUiModelList(files.result)
-                        view.showFiles(filesUiModel, files.total)
-                        offset += 1 * 30
-                    }.ifNull {
-                        Timber.e("Couldn't find a room with id: $roomId at current server.")
-                    }
+                dbManager.getRoom(roomId)?.let {
+                    val files = client.getFiles(roomId, roomTypeOf(it.chatRoom.type), offset)
+                    val filesUiModel = mapper.mapToUiModelList(files.result)
+                    view.showFiles(filesUiModel, files.total)
+                    offset += 1 * 30
+                }.ifNull {
+                    Timber.e("Couldn't find a room with id: $roomId at current server.")
                 }
             } catch (exception: RocketChatException) {
                 exception.message?.let {
