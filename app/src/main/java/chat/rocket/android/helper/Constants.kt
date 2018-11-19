@@ -12,6 +12,7 @@ object Constants {
     const val CHATROOM_LIVE_CHAT = 3
 
     // Enables/disables WIDECHAT specific features, functionality and views
+    // Use both WIDECHAT and WIDECHAT_DEV switches == true to allow for normal RC login sequence and login to any server
     const val WIDECHAT = true
     const val WIDECHAT_DEV = false
 }
