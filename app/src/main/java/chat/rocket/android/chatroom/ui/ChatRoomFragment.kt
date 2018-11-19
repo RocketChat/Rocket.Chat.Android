@@ -770,6 +770,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         if (isReadOnly && !roomUiModel.canPost) {
             text_room_is_read_only.isVisible = true
             input_container.isVisible = false
+            text_room_is_read_only.setText(
+                if (isReadOnly) {
+                    R.string.msg_this_room_is_read_only
+                } else {
+                    // Not a read-only channel but user has been muted.
+                    R.string.msg_muted_on_this_channel
+                }
+            )
         } else if (!isSubscribed && roomTypeOf(chatRoomType) !is RoomType.DirectMessage) {
             input_container.isVisible = false
             button_join_chat.isVisible = true

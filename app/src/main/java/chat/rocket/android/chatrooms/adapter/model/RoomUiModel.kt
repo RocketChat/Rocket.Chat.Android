@@ -17,5 +17,6 @@ data class RoomUiModel(
     val username: String? = null,
     val broadcast: Boolean = false,
     val canModerate: Boolean = false,
-    val canPost: Boolean = true
+    val canPost: Boolean = true,
+    val muted: List<String> = emptyList()
 )

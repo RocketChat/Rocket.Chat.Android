@@ -165,6 +165,8 @@
     <string name="msg_view_less">view less</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copied</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
