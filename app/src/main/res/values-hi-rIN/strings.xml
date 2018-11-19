@@ -16,13 +16,13 @@
     <string name="title_settings">सेटिंग्स</string>
     <string name="title_preferences">प्राथमिकताएँ</string>
     <string name="title_change_password">पासवर्ड बदलें</string>
+    <string name="title_rate_us">हमें रेटिंग दें</string>
     <string name="title_admin_panel">एडमिन पैनल</string>
     <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
     <string name="title_create_channel">चैनल बनाएं</string>
-    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
-
+    <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
@@ -35,7 +35,6 @@
     <string name="action_create_channel">चैनल बनाएं</string>
     <string name="action_create">बनाएं</string>
     <string name="action_logout">लोग आउट करें</string>
-    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">फ़ाइलें</string>
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
     <string name="action_join_chat">चैट में शामिल हों</string>
@@ -54,13 +53,15 @@
     <string name="action_create_server">नया सर्वर बनाएं</string>
     <string name="action_register">रजिस्टर</string>
     <string name="action_confirm">पुष्टि करें</string>
+    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_preferences">प्राथमिकताएँ</item>
         <item name="item_password">पासवर्ड बदलें</item>
-        <item name="item_password">परिचय</item>
         <item name="item_share_app">ऐप शेयर करें</item>
+        <item name="item_rate_us">हमें रेटिंग दें</item>
+        <item name="item_password">परिचय</item>
     </string-array>
 
     <!-- Regular information messages -->

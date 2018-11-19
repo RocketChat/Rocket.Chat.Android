@@ -16,13 +16,13 @@
     <string name="title_settings">Configurações</string>
     <string name="title_preferences">Preferencias</string>
     <string name="title_change_password">Alterar senha</string>
+    <string name="title_rate_us">nos avalie</string>
     <string name="title_admin_panel">Painel administrativo</string>
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
     <string name="title_create_channel">Criar chat</string>
-    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
-
+    <string name="title_are_you_sure">Você tem certeza?</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
@@ -35,7 +35,6 @@
     <string name="action_create_channel">Criar chat</string>
     <string name="action_create">Criar</string>
     <string name="action_logout">Sair</string>
-    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
     <string name="action_join_chat">Entrar no Chat</string>
@@ -49,18 +48,20 @@
     <string name="action_select_photo_from_gallery">Escolher foto da galeria</string>
     <string name="action_take_photo">Tirar foto</string>
     <string name="action_reset_avatar">Resetar avatar</string>
-    <string name="action_connect_server">Connect with a server</string> <!-- TODO Add translation -->
-    <string name="action_join_community">Join in the community</string> <!-- TODO Add translation -->
-    <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
-    <string name="action_register">Register</string> <!-- TODO Add translation -->
-    <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
+    <string name="action_connect_server">Conectar com um servidor</string>
+    <string name="action_join_community">Junte-se à comunidade</string>
+    <string name="action_create_server">Criar um novo servidor</string>
+    <string name="action_register">Registrar</string>
+    <string name="action_confirm">Confirmar</string>
+    <string name="action_delete_account">Deletar conta</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_preferences">Preferencias</item>
         <item name="item_password">Alterar senha</item>
-        <item name="item_password">Sobre</item>
         <item name="item_share_app">Compartilhe o aplicativo</item>
+        <item name="item_rate_us">nos avalie</item>
+        <item name="item_password">Sobre</item>
     </string-array>
 
     <!-- Regular information messages -->
