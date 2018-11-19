@@ -14,5 +14,6 @@ data class RoomUiModel(
     val alert: Boolean = false,
     val lastMessage: CharSequence? = null,
     val status: UserStatus? = null,
-    val username: String? = null
+    val username: String? = null,
+    val muted: List<String> = emptyList()
 )

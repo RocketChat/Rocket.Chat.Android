@@ -2,6 +2,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Inicia sesión en tu servidor</string>
     <string name="title_log_in">Iniciar sesión</string>
+    <string name="title_share_the_app">Compartir aplicación</string>
     <string name="title_register_username">Registrar nombre de usuario</string>
     <string name="title_reset_password">Restablecer la contraseña</string>
     <string name="title_sign_up">Regístrate</string>
@@ -14,12 +15,14 @@
     <string name="title_settings">Configuraciones</string>
     <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
     <string name="title_change_password">Cambia la contraseña</string>
+    <string name="title_rate_us">Nos califica</string>
     <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
     <string name="title_password">Cambia la contraseña</string>
     <string name="title_update_profile">Actualización del perfil</string>
     <string name="title_about">Acerca de</string>
     <string name="title_create_channel">Crear canal</string>
-    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
+    <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
+
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
     <string name="action_use_this_username">Usa este nombre de usuario</string>
@@ -31,7 +34,6 @@
     <string name="action_create_channel">Crear canal</string>
     <string name="action_create">Create</string>
     <string name="action_logout">Cerrar sesión</string>
-    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
     <string name="action_files">Archivos</string>
     <string name="action_confirm_password">Confirmar cambio de contraseña</string>
     <string name="action_join_chat">Unirse al chat</string>
@@ -50,17 +52,22 @@
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
+    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Cambia la contraseña</item>
+        <item name="item_share_app">Compartir aplicación</item>
+        <item name="item_rate_us">Nos califica</item>
         <item name="item_password">Acerca de</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Lo sentimos, ha ocurrido un error, por favor intente de nuevo</string>
     <string name="msg_no_data_to_display">No hay información para mostrar</string>
+    <string name="msg_check_this_out">Mira esto</string>
+    <string name="msg_share_using">Compartir usando</string>
     <string name="msg_profile_update_successfully">Actualización de perfil con éxito</string>
     <string name="msg_username">usuario</string>
     <string name="msg_username_or_email">Nombre de usuario o correo electrónico</string>
@@ -161,6 +168,8 @@
     <string name="msg_view_less">view less</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copied</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
