@@ -7,6 +7,7 @@ import chat.rocket.android.files.uimodel.FileUiModel
 import chat.rocket.android.files.uimodel.FileUiModelMapper
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.retryDB
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
@@ -36,13 +37,15 @@ class FilesPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 view.showLoading()
-                dbManager.getRoom(roomId)?.let {
-                    val files = client.getFiles(roomId, roomTypeOf(it.chatRoom.type), offset)
-                    val filesUiModel = mapper.mapToUiModelList(files.result)
-                    view.showFiles(filesUiModel, files.total)
-                    offset += 1 * 30
-                }.ifNull {
-                    Timber.e("Couldn't find a room with id: $roomId at current server.")
+                retryDB("getRoom($roomId)") {
+                    dbManager.getRoom(roomId)?.let {
+                        val files = client.getFiles(roomId, roomTypeOf(it.chatRoom.type), offset)
+                        val filesUiModel = mapper.mapToUiModelList(files.result)
+                        view.showFiles(filesUiModel, files.total)
+                        offset += 1 * 30
+                    }.ifNull {
+                        Timber.e("Couldn't find a room with id: $roomId at current server.")
+                    }
                 }
             } catch (exception: RocketChatException) {
                 exception.message?.let {

@@ -13,6 +13,7 @@ import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.server.infraestructure.ConnectionManager
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -45,7 +46,7 @@ class ChatRoomsPresenter @Inject constructor(
         launchUI(strategy) {
             view.showLoadingRoom(chatRoom.name)
             try {
-                val room = dbManager.getRoom(chatRoom.id)
+                val room = retryDB("getRoom(${chatRoom.id}") { dbManager.getRoom(chatRoom.id) }
                 if (room != null) {
                     loadChatRoom(room.chatRoom, true)
                 } else {

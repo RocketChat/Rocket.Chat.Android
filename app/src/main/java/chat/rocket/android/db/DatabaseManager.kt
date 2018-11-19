@@ -92,8 +92,8 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         }
     }
 
-    fun logout() {
-        database.clearAllTables()
+    suspend fun logout() {
+        retryDB("clearAllTables") { database.clearAllTables() }
     }
 
     suspend fun getRoom(id: String) = withContext(dbManagerContext) {
