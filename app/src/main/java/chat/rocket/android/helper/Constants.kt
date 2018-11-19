@@ -13,6 +13,7 @@ object Constants {
 
     // Enables/disables WIDECHAT specific features, functionality and views
     const val WIDECHAT = true
+    const val WIDECHAT_DEV = true
 }
 
 object ChatRoomsSortOrder {

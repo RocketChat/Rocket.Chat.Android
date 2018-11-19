@@ -164,7 +164,7 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        if (!Constants.WIDECHAT) {
+        if ((!Constants.WIDECHAT) || (Constants.WIDECHAT_DEV)) {
             auth_fragment = R.layout.fragment_authentication_login_options
         }
 
@@ -216,7 +216,7 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     private fun setupToolbar() {
         with(activity as AuthenticationActivity) {
             toolbar.isVisible = true
-            if (Constants.WIDECHAT) {
+            if ((Constants.WIDECHAT) && (!Constants.WIDECHAT_DEV)) {
                 toolbar.title = null
                 toolbar.navigationIcon = null
             } else {
@@ -227,7 +227,7 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     }
 
     private fun setupAccounts() {
-        if (Constants.WIDECHAT) {
+        if ((Constants.WIDECHAT) && (!Constants.WIDECHAT_DEV)) {
             setupCustomOauth()
         } else {
             setupSocialAccounts()
@@ -287,7 +287,7 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
 
     private fun setupCustomOauth() {
         if (customOauthUrl != null && state != null && customOauthServiceName != null) {
-            if (Constants.WIDECHAT) {
+            if ((Constants.WIDECHAT) && (!Constants.WIDECHAT_DEV)) {
                 addWidechatOauthButtons(
                     customOauthUrl.toString(),
                     state.toString()
@@ -475,7 +475,7 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
 
     override fun showLoading() {
         ui {
-            if (Constants.WIDECHAT) {
+            if ((Constants.WIDECHAT) && (!Constants.WIDECHAT_DEV)) {
                 widechat_view_loading.isVisible = true
             } else {
                 view_loading.isVisible = true
@@ -485,7 +485,7 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
 
     override fun hideLoading() {
         ui {
-            if (Constants.WIDECHAT) {
+            if ((Constants.WIDECHAT) && (!Constants.WIDECHAT_DEV)) {
                 widechat_view_loading.isVisible = false
             } else {
                 view_loading.isVisible = false
