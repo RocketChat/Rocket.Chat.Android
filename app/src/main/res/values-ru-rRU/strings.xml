@@ -323,4 +323,5 @@
     <string name="edit_profile">Edit My Profile</string>
     <string name="delete_account">Delete My Account</string>
     <string name="log_out">Log Out</string>
+    <string name="widechat_new_channel">New Group Chat</string>
 </resources>
