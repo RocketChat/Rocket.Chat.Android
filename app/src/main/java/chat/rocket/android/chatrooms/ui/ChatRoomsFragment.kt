@@ -30,15 +30,13 @@ import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModel
 import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModelFactory
 import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.chatrooms.viewmodel.Query
+import chat.rocket.android.contacts.ContactsFragment
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
+import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extension.onQueryTextListener
-import chat.rocket.android.util.extensions.fadeIn
-import chat.rocket.android.util.extensions.fadeOut
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
@@ -51,7 +49,6 @@ import android.graphics.Color
 import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.helper.UserHelper
-import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.ui.ProfileFragment
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.settings.ui.SettingsFragment
@@ -484,6 +481,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             }
         } else {
             (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_chats)
+            (activity as MainActivity).setupNavigationView()
         }
     }
 
@@ -497,8 +495,12 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     private fun setupFab() {
-        create_new_channel_fab.setOnClickListener {
-            showToast("fab click")
+        create_new_channel_fab.setOnClickListener { view ->
+            val contactsFragment = ContactsFragment()
+            val transaction = activity?.supportFragmentManager?.beginTransaction();
+            transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+            transaction?.replace(this.id, contactsFragment, "contactsFragment");
+            transaction?.addToBackStack(null)?.commit();
         }
     }
 }

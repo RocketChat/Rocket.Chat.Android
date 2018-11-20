@@ -10,6 +10,7 @@
     <string name="title_authentication">Login Daten prüfen</string>
     <string name="title_legal_terms">Legal Terms</string>
     <string name="title_chats">Chats</string>
+    <string name="title_contacts">New Chat</string>
     <string name="title_profile">Profil</string>
     <string name="title_members">Benutzer</string>
     <string name="title_counted_members">Benutzer (%d)</string>
@@ -324,4 +325,5 @@
     <string name="edit_profile">Edit My Profile</string>
     <string name="delete_account">Delete My Account</string>
     <string name="log_out">Log Out</string>
+    <string name="widechat_new_channel">New Group Chat</string>
 </resources>

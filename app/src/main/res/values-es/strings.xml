@@ -9,6 +9,7 @@
     <string name="title_authentication">Autenticación</string>
     <string name="title_legal_terms">Términos legales</string>
     <string name="title_chats">Chats</string>
+    <string name="title_contacts">New Chat</string>
     <string name="title_profile">Perfil</string>
     <string name="title_members">Miembros</string>
     <string name="title_counted_members">Miembros (%d)</string>
@@ -328,5 +329,6 @@
     <string name="edit_profile">Edit My Profile</string>
     <string name="delete_account">Delete My Account</string>
     <string name="log_out">Log Out</string>
+    <string name="widechat_new_channel">New Group Chat</string>
 
 </resources>

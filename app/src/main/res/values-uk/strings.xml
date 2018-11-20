@@ -10,6 +10,7 @@
     <string name="title_authentication">Аутентифікація</string>
     <string name="title_legal_terms">Юридичні умови</string>
     <string name="title_chats">Чати</string>
+    <string name="title_contacts">New Chat</string>
     <string name="title_profile">Профіль</string>
     <string name="title_members">Користувачі</string>
     <string name="title_counted_members">Користувачі (%d)</string>
@@ -326,4 +327,5 @@
     <string name="edit_profile">Edit My Profile</string>
     <string name="delete_account">Delete My Account</string>
     <string name="log_out">Log Out</string>
+    <string name="widechat_new_channel">New Group Chat</string>
 </resources>

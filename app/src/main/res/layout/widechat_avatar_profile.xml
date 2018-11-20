@@ -13,14 +13,14 @@
         android:layout_width="96dp"
         android:layout_height="96dp"
         android:layout_centerHorizontal="true"
+        android:foregroundGravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:foregroundGravity="center"
         app:roundedCornerRadius="3dp"
         fresco:roundAsCircle="true"
-        fresco:roundingBorderWidth="8dp"
-        fresco:roundingBorderColor="@android:color/white" />
+        fresco:roundingBorderColor="@android:color/white"
+        fresco:roundingBorderWidth="8dp" />
 
 </LinearLayout>

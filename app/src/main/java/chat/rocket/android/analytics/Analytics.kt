@@ -61,7 +61,14 @@ interface Analytics {
     fun logServerSwitch(serverUrl: String, serverCount: Int) {}
 
     /**
-     * Logs the admin opening.
+     * Logs the admin opening event.
      */
     fun logOpenAdmin() {}
+
+    /**
+     * Logs the reset password event.
+     *
+     * @param resetPasswordSucceeded True if successful reset password, false otherwise.
+     */
+    fun logResetPassword(resetPasswordSucceeded: Boolean) {}
 }
