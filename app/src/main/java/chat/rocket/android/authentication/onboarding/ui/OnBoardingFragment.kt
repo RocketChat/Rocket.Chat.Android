@@ -40,7 +40,7 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        if (!Constants.WIDECHAT) {
+        if ((!Constants.WIDECHAT) || (Constants.WIDECHAT_DEV)) {
             auth_fragment = R.layout.fragment_authentication_on_boarding
         }
     }
@@ -55,7 +55,7 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
 
-        if (Constants.WIDECHAT) {
+        if ((Constants.WIDECHAT) && (!Constants.WIDECHAT_DEV)) {
             // WIDECHAT - this is where we bypass the original RC onboarding sequence,
             // sign on to our server, and provide the login buttons inside LoginOptionsFragment.kt
             joinWidechatServer()
