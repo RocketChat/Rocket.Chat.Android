@@ -63,8 +63,11 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        if (Constants.WIDECHAT) {
+            setContentView(R.layout.widechat_activity_main)
+        } else {
+            setContentView(R.layout.activity_main)
+        }
         refreshPushToken()
 
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
@@ -73,7 +76,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         presenter.clearNotificationsForChatroom(chatRoomId)
 
         presenter.connect()
-        presenter.loadServerAccounts()
+        if (!Constants.WIDECHAT) {
+            presenter.loadServerAccounts()
+        }
         presenter.loadCurrentInfo()
         presenter.loadEmojis()
         setupToolbar()
@@ -124,6 +129,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     override fun setupUserAccountInfo(uiModel: NavHeaderUiModel) {
+        if (Constants.WIDECHAT) {
+            return
+        }
         with(headerLayout) {
             with(uiModel) {
                 if (userStatus != null) {
