@@ -48,3 +48,4 @@ Are you having a technical issue trying to compile the app, or setting up Push N
 
 Please follow our [coding style](https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md) when contributing.
 
+test
