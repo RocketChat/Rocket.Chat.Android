@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Connectez-vous sur votre serveur</string>
     <string name="title_log_in">S\'identifier</string>
+    <string name="title_share_the_app">Partager l\'application</string>
     <string name="title_register_username">Enregistrer le nom d\'utilisateur</string>
     <string name="title_reset_password">Réinitialiser mot de passe</string>
     <string name="title_sign_up">S\'inscrire</string>
@@ -15,17 +16,17 @@
     <string name="title_settings">Paramètres</string>
     <string name="title_preferences">Préférences</string>
     <string name="title_change_password">Changer le mot de passe</string>
+    <string name="title_rate_us">évaluez nous</string>
     <string name="title_admin_panel">Administration</string>
     <string name="title_password">Changer le mot de passe</string>
     <string name="title_update_profile">Mettre à jour le profil</string>
     <string name="title_about">À propos</string>
     <string name="title_create_channel">Créer salon</string>
-
+    <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
     <string name="action_connect">Se connecter</string>
     <string name="action_use_this_username">Utilisez ce nom d\'utilisateur</string>
-    <string name="action_login_or_sign_up">Touchez ce bouton pour vous connecter ou créer un compte</string>
     <string name="action_terms_of_service">Conditions d\'utilisation</string>
     <string name="action_privacy_policy">Politique de confidentialité</string>
     <string name="action_search">Chercher</string>
@@ -52,17 +53,22 @@
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
+    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_preferences">Préférences</item>
         <item name="item_password">Changer le mot de passe</item>
+        <item name="item_share_app">Partager l\'application</item>
+        <item name="item_rate_us">évaluez nous</item>
         <item name="item_password">À propos</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Désolé, une erreur s\'est produite. Veuillez réessayer</string>
     <string name="msg_no_data_to_display">Aucune donnée à afficher</string>
+    <string name="msg_check_this_out">regarde ça</string>
+    <string name="msg_share_using">Partager en utilisant</string>
     <string name="msg_profile_update_successfully">Mise à jour du profil avec succès</string>
     <string name="msg_username">nom d\'utilisateur</string>
     <string name="msg_username_or_email">Nom d\'utilisateur ou email</string>
@@ -152,6 +158,10 @@
     <string name="msg_view_more">view more</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_view_less">view less</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privé</string>
@@ -201,6 +211,8 @@
     <string name="action_msg_share">Partager</string>
     <string name="action_title_editing">Modification du message</string>
     <string name="action_msg_add_reaction">Ajouter une réaction</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_copy_permalink">Copy permalink</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">L\'édition n\'est pas autorisée</string>
