@@ -38,6 +38,7 @@ import chat.rocket.android.util.extension.compressImageAndGetByteArray
 import chat.rocket.android.util.extension.getByteArray
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.exhaustive
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -137,9 +138,12 @@ class ChatRoomPresenter @Inject constructor(
             } finally {
                 // User has at least an 'owner' or 'moderator' role.
                 val userCanMod = isOwnerOrMod()
+                val chatRoom = dbManager.getRoom(roomId)
+                val muted = chatRoom?.chatRoom?.muted ?: emptyList()
                 // Can post anyway if has the 'post-readonly' permission on server.
-                val userCanPost = userCanMod || permissions.canPostToReadOnlyChannels()
-                chatIsBroadcast = dbManager.getRoom(roomId)?.chatRoom?.run {
+                val userCanPost = userCanMod || permissions.canPostToReadOnlyChannels() ||
+                    !muted.contains(currentLoggedUsername)
+                chatIsBroadcast = chatRoom?.chatRoom?.run {
                     broadcast
                 } ?: false
                 view.onRoomUpdated(userCanPost, chatIsBroadcast, userCanMod)
@@ -1169,24 +1173,26 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     private fun processTypingStatus(typingStatus: Pair<String, Boolean>) {
-        if (typingStatus.first != currentLoggedUsername) {
-            if (!typingStatusList.any { username -> username == typingStatus.first }) {
-                if (typingStatus.second) {
-                    typingStatusList.add(typingStatus.first)
-                }
-            } else {
-                typingStatusList.find { username -> username == typingStatus.first }?.let {
-                    typingStatusList.remove(it)
+        synchronized(typingStatusList) {
+            if (typingStatus.first != currentLoggedUsername) {
+                if (!typingStatusList.any { username -> username == typingStatus.first }) {
                     if (typingStatus.second) {
                         typingStatusList.add(typingStatus.first)
                     }
+                } else {
+                    typingStatusList.find { username -> username == typingStatus.first }?.let {
+                        typingStatusList.remove(it)
+                        if (typingStatus.second) {
+                            typingStatusList.add(typingStatus.first)
+                        }
+                    }
                 }
-            }
 
-            if (typingStatusList.isNotEmpty()) {
-                view.showTypingStatus(typingStatusList.toList())
-            } else {
-                view.hideTypingStatusView()
+                if (typingStatusList.isNotEmpty()) {
+                    view.showTypingStatus(typingStatusList.toList())
+                } else {
+                    view.hideTypingStatusView()
+                }
             }
         }
     }

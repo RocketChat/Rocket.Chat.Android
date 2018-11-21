@@ -41,13 +41,12 @@ import timber.log.Timber
 import java.util.HashSet
 import kotlin.system.measureTimeMillis
 
-class DatabaseManager(val context: Application,
-                      val serverUrl: String) {
+class DatabaseManager(val context: Application, val serverUrl: String) {
 
     private val database: RCDatabase = androidx.room.Room.databaseBuilder(context,
-            RCDatabase::class.java, serverUrl.databaseName())
-            .fallbackToDestructiveMigration()
-            .build()
+        RCDatabase::class.java, serverUrl.databaseName())
+        .fallbackToDestructiveMigration()
+        .build()
     private val dbContext = newSingleThreadContext("$serverUrl-db-context")
     private val dbManagerContext = newSingleThreadContext("$serverUrl-db-manager-context")
 
@@ -124,11 +123,11 @@ class DatabaseManager(val context: Application,
             val toInsert = ArrayList<ChatRoomEntity>(batch.size / 2)
             val toUpdate = ArrayList<ChatRoomEntity>(batch.size)
             batch.forEach {
-                when(it.type) {
+                when (it.type) {
                     is Type.Removed -> toRemove.add(removeChatRoom(it.data))
                     is Type.Inserted -> insertChatRoom(it.data)?.let { toInsert.add(it) }
                     is Type.Updated -> {
-                        when(it.data) {
+                        when (it.data) {
                             is Subscription -> updateSubs[(it.data as Subscription).roomId] = it.data as Subscription
                             is Room -> updateRooms[(it.data as Room).id] = it.data as Room
                         }
@@ -154,10 +153,10 @@ class DatabaseManager(val context: Application,
         launch(dbManagerContext) {
             val user = userDao().getUser(myself.id)
             val entity = user?.copy(
-                    name = myself.name ?: user.name,
-                    username = myself.username ?: user.username,
-                    utcOffset = myself.utcOffset ?: user.utcOffset,
-                    status = myself.status?.toString() ?: user.status
+                name = myself.name ?: user.name,
+                username = myself.username ?: user.username,
+                utcOffset = myself.utcOffset ?: user.utcOffset,
+                status = myself.status?.toString() ?: user.status
             ) ?: myself.asUser().toEntity()
 
             Timber.d("UPDATING SELF: $entity")
@@ -187,7 +186,7 @@ class DatabaseManager(val context: Application,
     private suspend fun createMessageEntities(message: Message): Pair<MessageEntity, List<BaseMessageEntity>> {
         val messageEntity = message.toEntity()
         val list = mutableListOf<BaseMessageEntity>()
-        createAttachments(message)?.let { list.addAll(it)  }
+        createAttachments(message)?.let { list.addAll(it) }
         createFavoriteRelations(message)?.let { list.addAll(it) }
         createMentionRelations(message)?.let { list.addAll(it) }
         createChannelRelations(message)?.let { list.addAll(it) }
@@ -225,7 +224,7 @@ class DatabaseManager(val context: Application,
         val list = mutableListOf<UrlEntity>()
         message.urls!!.forEach { url ->
             list.add(UrlEntity(message.id, url.url, url.parsedUrl?.host, url.meta?.title,
-                    url.meta?.description, url.meta?.imageUrl))
+                url.meta?.description, url.meta?.imageUrl))
         }
 
         return list
@@ -329,7 +328,7 @@ class DatabaseManager(val context: Application,
     }
 
     private fun removeChatRoom(data: BaseRoom): String {
-        return when(data) {
+        return when (data) {
             is Subscription -> data.roomId
             else -> data.id
         }
@@ -344,14 +343,15 @@ class DatabaseManager(val context: Application,
                 insertUserIfMissing(user)
 
                 chatRoom.copy(
-                        name = name ?: chatRoom.name,
-                        fullname = fullName ?: chatRoom.fullname,
-                        ownerId = user?.id ?: chatRoom.ownerId,
-                        readonly = readonly,
-                        updatedAt = updatedAt ?: chatRoom.updatedAt,
-                        lastMessageText = mapLastMessageText(lastMessage),
-                        lastMessageUserId = lastMessage?.sender?.id,
-                        lastMessageTimestamp = lastMessage?.timestamp
+                    name = name ?: chatRoom.name,
+                    fullname = fullName ?: chatRoom.fullname,
+                    ownerId = user?.id ?: chatRoom.ownerId,
+                    readonly = readonly,
+                    updatedAt = updatedAt ?: chatRoom.updatedAt,
+                    lastMessageText = mapLastMessageText(lastMessage),
+                    lastMessageUserId = lastMessage?.sender?.id,
+                    lastMessageTimestamp = lastMessage?.timestamp,
+                    muted = muted
                 )
             }
         }
@@ -386,30 +386,32 @@ class DatabaseManager(val context: Application,
 
                 val chatRoom = current.chatRoom
                 chatRoom.copy(
-                        id = roomId,
-                        subscriptionId = id,
-                        type = type.toString(),
-                        name = name ?: throw NullPointerException(), // this should be filtered on the SDK
-                        fullname = fullName ?: chatRoom.fullname,
-                        userId = userId ?: chatRoom.userId,
-                        readonly = readonly ?: chatRoom.readonly,
-                        isDefault = isDefault,
-                        favorite = isFavorite,
-                        open = open,
-                        alert = alert,
-                        unread = unread,
-                        userMentions = userMentions ?: chatRoom.userMentions,
-                        groupMentions = groupMentions ?: chatRoom.groupMentions,
-                        updatedAt = updatedAt ?: chatRoom.updatedAt,
-                        timestamp = timestamp ?: chatRoom.timestamp,
-                        lastSeen = lastSeen ?: chatRoom.lastSeen
+                    id = roomId,
+                    subscriptionId = id,
+                    type = type.toString(),
+                    name = name
+                        ?: throw NullPointerException(), // this should be filtered on the SDK
+                    fullname = fullName ?: chatRoom.fullname,
+                    userId = userId ?: chatRoom.userId,
+                    readonly = readonly ?: chatRoom.readonly,
+                    isDefault = isDefault,
+                    favorite = isFavorite,
+                    open = open,
+                    alert = alert,
+                    unread = unread,
+                    userMentions = userMentions ?: chatRoom.userMentions,
+                    groupMentions = groupMentions ?: chatRoom.groupMentions,
+                    updatedAt = updatedAt ?: chatRoom.updatedAt,
+                    timestamp = timestamp ?: chatRoom.timestamp,
+                    lastSeen = lastSeen ?: chatRoom.lastSeen,
+                    muted = chatRoom.muted
                 )
             }
         }
     }
 
     private suspend fun insertChatRoom(data: BaseRoom): ChatRoomEntity? {
-        return when(data) {
+        return when (data) {
             is Room -> insertRoom(data)
             is Subscription -> insertSubscription(data)
             else -> null
@@ -451,7 +453,8 @@ class DatabaseManager(val context: Application,
             id = room.id,
             subscriptionId = subscription.id,
             type = room.type.toString(),
-            name = room.name ?: subscription.name ?: throw NullPointerException(), // this should be filtered on the SDK
+            name = room.name ?: subscription.name
+            ?: throw NullPointerException(), // this should be filtered on the SDK
             fullname = subscription.fullName ?: room.fullName,
             userId = userId,
             ownerId = room.user?.id,
@@ -506,7 +509,8 @@ class DatabaseManager(val context: Application,
                 lastMessageText = mapLastMessageText(lastMessage),
                 lastMessageUserId = lastMessage?.sender?.id,
                 lastMessageTimestamp = lastMessage?.timestamp,
-                broadcast = broadcast
+                broadcast = broadcast,
+                muted = room.muted
             )
         }
     }
@@ -579,6 +583,7 @@ sealed class Operation {
         val toUpdate: List<ChatRoomEntity>,
         val toRemove: List<String>
     ) : Operation()
+
     data class InsertRooms(val chatRooms: List<ChatRoomEntity>) : Operation()
     data class CleanInsertRooms(val chatRooms: List<ChatRoomEntity>) : Operation()
 
@@ -607,10 +612,10 @@ private fun Myself.asUser(): User {
 
 private fun String.databaseName(): String {
     val tmp = this.removePrefix("https://")
-            .removePrefix("http://")
-            .removeTrailingSlash()
-            .replace("/","-")
-            .replace(".", "_")
+        .removePrefix("http://")
+        .removeTrailingSlash()
+        .replace("/", "-")
+        .replace(".", "_")
 
     return "$tmp.db"
 }

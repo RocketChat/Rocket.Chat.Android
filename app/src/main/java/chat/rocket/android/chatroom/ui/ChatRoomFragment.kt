@@ -545,6 +545,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun dispatchUpdateMessage(index: Int, message: List<BaseUiModel<*>>) {
         ui {
+            // TODO - investigate WHY we get a empty list here
+            if (message.isEmpty()) return@ui
+
             if (adapter.updateItem(message.last())) {
                 if (message.size > 1) {
                     adapter.prependData(listOf(message.first()))
@@ -591,7 +594,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+    override fun showGenericErrorMessage(){
+        ui {
+            showMessage(getString(R.string.msg_generic_error))
+        }
+    }
 
     override fun populatePeopleSuggestions(members: List<PeopleSuggestionUiModel>) {
         ui {
@@ -763,9 +770,17 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun setupMessageComposer(canPost: Boolean) {
-        if (isReadOnly && !canPost) {
+        if (!canPost) {
             text_room_is_read_only.isVisible = true
             input_container.isVisible = false
+            text_room_is_read_only.setText(
+                if (isReadOnly) {
+                    R.string.msg_this_room_is_read_only
+                } else {
+                    // Not a read-only channel but user has been muted.
+                    R.string.msg_muted_on_this_channel
+                }
+            )
         } else if (!isSubscribed && roomTypeOf(chatRoomType) !is RoomType.DirectMessage) {
             input_container.isVisible = false
             button_join_chat.isVisible = true
