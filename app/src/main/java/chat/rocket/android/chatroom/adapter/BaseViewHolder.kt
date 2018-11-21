@@ -62,8 +62,8 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
                         }
                     }
 
-                    override fun onReactionLongClicked(emojiShortname: String, usernames: List<String>) {
-                        reactionListener?.onReactionLongClicked(emojiShortname, usernames)
+                    override fun onReactionLongClicked(shortname: String, isCustom: Boolean, url: String?, usernames: List<String>) {
+                        reactionListener?.onReactionLongClicked(shortname, isCustom,url, usernames)
                     }
                 }
 

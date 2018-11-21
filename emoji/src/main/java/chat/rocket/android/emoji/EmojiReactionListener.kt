@@ -20,8 +20,10 @@ interface EmojiReactionListener {
     /**
      * Callback when an added reaction is long-clicked.
      *
-     * @param emojiShortname The shortname of the emoji (:grin:, :smiley:, etc).
+     * @param shortname The shortname of the emoji (:grin:, :smiley:, etc).
+     * @param isCustom Whether the reaction is custom or one of the defaults.
+     * @param url In case of a custom emoji, this is the url to find it. Can be null if not a custom.
      * @param usernames The list of usernames of users who added the reaction.
      */
-    fun onReactionLongClicked(emojiShortname: String, usernames: List<String>)
+    fun onReactionLongClicked(shortname: String, isCustom: Boolean, url: String?, usernames: List<String>)
 }

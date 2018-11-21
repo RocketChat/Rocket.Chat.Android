@@ -136,7 +136,7 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
         }
 
         override fun onLongClick(v: View?): Boolean {
-            listener?.onReactionLongClicked(reaction.shortname, reaction.usernames)
+            listener?.onReactionLongClicked(reaction.shortname, reaction.isCustom, reaction.url, reaction.usernames)
             return true
         }
     }
