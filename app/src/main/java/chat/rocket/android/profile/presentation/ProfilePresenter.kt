@@ -83,14 +83,14 @@ class ProfilePresenter @Inject constructor(
             try {
                 user?.id?.let { id ->
                     retryIO { client.updateProfile(id, email, name, username) }
+                    view.showProfileUpdateSuccessfullyMessage()
+                    view.showProfile(
+                        serverUrl.avatarUrl(user.username ?: ""),
+                        name,
+                        username,
+                        email
+                    )
                 }
-                view.showProfileUpdateSuccessfullyMessage()
-                view.showProfile(
-                    serverUrl.avatarUrl(user?.username ?: ""),
-                    name,
-                    username,
-                    email
-                )
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
