@@ -152,9 +152,9 @@ class FilesFragment : Fragment(), FilesView {
     }
 
     private fun setupToolbar(totalFiles: Long) {
-        with(activity as ChatDetailsActivity) {
-            setToolbarTitle(getString(R.string.title_files_total, totalFiles))
-            setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        (activity as ChatDetailsActivity).let {
+            it.setToolbarTitle(getString(R.string.title_files_total, totalFiles))
+            it.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         }
     }
 }

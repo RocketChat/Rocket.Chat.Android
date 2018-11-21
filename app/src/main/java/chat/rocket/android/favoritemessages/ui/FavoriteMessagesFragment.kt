@@ -116,9 +116,9 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
     }
 
     private fun setupToolbar() {
-        with(activity as ChatDetailsActivity) {
-            setToolbarTitle(getString(R.string.title_favorite_messages))
-            setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        (activity as ChatDetailsActivity).let {
+            it.setToolbarTitle(getString(R.string.title_favorite_messages))
+            it.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         }
     }
 }

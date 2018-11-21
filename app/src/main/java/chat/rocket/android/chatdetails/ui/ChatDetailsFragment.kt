@@ -60,8 +60,8 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
 
     private var chatRoomId: String? = null
     private var chatRoomType: String? = null
-    private var isSubscribed: Boolean? = null
-    private var disableMenu: Boolean? = null
+    private var isSubscribed: Boolean = true
+    private var disableMenu: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +91,7 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
 
     override fun displayDetails(room: ChatDetails) {
         ui {
-            val text = " " + room.name
+            val text = room.name
             name.text = text
             bindImage(chatRoomType!!)
             content_topic.text = if (room.topic.isNullOrEmpty()) getString(R.string.msg_no_topic) else room.topic
@@ -115,13 +115,13 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
     }
 
     private fun addOptions(adapter: ChatDetailsAdapter) {
-        if (!disableMenu!!) {
+        if (!disableMenu) {
             adapter.addOption(getString(R.string.title_files), R.drawable.ic_files_24dp) {
                 presenter.toFiles(chatRoomId!!)
             }
         }
 
-        if (chatRoomType != RoomType.DIRECT_MESSAGE && !disableMenu!!) {
+        if (chatRoomType != RoomType.DIRECT_MESSAGE && !disableMenu) {
             adapter.addOption(getString(R.string.msg_mentions), R.drawable.ic_at_black_20dp) {
                 presenter.toMentions(chatRoomId!!)
             }
@@ -158,7 +158,7 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
     }
 
     private fun getDetails() {
-        if (isSubscribed!!)
+        if (isSubscribed)
             viewModel.getDetails(chatRoomId!!).observe(viewLifecycleOwner, Observer { details ->
                 displayDetails(details)
             })
@@ -190,9 +190,9 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
     }
 
     private fun setupToolbar() {
-        with(activity as ChatDetailsActivity) {
-            setNavigationIcon(R.drawable.ic_close_white_24dp)
-            setToolbarTitle(getString(R.string.title_channel_details))
+        (activity as ChatDetailsActivity).let {
+            it.setNavigationIcon(R.drawable.ic_close_white_24dp)
+            it.setToolbarTitle(getString(R.string.title_channel_details))
         }
     }
 }

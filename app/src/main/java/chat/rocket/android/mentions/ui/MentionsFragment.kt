@@ -122,9 +122,9 @@ class MentionsFragment : Fragment(), MentionsView {
     }
 
     private fun setupToolbar() {
-        with(activity as ChatDetailsActivity) {
-            setToolbarTitle(getString(R.string.msg_mentions))
-            setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        (activity as ChatDetailsActivity).let {
+            it.setToolbarTitle(getString(R.string.msg_mentions))
+            it.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         }
     }
 }

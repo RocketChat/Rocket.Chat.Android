@@ -127,13 +127,13 @@ class MembersFragment : Fragment(), MembersView {
     }
 
     private fun setupToolbar(totalMembers: Long? = null) {
-        with (activity as ChatDetailsActivity) {
+        (activity as ChatDetailsActivity).let {
             if (totalMembers != null) {
-                setToolbarTitle(getString(R.string.title_counted_members, totalMembers))
+                it.setToolbarTitle(getString(R.string.title_counted_members, totalMembers))
             } else {
-                setToolbarTitle(getString(R.string.title_members))
+                it.setToolbarTitle(getString(R.string.title_members))
             }
-            setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            it.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         }
     }
 }

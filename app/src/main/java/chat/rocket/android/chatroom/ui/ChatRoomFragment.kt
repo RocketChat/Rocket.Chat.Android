@@ -296,8 +296,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        setOnMenuItemClickListener(item!!)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        setOnMenuItemClickListener(item)
         return true
     }
 

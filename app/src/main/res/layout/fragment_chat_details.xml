@@ -18,6 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/ChatDetails.Title.TextView"
+                android:drawablePadding="@dimen/text_view_drawable_padding"
                 tools:text="#important"/>
             <TextView
                 android:id="@+id/title_topic"
