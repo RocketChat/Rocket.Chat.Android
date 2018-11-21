@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/emoji_view"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:foreground="?selectableItemBackground"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:textColor="#000000"
+    android:textSize="24sp"
+    tools:text="😀" />
