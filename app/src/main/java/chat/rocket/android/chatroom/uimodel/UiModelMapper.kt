@@ -19,6 +19,7 @@ import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiRepository
+import chat.rocket.android.emoji.internal.isCustom
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.helper.UserHelper
@@ -31,6 +32,7 @@ import chat.rocket.android.server.domain.messageReadReceiptEnabled
 import chat.rocket.android.server.domain.messageReadReceiptStoreUsers
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
+import chat.rocket.android.util.extension.orFalse
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.ifNotNullNorEmpty
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
@@ -469,7 +471,7 @@ class UiModelMapper @Inject constructor(
             val list = mutableListOf<ReactionUiModel>()
             val customEmojis = EmojiRepository.getCustomEmojis()
             it.getShortNames().forEach { shortname ->
-                val usernames = it.getUsernames(shortname) ?: emptyList()
+                val usernames = it.getUsernames(shortname).orEmpty()
                 val count = usernames.size
                 val custom = customEmojis.firstOrNull { emoji -> emoji.shortname == shortname }
                 list.add(
@@ -478,7 +480,8 @@ class UiModelMapper @Inject constructor(
                         unicode = EmojiParser.parse(context, shortname),
                         count = count,
                         usernames = usernames,
-                        url = custom?.url)
+                        url = custom?.url,
+                        isCustom = custom != null)
                 )
             }
             list

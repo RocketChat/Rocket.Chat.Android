@@ -165,6 +165,12 @@
     <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
     <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
     <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
+    <!-- TODO - Add proper translation -->
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reacted with %2$s</item>
+        <item quantity="few">%1$s reacted with %2$s</item>
+        <item quantity="many">%1$s reacted with %2$s</item>
+    </plurals>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>

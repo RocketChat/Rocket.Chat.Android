@@ -162,7 +162,14 @@
     <string name="msg_view_more">更に表示</string>
     <string name="msg_view_less">隠す</string>
     <string name="msg_muted_on_this_channel">あなたはこのチャンネルでミュートされています</string>
-
+    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
+    <!-- TODO - Add proper translation -->
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reacted with %2$s</item>
+        <item quantity="other">%1$s reacted with %2$s</item>
+    </plurals>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">プライベート</string>
@@ -178,10 +185,7 @@
     <string name="msg_message_copied">メッセージをコピー</string>
     <string name="msg_delete_message">メッセージを削除</string>
     <string name="msg_delete_description">このメッセージを削除してもよろしいですか?</string>
-    <string name="msg_permalink_copied">パーマリンクのコピー</string>    
-    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
-    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
-    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
+    <string name="msg_permalink_copied">パーマリンクのコピー</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">トラッキングの分析</string>

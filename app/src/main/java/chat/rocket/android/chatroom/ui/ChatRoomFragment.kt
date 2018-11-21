@@ -57,6 +57,7 @@ import chat.rocket.android.emoji.EmojiKeyboardPopup
 import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiPickerPopup
 import chat.rocket.android.emoji.EmojiReactionListener
+import chat.rocket.android.emoji.internal.GlideApp
 import chat.rocket.android.emoji.internal.isCustom
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.ImageHelper
@@ -79,10 +80,13 @@ import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.emoji_image_row_item.*
+import kotlinx.android.synthetic.main.emoji_row_item.*
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
+import kotlinx.android.synthetic.main.reaction_praises_list_item.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -590,7 +594,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun showGenericErrorMessage(){
+    override fun showGenericErrorMessage() {
         ui {
             showMessage(getString(R.string.msg_generic_error))
         }
@@ -665,6 +669,44 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun onReactionAdded(messageId: String, emoji: Emoji) {
         presenter.react(messageId, emoji.shortname)
+    }
+
+    override fun onReactionLongClicked(shortname: String, isCustom: Boolean, url: String?, usernames: List<String>) {
+        val layout = LayoutInflater.from(requireContext()).inflate(R.layout.reaction_praises_list_item, null)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(layout)
+            .setCancelable(true)
+
+        with(layout) {
+            view_flipper.displayedChild = if (isCustom) 1 else 0
+            if (isCustom && url != null) {
+                val glideRequest = if (url.endsWith("gif", true)) {
+                    GlideApp.with(requireContext()).asGif()
+                } else {
+                    GlideApp.with(requireContext()).asBitmap()
+                }
+
+                glideRequest.load(url).into(emoji_image_view)
+            } else {
+                emoji_view.text = EmojiParser.parse(requireContext(), shortname)
+            }
+
+            var listing = ""
+            if (usernames.size == 1) {
+                listing = usernames.first()
+            } else {
+                usernames.forEachIndexed { index, username ->
+                    listing += if (index == usernames.size - 1) "|$username" else "$username, "
+                }
+
+                listing = listing.replace(", |", " ${requireContext().getString(R.string.msg_and)} ")
+            }
+
+            text_view_usernames.text = requireContext().resources.getQuantityString(
+                R.plurals.msg_reacted_with_, usernames.size, listing, shortname)
+
+            dialog.show()
+        }
     }
 
     override fun showReactionsPopup(messageId: String) {
