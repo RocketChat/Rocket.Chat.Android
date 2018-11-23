@@ -170,6 +170,11 @@
     <string name="msg_permalink_copied">Permalink copied</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
+    <!-- TODO - Add proper translation -->
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reacted with %2$s</item>
+        <item quantity="other">%1$s reacted with %2$s</item>
+    </plurals>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->

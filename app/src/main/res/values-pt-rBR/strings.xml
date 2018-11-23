@@ -160,6 +160,10 @@
     <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copiado</string>
     <string name="msg_muted_on_this_channel">Você está silenciado neste canal</string>
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reagiu com %2$s</item>
+        <item quantity="other">%1$s reagiram com %2$s</item>
+    </plurals>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>

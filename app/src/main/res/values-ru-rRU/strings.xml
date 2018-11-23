@@ -158,6 +158,12 @@
     <string name="msg_permalink_copied">Ссылка скопирована</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
+    <!-- TODO - Add proper translation -->
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reacted with %2$s</item>
+        <item quantity="few">%1$s reacted with %2$s</item>
+        <item quantity="many">%1$s reacted with %2$s</item>
+    </plurals>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>
