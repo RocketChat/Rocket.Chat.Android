@@ -137,7 +137,7 @@ class ChatRoomPresenter @Inject constructor(
             } finally {
                 // User has at least an 'owner' or 'moderator' role.
                 val userCanMod = isOwnerOrMod()
-                val chatRoom = retryDB("getRoom($roomId)") { dbManager.getRoom(roomId) }
+                val chatRoom = dbManager.getRoom(roomId)
                 val muted = chatRoom?.chatRoom?.muted ?: emptyList()
                 // Can post anyway if has the 'post-readonly' permission on server.
                 val userCanPost = userCanMod || permissions.canPostToReadOnlyChannels() ||

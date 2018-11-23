@@ -42,6 +42,26 @@ class ChatRoomsPresenter @Inject constructor(
     private val client = manager.client
     private val settings = settingsRepository.get(currentServer)
 
+    fun loadChatRoom(roomId: String) {
+        launchUI(strategy) {
+            view.showLoadingRoom("")
+            try {
+                val room = dbManager.getRoom(roomId)
+                if (room != null) {
+                    loadChatRoom(room.chatRoom, true)
+                } else {
+                    Timber.d("Error loading channel")
+                    view.showGenericErrorMessage()
+                }
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error loading channel")
+                view.showGenericErrorMessage()
+            } finally {
+                view.hideLoadingRoom()
+            }
+        }
+    }
+
     fun loadChatRoom(chatRoom: RoomUiModel) {
         launchUI(strategy) {
             view.showLoadingRoom(chatRoom.name)

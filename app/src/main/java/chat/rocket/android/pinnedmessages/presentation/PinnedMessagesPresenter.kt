@@ -35,16 +35,14 @@ class PinnedMessagesPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 view.showLoading()
-                retryDB("getRoom($roomId)") {
-                    dbManager.getRoom(roomId)?.let {
-                        val pinnedMessages =
-                                client.getPinnedMessages(roomId, roomTypeOf(it.chatRoom.type), offset)
-                        val messageList = mapper.map(pinnedMessages.result, asNotReversed = true)
-                        view.showPinnedMessages(messageList)
-                        offset += 1 * 30
-                    }.ifNull {
-                        Timber.e("Couldn't find a room with id: $roomId at current server.")
-                    }
+                dbManager.getRoom(roomId)?.let {
+                    val pinnedMessages =
+                            client.getPinnedMessages(roomId, roomTypeOf(it.chatRoom.type), offset)
+                    val messageList = mapper.map(pinnedMessages.result, asNotReversed = true)
+                    view.showPinnedMessages(messageList)
+                    offset += 1 * 30
+                }.ifNull {
+                    Timber.e("Couldn't find a room with id: $roomId at current server.")
                 }
             } catch (exception: RocketChatException) {
                 Timber.e(exception)
