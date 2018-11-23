@@ -84,8 +84,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         if (bundle != null) {
             chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
             chatRoomId?.let {
-                // TODO - bring back support to load a room from id.
-                //presenter.goToChatRoomWithId(it)
+                presenter.loadChatRoom(it)
                 chatRoomId = null
             }
         }

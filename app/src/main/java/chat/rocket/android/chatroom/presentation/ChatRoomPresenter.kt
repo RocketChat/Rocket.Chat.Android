@@ -37,6 +37,8 @@ import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extension.getByteArray
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.exhaustive
+import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -901,77 +903,81 @@ class ChatRoomPresenter @Inject constructor(
 
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
     private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(CommonPool) {
-        return@withContext dbManager.chatRoomDao().get(roomId)?.let {
-            with(it.chatRoom) {
-                ChatRoom(
-                    id = id,
-                    subscriptionId = subscriptionId,
-                    type = roomTypeOf(type),
-                    unread = unread,
-                    broadcast = broadcast ?: false,
-                    alert = alert,
-                    fullName = fullname,
-                    name = name,
-                    favorite = favorite ?: false,
-                    default = isDefault ?: false,
-                    readonly = readonly,
-                    open = open,
-                    lastMessage = null,
-                    archived = false,
-                    status = null,
-                    user = null,
-                    userMentions = userMentions,
-                    client = client,
-                    announcement = null,
-                    description = null,
-                    groupMentions = groupMentions,
-                    roles = null,
-                    topic = null,
-                    lastSeen = this.lastSeen,
-                    timestamp = timestamp,
-                    updatedAt = updatedAt
-                )
+        retryDB("getRoom($roomId)") {
+            dbManager.chatRoomDao().get(roomId)?.let {
+                with(it.chatRoom) {
+                    ChatRoom(
+                            id = id,
+                            subscriptionId = subscriptionId,
+                            type = roomTypeOf(type),
+                            unread = unread,
+                            broadcast = broadcast ?: false,
+                            alert = alert,
+                            fullName = fullname,
+                            name = name,
+                            favorite = favorite ?: false,
+                            default = isDefault ?: false,
+                            readonly = readonly,
+                            open = open,
+                            lastMessage = null,
+                            archived = false,
+                            status = null,
+                            user = null,
+                            userMentions = userMentions,
+                            client = client,
+                            announcement = null,
+                            description = null,
+                            groupMentions = groupMentions,
+                            roles = null,
+                            topic = null,
+                            lastSeen = this.lastSeen,
+                            timestamp = timestamp,
+                            updatedAt = updatedAt
+                    )
+                }
             }
         }
     }
 
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
     private suspend fun getChatRoomsAsync(name: String? = null): List<ChatRoom> = withContext(CommonPool) {
-        return@withContext dbManager.chatRoomDao().getAllSync().filter {
-            if (name == null) {
-                return@filter true
-            }
-            it.chatRoom.name == name || it.chatRoom.fullname == name
-        }.map {
-            with(it.chatRoom) {
-                ChatRoom(
-                    id = id,
-                    subscriptionId = subscriptionId,
-                    type = roomTypeOf(type),
-                    unread = unread,
-                    broadcast = broadcast ?: false,
-                    alert = alert,
-                    fullName = fullname,
-                    name = name ?: "",
-                    favorite = favorite ?: false,
-                    default = isDefault ?: false,
-                    readonly = readonly,
-                    open = open,
-                    lastMessage = null,
-                    archived = false,
-                    status = null,
-                    user = null,
-                    userMentions = userMentions,
-                    client = client,
-                    announcement = null,
-                    description = null,
-                    groupMentions = groupMentions,
-                    roles = null,
-                    topic = null,
-                    lastSeen = this.lastSeen,
-                    timestamp = timestamp,
-                    updatedAt = updatedAt
-                )
+        retryDB("getAllSync()") {
+            dbManager.chatRoomDao().getAllSync().filter {
+                if (name == null) {
+                    return@filter true
+                }
+                it.chatRoom.name == name || it.chatRoom.fullname == name
+            }.map {
+                with(it.chatRoom) {
+                    ChatRoom(
+                            id = id,
+                            subscriptionId = subscriptionId,
+                            type = roomTypeOf(type),
+                            unread = unread,
+                            broadcast = broadcast ?: false,
+                            alert = alert,
+                            fullName = fullname,
+                            name = name ?: "",
+                            favorite = favorite ?: false,
+                            default = isDefault ?: false,
+                            readonly = readonly,
+                            open = open,
+                            lastMessage = null,
+                            archived = false,
+                            status = null,
+                            user = null,
+                            userMentions = userMentions,
+                            client = client,
+                            announcement = null,
+                            description = null,
+                            groupMentions = groupMentions,
+                            roles = null,
+                            topic = null,
+                            lastSeen = this.lastSeen,
+                            timestamp = timestamp,
+                            updatedAt = updatedAt
+                    )
+                }
             }
         }
     }
