@@ -20,6 +20,7 @@
     <string name="title_update_profile">Actualización del perfil</string>
     <string name="title_about">Acerca de</string>
     <string name="title_create_channel">Crear canal</string>
+    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
@@ -59,6 +60,8 @@
         <item name="item_password">Cambia la contraseña</item>
         <item name="item_password">Acerca de</item>
         <item name="item_share_app">Compartir aplicación</item>
+        <item name="item_share_app_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->
@@ -160,12 +163,11 @@
     <string name="msg_member_already_added">Ya has seleccionado este usuario</string>
     <string name="msg_member_not_found">Miembro no encontrado</string>
     <string name="msg_channel_created_successfully">Canal creado con éxito</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_more">view more</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_less">view less</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_permalink_copied">Permalink copied</string>
+    <string name="msg_view_more">view more</string> <!-- TODO - Add proper translation -->
+    <string name="msg_view_less">view less</string> <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string> <!-- TODO - Add proper translation -->
+    <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
+    <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->

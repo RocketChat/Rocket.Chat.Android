@@ -21,6 +21,7 @@
     <string name="title_update_profile">Обновить профиль</string>
     <string name="title_about">О программе</string>
     <string name="title_create_channel">Создать новый канал</string>
+    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
@@ -60,6 +61,8 @@
         <item name="item_password">Изменить пароль</item>
         <item name="item_password">О программе</item>
         <item name="item_share_app">добавить приложение</item>
+        <item name="item_share_app_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->
@@ -154,6 +157,8 @@
     <string name="msg_view_more">больше</string>
     <string name="msg_view_less">меньше</string>
     <string name="msg_permalink_copied">Ссылка скопирована</string>
+    <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
+    <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>

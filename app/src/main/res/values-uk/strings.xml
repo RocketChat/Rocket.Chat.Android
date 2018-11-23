@@ -21,6 +21,7 @@
     <string name="title_update_profile">Оновити профіль</string>
     <string name="title_about">"Про програму"</string>
     <string name="title_create_channel">Створити новий канал</string>
+    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
@@ -60,6 +61,8 @@
         <item name="item_password">Change Password</item> <!-- TODO Add translation -->
         <item name="item_password">About</item> <!-- TODO Add translation -->
         <item name="item_share_app">поділитися прикладом</item>
+        <item name="item_share_app_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->
@@ -150,12 +153,11 @@
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
     <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
     <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_more">view more</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_less">view less</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_permalink_copied">Permalink copied</string>
+    <string name="msg_view_more">view more</string> <!-- TODO - Add proper translation -->
+    <string name="msg_view_less">view less</string> <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string> <!-- TODO - Add proper translation -->
+    <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
+    <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватний</string>

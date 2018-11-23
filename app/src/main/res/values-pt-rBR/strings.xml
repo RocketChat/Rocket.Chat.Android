@@ -21,6 +21,7 @@
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
     <string name="title_create_channel">Criar chat</string>
+    <string name="title_licence">Licença</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Você tem certeza?</string>
 
     <!-- Actions -->
@@ -60,6 +61,8 @@
         <item name="item_password">Alterar senha</item>
         <item name="item_password">Sobre</item>
         <item name="item_share_app">Compartilhe o aplicativo</item>
+        <item name="item_share_app_licence">Licença</item>
+        <item name="item_contact_us">Contate-nos</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -155,8 +158,9 @@
     <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
     <string name="msg_view_more">visualizar mais</string>
     <string name="msg_view_less">visualizar menos</string>
-    <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copiado</string>
+    <string name="msg_send_email">Enviar e-mail</string>
+    <string name="msg_android_app_support">Suporte ao aplicativo Android</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>

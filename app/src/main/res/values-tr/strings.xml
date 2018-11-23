@@ -21,6 +21,7 @@
     <string name="title_update_profile">Profilinizi Düzenleyin</string>
     <string name="title_about">Hakkında</string>
     <string name="title_create_channel">Yeni Kanal Oluştur</string>
+    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
@@ -60,6 +61,8 @@
         <item name="item_password">Şifre Değiştir</item>
         <item name="item_password">Hakkında</item>
         <item name="item_share_app">uygulamayı Paylaş</item>
+        <item name="item_share_app_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->
@@ -169,9 +172,10 @@
     <string name="msg_delete_description">Bu mesajı silmek istediğinizden emin misiniz</string>
     <string name="msg_view_more">Daha fazla göster</string>
     <string name="msg_view_less">Daha az göster</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_permalink_copied">Permalink copied</string>
-    
+    <string name="msg_permalink_copied">Permalink copied</string> <!-- TODO - Add proper translation -->
+    <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
+    <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
+
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">İstatistik takibi</string>
     <string name="msg_send_analytics_tracking">Uygulamanın gelişmesine katkıda bulunmak için anonim istatistik bilgisi gönder</string>
