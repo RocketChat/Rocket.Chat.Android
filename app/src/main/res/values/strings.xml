@@ -47,7 +47,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_create_channel">Create channel</string>
     <string name="action_create">Create</string>
     <string name="action_logout">Logout</string>
-    <string name="action_files">Files</string>
+    <string name="action_attach_a_files">Attach a file</string>
     <string name="action_confirm_password">Confirm Password Change</string>
     <string name="action_join_chat">Join Chat</string>
     <string name="action_add_account">Add account</string>
@@ -58,7 +58,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_drawing">Drawing</string>
     <string name="action_save_to_gallery">Save to gallery</string>
     <string name="action_select_photo_from_gallery">Select photo from gallery</string>
-    <string name="action_take_photo">Take photo</string>
+    <string name="action_take_a_photo">Take a photo</string>
     <string name="action_reset_avatar">Reset avatar</string>
     <string name="action_connect_server">Connect with a server</string>
     <string name="action_join_community">Join in the community</string>
@@ -168,6 +168,10 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_two_factor_authentication">Two-factor Authentication</string>
     <string name="msg__your_2fa_code">What’s your 2FA code?</string>
     <string name="msg_permalink_copied">Permalink copied</string>
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reacted with %2$s</item>
+        <item quantity="other">%1$s reacted with %2$s</item>
+    </plurals>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Private</string>
