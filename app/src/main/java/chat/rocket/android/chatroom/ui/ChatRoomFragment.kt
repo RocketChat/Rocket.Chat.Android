@@ -531,7 +531,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             button_send.isEnabled = true
             text_message.isEnabled = true
-            clearMessageComposition(true)
         }
     }
 
@@ -894,7 +893,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }, 400)
             }
 
-            button_add_reaction.setOnClickListener { _ ->
+            button_add_reaction.setOnClickListener {
                 openEmojiKeyboardPopup()
             }
 
