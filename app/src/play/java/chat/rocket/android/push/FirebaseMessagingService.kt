@@ -1,5 +1,6 @@
 package chat.rocket.android.push
 
+import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.work.Constraints
 import androidx.work.NetworkType
@@ -23,9 +24,12 @@ class FirebaseMessagingService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-        // XXX - for now this is ok, if we start to do network calls, use a Worker instead
-        message.data?.let {
-            pushManager.handle(bundleOf(*(it.map { Pair(it.key, it.value) }).toTypedArray()))
+        message.data?.let { data ->
+            val bundle = Bundle()
+            data.entries.forEach { entry ->
+                bundle.putString(entry.key, entry.value)
+            }
+            pushManager.handle(bundle)
         }
     }
 

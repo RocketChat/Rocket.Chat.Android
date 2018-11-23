@@ -16,6 +16,7 @@
     <string name="title_settings">Ayarlar</string>
     <string name="title_preferences">Tercihler</string>
     <string name="title_change_password">Şifre Değişikliği</string>
+    <string name="title_rate_us">Bizi değerlendirin</string>
     <string name="title_admin_panel">Yönetici Paneli</string>
     <string name="title_password">Şifrenizi Değiştirin</string>
     <string name="title_update_profile">Profilinizi Düzenleyin</string>
@@ -58,8 +59,9 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Tercihler</item>
         <item name="item_password">Şifre Değiştir</item>
-        <item name="item_password">Hakkında</item>
         <item name="item_share_app">uygulamayı Paylaş</item>
+        <item name="item_rate_us">Bizi değerlendirin</item>
+        <item name="item_password">Hakkında</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -171,6 +173,13 @@
     <string name="msg_view_less">Daha az göster</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copied</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
+    <!-- TODO - Add proper translation -->
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reacted with %2$s</item>
+        <item quantity="other">%1$s reacted with %2$s</item>
+    </plurals>
     
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">İstatistik takibi</string>

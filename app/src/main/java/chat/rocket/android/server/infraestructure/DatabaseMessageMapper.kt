@@ -7,6 +7,7 @@ import chat.rocket.android.db.model.FullMessage
 import chat.rocket.android.db.model.ReactionEntity
 import chat.rocket.android.db.model.UrlEntity
 import chat.rocket.android.db.model.UserEntity
+import chat.rocket.android.util.retryDB
 import chat.rocket.common.model.SimpleRoom
 import chat.rocket.common.model.SimpleUser
 import chat.rocket.core.model.Message
@@ -135,14 +136,18 @@ class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
             with(attachment) {
                 val fields = if (hasFields) {
                     withContext(CommonPool) {
-                        dbManager.messageDao().getAttachmentFields(attachment._id)
+                        retryDB("getAttachmentFields(${attachment._id})") {
+                            dbManager.messageDao().getAttachmentFields(attachment._id)
+                        }
                     }.map { Field(it.title, it.value) }
                 } else {
                     null
                 }
                 val actions = if (hasActions) {
                     withContext(CommonPool) {
-                        dbManager.messageDao().getAttachmentActions(attachment._id)
+                        retryDB("getAttachmentActions(${attachment._id})") {
+                            dbManager.messageDao().getAttachmentActions(attachment._id)
+                        }
                     }.mapNotNull { mapAction(it) }
                 } else {
                     null
@@ -183,29 +188,6 @@ class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
         return list
     }
 
-    /*private suspend fun mapColorAttachmentWithFields(entity: AttachmentEntity): ColorAttachment {
-        val fields = withContext(CommonPool) {
-            dbManager.messageDao().getAttachmentFields(entity._id)
-        }.map { Field(it.title, it.value) }
-        return with(entity) {
-            ColorAttachment(
-                color = Color.Custom(color ?: DEFAULT_COLOR_STR),
-                text = text ?: "",
-                fallback = fallback,
-                fields = fields)
-        }
-    }
-
-    private suspend fun mapActionAttachment(attachment: AttachmentEntity): ActionsAttachment {
-        val actions = withContext(CommonPool) {
-            dbManager.messageDao().getAttachmentActions(attachment._id)
-        }.mapNotNull { mapAction(it) }
-        return with(attachment) {
-            // TODO - remove the default "vertical" value from here...
-            ActionsAttachment(title, actions, buttonAlignment ?: "vertical")
-        }
-    }*/
-
     private fun mapAction(action: AttachmentActionEntity): Action? {
         return when (action.type) {
             "button" -> ButtonAction(action.type, action.text, action.url, action.isWebView,
@@ -214,13 +196,4 @@ class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
             else -> null
         }
     }
-
-    /*private suspend fun mapAuthorAttachment(attachment: AttachmentEntity): AuthorAttachment {
-        val fields = withContext(CommonPool) {
-            dbManager.messageDao().getAttachmentFields(attachment._id)
-        }.map { Field(it.title, it.value) }
-        return with(attachment) {
-            AuthorAttachment(authorLink!!, authorIcon, authorName, fields)
-        }
-    }*/
 }

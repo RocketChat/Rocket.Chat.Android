@@ -16,6 +16,7 @@
     <string name="title_settings">Einstellungen</string>
     <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
     <string name="title_change_password">Ändere Passwort</string>
+    <string name="title_rate_us">Bewerten Sie uns</string>
     <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
     <string name="title_password">Ändere Passwort</string>
     <string name="title_update_profile">Update Profil</string>
@@ -58,8 +59,9 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Ändere Passwort</item>
-        <item name="item_password">Über</item>
         <item name="item_share_app">App teilen</item>
+        <item name="item_rate_us">Bewerten Sie uns</item>
+        <item name="item_password">Über</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -148,6 +150,13 @@
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
     <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
     <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+    <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
+    <!-- TODO - Add proper translation -->
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reacted with %2$s</item>
+        <item quantity="other">%1$s reacted with %2$s</item>
+    </plurals>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privat</string>
