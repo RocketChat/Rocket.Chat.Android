@@ -16,6 +16,7 @@
     <string name="title_settings">Настройки</string>
     <string name="title_preferences">Персональные</string>
     <string name="title_change_password">Изменить пароль</string>
+    <string name="title_rate_us">оцените нас</string>
     <string name="title_admin_panel">Панель админа</string>
     <string name="title_password">Изменить пароль</string>
     <string name="title_update_profile">Обновить профиль</string>
@@ -58,8 +59,9 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Персональные</item>
         <item name="item_password">Изменить пароль</item>
-        <item name="item_password">О программе</item>
+        <item name="item_rate_us">оцените нас</item>
         <item name="item_share_app">добавить приложение</item>
+        <item name="item_password">О программе</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -154,6 +156,14 @@
     <string name="msg_view_more">больше</string>
     <string name="msg_view_less">меньше</string>
     <string name="msg_permalink_copied">Ссылка скопирована</string>
+    <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
+    <!-- TODO - Add proper translation -->
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reacted with %2$s</item>
+        <item quantity="few">%1$s reacted with %2$s</item>
+        <item quantity="many">%1$s reacted with %2$s</item>
+    </plurals>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>

@@ -16,6 +16,7 @@
     <string name="title_settings">Configurações</string>
     <string name="title_preferences">Preferencias</string>
     <string name="title_change_password">Alterar senha</string>
+    <string name="title_rate_us">nos avalie</string>
     <string name="title_admin_panel">Painel administrativo</string>
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
@@ -58,8 +59,9 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferencias</item>
         <item name="item_password">Alterar senha</item>
-        <item name="item_password">Sobre</item>
         <item name="item_share_app">Compartilhe o aplicativo</item>
+        <item name="item_rate_us">nos avalie</item>
+        <item name="item_password">Sobre</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -157,6 +159,11 @@
     <string name="msg_view_less">visualizar menos</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copiado</string>
+    <string name="msg_muted_on_this_channel">Você está silenciado neste canal</string>
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reagiu com %2$s</item>
+        <item quantity="other">%1$s reagiram com %2$s</item>
+    </plurals>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
@@ -185,8 +192,8 @@
     <string name="message_welcome">Bem-vindo, %s</string>
     <string name="message_removed">Mensagem removida</string>
     <string name="message_pinned">Pinou uma mensagem:</string>
-    <string name="message_muted">Usuário %1$s entrou no modo mudo por %2$s</string>
-    <string name="message_unmuted">Usuário %1$s saiu do modo mudo por %2$s</string>
+    <string name="message_muted">Usuário %1$s foi silenciado por %2$s</string>
+    <string name="message_unmuted">Usuário %1$s saiu do modo silenciado por %2$s</string>
     <string name="message_role_add">%1$s foi definido %2$s por %3$s</string>
     <string name="message_role_removed">%1$s não é mais %2$s por %3$s</string>
     // TODO:Add proper translation.
