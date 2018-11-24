@@ -51,6 +51,7 @@ import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.EmojiSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
+import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.draw.main.ui.DRAWING_BYTE_ARRAY_EXTRA_DATA
 import chat.rocket.android.draw.main.ui.DrawingActivity
 import chat.rocket.android.emoji.ComposerEditText
@@ -401,17 +402,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         empty_chat_view.isVisible = adapter.itemCount == 0
     }
 
-    override fun onRoomUpdated(
-        userCanPost: Boolean,
-        channelIsBroadcast: Boolean,
-        userCanMod: Boolean
-    ) {
+    override fun onRoomUpdated(roomUiModel: RoomUiModel) {
         // TODO: We should rely solely on the user being able to post, but we cannot guarantee
         // that the "(channels|groups).roles" endpoint is supported by the server in use.
         ui {
-            setupMessageComposer(userCanPost)
-            isBroadcastChannel = channelIsBroadcast
-            if (isBroadcastChannel && !userCanMod) {
+            setupToolbar(roomUiModel.name.toString())
+            setupMessageComposer(roomUiModel)
+            isBroadcastChannel = roomUiModel.broadcast
+            if (isBroadcastChannel && !roomUiModel.canModerate) {
                 disableMenu = true
                 activity?.invalidateOptionsMenu()
             }
@@ -790,12 +788,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun onJoined(userCanPost: Boolean) {
+    override fun onJoined(roomUiModel: RoomUiModel) {
         ui {
             input_container.isVisible = true
             button_join_chat.isVisible = false
             isSubscribed = true
-            setupMessageComposer(userCanPost)
         }
     }
 
@@ -828,8 +825,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    private fun setupMessageComposer(canPost: Boolean) {
-        if (!canPost) {
+    private fun setupMessageComposer(roomUiModel: RoomUiModel) {
+        if (isReadOnly || !roomUiModel.writable) {
             text_room_is_read_only.isVisible = true
             input_container.isVisible = false
             text_room_is_read_only.setText(
@@ -845,6 +842,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_join_chat.isVisible = true
             button_join_chat.setOnClickListener { presenter.joinChat(chatRoomId) }
         } else {
+            input_container.isVisible = true
+            text_room_is_read_only.isVisible = false
             button_send.isVisible = false
             button_show_attachment_options.alpha = 1f
             button_show_attachment_options.isVisible = true
