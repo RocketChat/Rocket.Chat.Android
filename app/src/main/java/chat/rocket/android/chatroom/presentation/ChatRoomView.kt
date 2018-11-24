@@ -5,6 +5,7 @@ import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.EmojiSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
+import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -131,12 +132,7 @@ interface ChatRoomView : LoadingView, MessageView {
 
     fun populateEmojiSuggestions(emojis: List<EmojiSuggestionUiModel>)
 
-    /**
-     * This user has joined the chat callback.
-     *
-     * @param userCanPost Whether the user can post a message or not.
-     */
-    fun onJoined(userCanPost: Boolean)
+    fun onJoined(roomUiModel: RoomUiModel)
 
     fun showReactionsPopup(messageId: String)
 
@@ -147,9 +143,6 @@ interface ChatRoomView : LoadingView, MessageView {
      */
     fun populateCommandSuggestions(commands: List<CommandSuggestionUiModel>)
 
-    /**
-     * Communicate whether it's a broadcast channel and if current user can post to it.
-     */
-    fun onRoomUpdated(userCanPost: Boolean, channelIsBroadcast: Boolean, userCanMod: Boolean)
+    fun onRoomUpdated(roomUiModel: RoomUiModel)
 
 }
