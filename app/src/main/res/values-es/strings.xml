@@ -34,7 +34,7 @@
     <string name="action_create_channel">Crear canal</string>
     <string name="action_create">Create</string>
     <string name="action_logout">Cerrar sesión</string>
-    <string name="action_files">Archivos</string>
+    <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">Confirmar cambio de contraseña</string>
     <string name="action_join_chat">Unirse al chat</string>
     <string name="action_add_account">Añadir cuenta</string>
@@ -45,7 +45,7 @@
     <string name="action_drawing">Dibujo</string>
     <string name="action_save_to_gallery">Guardar en la galería</string>
     <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
-    <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_take_a_photo">Take a photo</string> <!-- TODO Add translation -->
     <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
     <string name="action_connect_server">Connect with a server</string> <!-- TODO Add translation -->
     <string name="action_join_community">Join in the community</string> <!-- TODO Add translation -->

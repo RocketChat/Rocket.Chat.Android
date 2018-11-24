@@ -12,6 +12,7 @@ import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.UserDao
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentUserInteractor
+import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.TokenRepository
@@ -88,9 +89,10 @@ class ChatRoomsFragmentModule {
         context: Application,
         repository: SettingsRepository,
         userInteractor: GetCurrentUserInteractor,
-        @Named("currentServer") serverUrl: String
+        @Named("currentServer") serverUrl: String,
+        permissionsInteractor: PermissionsInteractor
     ): RoomUiModelMapper {
-        return RoomUiModelMapper(context, repository.get(serverUrl), userInteractor, serverUrl)
+        return RoomUiModelMapper(context, repository.get(serverUrl), userInteractor, serverUrl, permissionsInteractor)
     }
 
     @Provides

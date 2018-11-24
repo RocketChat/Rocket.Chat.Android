@@ -29,7 +29,6 @@ import chat.rocket.core.internal.rest.setAvatar
 import chat.rocket.core.internal.rest.updateProfile
 import kotlinx.coroutines.experimental.DefaultDispatcher
 import kotlinx.coroutines.experimental.withContext
-import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
 
@@ -58,20 +57,17 @@ class ProfilePresenter @Inject constructor(
 ) {
     private val serverUrl = serverInteractor.get()!!
     private val client: RocketChatClient = factory.create(serverUrl)
-    private val myselfId = userHelper.user()?.id ?: ""
-    private var myselfName = userHelper.user()?.name ?: ""
-    private var myselfUsername = userHelper.username() ?: ""
-    private var myselfEmailAddress = userHelper.user()?.emails?.getOrNull(0)?.address ?: ""
+    private val user = userHelper.user()
 
     fun loadUserProfile() {
         launchUI(strategy) {
             view.showLoading()
             try {
                 view.showProfile(
-                    serverUrl.avatarUrl(myselfUsername),
-                    myselfName,
-                    myselfUsername,
-                    myselfEmailAddress
+                    serverUrl.avatarUrl(user?.username ?: ""),
+                    user?.name ?: "",
+                    user?.username ?: "",
+                    user?.emails?.getOrNull(0)?.address ?: ""
                 )
             } catch (exception: RocketChatException) {
                 view.showMessage(exception)
@@ -85,14 +81,16 @@ class ProfilePresenter @Inject constructor(
         launchUI(strategy) {
             view.showLoading()
             try {
-                retryIO { client.updateProfile(myselfId, email, name, username) }
-
-                myselfEmailAddress = email
-                myselfName = name
-                myselfUsername = username
-
-                view.showProfileUpdateSuccessfullyMessage()
-                loadUserProfile()
+                user?.id?.let { id ->
+                    retryIO { client.updateProfile(id, email, name, username) }
+                    view.showProfileUpdateSuccessfullyMessage()
+                    view.showProfile(
+                        serverUrl.avatarUrl(user.username ?: ""),
+                        name,
+                        username,
+                        email
+                    )
+                }
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
@@ -117,7 +115,7 @@ class ProfilePresenter @Inject constructor(
                         uriInteractor.getInputStream(uri)
                     }
                 }
-                view.reloadUserAvatar(serverUrl.avatarUrl(myselfUsername))
+                user?.username?.let { view.reloadUserAvatar(it) }
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
@@ -144,7 +142,8 @@ class ProfilePresenter @Inject constructor(
                         byteArray?.inputStream()
                     }
                 }
-                view.reloadUserAvatar(serverUrl.avatarUrl(myselfUsername))
+
+                user?.username?.let { view.reloadUserAvatar(it) }
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
@@ -161,8 +160,10 @@ class ProfilePresenter @Inject constructor(
         launchUI(strategy) {
             view.showLoading()
             try {
-                retryIO { client.resetAvatar(myselfId) }
-                view.reloadUserAvatar(serverUrl.avatarUrl(myselfUsername))
+                user?.id?.let { id ->
+                    retryIO { client.resetAvatar(id) }
+                }
+                user?.username?.let { view.reloadUserAvatar(it) }
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)

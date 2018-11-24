@@ -35,7 +35,7 @@
     <string name="action_create_channel">Crea canale</string>
     <string name="action_create">Crea</string>
     <string name="action_logout">Disconnettersi</string>
-    <string name="action_files">Documenti</string>
+    <string name="action_attach_a_files">Attach a file</string> <!-- TODO ADD translation -->
     <string name="action_confirm_password">Conferma Cambio Password</string>
     <string name="action_join_chat">Iscriviti alla stanza</string>
     <string name="action_add_account">Aggiungi utente</string>
@@ -46,7 +46,7 @@
     <string name="action_drawing">Disegno</string>
     <string name="action_save_to_gallery">Salva in galleria</string>
     <string name="action_select_photo_from_gallery">Seleziona foto dalla galleria</string>
-    <string name="action_take_photo">Fare foto</string>
+    <string name="action_take_a_photo">Take a photo</string> <!-- TODO ADD translation -->
     <string name="action_reset_avatar">Reimposta avatar</string>
     <string name="action_connect_server">Collegati a un server</string>
     <string name="action_join_community">Entra nella community</string>
