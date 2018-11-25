@@ -2,18 +2,26 @@ package chat.rocket.android.userdetails.ui
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import blurred
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.chatRoomIntent
 import chat.rocket.android.emoji.internal.GlideApp
 import chat.rocket.android.userdetails.presentation.UserDetailsPresenter
 import chat.rocket.android.userdetails.presentation.UserDetailsView
+import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extension.orFalse
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.model.ChatRoom
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.CenterInside
+import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import dagger.android.AndroidInjection
@@ -21,6 +29,10 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_user_details.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset
@@ -73,11 +85,28 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView, HasSupportFrag
         text_view_name.text = name
         text_view_username.text = username
         text_view_status.text = status.capitalize()
-        GlideApp.with(this)
-            .load(avatarUrl)
-            .centerCrop()
-            .apply(RequestOptions().transform(RoundedCorners(25)))
-            .into(image_view_avatar)
+
+        launch(UI) {
+            val image = withContext(CommonPool) {
+                val requestOptions = RequestOptions()
+                    .priority(Priority.IMMEDIATE)
+                    .transforms(CenterInside(), FitCenter())
+
+                return@withContext GlideApp.with(this@UserDetailsActivity)
+                    .asBitmap()
+                    .load(avatarUrl)
+                    .apply(requestOptions)
+                    .submit()
+                    .get()
+            }
+
+            toolbar.background = BitmapDrawable(resources, image.blurred(this@UserDetailsActivity))
+            GlideApp.with(this@UserDetailsActivity)
+                .asBitmap()
+                .transforms(RoundedCorners(25), CenterCrop())
+                .load(avatarUrl)
+                .into(image_view_avatar)
+        }
 
         utcOffset?.let {
             val offsetLong = it.roundToLong()
@@ -99,6 +128,7 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView, HasSupportFrag
 
     private fun toDirectMessage(chatRoom: ChatRoom?) {
         chatRoom?.let { c ->
+            finish()
             startActivity(
                 chatRoomIntent(
                     chatRoomId = c.id,

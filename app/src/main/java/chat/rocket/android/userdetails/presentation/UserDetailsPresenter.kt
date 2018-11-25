@@ -41,14 +41,14 @@ class UserDetailsPresenter @Inject constructor(
 
                     val chatRoom: ChatRoom? = if (localDMs.isEmpty()) {
                         val query = u.username!!
-                        val result = retryIO("spotlight($query)") {
+                        val spotlightResult = retryIO("spotlight($query)") {
                             client.spotlight(query = query)
                         }
 
-                        val userMatch = result.users.firstOrNull()
+                        val matchFromSpotlight = spotlightResult.users.firstOrNull()
 
-                        if (userMatch != null) {
-                            with (userMatch) {
+                        if (matchFromSpotlight != null) {
+                            with (matchFromSpotlight) {
                                     ChatRoom(
                                         id = id,
                                         type = roomTypeOf(RoomType.DIRECT_MESSAGE),
