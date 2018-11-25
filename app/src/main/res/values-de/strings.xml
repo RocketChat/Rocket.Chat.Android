@@ -329,6 +329,9 @@
     <string name="notif_success_sending">Nachricht gesendet nach %1$s!</string>
     <string name="read_by">Gelesen von</string>
     <string name="message_information_title">Nachricht Information</string>
-    <!--TODO - Add proper translation-->
-    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string> <!--TODO - Add proper translation-->
+
+    <!-- User Details -->
+    <string name="message">Message</string> <!--TODO - Add proper translation-->
+    <string name="timezone">Timezone</string> <!--TODO - Add proper translation-->
 </resources>

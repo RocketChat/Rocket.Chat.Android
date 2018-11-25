@@ -334,4 +334,10 @@
     <string name="message_information_title">संदेश की जानकारी</string>
     <string name="msg_log_out">लॉग आउट कर रहा हूं…</string>
     <string name="message_room_changed_privacy">%2$s ने रूम का प्रकार बदलकर %1$s किया </string>
+
+    <!-- User Details -->
+    <!-- TODO - Add proper translation -->
+    <string name="message">Message</string>
+    <!-- TODO - Add proper translation -->
+    <string name="timezone">Timezone</string>
 </resources>

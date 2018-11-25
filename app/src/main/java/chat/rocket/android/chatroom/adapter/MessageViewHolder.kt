@@ -74,19 +74,20 @@ class MessageViewHolder(
             }
 
             val senderId = data.message.sender?.id
+            val subscriptionId = data.subscriptionId
             text_sender.setOnClickListener {
-                toUserDetails(context, senderId)
+                toUserDetails(context, senderId, subscriptionId)
             }
 
             image_avatar.setOnClickListener {
-                toUserDetails(context, senderId)
+                toUserDetails(context, senderId, subscriptionId)
             }
 
         }
     }
 
-    private fun toUserDetails(context: Context, userId: String?) {
-        userId?.let { context.startActivity(context.userDetailsIntent(it)) }
+    private fun toUserDetails(context: Context, userId: String?, subscriptionId: String) {
+        userId?.let { context.startActivity(context.userDetailsIntent(it, subscriptionId)) }
     }
 
     override fun unscheduleDrawable(who: Drawable?, what: Runnable?) {

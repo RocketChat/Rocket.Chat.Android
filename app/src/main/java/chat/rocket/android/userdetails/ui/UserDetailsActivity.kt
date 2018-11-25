@@ -17,6 +17,7 @@ import chat.rocket.android.util.extension.orFalse
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.model.ChatRoom
+import chat.rocket.core.model.userId
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -38,16 +39,19 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.math.roundToLong
 
-fun Context.userDetailsIntent(userId: String): Intent {
+fun Context.userDetailsIntent(userId: String, subscriptionId: String): Intent {
     return Intent(this, UserDetailsActivity::class.java).apply {
         putExtra(EXTRA_USER_ID, userId)
+        putExtra(EXTRA_SUBSCRIPTION_ID, subscriptionId)
     }
 }
 
 const val EXTRA_USER_ID = "EXTRA_USER_ID"
+const val EXTRA_SUBSCRIPTION_ID = "EXTRA_USERNAME"
 
 class UserDetailsActivity : AppCompatActivity(), UserDetailsView, HasSupportFragmentInjector {
 
@@ -56,6 +60,8 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView, HasSupportFrag
     @Inject
     lateinit var presenter: UserDetailsPresenter
 
+    private lateinit var subscriptionId: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -63,6 +69,7 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView, HasSupportFrag
         setupToolbar()
 
         val userId = intent.getStringExtra(EXTRA_USER_ID)
+        subscriptionId = intent.getStringExtra(EXTRA_SUBSCRIPTION_ID)
         presenter.loadUserDetails(userId = userId)
     }
 
@@ -129,18 +136,20 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView, HasSupportFrag
     private fun toDirectMessage(chatRoom: ChatRoom?) {
         chatRoom?.let { c ->
             finish()
-            startActivity(
-                chatRoomIntent(
-                    chatRoomId = c.id,
-                    chatRoomName = c.name,
-                    chatRoomType = c.type.toString(),
-                    isReadOnly = c.readonly.orFalse(),
-                    chatRoomLastSeen = c.lastSeen ?: 0,
-                    isSubscribed = c.open,
-                    isCreator = false,
-                    isFavorite = c.favorite
+            if (c.subscriptionId.isEmpty() || c.subscriptionId != subscriptionId) {
+                startActivity(
+                    chatRoomIntent(
+                        chatRoomId = c.id,
+                        chatRoomName = c.name,
+                        chatRoomType = c.type.toString(),
+                        isReadOnly = c.readonly.orFalse(),
+                        chatRoomLastSeen = c.lastSeen ?: 0,
+                        isSubscribed = c.open,
+                        isCreator = false,
+                        isFavorite = c.favorite
+                    )
                 )
-            )
+            }
         }
     }
 }

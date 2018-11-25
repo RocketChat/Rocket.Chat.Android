@@ -332,4 +332,10 @@
     <string name="msg_log_out">Deslogando…</string>
     <string name="msg_sent_attachment">Enviou um arquivo</string>
     <string name="message_room_changed_privacy">O tipo da sala mudou para: %1$s por %2$s</string>
+
+    <!-- User Details -->
+    <!-- TODO - Add proper translation -->
+    <string name="message">Mensagem</string>
+    <!-- TODO - Add proper translation -->
+    <string name="timezone">Fuso Horário</string>
 </resources>

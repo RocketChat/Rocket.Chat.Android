@@ -32,7 +32,7 @@
                 android:id="@+id/text_view_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Message"
+                android:text="@string/message"
                 android:textColor="#1d74f5"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="@+id/image_view_message"
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:text="Status"
+                android:text="@string/status"
                 android:textColor="@color/darkGray"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Timezone"
+                android:text="@string/timezone"
                 android:textColor="@color/darkGray"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -152,7 +152,6 @@
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/bg_round_bounds_white"
                 tools:srcCompat="@tools:sample/avatars[6]" />
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

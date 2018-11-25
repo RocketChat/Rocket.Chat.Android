@@ -1,7 +1,9 @@
 package chat.rocket.android.userdetails.presentation
 
+import androidx.core.text.toSpannable
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.server.domain.GetConnectingServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
@@ -22,11 +24,13 @@ class UserDetailsPresenter @Inject constructor(
     private val dbManager: DatabaseManager,
     private val strategy: CancelStrategy,
     serverInteractor: GetConnectingServerInteractor,
-    factory: ConnectionManagerFactory
+    factory: ConnectionManagerFactory,
+    userHelper: UserHelper
 ) {
     private var currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
+    private val userId = userHelper.user()?.id
 
     fun loadUserDetails(userId: String) {
         launchUI(strategy) {
@@ -50,7 +54,7 @@ class UserDetailsPresenter @Inject constructor(
                         if (matchFromSpotlight != null) {
                             with (matchFromSpotlight) {
                                     ChatRoom(
-                                        id = id,
+                                        id = "$id$userId",
                                         type = roomTypeOf(RoomType.DIRECT_MESSAGE),
                                         name = u.username ?: u.name.orEmpty(),
                                         fullName = u.name,
@@ -76,7 +80,7 @@ class UserDetailsPresenter @Inject constructor(
                                         subscriptionId = "",
                                         timestamp = null,
                                         updatedAt = null,
-                                        user = SimpleUser(id, username)
+                                        user = null
                                 )
                             }
                         } else null
