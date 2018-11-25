@@ -9,6 +9,7 @@
     <item name="menu_action_profile" type="id"/>
     <item name="menu_action_settings" type="id"/>
     <item name="menu_action_admin_panel" type="id"/>
+    <item name="menu_action_download" type="id"/>
     <item name="menu_action_logout" type="id"/>
 
 </resources>

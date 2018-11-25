@@ -21,6 +21,7 @@
     <string name="title_update_profile">Actualización del perfil</string>
     <string name="title_about">Acerca de</string>
     <string name="title_create_channel">Crear canal</string>
+    <string name="tittle_download">Descargar mis datos</string>
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
@@ -60,6 +61,7 @@
         <item name="item_password">Cambia la contraseña</item>
         <item name="item_share_app">Compartir aplicación</item>
         <item name="item_rate_us">Nos califica</item>
+        <item name="item_download_data">Descargar mis datos</item>
         <item name="item_password">Acerca de</item>
     </string-array>
 
@@ -212,6 +214,13 @@
     <string name="action_title_editing">Edición de mensaje</string>
     <string name="action_msg_add_reaction">Añadir una reacción</string>
     <string name="action_msg_copy_permalink">Copiar permalink</string>
+
+    <!--download message-->
+    <string name="request_download">Descargar archivo solicitado</string>
+    <string name="UserDataDownload_Requested_Text">Se generará su archivo de datos. Se enviará un enlace para descargarlo a su dirección de correo electrónico cuando esté listo.</string>
+    <string name="UserDataDownload_RequestExisted_Text">Su archivo de datos ya se está generando. Se enviará un enlace para descargarlo a su dirección de correo electrónico cuando esté listo.</string>
+    <string name="UserDataDownload_CompletedRequestExisted_Text">Su archivo de datos ya fue generado. Compruebe su cuenta de correo electrónico para el enlace de descarga.</string>
+
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">La edición no és permitida</string>

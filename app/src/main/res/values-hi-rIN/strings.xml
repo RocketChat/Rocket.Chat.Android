@@ -22,6 +22,7 @@
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
     <string name="title_create_channel">चैनल बनाएं</string>
+    <string name="tittle_download">डाउन लोड करें</string>
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
@@ -61,6 +62,7 @@
         <item name="item_password">पासवर्ड बदलें</item>
         <item name="item_share_app">ऐप शेयर करें</item>
         <item name="item_rate_us">हमें रेटिंग दें</item>
+        <item name="item_download_data">डाउन लोड करें</item>
         <item name="item_password">परिचय</item>
     </string-array>
 
@@ -156,6 +158,11 @@
     <string name="msg_continue_with_wordpress"><b>WordPress</b> के साथ जारी रखें</string>
     <string name="msg_two_factor_authentication">दो तरीकों से प्रमाणीकरण</string>
     <string name="msg__your_2fa_code">आपका 2FA कोड क्या है?</string>
+
+    <string name="request_download">अनुरोध फ़ाइल डाउनलोड करें</string>
+    <string name="UserDataDownload_Requested_Text">आपकी डेटा फ़ाइल जेनरेट की जाएगी। इसे डाउनलोड करने के लिए एक लिंक तैयार होने पर आपके ईमेल पते पर भेजा जाएगा।</string>
+    <string name="UserDataDownload_RequestExisted_Text">आपकी डेटा फ़ाइल पहले से ही उत्पन्न हो रही है। इसे डाउनलोड करने के लिए एक लिंक तैयार होने पर आपके ईमेल पते पर भेजा जाएगा।</string>
+    <string name="UserDataDownload_CompletedRequestExisted_Text">आपकी डेटा फ़ाइल पहले ही जेनरेट की गई थी। डाउनलोड लिंक के लिए अपना ईमेल खाता देखें।</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">प्राइवेट</string>

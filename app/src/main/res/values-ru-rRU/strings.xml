@@ -22,6 +22,7 @@
     <string name="title_update_profile">Обновить профиль</string>
     <string name="title_about">О программе</string>
     <string name="title_create_channel">Создать новый канал</string>
+    <string name="tittle_download">Загрузите мои данные</string>
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
@@ -60,6 +61,7 @@
         <item name="item_preferences">Персональные</item>
         <item name="item_password">Изменить пароль</item>
         <item name="item_rate_us">оцените нас</item>
+        <item name="item_download_data">Загрузите мои данные</item>
         <item name="item_share_app">добавить приложение</item>
         <item name="item_password">О программе</item>
     </string-array>
@@ -158,6 +160,11 @@
     <string name="msg_permalink_copied">Ссылка скопирована</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
+    <string name="request_download">Загрузить файл</string>
+    <string name="UserDataDownload_Requested_Text">Будет создан ваш файл данных. Ссылка на скачивание будет отправлена на ваш адрес электронной почты, когда будет готова.</string>
+    <string name="UserDataDownload_RequestExisted_Text">Файл данных уже создан. Ссылка на скачивание будет отправлена на ваш адрес электронной почты, когда будет готова.</string>
+    <string name="UserDataDownload_CompletedRequestExisted_Text">Файл данных уже сгенерирован. Проверьте свою учетную запись электронной почты для ссылки для загрузки.</string>
+
     <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s reacted with %2$s</item>

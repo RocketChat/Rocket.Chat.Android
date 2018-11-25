@@ -22,6 +22,7 @@
     <string name="title_update_profile">Aggiorna Profilo</string>
     <string name="title_about">Informazioni</string>
     <string name="title_create_channel">Crea Canale</string>
+    <string name="tittle_download">Scarica i miei dati</string>
     <string name="title_are_you_sure">Sei sicuro che vuoi uscire ?</string>
 
     <!-- Actions -->
@@ -54,6 +55,11 @@
     <string name="action_register">Registra</string>
     <string name="action_confirm">Conferma</string>
     <string name="action_delete_account">Elimina utente</string>
+    <string name="request_download">Scarica il file richiesto</string>
+    <string name="UserDataDownload_Requested_Text">Il tuo file di dati sarà generato. Quando sarà pronto, un link per scaricarlo verrà inviato al tuo indirizzo email.</string>
+    <string name="UserDataDownload_RequestExisted_Text">Il tuo file di dati è già stato generato. Quando sarà pronto, un link per scaricarlo verrà inviato al tuo indirizzo email.</string>
+    <string name="UserDataDownload_CompletedRequestExisted_Text">Il tuo file di dati è già stato generato. Controlla il tuo account e-mail per il link di download.</string>
+
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -61,6 +67,7 @@
         <item name="item_password">Cambiare Password</item>
         <item name="item_share_app">Condividi App</item>
         <item name="item_rate_us">Valutaci</item>
+        <item name="item_download_data">Scarica i miei dati</item>
         <item name="item_password">Informazioni</item>
     </string-array>
 

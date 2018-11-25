@@ -1,3 +1,9 @@
 package chat.rocket.android.settings.presentation
 
-interface SettingsView
+import chat.rocket.android.core.behaviours.MessageView
+
+interface SettingsView:  MessageView {
+
+    fun showDownloadDialog(error : String?)
+}
+

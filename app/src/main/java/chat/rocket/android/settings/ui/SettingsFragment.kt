@@ -1,8 +1,8 @@
 package chat.rocket.android.settings.ui
 
+import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,9 +21,10 @@ import chat.rocket.android.preferences.ui.PreferencesFragment
 import chat.rocket.android.preferences.ui.TAG_PREFERENCES_FRAGMENT
 import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.settings.presentation.SettingsView
-import chat.rocket.android.util.extensions.addFragmentBackStack
-import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.settings.presentation.settingPresenter
+import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.dialog_download.view.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
@@ -32,11 +33,14 @@ internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
 class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListener {
     @Inject
+    lateinit var presenter: settingPresenter
+
+    @Inject
     lateinit var analyticsManager: AnalyticsManager
 
    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        AndroidSupportInjection.inject(this)
+       AndroidSupportInjection.inject(this)
+       super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -88,6 +92,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                 startActivity(Intent.createChooser(shareIntent, getString(R.string.msg_share_using)))
             }
             resources.getString(R.string.title_rate_us) -> startAppPlayStore()
+            resources.getString(R.string.tittle_download) -> presenter.downloadData();
         }
     }
 
@@ -116,4 +121,36 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     companion object {
         fun newInstance() = SettingsFragment()
     }
+
+    override fun showDownloadDialog(data : String?) {
+        ui {
+            val context = this
+            val builder = AlertDialog.Builder(activity)
+            val view = layoutInflater.inflate(R.layout.dialog_download, null)
+            if (data.equals("UserDataDownload_RequestExisted_Text"))
+                view.text_download_description.textContent = resources.getString(R.string.UserDataDownload_RequestExisted_Text);
+            else if (data.equals("UserDataDownload_CompletedRequestExisted_Text"))
+                view.text_download_description.textContent = resources.getString(R.string.UserDataDownload_CompletedRequestExisted_Text);
+            else
+                view.text_download_description.textContent = resources.getString(R.string.UserDataDownload_Requested_Text);
+
+            builder.setView(view)
+            builder.setPositiveButton(R.string.msg_ok) { dialog, p1 ->
+                dialog.cancel()
+            }
+
+            builder.show()
+        }
+    }
+
+
+    override fun showMessage(resId: Int) {
+        ui { showToast(resId) }
+    }
+
+    override fun showMessage(message: String) {
+        ui { showToast(message) }
+    }
+
+    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 }
