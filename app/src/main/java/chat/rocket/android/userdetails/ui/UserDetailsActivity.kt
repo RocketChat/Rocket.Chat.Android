@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import blurred
 import chat.rocket.android.R
@@ -70,6 +71,7 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView, HasSupportFrag
 
         val userId = intent.getStringExtra(EXTRA_USER_ID)
         subscriptionId = intent.getStringExtra(EXTRA_SUBSCRIPTION_ID)
+        showLoadingView(true)
         presenter.loadUserDetails(userId = userId)
     }
 
@@ -104,7 +106,7 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView, HasSupportFrag
                     .load(avatarUrl)
                     .apply(requestOptions)
                     .submit()
-                    .get()
+                    .get().also { showLoadingView(false) }
             }
 
             toolbar.background = BitmapDrawable(resources, image.blurred(this@UserDetailsActivity))
@@ -130,6 +132,13 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView, HasSupportFrag
 
         image_view_message.setOnClickListener {
             toDirectMessage(chatRoom = chatRoom)
+        }
+    }
+
+    private fun showLoadingView(show: Boolean) {
+        runOnUiThread {
+            group_user_details.isVisible = !show
+            view_loading.isVisible = show
         }
     }
 

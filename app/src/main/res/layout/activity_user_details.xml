@@ -18,6 +18,16 @@
             android:layout_height="match_parent"
             android:background="@android:color/white">
 
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/view_loading"
+                style="@style/Authentication.AVLoadingIndicatorView"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
             <ImageView
                 android:id="@+id/image_view_message"
                 android:layout_width="24dp"
@@ -111,6 +121,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
                 tools:text="(UTC-2) 11:08 AM" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/group_user_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="text_view_tz,textView,text_view_status,text_view_message,textView3,text_view_name,text_view_username,image_view_message" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 

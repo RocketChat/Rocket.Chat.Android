@@ -337,5 +337,5 @@
     <!-- TODO - Add proper translation -->
     <string name="message">Mensagem</string>
     <!-- TODO - Add proper translation -->
-    <string name="timezone">Fuso Horário</string>
+    <string name="timezone">Fuso horário</string>
 </resources>
