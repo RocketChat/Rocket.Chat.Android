@@ -296,11 +296,8 @@ class PushManager @Inject constructor(
     }
 
     private fun getContentIntent(context: Context, notificationId: Int, pushMessage: PushMessage, grouped: Boolean = false): PendingIntent {
-        val notificationIntent = context.changeServerIntent(pushMessage.info.host, chatRoomId = pushMessage.info.roomId)
-        // TODO - add support to go directly to the chatroom
-        /*if (!isGrouped) {
-            notificationIntent.putExtra(EXTRA_ROOM_ID, pushMessage.info.roomId)
-        }*/
+        val roomId = if (!grouped) pushMessage.info.roomId else null
+        val notificationIntent = context.changeServerIntent(pushMessage.info.host, chatRoomId = roomId)
         return PendingIntent.getActivity(context, random.nextInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 

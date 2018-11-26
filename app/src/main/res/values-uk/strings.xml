@@ -36,7 +36,7 @@
     <string name="action_create_channel">Створити канал</string>
     <string name="action_create">Створити</string>
     <string name="action_logout">Вийти</string>
-    <string name="action_files">Файли</string>
+    <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">Підтвердження зміни пароля</string>
     <string name="action_join_chat">Приєднатися до чату</string>
     <string name="action_add_account">Додати аккаунт</string>
@@ -47,7 +47,7 @@
     <string name="action_drawing">Малюнок</string>
     <string name="action_save_to_gallery">Зберегти до галереї</string>
     <string name="action_select_photo_from_gallery">Вибрати з галереї</string>
-    <string name="action_take_photo">Зробити знімок</string>
+    <string name="action_take_a_photo">Зробити знімок</string>
     <string name="action_reset_avatar">Відновити аватар</string>
     <string name="action_connect_server">Connect with a server</string> <!-- TODO Add translation -->
     <string name="action_join_community">Join in the community</string> <!-- TODO Add translation -->
@@ -161,6 +161,12 @@
     <string name="msg_permalink_copied">Permalink copied</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
+    <!-- TODO - Add proper translation -->
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reacted with %2$s</item>
+        <item quantity="few">%1$s reacted with %2$s</item>
+        <item quantity="many">%1$s reacted with %2$s</item>
+    </plurals>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватний</string>

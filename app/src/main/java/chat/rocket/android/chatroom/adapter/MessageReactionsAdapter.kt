@@ -75,7 +75,7 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
     class ReactionViewHolder(
         view: View,
         private val listener: EmojiReactionListener?
-    ) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    ) : RecyclerView.ViewHolder(view), View.OnClickListener, View.OnLongClickListener {
 
         @Inject
         lateinit var localRepository: LocalRepository
@@ -121,6 +121,8 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
 
                 view_flipper_reaction.setOnClickListener(this@ReactionViewHolder)
                 text_count.setOnClickListener(this@ReactionViewHolder)
+                view_flipper_reaction.setOnLongClickListener(this@ReactionViewHolder)
+                text_count.setOnLongClickListener(this@ReactionViewHolder)
             }
         }
 
@@ -131,6 +133,11 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
                     listener?.onReactionTouched(reaction.messageId, reaction.shortname)
                 }
             }
+        }
+
+        override fun onLongClick(v: View?): Boolean {
+            listener?.onReactionLongClicked(reaction.shortname, reaction.isCustom, reaction.url, reaction.usernames)
+            return true
         }
     }
 
