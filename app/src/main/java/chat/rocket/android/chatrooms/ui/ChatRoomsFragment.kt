@@ -462,8 +462,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 setupWidechatSearchView()
 
                 val serverUrl = serverInteractor.get()
-                val myselfUsername = userHelper.username().toString()
-                val myAvatarUrl = serverUrl?.avatarUrl(myselfUsername)
+                val user = userHelper.user()
+                val myAvatarUrl: String? =  serverUrl?.avatarUrl(user?.username ?: "")
 
                 profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
                 profileButton?.setImageURI(myAvatarUrl)
