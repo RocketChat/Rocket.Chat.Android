@@ -36,7 +36,7 @@
     <string name="action_create_channel">Criar chat</string>
     <string name="action_create">Criar</string>
     <string name="action_logout">Sair</string>
-    <string name="action_files">Arquivos</string>
+    <string name="action_attach_a_files">Anexar um arquivo</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
     <string name="action_join_chat">Entrar no Chat</string>
     <string name="action_add_account">Adicionar conta</string>
@@ -48,7 +48,7 @@
     <string name="action_save_to_gallery">Salvar na galeria</string>
     <string name="action_invite">Compartilhar</string>
     <string name="action_select_photo_from_gallery">Escolher foto da galeria</string>
-    <string name="action_take_photo">Tirar foto</string>
+    <string name="action_take_a_photo">Tirar uma foto</string>
     <string name="action_reset_avatar">Resetar avatar</string>
     <string name="action_connect_server">Conectar com um servidor</string>
     <string name="action_join_community">Junte-se à comunidade</string>
@@ -162,6 +162,10 @@
     <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copiado</string>
     <string name="msg_muted_on_this_channel">Você está silenciado neste canal</string>
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reagiu com %2$s</item>
+        <item quantity="other">%1$s reagiram com %2$s</item>
+    </plurals>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
