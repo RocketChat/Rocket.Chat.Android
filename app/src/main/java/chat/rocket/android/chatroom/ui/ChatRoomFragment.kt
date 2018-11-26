@@ -51,6 +51,7 @@ import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.EmojiSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
+import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.draw.main.ui.DRAWING_BYTE_ARRAY_EXTRA_DATA
 import chat.rocket.android.draw.main.ui.DrawingActivity
 import chat.rocket.android.emoji.ComposerEditText
@@ -60,6 +61,7 @@ import chat.rocket.android.emoji.EmojiKeyboardPopup
 import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiPickerPopup
 import chat.rocket.android.emoji.EmojiReactionListener
+import chat.rocket.android.emoji.internal.GlideApp
 import chat.rocket.android.emoji.internal.isCustom
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.ImageHelper
@@ -84,6 +86,8 @@ import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.emoji_image_row_item.*
+import kotlinx.android.synthetic.main.emoji_row_item.*
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
@@ -91,6 +95,7 @@ import kotlinx.android.synthetic.main.message_list.*
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
+import kotlinx.android.synthetic.main.reaction_praises_list_item.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -397,17 +402,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         empty_chat_view.isVisible = adapter.itemCount == 0
     }
 
-    override fun onRoomUpdated(
-        userCanPost: Boolean,
-        channelIsBroadcast: Boolean,
-        userCanMod: Boolean
-    ) {
+    override fun onRoomUpdated(roomUiModel: RoomUiModel) {
         // TODO: We should rely solely on the user being able to post, but we cannot guarantee
         // that the "(channels|groups).roles" endpoint is supported by the server in use.
         ui {
-            setupMessageComposer(userCanPost)
-            isBroadcastChannel = channelIsBroadcast
-            if (isBroadcastChannel && !userCanMod) {
+            setupToolbar(roomUiModel.name.toString())
+            setupMessageComposer(roomUiModel)
+            isBroadcastChannel = roomUiModel.broadcast
+            if (isBroadcastChannel && !roomUiModel.canModerate) {
                 disableMenu = true
                 activity?.invalidateOptionsMenu()
             }
@@ -544,7 +546,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             button_send.isEnabled = true
             text_message.isEnabled = true
-            clearMessageComposition(true)
         }
     }
 
@@ -611,7 +612,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun showGenericErrorMessage(){
+    override fun showGenericErrorMessage() {
         ui {
             showMessage(getString(R.string.msg_generic_error))
         }
@@ -688,6 +689,44 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         presenter.react(messageId, emoji.shortname)
     }
 
+    override fun onReactionLongClicked(shortname: String, isCustom: Boolean, url: String?, usernames: List<String>) {
+        val layout = LayoutInflater.from(requireContext()).inflate(R.layout.reaction_praises_list_item, null)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(layout)
+            .setCancelable(true)
+
+        with(layout) {
+            view_flipper.displayedChild = if (isCustom) 1 else 0
+            if (isCustom && url != null) {
+                val glideRequest = if (url.endsWith("gif", true)) {
+                    GlideApp.with(requireContext()).asGif()
+                } else {
+                    GlideApp.with(requireContext()).asBitmap()
+                }
+
+                glideRequest.load(url).into(emoji_image_view)
+            } else {
+                emoji_view.text = EmojiParser.parse(requireContext(), shortname)
+            }
+
+            var listing = ""
+            if (usernames.size == 1) {
+                listing = usernames.first()
+            } else {
+                usernames.forEachIndexed { index, username ->
+                    listing += if (index == usernames.size - 1) "|$username" else "$username, "
+                }
+
+                listing = listing.replace(", |", " ${requireContext().getString(R.string.msg_and)} ")
+            }
+
+            text_view_usernames.text = requireContext().resources.getQuantityString(
+                R.plurals.msg_reacted_with_, usernames.size, listing, shortname)
+
+            dialog.show()
+        }
+    }
+
     override fun showReactionsPopup(messageId: String) {
         ui {
             val emojiPickerPopup = EmojiPickerPopup(it)
@@ -748,12 +787,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun onJoined(userCanPost: Boolean) {
+    override fun onJoined(roomUiModel: RoomUiModel) {
         ui {
             input_container.isVisible = true
             button_join_chat.isVisible = false
             isSubscribed = true
-            setupMessageComposer(userCanPost)
         }
     }
 
@@ -786,15 +824,25 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    private fun setupMessageComposer(canPost: Boolean) {
-        if (isReadOnly && !canPost) {
+    private fun setupMessageComposer(roomUiModel: RoomUiModel) {
+        if (isReadOnly || !roomUiModel.writable) {
             text_room_is_read_only.isVisible = true
             input_container.isVisible = false
+            text_room_is_read_only.setText(
+                if (isReadOnly) {
+                    R.string.msg_this_room_is_read_only
+                } else {
+                    // Not a read-only channel but user has been muted.
+                    R.string.msg_muted_on_this_channel
+                }
+            )
         } else if (!isSubscribed && roomTypeOf(chatRoomType) !is RoomType.DirectMessage) {
             input_container.isVisible = false
             button_join_chat.isVisible = true
             button_join_chat.setOnClickListener { presenter.joinChat(chatRoomId) }
         } else {
+            input_container.isVisible = true
+            text_room_is_read_only.isVisible = false
             button_send.isVisible = false
             button_show_attachment_options.alpha = 1f
             button_show_attachment_options.isVisible = true

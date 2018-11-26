@@ -6,6 +6,7 @@ import chat.rocket.android.members.uimodel.MemberUiModel
 import chat.rocket.android.members.uimodel.MemberUiModelMapper
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.retryDB
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
@@ -38,7 +39,7 @@ class MembersPresenter @Inject constructor(
                 view.showLoading()
                 dbManager.getRoom(roomId)?.let {
                     val members =
-                        client.getMembers(roomId, roomTypeOf(it.chatRoom.type), offset, 60)
+                            client.getMembers(roomId, roomTypeOf(it.chatRoom.type), offset, 60)
                     val memberUiModels = mapper.mapToUiModelList(members.result)
                     view.showMembers(memberUiModels, members.total)
                     offset += 1 * 60L

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.about.ui.AboutFragment
@@ -72,7 +73,20 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             resources.getStringArray(R.array.settings_actions)[1] ->
                 activity?.startActivity(Intent(activity, PasswordActivity::class.java))
 
-            resources.getStringArray(R.array.settings_actions)[2] -> {
+            resources.getStringArray(R.array.settings_actions)[2] -> shareApp()
+
+            resources.getStringArray(R.array.settings_actions)[3] -> showAppOnStore()
+
+            resources.getStringArray(R.array.settings_actions)[4] -> contactSupport()
+
+            resources.getStringArray(R.array.settings_actions)[5] -> activity?.startActivity(
+                context?.webViewIntent(
+                    getString(R.string.license_url),
+                    getString(R.string.title_licence)
+                )
+            )
+
+            resources.getStringArray(R.array.settings_actions)[6] -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
                     TAG_ABOUT_FRAGMENT,
                     R.id.fragment_container
@@ -80,17 +94,14 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                     AboutFragment.newInstance()
                 }
             }
+        }
+    }
 
-            resources.getStringArray(R.array.settings_actions)[3] -> shareApp()
-
-            resources.getStringArray(R.array.settings_actions)[4] -> activity?.startActivity(
-                context?.webViewIntent(
-                    getString(R.string.license_url),
-                    getString(R.string.title_licence)
-                )
-            )
-
-            resources.getStringArray(R.array.settings_actions)[5] -> contactSupport()
+    private fun showAppOnStore() {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, getString(R.string.market_link).toUri()))
+        } catch (error: ActivityNotFoundException) {
+            startActivity(Intent(Intent.ACTION_VIEW, getString(R.string.play_store_link).toUri()))
         }
     }
 
