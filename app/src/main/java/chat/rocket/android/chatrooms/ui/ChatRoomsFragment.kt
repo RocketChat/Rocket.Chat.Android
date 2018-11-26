@@ -462,27 +462,27 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 setupWidechatSearchView()
 
                 val serverUrl = serverInteractor.get()
-                val myselfUsername = userHelper.username().toString()
-                val myAvatarUrl = serverUrl?.avatarUrl(myselfUsername)
+                val user = userHelper.user()
+                val myAvatarUrl: String? =  serverUrl?.avatarUrl(user?.username ?: "")
 
-                profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
-                profileButton?.setImageURI(myAvatarUrl)
-                profileButton?.setOnClickListener { v ->
+                    profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
+                    profileButton?.setImageURI(myAvatarUrl)
+                    profileButton?.setOnClickListener { v ->
 
-                    searchView?.clearFocus()
-                    val newFragment = ProfileFragment()
-                    val fragmentManager = fragmentManager
-                    val fragmentTransaction = fragmentManager!!.beginTransaction()
-                    fragmentTransaction.replace(R.id.fragment_container, newFragment)
-                    fragmentTransaction.addToBackStack(null)
-                    fragmentTransaction.commit()
+                        searchView?.clearFocus()
+                        val newFragment = ProfileFragment()
+                        val fragmentManager = fragmentManager
+                        val fragmentTransaction = fragmentManager!!.beginTransaction()
+                        fragmentTransaction.replace(R.id.fragment_container, newFragment)
+                        fragmentTransaction.addToBackStack(null)
+                        fragmentTransaction.commit()
+                    }
                 }
+            } else {
+                (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_chats)
+                (activity as MainActivity).setupNavigationView()
             }
-        } else {
-            (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_chats)
-            (activity as MainActivity).setupNavigationView()
         }
-    }
 
     private fun queryChatRoomsByName(name: String?): Boolean {
         if (name.isNullOrEmpty()) {
