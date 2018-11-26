@@ -349,4 +349,6 @@
     <string name="submit">Submit</string>
     <!--TODO - Add proper translation-->
     <string name="required">*required</string>
+    <!--TODO - Add proper translation-->
+    <string name="report_sent">Your report has been sent!</string>
 </resources>

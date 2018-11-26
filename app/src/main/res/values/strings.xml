@@ -357,4 +357,5 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <!-- Report -->
     <string name="submit">Submit</string>
     <string name="required">*required</string>
+    <string name="report_sent">Your report has been sent!</string>
 </resources>

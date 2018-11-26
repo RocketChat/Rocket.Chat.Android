@@ -380,6 +380,7 @@ class ChatRoomPresenter @Inject constructor(
                 retryIO("reportMessage($messageId, $description)") {
                     client.reportMessage(messageId = messageId, description = description)
                 }
+                view.showMessage(R.string.report_sent)
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
             }

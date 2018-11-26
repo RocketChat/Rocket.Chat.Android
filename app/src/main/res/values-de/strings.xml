@@ -338,6 +338,7 @@
     <string name="timezone">Timezone</string> <!--TODO - Add proper translation-->
 
     <!-- Report -->
-    <string name="submit">Submit</string>
-    <string name="required">*required</string>
+    <string name="submit">Submit</string> <!--TODO - Add proper translation-->
+    <string name="required">*required</string> <!--TODO - Add proper translation-->
+    <string name="report_sent">Your report has been sent!</string> <!--TODO - Add proper translation-->
 </resources>
