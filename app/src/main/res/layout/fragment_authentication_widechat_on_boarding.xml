@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:gravity="left"
-        android:text="Connecting to your server.."
+        android:text="Connecting..."
         android:textColor="@color/colorWhite"
         android:autoSizeTextType="uniform"
         app:layout_constraintStart_toStartOf="parent"

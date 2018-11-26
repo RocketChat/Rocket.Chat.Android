@@ -206,7 +206,7 @@
     <string name="action_msg_unpin">Messaggio normale</string>
     <string name="action_msg_star">Messaggio preferito</string>
     <string name="action_msg_unstar">Messaggio normale</string>
-    <string name="action_msg_share">Condividi</string>
+    <string name="action_msg_invite">Condividi</string>
     <string name="action_title_editing">Modifica messaggio</string>
     <string name="action_msg_add_reaction">Aggiungi reazione</string>
     <string name="action_msg_copy_permalink">Copia permalink</string>3
@@ -308,7 +308,7 @@
     <string name="header_unknown">Sconosciuto</string>
 
     <!--Notifications-->
-    <string name="share_label">Modifica messaggio condiviso</string>
+    <string name="invite_label">Modifica messaggio condiviso</string>
     <string name="notif_action_reply_hint">Risposta</string>
     <string name="notif_error_sending">La risposta è fallita. Per favore riprova.</string>
     <string name="notif_success_sending">Messaggio inviato a %1$s!</string>
