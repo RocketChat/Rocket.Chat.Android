@@ -217,7 +217,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             hideUpdateAvatarOptions()
         }
 
-        button_take_photo.setOnClickListener {
+        button_take_a_photo.setOnClickListener {
             dispatchTakePicture(REQUEST_CODE_FOR_PERFORM_CAMERA)
             hideUpdateAvatarOptions()
         }

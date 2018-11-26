@@ -62,10 +62,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         setContentView(R.layout.activity_main)
 
         refreshPushToken()
-
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
-
-        println("ChatRoomId: $chatRoomId")
         presenter.clearNotificationsForChatroom(chatRoomId)
 
         presenter.connect()
