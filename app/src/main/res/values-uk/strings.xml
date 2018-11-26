@@ -224,6 +224,8 @@
     <string name="action_msg_add_reaction">Відреагувати</string>
     <!-- TODO - Add proper translation -->
     <string name="action_msg_copy_permalink">Copy permalink</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">Report</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редагування заборонено</string>
@@ -338,4 +340,10 @@
     <string name="message">Message</string>
     <!-- TODO - Add proper translation -->
     <string name="timezone">Timezone</string>
+
+    <!-- Report -->
+    <!--TODO - Add proper translation-->
+    <string name="submit">Submit</string>
+    <!--TODO - Add proper translation-->
+    <string name="required">*required</string>
 </resources>

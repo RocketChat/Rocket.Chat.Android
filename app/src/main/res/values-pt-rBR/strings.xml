@@ -225,6 +225,8 @@
     <string name="action_title_editing">Editando mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
     <string name="action_msg_copy_permalink">Copiar permalink</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">Reportar</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Edição não permitida</string>
@@ -338,4 +340,10 @@
     <string name="message">Mensagem</string>
     <!-- TODO - Add proper translation -->
     <string name="timezone">Fuso horário</string>
+
+    <!-- Report -->
+    <!--TODO - Add proper translation-->
+    <string name="submit">Enviar</string>
+    <!--TODO - Add proper translation-->
+    <string name="required">*obrigatório</string>
 </resources>

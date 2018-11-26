@@ -228,6 +228,8 @@
     <string name="action_title_editing">メッセージの編集</string>
     <string name="action_msg_add_reaction">リアクションする</string>
     <string name="action_msg_copy_permalink">パーマリンクのコピー</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">Report</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">編集は許可されていません</string>
@@ -341,4 +343,10 @@
     <string name="message">Message</string>
     <!-- TODO - Add proper translation -->
     <string name="timezone">Timezone</string>
+
+    <!-- Report -->
+    <!--TODO - Add proper translation-->
+    <string name="submit">Submit</string>
+    <!--TODO - Add proper translation-->
+    <string name="required">*required</string>
 </resources>

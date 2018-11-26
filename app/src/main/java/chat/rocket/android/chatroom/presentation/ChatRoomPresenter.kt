@@ -60,6 +60,7 @@ import chat.rocket.core.internal.rest.joinChat
 import chat.rocket.core.internal.rest.markAsRead
 import chat.rocket.core.internal.rest.messages
 import chat.rocket.core.internal.rest.pinMessage
+import chat.rocket.core.internal.rest.reportMessage
 import chat.rocket.core.internal.rest.runCommand
 import chat.rocket.core.internal.rest.searchMessages
 import chat.rocket.core.internal.rest.sendMessage
@@ -369,6 +370,18 @@ class ChatRoomPresenter @Inject constructor(
                 jobSchedulerInteractor.scheduleSendingMessages()
             } finally {
                 view.enableSendMessageButton()
+            }
+        }
+    }
+
+    fun reportMessage(messageId: String, description: String) {
+        launchUI(strategy) {
+            try {
+                retryIO("reportMessage($messageId, $description)") {
+                    client.reportMessage(messageId = messageId, description = description)
+                }
+            } catch (ex: RocketChatException) {
+                Timber.e(ex)
             }
         }
     }
