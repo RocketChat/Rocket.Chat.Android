@@ -24,9 +24,9 @@
     <string name="title_create_channel">Crea Canale</string>
     <string name="title_are_you_sure">Sei sicuro che vuoi uscire ?</string>
     <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
-    <string name="title_topic">Sujet</string> <!-- TODO add translation -->
-    <string name="title_announcement">Annonce</string> <!-- TODO add translation -->
-    <string name="title_description">La description</string> <!-- TODO add translation -->
+    <string name="title_topic">Argomento</string>
+    <string name="title_announcement">Annuncio</string>
+    <string name="title_description">Descrizione</string>
 
     <!-- Actions -->
     <string name="action_connect">Collega</string>
@@ -155,6 +155,9 @@
     <string name="msg_two_factor_authentication">Autenticazione a 2 fattori (2FA)</string>
     <string name="msg__your_2fa_code">Qual è il tuo codice 2FA ?</string>
     <string name="msg_permalink_copied">Permalink copiato</string>
+    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s ha reagito con %2$s</item>
         <item quantity="other">%1$s ha reagito con %2$s</item>
