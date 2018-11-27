@@ -8,8 +8,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.provider.MediaStore
 import android.text.SpannableStringBuilder
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -23,6 +25,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
+import androidx.core.content.FileProvider
 import androidx.core.text.bold
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -48,6 +51,7 @@ import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.EmojiSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
+import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.draw.main.ui.DRAWING_BYTE_ARRAY_EXTRA_DATA
 import chat.rocket.android.draw.main.ui.DrawingActivity
 import chat.rocket.android.emoji.ComposerEditText
@@ -73,6 +77,8 @@ import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extension.createImageFile
+import chat.rocket.android.util.extensions.getBitmpap
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -86,6 +92,9 @@ import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
+import timber.log.Timber
+import java.io.File
+import java.io.IOException
 import kotlinx.android.synthetic.main.reaction_praises_list_item.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
@@ -125,6 +134,7 @@ private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 private const val REQUEST_CODE_FOR_DRAW = 101
+private const val REQUEST_CODE_FOR_PERFORM_CAMERA = 102
 private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 private const val BUNDLE_CHAT_ROOM_IS_CREATOR = "chat_room_is_creator"
@@ -192,6 +202,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     internal val description by lazy { dialogView.findViewById<EditText>(R.id.text_file_description) }
     internal val audioVideoAttachment by lazy { dialogView.findViewById<FrameLayout>(R.id.audio_video_attachment) }
     internal val textFile by lazy { dialogView.findViewById<TextView>(R.id.text_file_name) }
+    private var takenPhotoUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -280,12 +291,19 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
-        if (resultData != null && resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                REQUEST_CODE_FOR_PERFORM_SAF -> showFileAttachmentDialog(resultData.data)
-                REQUEST_CODE_FOR_DRAW -> showDrawAttachmentDialog(
-                    resultData.getByteArrayExtra(DRAWING_BYTE_ARRAY_EXTRA_DATA)
-                )
+                REQUEST_CODE_FOR_PERFORM_CAMERA -> takenPhotoUri?.let { uri ->
+                    uri.getBitmpap(requireContext())?.let { bitmap ->
+                        presenter.uploadImage(chatRoomId, "image/png", uri, bitmap, "")
+                    }
+                }
+                REQUEST_CODE_FOR_PERFORM_SAF -> resultData?.data?.let {
+                    showFileAttachmentDialog(it)
+                }
+                REQUEST_CODE_FOR_DRAW -> resultData?.getByteArrayExtra(DRAWING_BYTE_ARRAY_EXTRA_DATA)?.let {
+                    showDrawAttachmentDialog(it)
+                }
             }
         }
     }
@@ -380,17 +398,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         empty_chat_view.isVisible = adapter.itemCount == 0
     }
 
-    override fun onRoomUpdated(
-        userCanPost: Boolean,
-        channelIsBroadcast: Boolean,
-        userCanMod: Boolean
-    ) {
+    override fun onRoomUpdated(roomUiModel: RoomUiModel) {
         // TODO: We should rely solely on the user being able to post, but we cannot guarantee
         // that the "(channels|groups).roles" endpoint is supported by the server in use.
         ui {
-            setupMessageComposer(userCanPost)
-            isBroadcastChannel = channelIsBroadcast
-            if (isBroadcastChannel && !userCanMod) {
+            setupToolbar(roomUiModel.name.toString())
+            setupMessageComposer(roomUiModel)
+            isBroadcastChannel = roomUiModel.broadcast
+            if (isBroadcastChannel && !roomUiModel.canModerate) {
                 disableMenu = true
                 activity?.invalidateOptionsMenu()
             }
@@ -527,7 +542,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             button_send.isEnabled = true
             text_message.isEnabled = true
-            clearMessageComposition(true)
         }
     }
 
@@ -769,12 +783,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun onJoined(userCanPost: Boolean) {
+    override fun onJoined(roomUiModel: RoomUiModel) {
         ui {
             input_container.isVisible = true
             button_join_chat.isVisible = false
             isSubscribed = true
-            setupMessageComposer(userCanPost)
         }
     }
 
@@ -807,8 +820,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    private fun setupMessageComposer(canPost: Boolean) {
-        if (!canPost) {
+    private fun setupMessageComposer(roomUiModel: RoomUiModel) {
+        if (isReadOnly || !roomUiModel.writable) {
             text_room_is_read_only.isVisible = true
             input_container.isVisible = false
             text_room_is_read_only.setText(
@@ -824,6 +837,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_join_chat.isVisible = true
             button_join_chat.setOnClickListener { presenter.joinChat(chatRoomId) }
         } else {
+            input_container.isVisible = true
+            text_room_is_read_only.isVisible = false
             button_send.isVisible = false
             button_show_attachment_options.alpha = 1f
             button_show_attachment_options.isVisible = true
@@ -880,7 +895,19 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 hideAttachmentOptions()
             }
 
-            button_files.setOnClickListener {
+            button_add_reaction.setOnClickListener { _ ->
+                openEmojiKeyboardPopup()
+            }
+
+            button_take_a_photo.setOnClickListener {
+                dispatchTakePictureIntent()
+
+                handler.postDelayed({
+                    hideAttachmentOptions()
+                }, 400)
+            }
+
+            button_attach_a_file.setOnClickListener {
                 handler.postDelayed({
                     presenter.selectFile()
                 }, 200)
@@ -888,10 +915,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 handler.postDelayed({
                     hideAttachmentOptions()
                 }, 400)
-            }
-
-            button_add_reaction.setOnClickListener { _ ->
-                openEmojiKeyboardPopup()
             }
 
             button_drawing.setOnClickListener {
@@ -907,6 +930,26 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 handler.postDelayed({
                     hideAttachmentOptions()
                 }, 400)
+            }
+        }
+    }
+
+    private fun dispatchTakePictureIntent() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Create the File where the photo should go
+            val photoFile: File? = try {
+                activity?.createImageFile()
+            } catch (ex: IOException) {
+                Timber.e(ex)
+                null
+            }
+            // Continue only if the File was successfully created
+            photoFile?.also {
+                takenPhotoUri = FileProvider.getUriForFile(
+                    requireContext(), "chat.rocket.android.fileprovider", it
+                )
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, takenPhotoUri)
+                startActivityForResult(takePictureIntent, REQUEST_CODE_FOR_PERFORM_CAMERA)
             }
         }
     }

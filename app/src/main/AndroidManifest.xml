@@ -110,6 +110,15 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="12ac6e94f850aaffcdff52001af77ca415d06a43" />
-    </application>
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="chat.rocket.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
 </manifest>

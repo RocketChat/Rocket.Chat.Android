@@ -39,7 +39,7 @@
     <string name="action_create_channel">Créer salon</string>
     <string name="action_create">Créer</string>
     <string name="action_logout">Se déconnecter</string>
-    <string name="action_files">Fichiers</string>
+    <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">Confirmer le mot de passe</string>
     <string name="action_join_chat">Rejoignez le chat</string>
     <string name="action_add_account">Ajouter un compte</string>
@@ -50,7 +50,7 @@
     <string name="action_drawing">Dessin</string>
     <string name="action_save_to_gallery">Sauvegarder vers la gallerie</string>
     <string name="action_select_photo_from_gallery">Sélectionner depuis la gallerie</string>
-    <string name="action_take_photo">Prendre une photo</string>
+    <string name="action_take_a_photo">Prendre une photo</string>
     <string name="action_reset_avatar">Réinitialiser l\'avatar</string>
     <string name="action_connect_server">Connect with a server</string> <!-- TODO Add translation -->
     <string name="action_join_community">Join in the community</string> <!-- TODO Add translation -->
