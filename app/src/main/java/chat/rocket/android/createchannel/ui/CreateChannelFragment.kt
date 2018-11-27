@@ -37,6 +37,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 // WIDECHAT
+import android.widget.TextView
+import android.widget.Switch
 import androidx.appcompat.widget.SearchView
 import chat.rocket.android.helper.Constants
 
@@ -82,6 +84,9 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         setupViewListeners()
         setupRecyclerView()
         subscribeEditTexts()
+        if (Constants.WIDECHAT) {
+            setupWidechatView(view)
+        }
 
         analyticsManager.logScreenView(ScreenViewEvent.CreateChannel)
     }
@@ -176,11 +181,15 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
 
     override fun prepareToShowChatList() {
         with(activity as MainActivity) {
-            setCheckedNavDrawerItem(R.id.menu_action_chats)
-            openDrawer()
-            getDrawerLayout().postDelayed(1000) {
-                closeDrawer()
+            if (Constants.WIDECHAT) {
                 createChannelPresenter.toChatList()
+            } else {
+                setCheckedNavDrawerItem(R.id.menu_action_chats)
+                openDrawer()
+                getDrawerLayout().postDelayed(1000) {
+                    closeDrawer()
+                    createChannelPresenter.toChatList()
+                }
             }
         }
     }
@@ -209,6 +218,24 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         }
         (activity as AppCompatActivity?)?.supportActionBar?.title =
                 getString(R.string.title_create_channel)
+    }
+
+    private fun setupWidechatView(view: View?) {
+        var chType: TextView? = view?.findViewById(R.id.text_channel_type)
+        chType?.isVisible = false
+        var chDesc: TextView? = view?.findViewById(R.id.text_channel_type_description)
+        chDesc?.isVisible = false
+        var chTypeSwitch: Switch? = view?.findViewById(R.id.switch_channel_type)
+        chTypeSwitch?.isVisible = false
+
+        var readOnly: TextView? = view?.findViewById(R.id.text_read_only)
+        readOnly?.isVisible = false
+        var readOnlyDesc: TextView? = view?.findViewById(R.id.text_read_only_description)
+        readOnlyDesc?.isVisible = false
+        var readOnlySwitch: Switch? = view?.findViewById(R.id.switch_read_only)
+        readOnlySwitch?.isVisible = false
+
+        channelType = RoomType.PRIVATE_GROUP
     }
 
     private fun setupViewListeners() {
