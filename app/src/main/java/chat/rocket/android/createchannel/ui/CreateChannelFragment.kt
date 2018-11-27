@@ -84,6 +84,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         setupViewListeners()
         setupRecyclerView()
         subscribeEditTexts()
+        // WIDECHAT - remove options for public rooms and read only
         if (Constants.WIDECHAT) {
             setupWidechatView(view)
         }
@@ -181,6 +182,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
 
     override fun prepareToShowChatList() {
         with(activity as MainActivity) {
+            // WIDECHAT - no nav drawer in widechat client
             if (Constants.WIDECHAT) {
                 createChannelPresenter.toChatList()
             } else {
