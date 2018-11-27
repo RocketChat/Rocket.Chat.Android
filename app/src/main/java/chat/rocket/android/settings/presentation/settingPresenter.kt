@@ -28,7 +28,10 @@ class settingPresenter @Inject constructor(
 
 
 
-// this method is written to execute download data call
+    /**
+     * Tells the status of downloaded data. Whether it is already requested , completed or user is requesting it now.
+     *
+     */
     fun downloadData() {
         launchUI(strategy) {
             view.showLoading()
