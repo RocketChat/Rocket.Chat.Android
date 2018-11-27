@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:text="@string/request_download"
         android:layout_margin="@dimen/padding_quote"
-        android:layout_alignParentTop="true"
         android:textColor="@color/color_black"
         />
 

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.about.ui.AboutFragment
@@ -25,6 +26,7 @@ import chat.rocket.android.settings.presentation.settingPresenter
 import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.dialog_download.view.*
+import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
@@ -32,21 +34,23 @@ import kotlin.reflect.KClass
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
 class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListener {
+
+
     @Inject
     lateinit var presenter: settingPresenter
 
     @Inject
     lateinit var analyticsManager: AnalyticsManager
 
-   override fun onCreate(savedInstanceState: Bundle?) {
-       AndroidSupportInjection.inject(this)
-       super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = container?.inflate(R.layout.fragment_settings)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,8 +70,8 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
         when (parent?.getItemAtPosition(position).toString()) {
             resources.getString(R.string.title_preferences) -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
-                    TAG_PREFERENCES_FRAGMENT,
-                    R.id.fragment_container
+                        TAG_PREFERENCES_FRAGMENT,
+                        R.id.fragment_container
                 ) {
                     PreferencesFragment.newInstance()
                 }
@@ -76,8 +80,8 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                 startNewActivity(PasswordActivity::class)
             resources.getString(R.string.title_about) -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
-                    TAG_ABOUT_FRAGMENT,
-                    R.id.fragment_container
+                        TAG_ABOUT_FRAGMENT,
+                        R.id.fragment_container
                 ) {
                     AboutFragment.newInstance()
                 }
@@ -122,30 +126,17 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
         fun newInstance() = SettingsFragment()
     }
 
-    override fun showDownloadDialog(data : String?) {
-        ui {
-            val context = this
-            val builder = AlertDialog.Builder(activity)
-            val view = layoutInflater.inflate(R.layout.dialog_download, null)
-            if (data.equals("UserDataDownload_RequestExisted_Text"))
-                view.text_download_description.textContent = resources.getString(R.string.UserDataDownload_RequestExisted_Text);
-            else if (data.equals("UserDataDownload_CompletedRequestExisted_Text"))
-                view.text_download_description.textContent = resources.getString(R.string.UserDataDownload_CompletedRequestExisted_Text);
-            else
-                view.text_download_description.textContent = resources.getString(R.string.UserDataDownload_Requested_Text);
 
+
+    override fun showMessage(resId: Int) {
+        ui { val builder = AlertDialog.Builder(activity)
+            val view = layoutInflater.inflate(R.layout.dialog_download, null)
+            view.text_download_description.textContent = resources.getString(resId);
             builder.setView(view)
             builder.setPositiveButton(R.string.msg_ok) { dialog, p1 ->
                 dialog.cancel()
             }
-
-            builder.show()
-        }
-    }
-
-
-    override fun showMessage(resId: Int) {
-        ui { showToast(resId) }
+            builder.show() }
     }
 
     override fun showMessage(message: String) {
@@ -153,4 +144,17 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+
+
+    override fun showLoading() {
+        ui { view_loading.isVisible = true }
+    }
+
+    override fun hideLoading() {
+        ui {
+            if (view_loading != null) {
+                view_loading.isVisible = false
+            }
+        }
+    }
 }

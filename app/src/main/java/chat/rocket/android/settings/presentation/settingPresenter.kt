@@ -1,5 +1,6 @@
 package chat.rocket.android.settings.presentation
 
+import chat.rocket.android.R
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
@@ -27,25 +28,22 @@ class settingPresenter @Inject constructor(
 
 
 
-
+// this method is written to execute download data call
     fun downloadData() {
         launchUI(strategy) {
-            //view.showLoading()
+            view.showLoading()
             try {
                 withContext(DefaultDispatcher) {
-                    // REMARK: Backend API is only working with a lowercase hash.
-                    // https://github.com/RocketChat/Rocket.Chat/issues/12573
 
                     val me = retryIO("me") { client.me() }
                     val response = retryIO { client.requestDataDownload(me.id) }
-                   // view.hideLoading()
+                   view.hideLoading()
                     if(response.requested){
-                    view.showDownloadDialog("UserDataDownload_Requested_Text")}
+                    view.showMessage(R.string.UserDataDownload_Requested_Text)}
                    else if(response.status.equals("completed")){
-                        view.showDownloadDialog("UserDataDownload_CompletedRequestExisted_Text")
+                        view.showMessage(R.string.UserDataDownload_CompletedRequestExisted_Text)
                     }else
-                        view.showDownloadDialog("UserDataDownload_RequestExisted_Text")
-
+                        view.showMessage(R.string.UserDataDownload_RequestExisted_Text)
                 }
             } catch (exception: Exception) {
                 exception.message?.let {
@@ -54,7 +52,7 @@ class settingPresenter @Inject constructor(
                     view.showGenericErrorMessage()
                 }
             } finally {
-              //  view.hideLoading()
+                view.hideLoading()
             }
         }
     }
