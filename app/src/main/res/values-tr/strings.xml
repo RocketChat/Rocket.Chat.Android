@@ -35,7 +35,7 @@
     <string name="action_create_channel">Yeni Kanal Oluştur</string>
     <string name="action_create">Oluştur</string>
     <string name="action_logout">Çıkış Yap</string>
-    <string name="action_files">Dosyalar</string>
+    <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">Şifre Değişikliğini Onaylayın</string>
     <string name="action_join_chat">Sohbete Bağlan</string>
     <string name="action_add_account">Hesap Ekle</string>
@@ -46,7 +46,7 @@
     <string name="action_drawing">Çizim</string>
     <string name="action_save_to_gallery">Galeriye kaydet</string>
     <string name="action_select_photo_from_gallery">Galeriden resim seç</string>
-    <string name="action_take_photo">Fotoğraf çek</string>
+    <string name="action_take_a_photo">Fotoğraf çek</string>
     <string name="action_reset_avatar">Avatarı kaldır</string>
     <string name="action_connect_server">Connect with a server</string> <!-- TODO Add translation -->
     <string name="action_join_community">Join in the community</string> <!-- TODO Add translation -->
@@ -175,6 +175,11 @@
     <string name="msg_permalink_copied">Permalink copied</string>
     <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
+    <!-- TODO - Add proper translation -->
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reacted with %2$s</item>
+        <item quantity="other">%1$s reacted with %2$s</item>
+    </plurals>
     
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">İstatistik takibi</string>

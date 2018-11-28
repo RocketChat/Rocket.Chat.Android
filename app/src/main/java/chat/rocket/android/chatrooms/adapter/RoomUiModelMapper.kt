@@ -8,9 +8,8 @@ import androidx.core.text.color
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.db.model.ChatRoom
-import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.infrastructure.checkIfMyself
 import chat.rocket.android.server.domain.GetCurrentUserInteractor
+import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.showLastMessage
 import chat.rocket.android.server.domain.useRealName
@@ -30,7 +29,8 @@ class RoomUiModelMapper(
     private val context: Application,
     private val settings: PublicSettings,
     private val userInteractor: GetCurrentUserInteractor,
-    private val serverUrl: String
+    private val serverUrl: String,
+    private val permissions: PermissionsInteractor
 ) {
     private val nameUnreadColor = ContextCompat.getColor(context, R.color.colorPrimaryText)
     private val nameColor = ContextCompat.getColor(context, R.color.colorSecondaryText)
@@ -97,7 +97,9 @@ class RoomUiModelMapper(
                 avatar = serverUrl.avatarUrl(name!!, isGroupOrChannel = true),
                 lastMessage = if(showLastMessage) { mapLastMessage(lastMessage?.sender?.id, lastMessage?.sender?.username,
                         lastMessage?.sender?.name, lastMessage?.message,
-                        isDirectMessage = type is RoomType.DirectMessage)} else { null }
+                        isDirectMessage = type is RoomType.DirectMessage)} else { null },
+                muted = muted.orEmpty(),
+                writable = isChannelWritable(muted)
             )
         }
     }
@@ -133,9 +135,16 @@ class RoomUiModelMapper(
                 alert = isUnread,
                 lastMessage = lastMessageMarkdown,
                 status = status,
-                username = if (type is RoomType.DirectMessage) name else null
+                username = if (type is RoomType.DirectMessage) name else null,
+                muted = muted.orEmpty(),
+                writable = isChannelWritable(muted)
             )
         }
+    }
+
+    private fun isChannelWritable(muted: List<String>?): Boolean {
+        val canWriteToReadOnlyChannels = permissions.canPostToReadOnlyChannels()
+        return canWriteToReadOnlyChannels || !muted.orEmpty().contains(currentUser?.username)
     }
 
     private fun roomType(type: String): String {
