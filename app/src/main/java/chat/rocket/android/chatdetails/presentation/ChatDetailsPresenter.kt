@@ -5,6 +5,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.retryIO
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.getInfo
@@ -25,7 +26,11 @@ class ChatDetailsPresenter @Inject constructor(
     fun getDetails(chatRoomId: String, chatRoomType: String) {
         launchUI(strategy) {
             try {
-                view.displayDetails(roomToChatDetails(client.getInfo(chatRoomId, null, roomTypeOf(chatRoomType))))
+                val room = retryIO("getInfo($chatRoomId, null, $chatRoomType") {
+                    client.getInfo(chatRoomId, null, roomTypeOf(chatRoomType))
+                }
+
+                view.displayDetails(roomToChatDetails(room))
             } catch(e: Exception) {
                 e.message.let {
                     view.showMessage(it!!)

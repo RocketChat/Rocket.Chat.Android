@@ -114,27 +114,29 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
         }
     }
 
-    private fun addOptions(adapter: ChatDetailsAdapter) {
-        if (!disableMenu) {
-            adapter.addOption(getString(R.string.title_files), R.drawable.ic_files_24dp) {
-                presenter.toFiles(chatRoomId!!)
+    private fun addOptions(adapter: ChatDetailsAdapter?) {
+        adapter?.let {
+            if (!disableMenu) {
+                it.addOption(getString(R.string.title_files), R.drawable.ic_files_24dp) {
+                    presenter.toFiles(chatRoomId!!)
+                }
             }
-        }
 
-        if (chatRoomType != RoomType.DIRECT_MESSAGE && !disableMenu) {
-            adapter.addOption(getString(R.string.msg_mentions), R.drawable.ic_at_black_20dp) {
-                presenter.toMentions(chatRoomId!!)
+            if (chatRoomType != RoomType.DIRECT_MESSAGE && !disableMenu) {
+                it.addOption(getString(R.string.msg_mentions), R.drawable.ic_at_black_20dp) {
+                    presenter.toMentions(chatRoomId!!)
+                }
+                it.addOption(getString(R.string.title_members), R.drawable.ic_people_outline_black_24dp) {
+                    presenter.toMembers(chatRoomId!!)
+                }
             }
-            adapter.addOption(getString(R.string.title_members), R.drawable.ic_people_outline_black_24dp) {
-                presenter.toMembers(chatRoomId!!)
-            }
-        }
 
-        adapter.addOption(getString(R.string.title_favorite_messages), R.drawable.ic_star_border_white_24dp) {
-            presenter.toFavorites(chatRoomId!!)
-        }
-        adapter.addOption(getString(R.string.title_pinned_messages), R.drawable.ic_action_message_pin_24dp) {
-            presenter.toPinned(chatRoomId!!)
+            it.addOption(getString(R.string.title_favorite_messages), R.drawable.ic_star_border_white_24dp) {
+                presenter.toFavorites(chatRoomId!!)
+            }
+            it.addOption(getString(R.string.title_pinned_messages), R.drawable.ic_action_message_pin_24dp) {
+                presenter.toPinned(chatRoomId!!)
+            }
         }
     }
 
@@ -169,7 +171,7 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
     private fun setupOptions() {
         ui {
             if (options.adapter == null) {
-                adapter = ChatDetailsAdapter(context!!)
+                adapter = ChatDetailsAdapter()
                 options.adapter = adapter
 
                 with(options) {
@@ -185,7 +187,7 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
                     isNestedScrollingEnabled = false
                 }
             }
-            addOptions(adapter!!)
+            addOptions(adapter)
         }
     }
 

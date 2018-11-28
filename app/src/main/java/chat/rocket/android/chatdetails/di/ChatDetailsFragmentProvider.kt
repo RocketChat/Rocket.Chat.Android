@@ -7,6 +7,7 @@ import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class ChatDetailsFragmentProvider {
+
     @ContributesAndroidInjector(modules = [ChatDetailsFragmentModule::class])
     @PerFragment
     abstract fun providesChatDetailsFragment(): ChatDetailsFragment

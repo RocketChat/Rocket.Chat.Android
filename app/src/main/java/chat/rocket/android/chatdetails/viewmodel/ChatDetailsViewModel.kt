@@ -8,6 +8,7 @@ import chat.rocket.android.chatdetails.domain.ChatDetails
 import chat.rocket.android.db.ChatRoomDao
 
 class ChatDetailsViewModel(private val chatRoomDao: ChatRoomDao): ViewModel() {
+
     fun getDetails(chatRoomId: String): LiveData<ChatDetails> {
         return Transformations.switchMap(chatRoomDao.get(chatRoomId)) { room ->
             val entity = room.chatRoom

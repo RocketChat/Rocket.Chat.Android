@@ -8,6 +8,7 @@ import dagger.Provides
 
 @Module
 class ChatDetailsModule {
+
     @Provides
     @PerActivity
     fun providesNavigator(activity: ChatDetailsActivity) = ChatDetailsNavigator(activity)

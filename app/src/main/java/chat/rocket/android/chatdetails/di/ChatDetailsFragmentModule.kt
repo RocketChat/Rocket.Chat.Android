@@ -13,6 +13,7 @@ import kotlinx.coroutines.experimental.Job
 
 @Module
 class ChatDetailsFragmentModule {
+
     @Provides
     @PerFragment
     fun provideJob() = Job()

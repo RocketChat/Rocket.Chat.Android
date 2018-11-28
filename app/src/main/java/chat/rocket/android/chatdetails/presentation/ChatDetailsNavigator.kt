@@ -10,6 +10,7 @@ import chat.rocket.android.pinnedmessages.ui.TAG_PINNED_MESSAGES_FRAGMENT
 import chat.rocket.android.util.extensions.addFragmentBackStack
 
 class ChatDetailsNavigator(internal val activity: ChatDetailsActivity) {
+
     fun toMembersList(chatRoomId: String) {
         activity.addFragmentBackStack(TAG_MEMBERS_FRAGMENT, R.id.fragment_container) {
             chat.rocket.android.members.ui.newInstance(chatRoomId)
