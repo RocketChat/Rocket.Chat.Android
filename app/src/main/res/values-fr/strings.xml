@@ -166,9 +166,9 @@
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
     <!--download message-->
     <string name="request_download">Télécharger le fichier demandé</string>
-    <string name="UserDataDownload_Requested_Text">Votre fichier de données sera généré. Un lien pour le télécharger sera envoyé à votre adresse e-mail lorsque vous serez prêt.</string>
-    <string name="UserDataDownload_RequestExisted_Text">Votre fichier de données est déjà généré. Un lien pour le télécharger sera envoyé à votre adresse e-mail lorsque vous serez prêt.</string>
-    <string name="UserDataDownload_CompletedRequestExisted_Text">Votre fichier de données a déjà été généré. Vérifiez votre compte de messagerie pour le lien de téléchargement.</string>
+    <string name="msg_download_data_request">Votre fichier de données sera généré. Un lien pour le télécharger sera envoyé à votre adresse e-mail lorsque vous serez prêt.</string>
+    <string name="msg_download_data_request_already_exist">Votre fichier de données est déjà généré. Un lien pour le télécharger sera envoyé à votre adresse e-mail lorsque vous serez prêt.</string>
+    <string name="msg_download_data_request_completed">Votre fichier de données a déjà été généré. Vérifiez votre compte de messagerie pour le lien de téléchargement.</string>
 
     <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">

@@ -161,9 +161,9 @@
     <string name="msg_view_less">隠す</string>
     <string name="msg_muted_on_this_channel">あなたはこのチャンネルでミュートされています</string>
     <string name="request_download">要求されたファイルをダウンロードする</string>
-    <string name="UserDataDownload_Requested_Text">あなたのデータファイルが生成されます。 準備ができたら、ダウンロードするためのリンクが電子メールアドレスに送信されます。</string>
-    <string name="UserDataDownload_RequestExisted_Text">あなたのデータファイルはすでに生成されています。 準備ができたら、ダウンロードするためのリンクが電子メールアドレスに送信されます。</string>
-    <string name="UserDataDownload_CompletedRequestExisted_Text">あなたのデータファイルはすでに生成されています。 電子メールアカウントでダウンロードリンクを確認してください。</string>
+    <string name="msg_download_data_request">あなたのデータファイルが生成されます。 準備ができたら、ダウンロードするためのリンクが電子メールアドレスに送信されます。</string>
+    <string name="msg_download_data_request_already_exist">あなたのデータファイルはすでに生成されています。 準備ができたら、ダウンロードするためのリンクが電子メールアドレスに送信されます。</string>
+    <string name="msg_download_data_request_completed">あなたのデータファイルはすでに生成されています。 電子メールアカウントでダウンロードリンクを確認してください。</string>
 
     <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">

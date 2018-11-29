@@ -160,9 +160,9 @@
     <string name="msg__your_2fa_code">आपका 2FA कोड क्या है?</string>
 
     <string name="request_download">अनुरोध फ़ाइल डाउनलोड करें</string>
-    <string name="UserDataDownload_Requested_Text">आपकी डेटा फ़ाइल जेनरेट की जाएगी। इसे डाउनलोड करने के लिए एक लिंक तैयार होने पर आपके ईमेल पते पर भेजा जाएगा।</string>
-    <string name="UserDataDownload_RequestExisted_Text">आपकी डेटा फ़ाइल पहले से ही उत्पन्न हो रही है। इसे डाउनलोड करने के लिए एक लिंक तैयार होने पर आपके ईमेल पते पर भेजा जाएगा।</string>
-    <string name="UserDataDownload_CompletedRequestExisted_Text">आपकी डेटा फ़ाइल पहले ही जेनरेट की गई थी। डाउनलोड लिंक के लिए अपना ईमेल खाता देखें।</string>
+    <string name="msg_download_data_request">आपकी डेटा फ़ाइल जेनरेट की जाएगी। इसे डाउनलोड करने के लिए एक लिंक तैयार होने पर आपके ईमेल पते पर भेजा जाएगा।</string>
+    <string name="msg_download_data_request_already_exist">आपकी डेटा फ़ाइल पहले से ही उत्पन्न हो रही है। इसे डाउनलोड करने के लिए एक लिंक तैयार होने पर आपके ईमेल पते पर भेजा जाएगा।</string>
+    <string name="msg_download_data_request_completed">आपकी डेटा फ़ाइल पहले ही जेनरेट की गई थी। डाउनलोड लिंक के लिए अपना ईमेल खाता देखें।</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">प्राइवेट</string>

@@ -68,9 +68,9 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_confirm">Confirm</string>
     <string name="action_delete_account">Delete account</string>
     <string name="request_download">Download File Requested</string>
-    <string name="UserDataDownload_Requested_Text">Your data file will be generated. A link to download it will be sent to your email address when ready.</string>
-    <string name="UserDataDownload_RequestExisted_Text">Your data file is already being generated. A link to download it will be sent to your email address when ready.</string>
-    <string name="UserDataDownload_CompletedRequestExisted_Text">Your data file was already generated. Check your email account for the download link.</string>
+    <string name="msg_download_data_request">Your data file will be generated. A link to download it will be sent to your email address when ready.</string>
+    <string name="msg_download_data_request_already_exist">Your data file is already being generated. A link to download it will be sent to your email address when ready.</string>
+    <string name="msg_download_data_request_completed">Your data file was already generated. Check your email account for the download link.</string>
 
 
     <!-- Settings List -->

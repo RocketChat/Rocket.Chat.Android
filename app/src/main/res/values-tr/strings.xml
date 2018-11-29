@@ -178,9 +178,9 @@
     <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
     <string name="request_download">Dosyayı İndir</string>
-    <string name="UserDataDownload_Requested_Text">Veri dosyanız oluşturulacak. İndirmek için bir bağlantı hazır olduğunda e-posta adresinize gönderilecektir.</string>
-    <string name="UserDataDownload_RequestExisted_Text">Veri dosyanız zaten oluşturuluyor. İndirmek için bir bağlantı hazır olduğunda e-posta adresinize gönderilecektir.</string>
-    <string name="UserDataDownload_CompletedRequestExisted_Text">Veri dosyanız zaten oluşturuldu. İndirme bağlantısı için e-posta hesabınızı kontrol edin.</string>
+    <string name="msg_download_data_request">Veri dosyanız oluşturulacak. İndirmek için bir bağlantı hazır olduğunda e-posta adresinize gönderilecektir.</string>
+    <string name="msg_download_data_request_already_exist">Veri dosyanız zaten oluşturuluyor. İndirmek için bir bağlantı hazır olduğunda e-posta adresinize gönderilecektir.</string>
+    <string name="msg_download_data_request_completed">Veri dosyanız zaten oluşturuldu. İndirme bağlantısı için e-posta hesabınızı kontrol edin.</string>
 
     <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">

@@ -163,9 +163,9 @@
     <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
     <string name="request_download">Завантажте потрібний файл</string>
-    <string name="UserDataDownload_Requested_Text">Ваш файл даних буде створено. Посилання на його завантаження буде надіслано на вашу електронну адресу, коли вона буде готова.</string>
-    <string name="UserDataDownload_RequestExisted_Text">Ваш файл даних вже створено. Посилання на його завантаження буде надіслано на вашу електронну адресу, коли вона буде готова.</string>
-    <string name="UserDataDownload_CompletedRequestExisted_Text">Ваш файл даних вже був створений. Перевірте свою електронну адресу для посилання на завантаження.</string>
+    <string name="msg_download_data_request">Ваш файл даних буде створено. Посилання на його завантаження буде надіслано на вашу електронну адресу, коли вона буде готова.</string>
+    <string name="msg_download_data_request_already_exist">Ваш файл даних вже створено. Посилання на його завантаження буде надіслано на вашу електронну адресу, коли вона буде готова.</string>
+    <string name="msg_download_data_request_completed">Ваш файл даних вже був створений. Перевірте свою електронну адресу для посилання на завантаження.</string>
 
     <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">

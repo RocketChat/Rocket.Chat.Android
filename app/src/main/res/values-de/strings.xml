@@ -155,9 +155,9 @@
     <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
     <string name="request_download">Herunterladen der angeforderten Datei</string>
-    <string name="UserDataDownload_Requested_Text">Ihre Datendatei wird generiert. Ein Link zum Herunterladen wird an Ihre E-Mail-Adresse gesendet, wenn Sie fertig sind.</string>
-    <string name="UserDataDownload_RequestExisted_Text">Ihre Datendatei wird bereits generiert. Ein Link zum Herunterladen wird an Ihre E-Mail-Adresse gesendet, wenn Sie fertig sind.</string>
-    <string name="UserDataDownload_CompletedRequestExisted_Text">Ihre Datendatei wurde bereits generiert. Überprüfen Sie in Ihrem E-Mail-Konto den Download-Link.</string>
+    <string name="msg_download_data_request">Ihre Datendatei wird generiert. Ein Link zum Herunterladen wird an Ihre E-Mail-Adresse gesendet, wenn Sie fertig sind.</string>
+    <string name="msg_download_data_request_already_exist">Ihre Datendatei wird bereits generiert. Ein Link zum Herunterladen wird an Ihre E-Mail-Adresse gesendet, wenn Sie fertig sind.</string>
+    <string name="msg_download_data_request_completed">Ihre Datendatei wurde bereits generiert. Überprüfen Sie in Ihrem E-Mail-Konto den Download-Link.</string>
 
 
     <!-- TODO - Add proper translation -->

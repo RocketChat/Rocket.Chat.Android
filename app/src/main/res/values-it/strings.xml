@@ -56,9 +56,9 @@
     <string name="action_confirm">Conferma</string>
     <string name="action_delete_account">Elimina utente</string>
     <string name="request_download">Scarica il file richiesto</string>
-    <string name="UserDataDownload_Requested_Text">Il tuo file di dati sarà generato. Quando sarà pronto, un link per scaricarlo verrà inviato al tuo indirizzo email.</string>
-    <string name="UserDataDownload_RequestExisted_Text">Il tuo file di dati è già stato generato. Quando sarà pronto, un link per scaricarlo verrà inviato al tuo indirizzo email.</string>
-    <string name="UserDataDownload_CompletedRequestExisted_Text">Il tuo file di dati è già stato generato. Controlla il tuo account e-mail per il link di download.</string>
+    <string name="msg_download_data_request">Il tuo file di dati sarà generato. Quando sarà pronto, un link per scaricarlo verrà inviato al tuo indirizzo email.</string>
+    <string name="msg_download_data_request_already_exist">Il tuo file di dati è già stato generato. Quando sarà pronto, un link per scaricarlo verrà inviato al tuo indirizzo email.</string>
+    <string name="msg_download_data_request_completed">Il tuo file di dati è già stato generato. Controlla il tuo account e-mail per il link di download.</string>
 
 
     <!-- Settings List -->

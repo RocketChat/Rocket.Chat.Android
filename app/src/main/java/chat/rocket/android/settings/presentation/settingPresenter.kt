@@ -47,11 +47,11 @@ class settingPresenter @Inject constructor(
 
                         view.hideLoading()
                         if (response.requested) {
-                            view.showMessage(R.string.UserDataDownload_Requested_Text)
+                            view.showMessage(R.string.msg_download_data_request)
                         } else if (response.status.equals("completed")) {
-                            view.showMessage(R.string.UserDataDownload_CompletedRequestExisted_Text)
+                            view.showMessage(R.string.msg_download_data_request_completed)
                         } else
-                            view.showMessage(R.string.UserDataDownload_RequestExisted_Text)
+                            view.showMessage(R.string.msg_download_data_request_already_exist)
                     }
                 }
             } catch (exception: Exception) {

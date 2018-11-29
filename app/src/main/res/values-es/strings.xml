@@ -217,9 +217,9 @@
 
     <!--download message-->
     <string name="request_download">Descargar archivo solicitado</string>
-    <string name="UserDataDownload_Requested_Text">Se generará su archivo de datos. Se enviará un enlace para descargarlo a su dirección de correo electrónico cuando esté listo.</string>
-    <string name="UserDataDownload_RequestExisted_Text">Su archivo de datos ya se está generando. Se enviará un enlace para descargarlo a su dirección de correo electrónico cuando esté listo.</string>
-    <string name="UserDataDownload_CompletedRequestExisted_Text">Su archivo de datos ya fue generado. Compruebe su cuenta de correo electrónico para el enlace de descarga.</string>
+    <string name="msg_download_data_request">Se generará su archivo de datos. Se enviará un enlace para descargarlo a su dirección de correo electrónico cuando esté listo.</string>
+    <string name="msg_download_data_request_already_exist">Su archivo de datos ya se está generando. Se enviará un enlace para descargarlo a su dirección de correo electrónico cuando esté listo.</string>
+    <string name="msg_download_data_request_completed">Su archivo de datos ya fue generado. Compruebe su cuenta de correo electrónico para el enlace de descarga.</string>
 
 
     <!-- Permission messages -->
