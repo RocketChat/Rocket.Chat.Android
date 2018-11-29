@@ -10,8 +10,7 @@
         android:layout_height="wrap_content"
         android:text="@string/request_download"
         android:layout_margin="@dimen/padding_quote"
-        android:textColor="@color/color_black"
-        />
+        android:textColor="@color/color_black" />
 
     <ImageView
         android:layout_width="@dimen/rc_48dp"
@@ -20,8 +19,7 @@
         android:background="@drawable/green_border_circle"
         android:src="@drawable/ic_done"
         android:layout_margin="@dimen/rc_16dp"
-        android:layout_gravity="center"
-        />
+        android:layout_gravity="center" />
 
 
     <TextView

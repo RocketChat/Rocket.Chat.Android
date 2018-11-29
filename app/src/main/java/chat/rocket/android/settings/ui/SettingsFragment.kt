@@ -35,10 +35,8 @@ internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
 class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListener {
 
-
     @Inject
     lateinit var presenter: settingPresenter
-
     @Inject
     lateinit var analyticsManager: AnalyticsManager
 
@@ -133,7 +131,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             val view = layoutInflater.inflate(R.layout.dialog_download, null)
             view.text_download_description.textContent = resources.getString(resId);
             builder.setView(view)
-            builder.setPositiveButton(R.string.msg_ok) { dialog, p1 ->
+            builder.setPositiveButton(R.string.msg_ok) { dialog, _ ->
                 dialog.cancel()
             }
             builder.show() }
