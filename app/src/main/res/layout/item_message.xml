@@ -98,6 +98,7 @@
         app:layout_constraintStart_toEndOf="@+id/layout_avatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/day_marker_layout">
+
         <TextView
             android:id="@+id/text_sender"
             style="@style/Sender.Name.TextView"
