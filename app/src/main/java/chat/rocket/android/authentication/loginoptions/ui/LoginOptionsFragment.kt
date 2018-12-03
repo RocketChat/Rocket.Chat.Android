@@ -34,6 +34,8 @@ import javax.inject.Inject
 import chat.rocket.android.helper.Constants
 import kotlinx.android.synthetic.main.fragment_authentication_widechat_login_options.*
 
+import timber.log.Timber
+
 private const val SERVER_NAME = "server_name"
 private const val STATE = "state"
 private const val FACEBOOK_OAUTH_URL = "facebook_oauth_url"
@@ -385,6 +387,8 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
             customOauthUrl: String,
             state: String
     ) {
+        Timber.d("############ EAR >> this is the custom oauth url being passed to the listener: ")
+        Timber.d(customOauthUrl)
         setupButtonListener(widechat_login_button, customOauthUrl, state, REQUEST_CODE_FOR_OAUTH)
         setupButtonListener(widechat_signup_button, customOauthUrl, state, REQUEST_CODE_FOR_OAUTH)
     }
