@@ -23,6 +23,7 @@
     <string name="title_about">Hakkında</string>
     <string name="title_create_channel">Yeni Kanal Oluştur</string>
     <string name="tittle_download">Verilerimi indir</string>
+    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
@@ -62,8 +63,10 @@
         <item name="item_password">Şifre Değiştir</item>
         <item name="item_share_app">uygulamayı Paylaş</item>
         <item name="item_rate_us">Bizi değerlendirin</item>
+        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
         <item name="item_download_data">Verilerimi indir</item>
-        <item name="item_password">Hakkında</item>
+        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_about">About</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->
@@ -183,11 +186,12 @@
     <string name="msg_download_data_request_completed">Veri dosyanız zaten oluşturuldu. İndirme bağlantısı için e-posta hesabınızı kontrol edin.</string>
 
     <!-- TODO - Add proper translation -->
+    <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
+    <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
-        <item quantity="one">%1$s reacted with %2$s</item>
-        <item quantity="other">%1$s reacted with %2$s</item>
+        <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
+        <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
-    
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">İstatistik takibi</string>
     <string name="msg_send_analytics_tracking">Uygulamanın gelişmesine katkıda bulunmak için anonim istatistik bilgisi gönder</string>

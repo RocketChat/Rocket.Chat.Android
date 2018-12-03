@@ -1,10 +1,12 @@
 package chat.rocket.android.helper
 
+import android.os.Build
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.widget.TextView
+import chat.rocket.android.BuildConfig
 import chat.rocket.android.util.extensions.ifEmpty
 
 object TextHelper {
@@ -23,7 +25,12 @@ object TextHelper {
             val link = links[i]
 
             val startIndexOfLink = textView.text.indexOf(link)
-            spannableString.setSpan(clickableSpan, startIndexOfLink, startIndexOfLink + link.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(
+                clickableSpan,
+                startIndexOfLink,
+                startIndexOfLink + link.length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
         }
         textView.movementMethod = LinkMovementMethod.getInstance()
         textView.setText(spannableString, TextView.BufferType.SPANNABLE)
@@ -38,5 +45,14 @@ object TextHelper {
     fun getFirstCharacter(string: String): String {
         string.ifEmpty("?")
         return string.substring(0, 1).toUpperCase()
+    }
+
+    /**
+     * Returns the user device information as well as the app information being used by the user.
+     */
+    fun getDeviceAndAppInformation(): String {
+        return "v${BuildConfig.VERSION_NAME} - (${BuildConfig.VERSION_CODE}) \n" +
+                "${Build.MANUFACTURER}  - ${Build.MODEL} \n" +
+                "Android ${Build.VERSION.RELEASE}"
     }
 }

@@ -546,7 +546,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             button_send.isEnabled = true
             text_message.isEnabled = true
-            clearMessageComposition(true)
         }
     }
 

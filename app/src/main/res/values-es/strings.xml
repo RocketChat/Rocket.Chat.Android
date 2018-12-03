@@ -22,6 +22,7 @@
     <string name="title_about">Acerca de</string>
     <string name="title_create_channel">Crear canal</string>
     <string name="tittle_download">Descargar mis datos</string>
+    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
@@ -61,8 +62,10 @@
         <item name="item_password">Cambia la contraseña</item>
         <item name="item_share_app">Compartir aplicación</item>
         <item name="item_rate_us">Nos califica</item>
+        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
         <item name="item_download_data">Descargar mis datos</item>
-        <item name="item_password">Acerca de</item>
+        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_about">Acerca de</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -164,18 +167,15 @@
     <string name="msg_member_already_added">Ya has seleccionado este usuario</string>
     <string name="msg_member_not_found">Miembro no encontrado</string>
     <string name="msg_channel_created_successfully">Canal creado con éxito</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_more">view more</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_less">view less</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_permalink_copied">Permalink copied</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
-    <!-- TODO - Add proper translation -->
+    <string name="msg_view_more">view more</string> <!-- TODO - Add proper translation -->
+    <string name="msg_view_less">view less</string> <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string> <!-- TODO - Add proper translation -->
+    <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
+    <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
-        <item quantity="one">%1$s reacted with %2$s</item>
-        <item quantity="other">%1$s reacted with %2$s</item>
+        <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
+        <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
 
     <!-- Preferences messages -->

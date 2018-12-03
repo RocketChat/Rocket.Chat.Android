@@ -23,6 +23,7 @@
     <string name="title_about">Sobre</string>
     <string name="title_create_channel">Criar chat</string>
     <string name="tittle_download">Baixe meus dados</string>
+    <string name="title_licence">Licença</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Você tem certeza?</string>
 
     <!-- Actions -->
@@ -58,12 +59,14 @@
 
     <!-- Settings List -->
     <string-array name="settings_actions">
-        <item name="item_preferences">Preferencias</item>
+        <item name="item_preferences">Preferências</item>
         <item name="item_password">Alterar senha</item>
-        <item name="item_share_app">Compartilhe o aplicativo</item>
-        <item name="item_rate_us">nos avalie</item>
+        <item name="item_share_app">Compartilhar app</item>
+        <item name="item_rate_us">Classifique-nos</item>
+        <item name="item_contact_us">Contate-nos</item>
         <item name="item_download_data">Baixe meus dados</item>
-        <item name="item_password">Sobre</item>
+        <item name="item_licence">Licença</item>
+        <item name="item_about">Sobre</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -159,8 +162,9 @@
     <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
     <string name="msg_view_more">visualizar mais</string>
     <string name="msg_view_less">visualizar menos</string>
-    <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copiado</string>
+    <string name="msg_send_email">Enviar e-mail</string>
+    <string name="msg_android_app_support">Suporte ao aplicativo Android</string>
     <string name="msg_muted_on_this_channel">Você está silenciado neste canal</string>
     <string name="request_download">Download do arquivo solicitado</string>
     <string name="msg_download_data_request">Seu arquivo de dados será gerado. Um link para baixá-lo será enviado para o seu endereço de e-mail quando estiver pronto.</string>

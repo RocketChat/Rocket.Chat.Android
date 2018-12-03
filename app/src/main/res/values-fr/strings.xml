@@ -23,6 +23,7 @@
     <string name="title_about">À propos</string>
     <string name="title_create_channel">Créer salon</string>
     <string name="tittle_download">Télécharger mes données</string>
+    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
@@ -62,8 +63,10 @@
         <item name="item_password">Changer le mot de passe</item>
         <item name="item_share_app">Partager l\'application</item>
         <item name="item_rate_us">évaluez nous</item>
+        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
         <item name="item_download_data">Télécharger mes données</item>
-        <item name="item_password">À propos</item>
+        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_about">À propos</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -170,10 +173,11 @@
     <string name="msg_download_data_request_already_exist">Votre fichier de données est déjà généré. Un lien pour le télécharger sera envoyé à votre adresse e-mail lorsque vous serez prêt.</string>
     <string name="msg_download_data_request_completed">Votre fichier de données a déjà été généré. Vérifiez votre compte de messagerie pour le lien de téléchargement.</string>
 
-    <!-- TODO - Add proper translation -->
+    <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
+    <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
-        <item quantity="one">%1$s reacted with %2$s</item>
-        <item quantity="other">%1$s reacted with %2$s</item>
+        <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
+        <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
 
     <!-- Create channel messages -->

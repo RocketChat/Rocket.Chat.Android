@@ -23,6 +23,7 @@
     <string name="title_about">"Про програму"</string>
     <string name="title_create_channel">Створити новий канал</string>
     <string name="tittle_download">Завантажте мої дані</string>
+    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
@@ -62,8 +63,10 @@
         <item name="item_password">Change Password</item> <!-- TODO Add translation -->
         <item name="item_share_app">поділитися прикладом</item>
         <item name="item_rate_us">Оцініть нас</item>
+        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
         <item name="item_download_data">Завантажте мої дані</item>
-        <item name="item_password">About</item> <!-- TODO Add translation -->
+        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_about">About</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->
@@ -168,10 +171,13 @@
     <string name="msg_download_data_request_completed">Ваш файл даних вже був створений. Перевірте свою електронну адресу для посилання на завантаження.</string>
 
     <!-- TODO - Add proper translation -->
+    <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
+    <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
-        <item quantity="one">%1$s reacted with %2$s</item>
-        <item quantity="few">%1$s reacted with %2$s</item>
-        <item quantity="many">%1$s reacted with %2$s</item>
+        <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
+        <item quantity="few">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
+        <item quantity="many">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
 
     <!-- Create channel messages -->

@@ -24,6 +24,7 @@
     <string name="title_create_channel">Erstelle Raum</string>
     <string name="tittle_download">Anglizismus Meine Daten</string>
     <string name="title_are_you_sure">Are you sure?</string><!-- TODO Add translation -->
+    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
     <string name="action_connect">Verbinde</string>
@@ -62,8 +63,10 @@
         <item name="item_password">Ändere Passwort</item>
         <item name="item_share_app">App teilen</item>
         <item name="item_rate_us">Bewerten Sie uns</item>
+        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
         <item name="item_download_data">Anglizismus Meine Daten</item>
-        <item name="item_password">Über</item>
+        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_about">Über</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -180,12 +183,11 @@
     <string name="msg_message_copied">Nachricht kopiert</string>
     <string name="msg_delete_message">Lösche Nachricht</string>
     <string name="msg_delete_description">Sind Sie sicher, dass Sie diese Nachricht löschen wollen?</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_more">view more</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_less">view less</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_permalink_copied">Permalink copied</string>
+    <string name="msg_view_more">view more</string> <!-- TODO - Add proper translation -->
+    <string name="msg_view_less">view less</string> <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string> <!-- TODO - Add proper translation -->
+    <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
+    <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->

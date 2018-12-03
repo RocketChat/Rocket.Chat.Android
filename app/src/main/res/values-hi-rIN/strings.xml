@@ -23,6 +23,7 @@
     <string name="title_about">परिचय</string>
     <string name="title_create_channel">चैनल बनाएं</string>
     <string name="tittle_download">डाउन लोड करें</string>
+    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
@@ -62,8 +63,10 @@
         <item name="item_password">पासवर्ड बदलें</item>
         <item name="item_share_app">ऐप शेयर करें</item>
         <item name="item_rate_us">हमें रेटिंग दें</item>
+        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
         <item name="item_download_data">डाउन लोड करें</item>
-        <item name="item_password">परिचय</item>
+        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_about">परिचय</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -177,14 +180,14 @@
     <string name="msg_channel_created_successfully">चैनल सफलतापूर्वक बनाया गया</string>
     <string name="msg_view_more">और देखें</string>
     <string name="msg_view_less">कम देखें</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_permalink_copied">Permalink copied</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
-    <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string> <!-- TODO - Add proper translation -->
+    <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
+    <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
-        <item quantity="one">%1$s reacted with %2$s</item>
-        <item quantity="other">%1$s reacted with %2$s</item>
+        <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
+        <item quantity="few">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
+        <item quantity="many">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
 
     <!-- Preferences messages -->

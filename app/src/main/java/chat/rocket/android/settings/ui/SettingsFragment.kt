@@ -17,6 +17,7 @@ import chat.rocket.android.about.ui.AboutFragment
 import chat.rocket.android.about.ui.TAG_ABOUT_FRAGMENT
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.helper.TextHelper.getDeviceAndAppInformation
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.preferences.ui.PreferencesFragment
 import chat.rocket.android.preferences.ui.TAG_PREFERENCES_FRAGMENT
@@ -24,12 +25,15 @@ import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.settings.presentation.settingPresenter
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.extensions.addFragmentBackStack
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.webview.ui.webViewIntent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.dialog_download.view.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_settings.*
+import timber.log.Timber
 import javax.inject.Inject
-import kotlin.reflect.KClass
 
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
@@ -41,6 +45,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
     }
@@ -66,7 +71,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         when (parent?.getItemAtPosition(position).toString()) {
-            resources.getString(R.string.title_preferences) -> {
+            resources.getStringArray(R.array.settings_actions)[0] -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
                         TAG_PREFERENCES_FRAGMENT,
                         R.id.fragment_container
@@ -74,9 +79,24 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                     PreferencesFragment.newInstance()
                 }
             }
-            resources.getString(R.string.title_change_password) ->
-                startNewActivity(PasswordActivity::class)
-            resources.getString(R.string.title_about) -> {
+
+            resources.getStringArray(R.array.settings_actions)[1] ->
+                activity?.startActivity(Intent(activity, PasswordActivity::class.java))
+
+            resources.getStringArray(R.array.settings_actions)[2] -> shareApp()
+
+            resources.getStringArray(R.array.settings_actions)[3] -> showAppOnStore()
+
+            resources.getStringArray(R.array.settings_actions)[4] -> contactSupport()
+
+            resources.getStringArray(R.array.settings_actions)[5] -> activity?.startActivity(
+                context?.webViewIntent(
+                    getString(R.string.license_url),
+                    getString(R.string.title_licence)
+                )
+            )
+
+            resources.getStringArray(R.array.settings_actions)[6] -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
                         TAG_ABOUT_FRAGMENT,
                         R.id.fragment_container
@@ -84,21 +104,13 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                     AboutFragment.newInstance()
                 }
             }
-            resources.getString(R.string.title_share_the_app) ->{
-                val shareIntent = Intent(Intent.ACTION_SEND)
-                shareIntent.type = "text/plain"
-                val shareBody = getString(R.string.msg_check_this_out)
-                val shareSub = getString(R.string.play_store_link)
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareBody)
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareSub)
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.msg_share_using)))
-            }
+     
             resources.getString(R.string.title_rate_us) -> startAppPlayStore()
             resources.getString(R.string.tittle_download) -> presenter.downloadData();
         }
     }
 
-    private fun startAppPlayStore() {
+    private fun showAppOnStore() {
         try {
             startActivity(Intent(Intent.ACTION_VIEW, getString(R.string.market_link).toUri()))
         } catch (error: ActivityNotFoundException) {
@@ -115,9 +127,27 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                 getString(R.string.title_settings)
     }
 
-    private fun startNewActivity(classType: KClass<out AppCompatActivity>) {
-        startActivity(Intent(activity, classType.java))
-        activity?.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
+    private fun shareApp() {
+        with(Intent(Intent.ACTION_SEND)) {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_check_this_out))
+            putExtra(Intent.EXTRA_TEXT, getString(R.string.play_store_link))
+            startActivity(Intent.createChooser(this, getString(R.string.msg_share_using)))
+        }
+    }
+
+    private fun contactSupport() {
+        with(Intent(Intent.ACTION_SEND)) {
+            type = "message/rfc822"
+            putExtra(Intent.EXTRA_EMAIL, arrayOf("support@rocket.chat"))
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_android_app_support))
+            putExtra(Intent.EXTRA_TEXT, getDeviceAndAppInformation())
+            try {
+                startActivity(Intent.createChooser(this, getString(R.string.msg_send_email)))
+            } catch (ex: ActivityNotFoundException) {
+                Timber.e(ex)
+            }
+        }
     }
 
     companion object {
