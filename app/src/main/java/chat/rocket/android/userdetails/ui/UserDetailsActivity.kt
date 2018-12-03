@@ -109,7 +109,9 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView, HasSupportFrag
                     .get().also { showLoadingView(false) }
             }
 
-            toolbar.background = BitmapDrawable(resources, image.blurred(this@UserDetailsActivity))
+            val blurredBitmap = image.blurred(context = this@UserDetailsActivity,
+                newWidth = toolbar.measuredWidth, newHeight =  toolbar.measuredHeight)
+            toolbar.background = BitmapDrawable(resources, blurredBitmap)
             GlideApp.with(this@UserDetailsActivity)
                 .asBitmap()
                 .transforms(RoundedCorners(25), CenterCrop())
