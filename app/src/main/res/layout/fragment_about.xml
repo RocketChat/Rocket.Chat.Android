@@ -18,7 +18,7 @@
     <ImageView
         android:layout_width="160dp"
         android:layout_height="160dp"
-        android:src="@mipmap/ic_launcher_foreground"
+        android:src="@drawable/ic_launcher_foreground"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/image_app_name"

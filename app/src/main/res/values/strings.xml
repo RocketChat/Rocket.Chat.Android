@@ -10,7 +10,7 @@ Coding style:
 https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strings
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-     <string name="app_name" translatable="false">Veranda</string>
+     <string name="app_name" translatable="false">Viasat Connect</string>
 
     <!-- Titles -->
     <string name="title_sign_in_your_server">Sign in to your server</string>

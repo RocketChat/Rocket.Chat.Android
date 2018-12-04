@@ -381,12 +381,14 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         accounts_container.addView(button)
     }
 
+    // Viasat SSO
     private fun addWidechatOauthButtons(
             customOauthUrl: String,
             state: String
     ) {
+        val signUpUrl = customOauthUrl + "&signup=true"
         setupButtonListener(widechat_login_button, customOauthUrl, state, REQUEST_CODE_FOR_OAUTH)
-        setupButtonListener(widechat_signup_button, customOauthUrl, state, REQUEST_CODE_FOR_OAUTH)
+        setupButtonListener(widechat_signup_button, signUpUrl, state, REQUEST_CODE_FOR_OAUTH)
     }
 
     // Custom OAuth account.
