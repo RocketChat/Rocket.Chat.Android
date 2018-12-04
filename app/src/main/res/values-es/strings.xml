@@ -342,7 +342,7 @@
     <string name="delete_account">Borrar mi cuenta</string>
     <string name="log_out">Cerrar sesión</string>
     <string name="widechat_new_channel">Nuevo chat de grupo</string>
-    <string name="msg_widechat_no_chats_to_display">Usted puede conseguir comenzado buscando para a gente a charlar con o invitando a sus amigos y familia que consigan el app también.</string>
-    <string name="msg_widechat_welcome_to_app">La recepción a Viasat Connect.</string>
+    <string name="msg_widechat_no_chats_to_display">Busca personas para chatear que ya tienen el app de Viasat Connect o invita tus amigos y familiares a descargarlo..</string>
+    <string name="msg_widechat_welcome_to_app">Bienvenido a Viasat Connect.</string>
 
 </resources>
