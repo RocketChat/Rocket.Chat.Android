@@ -18,10 +18,8 @@ import kotlinx.android.synthetic.main.app_bar.*
 import org.json.JSONObject
 
 // WIDECHAT
-import java.util.Locale
 import android.content.res.Resources
 import androidx.core.os.ConfigurationCompat
-import timber.log.Timber
 
 fun Context.oauthWebViewIntent(webPageUrl: String, state: String): Intent {
     return Intent(this, OauthWebViewActivity::class.java).apply {
