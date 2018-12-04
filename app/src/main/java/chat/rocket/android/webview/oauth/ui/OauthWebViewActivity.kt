@@ -17,6 +17,10 @@ import kotlinx.android.synthetic.main.activity_web_view.*
 import kotlinx.android.synthetic.main.app_bar.*
 import org.json.JSONObject
 
+// WIDECHAT
+import android.content.res.Resources
+import androidx.core.os.ConfigurationCompat
+
 fun Context.oauthWebViewIntent(webPageUrl: String, state: String): Intent {
     return Intent(this, OauthWebViewActivity::class.java).apply {
         putExtra(INTENT_WEB_PAGE_URL, webPageUrl)
@@ -104,7 +108,17 @@ class OauthWebViewActivity : AppCompatActivity() {
                 view_loading.hide()
             }
         }
-        web_view.loadUrl(webPageUrl)
+        // WIDECHAT
+        var languages = "?;q-0.9,en-US;q=0.8"
+        val locale = ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0).toString().replace("_", "-")
+        val lang = locale.split("-").get(0)
+        val entry = locale + "," + lang
+
+        val header = languages.replace("?", entry)
+        val extraHeaders = HashMap<String, String>()
+        extraHeaders.put("Accept-Language", header)
+
+        web_view.loadUrl(webPageUrl, extraHeaders)
     }
 
     // If the states matches, then try to get the code, otherwise the request was created by a third party and the process should be aborted.

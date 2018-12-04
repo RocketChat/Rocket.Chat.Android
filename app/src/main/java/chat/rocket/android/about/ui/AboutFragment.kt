@@ -15,6 +15,11 @@ import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_about.*
 import javax.inject.Inject
 
+// WIDECHAT
+import androidx.core.view.isVisible
+import chat.rocket.android.helper.Constants
+
+
 internal const val TAG_ABOUT_FRAGMENT = "AboutFragment"
 
 class AboutFragment : Fragment() {
@@ -34,6 +39,10 @@ class AboutFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (Constants.WIDECHAT) {
+            val appName: View = view.findViewById(R.id.image_app_name)
+            appName.isVisible = false
+        }
         setupToolbar()
         setupViews()
 
