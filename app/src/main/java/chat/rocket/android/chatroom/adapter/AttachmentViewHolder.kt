@@ -146,7 +146,8 @@ class AttachmentViewHolder(
 
     private fun bindAudioOrVideo(data: AttachmentUiModel) {
         with(itemView) {
-            text_file_name.content = data.title
+            file_name.isVisible = data.hasTitle
+            file_name.text = data.title
 
             file_text.isVisible = data.hasText
             file_text.text = data.text
