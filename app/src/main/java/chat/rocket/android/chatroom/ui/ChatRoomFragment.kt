@@ -145,11 +145,7 @@ private const val BUNDLE_CHAT_ROOM_IS_FAVORITE = "chat_room_is_favorite"
 private const val BUNDLE_CHAT_ROOM_MESSAGE = "chat_room_message"
 
 internal const val MENU_ACTION_FAVORITE_UNFAVORITE_CHAT = 1
-internal const val MENU_ACTION_MEMBER = 2
-internal const val MENU_ACTION_MENTIONS = 3
-internal const val MENU_ACTION_PINNED_MESSAGES = 4
-internal const val MENU_ACTION_FAVORITE_MESSAGES = 5
-internal const val MENU_ACTION_FILES = 6
+internal const val MENU_ACTION_SHOW_DETAILS = 2
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener,
     ChatRoomAdapter.OnActionSelected, Drawable.Callback {
@@ -166,7 +162,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     internal lateinit var chatRoomType: String
     private var newMessageCount: Int = 0
     private var chatRoomMessage: String? = null
-    private var isSubscribed: Boolean = true
+    internal var isSubscribed: Boolean = true
     private var isReadOnly: Boolean = false
     private var isCreator: Boolean = false
     internal var isFavorite: Boolean = false

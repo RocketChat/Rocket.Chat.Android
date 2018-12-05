@@ -1,7 +1,7 @@
 package chat.rocket.android.members.di
 
 import androidx.lifecycle.LifecycleOwner
-import chat.rocket.android.chatroom.ui.ChatRoomActivity
+import chat.rocket.android.chatdetails.ui.ChatDetailsActivity
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.members.presentation.MembersNavigator
@@ -22,7 +22,7 @@ class MembersFragmentModule {
 
     @Provides
     @PerFragment
-    fun provideChatRoomNavigator(activity: ChatRoomActivity) = MembersNavigator(activity)
+    fun provideChatRoomNavigator(activity: ChatDetailsActivity) = MembersNavigator(activity)
 
     @Provides
     @PerFragment
