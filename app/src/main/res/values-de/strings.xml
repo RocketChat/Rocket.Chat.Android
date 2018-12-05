@@ -28,7 +28,6 @@
     <string name="title_announcement">Ankündigung</string>
     <string name="title_description">Beschreibung</string>
     <string name="title_licence">Licence</string> <!-- TODO Add translation -->
-    <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
 
     <!-- Actions -->
     <string name="action_connect">Verbinde</string>
