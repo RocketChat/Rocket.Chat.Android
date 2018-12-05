@@ -22,6 +22,7 @@
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
     <string name="title_create_channel">Criar chat</string>
+    <string name="title_licence">Licença</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Você tem certeza?</string>
     <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
     <string name="title_topic">Tópico</string>
@@ -61,11 +62,13 @@
 
     <!-- Settings List -->
     <string-array name="settings_actions">
-        <item name="item_preferences">Preferencias</item>
+        <item name="item_preferences">Preferências</item>
         <item name="item_password">Alterar senha</item>
-        <item name="item_share_app">Compartilhe o aplicativo</item>
-        <item name="item_rate_us">nos avalie</item>
-        <item name="item_password">Sobre</item>
+        <item name="item_share_app">Compartilhar app</item>
+        <item name="item_rate_us">Classifique-nos</item>
+        <item name="item_contact_us">Contate-nos</item>
+        <item name="item_licence">Licença</item>
+        <item name="item_about">Sobre</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -161,8 +164,9 @@
     <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
     <string name="msg_view_more">visualizar mais</string>
     <string name="msg_view_less">visualizar menos</string>
-    <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copiado</string>
+    <string name="msg_send_email">Enviar e-mail</string>
+    <string name="msg_android_app_support">Suporte ao aplicativo Android</string>
     <string name="msg_muted_on_this_channel">Você está silenciado neste canal</string>
     <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
     <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->

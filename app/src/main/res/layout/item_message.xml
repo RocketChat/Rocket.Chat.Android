@@ -52,7 +52,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_sender" />
+        app:layout_constraintTop_toTopOf="@+id/message_header" />
 
     <LinearLayout
         android:id="@+id/new_messages_notif"
@@ -88,68 +88,63 @@
             android:background="@color/colorRed" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/text_sender"
-        style="@style/Sender.Name.TextView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/message_header"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginStart="16dp"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
         app:layout_constraintStart_toEndOf="@+id/layout_avatar"
-        app:layout_constraintTop_toBottomOf="@+id/day_marker_layout"
-        tools:text="Ronald Perkins" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/day_marker_layout">
 
-    <TextView
-        android:id="@+id/text_message_time"
-        style="@style/Timestamp.TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/text_sender"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/text_sender"
-        tools:text="11:45 PM" />
+        <TextView
+            android:id="@+id/text_sender"
+            style="@style/Sender.Name.TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            tools:text="User Name with long name" />
 
-    <TextView
-        android:id="@+id/text_edit_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/msg_edited"
-        android:textStyle="italic"
-        android:visibility="gone"
-        app:layout_constraintBaseline_toBaselineOf="@+id/text_sender"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/text_message_time"
-        tools:visibility="visible" />
+        <TextView
+            android:id="@+id/text_message_time"
+            style="@style/Timestamp.TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            tools:text="11:45 PM" />
 
-    <ImageView
-        android:id="@+id/image_star_indicator"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="2dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/text_sender"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/text_edit_indicator"
-        app:layout_constraintTop_toTopOf="@+id/text_sender"
-        app:srcCompat="@drawable/ic_action_message_star_24dp"
-        tools:visibility="visible" />
+        <TextView
+            android:id="@+id/text_edit_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/msg_edited"
+            android:textStyle="italic"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
-    <ImageView
-        android:id="@+id/read_receipt_view"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/text_sender"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/image_star_indicator"
-        app:layout_constraintTop_toTopOf="@+id/text_sender"
-        app:srcCompat="@drawable/ic_check_unread_24dp"
-        tools:visibility="visible" />
+        <ImageView
+            android:id="@+id/image_star_indicator"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="2dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_action_message_star_24dp"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/read_receipt_view"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_check_unread_24dp"
+            tools:visibility="visible" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/text_content"
@@ -160,8 +155,8 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="2dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/text_sender"
-        app:layout_constraintTop_toBottomOf="@+id/text_sender"
+        app:layout_constraintStart_toStartOf="@+id/message_header"
+        app:layout_constraintTop_toBottomOf="@+id/message_header"
         tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
 
     <include

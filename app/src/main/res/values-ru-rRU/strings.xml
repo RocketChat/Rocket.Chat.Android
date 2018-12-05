@@ -27,6 +27,8 @@
     <string name="title_topic">Тема</string>
     <string name="title_announcement">Объявление</string>
     <string name="title_description">Описание</string>
+    <string name="title_licence">Лицензия</string>
+    <string name="title_are_you_sure">Вы уверены?</string>
 
     <!-- Actions -->
     <string name="action_connect">Подключиться</string>
@@ -39,7 +41,7 @@
     <string name="action_create_channel">Создать канал</string>
     <string name="action_create">Создать</string>
     <string name="action_logout">Выйти</string>
-    <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
+    <string name="action_attach_a_files">Прикрепить файл</string>
     <string name="action_confirm_password">Подтверждение изменения пароля</string>
     <string name="action_join_chat">Присоединиться к чату</string>
     <string name="action_add_account">Добавить аккаунт</string>
@@ -57,15 +59,17 @@
     <string name="action_create_server">Создать новый сервер</string>
     <string name="action_register">Зарегистрировать</string>
     <string name="action_confirm">Подтвердить</string>
-    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
+    <string name="action_delete_account">Удалить аккаунт</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_preferences">Персональные</item>
         <item name="item_password">Изменить пароль</item>
-        <item name="item_rate_us">оцените нас</item>
-        <item name="item_share_app">добавить приложение</item>
-        <item name="item_password">О программе</item>
+        <item name="item_share_app">Поделиться приложением</item>
+        <item name="item_rate_us">Оцените нас</item>
+        <item name="item_contact_us">Связаться с нами</item>
+        <item name="item_licence">Лицензия</item>
+        <item name="item_about">О программе</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -160,16 +164,18 @@
     <string name="msg_view_more">больше</string>
     <string name="msg_view_less">меньше</string>
     <string name="msg_permalink_copied">Ссылка скопирована</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string> <!-- TODO - Add proper translation -->
     <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
     <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
     <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
-    <!-- TODO - Add proper translation -->
+    <string name="msg_send_email">Отправить e-mail</string>
+    <string name="msg_android_app_support">Поддержка Android-приложения</string>
+    <string name="msg_muted_on_this_channel">Вы лишены дара речи на этом канале</string>
+
     <plurals name="msg_reacted_with_">
-        <item quantity="one">%1$s reacted with %2$s</item>
-        <item quantity="few">%1$s reacted with %2$s</item>
-        <item quantity="many">%1$s reacted with %2$s</item>
+        <item quantity="one">%1$s реагирует с %2$s</item>
+        <item quantity="few">%1$s реагируют с %2$s</item>
+        <item quantity="many">%1$s реагируют с %2$s</item>
     </plurals>
 
     <!-- Create channel messages -->

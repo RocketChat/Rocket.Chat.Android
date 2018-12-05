@@ -170,7 +170,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     fun processRooms(rooms: List<ChatRoom>) {
         launch(dbManagerContext) {
             val entities = rooms.map { mapChatRoom(it) }
-            sendOperation(Operation.InsertRooms(entities))
+            sendOperation(Operation.CleanInsertRooms(entities))
         }
     }
 
