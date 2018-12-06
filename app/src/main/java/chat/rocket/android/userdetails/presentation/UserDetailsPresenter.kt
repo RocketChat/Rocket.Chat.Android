@@ -1,6 +1,5 @@
 package chat.rocket.android.userdetails.presentation
 
-import androidx.core.text.toSpannable
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.helper.UserHelper
@@ -10,8 +9,8 @@ import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.model.RoomType
-import chat.rocket.common.model.SimpleUser
 import chat.rocket.common.model.roomTypeOf
+import chat.rocket.core.internal.rest.createDirectMessage
 import chat.rocket.core.internal.rest.spotlight
 import chat.rocket.core.model.ChatRoom
 import kotlinx.coroutines.experimental.CommonPool
@@ -30,7 +29,7 @@ class UserDetailsPresenter @Inject constructor(
     private var currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
-    private val userId = userHelper.user()?.id
+    private val currentUserId = userHelper.user()?.id
 
     fun loadUserDetails(userId: String) {
         launchUI(strategy) {
@@ -49,38 +48,41 @@ class UserDetailsPresenter @Inject constructor(
                             client.spotlight(query = query)
                         }
 
-                        val matchFromSpotlight = spotlightResult.users.firstOrNull()
+                        val matchFromSpotlight = spotlightResult.users.firstOrNull { it.username == query }
 
                         if (matchFromSpotlight != null) {
-                            with (matchFromSpotlight) {
-                                    ChatRoom(
-                                        id = "$id$userId",
-                                        type = roomTypeOf(RoomType.DIRECT_MESSAGE),
-                                        name = u.username ?: u.name.orEmpty(),
-                                        fullName = u.name,
-                                        favorite = false,
-                                        open = false,
-                                        alert = false,
-                                        status = status,
-                                        client = client,
-                                        broadcast = false,
-                                        archived = false,
-                                        default = false,
-                                        description = null,
-                                        groupMentions = null,
-                                        userMentions = null,
-                                        lastMessage = null,
-                                        lastSeen = null,
-                                        topic = null,
-                                        announcement = null,
-                                        roles = null,
-                                        unread = 0,
-                                        readonly = false,
-                                        muted = null,
-                                        subscriptionId = "",
-                                        timestamp = null,
-                                        updatedAt = null,
-                                        user = null
+                            val result = retryIO("createDirectMessage(${matchFromSpotlight.id}") {
+                                client.createDirectMessage(username = matchFromSpotlight.id)
+                            }
+                            with(matchFromSpotlight) {
+                                ChatRoom(
+                                    id = result.id,
+                                    type = roomTypeOf(RoomType.DIRECT_MESSAGE),
+                                    name = u.username ?: u.name.orEmpty(),
+                                    fullName = u.name,
+                                    favorite = false,
+                                    open = false,
+                                    alert = false,
+                                    status = status,
+                                    client = client,
+                                    broadcast = false,
+                                    archived = false,
+                                    default = false,
+                                    description = null,
+                                    groupMentions = null,
+                                    userMentions = null,
+                                    lastMessage = null,
+                                    lastSeen = null,
+                                    topic = null,
+                                    announcement = null,
+                                    roles = null,
+                                    unread = 0,
+                                    readonly = false,
+                                    muted = null,
+                                    subscriptionId = "",
+                                    timestamp = null,
+                                    updatedAt = null,
+                                    user = null
                                 )
                             }
                         } else null
@@ -98,6 +100,10 @@ class UserDetailsPresenter @Inject constructor(
                 Timber.e(ex)
             }
         }
+    }
+
+    fun createDirectMessage(username: String) {
+
     }
 
     private suspend fun chatRoomByName(name: String? = null): List<ChatRoom> = withContext(CommonPool) {
