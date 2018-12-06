@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.chatdetails.ui.ChatDetailsActivity
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
-import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.mentions.presentention.MentionsPresenter
@@ -122,9 +122,9 @@ class MentionsFragment : Fragment(), MentionsView {
     }
 
     private fun setupToolbar() {
-        (activity as ChatRoomActivity).let {
-            it.showToolbarTitle(getString(R.string.msg_mentions))
-            it.hideToolbarChatRoomIcon()
+        (activity as ChatDetailsActivity).let {
+            it.setToolbarTitle(getString(R.string.msg_mentions))
+            it.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         }
     }
 }

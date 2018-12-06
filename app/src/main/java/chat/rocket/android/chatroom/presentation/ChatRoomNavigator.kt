@@ -1,6 +1,7 @@
 package chat.rocket.android.chatroom.presentation
 
 import chat.rocket.android.R
+import chat.rocket.android.chatdetails.ui.chatDetailsIntent
 import chat.rocket.android.chatinformation.ui.messageInformationIntent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.ui.chatRoomIntent
@@ -13,35 +14,20 @@ import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.util.extensions.addFragmentBackStack
 
 class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
-
-    fun toMembersList(chatRoomId: String) {
-        activity.addFragmentBackStack(TAG_MEMBERS_FRAGMENT, R.id.fragment_container) {
-            chat.rocket.android.members.ui.newInstance(chatRoomId)
-        }
-    }
-
-    fun toMentions(chatRoomId: String) {
-        activity.addFragmentBackStack(TAG_MENTIONS_FRAGMENT, R.id.fragment_container) {
-            chat.rocket.android.mentions.ui.newInstance(chatRoomId)
-        }
-    }
-
-    fun toPinnedMessageList(chatRoomId: String) {
-        activity.addFragmentBackStack(TAG_PINNED_MESSAGES_FRAGMENT, R.id.fragment_container) {
-            chat.rocket.android.pinnedmessages.ui.newInstance(chatRoomId)
-        }
-    }
-
-    fun toFavoriteMessageList(chatRoomId: String) {
-        activity.addFragmentBackStack(TAG_FAVORITE_MESSAGES_FRAGMENT, R.id.fragment_container) {
-            chat.rocket.android.favoritemessages.ui.newInstance(chatRoomId)
-        }
-    }
-
-    fun toFileList(chatRoomId: String) {
-        activity.addFragmentBackStack(TAG_FILES_FRAGMENT, R.id.fragment_container) {
-            chat.rocket.android.files.ui.newInstance(chatRoomId)
-        }
+    fun toChatDetails(
+        chatRoomId: String,
+        chatRoomType: String,
+        isChatRoomSubscribed: Boolean,
+        isMenuDisabled: Boolean
+    ) {
+        activity.startActivity(
+            activity.chatDetailsIntent(
+                chatRoomId,
+                chatRoomType,
+                isChatRoomSubscribed,
+                isMenuDisabled
+            )
+        )
     }
 
     fun toNewServer() {

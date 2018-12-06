@@ -87,7 +87,9 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.emoji_image_row_item.*
+import kotlinx.android.synthetic.main.emoji_image_row_item.view.*
 import kotlinx.android.synthetic.main.emoji_row_item.*
+import kotlinx.android.synthetic.main.emoji_row_item.view.*
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
@@ -96,6 +98,7 @@ import timber.log.Timber
 import java.io.File
 import java.io.IOException
 import kotlinx.android.synthetic.main.reaction_praises_list_item.*
+import kotlinx.android.synthetic.main.reaction_praises_list_item.view.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -142,11 +145,7 @@ private const val BUNDLE_CHAT_ROOM_IS_FAVORITE = "chat_room_is_favorite"
 private const val BUNDLE_CHAT_ROOM_MESSAGE = "chat_room_message"
 
 internal const val MENU_ACTION_FAVORITE_UNFAVORITE_CHAT = 1
-internal const val MENU_ACTION_MEMBER = 2
-internal const val MENU_ACTION_MENTIONS = 3
-internal const val MENU_ACTION_PINNED_MESSAGES = 4
-internal const val MENU_ACTION_FAVORITE_MESSAGES = 5
-internal const val MENU_ACTION_FILES = 6
+internal const val MENU_ACTION_SHOW_DETAILS = 2
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener,
     ChatRoomAdapter.OnActionSelected, Drawable.Callback {
@@ -163,7 +162,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     internal lateinit var chatRoomType: String
     private var newMessageCount: Int = 0
     private var chatRoomMessage: String? = null
-    private var isSubscribed: Boolean = true
+    internal var isSubscribed: Boolean = true
     private var isReadOnly: Boolean = false
     private var isCreator: Boolean = false
     internal var isFavorite: Boolean = false
@@ -704,9 +703,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                     GlideApp.with(requireContext()).asBitmap()
                 }
 
-                glideRequest.load(url).into(emoji_image_view)
+                glideRequest.load(url).into(view_flipper.emoji_image_view)
             } else {
-                emoji_view.text = EmojiParser.parse(requireContext(), shortname)
+                view_flipper.emoji_view.text = EmojiParser.parse(requireContext(), shortname)
             }
 
             var listing = ""

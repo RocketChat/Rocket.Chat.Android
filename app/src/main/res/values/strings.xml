@@ -36,6 +36,10 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_create_channel">Create Channel</string>
     <string name="title_licence">Licence</string>
     <string name="title_are_you_sure">Are you sure?</string>
+    <string name="title_channel_details">Channel Details</string>
+    <string name="title_topic">Topic</string>
+    <string name="title_announcement">Announcement</string>
+    <string name="title_description">Description</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
@@ -171,8 +175,12 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_two_factor_authentication">Two-factor Authentication</string>
     <string name="msg__your_2fa_code">What’s your 2FA code?</string>
     <string name="msg_permalink_copied">Permalink copied</string>
+    <string name="msg_no_topic">No topic added</string>
+    <string name="msg_no_announcement">No announcement added</string>
+    <string name="msg_no_description">No description added</string>
     <string name="msg_send_email">Send email</string>
     <string name="msg_android_app_support">Android app support</string>
+
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s reacted with %2$s</item>
         <item quantity="other">%1$s reacted with %2$s</item>

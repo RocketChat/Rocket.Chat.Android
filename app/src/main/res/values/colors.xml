@@ -55,6 +55,8 @@
 
     <color name="colorDivider">#1F000000</color>
 
+    <color name="colorLightGrey">#F4F5F7</color>
+
     <!-- Suggestions -->
     <color name="suggestion_background_color">@color/colorWhite</color>
 

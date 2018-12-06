@@ -24,6 +24,10 @@
     <string name="title_create_channel">चैनल बनाएं</string>
     <string name="title_licence">Licence</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
+    <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
+    <string name="title_topic">विषय</string>
+    <string name="title_announcement">घोषणा</string>
+    <string name="title_description">विवरण</string>
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
@@ -177,6 +181,10 @@
     <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
     <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string> <!-- TODO - Add proper translation -->
+    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
+
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
         <item quantity="few">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
