@@ -92,38 +92,25 @@
         android:id="@+id/message_header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginStart="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
         app:layout_constraintStart_toEndOf="@+id/layout_avatar"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/day_marker_layout">
 
-<<<<<<< HEAD
-    <TextView
-        android:id="@+id/text_message_time"
-        style="@style/ChatList.Timestamp.TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/text_sender"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/text_sender"
-        tools:text="11:45 PM" />
-=======
         <TextView
             android:id="@+id/text_sender"
             style="@style/Sender.Name.TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginEnd="8dp"
+            android:layout_weight="1"
             tools:text="User Name with long name" />
->>>>>>> 1d1f9ba1c422f9bea486a0b4d356753f68f10ca0
 
         <TextView
             android:id="@+id/text_message_time"
-            style="@style/Timestamp.TextView"
+            style="@style/ChatRoom.Timestamp.TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"

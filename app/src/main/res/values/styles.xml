@@ -165,6 +165,10 @@
         <item name="closeIcon">@drawable/ic_close_white_24dp</item>
     </style>
 
+    <style name="ChatRoom.Timestamp.TextView" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">10sp</item>
+    </style>
+
     <style name="ChatRooms.Header" parent="TextAppearance.AppCompat.Headline">
         <item name="android:textSize">16sp</item>
     </style>
