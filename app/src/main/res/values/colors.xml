@@ -10,7 +10,8 @@
     <color name="colorPrimaryText">#DE000000</color>
     <color name="colorSecondaryText">#FF787878</color>
     <color name="colorSecondaryTextLight">#FFC1C1C1</color>
-    <color name="colorTimestampText">#FF5699FF</color>
+    <color name="colorTimestampText">#FF9DA2A9</color>
+    <color name="colorTimestampTextUnread">#FF5699FF</color>
     <color name="colorLastMessageText">#99000000</color>
 
     <!-- User status colors -->

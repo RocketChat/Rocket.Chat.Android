@@ -10,6 +10,7 @@ import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.UserStatus
+import chat.rocket.common.util.ifNull
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
@@ -29,6 +30,12 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
             image_avatar.setImageURI(room.avatar)
             text_chat_name.text = room.name
 
+            if (room.status != null && room.type is RoomType.DirectMessage) {
+                image_chat_icon.setImageDrawable(getStatusDrawable(room.status))
+            } else {
+                image_chat_icon.setImageDrawable(getRoomDrawable(room.type))
+            }
+
             if (room.lastMessage != null) {
                 text_last_message.text = room.lastMessage
                 text_last_message.isVisible = true
@@ -37,10 +44,10 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
             }
 
             if (room.date != null) {
-                text_last_message_date_time.text = room.date
-                text_last_message_date_time.isVisible = true
+                text_timestamp.text = room.date
+                text_timestamp.isVisible = true
             } else {
-                text_last_message_date_time.isInvisible = true
+                text_timestamp.isInvisible = true
             }
 
             if (room.unread != null) {
@@ -50,10 +57,17 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
                 text_total_unread_messages.isInvisible = true
             }
 
-            if (room.status != null && room.type is RoomType.DirectMessage) {
-                image_chat_icon.setImageDrawable(getStatusDrawable(room.status))
-            } else {
-                image_chat_icon.setImageDrawable(getRoomDrawable(room.type))
+            if (room.alert || room.unread != null) {
+                text_timestamp.setTextAppearance(
+                    context,
+                    R.style.ChatList_Timestamp_Unread_TextView
+                )
+                text_last_message.setTextAppearance(
+                    context,
+                    R.style.ChatList_LastMessage_Unread_TextView
+                )
+                text_total_unread_messages.text = "!"
+                text_total_unread_messages.isVisible = true
             }
 
             setOnClickListener { listener(room) }

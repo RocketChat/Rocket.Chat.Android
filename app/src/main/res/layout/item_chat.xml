@@ -31,19 +31,19 @@
 
     <TextView
         android:id="@+id/text_chat_name"
-        style="@style/ChatRoom.Name.TextView"
+        style="@style/ChatList.ChatName.TextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/text_view_drawable_padding"
         android:textDirection="locale"
-        app:layout_constraintEnd_toStartOf="@+id/text_last_message_date_time"
+        app:layout_constraintEnd_toStartOf="@+id/text_timestamp"
         app:layout_constraintStart_toEndOf="@+id/image_chat_icon"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Margaret Hanson" />
 
     <TextView
-        android:id="@+id/text_last_message_date_time"
-        style="@style/Timestamp.TextView"
+        android:id="@+id/text_timestamp"
+        style="@style/ChatList.Timestamp.TextView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:textDirection="locale"
@@ -53,7 +53,7 @@
 
     <TextView
         android:id="@+id/text_last_message"
-        style="@style/ChatRoom.LastMessage.TextView"
+        style="@style/ChatList.LastMessage.TextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
