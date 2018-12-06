@@ -10,7 +10,6 @@ import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.UserStatus
-import chat.rocket.common.util.ifNull
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
@@ -57,17 +56,20 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
                 text_total_unread_messages.isInvisible = true
             }
 
-            if (room.alert || room.unread != null) {
-                text_timestamp.setTextAppearance(
-                    context,
-                    R.style.ChatList_Timestamp_Unread_TextView
-                )
-                text_last_message.setTextAppearance(
-                    context,
-                    R.style.ChatList_LastMessage_Unread_TextView
-                )
-                text_total_unread_messages.text = "!"
-                text_total_unread_messages.isVisible = true
+            context?.let {
+                if (room.alert || room.unread != null) {
+                    text_timestamp.setTextAppearance(it, R.style.ChatList_Timestamp_Unread_TextView)
+                    text_last_message.setTextAppearance(
+                        it,
+                        R.style.ChatList_LastMessage_Unread_TextView
+                    )
+                    text_total_unread_messages.text = "!"
+                    text_total_unread_messages.isVisible = true
+                } else {
+                    text_timestamp.setTextAppearance(it, R.style.ChatList_Timestamp_TextView)
+                    text_last_message.setTextAppearance(it, R.style.ChatList_LastMessage_TextView)
+                    text_total_unread_messages.isInvisible = true
+                }
             }
 
             setOnClickListener { listener(room) }
