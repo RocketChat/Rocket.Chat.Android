@@ -22,7 +22,7 @@
     <string name="title_update_profile">Обновить профиль</string>
     <string name="title_about">О программе</string>
     <string name="title_create_channel">Создать новый канал</string>
-    <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
+    <string name="title_channel_details">О канале</string>
     <string name="title_topic">Тема</string>
     <string name="title_announcement">Объявление</string>
     <string name="title_description">Описание</string>
@@ -163,9 +163,9 @@
     <string name="msg_view_more">больше</string>
     <string name="msg_view_less">меньше</string>
     <string name="msg_permalink_copied">Ссылка скопирована</string>
-    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
-    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
-    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
+    <string name="msg_no_topic">Нет темы</string>
+    <string name="msg_no_announcement">Нет объявления</string>
+    <string name="msg_no_description">Нет описания</string>
     <string name="msg_send_email">Отправить e-mail</string>
     <string name="msg_android_app_support">Поддержка Android-приложения</string>
     <string name="msg_muted_on_this_channel">Вы лишены дара речи на этом канале</string>
