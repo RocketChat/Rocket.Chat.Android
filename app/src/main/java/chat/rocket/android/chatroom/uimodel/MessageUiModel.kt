@@ -21,7 +21,8 @@ data class MessageUiModel(
     var isFirstUnread: Boolean,
     override var isTemporary: Boolean = false,
     override var menuItemsToHide: MutableList<Int> = mutableListOf(),
-    override var permalink: String
+    override var permalink: String,
+    val subscriptionId: String
 ) : BaseMessageUiModel<Message> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.MESSAGE.viewType

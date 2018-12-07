@@ -11,6 +11,7 @@ class MemberUiModel(
     private val settings: Map<String, Value<Any>>,
     private val baseUrl: String?
 ) {
+    val userId: String = member.id
     val avatarUri: String?
     val displayName: String
     val realName: String?
