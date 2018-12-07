@@ -22,9 +22,9 @@
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
     <string name="title_create_channel">चैनल बनाएं</string>
-    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
-    <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
-    <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
+    <string name="title_licence">लाइसेंस</string>
+    <string name="title_are_you_sure">क्या आपको यकीन है?</string>
+    <string name="title_channel_details">चैनल विवरण</string>
     <string name="title_topic">विषय</string>
     <string name="title_announcement">घोषणा</string>
     <string name="title_description">विवरण</string>
@@ -40,7 +40,7 @@
     <string name="action_create_channel">चैनल बनाएं</string>
     <string name="action_create">बनाएं</string>
     <string name="action_logout">लोग आउट करें</string>
-    <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
+    <string name="action_attach_a_files">एक फ़ाइल जोडो</string>
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
     <string name="action_join_chat">चैट में शामिल हों</string>
     <string name="action_add_account">खाता जोड़ो</string>
@@ -58,17 +58,17 @@
     <string name="action_create_server">नया सर्वर बनाएं</string>
     <string name="action_register">रजिस्टर</string>
     <string name="action_confirm">पुष्टि करें</string>
-    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
+    <string name="action_delete_account">खाता हटा दो</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
-        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
-        <item name="item_password">Change password</item> <!-- TODO Add translation -->
-        <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
-        <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
-        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
-        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
-        <item name="item_about">About</item> <!-- TODO Add translation -->
+        <item name="item_preferences">पसंद</item>
+        <item name="item_password">पासवर्ड बदलें</item>
+        <item name="item_share_app">ऐप शेयर करें</item>
+        <item name="item_rate_us">हमें रेटिंग दें</item>
+        <item name="item_contact_us">हमसे संपर्क करें</item>
+        <item name="item_licence">लाइसेंस</item>
+        <item name="item_about">के बारे में</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -177,18 +177,18 @@
     <string name="msg_channel_created_successfully">चैनल सफलतापूर्वक बनाया गया</string>
     <string name="msg_view_more">और देखें</string>
     <string name="msg_view_less">कम देखें</string>
-    <string name="msg_permalink_copied">Permalink copied</string> <!-- TODO - Add proper translation -->
-    <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
-    <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
-    <string name="msg_muted_on_this_channel">You are muted on this channel</string> <!-- TODO - Add proper translation -->
-    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
-    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
-    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
+    <string name="msg_permalink_copied">पर्मलिंक की प्रतिलिपि बनाई गई</string>
+    <string name="msg_send_email">ईमेल भेजें</string>
+    <string name="msg_android_app_support">एंड्रॉइड ऐप समर्थन</string>
+    <string name="msg_muted_on_this_channel">आप इस चैनल पर म्यूट कर रहे हैं</string>
+    <string name="msg_no_topic">कोई विषय नहीं जोड़ा गया</string>
+    <string name="msg_no_announcement">कोई घोषणा नहीं जोड़ा गया</string>
+    <string name="msg_no_description">कोई विवरण नहीं जोड़ा गया</string>
 
     <plurals name="msg_reacted_with_">
-        <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
-        <item quantity="few">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
-        <item quantity="many">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
+        <item quantity="one">% 1 $ s ने% 2 $ %d s के साथ प्रतिक्रिया व्यक्त की</item>
+        <item quantity="few">% 1 $ s ने% 2 $ s के साथ प्रतिक्रिया व्यक्त की</item>
+        <item quantity="many">% 1 $ s ने% 2 $ s के साथ प्रतिक्रिया व्यक्त की</item>
     </plurals>
 
     <!-- Preferences messages -->
@@ -226,8 +226,7 @@
     <string name="action_msg_share">शेयर करें</string>
     <string name="action_title_editing">संपादन संदेश</string>
     <string name="action_msg_add_reaction">प्रतिक्रिया जोड़ें</string>
-    <!-- TODO - Add proper translation -->
-    <string name="action_msg_copy_permalink">Copy permalink</string>
+    <string name="action_msg_copy_permalink">परमालिंक कॉपी करें</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">संपादन की अनुमति नहीं है</string>
