@@ -126,8 +126,8 @@ class RoomUiModelMapper(
             } else {
                 null
             }
+            val hasMentions = mapMentions(userMentions, groupMentions)
             val open = open
-
             val lastMessageMarkdown =
                 lastMessage?.let { Markwon.markdown(context, it.toString()).toString() }
 
@@ -139,6 +139,7 @@ class RoomUiModelMapper(
                 open = open,
                 date = timestamp,
                 unread = unread,
+                mentions = hasMentions,
                 alert = isUnread,
                 lastMessage = lastMessageMarkdown,
                 status = status,
@@ -201,6 +202,15 @@ class RoomUiModelMapper(
             else -> context.getString(R.string.msg_more_than_ninety_nine_unread_messages)
 
         }
+    }
+
+    private fun mapMentions(userMentions: Long?, groupMentions: Long?): Boolean {
+        if (userMentions != null && groupMentions != null) {
+            if (userMentions > 0 || groupMentions > 0) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun mapDate(date: Long?): CharSequence? = date?.localDateTime()?.date(context)
