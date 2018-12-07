@@ -353,6 +353,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="message">Message</string>
     <string name="timezone">Timezone</string>
     <string name="status" translatable="false">Status</string>
+    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string>
+    <string name="retry">Retry</string>
 
     <!-- Report -->
     <string name="submit">Submit</string>

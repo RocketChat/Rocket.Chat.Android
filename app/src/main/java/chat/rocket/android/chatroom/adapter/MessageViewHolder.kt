@@ -75,6 +75,7 @@ class MessageViewHolder(
 
             val senderId = data.message.sender?.id
             val subscriptionId = data.subscriptionId
+
             text_sender.setOnClickListener {
                 toUserDetails(context, senderId, subscriptionId)
             }
