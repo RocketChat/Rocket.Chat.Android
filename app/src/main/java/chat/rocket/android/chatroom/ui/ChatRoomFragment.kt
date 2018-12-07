@@ -70,6 +70,7 @@ import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.createImageFile
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
+import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.getBitmpap
@@ -839,9 +840,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         } else {
             input_container.isVisible = true
             text_room_is_read_only.isVisible = false
-            button_send.isVisible = false
             button_show_attachment_options.alpha = 1f
-            button_show_attachment_options.isVisible = true
 
             activity?.supportFragmentManager?.registerFragmentLifecycleCallbacks(
                 object : FragmentManager.FragmentLifecycleCallbacks() {
@@ -859,7 +858,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             )
 
             subscribeComposeTextMessage()
-            getUnfinishedMessage()
             emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
             emojiKeyboardPopup.listener = this
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
