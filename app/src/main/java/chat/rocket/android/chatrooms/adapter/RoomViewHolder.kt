@@ -53,10 +53,12 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
                 if (room.unread == null) text_total_unread_messages.text = "!"
                 if (room.unread != null) text_total_unread_messages.text = room.unread
                 if (room.mentions) text_total_unread_messages.text = "@${room.unread}"
+                text_chat_name.setTextAppearance(context, R.style.ChatList_ChatName_Unread_TextView)
                 text_timestamp.setTextAppearance(context, R.style.ChatList_Timestamp_Unread_TextView)
                 text_last_message.setTextAppearance(context, R.style.ChatList_LastMessage_Unread_TextView)
                 text_total_unread_messages.isVisible = true
             } else {
+                text_chat_name.setTextAppearance(context, R.style.ChatList_ChatName_TextView)
                 text_timestamp.setTextAppearance(context, R.style.ChatList_Timestamp_TextView)
                 text_last_message.setTextAppearance(context, R.style.ChatList_LastMessage_TextView)
                 text_total_unread_messages.isInvisible = true
