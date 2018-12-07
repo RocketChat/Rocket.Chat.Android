@@ -336,10 +336,10 @@
     <string name="message_room_changed_privacy">O tipo da sala mudou para: %1$s por %2$s</string>
 
     <!-- User Details -->
-    <!-- TODO - Add proper translation -->
     <string name="message">Mensagem</string>
-    <!-- TODO - Add proper translation -->
     <string name="timezone">Fuso horário</string>
+    <string name="error_opening_dm">Algo deu errado quando tentamos abrir esta conversa…</string>
+    <string name="retry">Retentar</string>
 
     <!-- Report -->
     <string name="submit">Enviar</string>

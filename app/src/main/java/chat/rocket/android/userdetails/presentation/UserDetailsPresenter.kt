@@ -2,7 +2,6 @@ package chat.rocket.android.userdetails.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
-import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.server.domain.GetConnectingServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
@@ -10,8 +9,8 @@ import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
+import chat.rocket.common.model.userStatusOf
 import chat.rocket.core.internal.rest.createDirectMessage
-import chat.rocket.core.internal.rest.spotlight
 import chat.rocket.core.model.ChatRoom
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.withContext
@@ -23,13 +22,11 @@ class UserDetailsPresenter @Inject constructor(
     private val dbManager: DatabaseManager,
     private val strategy: CancelStrategy,
     serverInteractor: GetConnectingServerInteractor,
-    factory: ConnectionManagerFactory,
-    userHelper: UserHelper
+    factory: ConnectionManagerFactory
 ) {
     private var currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
-    private val currentUserId = userHelper.user()?.id
 
     fun loadUserDetails(userId: String) {
         launchUI(strategy) {
@@ -39,54 +36,41 @@ class UserDetailsPresenter @Inject constructor(
                 }
 
                 user?.let { u ->
-                    val localDMs = chatRoomByName(name = u.name)
+                    val openedChatRooms = chatRoomByName(name = u.name)
                     val avatarUrl = u.username?.let { currentServer.avatarUrl(avatar = it) }
 
-                    val chatRoom: ChatRoom? = if (localDMs.isEmpty()) {
-                        val query = u.username!!
-                        val spotlightResult = retryIO("spotlight($query)") {
-                            client.spotlight(query = query)
-                        }
+                    val chatRoom: ChatRoom? = if (openedChatRooms.isEmpty()) {
+                        ChatRoom(
+                            id = "",
+                            type = roomTypeOf(RoomType.DIRECT_MESSAGE),
+                            name = u.username ?: u.name.orEmpty(),
+                            fullName = u.name,
+                            favorite = false,
+                            open = false,
+                            alert = false,
+                            status = userStatusOf(u.status),
+                            client = client,
+                            broadcast = false,
+                            archived = false,
+                            default = false,
+                            description = null,
+                            groupMentions = null,
+                            userMentions = null,
+                            lastMessage = null,
+                            lastSeen = null,
+                            topic = null,
+                            announcement = null,
+                            roles = null,
+                            unread = 0,
+                            readonly = false,
+                            muted = null,
+                            subscriptionId = "",
+                            timestamp = null,
+                            updatedAt = null,
+                            user = null
+                        )
+                    } else openedChatRooms.firstOrNull()
 
-                        val matchFromSpotlight = spotlightResult.users.firstOrNull { it.username == query }
-
-                        if (matchFromSpotlight != null) {
-                            val result = retryIO("createDirectMessage(${matchFromSpotlight.id}") {
-                                client.createDirectMessage(username = matchFromSpotlight.id)
-                            }
-                            with(matchFromSpotlight) {
-                                ChatRoom(
-                                    id = result.id,
-                                    type = roomTypeOf(RoomType.DIRECT_MESSAGE),
-                                    name = u.username ?: u.name.orEmpty(),
-                                    fullName = u.name,
-                                    favorite = false,
-                                    open = false,
-                                    alert = false,
-                                    status = status,
-                                    client = client,
-                                    broadcast = false,
-                                    archived = false,
-                                    default = false,
-                                    description = null,
-                                    groupMentions = null,
-                                    userMentions = null,
-                                    lastMessage = null,
-                                    lastSeen = null,
-                                    topic = null,
-                                    announcement = null,
-                                    roles = null,
-                                    unread = 0,
-                                    readonly = false,
-                                    muted = null,
-                                    subscriptionId = "",
-                                    timestamp = null,
-                                    updatedAt = null,
-                                    user = null
-                                )
-                            }
-                        } else null
-                    } else localDMs.firstOrNull()
                     view.showUserDetails(
                         avatarUrl = avatarUrl,
                         username = u.username,
@@ -102,10 +86,54 @@ class UserDetailsPresenter @Inject constructor(
         }
     }
 
-    fun createDirectMessage(username: String) {
+    fun createDirectMessage(id: String) = launchUI(strategy) {
+        try {
+            val result = retryIO("createDirectMessage($id") {
+                client.createDirectMessage(username = id)
+            }
 
+            val userEntity = withContext(CommonPool) {
+                dbManager.userDao().getUser(id = id)
+            }
+
+            if (userEntity != null) {
+                view.toDirectMessage(
+                    chatRoom = ChatRoom(
+                        id = result.id,
+                        type = roomTypeOf(RoomType.DIRECT_MESSAGE),
+                        name = userEntity.username ?: userEntity.name.orEmpty(),
+                        fullName = userEntity.name,
+                        favorite = false,
+                        open = false,
+                        alert = false,
+                        status = userStatusOf(userEntity.status),
+                        client = client,
+                        broadcast = false,
+                        archived = false,
+                        default = false,
+                        description = null,
+                        groupMentions = null,
+                        userMentions = null,
+                        lastMessage = null,
+                        lastSeen = null,
+                        topic = null,
+                        announcement = null,
+                        roles = null,
+                        unread = 0,
+                        readonly = false,
+                        muted = null,
+                        subscriptionId = "",
+                        timestamp = null,
+                        updatedAt = result.updatedAt,
+                        user = null
+                    )
+                )
+            }
+        } catch (ex: Exception) {
+            Timber.e(ex)
+            view.onOpenDirectMessageError()
+        }
     }
-
     private suspend fun chatRoomByName(name: String? = null): List<ChatRoom> = withContext(CommonPool) {
         return@withContext dbManager.chatRoomDao().getAllSync().filter {
             if (name == null) {
@@ -145,5 +173,4 @@ class UserDetailsPresenter @Inject constructor(
             }
         }
     }
-
 }

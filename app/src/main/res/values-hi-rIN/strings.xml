@@ -337,16 +337,13 @@
     <string name="message_room_changed_privacy">%2$s ने रूम का प्रकार बदलकर %1$s किया </string>
 
     <!-- User Details -->
-    <!-- TODO - Add proper translation -->
-    <string name="message">Message</string>
-    <!-- TODO - Add proper translation -->
-    <string name="timezone">Timezone</string>
+    <string name="message">Message</string> <!-- TODO - Add proper translation -->
+    <string name="timezone">Timezone</string> <!-- TODO - Add proper translation -->
+    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string> <!-- TODO - Add proper translation -->
+    <string name="retry">Retry</string> <!-- TODO - Add proper translation -->
 
     <!-- Report -->
-    <!--TODO - Add proper translation-->
-    <string name="submit">Submit</string>
-    <!--TODO - Add proper translation-->
-    <string name="required">*required</string>
-    <!--TODO - Add proper translation-->
+    <string name="submit">Submit</string> <!-- TODO - Add proper translation -->
+    <string name="required">*required</string> <!-- TODO - Add proper translation -->
     <string name="report_sent">Your report has been sent!</string>
 </resources>
