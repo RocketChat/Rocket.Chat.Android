@@ -1,14 +1,12 @@
 package chat.rocket.android.contacts
 
 import android.Manifest
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
@@ -196,6 +194,7 @@ class ContactsFragment : Fragment() {
                 } else {
                     populateContacts(false)
                 }
+                setupFrameLayout(contactArrayList)
                 return
             }
             else -> {
@@ -213,9 +212,9 @@ class ContactsFragment : Fragment() {
                 && ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED
         ) {
             populateContacts(true)
+            setupFrameLayout(contactArrayList)
         } else {
-            ActivityCompat.requestPermissions(
-                    this.activity as Activity,
+            requestPermissions(
                     arrayOf(
                             Manifest.permission.READ_CONTACTS,
                             Manifest.permission.WRITE_CONTACTS
@@ -223,9 +222,6 @@ class ContactsFragment : Fragment() {
                     MY_PERMISSIONS_REQUEST_RW_CONTACTS
             )
         }
-
-        // Filter before sending to FrameLayout
-        setupFrameLayout(contactArrayList)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
