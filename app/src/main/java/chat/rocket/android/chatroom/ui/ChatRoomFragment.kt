@@ -1167,4 +1167,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun sendMessage(chatRoomId: String, text: String) {
         presenter.sendMessage(chatRoomId, text, null)
     }
+
+    override fun reportMessage(id: String) {
+        presenter.reportMessage(messageId = id,
+            description = "This message was reported by a user from the Android app")
+    }
 }

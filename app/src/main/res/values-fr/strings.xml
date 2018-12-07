@@ -226,6 +226,8 @@
     <string name="action_msg_add_reaction">Ajouter une réaction</string>
     <!-- TODO - Add proper translation -->
     <string name="action_msg_copy_permalink">Copy permalink</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">Report</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">L\'édition n\'est pas autorisée</string>
@@ -340,4 +342,11 @@
     <string name="message">Message</string>
     <!-- TODO - Add proper translation -->
     <string name="timezone">Timezone</string>
+    <!-- Report -->
+    <!--TODO - Add proper translation-->
+    <string name="submit">Submit</string>
+    <!--TODO - Add proper translation-->
+    <string name="required">*required</string>
+    <!--TODO - Add proper translation-->
+    <string name="report_sent">Your report has been sent!</string>
 </resources>
