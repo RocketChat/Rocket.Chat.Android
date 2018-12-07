@@ -32,6 +32,30 @@
         tools:visibility="visible" />
 
     <TextView
+        android:id="@+id/widechat_welcome_to_app"
+        style="@style/Widechat.NoChats.Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/widechat_text_no_data_to_display"
+        android:layout_marginBottom="16dp"
+        android:paddingStart="8dp"
+        android:text="@string/msg_widechat_welcome_to_app"
+        android:textStyle="bold"
+        android:textSize="28sp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/widechat_text_no_data_to_display"
+        style="@style/Widechat.NoChats.Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/msg_widechat_no_chats_to_display"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <TextView
         android:id="@+id/text_connection_status"
         android:layout_width="match_parent"
         android:layout_height="32dp"

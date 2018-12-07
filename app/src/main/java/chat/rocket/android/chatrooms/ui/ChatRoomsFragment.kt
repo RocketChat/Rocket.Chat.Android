@@ -172,7 +172,12 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     Timber.d("Got items: $it")
                     adapter.values = it
                     if (rooms.isNotEmpty()) {
-                        text_no_data_to_display.isVisible = false
+                        if (Constants.WIDECHAT) {
+                            widechat_welcome_to_app.isVisible = false
+                            widechat_text_no_data_to_display.isVisible = false
+                        } else {
+                            text_no_data_to_display.isVisible = false
+                        }
                     }
                 }
             })
@@ -380,7 +385,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     private fun showNoChatRoomsToDisplay() {
-        ui { text_no_data_to_display.isVisible = true }
+        if (Constants.WIDECHAT) {
+            ui { widechat_welcome_to_app.isVisible = true
+                 widechat_text_no_data_to_display.isVisible = true
+            }
+        } else {
+            ui { text_no_data_to_display.isVisible = true }
+        }
     }
 
     override fun showLoading() {
