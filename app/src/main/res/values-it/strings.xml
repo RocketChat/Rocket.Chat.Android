@@ -329,4 +329,9 @@
     <string name="message_information_title">Informazioni Messaggio</string>
     <string name="message_room_changed_privacy">Il tipo di stanza è cambiato in: %1$s da %2$s</string>
 
+    <!-- User Details -->
+    <!-- TODO - Add proper translation -->
+    <string name="message">Message</string>
+    <!-- TODO - Add proper translation -->
+    <string name="timezone">Timezone</string>
 </resources>

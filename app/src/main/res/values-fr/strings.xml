@@ -334,4 +334,10 @@
     <string name="msg_sent_attachment">Envoyé un fichier</string>
     <!--TODO - Add proper translation-->
     <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
+
+    <!-- User Details -->
+    <!-- TODO - Add proper translation -->
+    <string name="message">Message</string>
+    <!-- TODO - Add proper translation -->
+    <string name="timezone">Timezone</string>
 </resources>
