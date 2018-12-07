@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.chatroom.ui.ChatRoomActivity
+import chat.rocket.android.chatdetails.ui.ChatDetailsActivity
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.presentation.MembersPresenter
@@ -127,13 +127,13 @@ class MembersFragment : Fragment(), MembersView {
     }
 
     private fun setupToolbar(totalMembers: Long? = null) {
-        (activity as ChatRoomActivity).let {
+        (activity as ChatDetailsActivity).let {
             if (totalMembers != null) {
-                it.showToolbarTitle(getString(R.string.title_counted_members, totalMembers))
+                it.setToolbarTitle(getString(R.string.title_counted_members, totalMembers))
             } else {
-                it.showToolbarTitle(getString(R.string.title_members))
+                it.setToolbarTitle(getString(R.string.title_members))
             }
-            it.hideToolbarChatRoomIcon()
+            it.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         }
     }
 }

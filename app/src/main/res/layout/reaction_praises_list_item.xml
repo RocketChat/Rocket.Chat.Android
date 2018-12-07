@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:padding="16dp">
+
+    <ViewFlipper
+        android:id="@+id/view_flipper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include layout="@layout/emoji_row_item" />
+
+        <include layout="@layout/emoji_image_row_item" />
+    </ViewFlipper>
+
+    <TextView
+        android:id="@+id/text_view_usernames"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:textColor="@color/darkGray"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view_flipper"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/view_flipper"
+        app:layout_constraintTop_toTopOf="@+id/view_flipper"
+        tools:text="Ann reacted with :grin:" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

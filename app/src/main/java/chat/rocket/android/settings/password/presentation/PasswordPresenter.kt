@@ -1,5 +1,6 @@
 package chat.rocket.android.settings.password.presentation
 
+import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
@@ -14,6 +15,7 @@ import javax.inject.Inject
 class PasswordPresenter @Inject constructor(
     private val view: PasswordView,
     private val strategy: CancelStrategy,
+    private val analyticsManager: AnalyticsManager,
     serverInteractor: GetCurrentServerInteractor,
     factory: RocketChatClientFactory
 ) {
@@ -30,10 +32,12 @@ class PasswordPresenter @Inject constructor(
                     client.updateProfile(me.id, null, null, password, null)
                 }
 
+                analyticsManager.logResetPassword(true)
                 view.showPasswordSuccessfullyUpdatedMessage()
-                view.hideLoading()
             } catch (exception: RocketChatException) {
+                analyticsManager.logResetPassword(false)
                 view.showPasswordFailsUpdateMessage(exception.message)
+            } finally {
                 view.hideLoading()
             }
         }

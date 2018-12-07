@@ -251,6 +251,9 @@ class ChatRoomAdapter(
                     R.id.action_message_permalink -> {
                         actionSelectListener?.copyPermalink(id)
                     }
+                    R.id.action_message_report -> {
+                        actionSelectListener?.reportMessage(id)
+                    }
                     else -> {
                         TODO("Not implemented")
                     }
@@ -260,16 +263,29 @@ class ChatRoomAdapter(
     }
 
     interface OnActionSelected {
+
         fun showMessageInfo(id: String)
+
         fun citeMessage(roomName: String, roomType: String, messageId: String, mentionAuthor: Boolean)
+
         fun copyMessage(id: String)
+
         fun editMessage(roomId: String, messageId: String, text: String)
+
         fun toogleStar(id: String, star: Boolean)
+
         fun tooglePin(id: String, pin: Boolean)
+
         fun deleteMessage(roomId: String, id: String)
+
         fun showReactions(id: String)
+
         fun openDirectMessage(roomName: String, message: String)
+
         fun sendMessage(chatRoomId: String, text: String)
+
         fun copyPermalink(id: String)
+
+        fun reportMessage(id: String)
     }
 }

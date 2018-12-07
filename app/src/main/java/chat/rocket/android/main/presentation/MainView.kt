@@ -4,9 +4,10 @@ import chat.rocket.android.authentication.server.presentation.VersionCheckView
 import chat.rocket.android.core.behaviours.MessageView
 import chat.rocket.android.main.uimodel.NavHeaderUiModel
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.server.presentation.TokenView
 import chat.rocket.common.model.UserStatus
 
-interface MainView : MessageView, VersionCheckView {
+interface MainView : MessageView, VersionCheckView, TokenView {
 
     /**
      * Shows the current user status.
@@ -30,8 +31,6 @@ interface MainView : MessageView, VersionCheckView {
     fun setupServerAccountList(serverAccountList: List<Account>)
 
     fun closeServerSelection()
-
-    fun invalidateToken(token: String)
 
     fun showProgress()
 

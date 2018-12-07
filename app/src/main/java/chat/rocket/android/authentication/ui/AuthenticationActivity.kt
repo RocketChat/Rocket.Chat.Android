@@ -19,7 +19,6 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.app_bar.*
-import kotlinx.coroutines.experimental.Job
 import javax.inject.Inject
 
 class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
@@ -27,7 +26,6 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
     lateinit var presenter: AuthenticationPresenter
-    val job = Job()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)

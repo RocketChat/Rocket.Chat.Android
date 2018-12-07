@@ -2,6 +2,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Inicia sesión en tu servidor</string>
     <string name="title_log_in">Iniciar sesión</string>
+    <string name="title_share_the_app">Compartir aplicación</string>
     <string name="title_register_username">Registrar nombre de usuario</string>
     <string name="title_reset_password">Restablecer la contraseña</string>
     <string name="title_sign_up">Regístrate</string>
@@ -14,12 +15,19 @@
     <string name="title_settings">Configuraciones</string>
     <string name="title_preferences">Preferences</string> <!-- TODO Add translation -->
     <string name="title_change_password">Cambia la contraseña</string>
+    <string name="title_rate_us">Nos califica</string>
     <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
     <string name="title_password">Cambia la contraseña</string>
     <string name="title_update_profile">Actualización del perfil</string>
     <string name="title_about">Acerca de</string>
     <string name="title_create_channel">Crear canal</string>
-    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
+    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
+    <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
+    <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
+    <string name="title_topic">Tema</string>
+    <string name="title_announcement">Anuncio</string>
+    <string name="title_description">Descripción</string>
+
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
     <string name="action_use_this_username">Usa este nombre de usuario</string>
@@ -31,8 +39,7 @@
     <string name="action_create_channel">Crear canal</string>
     <string name="action_create">Create</string>
     <string name="action_logout">Cerrar sesión</string>
-    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
-    <string name="action_files">Archivos</string>
+    <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">Confirmar cambio de contraseña</string>
     <string name="action_join_chat">Unirse al chat</string>
     <string name="action_add_account">Añadir cuenta</string>
@@ -43,24 +50,31 @@
     <string name="action_drawing">Dibujo</string>
     <string name="action_save_to_gallery">Guardar en la galería</string>
     <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
-    <string name="action_take_photo">Select photo from gallery</string> <!-- TODO Add translation -->
+    <string name="action_take_a_photo">Take a photo</string> <!-- TODO Add translation -->
     <string name="action_reset_avatar">Reset avatar</string> <!-- TODO Add translation -->
     <string name="action_connect_server">Connect with a server</string> <!-- TODO Add translation -->
     <string name="action_join_community">Join in the community</string> <!-- TODO Add translation -->
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
+    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
-        <item name="item_password">Cambia la contraseña</item>
-        <item name="item_password">Acerca de</item>
+        <item name="item_password">Change password</item> <!-- TODO Add translation -->
+        <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
+        <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
+        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
+        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_about">About</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Lo sentimos, ha ocurrido un error, por favor intente de nuevo</string>
     <string name="msg_no_data_to_display">No hay información para mostrar</string>
+    <string name="msg_check_this_out">Mira esto</string>
+    <string name="msg_share_using">Compartir usando</string>
     <string name="msg_profile_update_successfully">Actualización de perfil con éxito</string>
     <string name="msg_username">usuario</string>
     <string name="msg_username_or_email">Nombre de usuario o correo electrónico</string>
@@ -155,12 +169,20 @@
     <string name="msg_member_already_added">Ya has seleccionado este usuario</string>
     <string name="msg_member_not_found">Miembro no encontrado</string>
     <string name="msg_channel_created_successfully">Canal creado con éxito</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_more">view more</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_view_less">view less</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_permalink_copied">Permalink copied</string>
+    <string name="msg_view_more">view more</string> <!-- TODO - Add proper translation -->
+    <string name="msg_view_less">view less</string> <!-- TODO - Add proper translation -->
+    <string name="msg_permalink_copied">Permalink copied</string> <!-- TODO - Add proper translation -->
+    <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
+    <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string> <!-- TODO - Add proper translation -->
+    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
+
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
+        <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
+    </plurals>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
@@ -198,6 +220,8 @@
     <string name="action_title_editing">Edición de mensaje</string>
     <string name="action_msg_add_reaction">Añadir una reacción</string>
     <string name="action_msg_copy_permalink">Copiar permalink</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">Report</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">La edición no és permitida</string>
@@ -308,7 +332,16 @@
     <string name="msg_file_description">Descripción del archivo</string>
     <string name="msg_send">Enviar</string>
     <string name="msg_sent_attachment">Envió un archivo</string>
-    <!--TODO - Add proper translation-->
-    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string> <!--TODO - Add proper translation-->
 
+    <!-- User Details -->
+    <string name="message">Message</string> <!-- TODO - Add proper translation -->
+    <string name="timezone">Timezone</string> <!-- TODO - Add proper translation -->
+    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string> <!-- TODO - Add proper translation -->
+    <string name="retry">Retry</string> <!-- TODO - Add proper translation -->
+
+    <!-- Report -->
+    <string name="submit">Submit</string> <!--TODO - Add proper translation-->
+    <string name="required">*required</string> <!--TODO - Add proper translation-->
+    <string name="report_sent">Your report has been sent!</string> <!--TODO - Add proper translation-->
 </resources>

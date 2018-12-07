@@ -23,9 +23,16 @@ class OnBoardingPresenter @Inject constructor(
     private val getAccountsInteractor: GetAccountsInteractor,
     val settingsInteractor: GetSettingsInteractor,
     val factory: RocketChatClientFactory
-) : CheckServerPresenter(strategy, factory, settingsInteractor) {
+) : CheckServerPresenter(
+    strategy = strategy,
+    factory = factory,
+    settingsInteractor = settingsInteractor,
+    refreshSettingsInteractor = refreshSettingsInteractor
+) {
 
     fun toSignInToYourServer() = navigator.toSignInToYourServer()
+
+    fun toCreateANewServer(createServerUrl: String) = navigator.toWebPage(createServerUrl)
 
     fun connectToCommunityServer(communityServerUrl: String) {
         connectToServer(communityServerUrl) {
@@ -63,8 +70,6 @@ class OnBoardingPresenter @Inject constructor(
         }
     }
 
-    fun toCreateANewServer(createServerUrl: String) = navigator.toWebPage(createServerUrl)
-
     private fun connectToServer(serverUrl: String, block: () -> Unit) {
         launchUI(strategy) {
             // Check if we already have an account for this server...
@@ -77,9 +82,9 @@ class OnBoardingPresenter @Inject constructor(
             try {
                 withContext(DefaultDispatcher) {
                     setupConnectionInfo(serverUrl)
-                    refreshSettingsInteractor.refresh(serverUrl)
 
                     // preparing next fragment before showing it
+                    refreshServerAccounts()
                     checkEnabledAccounts(serverUrl)
                     checkIfLoginFormIsEnabled()
                     checkIfCreateNewAccountIsEnabled()

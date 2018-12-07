@@ -6,5 +6,6 @@ data class ReactionUiModel(
     val unicode: CharSequence,
     val count: Int,
     val usernames: List<String> = emptyList(),
-    var url: String? = null
+    var url: String? = null,
+    val isCustom: Boolean = false
 )
