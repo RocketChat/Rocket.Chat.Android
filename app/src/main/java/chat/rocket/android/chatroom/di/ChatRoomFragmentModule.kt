@@ -9,9 +9,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.db.ChatRoomDao
 import chat.rocket.android.db.DatabaseManager
-import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.db.UserDao
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetCurrentUserInteractor
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.SettingsRepository

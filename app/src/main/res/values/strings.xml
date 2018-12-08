@@ -203,7 +203,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_view_more">view more</string>
     <string name="msg_view_less">view less</string>
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
-    
+
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string>
     <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string>
@@ -240,6 +240,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_title_editing">Editing Message</string>
     <string name="action_msg_add_reaction">Add reaction</string>
     <string name="action_msg_copy_permalink">Copy permalink</string>
+    <string name="action_msg_report">Report</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Editing is not allowed</string>
@@ -346,5 +347,17 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="message_information_title">Message information</string>
     <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
 
-    <string name="foss" tools:ignore="MissingTranslation">(FOSS)</string>
+    <string name="foss" translatable="false">(FOSS)</string>
+
+    <!-- User Details -->
+    <string name="message">Message</string>
+    <string name="timezone">Timezone</string>
+    <string name="status" translatable="false">Status</string>
+    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string>
+    <string name="retry">Retry</string>
+
+    <!-- Report -->
+    <string name="submit">Submit</string>
+    <string name="required">*required</string>
+    <string name="report_sent">Your report has been sent!</string>
 </resources>

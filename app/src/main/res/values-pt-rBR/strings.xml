@@ -225,6 +225,8 @@
     <string name="action_title_editing">Editando mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
     <string name="action_msg_copy_permalink">Copiar permalink</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">Reportar</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Edição não permitida</string>
@@ -332,4 +334,15 @@
     <string name="msg_log_out">Deslogando…</string>
     <string name="msg_sent_attachment">Enviou um arquivo</string>
     <string name="message_room_changed_privacy">O tipo da sala mudou para: %1$s por %2$s</string>
+
+    <!-- User Details -->
+    <string name="message">Mensagem</string>
+    <string name="timezone">Fuso horário</string>
+    <string name="error_opening_dm">Algo deu errado quando tentamos abrir esta conversa…</string>
+    <string name="retry">Retentar</string>
+
+    <!-- Report -->
+    <string name="submit">Enviar</string>
+    <string name="required">*obrigatório</string>
+    <string name="report_sent">A mensagem foi reportada!</string>
 </resources>

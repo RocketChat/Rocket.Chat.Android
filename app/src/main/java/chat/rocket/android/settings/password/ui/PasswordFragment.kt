@@ -35,10 +35,6 @@ class PasswordFragment : Fragment(), PasswordView, ActionMode.Callback {
     private var actionMode: ActionMode? = null
     private val disposables = CompositeDisposable()
 
-    companion object {
-        fun newInstance() = PasswordFragment()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -142,5 +138,9 @@ class PasswordFragment : Fragment(), PasswordView, ActionMode.Callback {
         if (actionMode == null) {
             actionMode = (activity as PasswordActivity).startSupportActionMode(this)
         }
+    }
+
+    companion object {
+        fun newInstance() = PasswordFragment()
     }
 }

@@ -228,6 +228,8 @@
     <string name="action_msg_add_reaction">Tepki Ekle</string>
     <!-- TODO - Add proper translation -->
     <string name="action_msg_copy_permalink">Copy permalink</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">Report</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Düzenlemeye izin verilmiyor</string>
@@ -332,6 +334,16 @@
     <string name="notif_success_sending">Mesaj %1$s\'a gönderildi!</string>
     <string name="read_by">ile oku</string>
     <string name="message_information_title">Mesaj bilgisi</string>
-    <!--TODO - Add proper translation-->
-    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string> <!--TODO - Add proper translation-->
+
+    <!-- User Details -->
+    <string name="message">Message</string> <!--TODO - Add proper translation-->
+    <string name="timezone">Timezone</string> <!--TODO - Add proper translation-->
+    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string> <!-- TODO - Add proper translation -->
+    <string name="retry">Retry</string> <!-- TODO - Add proper translation -->
+
+    <!-- Report -->
+    <string name="submit">Submit</string> <!--TODO - Add proper translation-->
+    <string name="required">*required</string> <!--TODO - Add proper translation-->
+    <string name="report_sent">Your report has been sent!</string> <!--TODO - Add proper translation-->
 </resources>

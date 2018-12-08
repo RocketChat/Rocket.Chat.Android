@@ -68,17 +68,18 @@ import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extension.asObservable
+import chat.rocket.android.util.extension.createImageFile
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
+import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
+import chat.rocket.android.util.extensions.getBitmpap
 import chat.rocket.android.util.extensions.hideKeyboard
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.util.extension.createImageFile
-import chat.rocket.android.util.extensions.getBitmpap
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -86,19 +87,16 @@ import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.emoji_image_row_item.*
 import kotlinx.android.synthetic.main.emoji_image_row_item.view.*
-import kotlinx.android.synthetic.main.emoji_row_item.*
 import kotlinx.android.synthetic.main.emoji_row_item.view.*
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
+import kotlinx.android.synthetic.main.reaction_praises_list_item.view.*
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
-import kotlinx.android.synthetic.main.reaction_praises_list_item.*
-import kotlinx.android.synthetic.main.reaction_praises_list_item.view.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -144,7 +142,7 @@ private const val BUNDLE_CHAT_ROOM_IS_CREATOR = "chat_room_is_creator"
 private const val BUNDLE_CHAT_ROOM_IS_FAVORITE = "chat_room_is_favorite"
 private const val BUNDLE_CHAT_ROOM_MESSAGE = "chat_room_message"
 
-internal const val MENU_ACTION_FAVORITE_UNFAVORITE_CHAT = 1
+internal const val MENU_ACTION_FAVORITE_UNFAVOURITE_CHAT = 1
 internal const val MENU_ACTION_SHOW_DETAILS = 2
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener,
@@ -842,9 +840,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         } else {
             input_container.isVisible = true
             text_room_is_read_only.isVisible = false
-            button_send.isVisible = false
             button_show_attachment_options.alpha = 1f
-            button_show_attachment_options.isVisible = true
 
             activity?.supportFragmentManager?.registerFragmentLifecycleCallbacks(
                 object : FragmentManager.FragmentLifecycleCallbacks() {
@@ -862,7 +858,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             )
 
             subscribeComposeTextMessage()
-            getUnfinishedMessage()
             emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
             emojiKeyboardPopup.listener = this
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
@@ -1171,5 +1166,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun sendMessage(chatRoomId: String, text: String) {
         presenter.sendMessage(chatRoomId, text, null)
+    }
+
+    override fun reportMessage(id: String) {
+        presenter.reportMessage(messageId = id,
+            description = "This message was reported by a user from the Android app")
     }
 }
