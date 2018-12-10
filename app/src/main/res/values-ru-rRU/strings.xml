@@ -172,8 +172,7 @@
 
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s реагирует с %2$s</item>
-        <item quantity="few">%1$s реагируют с %2$s</item>
-        <item quantity="many">%1$s реагируют с %2$s</item>
+        <item quantity="other">%1$s реагирует с %2$s</item>
     </plurals>
 
     <!-- Create channel messages -->
