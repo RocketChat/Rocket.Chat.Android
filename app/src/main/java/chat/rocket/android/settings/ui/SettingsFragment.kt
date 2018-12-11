@@ -73,20 +73,22 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             resources.getStringArray(R.array.settings_actions)[1] ->
                 activity?.startActivity(Intent(activity, PasswordActivity::class.java))
 
-            resources.getStringArray(R.array.settings_actions)[2] -> shareApp()
+            resources.getStringArray(R.array.settings_actions)[2] -> (activity as? MainActivity)?.changeLanguage()
 
-            resources.getStringArray(R.array.settings_actions)[3] -> showAppOnStore()
+            resources.getStringArray(R.array.settings_actions)[3] -> shareApp()
 
-            resources.getStringArray(R.array.settings_actions)[4] -> contactSupport()
+            resources.getStringArray(R.array.settings_actions)[4] -> showAppOnStore()
 
-            resources.getStringArray(R.array.settings_actions)[5] -> activity?.startActivity(
+            resources.getStringArray(R.array.settings_actions)[5] -> contactSupport()
+
+            resources.getStringArray(R.array.settings_actions)[6] -> activity?.startActivity(
                 context?.webViewIntent(
                     getString(R.string.license_url),
                     getString(R.string.title_licence)
                 )
             )
 
-            resources.getStringArray(R.array.settings_actions)[6] -> {
+            resources.getStringArray(R.array.settings_actions)[7] -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
                     TAG_ABOUT_FRAGMENT,
                     R.id.fragment_container
@@ -96,6 +98,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             }
         }
     }
+
 
     private fun showAppOnStore() {
         try {

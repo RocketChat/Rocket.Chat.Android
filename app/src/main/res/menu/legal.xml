@@ -5,10 +5,10 @@
     <item
         android:id="@+id/action_terms_of_Service"
         android:title="@string/action_terms_of_service"
-        app:showAsAction="never" />
+        android:showAsAction="never" />
 
     <item
         android:id="@+id/action_privacy_policy"
         android:title="@string/action_privacy_policy"
-        app:showAsAction="never" />
+        android:showAsAction="never" />
 </menu>

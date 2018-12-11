@@ -4,6 +4,8 @@ import DrawableHelper
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +38,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.nav_header.view.*
+import java.util.Locale
 import javax.inject.Inject
 
 private const val CURRENT_STATE = "current_state"
@@ -257,4 +260,53 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         progressDialog?.dismiss()
         progressDialog = null
     }
+
+      fun changeLanguage(){
+        val languages = arrayOf("English", "Hindi", "Japanese", "Russian", "Italian")
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Choose Language")
+        builder.setSingleChoiceItems(languages,-1) { dialog, which ->
+            if (which==0){
+                setLocale("en")
+                recreate()
+            }else if (which==1){
+                setLocale("hi")
+                recreate()
+            }else if (which==2){
+                setLocale("ja")
+                recreate()
+            }else if (which==3){
+                setLocale("ru")
+                recreate()
+            }else if (which==4){
+                setLocale("it")
+                recreate()
+            }
+            dialog.dismiss()
+        }
+            val mdialog=builder.create()
+            mdialog.show()
+    }
+
+     fun setLocale(lang: String) {
+         val locale = Locale(lang)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
+
+        val editor = getSharedPreferences("Settings", Context.MODE_PRIVATE).edit()
+        editor.putString("My_Lang", lang)
+        editor.apply()
+    }
+
+    private fun loadLocale(){
+        val sharedPreferences =getSharedPreferences("settings",Activity.MODE_PRIVATE)
+        val language = sharedPreferences.getString("My_Lang","")
+        setLocale(language)
+    }
+
+
+
 }

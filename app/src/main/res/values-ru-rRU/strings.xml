@@ -64,6 +64,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Персональные</item>
         <item name="item_password">Изменить пароль</item>
+        <item name="change_language">Изменить язык</item>
         <item name="item_share_app">Поделиться приложением</item>
         <item name="item_rate_us">Оцените нас</item>
         <item name="item_contact_us">Связаться с нами</item>

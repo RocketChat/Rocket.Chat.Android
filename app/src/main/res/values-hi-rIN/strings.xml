@@ -64,6 +64,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">पसंद</item>
         <item name="item_password">पासवर्ड बदलें</item>
+        <item name="change_language">भाषा बदलें</item>
         <item name="item_share_app">ऐप शेयर करें</item>
         <item name="item_rate_us">हमें रेटिंग दें</item>
         <item name="item_contact_us">हमसे संपर्क करें</item>
