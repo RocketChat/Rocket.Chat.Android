@@ -22,6 +22,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_authentication">Authentication</string>
     <string name="title_legal_terms">Legal Terms</string>
     <string name="title_chats">Chats</string>
+    <string name="title_contacts">New Chat</string>
     <string name="title_profile">Profile</string>
     <string name="title_members">Members</string>
     <string name="title_counted_members">Members (%d)</string>
@@ -312,6 +313,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="Mute_someone_in_room">Mute someone in the room</string>
     <string name="Unmute_someone_in_room">Unmute someone in the room</string>
     <string name="Invite_user_to_join_channel">Invite one user to join this channel</string>
+    <string name="Invite">Invite</string>
     <string name="Unarchive">Unarchive</string>
     <string name="Join_the_given_channel">Join the given channel</string>
     <string name="Guggy_Command_Description">Generates a gif based upon the provided text</string>

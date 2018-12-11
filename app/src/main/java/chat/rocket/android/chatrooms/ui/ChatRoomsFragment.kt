@@ -30,15 +30,13 @@ import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModel
 import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModelFactory
 import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.chatrooms.viewmodel.Query
+import chat.rocket.android.contacts.ContactsFragment
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
+import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extension.onQueryTextListener
-import chat.rocket.android.util.extensions.fadeIn
-import chat.rocket.android.util.extensions.fadeOut
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
@@ -108,6 +106,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         subscribeUi()
 
         setupToolbar()
+        setupFab()
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
     }
@@ -179,6 +178,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 // to recreate the entire menu...
                 viewModel.showLastMessage = true
                 activity?.invalidateOptionsMenu()
+                create_new_channel_fab.isVisible = true
                 queryChatRoomsByName(null)
                 return true
             }
@@ -186,6 +186,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 viewModel.showLastMessage = false
                 sortView?.isVisible = false
+                create_new_channel_fab.isVisible = false
                 return true
             }
         }
@@ -343,6 +344,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun setupToolbar() {
         (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_chats)
+        (activity as MainActivity).setupNavigationView()
     }
 
     private fun queryChatRoomsByName(name: String?): Boolean {
@@ -352,5 +354,15 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             viewModel.setQuery(Query.Search(name!!))
         }
         return true
+    }
+
+    private fun setupFab() {
+        create_new_channel_fab.setOnClickListener { view ->
+            val contactsFragment = ContactsFragment()
+            val transaction = activity?.supportFragmentManager?.beginTransaction();
+            transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+            transaction?.replace(this.id, contactsFragment, "contactsFragment");
+            transaction?.addToBackStack(null)?.commit();
+        }
     }
 }
