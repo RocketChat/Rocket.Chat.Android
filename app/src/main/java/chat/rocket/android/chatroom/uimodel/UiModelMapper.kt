@@ -127,7 +127,12 @@ class UiModelMapper @Inject constructor(
 
             getChatRoomAsync(message.roomId)?.let { chatRoom ->
                 message.urls?.forEach { url ->
-                    mapUrl(message, url, chatRoom)?.let { list.add(it) }
+                    if (url.url.endsWith(".gif")) {
+                        val attachment = Attachment(imageUrl = url.url)
+                        mapAttachment(message, attachment, chatRoom)?.let { list.add(it) }
+                    } else {
+                        mapUrl(message, url, chatRoom)?.let { list.add(it) }
+                    }
                 }
 
                 message.attachments?.mapNotNull { attachment ->
