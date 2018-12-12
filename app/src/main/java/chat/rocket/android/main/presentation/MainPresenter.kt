@@ -44,15 +44,12 @@ import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.getCustomEmojis
 import chat.rocket.core.internal.rest.me
-import chat.rocket.core.internal.rest.unregisterPushToken
 import chat.rocket.core.internal.rest.inviteViaEmail
 import chat.rocket.core.internal.rest.inviteViaSMS
 import chat.rocket.core.model.Myself
 import kotlinx.coroutines.experimental.channels.Channel
 import timber.log.Timber
 import javax.inject.Inject
-import chat.rocket.android.util.extensions.showToast
-
 
 class MainPresenter @Inject constructor(
     private val view: MainView,
@@ -343,4 +340,5 @@ class MainPresenter @Inject constructor(
             list.removeAll { it.info.roomId == chatRoomId }
         }
     }
+
 }

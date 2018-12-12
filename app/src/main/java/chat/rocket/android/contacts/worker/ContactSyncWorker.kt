@@ -2,20 +2,19 @@ package chat.rocket.android.contacts.worker
 
 import android.content.Context
 import android.provider.ContactsContract
-import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import chat.rocket.android.app.RocketChatApplication
 import chat.rocket.android.contacts.models.Contact
 import chat.rocket.android.dagger.injector.AndroidWorkerInjection
-import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.DatabaseManagerFactory
-import chat.rocket.android.draw.dagger.DaggerAppComponent
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import dagger.Module
-import dagger.android.AndroidInjection
-import timber.log.Timber
+import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.core.RocketChatClient
+import chat.rocket.core.internal.rest.queryContacts
+import chat.rocket.core.model.ContactHolder
+import kotlinx.coroutines.experimental.runBlocking
+import java.security.MessageDigest
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -27,24 +26,50 @@ class ContactSyncWorker(context : Context, params : WorkerParameters)
     lateinit var serverInteractor: GetCurrentServerInteractor
     @Inject
     lateinit var getAccountsInteractor: GetAccountsInteractor
+    @Inject
+    lateinit var factory: RocketChatClientFactory
+
 
     private var contactArrayList: ArrayList<Contact> = ArrayList()
 
     override fun doWork(): Result {
         AndroidWorkerInjection.inject(this)
 
-        getContactList()
+        val currentServer = serverInteractor.get()!!
+        val client: RocketChatClient = factory.create(currentServer)
 
+        getContactList()
         val dbManager = dbFactory.create(serverInteractor.get()!!)
         dbManager.processContacts(contactArrayList)
 
-        Timber.d("Contacts fetched in background.")
+        val strongHashes: List<String> = (contactArrayList.map { contact -> hashString(contact.getDetail()!!) })
+        val weakHashes: List<String> = strongHashes.map{ strongHash -> strongHash.substring(3,9) }
+        runBlocking {
+            val apiResult: List<ContactHolder>? = client.queryContacts(weakHashes)
 
+            if (apiResult != null) {
+                val intersectionMap: HashMap<String, String> = HashMap()
+                val intersection: List<String> = apiResult!!.mapIndexed { index, list ->
+                    run {
+                        intersectionMap.put(list.h, list.u)
+                        list.h
+                    }
+                }
+                val intersectionSet: Set<String> = intersection.toSet()
+                contactArrayList.forEachIndexed { index, contact ->
+                    run {
+                        if (strongHashes[index] in intersectionSet) {
+                            contact.setUsername(intersectionMap[strongHashes[index]])
+                        }
+                    }
+                }
 
+                dbManager.processContacts(contactArrayList)
+            }
+        }
         return Result.SUCCESS
+
     }
-
-
 
     private fun getContactList() {
         val cr = applicationContext.contentResolver
@@ -99,5 +124,22 @@ class ContactSyncWorker(context : Context, params : WorkerParameters)
         contactArrayList.sortWith(Comparator { o1, o2 ->
             o1.getName()!!.compareTo(o2.getName()!!)
         })
+    }
+
+
+    private fun hashString(input: String): String {
+        val HEX_CHARS = "0123456789abcdef"
+        val bytes = MessageDigest
+                .getInstance("SHA-1")
+                .digest(input.toByteArray())
+        val result = StringBuilder(bytes.size * 2)
+
+        bytes.forEach {
+            val i = it.toInt()
+            result.append(HEX_CHARS[i shr 4 and 0x0f])
+            result.append(HEX_CHARS[i and 0x0f])
+        }
+
+        return result.toString()
     }
 }

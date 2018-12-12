@@ -29,7 +29,7 @@ class Contact() : Parcelable {
     }
 
     fun getUsername(): String? {
-        return username
+        return this.username
     }
 
     fun setId(id: Int) {
@@ -40,7 +40,7 @@ class Contact() : Parcelable {
         this.name = name
     }
 
-    fun setUsername(username: String) {
+    fun setUsername(username: String?) {
         this.username = username
     }
 
