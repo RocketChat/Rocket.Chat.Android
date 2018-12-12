@@ -25,6 +25,10 @@
     <string name="tittle_download">Télécharger mes données</string>
     <string name="title_licence">Licence</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
+    <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
+    <string name="title_topic">Sujet</string>
+    <string name="title_announcement">Annonce</string>
+    <string name="title_description">La description</string>
 
     <!-- Actions -->
     <string name="action_connect">Se connecter</string>
@@ -175,6 +179,11 @@
 
     <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
     <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
+    <string name="msg_muted_on_this_channel">You are muted on this channel</string> <!-- TODO - Add proper translation -->
+    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
+
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
         <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
@@ -230,6 +239,8 @@
     <string name="action_msg_add_reaction">Ajouter une réaction</string>
     <!-- TODO - Add proper translation -->
     <string name="action_msg_copy_permalink">Copy permalink</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">Report</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">L\'édition n\'est pas autorisée</string>
@@ -338,4 +349,15 @@
     <string name="msg_sent_attachment">Envoyé un fichier</string>
     <!--TODO - Add proper translation-->
     <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
+
+    <!-- User Details -->
+    <string name="message">Message</string> <!-- TODO - Add proper translation -->
+    <string name="timezone">Timezone</string> <!-- TODO - Add proper translation -->
+    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string> <!-- TODO - Add proper translation -->
+    <string name="retry">Retry</string> <!-- TODO - Add proper translation -->
+
+    <!-- Report -->
+    <string name="submit">Submit</string> <!-- TODO - Add proper translation -->
+    <string name="required">*required</string> <!-- TODO - Add proper translation -->
+    <string name="report_sent">Your report has been sent!</string> <!-- TODO - Add proper translation -->
 </resources>

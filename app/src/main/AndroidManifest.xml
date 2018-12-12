@@ -79,6 +79,11 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
+            android:name=".chatdetails.ui.ChatDetailsActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
+        <activity
             android:name=".chatinformation.ui.MessageInfoActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
@@ -87,6 +92,16 @@
         <activity
             android:name=".settings.password.ui.PasswordActivity"
             android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".userdetails.ui.UserDetailsActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateAlwaysHidden">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".chatroom.ui.ChatRoomActivity" />
+        </activity>
 
         <receiver
             android:name=".push.DirectReplyReceiver"
