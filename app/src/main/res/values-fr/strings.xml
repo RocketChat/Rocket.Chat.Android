@@ -170,7 +170,6 @@
     <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copied</string>
     <!-- TODO - Add proper translation -->
-    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
     <!--download message-->
     <string name="request_download">Télécharger le fichier demandé</string>
     <string name="msg_download_data_request">Votre fichier de données sera généré. Un lien pour le télécharger sera envoyé à votre adresse e-mail lorsque vous serez prêt.</string>
