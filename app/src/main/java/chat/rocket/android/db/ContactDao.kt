@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import chat.rocket.android.contacts.models.Contact
-import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.db.model.ContactEntity
 
 @Dao

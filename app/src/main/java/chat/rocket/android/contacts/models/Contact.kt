@@ -10,6 +10,7 @@ class Contact() : Parcelable {
     private var phoneNumber: String? = null
     private var emailAddress: String? = null
     private var isPhone: Boolean = true
+    private var username: String? = null
 
     fun getDetail(): String? {
         if(this.isPhone){
@@ -27,12 +28,20 @@ class Contact() : Parcelable {
         return name
     }
 
+    fun getUsername(): String? {
+        return username
+    }
+
     fun setId(id: Int) {
         this.id = id
     }
 
     fun setName(name: String) {
         this.name = name
+    }
+
+    fun setUsername(username: String) {
+        this.username = username
     }
 
     fun setIsPhone(isPhone: Boolean) {
