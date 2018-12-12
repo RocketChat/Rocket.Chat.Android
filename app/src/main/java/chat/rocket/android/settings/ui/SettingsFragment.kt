@@ -25,12 +25,9 @@ import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.settings.presentation.settingPresenter
 import chat.rocket.android.util.extensions.*
-import chat.rocket.android.util.extensions.addFragmentBackStack
-import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.webview.ui.webViewIntent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.dialog_download.view.*
-import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -89,14 +86,16 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
 
             resources.getStringArray(R.array.settings_actions)[4] -> contactSupport()
 
-            resources.getStringArray(R.array.settings_actions)[5] -> activity?.startActivity(
+            resources.getStringArray(R.array.settings_actions)[5] -> presenter.downloadData();
+
+            resources.getStringArray(R.array.settings_actions)[6] -> activity?.startActivity(
                 context?.webViewIntent(
                     getString(R.string.license_url),
                     getString(R.string.title_licence)
                 )
             )
 
-            resources.getStringArray(R.array.settings_actions)[6] -> {
+            resources.getStringArray(R.array.settings_actions)[7] -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
                         TAG_ABOUT_FRAGMENT,
                         R.id.fragment_container
@@ -105,8 +104,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                 }
             }
      
-            resources.getString(R.string.title_rate_us) -> startAppPlayStore()
-            resources.getString(R.string.tittle_download) -> presenter.downloadData();
+
         }
     }
 
@@ -175,13 +173,17 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
 
 
     override fun showLoading() {
-        ui { view_loading.isVisible = true }
+        ui {
+            if (view_setting_loading != null) {
+                view_setting_loading.isVisible = true
+            }
+        }
     }
 
     override fun hideLoading() {
         ui {
-            if (view_loading != null) {
-                view_loading.isVisible = false
+            if (view_setting_loading != null) {
+                view_setting_loading.isVisible = false
             }
         }
     }

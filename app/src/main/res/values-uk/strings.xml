@@ -164,7 +164,6 @@
     <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copied</string>
     <!-- TODO - Add proper translation -->
-    <string name="msg_muted_on_this_channel">You are muted on this channel</string>
     <string name="request_download">Завантажте потрібний файл</string>
     <string name="msg_download_data_request">Ваш файл даних буде створено. Посилання на його завантаження буде надіслано на вашу електронну адресу, коли вона буде готова.</string>
     <string name="msg_download_data_request_already_exist">Ваш файл даних вже створено. Посилання на його завантаження буде надіслано на вашу електронну адресу, коли вона буде готова.</string>
