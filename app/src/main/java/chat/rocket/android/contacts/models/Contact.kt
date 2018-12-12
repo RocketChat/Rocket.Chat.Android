@@ -11,12 +11,32 @@ class Contact() : Parcelable {
     private var emailAddress: String? = null
     private var isPhone: Boolean = true
 
+    fun getDetail(): String? {
+        if(this.isPhone){
+            return getPhoneNumber()
+        }else{
+            return getEmailAddress()
+        }
+    }
+
+    fun getId(): Int {
+        return id
+    }
+
     fun getName(): String? {
         return name
     }
 
+    fun setId(id: Int) {
+        this.id = id
+    }
+
     fun setName(name: String) {
         this.name = name
+    }
+
+    fun setIsPhone(isPhone: Boolean) {
+        this.isPhone = isPhone
     }
 
     fun getPhoneNumber(): String? {

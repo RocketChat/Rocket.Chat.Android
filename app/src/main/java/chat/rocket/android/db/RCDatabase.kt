@@ -7,6 +7,7 @@ import chat.rocket.android.db.model.AttachmentActionEntity
 import chat.rocket.android.db.model.AttachmentEntity
 import chat.rocket.android.db.model.AttachmentFieldEntity
 import chat.rocket.android.db.model.ChatRoomEntity
+import chat.rocket.android.db.model.ContactEntity
 import chat.rocket.android.db.model.MessageChannels
 import chat.rocket.android.db.model.MessageEntity
 import chat.rocket.android.db.model.MessageFavoritesRelation
@@ -23,9 +24,9 @@ import chat.rocket.android.emoji.internal.db.StringListConverter
         MessageFavoritesRelation::class, MessageMentionsRelation::class,
         MessageChannels::class, AttachmentEntity::class,
         AttachmentFieldEntity::class, AttachmentActionEntity::class, UrlEntity::class,
-        ReactionEntity::class, MessagesSync::class
+        ReactionEntity::class, MessagesSync::class, ContactEntity::class
     ],
-    version = 12,
+    version = 13,
     exportSchema = true
 )
 @TypeConverters(StringListConverter::class)
@@ -33,4 +34,5 @@ abstract class RCDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun chatRoomDao(): ChatRoomDao
     abstract fun messageDao(): MessageDao
+    abstract fun contactDao(): ContactDao
 }

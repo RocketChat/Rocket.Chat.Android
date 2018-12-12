@@ -1,5 +1,7 @@
 package chat.rocket.android.util.extensions
 
+import chat.rocket.android.contacts.models.Contact
+import chat.rocket.android.db.model.ContactEntity
 import chat.rocket.android.db.model.MessageEntity
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
@@ -47,5 +49,15 @@ fun Message.toEntity(): MessageEntity {
         pinned = pinned,
         role = role,
         synced = synced
+    )
+}
+
+fun Contact.toEntity(): ContactEntity {
+    return ContactEntity(
+            id=0,
+            name = getName(),
+            phoneNumber = getPhoneNumber(),
+            emailAddress = getEmailAddress(),
+            isPhone = isPhone()
     )
 }
