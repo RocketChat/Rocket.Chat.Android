@@ -24,6 +24,10 @@
     <string name="title_create_channel">Criar chat</string>
     <string name="title_licence">Licença</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Você tem certeza?</string>
+    <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
+    <string name="title_topic">Tópico</string>
+    <string name="title_announcement">Anúncio</string>
+    <string name="title_description">Descrição</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
@@ -164,6 +168,9 @@
     <string name="msg_send_email">Enviar e-mail</string>
     <string name="msg_android_app_support">Suporte ao aplicativo Android</string>
     <string name="msg_muted_on_this_channel">Você está silenciado neste canal</string>
+    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s reagiu com %2$s</item>
         <item quantity="other">%1$s reagiram com %2$s</item>
@@ -218,6 +225,8 @@
     <string name="action_title_editing">Editando mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
     <string name="action_msg_copy_permalink">Copiar permalink</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">Reportar</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Edição não permitida</string>
@@ -325,4 +334,15 @@
     <string name="msg_log_out">Deslogando…</string>
     <string name="msg_sent_attachment">Enviou um arquivo</string>
     <string name="message_room_changed_privacy">O tipo da sala mudou para: %1$s por %2$s</string>
+
+    <!-- User Details -->
+    <string name="message">Mensagem</string>
+    <string name="timezone">Fuso horário</string>
+    <string name="error_opening_dm">Algo deu errado quando tentamos abrir esta conversa…</string>
+    <string name="retry">Retentar</string>
+
+    <!-- Report -->
+    <string name="submit">Enviar</string>
+    <string name="required">*obrigatório</string>
+    <string name="report_sent">A mensagem foi reportada!</string>
 </resources>

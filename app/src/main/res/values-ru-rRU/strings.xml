@@ -22,6 +22,10 @@
     <string name="title_update_profile">Обновить профиль</string>
     <string name="title_about">О программе</string>
     <string name="title_create_channel">Создать новый канал</string>
+    <string name="title_channel_details">О канале</string>
+    <string name="title_topic">Тема</string>
+    <string name="title_announcement">Объявление</string>
+    <string name="title_description">Описание</string>
     <string name="title_licence">Лицензия</string>
     <string name="title_are_you_sure">Вы уверены?</string>
 
@@ -159,9 +163,13 @@
     <string name="msg_view_more">больше</string>
     <string name="msg_view_less">меньше</string>
     <string name="msg_permalink_copied">Ссылка скопирована</string>
+    <string name="msg_no_topic">Нет темы</string>
+    <string name="msg_no_announcement">Нет объявления</string>
+    <string name="msg_no_description">Нет описания</string>
     <string name="msg_send_email">Отправить e-mail</string>
     <string name="msg_android_app_support">Поддержка Android-приложения</string>
     <string name="msg_muted_on_this_channel">Вы лишены дара речи на этом канале</string>
+
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s реагирует с %2$s</item>
         <item quantity="few">%1$s реагируют с %2$s</item>
@@ -216,6 +224,8 @@
     <string name="action_title_editing">Редактирование сообщения</string>
     <string name="action_msg_add_reaction">Отреагировать</string>
     <string name="action_msg_copy_permalink">Копировать ссылку</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">Report</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редактирование запрещено</string>
@@ -322,4 +332,15 @@
     <string name="message_information_title">Информация о прочтении</string>
     <string name="msg_log_out">Выходим…</string>
     <string name="message_room_changed_privacy">Тип канала изменен на: %1$s пользователем %2$s</string>
+
+    <!-- User Details -->
+    <string name="message">Message</string> <!--TODO - Add proper translation-->
+    <string name="timezone">Timezone</string> <!--TODO - Add proper translation-->
+    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string> <!-- TODO - Add proper translation -->
+    <string name="retry">Retry</string> <!-- TODO - Add proper translation -->
+
+    <!-- Report -->
+    <string name="submit">Submit</string> <!--TODO - Add proper translation-->
+    <string name="required">*required</string> <!--TODO - Add proper translation-->
+    <string name="report_sent">Your report has been sent!</string> <!--TODO - Add proper translation-->
 </resources>

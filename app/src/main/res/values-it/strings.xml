@@ -22,8 +22,12 @@
     <string name="title_update_profile">Aggiorna Profilo</string>
     <string name="title_about">Informazioni</string>
     <string name="title_create_channel">Crea Canale</string>
-    <string name="title_licence">Licence</string> <!-- TODO ADD translation -->
+    <string name="title_licence">licenza</string>
     <string name="title_are_you_sure">Sei sicuro che vuoi uscire ?</string>
+    <string name="title_channel_details">Allegare un file</string>
+    <string name="title_topic">Argomento</string>
+    <string name="title_announcement">Annuncio</string>
+    <string name="title_description">Descrizione</string>
 
     <!-- Actions -->
     <string name="action_connect">Collega</string>
@@ -36,7 +40,7 @@
     <string name="action_create_channel">Crea canale</string>
     <string name="action_create">Crea</string>
     <string name="action_logout">Disconnettersi</string>
-    <string name="action_attach_a_files">Attach a file</string> <!-- TODO ADD translation -->
+    <string name="action_attach_a_files">Ceangail comhad</string>
     <string name="action_confirm_password">Conferma Cambio Password</string>
     <string name="action_join_chat">Iscriviti alla stanza</string>
     <string name="action_add_account">Aggiungi utente</string>
@@ -47,7 +51,7 @@
     <string name="action_drawing">Disegno</string>
     <string name="action_save_to_gallery">Salva in galleria</string>
     <string name="action_select_photo_from_gallery">Seleziona foto dalla galleria</string>
-    <string name="action_take_a_photo">Take a photo</string> <!-- TODO ADD translation -->
+    <string name="action_take_a_photo">Scatta una foto</string>
     <string name="action_reset_avatar">Reimposta avatar</string>
     <string name="action_connect_server">Collegati a un server</string>
     <string name="action_join_community">Entra nella community</string>
@@ -58,13 +62,13 @@
 
     <!-- Settings List -->
     <string-array name="settings_actions">
-        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
-        <item name="item_password">Change password</item> <!-- TODO Add translation -->
-        <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
-        <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
-        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
-        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
-        <item name="item_about">About</item> <!-- TODO Add translation -->
+        <item name="item_preferences">Preferenze</item>
+        <item name="item_password">Cambia password</item>
+        <item name="item_share_app">Condividi app</item>
+        <item name="item_rate_us">Votaci</item>
+        <item name="item_contact_us">Contattaci</item>
+        <item name="item_licence">Licenza</item>
+        <item name="item_about">Di</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -154,8 +158,12 @@
     <string name="msg_two_factor_authentication">Autenticazione a 2 fattori (2FA)</string>
     <string name="msg__your_2fa_code">Qual è il tuo codice 2FA ?</string>
     <string name="msg_permalink_copied">Permalink copiato</string>
-    <string name="msg_send_email">Send email</string>
-    <string name="msg_android_app_support">Android app support</string>
+    <string name="msg_no_topic">Nessun argomento aggiunto</string>
+    <string name="msg_no_announcement">Nessun annuncio aggiunto</string>
+    <string name="msg_no_description">Nessuna descrizione aggiunta</string>
+    <string name="msg_send_email">Invia una email</string>
+    <string name="msg_android_app_support">Supporto per le app Android</string>
+
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s ha reagito con %2$s</item>
         <item quantity="other">%1$s ha reagito con %2$s</item>
@@ -214,7 +222,9 @@
     <string name="action_msg_share">Condividi</string>
     <string name="action_title_editing">Modifica messaggio</string>
     <string name="action_msg_add_reaction">Aggiungi reazione</string>
-    <string name="action_msg_copy_permalink">Copia permalink</string>3
+    <string name="action_msg_copy_permalink">Copia permalink</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">Report</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">La modifica non è consentita</string>
@@ -321,4 +331,14 @@
     <string name="message_information_title">Informazioni Messaggio</string>
     <string name="message_room_changed_privacy">Il tipo di stanza è cambiato in: %1$s da %2$s</string>
 
+    <!-- User Details -->
+    <string name="message">Message</string> <!-- TODO - Add proper translation -->
+    <string name="timezone">Timezone</string> <!-- TODO - Add proper translation -->
+    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string> <!-- TODO - Add proper translation -->
+    <string name="retry">Retry</string> <!-- TODO - Add proper translation -->
+
+    <!-- Report -->
+    <string name="submit">Submit</string> <!-- TODO - Add proper translation -->
+    <string name="required">*required</string> <!-- TODO - Add proper translation -->
+    <string name="report_sent">Your report has been sent!</string> <!-- TODO - Add proper translation -->
 </resources>

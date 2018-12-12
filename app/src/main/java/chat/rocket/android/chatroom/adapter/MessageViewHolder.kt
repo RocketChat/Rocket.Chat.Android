@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.adapter
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.text.Spannable
@@ -10,6 +11,7 @@ import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.emoji.EmojiReactionListener
+import chat.rocket.android.userdetails.ui.userDetailsIntent
 import chat.rocket.core.model.isSystemMessage
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import kotlinx.android.synthetic.main.avatar.view.*
@@ -70,7 +72,23 @@ class MessageViewHolder(
                 )
                 read_receipt_view.isVisible = true
             }
+
+            val senderId = data.message.sender?.id
+            val subscriptionId = data.subscriptionId
+
+            text_sender.setOnClickListener {
+                toUserDetails(context, senderId, subscriptionId)
+            }
+
+            image_avatar.setOnClickListener {
+                toUserDetails(context, senderId, subscriptionId)
+            }
+
         }
+    }
+
+    private fun toUserDetails(context: Context, userId: String?, subscriptionId: String) {
+        userId?.let { context.startActivity(context.userDetailsIntent(it, subscriptionId)) }
     }
 
     override fun unscheduleDrawable(who: Drawable?, what: Runnable?) {

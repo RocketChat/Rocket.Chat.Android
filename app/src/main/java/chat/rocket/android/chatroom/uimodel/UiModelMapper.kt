@@ -164,7 +164,7 @@ class UiModelMapper @Inject constructor(
 
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
     private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(CommonPool) {
-        return@withContext dbManager.chatRoomDao().get(roomId)?.let {
+        return@withContext dbManager.chatRoomDao().getSync(roomId)?.let {
             with(it.chatRoom) {
                 ChatRoom(
                     id = id,
@@ -456,7 +456,8 @@ class UiModelMapper @Inject constructor(
             messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
             content = content, isPinned = message.pinned, currentDayMarkerText = dayMarkerText,
             showDayMarker = false, reactions = getReactions(message), isFirstUnread = false,
-            preview = preview, isTemporary = !synced, unread = unread, permalink = permalink)
+            preview = preview, isTemporary = !synced, unread = unread, permalink = permalink,
+            subscriptionId = chatRoom.subscriptionId)
     }
 
     private fun mapMessagePreview(message: Message): Message {
