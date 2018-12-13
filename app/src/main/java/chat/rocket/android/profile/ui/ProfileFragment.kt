@@ -46,6 +46,9 @@ import javax.inject.Inject
 import chat.rocket.android.helper.Constants
 import kotlinx.android.synthetic.main.app_bar.* // need this for back button in setupToolbar
 import kotlinx.android.synthetic.main.fragment_profile_widechat.*
+// EAR test
+import chat.rocket.android.webview.ui.webViewIntent
+import chat.rocket.android.util.extensions.openTabbedUrl
 
 internal const val TAG_PROFILE_FRAGMENT = "ProfileFragment"
 
@@ -267,7 +270,23 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
         if (Constants.WIDECHAT) {
             widechat_view_dim.setOnClickListener { hideUpdateAvatarOptions() }
-            edit_profile_button.setOnClickListener { showToast("Edit Profile Button Clicked") }
+
+            // EAR >> this works for webView impl but needs a 'override fun onActivityResult' function - see LoginOptionsFragment for example
+//            ui { activity ->
+//                edit_profile_button.setOnClickListener {
+//                    startActivityForResult(
+//                        activity.webViewIntent("https://devsup1-myexede.cs33.force.com/viasatconnectredirecttest", "redirectTest"),
+//                            1
+//                    )
+//                }
+//            }
+//            edit_profile_button.setOnClickListener { showToast("Edit Profile Button Clicked") }
+
+
+            var link: String? = "https://devsup1-myexede.cs33.force.com/viasatconnectredirecttest"
+            edit_profile_button.setOnClickListener { view: View ->
+                view.openTabbedUrl(link)
+            }
             delete_account_button.setOnClickListener { showToast("Delete Account Button Clicked") }
         } else {
             view_dim.setOnClickListener { hideUpdateAvatarOptions() }

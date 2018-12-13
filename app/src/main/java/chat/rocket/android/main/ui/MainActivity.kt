@@ -41,6 +41,7 @@ import javax.inject.Inject
 
 // WIDECHAT
 import chat.rocket.android.helper.Constants
+import androidx.core.net.toUri
 
 private const val CURRENT_STATE = "current_state"
 
@@ -98,6 +99,10 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     override fun onResume() {
         super.onResume()
+        if (intent?.data == "connect://profile.update".toUri()) {
+            presenter.logout()
+            return
+        }
         if (!isFragmentAdded) {
             presenter.toChatList(chatRoomId)
             isFragmentAdded = true

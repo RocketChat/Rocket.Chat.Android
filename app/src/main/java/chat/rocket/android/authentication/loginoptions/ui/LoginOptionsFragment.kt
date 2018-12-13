@@ -33,6 +33,8 @@ import javax.inject.Inject
 // WIDECHAT
 import chat.rocket.android.helper.Constants
 import kotlinx.android.synthetic.main.fragment_authentication_widechat_login_options.*
+// EAR test
+import timber.log.Timber
 
 private const val SERVER_NAME = "server_name"
 private const val STATE = "state"
