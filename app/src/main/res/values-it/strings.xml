@@ -332,13 +332,13 @@
     <string name="message_room_changed_privacy">Il tipo di stanza è cambiato in: %1$s da %2$s</string>
 
     <!-- User Details -->
-    <string name="message">Message</string> <!-- TODO - Add proper translation -->
-    <string name="timezone">Timezone</string> <!-- TODO - Add proper translation -->
-    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string> <!-- TODO - Add proper translation -->
-    <string name="retry">Retry</string> <!-- TODO - Add proper translation -->
+    <string name="message">Messaggio</string>
+    <string name="timezone">Fuso orario</string>
+    <string name="error_opening_dm">Qualcosa è andato storto mentre stavamo creando questa conversazione ...</string> <!-- TODO - Add proper translation -->
+    <string name="retry">Riprova</string>
 
     <!-- Report -->
-    <string name="submit">Submit</string> <!-- TODO - Add proper translation -->
-    <string name="required">*required</string> <!-- TODO - Add proper translation -->
-    <string name="report_sent">Your report has been sent!</string> <!-- TODO - Add proper translation -->
+    <string name="submit">Sottoscrivi</string>
+    <string name="required">*necessario</string>
+    <string name="report_sent">Il tuo rapporto è stato inviato!</string>
 </resources>
