@@ -84,7 +84,7 @@ class ProfilePresenter @Inject constructor(
                 withContext(DefaultDispatcher) {
                     setupConnectionInfo(serverUrl)
                     refreshServerAccounts()
-                    checForCustomOauthAccount(serverUrl)
+                    checkForCustomOauthAccount(serverUrl)
                 }
             } catch (ex: Exception) {
                 view.showMessage(ex)

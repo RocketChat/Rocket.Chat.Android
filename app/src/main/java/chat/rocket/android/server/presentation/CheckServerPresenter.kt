@@ -204,7 +204,7 @@ abstract class CheckServerPresenter constructor(
     }
 
     // WIDECHAT
-    internal suspend fun checForCustomOauthAccount(serverUrl: String) {
+    internal suspend fun checkForCustomOauthAccount(serverUrl: String) {
         try {
             val services = retryIO("settingsOauth()") {
                 client.settingsOauth().services

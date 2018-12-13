@@ -91,6 +91,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
         setupToolbar()
         setupListeners()
         if ((Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) && (!Constants.WIDECHAT)) {
