@@ -91,7 +91,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
+
         setupToolbar()
         setupListeners()
         if ((Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) && (!Constants.WIDECHAT)) {
@@ -272,8 +272,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             widechat_view_dim.setOnClickListener { hideUpdateAvatarOptions() }
 
             presenter.getCustomOauthUrl()
-            var link: String? = "https://devsup1-myexede.cs33.force.com/viasatconnectredirecttest"
+//            var link: String? = "https://devsup1-myexede.cs33.force.com/viasatconnectredirecttest"
             edit_profile_button.setOnClickListener { view: View ->
+                // EAR > TODO: append the path to update profile page in sso
                 view.openTabbedUrl(presenter.widechatCustomOauthHost)
             }
             delete_account_button.setOnClickListener { showToast("Delete Account Button Clicked") }
