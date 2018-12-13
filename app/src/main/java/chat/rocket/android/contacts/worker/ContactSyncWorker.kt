@@ -14,6 +14,7 @@ import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.queryContacts
 import chat.rocket.core.model.ContactHolder
 import kotlinx.coroutines.experimental.runBlocking
+import timber.log.Timber
 import java.security.MessageDigest
 import java.util.ArrayList
 import javax.inject.Inject
@@ -40,32 +41,34 @@ class ContactSyncWorker(context : Context, params : WorkerParameters)
 
         getContactList()
         val dbManager = dbFactory.create(serverInteractor.get()!!)
-        dbManager.processContacts(contactArrayList)
 
         val strongHashes: List<String> = (contactArrayList.map { contact -> hashString(contact.getDetail()!!) })
         val weakHashes: List<String> = strongHashes.map{ strongHash -> strongHash.substring(3,9) }
         runBlocking {
             val apiResult: List<ContactHolder>? = client.queryContacts(weakHashes)
-
             if (apiResult != null) {
-                val intersectionMap: HashMap<String, String> = HashMap()
-                val intersection: List<String> = apiResult!!.mapIndexed { index, list ->
-                    run {
-                        intersectionMap.put(list.h, list.u)
-                        list.h
-                    }
-                }
-                val intersectionSet: Set<String> = intersection.toSet()
-                contactArrayList.forEachIndexed { index, contact ->
-                    run {
-                        if (strongHashes[index] in intersectionSet) {
-                            contact.setUsername(intersectionMap[strongHashes[index]])
+                try {
+                    val intersectionMap: HashMap<String, String> = HashMap()
+                    val intersection: List<String> = apiResult!!.mapIndexed { index, list ->
+                        run {
+                           intersectionMap.put(list.h, list.u)
+                            list.h
                         }
                     }
+                    val intersectionSet: Set<String> = intersection.toSet()
+                    contactArrayList.forEachIndexed { index, contact ->
+                        run {
+                            if (strongHashes[index] in intersectionSet) {
+                                contact.setUsername(intersectionMap[strongHashes[index]])
+                            }
+                        }
+                    }
+                } finally {
+                    dbManager.processContacts(contactArrayList)
                 }
 
-                dbManager.processContacts(contactArrayList)
             }
+            Timber.d("Contacts fetched in background.")
         }
         return Result.SUCCESS
 

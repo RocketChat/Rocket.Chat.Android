@@ -12,7 +12,7 @@ abstract class ContactDao : BaseDao<ContactEntity> {
     @Query("""
         SELECT * FROM contacts
     """)
-    abstract fun getAllSync(): List<Contact>
+    abstract fun getAllSync(): List<ContactEntity>
 
     @Query("DELETE FROM contacts")
     abstract fun delete()

@@ -12,6 +12,10 @@ class Contact() : Parcelable {
     private var isPhone: Boolean = true
     private var username: String? = null
 
+    private fun formatPhoneNumber(phone: String): String {
+        return phone.replace("-|\\s|\\(|\\)".toRegex(), "")
+    }
+
     fun getDetail(): String? {
         if(this.isPhone){
             return getPhoneNumber()
@@ -53,7 +57,7 @@ class Contact() : Parcelable {
     }
 
     fun setPhoneNumber(phoneNumber: String) {
-        this.phoneNumber = phoneNumber
+        this.phoneNumber = formatPhoneNumber(phoneNumber)
     }
 
     fun getEmailAddress(): String? {
