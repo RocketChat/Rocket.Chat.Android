@@ -20,7 +20,9 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.User
 import chat.rocket.common.model.roomTypeOf
+import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.createDirectMessage
+import chat.rocket.core.internal.rest.favorite
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.show
 import kotlinx.coroutines.withTimeout
@@ -140,6 +142,25 @@ class ChatRoomsPresenter @Inject constructor(
                         isCreator = ownerId == myself.id || isDirectMessage,
                         isFavorite = favorite ?: false
                 )
+            }
+        }
+    }
+
+    fun toggleFavoriteChatRoom(roomId: String, isFavorite: Boolean) {
+        launchUI(strategy) {
+            try {
+                // Note that if it is favorite then the user wants to unfavorite - and vice versa.
+                retryIO("favorite($roomId, $isFavorite)") {
+                    client.favorite(roomId, !isFavorite)
+                }
+//                view.showFavoriteIcon(!isFavorite)
+            } catch (e: RocketChatException) {
+                Timber.e(e, "Error while trying to favorite/unfavorite chat room.")
+                e.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
             }
         }
     }

@@ -1,15 +1,20 @@
 package chat.rocket.android.chatrooms.adapter
 
+import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.uimodel.toViewType
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
+import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.util.extensions.inflate
 
-class RoomsAdapter(private val listener: (RoomUiModel) -> Unit) :
+class RoomsAdapter(private val listener: (RoomUiModel) -> Unit, presenter: ChatRoomsPresenter) :
     RecyclerView.Adapter<ViewHolder<*>>() {
+    private val enableActions: Boolean = true
 
-    init {
+
+  init {
         setHasStableIds(true)
     }
 
@@ -22,15 +27,15 @@ class RoomsAdapter(private val listener: (RoomUiModel) -> Unit) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> = when (viewType) {
         VIEW_TYPE_ROOM -> {
             val view = parent.inflate(R.layout.item_chat)
-            RoomViewHolder(view, listener)
+            RoomViewHolder(view, listener, actionsListener)
         }
         VIEW_TYPE_HEADER -> {
             val view = parent.inflate(R.layout.item_chatroom_header)
-            HeaderViewHolder(view)
+            HeaderViewHolder(view, actionsListener)
         }
         VIEW_TYPE_LOADING -> {
             val view = parent.inflate(R.layout.item_loading)
-            LoadingViewHolder(view)
+            LoadingViewHolder(view, actionsListener)
         }
         else -> throw IllegalStateException("View type must be either Room, Header or Loading")
     }
@@ -66,5 +71,28 @@ class RoomsAdapter(private val listener: (RoomUiModel) -> Unit) :
         const val VIEW_TYPE_ROOM = 1
         const val VIEW_TYPE_HEADER = 2
         const val VIEW_TYPE_LOADING = 3
+    }
+
+    private val actionsListener = object : ViewHolder.ActionsListener {
+      override fun isActionsEnabled(): Boolean = enableActions
+      override fun onActionSelected(item: MenuItem, room: RoomUiModel) {
+            room.apply {
+                when (item.itemId) {
+                    R.id.action_favorite_room-> {
+                        presenter.toggleFavoriteChatRoom(this.id,  this.favorite==true)
+                    }
+                    R.id.action_leave_room-> {
+
+                    }
+                    R.id.action_read->{
+
+                    }
+                    R.id.action_hide_room->{
+
+                    }
+                    else -> TODO("Not implemented")
+                }
+            }
+        }
     }
 }

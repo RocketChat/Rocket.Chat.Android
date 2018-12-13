@@ -14,8 +14,14 @@ import chat.rocket.common.model.UserStatus
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
-class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit) :
-    ViewHolder<RoomItemHolder>(itemView) {
+class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit, actionsListener: ActionsListener) :
+    ViewHolder<RoomItemHolder>(itemView, actionsListener) {
+
+    init {
+        with(itemView) {
+            setupActionMenu(itemView)
+        }
+    }
     private val resources: Resources = itemView.resources
     private val channelIcon: Drawable = resources.getDrawable(R.drawable.ic_hashtag_12dp, null)
     private val groupIcon: Drawable = resources.getDrawable(R.drawable.ic_lock_12_dp, null)

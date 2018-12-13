@@ -60,6 +60,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     lateinit var analyticsManager: AnalyticsManager
 
     private lateinit var viewModel: ChatRoomsViewModel
+    private lateinit var  adapter: RoomsAdapter
 
     private var searchView: SearchView? = null
     private var sortView: MenuItem? = null
@@ -110,11 +111,12 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
     }
 
+
     private fun subscribeUi() {
         ui {
-            val adapter = RoomsAdapter { room ->
+            adapter = RoomsAdapter ({ room ->
                 presenter.loadChatRoom(room)
-            }
+            },presenter)
 
             recycler_view.layoutManager = LinearLayoutManager(it)
             recycler_view.addItemDecoration(

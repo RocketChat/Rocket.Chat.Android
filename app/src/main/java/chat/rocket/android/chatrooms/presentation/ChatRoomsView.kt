@@ -7,4 +7,7 @@ interface ChatRoomsView : LoadingView, MessageView {
     fun showLoadingRoom(name: CharSequence)
 
     fun hideLoadingRoom()
+
+//    fun showFavoriteIcon(isFavorite:Boolean)
+
 }
