@@ -223,7 +223,6 @@
     <string name="action_title_editing">Modifica messaggio</string>
     <string name="action_msg_add_reaction">Aggiungi reazione</string>
     <string name="action_msg_copy_permalink">Copia permalink</string>
-    <!-- TODO - Add proper translation -->
     <string name="action_msg_report">Report</string>
 
     <!-- Permission messages -->
@@ -334,7 +333,7 @@
     <!-- User Details -->
     <string name="message">Messaggio</string>
     <string name="timezone">Fuso orario</string>
-    <string name="error_opening_dm">Qualcosa è andato storto mentre stavamo creando questa conversazione ...</string> <!-- TODO - Add proper translation -->
+    <string name="error_opening_dm">Qualcosa è andato storto mentre stavamo creando questa conversazione ...</string>
     <string name="retry">Riprova</string>
 
     <!-- Report -->
