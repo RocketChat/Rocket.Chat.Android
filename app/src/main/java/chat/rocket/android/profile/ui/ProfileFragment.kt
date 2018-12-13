@@ -44,11 +44,11 @@ import javax.inject.Inject
 
 // WIDECHAT
 import chat.rocket.android.helper.Constants
+import chat.rocket.android.util.extensions.openTabbedUrl
 import kotlinx.android.synthetic.main.app_bar.* // need this for back button in setupToolbar
 import kotlinx.android.synthetic.main.fragment_profile_widechat.*
-// EAR test
-import chat.rocket.android.webview.ui.webViewIntent
-import chat.rocket.android.util.extensions.openTabbedUrl
+
+
 
 internal const val TAG_PROFILE_FRAGMENT = "ProfileFragment"
 
@@ -91,7 +91,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupToolbar()
         setupListeners()
         if ((Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) && (!Constants.WIDECHAT)) {
@@ -271,21 +270,10 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         if (Constants.WIDECHAT) {
             widechat_view_dim.setOnClickListener { hideUpdateAvatarOptions() }
 
-            // EAR >> this works for webView impl but needs a 'override fun onActivityResult' function - see LoginOptionsFragment for example
-//            ui { activity ->
-//                edit_profile_button.setOnClickListener {
-//                    startActivityForResult(
-//                        activity.webViewIntent("https://devsup1-myexede.cs33.force.com/viasatconnectredirecttest", "redirectTest"),
-//                            1
-//                    )
-//                }
-//            }
-//            edit_profile_button.setOnClickListener { showToast("Edit Profile Button Clicked") }
-
-
+            presenter.getCustomOauthUrl()
             var link: String? = "https://devsup1-myexede.cs33.force.com/viasatconnectredirecttest"
             edit_profile_button.setOnClickListener { view: View ->
-                view.openTabbedUrl(link)
+                view.openTabbedUrl(presenter.widechatCustomOauthHost)
             }
             delete_account_button.setOnClickListener { showToast("Delete Account Button Clicked") }
         } else {

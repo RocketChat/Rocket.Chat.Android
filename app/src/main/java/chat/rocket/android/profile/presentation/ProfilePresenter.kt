@@ -77,6 +77,21 @@ class ProfilePresenter @Inject constructor(
         }
     }
 
+    // WIDECHAT
+    fun getCustomOauthUrl() {
+        launchUI(strategy) {
+            try {
+                withContext(DefaultDispatcher) {
+                    setupConnectionInfo(serverUrl)
+                    refreshServerAccounts()
+                    checForCustomOauthAccount(serverUrl)
+                }
+            } catch (ex: Exception) {
+                view.showMessage(ex)
+            }
+        }
+    }
+
     fun updateUserProfile(email: String, name: String, username: String) {
         launchUI(strategy) {
             view.showLoading()
