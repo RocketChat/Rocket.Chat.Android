@@ -227,8 +227,7 @@
     <string name="action_title_editing">संपादन संदेश</string>
     <string name="action_msg_add_reaction">प्रतिक्रिया जोड़ें</string>
     <string name="action_msg_copy_permalink">परमालिंक कॉपी करें</string>
-    <!-- TODO - Add proper translation -->
-    <string name="action_msg_report">Report</string>
+    <string name="action_msg_report">रिपोर्ट</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">संपादन की अनुमति नहीं है</string>
@@ -337,13 +336,13 @@
     <string name="message_room_changed_privacy">%2$s ने रूम का प्रकार बदलकर %1$s किया </string>
 
     <!-- User Details -->
-    <string name="message">Message</string> <!-- TODO - Add proper translation -->
-    <string name="timezone">Timezone</string> <!-- TODO - Add proper translation -->
-    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string> <!-- TODO - Add proper translation -->
-    <string name="retry">Retry</string> <!-- TODO - Add proper translation -->
+    <string name="message">संदेश</string>
+    <string name="timezone">समय क्षेत्र</string>
+    <string name="error_opening_dm">जब हम इस बातचीत को बना रहे थे तो कुछ गड़बड़ हुई …</string>
+    <string name="retry">पुन: प्रयास करें</string>
 
     <!-- Report -->
-    <string name="submit">Submit</string> <!-- TODO - Add proper translation -->
-    <string name="required">*required</string> <!-- TODO - Add proper translation -->
-    <string name="report_sent">Your report has been sent!</string>
+    <string name="submit">जमा करें</string>
+    <string name="required">* आवश्यक</string>
+    <string name="report_sent">आपकी रिपोर्ट भेज दी गई है!</string>
 </resources>
