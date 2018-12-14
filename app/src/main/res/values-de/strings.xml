@@ -157,12 +157,12 @@
     <string name="msg_continue_with_wordpress">Weitermachen mit <b>WordPress</b></string>
     <string name="msg_two_factor_authentication">Zwei-Faktor-Authentifizierung</string>
     <string name="msg__your_2fa_code">Wie lautet Ihr 2FA-Code?</string>
-    <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">Sie sind auf diesem Kanal stummgeschaltet</string>
     <string name="msg_no_topic">Kein Thema hinzugefügt</string>
     <string name="msg_no_announcement">Keine Ankündigung hinzugefügt</string>
     <string name="msg_no_description">Keine Beschreibung hinzugefügt</string>
-    <!-- TODO - Add proper translation -->
+    <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
+    <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
         <item quantity="one">% 1 $ s reagierte mit% 2 $ s</item>
         <item quantity="other">% 1 $ s reagierte mit% 2 $ s</item>
@@ -223,9 +223,7 @@
     <string name="action_msg_share">Teilen</string>
     <string name="action_title_editing">Nachricht bearbeiten</string>
     <string name="action_msg_add_reaction">Reaktion hinzufügen</string>
-    <!-- TODO - Add proper translation -->
     <string name="action_msg_copy_permalink">Permalink kopieren</string>
-    <!-- TODO - Add proper translation -->
     <string name="action_msg_report">Bericht</string>
 
     <!-- Permission messages -->

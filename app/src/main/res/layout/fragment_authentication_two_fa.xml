@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_two_factor_authentication" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/button_confirm"
         style="@style/Authentication.Button"
         android:layout_marginTop="20dp"
