@@ -1,5 +1,6 @@
 package chat.rocket.android.chatrooms.adapter
 
+import android.util.Log
 import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -7,7 +8,9 @@ import chat.rocket.android.R
 import chat.rocket.android.chatroom.uimodel.toViewType
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
+import chat.rocket.android.util.extensions.ifNotNullNorEmpty
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.common.util.ifNull
 
 class RoomsAdapter(private val listener: (RoomUiModel) -> Unit, presenter: ChatRoomsPresenter) :
     RecyclerView.Adapter<ViewHolder<*>>() {
@@ -85,7 +88,7 @@ class RoomsAdapter(private val listener: (RoomUiModel) -> Unit, presenter: ChatR
 
                     }
                     R.id.action_read->{
-
+                      this.unread.ifNotNullNorEmpty{ presenter.markRoomAsRead(this.id) }
                     }
                     R.id.action_hide_room->{
 

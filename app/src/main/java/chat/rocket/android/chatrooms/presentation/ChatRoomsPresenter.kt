@@ -23,6 +23,7 @@ import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.createDirectMessage
 import chat.rocket.core.internal.rest.favorite
+import chat.rocket.core.internal.rest.markAsRead
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.show
 import kotlinx.coroutines.withTimeout
@@ -161,6 +162,17 @@ class ChatRoomsPresenter @Inject constructor(
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }
+            }
+        }
+    }
+
+    fun markRoomAsRead(roomId: String) {
+        launchUI(strategy) {
+            try {
+                retryIO(description = "markAsRead($roomId)") { client.markAsRead(roomId) }
+            } catch (ex: RocketChatException) {
+                view.showMessage(ex.message!!) // TODO Remove.
+                Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
             }
         }
     }
