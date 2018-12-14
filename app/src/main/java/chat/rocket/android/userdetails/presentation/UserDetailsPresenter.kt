@@ -39,37 +39,7 @@ class UserDetailsPresenter @Inject constructor(
                     val openedChatRooms = chatRoomByName(name = u.name)
                     val avatarUrl = u.username?.let { currentServer.avatarUrl(avatar = it) }
 
-                    val chatRoom: ChatRoom? = if (openedChatRooms.isEmpty()) {
-                        ChatRoom(
-                            id = "",
-                            type = roomTypeOf(RoomType.DIRECT_MESSAGE),
-                            name = u.username ?: u.name.orEmpty(),
-                            fullName = u.name,
-                            favorite = false,
-                            open = false,
-                            alert = false,
-                            status = userStatusOf(u.status),
-                            client = client,
-                            broadcast = false,
-                            archived = false,
-                            default = false,
-                            description = null,
-                            groupMentions = null,
-                            userMentions = null,
-                            lastMessage = null,
-                            lastSeen = null,
-                            topic = null,
-                            announcement = null,
-                            roles = null,
-                            unread = 0,
-                            readonly = false,
-                            muted = null,
-                            subscriptionId = "",
-                            timestamp = null,
-                            updatedAt = null,
-                            user = null
-                        )
-                    } else openedChatRooms.firstOrNull()
+                    val chatRoom: ChatRoom? = openedChatRooms.firstOrNull()
 
                     view.showUserDetails(
                         avatarUrl = avatarUrl,
