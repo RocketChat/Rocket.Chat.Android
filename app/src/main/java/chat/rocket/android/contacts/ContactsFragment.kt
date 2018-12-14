@@ -2,9 +2,11 @@ package chat.rocket.android.contacts
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.*
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -22,6 +24,10 @@ import kotlin.collections.HashMap
 // WIDECHAT
 import chat.rocket.android.helper.Constants
 import com.facebook.drawee.view.SimpleDraweeView
+import android.view.LayoutInflater
+import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
+
 
 /**
  * Load a list of contacts in a recycler view
@@ -42,10 +48,15 @@ class ContactsFragment : Fragment() {
     private var createNewChannelLink: View? = null
     private var searchView: SearchView? = null
     private var sortView: MenuItem? = null
+    private var searchIcon: ImageView? = null
+    private var searchText:  TextView? = null
+    private var searchCloseButton: ImageView? = null
 
     // WIDECHAT
     private var profileButton: SimpleDraweeView? = null
     private var widechatSearchView: SearchView? = null
+    private var onlineStatusButton: ImageView?=null
+
 
     private fun getContactList() {
         val cr = context!!.contentResolver
@@ -113,9 +124,7 @@ class ContactsFragment : Fragment() {
 
         val searchItem = menu.findItem(R.id.action_search)
         searchView = searchItem?.actionView as? SearchView
-        searchView?.setIconifiedByDefault(false)
-        searchView?.maxWidth = Integer.MAX_VALUE
-        searchView?.onQueryTextListener { queryContacts(it) }
+        setupWidechatSearchView()
 
         val expandListener = object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
@@ -131,6 +140,30 @@ class ContactsFragment : Fragment() {
             }
         }
         searchItem?.setOnActionExpandListener(expandListener)
+    }
+
+
+    private fun setupWidechatSearchView() {
+        searchView?.setBackgroundResource(R.drawable.widechat_search_white_background)
+        searchView?.isIconified = true
+
+        searchIcon = searchView?.findViewById(R.id.search_mag_icon)
+        searchIcon?.setImageResource(R.drawable.ic_search_gray_24px)
+        
+
+        searchText = searchView?.findViewById(R.id.search_src_text)
+        searchText?.setTextColor(Color.GRAY)
+        searchText?.setHintTextColor(Color.GRAY)
+
+        searchCloseButton = searchView?.findViewById(R.id.search_close_btn)
+        searchCloseButton?.setImageResource(R.drawable.ic_close_gray_24dp)
+
+        searchCloseButton?.setOnClickListener { v ->
+            searchView?.clearFocus()
+            searchView?.setQuery("", false)
+        }
+
+        searchView?.onQueryTextListener { queryContacts(it) }
     }
 
     fun containsIgnoreCase(src: String, what: String): Boolean {
@@ -241,6 +274,8 @@ class ContactsFragment : Fragment() {
             with((activity as AppCompatActivity?)?.supportActionBar) {
                 profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
                 profileButton?.visibility = View.GONE
+                onlineStatusButton=this?.getCustomView()?.findViewById(R.id.text_online)
+                onlineStatusButton?.visibility=View.GONE
                 widechatSearchView = this?.getCustomView()?.findViewById(R.id.action_widechat_search)
                 widechatSearchView?.visibility = View.GONE
             }
@@ -273,7 +308,12 @@ class ContactsFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_contact_parent, container, false)
+        val contextThemeWrapper = ContextThemeWrapper(activity, R.style.AppTheme)
+
+        // clone the inflater using the ContextThemeWrapper
+        val localInflater = inflater.cloneInContext(contextThemeWrapper)
+
+        val view = localInflater.inflate(R.layout.fragment_contact_parent, container, false)
 
         createNewChannelLink = view.findViewById(R.id.create_new_channel_button)
         createNewChannelLink!!.setOnClickListener {

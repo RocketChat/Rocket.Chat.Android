@@ -32,13 +32,15 @@
 
     <TextView
         android:id="@+id/contacts_heading"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:layout_marginStart="18dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
         android:layout_below="@id/create_new_channel_button"
+        android:fontFamily="@string/font_fontFamily_widechat"
         android:paddingBottom="12dp"
-        android:text="CONTACTS"/>
+        android:text="@string/Invite_contacts"/>
 
     <FrameLayout
         android:id="@+id/contacts_area"

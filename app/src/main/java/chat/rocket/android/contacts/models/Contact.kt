@@ -10,6 +10,22 @@ class Contact() : Parcelable {
     private var phoneNumber: String? = null
     private var emailAddress: String? = null
     private var isPhone: Boolean = true
+    private var username: String? = null
+    private var type:Int?=0
+
+    fun getUsername(): String? {
+        return username
+    }
+
+    fun setType(id: Int) {
+        this.type = id
+    }
+
+    fun getType():Int? {
+        return type;
+    }
+
+
 
     fun getName(): String? {
         return name
@@ -64,6 +80,15 @@ class Contact() : Parcelable {
 
         override fun newArray(size: Int): Array<Contact?> {
             return arrayOfNulls(size)
+        }
+    }
+
+    interface CARD_TYPE {
+        companion object {
+            val VIEW_PUBLIC_ACCOUNT= 0
+            val VIEW_CONTACT = 1
+            val VIEW_HEADING= 2
+            val VIEW_INVITE_OTHER_APP= 3
         }
     }
 

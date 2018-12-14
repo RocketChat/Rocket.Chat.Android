@@ -1,69 +1,119 @@
 package chat.rocket.android.contacts
 
-import android.content.Context
+import android.content.Intent
 import timber.log.Timber
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.contacts.models.Contact
 import chat.rocket.android.main.ui.MainActivity
+import chat.rocket.android.util.extensions.inflate
 import java.util.*
 import kotlin.collections.HashMap
-import chat.rocket.android.util.extensions.showToast
+
 
 class ContactRecyclerViewAdapter(
         private val context: MainActivity,
         private val contactArrayList: ArrayList<Contact?>,
         private val contactHashMap: HashMap<String, String>
-) : RecyclerView.Adapter<ContactRecyclerViewAdapter.ViewHolder>() {
+
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemCount(): Int {
         return contactArrayList.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.item_contact, parent, false)
-        return ViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            Contact.CARD_TYPE.VIEW_CONTACT -> ContactViewHolder(parent.inflate(R.layout.item_change_status))
+            Contact.CARD_TYPE.VIEW_INVITE_OTHER_APP -> inviteViewHolder(parent.inflate(R.layout.item_account))
+            else -> ContactViewHolder(parent.inflate(R.layout.item_change_status))
+
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.contact = contactArrayList[position]
-        holder.status = contactHashMap.get(holder.contact!!.getPhoneNumber())
+    private fun getItem(position: Int): Contact {
+        return contactArrayList.get(position)!!
+    }
+        override fun getItemViewType(position: Int): Int {
+            return contactArrayList.get(position)!!.getType()!!;
+        }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val userContact = getItem(position)
+        val viewType = getItemViewType(position)
+        when (viewType) {
+            Contact.CARD_TYPE.VIEW_CONTACT  ->
+                contactData(holder,position)
+
+            Contact.CARD_TYPE.VIEW_INVITE_OTHER_APP -> inviteData(holder, position)
+            Contact.CARD_TYPE.VIEW_PUBLIC_ACCOUNT -> contactData(holder,position)
+            Contact.CARD_TYPE.VIEW_HEADING -> HeadingData(holder,position)
+        }
+
+
+    }
+
+
+    private fun inviteData(holder:RecyclerView.ViewHolder,  position: Int) {
+        val contactCardViewHolder = holder as ContactViewHolder
+        contactCardViewHolder.contact = contactArrayList[position]
+        contactCardViewHolder.status = contactHashMap.get(holder.contact!!.getPhoneNumber())
         try {
-            holder.contactName.text = holder.contact!!.getName()
-            if (holder.contact!!.isPhone()) {
-                holder.contactDetail.text = holder.contact!!.getPhoneNumber()
+            if(contactCardViewHolder.contact!!.getUsername()==null){
+                contactCardViewHolder.inviteButton.visibility = View.VISIBLE
+                contactCardViewHolder.emailDetail.visibility=View.GONE
+                contactCardViewHolder.online.visibility=View.GONE
+            }else{
+                contactCardViewHolder.inviteButton.visibility = View.GONE
+                contactCardViewHolder.emailDetail.visibility=View.VISIBLE
+                contactCardViewHolder.emailDetail.text= holder.contact!!.getEmailAddress()
+                contactCardViewHolder.online.visibility=View.VISIBLE
+            }
+            contactCardViewHolder.contactName.text = holder.contact!!.getName()
+            if (contactCardViewHolder.contact!!.isPhone()) {
+                contactCardViewHolder.contactDetail.text = holder.contact!!.getPhoneNumber()
             } else {
-                holder.contactDetail.text = holder.contact!!.getEmailAddress()
+                contactCardViewHolder.contactDetail.text = holder.contact!!.getEmailAddress()
             }
         } catch (exception: NullPointerException) {
             Timber.e("Failed to send resolution. Exception is: $exception")
         }
+    }
+
+    private fun contactData(holder:RecyclerView.ViewHolder,  position: Int) {
+        val inviteViewHolder = holder as inviteViewHolder
 
     }
 
-    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    private fun HeadingData(holder:RecyclerView.ViewHolder,  position: Int) {
+        val headingViewHolder = holder as HeadingViewHolder
+        headingViewHolder.contactHeading.text=headingViewHolder.contact!!.getName()
+
+    }
+
+
+
+    inner class ContactViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         var contact: Contact? = null
         var status: String? = null
 
         var contactName: TextView
         var contactDetail: TextView
         var inviteButton: Button
+        var online:ImageView
+        var emailDetail:TextView
 
         init {
             this.contactName = view.findViewById(R.id.contact_name) as TextView
             this.contactDetail = view.findViewById(R.id.contact_detail) as TextView
             this.inviteButton = view.findViewById(R.id.invite_contact) as Button
+            this.online = view.findViewById(R.id.img_online) as ImageView
+            this.emailDetail = view.findViewById(R.id.text_email) as TextView
 
-            this.inviteButton.setOnClickListener { view ->
+                this.inviteButton.setOnClickListener { view ->
                 run {
                     // Make API call using context.presenter
                     if(contact!!.isPhone()){
@@ -73,6 +123,48 @@ class ContactRecyclerViewAdapter(
                     }
                 }
             }
+        }
+    }
+
+    inner class inviteViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        var contact: Contact? = null
+
+        var contactName: TextView
+        var online:ImageView
+        var layout: LinearLayout
+
+        init {
+            this.contactName = view.findViewById(R.id.contact_name) as TextView
+            this.online = view.findViewById(R.id.img_online) as ImageView
+            this.layout=view.findViewById(R.id.ll_invite)as LinearLayout
+
+            this.layout.setOnClickListener { view ->
+                run {
+                    shareApp();
+
+                }
+            }
+        }
+    }
+
+    inner class HeadingViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        var contact: Contact? = null
+
+        var contactHeading: TextView
+
+        init {
+            this.contactHeading = view.findViewById(R.id.contact_name) as TextView
+
+
+        }
+    }
+
+    private fun shareApp() {
+        with(Intent(Intent.ACTION_SEND)) {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.msg_check_this_out))
+            putExtra(Intent.EXTRA_TEXT, context.getString(R.string.play_store_link))
+           context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
         }
     }
 }

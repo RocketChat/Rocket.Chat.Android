@@ -9,25 +9,50 @@
     android:paddingEnd="8dp"
     android:paddingStart="0dp">
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/profile_image_avatar"
+
+
+    <RelativeLayout
+        android:id="@+id/rl_image_avatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginRight="24dp"
-        android:foregroundGravity="center"
-        android:background="@drawable/widechat_circle_shadow"
-        app:roundedCornerRadius="3dp"
-        fresco:actualImageScaleType="centerCrop"
-        fresco:roundAsCircle="true"
-        fresco:roundingBorderColor="@color/colorWhite"
-        fresco:roundingBorderPadding="2dp"
-        fresco:roundingBorderWidth="2dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="16dp"
+        android:layout_margin="10dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/profile_image_avatar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+
+            android:foregroundGravity="center"
+            android:background="@drawable/widechat_circle_shadow"
+            app:roundedCornerRadius="3dp"
+            fresco:actualImageScaleType="centerCrop"
+            fresco:roundAsCircle="true"
+            fresco:roundingBorderColor="@color/colorWhite"
+            fresco:roundingBorderPadding="2dp"
+            fresco:roundingBorderWidth="2dp" />
+
+        <ImageView
+            android:id="@+id/text_online"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:visibility="visible"
+            android:layout_alignRight="@+id/profile_image_avatar"
+            android:layout_alignBottom="@+id/profile_image_avatar"
+            android:src="@drawable/ic_status_online_12dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/circle_background_white"
+          />
+    </RelativeLayout>
 
    <androidx.appcompat.widget.SearchView
        android:layout_width="wrap_content"
        android:layout_height="match_parent"
        android:id="@+id/action_widechat_search"
        android:icon="@drawable/ic_search_white_24dp"
+
        android:iconifiedByDefault="false"
        android:imeOptions="actionSearch|flagNoExtractUi|flagNoFullscreen"
        android:title="@string/action_search"

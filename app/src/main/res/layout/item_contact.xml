@@ -4,26 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:background="?android:attr/selectableItemBackground"
     android:paddingStart="@dimen/screen_edge_left_and_right_padding"
     android:paddingTop="@dimen/chat_item_top_and_bottom_padding"
     android:paddingEnd="@dimen/screen_edge_left_and_right_padding">
 
+    <RelativeLayout
+        android:id="@+id/rl_image_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="10dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/image_avatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:foregroundGravity="center"
+        android:background="@drawable/widechat_circle_shadow"
+        app:roundedCornerRadius="3dp"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:roundAsCircle="true"
+        fresco:roundingBorderColor="@color/colorWhite"
+        fresco:roundingBorderPadding="2dp"
+        fresco:roundingBorderWidth="2dp" />
+        <ImageView
+            android:id="@+id/img_online"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:visibility="visible"
+            android:layout_alignRight="@+id/image_avatar"
+            android:layout_alignBottom="@+id/image_avatar"
+            android:src="@drawable/ic_status_online_12dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/circle_background_white"
+            />
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/contact_detail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/text_view_drawable_padding"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="@dimen/chat_item_top_and_bottom_padding"
-        android:layout_weight="0.8"
         android:ellipsize="end"
         android:maxLines="2"
         android:textDirection="locale"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="@+id/rl_image_avatar"
         app:layout_constraintTop_toBottomOf="@+id/contact_name"
         tools:text="Phone number goes here" />
 
@@ -33,15 +61,16 @@
         style="@style/ChatRoom.Name.TextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="12dp"
         android:ellipsize="end"
         android:lines="1"
         android:maxLines="1"
-        android:textColor="@color/colorSecondaryText"
+        android:textColor="@color/colorPrimaryText"
         android:textDirection="locale"
-        app:layout_constraintLeft_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/rl_image_avatar"
+        app:layout_constraintLeft_toRightOf="@+id/rl_image_avatar"
+        app:layout_constraintTop_toTopOf="@+id/rl_image_avatar"
+        android:fontFamily="@string/font_fontFamily_widechat"
         tools:text="Name goes here" />
 
     <Button
@@ -50,19 +79,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Invite"
-        app:layout_constraintEnd_toStartOf="@id/image_avatar"
-        app:layout_constraintTop_toTopOf="@id/image_avatar"
-        tools:layout_editor_absoluteY="4dp" />
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/image_avatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintStart_toEndOf="parent"
+        android:textColor="@color/color_invite"
+        android:fontFamily="@string/font_fontFamily_widechat"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="invisible"
-        app:roundedCornerRadius="3dp" />
+        tools:layout_editor_absoluteY="4dp" />
+    <TextView
+        android:id="@+id/text_email"
+        style="@style/Sender.Name.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/rl_image_avatar"
+        android:textColor="@color/colorPrimaryText"
+        android:fontFamily="@string/font_fontFamily_widechat"
+        tools:text="alex.johnson" />
+
 
     <View
         android:id="@+id/divider"
