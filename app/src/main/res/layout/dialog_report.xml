@@ -113,7 +113,7 @@
             app:layout_constraintTop_toBottomOf="@+id/edit_text_description"
             tools:visibility="visible" />
 
-        <Button
+        <android.widget.Button
             android:id="@+id/button_send_report"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
