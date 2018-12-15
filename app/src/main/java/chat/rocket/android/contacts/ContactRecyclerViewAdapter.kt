@@ -27,9 +27,9 @@ class ContactRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            Contact.CARD_TYPE.VIEW_CONTACT -> ContactViewHolder(parent.inflate(R.layout.item_change_status))
-            Contact.CARD_TYPE.VIEW_INVITE_OTHER_APP -> inviteViewHolder(parent.inflate(R.layout.item_account))
-            else -> ContactViewHolder(parent.inflate(R.layout.item_change_status))
+            Contact.CARD_TYPE.VIEW_CONTACT -> ContactViewHolder(parent.inflate(R.layout.item_contact))
+            Contact.CARD_TYPE.VIEW_INVITE_OTHER_APP -> inviteViewHolder(parent.inflate(R.layout.item_invite))
+            else -> ContactViewHolder(parent.inflate(R.layout.item_contact))
 
         }
     }
@@ -49,18 +49,20 @@ class ContactRecyclerViewAdapter(
                 contactData(holder,position)
 
             Contact.CARD_TYPE.VIEW_INVITE_OTHER_APP -> inviteData(holder, position)
-            Contact.CARD_TYPE.VIEW_PUBLIC_ACCOUNT -> contactData(holder,position)
             Contact.CARD_TYPE.VIEW_HEADING -> HeadingData(holder,position)
+            else -> contactData(holder,position)
+
         }
 
 
     }
 
 
-    private fun inviteData(holder:RecyclerView.ViewHolder,  position: Int) {
+    private fun contactData(holder:RecyclerView.ViewHolder,  position: Int) {
         val contactCardViewHolder = holder as ContactViewHolder
         contactCardViewHolder.contact = contactArrayList[position]
         contactCardViewHolder.status = contactHashMap.get(holder.contact!!.getPhoneNumber())
+
         try {
             if(contactCardViewHolder.contact!!.getUsername()==null){
                 contactCardViewHolder.inviteButton.visibility = View.VISIBLE
@@ -78,12 +80,22 @@ class ContactRecyclerViewAdapter(
             } else {
                 contactCardViewHolder.contactDetail.text = holder.contact!!.getEmailAddress()
             }
+            contactCardViewHolder.inviteButton.setOnClickListener { view ->
+                run {
+                    // Make API call using context.presenter
+                    if(contactCardViewHolder.contact!!.isPhone()){
+                        context.presenter.inviteViaSMS(contactCardViewHolder.contact!!.getPhoneNumber()!!);
+                    }else{
+                        context.presenter.inviteViaEmail(contactCardViewHolder.contact!!.getEmailAddress()!!);
+                    }
+                }
+            }
         } catch (exception: NullPointerException) {
             Timber.e("Failed to send resolution. Exception is: $exception")
         }
     }
 
-    private fun contactData(holder:RecyclerView.ViewHolder,  position: Int) {
+    private fun inviteData(holder:RecyclerView.ViewHolder,  position: Int) {
         val inviteViewHolder = holder as inviteViewHolder
 
     }
@@ -113,16 +125,7 @@ class ContactRecyclerViewAdapter(
             this.online = view.findViewById(R.id.img_online) as ImageView
             this.emailDetail = view.findViewById(R.id.text_email) as TextView
 
-                this.inviteButton.setOnClickListener { view ->
-                run {
-                    // Make API call using context.presenter
-                    if(contact!!.isPhone()){
-                        context.presenter.inviteViaSMS(contact!!.getPhoneNumber()!!);
-                        }else{
-                        context.presenter.inviteViaEmail(contact!!.getEmailAddress()!!);
-                    }
-                }
-            }
+
         }
     }
 

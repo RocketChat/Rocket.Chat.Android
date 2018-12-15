@@ -80,6 +80,7 @@ abstract class ActivityBuilder {
             MentionsFragmentProvider::class,
             PinnedMessagesFragmentProvider::class,
             FavoriteMessagesFragmentProvider::class,
+
             FilesFragmentProvider::class
         ]
     )
