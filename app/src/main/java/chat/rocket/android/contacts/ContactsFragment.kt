@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.view.*
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +17,6 @@ import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extension.onQueryTextListener
 import kotlinx.android.synthetic.main.app_bar.*
 import java.util.ArrayList
-import kotlin.Comparator
 import kotlin.collections.HashMap
 
 // WIDECHAT
@@ -26,13 +24,24 @@ import chat.rocket.android.helper.Constants
 import com.facebook.drawee.view.SimpleDraweeView
 import android.view.LayoutInflater
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import chat.rocket.android.db.DatabaseManagerFactory
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import dagger.android.support.AndroidSupportInjection
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 
 /**
  * Load a list of contacts in a recycler view
  */
 class ContactsFragment : Fragment() {
+    @Inject
+    lateinit var dbFactory: DatabaseManagerFactory
+    @Inject
+    lateinit var serverInteractor: GetCurrentServerInteractor
     /**
      * The list of contacts to load in the recycler view
      */
@@ -59,60 +68,38 @@ class ContactsFragment : Fragment() {
 
 
     private fun getContactList() {
-        val cr = context!!.contentResolver
 
-        val cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
+        val dbManager = dbFactory.create(serverInteractor.get()!!)
 
-        if ((cur?.count ?: 0) > 0) {
-            while (cur != null && cur.moveToNext()) {
-                val id = cur.getString(
-                        cur.getColumnIndex(ContactsContract.Contacts._ID))
-                val name = cur.getString(cur.getColumnIndex(
-                        ContactsContract.Contacts.DISPLAY_NAME))
-
-                if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-                    // Has phone numbers
-
-                    val pCur = cr.query(
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                            arrayOf<String>(id), null)
-                    while (pCur!!.moveToNext()) {
-                        val phoneNo = pCur.getString(pCur.getColumnIndex(
-                                ContactsContract.CommonDataKinds.Phone.NUMBER))
-                        val contact = Contact()
-                        contact.setName(name)
-                        contact.setPhoneNumber(phoneNo)
-                        contactArrayList.add(contact)
-                        contactHashMap[phoneNo] = "INDETERMINATE"
-                    }
-                    pCur.close()
-                }
-
-                if (true) {
-                    // No check for having email address
-
-                    val eCur = cr.query(
-                            ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
-                            ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?",
-                            arrayOf<String>(id), null)
-                    while (eCur!!.moveToNext()) {
-                        val emailID = eCur.getString(eCur.getColumnIndex(
-                                ContactsContract.CommonDataKinds.Email.DATA))
-                        val contact = Contact()
-                        contact.setName(name)
-                        contact.setEmailAddress(emailID)
-                        contactArrayList.add(contact)
-                        contactHashMap[emailID] = "INDETERMINATE"
-                    }
-                    eCur.close()
-                }
-            }
+        Single.fromCallable {
+            // need to return a non-null object, since Rx 2 doesn't allow nulls
+            dbManager.contactsDao().getAllSync()
         }
-        cur?.close()
-        contactArrayList.sortWith(Comparator { o1, o2 ->
-            o1.getName()!!.compareTo(o2.getName()!!)
-        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                        onSuccess = { contactEntities ->
+                            contactArrayList = ArrayList(contactEntities.map { contactEntity ->
+                                run{
+                                    val contact = Contact()
+                                    contact.setName(contactEntity.name!!)
+                                    if(contactEntity.isPhone){
+                                        contact.setPhoneNumber(contactEntity.phoneNumber!!)
+                                        contact.setIsPhone(true)
+                                    }else {
+                                        contact.setEmailAddress(contactEntity.emailAddress!!)
+                                    }
+                                    if(contactEntity.username != null){
+                                        contact.setUsername(contactEntity.username)
+                                    }
+                                    contact
+                                }
+                            })
+                            setupFrameLayout(contactArrayList)
+                        },
+                        onError = { error ->
+                        }
+                )
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -238,6 +225,8 @@ class ContactsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidSupportInjection.inject(this)
+
         setHasOptionsMenu(true)
 
         if (
