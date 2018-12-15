@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -19,6 +20,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.app_bar_chat_room.*
+import kotlinx.android.synthetic.main.unread_messages_badge.*
 import javax.inject.Inject
 
 fun Context.chatRoomIntent(
@@ -161,6 +163,26 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     fun hideToolbarChatRoomIcon() {
         text_room_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+    }
+
+    fun bindUnreadRooms(totalUnreadRooms: Long) {
+        val textView = text_total_unread_messages
+        when {
+            totalUnreadRooms in 1..9 -> {
+                textView.textContent = totalUnreadRooms.toString()
+                textView.isVisible = true
+                toolbar.setNavigationIcon(R.drawable.ic_keyboard_arrow_left_white_24dp)
+            }
+            totalUnreadRooms > 9 -> {
+                textView.textContent = "!"
+                textView.isVisible = true
+                toolbar.setNavigationIcon(R.drawable.ic_keyboard_arrow_left_white_24dp)
+            }
+            else -> {
+                textView.isVisible = false
+                toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            }
+        }
     }
 
     private fun finishActivity() {

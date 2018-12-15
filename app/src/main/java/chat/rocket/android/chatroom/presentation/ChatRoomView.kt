@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.presentation
 
+import androidx.lifecycle.MutableLiveData
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
@@ -144,5 +145,7 @@ interface ChatRoomView : LoadingView, MessageView {
     fun populateCommandSuggestions(commands: List<CommandSuggestionUiModel>)
 
     fun onRoomUpdated(roomUiModel: RoomUiModel)
+
+    fun updateUnreadRoomsBadge(totalUnreadRooms: MutableLiveData<Long>)
 
 }
