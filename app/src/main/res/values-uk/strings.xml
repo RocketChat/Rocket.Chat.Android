@@ -168,7 +168,8 @@
     <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
     <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
     <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
-
+    <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
+    <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
         <item quantity="few">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->

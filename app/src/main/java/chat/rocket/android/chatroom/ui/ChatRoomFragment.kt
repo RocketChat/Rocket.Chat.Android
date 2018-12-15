@@ -198,8 +198,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private val dialogView by lazy { View.inflate(context, R.layout.file_attachments_dialog, null) }
     internal val alertDialog by lazy { AlertDialog.Builder(activity).setView(dialogView).create() }
     internal val imagePreview by lazy { dialogView.findViewById<ImageView>(R.id.image_preview) }
-    internal val sendButton by lazy { dialogView.findViewById<Button>(R.id.button_send) }
-    internal val cancelButton by lazy { dialogView.findViewById<Button>(R.id.button_cancel) }
+    internal val sendButton by lazy { dialogView.findViewById<android.widget.Button>(R.id.button_send) }
+    internal val cancelButton by lazy { dialogView.findViewById<android.widget.Button>(R.id.button_cancel) }
     internal val description by lazy { dialogView.findViewById<EditText>(R.id.text_file_description) }
     internal val audioVideoAttachment by lazy { dialogView.findViewById<FrameLayout>(R.id.audio_video_attachment) }
     internal val textFile by lazy { dialogView.findViewById<TextView>(R.id.text_file_name) }
