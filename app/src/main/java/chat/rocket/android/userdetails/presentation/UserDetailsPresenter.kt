@@ -1,5 +1,6 @@
 package chat.rocket.android.userdetails.presentation
 
+import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.server.domain.GetConnectingServerInteractor
@@ -27,6 +28,7 @@ class UserDetailsPresenter @Inject constructor(
     private var currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
+    private val interactor = FetchChatRoomsInteractor(client,dbManager)
 
     fun loadUserDetails(userId: String) {
         launchUI(strategy) {
@@ -61,6 +63,8 @@ class UserDetailsPresenter @Inject constructor(
             val result = retryIO("createDirectMessage($id") {
                 client.createDirectMessage(username = id)
             }
+
+            interactor.refreshChatRooms()
 
             val userEntity = withContext(CommonPool) {
                 dbManager.userDao().getUser(id = id)
