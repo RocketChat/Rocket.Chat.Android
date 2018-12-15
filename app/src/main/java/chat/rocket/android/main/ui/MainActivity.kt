@@ -1,19 +1,26 @@
 package chat.rocket.android.main.ui
 
 import DrawableHelper
+import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Layout
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
+import chat.rocket.android.contacts.worker.ContactSyncWorker
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
@@ -59,6 +66,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
     private var chatRoomId: String? = null
     private var progressDialog: ProgressDialog? = null
+    private val PERMISSIONS_REQUEST_RW_CONTACTS = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -69,6 +77,21 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             setContentView(R.layout.activity_main)
         }
         refreshPushToken()
+
+        if (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.READ_CONTACTS),
+                    PERMISSIONS_REQUEST_RW_CONTACTS)
+        } else {
+            // Permission has already been granted
+            syncContacts()
+
+        }
+
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
         presenter.clearNotificationsForChatroom(chatRoomId)
 
@@ -271,5 +294,26 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     override fun hideProgress() {
         progressDialog?.dismiss()
         progressDialog = null
+    }
+
+    private fun syncContacts() {
+        val contactSyncWork = OneTimeWorkRequestBuilder<ContactSyncWorker>().build()
+        WorkManager.getInstance().enqueue(contactSyncWork)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            PERMISSIONS_REQUEST_RW_CONTACTS -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    syncContacts()
+                }
+                return
+            }
+            else -> {
+                // Ignore
+            }
+        }
     }
 }
