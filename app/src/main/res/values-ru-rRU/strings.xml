@@ -170,7 +170,8 @@
     <string name="msg_send_email">Отправить e-mail</string>
     <string name="msg_android_app_support">Поддержка Android-приложения</string>
     <string name="msg_muted_on_this_channel">Вы лишены дара речи на этом канале</string>
-
+    <string name="msg_unable_to_update_password">Невозможно обновить пароль. Ошибка: %1$s</string>
+    <string name="msg_password_updated_successfully">Пароль успешно обновлен</string>
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s реагирует с %2$s</item>
         <item quantity="few">%1$s реагируют с %2$s</item>
@@ -225,8 +226,7 @@
     <string name="action_title_editing">Редактирование сообщения</string>
     <string name="action_msg_add_reaction">Отреагировать</string>
     <string name="action_msg_copy_permalink">Копировать ссылку</string>
-    <!-- TODO - Add proper translation -->
-    <string name="action_msg_report">Report</string>
+    <string name="action_msg_report">Пожаловаться</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редактирование запрещено</string>
@@ -335,13 +335,13 @@
     <string name="message_room_changed_privacy">Тип канала изменен на: %1$s пользователем %2$s</string>
 
     <!-- User Details -->
-    <string name="message">Message</string> <!--TODO - Add proper translation-->
-    <string name="timezone">Timezone</string> <!--TODO - Add proper translation-->
-    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string> <!-- TODO - Add proper translation -->
-    <string name="retry">Retry</string> <!-- TODO - Add proper translation -->
+    <string name="message">Сообщение</string>
+    <string name="timezone">Часовой поясe</string>
+    <string name="error_opening_dm">При создании этого диалога что-то пошло не так...</string>
+    <string name="retry">Повторить</string>
 
     <!-- Report -->
-    <string name="submit">Submit</string> <!--TODO - Add proper translation-->
-    <string name="required">*required</string> <!--TODO - Add proper translation-->
-    <string name="report_sent">Your report has been sent!</string> <!--TODO - Add proper translation-->
+    <string name="submit">Отправить</string>
+    <string name="required">*требуется</string>
+    <string name="report_sent">Ваша жалоба была отправлена!</string>
 </resources>
