@@ -1092,7 +1092,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         view_dim.isVisible = false
     }
 
-    private fun setupToolbar(toolbarTitle: String) {
+    private fun setupToolbar(toolbarTitle: Strring) {
         (activity as ChatRoomActivity).showToolbarTitle(toolbarTitle)
     }
 
