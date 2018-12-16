@@ -17,6 +17,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="10dp"
+            android:visibility="gone"
             android:contentDescription="@string/Create_A_New_Channel"
             android:src="@drawable/ic_community_black" />
 
@@ -26,6 +27,7 @@
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="@string/widechat_new_channel"/>
 
     </LinearLayout>
@@ -39,6 +41,7 @@
         android:textColor="@color/colorPrimary"
         android:layout_below="@id/create_new_channel_button"
         android:fontFamily="@string/font_fontFamily_widechat"
+        android:visibility="gone"
         android:paddingBottom="12dp"
         android:text="@string/Invite_contacts"/>
 
@@ -55,5 +58,6 @@
         android:layout_height="1dp"
         android:layout_alignBottom="@+id/contacts_heading"
         android:layout_marginTop="16dp"
+        android:visibility="gone"
         android:background="?android:attr/listDivider" />
 </RelativeLayout>

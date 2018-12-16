@@ -276,9 +276,10 @@ class ContactsFragment : Fragment() {
     }
 
     fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>) {
+
         try {
             val contactListFragment = ContactListFragment.newInstance(
-                    filteredContactArrayList,
+                    changeContactList(filteredContactArrayList),
                     contactHashMap
             )
             val fragmentTransaction = childFragmentManager.beginTransaction()
@@ -295,6 +296,31 @@ class ContactsFragment : Fragment() {
 
 
     }
+
+    private fun changeContactList(filteredContactArrayList: ArrayList<Contact>): ArrayList<Contact> {
+         var memberArrayList: ArrayList<Contact> = ArrayList()
+        var nonMemberArrayList: ArrayList<Contact> = ArrayList()
+        for(Contact in filteredContactArrayList){
+            if(Contact!!.getUsername()!=null){
+                memberArrayList.add(Contact)
+            }else
+                nonMemberArrayList.add(Contact)
+        }
+
+        var contact= Contact();
+        contact.setType(Contact.CARD_TYPE.VIEW_HEADING)
+        contact.setUsername("INVITE CONTACTS ")
+        memberArrayList.add(contact)
+        memberArrayList.addAll(nonMemberArrayList)
+        var contactinvite= Contact();
+        contactinvite.setType(Contact.CARD_TYPE.VIEW_INVITE_OTHER_APP)
+        memberArrayList.add(contactinvite)
+        return memberArrayList
+
+
+
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val contextThemeWrapper = ContextThemeWrapper(activity, R.style.AppTheme)

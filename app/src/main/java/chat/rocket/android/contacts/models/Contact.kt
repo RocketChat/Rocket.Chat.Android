@@ -2,6 +2,7 @@ package chat.rocket.android.contacts.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import chat.rocket.common.model.UserStatus
 
 
 class Contact() : Parcelable {
@@ -12,6 +13,8 @@ class Contact() : Parcelable {
     private var isPhone: Boolean = true
     private var username: String? = null
     private var type:Int?=0
+
+
 
     fun getUsername(): String? {
         return username

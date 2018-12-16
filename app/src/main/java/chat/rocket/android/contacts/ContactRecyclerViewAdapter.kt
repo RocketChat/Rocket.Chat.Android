@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.contacts.models.Contact
 import chat.rocket.android.main.ui.MainActivity
+import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.common.model.UserStatus
+import kotlinx.android.synthetic.main.item_member.view.*
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -27,6 +30,7 @@ class ContactRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
+            Contact.CARD_TYPE.VIEW_HEADING-> HeadingViewHolder(parent.inflate(R.layout.item_heading))
             Contact.CARD_TYPE.VIEW_CONTACT -> ContactViewHolder(parent.inflate(R.layout.item_contact))
             Contact.CARD_TYPE.VIEW_INVITE_OTHER_APP -> inviteViewHolder(parent.inflate(R.layout.item_invite))
             else -> ContactViewHolder(parent.inflate(R.layout.item_contact))
@@ -73,6 +77,7 @@ class ContactRecyclerViewAdapter(
                 contactCardViewHolder.emailDetail.visibility=View.VISIBLE
                 contactCardViewHolder.emailDetail.text= holder.contact!!.getEmailAddress()
                 contactCardViewHolder.online.visibility=View.VISIBLE
+               // contactCardViewHolder.online.setImageDrawable(DrawableHelper.getUserStatusDrawable(contactCardViewHolder.status, context))
             }
             contactCardViewHolder.contactName.text = holder.contact!!.getName()
             if (contactCardViewHolder.contact!!.isPhone()) {
@@ -102,7 +107,8 @@ class ContactRecyclerViewAdapter(
 
     private fun HeadingData(holder:RecyclerView.ViewHolder,  position: Int) {
         val headingViewHolder = holder as HeadingViewHolder
-        headingViewHolder.contactHeading.text=headingViewHolder.contact!!.getName()
+        headingViewHolder.contact = contactArrayList[position]
+        headingViewHolder.contactHeading.text=headingViewHolder.contact!!.getUsername()
 
     }
 
@@ -138,7 +144,7 @@ class ContactRecyclerViewAdapter(
 
         init {
             this.contactName = view.findViewById(R.id.contact_name) as TextView
-            this.online = view.findViewById(R.id.img_online) as ImageView
+            this.online = view.findViewById(R.id.image_invite) as ImageView
             this.layout=view.findViewById(R.id.ll_invite)as LinearLayout
 
             this.layout.setOnClickListener { view ->
@@ -156,11 +162,14 @@ class ContactRecyclerViewAdapter(
         var contactHeading: TextView
 
         init {
-            this.contactHeading = view.findViewById(R.id.contact_name) as TextView
+            this.contactHeading = view.findViewById(R.id.contacts_heading) as TextView
 
 
         }
     }
+
+
+
 
     private fun shareApp() {
         with(Intent(Intent.ACTION_SEND)) {
