@@ -77,3 +77,9 @@ fun String.lowercaseUrl(): String? {
 }
 
 fun String?.isNotNullNorEmpty(): Boolean = this != null && this.isNotEmpty()
+
+inline fun String?.ifNotNullNotEmpty(block: (String) -> Unit) {
+    if (this != null && this.isNotEmpty()) {
+        block(this)
+    }
+}

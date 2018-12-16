@@ -5,17 +5,17 @@
     android:background="@drawable/style_attachment_options"
     android:orientation="vertical">
 
-    <Button
+    <android.widget.Button
         android:id="@+id/button_take_a_photo"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawablePadding="20dp"
-        android:drawableStart="@drawable/ic_photo_camera_black_24dp"
+        android:drawableStart="@drawable/ic_camera"
         android:gravity="start|center"
         android:text="@string/action_take_a_photo" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/button_attach_a_file"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
         android:gravity="start|center"
         android:text="@string/action_attach_a_files" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/button_drawing"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"

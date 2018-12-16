@@ -11,6 +11,9 @@ import chat.rocket.android.authentication.server.di.ServerFragmentProvider
 import chat.rocket.android.authentication.signup.di.SignupFragmentProvider
 import chat.rocket.android.authentication.twofactor.di.TwoFAFragmentProvider
 import chat.rocket.android.authentication.ui.AuthenticationActivity
+import chat.rocket.android.chatdetails.di.ChatDetailsFragmentProvider
+import chat.rocket.android.chatdetails.di.ChatDetailsModule
+import chat.rocket.android.chatdetails.ui.ChatDetailsActivity
 import chat.rocket.android.chatinformation.di.MessageInfoFragmentProvider
 import chat.rocket.android.chatinformation.ui.MessageInfoActivity
 import chat.rocket.android.chatroom.di.ChatRoomFragmentProvider
@@ -35,25 +38,26 @@ import chat.rocket.android.server.ui.ChangeServerActivity
 import chat.rocket.android.settings.di.SettingsFragmentProvider
 import chat.rocket.android.settings.password.di.PasswordFragmentProvider
 import chat.rocket.android.settings.password.ui.PasswordActivity
+import chat.rocket.android.userdetails.di.UserDetailsModule
+import chat.rocket.android.userdetails.ui.UserDetailsActivity
 import chat.rocket.android.webview.adminpanel.di.AdminPanelWebViewFragmentProvider
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class ActivityBuilder {
-
     @PerActivity
     @ContributesAndroidInjector(
-            modules = [AuthenticationModule::class,
-                OnBoardingFragmentProvider::class,
-                ServerFragmentProvider::class,
-                LoginOptionsFragmentProvider::class,
-                LoginFragmentProvider::class,
-                RegisterUsernameFragmentProvider::class,
-                ResetPasswordFragmentProvider::class,
-                SignupFragmentProvider::class,
-                TwoFAFragmentProvider::class
-            ]
+        modules = [AuthenticationModule::class,
+            OnBoardingFragmentProvider::class,
+            ServerFragmentProvider::class,
+            LoginOptionsFragmentProvider::class,
+            LoginFragmentProvider::class,
+            RegisterUsernameFragmentProvider::class,
+            ResetPasswordFragmentProvider::class,
+            SignupFragmentProvider::class,
+            TwoFAFragmentProvider::class
+        ]
     )
     abstract fun bindAuthenticationActivity(): AuthenticationActivity
 
@@ -75,7 +79,16 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(
         modules = [
             ChatRoomModule::class,
-            ChatRoomFragmentProvider::class,
+            ChatRoomFragmentProvider::class
+        ]
+    )
+    abstract fun bindChatRoomActivity(): ChatRoomActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(
+        modules = [
+            ChatDetailsModule::class,
+            ChatDetailsFragmentProvider::class,
             MembersFragmentProvider::class,
             MentionsFragmentProvider::class,
             PinnedMessagesFragmentProvider::class,
@@ -83,7 +96,7 @@ abstract class ActivityBuilder {
             FilesFragmentProvider::class
         ]
     )
-    abstract fun bindChatRoomActivity(): ChatRoomActivity
+    abstract fun bindChatDetailsActivity(): ChatDetailsActivity
 
     @PerActivity
     @ContributesAndroidInjector(modules = [PasswordFragmentProvider::class])
@@ -96,6 +109,12 @@ abstract class ActivityBuilder {
     @PerActivity
     @ContributesAndroidInjector(modules = [MessageInfoFragmentProvider::class])
     abstract fun bindMessageInfoActiviy(): MessageInfoActivity
+
+    @PerActivity
     @ContributesAndroidInjector(modules = [DrawModule::class])
     abstract fun bindDrawingActivity(): DrawingActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = [UserDetailsModule::class])
+    abstract fun bindUserDetailsActivity(): UserDetailsActivity
 }

@@ -38,7 +38,6 @@ import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extension.getByteArray
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
-import chat.rocket.android.util.extensions.exhaustive
 import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
@@ -61,6 +60,7 @@ import chat.rocket.core.internal.rest.joinChat
 import chat.rocket.core.internal.rest.markAsRead
 import chat.rocket.core.internal.rest.messages
 import chat.rocket.core.internal.rest.pinMessage
+import chat.rocket.core.internal.rest.reportMessage
 import chat.rocket.core.internal.rest.runCommand
 import chat.rocket.core.internal.rest.searchMessages
 import chat.rocket.core.internal.rest.sendMessage
@@ -370,6 +370,19 @@ class ChatRoomPresenter @Inject constructor(
                 jobSchedulerInteractor.scheduleSendingMessages()
             } finally {
                 view.enableSendMessageButton()
+            }
+        }
+    }
+
+    fun reportMessage(messageId: String, description: String) {
+        launchUI(strategy) {
+            try {
+                retryIO("reportMessage($messageId, $description)") {
+                    client.reportMessage(messageId = messageId, description = description)
+                }
+                view.showMessage(R.string.report_sent)
+            } catch (ex: RocketChatException) {
+                Timber.e(ex)
             }
         }
     }
@@ -887,20 +900,14 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    fun toMembersList(chatRoomId: String) =
-        navigator.toMembersList(chatRoomId)
-
-    fun toMentions(chatRoomId: String) =
-        navigator.toMentions(chatRoomId)
-
-    fun toPinnedMessageList(chatRoomId: String) =
-        navigator.toPinnedMessageList(chatRoomId)
-
-    fun toFavoriteMessageList(chatRoomId: String) =
-        navigator.toFavoriteMessageList(chatRoomId)
-
-    fun toFileList(chatRoomId: String) =
-        navigator.toFileList(chatRoomId)
+    fun toChatDetails(
+        chatRoomId: String,
+        chatRoomType: String,
+        isSubscribed: Boolean,
+        isMenuDisabled: Boolean
+    ) {
+        navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isMenuDisabled)
+    }
 
     fun loadChatRooms() {
         launchUI(strategy) {
@@ -929,7 +936,7 @@ class ChatRoomPresenter @Inject constructor(
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
     private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(CommonPool) {
         retryDB("getRoom($roomId)") {
-            dbManager.chatRoomDao().get(roomId)?.let {
+            dbManager.chatRoomDao().getSync(roomId)?.let {
                 with(it.chatRoom) {
                     ChatRoom(
                             id = id,
