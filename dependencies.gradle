@@ -61,7 +61,10 @@ ext {
             junit                 : '4.12',
             truth                 : '0.42',
             espresso              : '3.1.0-alpha4',
-            mockito               : '2.21.0'
+            mockito               : '2.21.0',
+
+            // For Draw
+            colorseekbar          : '1.0.2'
     ]
     libraries = [
             kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
@@ -141,6 +144,9 @@ ext {
             espressoCore          : "androidx.test.espresso:espresso-core:${versions.espresso}",
             espressoIntents       : "androidx.test.espresso:espresso-intents:${versions.espresso}",
             roomTest              : "android.arch.persistence.room:testing:${versions.room}",
-            truth                 : "com.google.truth:truth:${versions.truth}"
+            truth                 : "com.google.truth:truth:${versions.truth}",
+
+            //For Draw
+            colorSeekBar          : "com.divyanshu.colorseekbar:colorseekbar:${versions.colorseekbar}"
     ]
 }

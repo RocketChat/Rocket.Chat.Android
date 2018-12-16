@@ -12,8 +12,8 @@ import androidx.core.view.isVisible
 import chat.rocket.android.draw.R
 import chat.rocket.android.draw.main.presenter.DrawPresenter
 import chat.rocket.android.draw.main.presenter.DrawView
-import chat.rocket.android.draw.widget.ColorSeekBar
 import chat.rocket.android.draw.widget.CustomDrawView
+import com.divyanshu.colorseekbar.ColorSeekBar
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_drawing.*
 import kotlinx.android.synthetic.main.color_palette_view.*

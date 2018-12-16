@@ -57,6 +57,7 @@ dependencies {
     implementation libraries.constraintlayout
 
     implementation libraries.androidKtx
+    implementation libraries.colorSeekBar
 
     implementation libraries.dagger
     implementation libraries.daggerSupport

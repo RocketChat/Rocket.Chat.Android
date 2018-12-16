@@ -82,7 +82,7 @@
             android:paddingEnd="12dp" />
     </LinearLayout>
 
-    <chat.rocket.android.draw.widget.ColorSeekBar
+    <com.divyanshu.colorseekbar.ColorSeekBar
         android:id="@+id/color_seek_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
