@@ -21,9 +21,10 @@ ext {
             workmanager           : '1.0.0-alpha09',
 
             dagger                : '2.16',
-            firebaseCloudMessage  : '17.3.0',
-            firebaseAnalytics     : '16.0.3',
-            playServices          : '16.0.0',
+            firebaseCloudMessage  : '17.3.4',
+            firebaseAnalytics     : '16.0.6',
+            dynamiclinks          : '16.1.5',
+            playServices          : '16.0.1',
             exoPlayer             : '2.8.2',
             flexbox               : '1.1.0',
             material              : '1.0.0-beta01',
@@ -54,7 +55,7 @@ ext {
 
             // For wearable
             wear                  : '2.3.0',
-            playServicesWearable  : '15.0.1',
+            playServicesWearable  : '16.0.1',
             supportWearable       : '27.1.1',
 
             // For testing
@@ -127,6 +128,7 @@ ext {
             fcm                   : "com.google.firebase:firebase-messaging:${versions.firebaseCloudMessage}",
             firebaseAnalytics     : "com.google.firebase:firebase-core:${versions.firebaseAnalytics}",
             playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServices}",
+            dynamiclinks          : "com.google.firebase:firebase-dynamic-links:${versions.dynamiclinks}",
 
             // For wearable
             wearable              : "com.google.android.support:wearable:${versions.wear}",

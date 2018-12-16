@@ -32,6 +32,7 @@ import chat.rocket.core.internal.rest.getCustomEmojis
 import com.facebook.drawee.backends.pipeline.DraweeConfig
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
+import com.google.firebase.FirebaseApp
 import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -98,6 +99,8 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         context = WeakReference(applicationContext)
 
         AndroidThreeTen.init(this)
+
+        FirebaseApp.initializeApp(this)
 
         setupFabric(this)
         setupFresco()

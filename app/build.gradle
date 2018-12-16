@@ -160,6 +160,7 @@ dependencies {
     playImplementation libraries.playServicesAuth
     playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') { transitive = true }
     playImplementation('com.crashlytics.sdk.android:answers:1.4.3@aar') { transitive = true }
+    playImplementation libraries.dynamiclinks
 
     testImplementation libraries.junit
     testImplementation libraries.truth

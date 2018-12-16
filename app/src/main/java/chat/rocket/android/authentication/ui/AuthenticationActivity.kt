@@ -2,9 +2,11 @@ package chat.rocket.android.authentication.ui
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
@@ -12,8 +14,12 @@ import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
+import chat.rocket.android.helper.Constants
+import chat.rocket.android.helper.SharedPreferenceHelper
+import chat.rocket.android.util.TimberLogger
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.common.util.ifNull
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -35,6 +41,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setContentView(R.layout.activity_authentication)
         setupToolbar()
         loadCredentials()
+        getDynamicLink()
     }
 
     private fun setupToolbar() {
@@ -104,6 +111,21 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun showChatList() = presenter.toChatList()
+
+	private fun getDynamicLink() {
+		FirebaseDynamicLinks.getInstance()
+			.getDynamicLink(intent)
+			.addOnSuccessListener(this) { pendingDynamicLinkData ->
+				var deepLink: Uri? = null
+				if (pendingDynamicLinkData != null) {
+					deepLink = pendingDynamicLinkData.link
+				}
+
+				TimberLogger.debug("DeepLink : deepLink.toString()")
+				SharedPreferenceHelper.putString(Constants.DEEP_LINK, deepLink.toString())
+			}
+			.addOnFailureListener(this) { e -> TimberLogger.debug("getDynamicLink:onFailure : $e") }
+	}
 }
 
 const val INTENT_ADD_NEW_SERVER = "INTENT_ADD_NEW_SERVER"

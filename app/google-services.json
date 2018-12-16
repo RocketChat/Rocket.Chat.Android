@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "528542541788",
-    "firebase_url": "https://veranda-1d914.firebaseio.com",
-    "project_id": "veranda-1d914",
-    "storage_bucket": "veranda-1d914.appspot.com"
+    "project_number": "855027673764",
+    "firebase_url": "https://dynamiclinks-test-35c22.firebaseio.com",
+    "project_id": "dynamiclinks-test-35c22",
+    "storage_bucket": "dynamiclinks-test-35c22.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:528542541788:android:3b5032d671a29f81",
+        "mobilesdk_app_id": "1:855027673764:android:3b5032d671a29f81",
         "android_client_info": {
           "package_name": "chat.veranda.android"
         }
       },
       "oauth_client": [
         {
-          "client_id": "528542541788-0dv75a3mndkcbj9iji7lemh8hjo5njt1.apps.googleusercontent.com",
+          "client_id": "855027673764-tea1nqbjijv9sgsv8tvkf8crpgpl9h8b.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDc2nC-kdBgnT1v8W2oz24TKvWAyij-h80"
+          "current_key": "AIzaSyA0ayomxX0RnIv2TkV0MtFbIJzSAqn_Qgk"
         }
       ],
       "services": {
@@ -39,20 +39,20 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:528542541788:android:05d0047069ea8c30",
+        "mobilesdk_app_id": "1:855027673764:android:05d0047069ea8c30",
         "android_client_info": {
           "package_name": "chat.veranda.android.dev"
         }
       },
       "oauth_client": [
         {
-          "client_id": "528542541788-0dv75a3mndkcbj9iji7lemh8hjo5njt1.apps.googleusercontent.com",
+          "client_id": "855027673764-tea1nqbjijv9sgsv8tvkf8crpgpl9h8b.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDc2nC-kdBgnT1v8W2oz24TKvWAyij-h80"
+          "current_key": "AIzaSyA0ayomxX0RnIv2TkV0MtFbIJzSAqn_Qgk"
         }
       ],
       "services": {

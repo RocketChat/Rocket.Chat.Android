@@ -10,8 +10,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -46,12 +44,12 @@ import javax.inject.Inject
 
 // WIDECHAT
 import android.graphics.Color
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.profile.ui.ProfileFragment
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.settings.ui.SettingsFragment
+import chat.rocket.android.util.TimberLogger
 import chat.rocket.android.util.extensions.avatarUrl
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.app_bar.*
@@ -90,6 +88,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var searchCloseButton: ImageView? = null
     private var profileButton: SimpleDraweeView? = null
     private var onlineStatusButton:ImageView?=null
+    private var deepLink: String? = null
     // handles that recurring connection status bug in widechat
     private var currentlyConnected: Boolean? = false
 
@@ -115,6 +114,16 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 chatRoomId = null
             }
         }
+        getDeepLink()
+    }
+
+    private fun getDeepLink() {
+        deepLink = SharedPreferenceHelper.getString(Constants.DEEP_LINK, "null")
+        SharedPreferenceHelper.remove(Constants.DEEP_LINK)
+        TimberLogger.debug("Retrieved deep link on ChatRooms : $deepLink")
+        Toast.makeText(context, "Retrieved : $deepLink", Toast.LENGTH_SHORT).show()
+
+        //Navigate to ChatRoom
     }
 
     override fun onDestroy() {

@@ -1,11 +1,14 @@
 package chat.rocket.android.contacts
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -39,6 +42,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+import com.google.firebase.dynamiclinks.DynamicLink
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import com.google.firebase.dynamiclinks.ShortDynamicLink
+import kotlinx.android.synthetic.main.fragment_contact_parent.view.*
 
 /**
  * Load a list of contacts in a recycler view
@@ -58,6 +65,15 @@ class ContactsFragment : Fragment() {
      */
     private var contactArrayList: ArrayList<Contact> = ArrayList()
 
+    /**
+     *  The mapping of contacts with their registration status
+     */
+    private var contactHashMap: HashMap<String, String> = HashMap()
+
+    private val MY_PERMISSIONS_REQUEST_RW_CONTACTS = 0
+
+    private var createNewChannelLink: View? = null
+    private var shareViaAnotherApp: View? = null
     private var searchView: SearchView? = null
     private var sortView: MenuItem? = null
     private var searchIcon: ImageView? = null
@@ -110,6 +126,37 @@ class ContactsFragment : Fragment() {
         this.recyclerView = view.findViewById(R.id.recycler_view)
         this.emptyTextView = view.findViewById(R.id.text_no_data_to_display)
         getContactsPermissions()
+        
+        shareViaAnotherApp = view.findViewById(R.id.share_via_another_app)
+		shareViaAnotherApp!!.setOnClickListener { _ ->
+
+			FirebaseDynamicLinks.getInstance().createDynamicLink()
+				.setLink(Uri.parse("https://open.rocket.chat/direct/Shailesh351"))
+				.setDomainUriPrefix("https://dylinktesting.page.link")
+				.setAndroidParameters(
+					DynamicLink.AndroidParameters.Builder("chat.veranda.android.dev").build())
+				.setSocialMetaTagParameters(
+					DynamicLink.SocialMetaTagParameters.Builder()
+						.setTitle("Shailesh351")
+						.setDescription("Chat with Shailesh on Rocket.Chat")
+						.build())
+				.buildShortDynamicLink(ShortDynamicLink.Suffix.SHORT)
+				.addOnSuccessListener { result ->
+					val link = result.shortLink.toString()
+					Toast.makeText(context, link, Toast.LENGTH_SHORT).show()
+
+					val shareIntent = Intent()
+					shareIntent.action = Intent.ACTION_SEND
+					shareIntent.putExtra(Intent.EXTRA_TEXT, "Default Invitation Text : $link")
+					shareIntent.type = "text/plain"
+					startActivity(shareIntent, null)
+
+				}.addOnFailureListener {
+					// Error
+					Toast.makeText(context, "Error dynamic link", Toast.LENGTH_SHORT).show()
+				}
+		}
+        
         return view
     }
 
@@ -341,4 +388,30 @@ class ContactsFragment : Fragment() {
         finalList.add(inviteItemHolder("invite"))
         return finalList
     }
+
+    companion object {
+
+        /**
+         * Create a new ContactList fragment that displays the given list of contacts
+         *
+         * @param contactArrayList the list of contacts to load in the recycler view
+         * @param contactHashMap the mapping of contacts with their registration status
+         * @return the newly created ContactList fragment
+         */
+        fun newInstance(
+                contactArrayList: ArrayList<Contact>,
+                contactHashMap: HashMap<String, String>
+        ): ContactsFragment {
+            val contactsFragment = ContactsFragment()
+
+            val arguments = Bundle()
+            arguments.putParcelableArrayList("CONTACT_ARRAY_LIST", contactArrayList)
+            arguments.putSerializable("CONTACT_HASH_MAP", contactHashMap)
+
+            contactsFragment.arguments = arguments
+
+            return contactsFragment
+        }
+    }
+
 }

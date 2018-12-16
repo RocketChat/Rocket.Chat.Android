@@ -14,7 +14,7 @@ buildscript {
         classpath 'com.android.tools.build.jetifier:jetifier-processor:1.0.0-beta02'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}"
-        classpath 'com.google.gms:google-services:4.1.0'
+        classpath 'com.google.gms:google-services:4.0.1'
         classpath 'io.fabric.tools:gradle:1.25.4'
 
         classpath "com.github.ben-manes:gradle-versions-plugin:0.20.0"

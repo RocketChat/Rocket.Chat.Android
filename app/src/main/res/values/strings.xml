@@ -363,6 +363,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="delete_account">Delete My Account</string>
     <string name="log_out">Log Out</string>
     <string name="widechat_new_channel">New Group Chat</string>
+    <string name="share_via_another_app">Share via another App</string>
     <string name="msg_widechat_no_chats_to_display">You Can get started by searching for people to chat with or by inviting your friends and family to get the app too.</string>
     <string name="msg_widechat_welcome_to_app">Welcome to Viasat Connect.</string>
 
