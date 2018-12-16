@@ -5,7 +5,7 @@
     android:background="@drawable/style_attachment_options"
     android:orientation="vertical">
 
-    <Button
+    <android.widget.Button
         android:id="@+id/button_open_gallery"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         android:gravity="start|center"
         android:text="@string/action_select_photo_from_gallery" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/button_take_a_photo"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
         android:gravity="start|center"
         android:text="@string/action_take_a_photo" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/button_reset_avatar"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
