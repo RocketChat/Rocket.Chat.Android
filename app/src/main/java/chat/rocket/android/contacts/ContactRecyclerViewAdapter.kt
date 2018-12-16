@@ -75,7 +75,7 @@ class ContactRecyclerViewAdapter(
             }else{
                 contactCardViewHolder.inviteButton.visibility = View.GONE
                 contactCardViewHolder.emailDetail.visibility=View.VISIBLE
-                contactCardViewHolder.emailDetail.text= holder.contact!!.getEmailAddress()
+                contactCardViewHolder.emailDetail.text= "@"+holder.contact!!.getUsername()
                 contactCardViewHolder.online.visibility=View.VISIBLE
                // contactCardViewHolder.online.setImageDrawable(DrawableHelper.getUserStatusDrawable(contactCardViewHolder.status, context))
             }

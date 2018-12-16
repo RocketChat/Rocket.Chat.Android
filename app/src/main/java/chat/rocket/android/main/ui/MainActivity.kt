@@ -15,6 +15,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -77,21 +79,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             setContentView(R.layout.activity_main)
         }
         refreshPushToken()
-
-        if (ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.READ_CONTACTS),
-                    PERMISSIONS_REQUEST_RW_CONTACTS)
-        } else {
-            // Permission has already been granted
-            syncContacts()
-
-        }
-
+        syncContacts()
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
         presenter.clearNotificationsForChatroom(chatRoomId)
 
@@ -121,6 +109,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     override fun onResume() {
         super.onResume()
+        syncContacts()
         if (!isFragmentAdded) {
             presenter.toChatList(chatRoomId)
             isFragmentAdded = true
@@ -297,8 +286,24 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     private fun syncContacts() {
-        val contactSyncWork = OneTimeWorkRequestBuilder<ContactSyncWorker>().build()
-        WorkManager.getInstance().enqueue(contactSyncWork)
+        if (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.READ_CONTACTS),
+                    PERMISSIONS_REQUEST_RW_CONTACTS)
+        } else {
+            // Permission has already been granted
+            val contactSyncWork = OneTimeWorkRequestBuilder<ContactSyncWorker>().build()
+            WorkManager.getInstance().enqueue(contactSyncWork)
+            WorkManager.getInstance().getStatusById(contactSyncWork.getId()).observe(this, Observer { info ->
+                if (info != null && info.state.isFinished) {
+                    showToast("Contacts synced in background")
+                }
+            })
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
