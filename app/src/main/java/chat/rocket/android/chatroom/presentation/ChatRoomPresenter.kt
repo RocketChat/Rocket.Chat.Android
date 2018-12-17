@@ -132,6 +132,8 @@ class ChatRoomPresenter @Inject constructor(
     ) {
         launch(CommonPool + strategy.jobs) {
             try {
+                chatRoomId = roomId
+                chatRoomType = roomType
                 chatRoles = if (roomTypeOf(roomType) !is RoomType.DirectMessage) {
                     client.chatRoomRoles(roomType = roomTypeOf(roomType), roomName = roomName)
                 } else emptyList()
@@ -181,11 +183,12 @@ class ChatRoomPresenter @Inject constructor(
                     }
                 }
             }
+
         }
     }
 
     private fun unsubscribeRoomChanges() {
-        chatRoomId?.let { manager.removeRoomChannel(it)  }
+        chatRoomId?.let { manager.removeRoomChannel(it) }
     }
 
     private fun isOwnerOrMod(): Boolean {
@@ -941,32 +944,32 @@ class ChatRoomPresenter @Inject constructor(
             dbManager.chatRoomDao().getSync(roomId)?.let {
                 with(it.chatRoom) {
                     ChatRoom(
-                            id = id,
-                            subscriptionId = subscriptionId,
-                            type = roomTypeOf(type),
-                            unread = unread,
-                            broadcast = broadcast ?: false,
-                            alert = alert,
-                            fullName = fullname,
-                            name = name,
-                            favorite = favorite ?: false,
-                            default = isDefault ?: false,
-                            readonly = readonly,
-                            open = open,
-                            lastMessage = null,
-                            archived = false,
-                            status = null,
-                            user = null,
-                            userMentions = userMentions,
-                            client = client,
-                            announcement = null,
-                            description = null,
-                            groupMentions = groupMentions,
-                            roles = null,
-                            topic = null,
-                            lastSeen = this.lastSeen,
-                            timestamp = timestamp,
-                            updatedAt = updatedAt
+                        id = id,
+                        subscriptionId = subscriptionId,
+                        type = roomTypeOf(type),
+                        unread = unread,
+                        broadcast = broadcast ?: false,
+                        alert = alert,
+                        fullName = fullname,
+                        name = name,
+                        favorite = favorite ?: false,
+                        default = isDefault ?: false,
+                        readonly = readonly,
+                        open = open,
+                        lastMessage = null,
+                        archived = false,
+                        status = null,
+                        user = null,
+                        userMentions = userMentions,
+                        client = client,
+                        announcement = null,
+                        description = null,
+                        groupMentions = groupMentions,
+                        roles = null,
+                        topic = null,
+                        lastSeen = this.lastSeen,
+                        timestamp = timestamp,
+                        updatedAt = updatedAt
                     )
                 }
             }
@@ -984,32 +987,32 @@ class ChatRoomPresenter @Inject constructor(
             }.map {
                 with(it.chatRoom) {
                     ChatRoom(
-                            id = id,
-                            subscriptionId = subscriptionId,
-                            type = roomTypeOf(type),
-                            unread = unread,
-                            broadcast = broadcast ?: false,
-                            alert = alert,
-                            fullName = fullname,
-                            name = name ?: "",
-                            favorite = favorite ?: false,
-                            default = isDefault ?: false,
-                            readonly = readonly,
-                            open = open,
-                            lastMessage = null,
-                            archived = false,
-                            status = null,
-                            user = null,
-                            userMentions = userMentions,
-                            client = client,
-                            announcement = null,
-                            description = null,
-                            groupMentions = groupMentions,
-                            roles = null,
-                            topic = null,
-                            lastSeen = this.lastSeen,
-                            timestamp = timestamp,
-                            updatedAt = updatedAt
+                        id = id,
+                        subscriptionId = subscriptionId,
+                        type = roomTypeOf(type),
+                        unread = unread,
+                        broadcast = broadcast ?: false,
+                        alert = alert,
+                        fullName = fullname,
+                        name = name ?: "",
+                        favorite = favorite ?: false,
+                        default = isDefault ?: false,
+                        readonly = readonly,
+                        open = open,
+                        lastMessage = null,
+                        archived = false,
+                        status = null,
+                        user = null,
+                        userMentions = userMentions,
+                        client = client,
+                        announcement = null,
+                        description = null,
+                        groupMentions = groupMentions,
+                        roles = null,
+                        topic = null,
+                        lastSeen = this.lastSeen,
+                        timestamp = timestamp,
+                        updatedAt = updatedAt
                     )
                 }
             }
