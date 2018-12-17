@@ -172,11 +172,13 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     private suspend fun subscribeRoomChanges() {
-        chatRoomId?.let {
-            manager.addRoomChannel(it, roomChangesChannel)
-            for (room in roomChangesChannel) {
-                dbManager.getRoom(room.id)?.let {
-                    view.onRoomUpdated(roomMapper.map(chatRoom = it, showLastMessage = true))
+        withContext(CommonPool + strategy.jobs) {
+            chatRoomId?.let {
+                manager.addRoomChannel(it, roomChangesChannel)
+                for (room in roomChangesChannel) {
+                    dbManager.getRoom(room.id)?.let {
+                        view.onRoomUpdated(roomMapper.map(chatRoom = it, showLastMessage = true))
+                    }
                 }
             }
         }
