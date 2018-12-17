@@ -123,6 +123,7 @@ class ChatRoomPresenter @Inject constructor(
     private var lastState = manager.state
     private var typingStatusList = arrayListOf<String>()
     private val roomChangesChannel = Channel<Room>(Channel.CONFLATED)
+    private lateinit var unfinishedMessageKey: String
 
     fun setupChatRoom(
         roomId: String,
@@ -132,9 +133,12 @@ class ChatRoomPresenter @Inject constructor(
     ) {
         launch(CommonPool + strategy.jobs) {
             try {
+                unfinishedMessageKey = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$roomId"
                 chatRoles = if (roomTypeOf(roomType) !is RoomType.DirectMessage) {
                     client.chatRoomRoles(roomType = roomTypeOf(roomType), roomName = roomName)
-                } else emptyList()
+                } else {
+                    emptyList()
+                }
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
                 chatRoles = emptyList()
@@ -364,6 +368,7 @@ class ChatRoomPresenter @Inject constructor(
                     client.updateMessage(chatRoomId, messageId, text)
                 }
 
+                clearUnfinishedMessage()
                 view.enableSendMessageButton()
             } catch (ex: Exception) {
                 Timber.d(ex, "Error sending message...")
@@ -1281,31 +1286,26 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     /**
-     * Save unfinished message, when user left chat room without sending a message. It also clears
-     * saved message from local repository when unfinishedMessage is blank.
+     * Save unfinished message, when user left chat room without sending a message.
      *
-     * @param chatRoomId Chat room Id.
      * @param unfinishedMessage The unfinished message to save.
      */
-    fun saveUnfinishedMessage(chatRoomId: String, unfinishedMessage: String) {
-        val key = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$chatRoomId"
+    fun saveUnfinishedMessage(unfinishedMessage: String) {
         if (unfinishedMessage.isNotBlank()) {
-            localRepository.save(key, unfinishedMessage)
-        } else {
-            localRepository.clear(key)
+            localRepository.save(unfinishedMessageKey, unfinishedMessage)
         }
     }
 
+    fun clearUnfinishedMessage() {
+        localRepository.clear(unfinishedMessageKey)
+    }
     /**
      * Get unfinished message from local repository, when user left chat room without
      * sending a message and now the user is back.
      *
-     * @param chatRoomId Chat room Id.
-     *
-     * @return Returns the unfinished message.
+     * @return Returns the unfinished message, null otherwise.
      */
-    fun getUnfinishedMessage(chatRoomId: String): String {
-        val key = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$chatRoomId"
-        return localRepository.get(key) ?: ""
+    fun getUnfinishedMessage(): String? {
+        return localRepository.get(unfinishedMessageKey)
     }
 }

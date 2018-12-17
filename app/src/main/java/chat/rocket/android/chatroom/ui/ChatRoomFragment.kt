@@ -76,6 +76,7 @@ import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.getBitmpap
 import chat.rocket.android.util.extensions.hideKeyboard
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.isNotNullNorEmpty
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
@@ -242,6 +243,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
         presenter.setupChatRoom(chatRoomId, chatRoomName, chatRoomType, chatRoomMessage)
         presenter.loadChatRooms()
+        getUnfinishedMessage()
         setupRecyclerView()
         setupFab()
         setupSuggestionsView()
@@ -264,9 +266,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         recycler_view.removeOnScrollListener(onScrollListener)
         recycler_view.removeOnLayoutChangeListener(layoutChangeListener)
 
-        presenter.disconnect()
-        presenter.saveUnfinishedMessage(chatRoomId, text_message.text.toString())
+        presenter.saveUnfinishedMessage(text_message.text.toString())
         handler.removeCallbacksAndMessages(null)
+        presenter.disconnect()
         unsubscribeComposeTextMessage()
 
         // Hides the keyboard (if it's opened) before going to any view.
@@ -953,15 +955,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun getUnfinishedMessage() {
-        val unfinishedMessage = presenter.getUnfinishedMessage(chatRoomId)
-        if (unfinishedMessage.isNotBlank()) {
+        val unfinishedMessage = presenter.getUnfinishedMessage()
+        if (unfinishedMessage.isNotNullNorEmpty()) {
             text_message.setText(unfinishedMessage)
-            val orientation = resources.configuration.orientation
-            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                KeyboardHelper.showSoftKeyboard(text_message)
-            } else {
-                //TODO show keyboard in full screen mode when landscape orientation
-            }
         }
     }
 
