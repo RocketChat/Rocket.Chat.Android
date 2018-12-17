@@ -219,8 +219,8 @@
     <string name="action_msg_copy">Copiar</string>
     <string name="action_msg_quote">Citar</string>
     <string name="action_msg_delete">Remover</string>
-    <string name="action_msg_pin">Pinar mensagem</string>
-    <string name="action_msg_unpin">Despinar mensagem</string>
+    <string name="action_msg_pin">Afixar mensagem</string>
+    <string name="action_msg_unpin">Desafixar mensagem</string>
     <string name="action_msg_star">Marcar como favorita</string>
     <string name="action_msg_unstar">Desmarcar como favorita</string>
     <string name="action_msg_share">Compartilhar</string>
