@@ -110,7 +110,7 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView, HasSupportFrag
 
                         return@withContext GlideApp.with(this@UserDetailsActivity)
                             .asBitmap()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .load(avatarUrl)
                             .apply(requestOptions)
                             .submit()
