@@ -184,8 +184,8 @@
     <string name="msg_no_topic">कोई विषय नहीं जोड़ा गया</string>
     <string name="msg_no_announcement">कोई घोषणा नहीं जोड़ा गया</string>
     <string name="msg_no_description">कोई विवरण नहीं जोड़ा गया</string>
-    <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
-    <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
+    <string name="msg_unable_to_update_password">पासवर्ड अपडेट करने में असमर्थ। त्रुटि संदेश:% 1$s</string>
+    <string name="msg_password_updated_successfully">पासवर्ड सफलतापूर्वक अपडेट किया गया</string>
     <plurals name="msg_reacted_with_">
         <item quantity="one">% 1 $ s ने% 2 $ %d s के साथ प्रतिक्रिया व्यक्त की</item>
         <item quantity="few">% 1 $ s ने% 2 $ s के साथ प्रतिक्रिया व्यक्त की</item>
