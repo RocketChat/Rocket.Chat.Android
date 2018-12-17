@@ -13,7 +13,7 @@ class Contact() : Parcelable {
     private var isPhone: Boolean = true
     private var username: String? = null
     private var type:Int?=0
-
+    private var avatarUrl: String? = null
 
 
     fun getUsername(): String? {
@@ -83,6 +83,14 @@ class Contact() : Parcelable {
 
     fun isPhone(): Boolean {
         return this.isPhone
+    }
+
+    fun getAvatarUrl(): String? {
+        return avatarUrl
+    }
+
+    fun setAvatarUrl(url: String) {
+        this.avatarUrl = url
     }
 
     constructor(parcel: Parcel) : this() {

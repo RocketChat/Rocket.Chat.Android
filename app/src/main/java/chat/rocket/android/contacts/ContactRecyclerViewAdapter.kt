@@ -20,8 +20,7 @@ import kotlinx.android.synthetic.main.item_member.view.*
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.HashMap
-@Inject
-lateinit var serverInteractor: GetCurrentServerInteractor
+
 
 class ContactRecyclerViewAdapter(
         private val context: MainActivity,
@@ -102,9 +101,7 @@ class ContactRecyclerViewAdapter(
                     }
                 }
             }
-            val serverUrl = serverInteractor.get()
-            val myAvatarUrl: String? =  serverUrl?.avatarUrl(contactCardViewHolder.contact?.getName() ?: "")
-            contactCardViewHolder.imageAvtar?.setImageURI(myAvatarUrl)
+            contactCardViewHolder.imageAvtar.setImageURI(holder.contact!!.getAvatarUrl())
         } catch (exception: NullPointerException) {
             Timber.e("Failed to send resolution. Exception is: $exception")
         }

@@ -28,6 +28,7 @@ import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModel
 import chat.rocket.android.chatrooms.viewmodel.Query
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.util.extensions.avatarUrl
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -72,8 +73,8 @@ class ContactsFragment : Fragment() {
 
 
     private fun getContactList() {
-
-        val dbManager = dbFactory.create(serverInteractor.get()!!)
+        val serverUrl = serverInteractor.get()!!
+        val dbManager = dbFactory.create(serverUrl)
 
         Single.fromCallable {
             // need to return a non-null object, since Rx 2 doesn't allow nulls
@@ -96,6 +97,7 @@ class ContactsFragment : Fragment() {
                                     if(contactEntity.username != null){
                                         contact.setUsername(contactEntity.username)
                                     }
+                                    contact.setAvatarUrl(serverUrl.avatarUrl(contact?.getUsername() ?: ""))
                                     contact
                                 }
                             })
