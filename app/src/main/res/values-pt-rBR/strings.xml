@@ -221,8 +221,8 @@
     <string name="action_msg_delete">Remover</string>
     <string name="action_msg_pin">Pinar mensagem</string>
     <string name="action_msg_unpin">Despinar mensagem</string>
-    <string name="action_msg_star">Favoritar mensagem</string>
-    <string name="action_msg_unstar">Desfavoritar messagem</string>
+    <string name="action_msg_star">Marcar como favorita</string>
+    <string name="action_msg_unstar">Desmarcar como favorita</string>
     <string name="action_msg_share">Compartilhar</string>
     <string name="action_title_editing">Editando mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
@@ -234,14 +234,14 @@
     <string name="permission_editing_not_allowed">Edição não permitida</string>
     <string name="permission_deleting_not_allowed">Remoção não permitida</string>
     <string name="permission_pinning_not_allowed">Pinagem não permitida</string>
-    <string name="permission_starring_not_allowed">Favoritar não permitido</string>
+    <string name="permission_starring_not_allowed">Marcar como favorita não permitido</string>
 
     <!-- Search message -->
     <string name="title_search_message">Procurar mensagem</string>
 
     <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Favoritar canal</string>
-    <string name="title_unfavorite_chat">Desfavoritar canal</string>
+    <string name="title_favorite_chat">Marcar canal como favorito</string>
+    <string name="title_unfavorite_chat">Desmarcar canal como favorito</string>
 
     <!-- Members List -->
     <string name="title_members_list">Membros</string>
