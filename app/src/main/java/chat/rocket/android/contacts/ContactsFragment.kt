@@ -24,6 +24,8 @@ import chat.rocket.android.helper.Constants
 import com.facebook.drawee.view.SimpleDraweeView
 import android.view.LayoutInflater
 import android.widget.TextView
+import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModel
+import chat.rocket.android.chatrooms.viewmodel.Query
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import dagger.android.support.AndroidSupportInjection
@@ -42,6 +44,8 @@ class ContactsFragment : Fragment() {
     lateinit var dbFactory: DatabaseManagerFactory
     @Inject
     lateinit var serverInteractor: GetCurrentServerInteractor
+    private lateinit var viewModel: ChatRoomsViewModel
+
     /**
      * The list of contacts to load in the recycler view
      */
@@ -179,6 +183,7 @@ class ContactsFragment : Fragment() {
             setupFrameLayout(contactArrayList)
         } else {
             var filteredContactArrayList: ArrayList<Contact> = ArrayList()
+            queryChatRoomsByName(query)
             for (contact in contactArrayList) {
                 if (containsIgnoreCase(contact.getName()!!, query)
                         || (contact.isPhone() && containsIgnoreCase(contact.getPhoneNumber()!!, query))
@@ -365,6 +370,16 @@ class ContactsFragment : Fragment() {
 
             return contactsFragment
         }
+    }
+
+
+    private fun queryChatRoomsByName(name: String?): Boolean {
+        if (name.isNullOrEmpty()) {
+
+        } else {
+            viewModel.setQuery(Query.Search(name!!))
+        }
+        return true
     }
 
 }

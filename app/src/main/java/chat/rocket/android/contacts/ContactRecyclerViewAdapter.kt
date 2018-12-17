@@ -9,18 +9,25 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.contacts.models.Contact
 import chat.rocket.android.main.ui.MainActivity
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.UserStatus
+import chat.rocket.core.model.ChatRoom
+import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.item_member.view.*
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.HashMap
-
+@Inject
+lateinit var serverInteractor: GetCurrentServerInteractor
 
 class ContactRecyclerViewAdapter(
         private val context: MainActivity,
         private val contactArrayList: ArrayList<Contact?>,
         private val contactHashMap: HashMap<String, String>
+
 
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -95,6 +102,9 @@ class ContactRecyclerViewAdapter(
                     }
                 }
             }
+            val serverUrl = serverInteractor.get()
+            val myAvatarUrl: String? =  serverUrl?.avatarUrl(contactCardViewHolder.contact?.getName() ?: "")
+            contactCardViewHolder.imageAvtar?.setImageURI(myAvatarUrl)
         } catch (exception: NullPointerException) {
             Timber.e("Failed to send resolution. Exception is: $exception")
         }
@@ -123,6 +133,7 @@ class ContactRecyclerViewAdapter(
         var inviteButton: Button
         var online:ImageView
         var emailDetail:TextView
+        var imageAvtar: SimpleDraweeView
 
         init {
             this.contactName = view.findViewById(R.id.contact_name) as TextView
@@ -130,6 +141,7 @@ class ContactRecyclerViewAdapter(
             this.inviteButton = view.findViewById(R.id.invite_contact) as Button
             this.online = view.findViewById(R.id.img_online) as ImageView
             this.emailDetail = view.findViewById(R.id.text_email) as TextView
+            this.imageAvtar = view.findViewById(R.id.image_avatar) as SimpleDraweeView
 
 
         }
@@ -155,6 +167,8 @@ class ContactRecyclerViewAdapter(
             }
         }
     }
+
+
 
     inner class HeadingViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         var contact: Contact? = null
