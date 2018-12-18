@@ -12,5 +12,5 @@ interface PasswordView: LoadingView {
      * Shows a message when the user's password fails to update
      * @param error is a String containing the failure message
      */
-    fun showPasswordFailsUpdateMessage(error : String?)
+    fun showPasswordFailsUpdateMessage(error : String)
 }
