@@ -190,7 +190,7 @@
     <string name="msg_channel_created_successfully">Канал создан успешно</string>
 
     <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Отслеживание Analytics</string>
+    <string name="msg_analytics_tracking">Отслеживание аналитики</string>
     <string name="msg_send_analytics_tracking">Отправлять анонимную статистику для улучшения приложения.</string>
     <string name="msg_do_not_send_analytics_tracking">Не отправлять анонимную статистику для улучшения приложения</string>
     <string name="msg_not_applicable_since_it_is_a_foss_version">Не применимо, так как это FOSS версия</string>
