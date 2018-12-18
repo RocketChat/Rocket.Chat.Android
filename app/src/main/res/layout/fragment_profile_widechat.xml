@@ -121,23 +121,17 @@
 
             <Button
                 android:id="@+id/edit_profile_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/Widechat.Authentication.Button"
                 android:layout_marginTop="32dp"
-                android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
-                android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
-                android:background="@drawable/widechat_login_button"
+                android:background="@drawable/widechat_update_profile_button"
                 android:textColor="@color/colorWhite"
                 android:text="@string/edit_profile" />
 
             <Button
                 android:id="@+id/delete_account_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/Widechat.Authentication.Button"
                 android:layout_marginTop="12dp"
-                android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
-                android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
-                android:background="@drawable/widechat_login_button"
+                android:background="@drawable/widechat_signup_button"
                 android:textColor="@color/colorWhite"
                 android:text="@string/delete_account" />
 

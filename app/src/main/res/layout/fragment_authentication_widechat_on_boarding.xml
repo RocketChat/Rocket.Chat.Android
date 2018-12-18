@@ -7,18 +7,13 @@
     android:padding="@dimen/screen_edge_left_and_right_margins"
     tools:context="authentication.onboarding.ui.OnBoardingFragment">
 
-    <TextView
-        android:id="@+id/text_widechat_loading"
-        style="@style/Authentication.TextView.Headline"
-        android:layout_width="match_parent"
+    <ImageView
+        android:layout_width="wrap_content"
+        android:contentDescription="Viasat logo"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginBottom="24dp"
-        android:gravity="left"
-        android:text="Connecting..."
-        android:textColor="@color/colorWhite"
-        android:autoSizeTextType="uniform"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/widechat_view_loading"/>
+        android:src="@drawable/ic_viasat_logo_full"/>
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/widechat_view_loading"
