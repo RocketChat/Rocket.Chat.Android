@@ -308,13 +308,12 @@
     <string name="alert_title_default_skin_tone">Тон шкіри за замовчуванням</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">Сортувати</string>
+    <string name="msg_sort">Сортувати</string>
     <string name="dialog_sort_title">Сортувати за</string>
     <string name="dialog_sort_by_alphabet">За алфавітом</string>
     <string name="dialog_sort_by_activity">За активністю</string>
     <string name="dialog_group_by_type">Групувати за типом</string>
     <string name="dialog_group_favourites">Групувати обране</string>
-    <string name="dialog_button_done">Ок</string>
     <string name="chatroom_header">Заголовок</string>
 
     <!--ChatRooms Headers-->

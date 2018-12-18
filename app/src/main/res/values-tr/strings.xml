@@ -312,13 +312,12 @@
     <string name="alert_title_default_skin_tone">Varsayılan tasarım tonu</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">Sırala</string>
+    <string name="msg_sort">Sırala</string>
     <string name="dialog_sort_title">Sırala</string>
     <string name="dialog_sort_by_alphabet">Alfabetik</string>
     <string name="dialog_sort_by_activity">Aktiviteye Göre</string>
     <string name="dialog_group_by_type">Türüne göre grupla</string>
     <string name="dialog_group_favourites">Favorileri grupla</string>
-    <string name="dialog_button_done">Tamam</string>
     <string name="chatroom_header">Başlık</string>
 
     <!--ChatRooms Headers-->
