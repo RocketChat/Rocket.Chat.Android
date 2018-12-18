@@ -13,7 +13,7 @@
 
     <item android:right="2dp" android:left="2dp" android:bottom="2dp" android:top="2dp">
         <shape>
-            <solid android:color="#00528c"/>
+            <solid android:color="@color/widechatGreenGradientDark"/>
             <corners android:radius="100dp"/>
         </shape>
 
