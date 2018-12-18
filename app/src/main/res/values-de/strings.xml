@@ -164,8 +164,8 @@
     <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
     <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
-        <item quantity="one">% 1 $ s reagierte mit% 2 $ s</item>
-        <item quantity="other">% 1 $ s reagierte mit% 2 $ s</item>
+        <item quantity="one">%1$ s reagierte mit %2$s</item>
+        <item quantity="other">%1$s reagierte mit %2$s</item>
     </plurals>
 
     <!-- Create channel messages -->
@@ -306,13 +306,12 @@
     <string name="alert_title_default_skin_tone">Standart Hautton</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">Sortiere</string>
+    <string name="msg_sort">Sortiere</string>
     <string name="dialog_sort_title">Sortieren nach</string>
     <string name="dialog_sort_by_alphabet">Alphabetisch</string>
     <string name="dialog_sort_by_activity">Aktivität</string>
     <string name="dialog_group_by_type">Räume nach Typ</string>
     <string name="dialog_group_favourites">Räume nach Favoriten</string>
-    <string name="dialog_button_done">Erledigt</string>
     <string name="chatroom_header">Kopf</string>
 
     <!--ChatRooms Headers-->
