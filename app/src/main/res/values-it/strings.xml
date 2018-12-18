@@ -312,7 +312,6 @@
     <string name="dialog_sort_by_activity">Attività</string>
     <string name="dialog_group_by_type">Raggruppa per tipo</string>
     <string name="dialog_group_favourites">Raggruppa preferiti</string>
-    <string name="dialog_button_done">Fatto</string>
     <string name="chatroom_header">Intestazione</string>
 
     <!--ChatRooms Headers-->

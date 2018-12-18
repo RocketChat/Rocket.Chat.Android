@@ -164,8 +164,8 @@
     <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
     <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
-        <item quantity="one">% 1 $ s reagierte mit% 2 $ s</item>
-        <item quantity="other">% 1 $ s reagierte mit% 2 $ s</item>
+        <item quantity="one">%1$ s reagierte mit %2$s</item>
+        <item quantity="other">%1$s reagierte mit %2$s</item>
     </plurals>
 
     <!-- Create channel messages -->
