@@ -306,7 +306,7 @@
     <string name="alert_title_default_skin_tone">Default skin tone</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">Ordinare</string>
+    <string name="msg_sort">Ordinare</string>
     <string name="dialog_sort_title">Ordinare per</string>
     <string name="dialog_sort_by_alphabet">Alfabeto</string>
     <string name="dialog_sort_by_activity">Attività</string>
