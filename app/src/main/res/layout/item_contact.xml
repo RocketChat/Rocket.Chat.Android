@@ -12,10 +12,9 @@
 
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/image_avatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:foregroundGravity="center"
+        android:id="@+id/contact_image_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:background="@drawable/widechat_circle_shadow"
         app:roundedCornerRadius="3dp"
         fresco:actualImageScaleType="centerCrop"
@@ -28,14 +27,14 @@
 
 
     <TextView
-        android:id="@+id/contact_detail"
+        android:id="@+id/phone_number"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="2"
         android:textDirection="locale"
         android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="@+id/rl_image_avatar"
+        app:layout_constraintLeft_toLeftOf="@+id/contact_image_avatar"
         app:layout_constraintTop_toBottomOf="@+id/contact_name"
         tools:text="Phone number goes here" />
 
@@ -51,9 +50,9 @@
         android:maxLines="1"
         android:textColor="@color/colorPrimaryText"
         android:textDirection="locale"
-        app:layout_constraintBottom_toBottomOf="@+id/rl_image_avatar"
-        app:layout_constraintLeft_toRightOf="@+id/rl_image_avatar"
-        app:layout_constraintTop_toTopOf="@+id/rl_image_avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/contact_image_avatar"
+        app:layout_constraintLeft_toRightOf="@+id/contact_image_avatar"
+        app:layout_constraintTop_toTopOf="@+id/contact_image_avatar"
         android:fontFamily="@string/font_fontFamily_widechat"
         tools:text="Name goes here" />
 
@@ -76,7 +75,7 @@
         android:layout_marginStart="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/rl_image_avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/contact_image_avatar"
         android:textColor="@color/colorPrimaryText"
         android:fontFamily="@string/font_fontFamily_widechat"
         tools:text="alex.johnson" />

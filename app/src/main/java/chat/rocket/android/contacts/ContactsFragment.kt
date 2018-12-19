@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.contacts.models.Contact
-import chat.rocket.android.createchannel.ui.CreateChannelFragment
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extension.onQueryTextListener
 import kotlinx.android.synthetic.main.app_bar.*
@@ -24,8 +23,15 @@ import chat.rocket.android.helper.Constants
 import com.facebook.drawee.view.SimpleDraweeView
 import android.view.LayoutInflater
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import chat.rocket.android.chatrooms.adapter.ItemHolder
 import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModel
 import chat.rocket.android.chatrooms.viewmodel.Query
+import chat.rocket.android.contacts.adapter.ContactHeaderItemHolder
+import chat.rocket.android.contacts.adapter.ContactItemHolder
+import chat.rocket.android.contacts.adapter.ContactRecyclerViewAdapter
+import chat.rocket.android.contacts.adapter.inviteItemHolder
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.util.extensions.avatarUrl
@@ -37,6 +43,7 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
+
 /**
  * Load a list of contacts in a recycler view
  */
@@ -46,6 +53,8 @@ class ContactsFragment : Fragment() {
     @Inject
     lateinit var serverInteractor: GetCurrentServerInteractor
     private lateinit var viewModel: ChatRoomsViewModel
+    private var recyclerView :RecyclerView?= null
+    private var emptyTextView:  TextView?=null
 
     /**
      * The list of contacts to load in the recycler view
@@ -66,10 +75,12 @@ class ContactsFragment : Fragment() {
     private var searchText:  TextView? = null
     private var searchCloseButton: ImageView? = null
 
+
     // WIDECHAT
     private var profileButton: SimpleDraweeView? = null
     private var widechatSearchView: SearchView? = null
     private var onlineStatusButton: ImageView?=null
+
 
 
     private fun getContactList() {
@@ -142,7 +153,7 @@ class ContactsFragment : Fragment() {
 
         searchIcon = searchView?.findViewById(R.id.search_mag_icon)
         searchIcon?.setImageResource(R.drawable.ic_search_gray_24px)
-        
+
 
         searchText = searchView?.findViewById(R.id.search_src_text)
         searchText?.setTextColor(Color.GRAY)
@@ -241,7 +252,7 @@ class ContactsFragment : Fragment() {
                 && ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED
         ) {
             populateContacts(true)
-            setupFrameLayout(contactArrayList)
+            //  setupFrameLayout(contactArrayList)
         } else {
             requestPermissions(
                     arrayOf(
@@ -278,54 +289,46 @@ class ContactsFragment : Fragment() {
         }
     }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-    }
 
     fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>) {
 
-        try {
-            val contactListFragment = ContactListFragment.newInstance(
-                    changeContactList(filteredContactArrayList),
-                    contactHashMap
-            )
-            val fragmentTransaction = childFragmentManager.beginTransaction()
-            fragmentTransaction.replace(
-                    R.id.contacts_area,
-                    contactListFragment,
-                    "CONTACT_LIST_FRAGMENT"
-            )
-            fragmentTransaction.commit()
-        } catch (exception: IllegalStateException) {
-            //This is one bad user who clicks too fast
-        } catch (exception: NullPointerException) {
+
+        if (filteredContactArrayList!!.size == 0) {
+            emptyTextView!!.visibility = View.VISIBLE
+            recyclerView!!.visibility = View.GONE
+        } else {
+            emptyTextView!!.visibility = View.GONE
+            recyclerView!!.visibility = View.VISIBLE
+
+            recyclerView!!.setHasFixedSize(true)
+            recyclerView!!.layoutManager = LinearLayoutManager(context)
+            recyclerView!!.adapter = ContactRecyclerViewAdapter(this.activity as MainActivity, map(filteredContactArrayList)!!, contactHashMap)
         }
-
-
     }
 
-    private fun changeContactList(filteredContactArrayList: ArrayList<Contact>): ArrayList<Contact> {
-         var memberArrayList: ArrayList<Contact> = ArrayList()
-        var nonMemberArrayList: ArrayList<Contact> = ArrayList()
-        for(Contact in filteredContactArrayList){
-            if(Contact!!.getUsername()!=null){
-                memberArrayList.add(Contact)
-            }else
-                nonMemberArrayList.add(Contact)
+
+
+
+    fun map(contacts: List<Contact>): ArrayList<ItemHolder<*>> {
+        val list = ArrayList<ItemHolder<*>>(contacts.size + 2)
+        var lastType: String? = null
+        var type: String? = "1"
+        contacts.forEach { contact ->
+            if(contact.getUsername()!=null){
+                type="0";
+            }else{
+                type="1";
+            }
+            if ( lastType !=type) {
+                // even here item is added but not of type contact
+                list.add(ContactHeaderItemHolder("INVITE MEMBERS"))
+            }
+            list.add(ContactItemHolder(contact))
+            lastType = type
         }
+        list.add(inviteItemHolder("invite"))
 
-        var contact= Contact();
-        contact.setType(Contact.CARD_TYPE.VIEW_HEADING)
-        contact.setUsername("INVITE CONTACTS ")
-        memberArrayList.add(contact)
-        memberArrayList.addAll(nonMemberArrayList)
-        var contactinvite= Contact();
-        contactinvite.setType(Contact.CARD_TYPE.VIEW_INVITE_OTHER_APP)
-        memberArrayList.add(contactinvite)
-        return memberArrayList
-
-
-
+        return list
     }
 
 
@@ -337,16 +340,13 @@ class ContactsFragment : Fragment() {
 
         val view = localInflater.inflate(R.layout.fragment_contact_parent, container, false)
 
-        createNewChannelLink = view.findViewById(R.id.create_new_channel_button)
-        createNewChannelLink!!.setOnClickListener {
-            val createChannelFragment = CreateChannelFragment()
-            val transaction = activity?.supportFragmentManager?.beginTransaction();
-            transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
-            transaction?.replace(this.id, createChannelFragment, "createChannelFragment");
-            transaction?.addToBackStack(null)?.commit();
-        }
+        this.recyclerView = view.findViewById(R.id.recycler_view)
+        this.emptyTextView = view.findViewById(R.id.text_no_data_to_display)
 
         return view
+
+
+
     }
 
     companion object {
