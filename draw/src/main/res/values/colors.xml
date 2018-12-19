@@ -10,14 +10,4 @@
     <color name="color_blue">#00B0FF</color>
     <color name="color_pink">#D500F9</color>
     <color name="color_brown">#8D6E63</color>
-
-    <array name="drawColors">
-        <item>@color/color_black</item>
-        <item>@color/color_red</item>
-        <item>@color/color_yellow</item>
-        <item>@color/color_green</item>
-        <item>@color/color_blue</item>
-        <item>@color/color_pink</item>
-        <item>@color/color_brown</item>
-    </array>
 </resources>
