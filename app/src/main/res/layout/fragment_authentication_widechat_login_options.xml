@@ -24,7 +24,7 @@
             style="@style/Widechat.Authentication.Button"
             android:background="@drawable/widechat_login_button"
             android:text="@string/log_in"
-            android:textColor="#26a1a1" />
+            android:textColor="@color/widechatGreenGradientLight" />
 
         <Button
             android:id="@+id/widechat_signup_button"
@@ -44,7 +44,7 @@
         android:autoSizeTextType="uniform"
         android:gravity="center"
         android:text="@string/msg_welcome_to_widechat"
-        android:textColor="@color/color_white"
+        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toTopOf="@id/widechat_login_button_container"
         app:layout_constraintStart_toStartOf="parent" />
 
