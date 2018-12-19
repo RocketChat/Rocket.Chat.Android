@@ -135,6 +135,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             menu.clear()
         }
         super.onPrepareOptionsMenu(menu)
+        if (Constants.WIDECHAT) {
+            menu.findItem(R.id.action_delete_account).isVisible = false
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
