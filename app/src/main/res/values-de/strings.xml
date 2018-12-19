@@ -146,7 +146,7 @@
     <string name="msg_send">Sende</string>
     <string name="msg_sent_attachment">Sende Anhang</string>
     <string name="msg_welcome_to_rocket_chat">Willkommen bei Rocket.Chat</string>
-    <string name="msg_team_communication">Open Source-Kommunikation</string>
+    <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
     <string name="msg_login_with_email">Einloggen mit <b>e-mail</b></string>
     <string name="msg_create_account">Ein Konto erstellen</string>
     <string name="msg_continue_with_facebook">Weitermachen mit <b>Facebook</b></string>

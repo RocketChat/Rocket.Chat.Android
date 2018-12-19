@@ -123,7 +123,7 @@ class ChatRoomPresenter @Inject constructor(
     private var lastState = manager.state
     private var typingStatusList = arrayListOf<String>()
     private val roomChangesChannel = Channel<Room>(Channel.CONFLATED)
-    private lateinit var unfinishedMessageKey: String
+    private lateinit var draftKey: String
 
     fun setupChatRoom(
         roomId: String,
@@ -131,17 +131,17 @@ class ChatRoomPresenter @Inject constructor(
         roomType: String,
         chatRoomMessage: String? = null
     ) {
+        draftKey = "${currentServer}_${LocalRepository.DRAFT_KEY}$roomId"
+        chatRoomId = roomId
+        chatRoomType = roomType
         launch(CommonPool + strategy.jobs) {
             try {
-                unfinishedMessageKey = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$roomId"
-                chatRoomId = roomId
-                chatRoomType = roomType
                 chatRoles = if (roomTypeOf(roomType) !is RoomType.DirectMessage) {
                     client.chatRoomRoles(roomType = roomTypeOf(roomType), roomName = roomName)
                 } else {
                     emptyList()
                 }
-            } catch (ex: RocketChatException) {
+            } catch (ex: Exception) {
                 Timber.e(ex)
                 chatRoles = emptyList()
             } finally {
@@ -187,7 +187,6 @@ class ChatRoomPresenter @Inject constructor(
                     }
                 }
             }
-
         }
     }
 
@@ -919,7 +918,7 @@ class ChatRoomPresenter @Inject constructor(
         navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isMenuDisabled)
     }
 
-    fun loadChatRooms() {
+    fun loadChatRoomsSuggestions() {
         launchUI(strategy) {
             try {
                 val chatRooms = getChatRoomsAsync()
@@ -1297,12 +1296,12 @@ class ChatRoomPresenter @Inject constructor(
      */
     fun saveUnfinishedMessage(unfinishedMessage: String) {
         if (unfinishedMessage.isNotBlank()) {
-            localRepository.save(unfinishedMessageKey, unfinishedMessage)
+            localRepository.save(draftKey, unfinishedMessage)
         }
     }
 
     fun clearUnfinishedMessage() {
-        localRepository.clear(unfinishedMessageKey)
+        localRepository.clear(draftKey)
     }
     /**
      * Get unfinished message from local repository, when user left chat room without
@@ -1311,6 +1310,6 @@ class ChatRoomPresenter @Inject constructor(
      * @return Returns the unfinished message, null otherwise.
      */
     fun getUnfinishedMessage(): String? {
-        return localRepository.get(unfinishedMessageKey)
+        return localRepository.get(draftKey)
     }
 }
