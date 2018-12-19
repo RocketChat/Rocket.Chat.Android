@@ -151,7 +151,7 @@
     <string name="msg_send">送信</string>
     <string name="msg_sent_attachment">添付ファイルを送信しました</string>
     <string name="msg_welcome_to_rocket_chat">Rocket.Chatへようこそ</string>
-    <string name="msg_team_communication">チームコミュニケーション</string>
+    <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
     <string name="msg_login_with_email"><b>e-mail</b>でログイン</string>
     <string name="msg_create_account">アカウントを作成</string>
     <string name="msg_continue_with_facebook"><b>Facebook</b>でログイン</string>
