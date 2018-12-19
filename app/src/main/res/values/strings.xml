@@ -47,6 +47,12 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_terms_of_service">Terms of Service</string>
     <string name="action_privacy_policy">Privacy Policy</string>
     <string name="action_search">Search</string>
+    <string name="action_mark_unread">Mark As Unread</string>
+    <string name="action_mark_read">Mark As Read</string>
+    <string name="action_hide_room">Hide Room</string>
+    <string name="action_leave_room">Leave Room</string>
+    <string name="action_favorite">Favorite</string>
+    <string name="action_unfavorite">Unfavorite</string>
     <string name="action_update">Update</string>
     <string name="action_settings">Settings</string>
     <string name="action_create_channel">Create channel</string>

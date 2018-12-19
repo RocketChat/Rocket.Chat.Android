@@ -85,13 +85,13 @@ class RoomsAdapter(private val listener: (RoomUiModel) -> Unit, presenter: ChatR
                         presenter.toggleFavoriteChatRoom(this.id,  this.favorite==true)
                     }
                     R.id.action_leave_room-> {
-
+                        presenter.leaveChatRoom(this.id, this.type)
                     }
                     R.id.action_read->{
-                      this.unread.ifNotNullNorEmpty{ presenter.markRoomAsRead(this.id) }
+                      presenter.toggleMarkRead(this.id, this.unread)
                     }
                     R.id.action_hide_room->{
-
+                        presenter.hideRoom(this.id, this.type)
                     }
                     else -> TODO("Not implemented")
                 }

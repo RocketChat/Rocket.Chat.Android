@@ -8,6 +8,4 @@ interface ChatRoomsView : LoadingView, MessageView {
 
     fun hideLoadingRoom()
 
-//    fun showFavoriteIcon(isFavorite:Boolean)
-
 }

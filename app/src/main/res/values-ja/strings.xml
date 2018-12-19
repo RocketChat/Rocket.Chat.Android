@@ -40,6 +40,12 @@
     <string name="action_create_channel">チャンネル作成</string>
     <string name="action_create">作ります</string>
     <string name="action_logout">ログアウト</string>
+    <string name="action_mark_unread">Mark As Unread</string><!-- TODO Add translation -->
+    <string name="action_mark_read">Mark As Read</string><!-- TODO Add translation -->
+    <string name="action_hide_room">Hide Room</string><!-- TODO Add translation -->
+    <string name="action_leave_room">Leave Room</string><!-- TODO Add translation -->
+    <string name="action_favorite">Favorite</string><!-- TODO Add translation -->
+    <string name="action_unfavorite">Unfavorite</string><!-- TODO Add translation -->
     <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">変更したパスワードの確認</string>
     <string name="action_join_chat">チャットに参加</string>
