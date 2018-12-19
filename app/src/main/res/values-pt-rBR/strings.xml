@@ -151,7 +151,7 @@
     <string name="msg_delete_message">Remove mensagem</string>
     <string name="msg_delete_description">Tem certeza que quer apagar esta mensagem?</string>
     <string name="msg_welcome_to_rocket_chat">Bem-vindo ao Rocket.Chat</string>
-    <string name="msg_team_communication">Comunicação Open Source</string>
+    <string name="msg_team_communication">Comunicação para equipes</string>
     <string name="msg_login_with_email">Fazer login com <b>e-mail</b></string>
     <string name="msg_create_account">Criar conta</string>
     <string name="msg_continue_with_facebook">Continuar com <b>Facebook</b></string>
