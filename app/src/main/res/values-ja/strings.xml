@@ -312,14 +312,13 @@
     <string name="alert_title_default_skin_tone">デフォルトスキントークン</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">ソート</string>
+    <string name="msg_sort">ソート</string>
     <string name="dialog_sort_title">ソート</string>
     <string name="dialog_sort_by_alphabet">アルファベット順</string>
     <string name="dialog_sort_by_activity">アクティビティ順</string>
     <string name="dialog_group_by_type">グループ別</string>
     <string name="dialog_group_favourites">お気に入りのグループ</string>
     <string name="chatroom_header">ヘッダ</string>
-    <string name="dialog_button_done">完了</string>
 
 
     <!--ChatRooms Headers-->

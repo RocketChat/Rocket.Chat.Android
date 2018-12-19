@@ -184,12 +184,12 @@
     <string name="msg_no_topic">कोई विषय नहीं जोड़ा गया</string>
     <string name="msg_no_announcement">कोई घोषणा नहीं जोड़ा गया</string>
     <string name="msg_no_description">कोई विवरण नहीं जोड़ा गया</string>
-    <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
-    <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
+    <string name="msg_unable_to_update_password">पासवर्ड अपडेट करने में असमर्थ। त्रुटि संदेश: %1$s</string>
+    <string name="msg_password_updated_successfully">पासवर्ड सफलतापूर्वक अपडेट किया गया</string>
     <plurals name="msg_reacted_with_">
-        <item quantity="one">% 1 $ s ने% 2 $ %d s के साथ प्रतिक्रिया व्यक्त की</item>
-        <item quantity="few">% 1 $ s ने% 2 $ s के साथ प्रतिक्रिया व्यक्त की</item>
-        <item quantity="many">% 1 $ s ने% 2 $ s के साथ प्रतिक्रिया व्यक्त की</item>
+        <item quantity="one">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
+        <item quantity="few">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
+        <item quantity="many">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
     </plurals>
 
     <!-- Preferences messages -->
@@ -310,13 +310,12 @@
     <string name="alert_title_default_skin_tone">डिफ़ॉल्ट त्वचा टोन</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">क्रम</string>
+    <string name="msg_sort">क्रम</string>
     <string name="dialog_sort_title">द्वारा सॉर्ट करें</string>
     <string name="dialog_sort_by_alphabet">वर्णानुक्रम</string>
     <string name="dialog_sort_by_activity">गतिविधि</string>
     <string name="dialog_group_by_type">प्रकार के आधार पर समूह</string>
     <string name="dialog_group_favourites">पसंदीदा समूह</string>
-    <string name="dialog_button_done">पूर्ण</string>
     <string name="chatroom_header">हैडर</string>
 
     <!--ChatRooms Headers-->
