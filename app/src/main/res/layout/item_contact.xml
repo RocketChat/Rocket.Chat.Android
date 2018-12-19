@@ -10,13 +10,6 @@
     android:paddingTop="@dimen/chat_item_top_and_bottom_padding"
     android:paddingEnd="@dimen/screen_edge_left_and_right_padding">
 
-    <RelativeLayout
-        android:id="@+id/rl_image_avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:padding="10dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_avatar"
@@ -28,20 +21,11 @@
         fresco:actualImageScaleType="centerCrop"
         fresco:roundAsCircle="true"
         fresco:roundingBorderColor="@color/colorWhite"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         fresco:roundingBorderPadding="2dp"
         fresco:roundingBorderWidth="2dp" />
-        <ImageView
-            android:id="@+id/img_online"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:visibility="visible"
-            android:layout_alignRight="@+id/image_avatar"
-            android:layout_alignBottom="@+id/image_avatar"
-            android:src="@drawable/ic_status_online_12dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/circle_background_white"
-            />
-    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/contact_detail"
