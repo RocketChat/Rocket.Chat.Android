@@ -1,24 +1,15 @@
 package chat.rocket.android.chatrooms.adapter
 
-import android.content.Context
-import android.content.ContextWrapper
-import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.children
-import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.bottomsheet.ChatRoomActionBottomSheet
-import chat.rocket.android.chatroom.ui.bottomsheet.MessageActionsBottomSheet
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
-import chat.rocket.android.util.extensions.ifNotNullNorEmpty
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.toList
-import chat.rocket.core.model.isSystemMessage
 
 abstract class ViewHolder<T : ItemHolder<*>>(
     itemView: View,
@@ -42,7 +33,6 @@ abstract class ViewHolder<T : ItemHolder<*>>(
         fun isActionsEnabled(): Boolean
         fun onActionSelected(item: MenuItem, room: RoomUiModel)
     }
-
 
     internal fun setupActionMenu(view: View) {
         view.setOnLongClickListener{

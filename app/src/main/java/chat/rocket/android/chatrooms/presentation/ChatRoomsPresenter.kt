@@ -1,13 +1,11 @@
 package chat.rocket.android.chatrooms.presentation
 
-import android.util.Log
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.model.ChatRoomEntity
-import chat.rocket.android.db.model.FullMessage
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.presentation.MainNavigator
@@ -15,8 +13,6 @@ import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.server.infraestructure.ConnectionManager
-import chat.rocket.android.server.infraestructure.DatabaseMessageMapper
-import chat.rocket.android.server.infraestructure.DatabaseMessagesRepository
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
@@ -33,6 +29,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+
 
 class ChatRoomsPresenter @Inject constructor(
     private val view: ChatRoomsView,
