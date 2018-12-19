@@ -60,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:alpha="0"
-        android:background="@color/widechatStatusBar"
+        android:background="@color/widechatFab"
         android:elevation="4dp"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
