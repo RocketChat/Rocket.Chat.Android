@@ -45,7 +45,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="36dp"
-                        android:layout_marginRight="24dp"
+                        android:layout_marginEnd="12dp"
                         android:gravity="center_vertical"
                         android:textSize="18sp"
                         android:text="Name" />
@@ -72,7 +72,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="36dp"
-                        android:layout_marginEnd="24dp"
+                        android:layout_marginEnd="12dp"
                         android:gravity="center_vertical"
                         android:textSize="18sp"
                         android:text="Username" />
@@ -98,7 +98,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="36dp"
-                        android:layout_marginEnd="24dp"
+                        android:layout_marginEnd="12dp"
                         android:gravity="center_vertical"
                         android:textSize="18sp"
                         android:text="Email" />
