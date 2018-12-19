@@ -9,6 +9,7 @@
     <!-- Widechat Colors -->
     <color name="colorPrimary">#008085</color>
     <color name="widechatStatusBar">#008085</color>
+    <color name="widechatGreenGradientLessDark">#0B6379</color>
     <color name="widechatGreenGradientLight">#26a1a1</color>
     <color name="widechatGreenGradientDark">#00528c</color>
     <color name="widechatFab">#00C1B7</color>
