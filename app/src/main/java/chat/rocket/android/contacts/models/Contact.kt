@@ -120,13 +120,4 @@ class Contact() : Parcelable {
         }
     }
 
-    interface CARD_TYPE {
-        companion object {
-            val VIEW_PUBLIC_ACCOUNT= 0
-            val VIEW_CONTACT = 1
-            val VIEW_HEADING= 2
-            val VIEW_INVITE_OTHER_APP= 3
-        }
-    }
-
 }

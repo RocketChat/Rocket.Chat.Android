@@ -91,9 +91,7 @@ class ContactRecyclerViewAdapter(
     companion object {
         const val VIEW_TYPE_CONTACT = 1
         const val VIEW_TYPE_HEADER = 2
-        const val VIEW_TYPE_LOADING = 3
         const val VIEW_TYPE_INVITE = 4
-
     }
 
 }
