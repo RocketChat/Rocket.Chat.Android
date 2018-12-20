@@ -5,6 +5,6 @@
     <item
         android:id="@+id/action_delete_account"
         android:title="@string/action_delete_account"
-        android:showAsAction="never" />
+        app:showAsAction="never" />
 
 </menu>
