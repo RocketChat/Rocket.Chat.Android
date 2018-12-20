@@ -8,6 +8,7 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.updateProfile
 import javax.inject.Inject
@@ -36,7 +37,9 @@ class PasswordPresenter @Inject constructor(
                 }
             } catch (exception: RocketChatException) {
                 analyticsManager.logResetPassword(false)
-                view.showPasswordFailsUpdateMessage(exception.message)
+                exception.message?.let { errorMessage ->
+                    view.showPasswordFailsUpdateMessage(errorMessage)
+                }
             } finally {
                 view.hideLoading()
             }

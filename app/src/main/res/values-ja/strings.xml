@@ -152,7 +152,7 @@
     <string name="msg_send">送信</string>
     <string name="msg_sent_attachment">添付ファイルを送信しました</string>
     <string name="msg_welcome_to_rocket_chat">Rocket.Chatへようこそ</string>
-    <string name="msg_team_communication">チームコミュニケーション</string>
+    <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
     <string name="msg_login_with_email"><b>e-mail</b>でログイン</string>
     <string name="msg_create_account">アカウントを作成</string>
     <string name="msg_continue_with_facebook"><b>Facebook</b>でログイン</string>
@@ -320,14 +320,13 @@
     <string name="alert_title_default_skin_tone">デフォルトスキントークン</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">ソート</string>
+    <string name="msg_sort">ソート</string>
     <string name="dialog_sort_title">ソート</string>
     <string name="dialog_sort_by_alphabet">アルファベット順</string>
     <string name="dialog_sort_by_activity">アクティビティ順</string>
     <string name="dialog_group_by_type">グループ別</string>
     <string name="dialog_group_favourites">お気に入りのグループ</string>
     <string name="chatroom_header">ヘッダ</string>
-    <string name="dialog_button_done">完了</string>
 
 
     <!--ChatRooms Headers-->

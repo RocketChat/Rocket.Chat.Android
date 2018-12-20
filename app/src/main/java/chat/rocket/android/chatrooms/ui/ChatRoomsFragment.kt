@@ -239,7 +239,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 AlertDialog.Builder(context)
                     .setTitle(R.string.dialog_sort_title)
                     .setView(dialogLayout)
-                    .setPositiveButton(R.string.dialog_button_done) { dialog, _ ->
+                    .setPositiveButton(R.string.msg_sort) { dialog, _ ->
                         invalidateQueryOnSearch()
                         updateSort()
                         dialog.dismiss()
