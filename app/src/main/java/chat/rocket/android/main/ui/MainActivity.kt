@@ -44,7 +44,7 @@ import javax.inject.Inject
 private const val CURRENT_STATE = "current_state"
 
 class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
-    HasSupportFragmentInjector {
+        HasSupportFragmentInjector {
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
     @Inject
@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         presenter.loadEmojis()
         setupToolbar()
         setupNavigationView()
+        loadLocale()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -104,13 +105,13 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> =
-        fragmentDispatchingAndroidInjector
+            fragmentDispatchingAndroidInjector
 
 
     override fun showUserStatus(userStatus: UserStatus) {
         headerLayout.apply {
             image_user_status.setImageDrawable(
-                DrawableHelper.getUserStatusDrawable(userStatus, this.context)
+                    DrawableHelper.getUserStatusDrawable(userStatus, this.context)
             )
         }
     }
@@ -120,7 +121,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             with(uiModel) {
                 if (userStatus != null) {
                     image_user_status.setImageDrawable(
-                        DrawableHelper.getUserStatusDrawable(userStatus, context)
+                            DrawableHelper.getUserStatusDrawable(userStatus, context)
                     )
                 }
                 if (userDisplayName != null) {
@@ -177,29 +178,29 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     override fun alertNotRecommendedVersion() {
         AlertDialog.Builder(this)
-            .setMessage(
-                getString(
-                    R.string.msg_ver_not_recommended,
-                    BuildConfig.RECOMMENDED_SERVER_VERSION
+                .setMessage(
+                        getString(
+                                R.string.msg_ver_not_recommended,
+                                BuildConfig.RECOMMENDED_SERVER_VERSION
+                        )
                 )
-            )
-            .setPositiveButton(R.string.msg_ok, null)
-            .create()
-            .show()
+                .setPositiveButton(R.string.msg_ok, null)
+                .create()
+                .show()
     }
 
     override fun blockAndAlertNotRequiredVersion() {
         AlertDialog.Builder(this)
-            .setMessage(
-                getString(
-                    R.string.msg_ver_not_minimum,
-                    BuildConfig.REQUIRED_SERVER_VERSION
+                .setMessage(
+                        getString(
+                                R.string.msg_ver_not_minimum,
+                                BuildConfig.REQUIRED_SERVER_VERSION
+                        )
                 )
-            )
-            .setOnDismissListener { presenter.logout() }
-            .setPositiveButton(R.string.msg_ok, null)
-            .create()
-            .show()
+                .setOnDismissListener { presenter.logout() }
+                .setPositiveButton(R.string.msg_ok, null)
+                .create()
+                .show()
     }
 
     override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
@@ -215,7 +216,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     fun setupNavigationView() {
-        with (view_navigation.menu) {
+        with(view_navigation.menu) {
             clear()
             setupMenu(this)
         }
@@ -234,10 +235,10 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     fun showLogoutDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.title_are_you_sure)
-            .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout()}
-            .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
-            .create()
-            .show()
+                .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout() }
+                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
+                .create()
+                .show()
     }
 
     fun setAvatar(avatarUrl: String) {
@@ -261,36 +262,36 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         progressDialog = null
     }
 
-      fun changeLanguage(){
+    fun changeLanguage() {
         val languages = arrayOf("English", "Hindi", "Japanese", "Russian", "Italian")
 
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Choose Language")
-        builder.setSingleChoiceItems(languages,-1) { dialog, which ->
-            if (which==0){
+        builder.setSingleChoiceItems(languages, -1) { dialog, which ->
+            if (which == 0) {
                 setLocale("en")
                 recreate()
-            }else if (which==1){
+            } else if (which == 1) {
                 setLocale("hi")
                 recreate()
-            }else if (which==2){
+            } else if (which == 2) {
                 setLocale("ja")
                 recreate()
-            }else if (which==3){
+            } else if (which == 3) {
                 setLocale("ru")
                 recreate()
-            }else if (which==4){
+            } else if (which == 4) {
                 setLocale("it")
                 recreate()
             }
             dialog.dismiss()
         }
-            val mdialog=builder.create()
-            mdialog.show()
+        val mdialog = builder.create()
+        mdialog.show()
     }
 
-     fun setLocale(lang: String) {
-         val locale = Locale(lang)
+    private fun setLocale(lang: String) {
+        val locale = Locale(lang)
         Locale.setDefault(locale)
         val config = Configuration()
         config.locale = locale
@@ -301,12 +302,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         editor.apply()
     }
 
-    private fun loadLocale(){
-        val sharedPreferences =getSharedPreferences("settings",Activity.MODE_PRIVATE)
-        val language = sharedPreferences.getString("My_Lang","")
+    private fun loadLocale() {
+        val sharedPreferences = getSharedPreferences("Settings", Activity.MODE_PRIVATE)
+        val language = sharedPreferences.getString("My_Lang", "")
         setLocale(language)
     }
-
-
-
 }

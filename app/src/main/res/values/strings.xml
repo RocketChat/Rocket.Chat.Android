@@ -18,7 +18,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_share_the_app">Share App</string>
     <string name="title_register_username">Register username</string>
     <string name="title_reset_password">Reset password</string>
-    <string name="title_sign_up">Sign up</string>
+    <string name="title_sign_up" translatable="false">Sign up</string>
     <string name="title_authentication">Authentication</string>
     <string name="title_legal_terms">Legal Terms</string>
     <string name="title_chats">Chats</string>
