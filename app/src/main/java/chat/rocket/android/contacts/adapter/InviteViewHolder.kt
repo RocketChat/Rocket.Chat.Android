@@ -6,10 +6,8 @@ import chat.rocket.android.chatrooms.adapter.ViewHolder
 
 class InviteViewHolder(itemView: View) : ViewHolder<inviteItemHolder>(itemView) {
     override fun bindViews(data: inviteItemHolder) {
-        with(itemView) {
-        }
-
-    }}
+    }
+}
 
 
 

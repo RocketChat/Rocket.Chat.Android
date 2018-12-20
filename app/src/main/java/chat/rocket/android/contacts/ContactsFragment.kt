@@ -23,6 +23,7 @@ import chat.rocket.android.helper.Constants
 import com.facebook.drawee.view.SimpleDraweeView
 import android.view.LayoutInflater
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.chatrooms.adapter.ItemHolder
@@ -52,7 +53,6 @@ class ContactsFragment : Fragment() {
     lateinit var dbFactory: DatabaseManagerFactory
     @Inject
     lateinit var serverInteractor: GetCurrentServerInteractor
-    private lateinit var viewModel: ChatRoomsViewModel
     private var recyclerView :RecyclerView?= null
     private var emptyTextView:  TextView?=null
 
@@ -68,7 +68,6 @@ class ContactsFragment : Fragment() {
 
     private val MY_PERMISSIONS_REQUEST_RW_CONTACTS = 0
 
-    private var createNewChannelLink: View? = null
     private var searchView: SearchView? = null
     private var sortView: MenuItem? = null
     private var searchIcon: ImageView? = null
@@ -196,7 +195,6 @@ class ContactsFragment : Fragment() {
             setupFrameLayout(contactArrayList)
         } else {
             var filteredContactArrayList: ArrayList<Contact> = ArrayList()
-            queryChatRoomsByName(query)
             for (contact in contactArrayList) {
                 if (containsIgnoreCase(contact.getName()!!, query)
                         || (contact.isPhone() && containsIgnoreCase(contact.getPhoneNumber()!!, query))
@@ -247,12 +245,16 @@ class ContactsFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
+
+    }
+
+    private fun getContactsPermissions() {
         if (
                 ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED
         ) {
             populateContacts(true)
-            //  setupFrameLayout(contactArrayList)
+            setupFrameLayout(contactArrayList)
         } else {
             requestPermissions(
                     arrayOf(
@@ -342,11 +344,8 @@ class ContactsFragment : Fragment() {
 
         this.recyclerView = view.findViewById(R.id.recycler_view)
         this.emptyTextView = view.findViewById(R.id.text_no_data_to_display)
-
+        getContactsPermissions()
         return view
-
-
-
     }
 
     companion object {
@@ -375,13 +374,6 @@ class ContactsFragment : Fragment() {
     }
 
 
-    private fun queryChatRoomsByName(name: String?): Boolean {
-        if (name.isNullOrEmpty()) {
 
-        } else {
-            viewModel.setQuery(Query.Search(name!!))
-        }
-        return true
-    }
 
 }
