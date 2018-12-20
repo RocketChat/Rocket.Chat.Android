@@ -127,7 +127,8 @@ class ContactsFragment : Fragment() {
 
         val searchItem = menu.findItem(R.id.action_search)
         searchView = searchItem?.actionView as? SearchView
-        setupWidechatSearchView()
+        if (Constants.WIDECHAT) {
+        setupWidechatSearchView()}
 
         val expandListener = object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {

@@ -24,11 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="visible"
-        android:src="@drawable/ic_share"
-         />
-
-
-
+        android:src="@drawable/ic_share" />
 
     <TextView
         android:id="@+id/contact_name"
@@ -41,10 +37,8 @@
         android:text="Invite friend via another app"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintLeft_toRightOf="@+id/image_avatar"
-        app:layout_constraintTop_toTopOf="parent"
-         />
+        app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
-
 
     <View
         android:id="@+id/divider"
@@ -52,5 +46,4 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toBottomOf="parent" />
-
 </LinearLayout>
