@@ -33,15 +33,11 @@ class ContactRecyclerViewAdapter(
                 val view = parent.inflate(R.layout.item_heading)
                 ContactHeaderViewHolder(view)
             }
-            VIEW_TYPE_LOADING -> {
-                val view = parent.inflate(R.layout.item_loading)
-                 LoadingViewHolder(view)
-            }
             VIEW_TYPE_INVITE -> {
                 val view = parent.inflate(R.layout.item_invite)
                 InviteViewHolder(view)
             }
-            else -> throw IllegalStateException("View type must be either Room, Header or Loading")
+            else -> throw IllegalStateException("View type must be either Room, Header or Invite")
         }
     }
 
@@ -52,9 +48,8 @@ class ContactRecyclerViewAdapter(
         return when (item) {
             is ContactItemHolder -> item.data.hashCode().toLong()
             is ContactHeaderItemHolder -> item.data.hashCode().toLong()
-            is LoadingItemHolder -> "loading".hashCode().toLong()
             is inviteItemHolder -> item.data.hashCode().toLong()
-            else -> throw IllegalStateException("View type must be either Room, Header or Loading")
+            else -> throw IllegalStateException("View type must be either Room, Header or Invite")
         }
     }
 
@@ -62,9 +57,8 @@ class ContactRecyclerViewAdapter(
         return when (contactArrayList[position]) {
             is ContactItemHolder -> VIEW_TYPE_CONTACT
             is ContactHeaderItemHolder -> VIEW_TYPE_HEADER
-            is LoadingItemHolder -> VIEW_TYPE_LOADING
             is inviteItemHolder -> VIEW_TYPE_INVITE
-            else -> throw IllegalStateException("View type must be either Room, Header or Loading")
+            else -> throw IllegalStateException("View type must be either Room, Header or Invite")
         }
     }
 
@@ -73,10 +67,8 @@ class ContactRecyclerViewAdapter(
             holder.bind(contactArrayList[position] as ContactItemHolder)
             holder.itemView.setOnClickListener {
                 //  it.context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
-
             }
-
-        } else if (holder is ContactHeaderViewHolder) {
+         } else if (holder is ContactHeaderViewHolder) {
             holder.bind(contactArrayList[position] as ContactHeaderItemHolder)
         } else if (holder is InviteViewHolder) {
             holder.bind(contactArrayList[position] as inviteItemHolder)
