@@ -2,6 +2,7 @@ package chat.rocket.android.chatroom.presentation
 
 import android.graphics.Bitmap
 import android.net.Uri
+import android.view.KeyEvent
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.SubscriptionTypeEvent
@@ -1312,4 +1313,18 @@ class ChatRoomPresenter @Inject constructor(
     fun getUnfinishedMessage(): String? {
         return localRepository.get(draftKey)
     }
+
+    fun onKeyEvent(keyCode: Int, keyEvent: KeyEvent): Boolean {
+        // TODO : use physical keyboard abstraction for better key event handling
+        when (keyCode) {
+            KeyEvent.KEYCODE_ENTER -> {
+                // TODO : check user's preference for shift or control key
+                if (keyEvent.isShiftPressed) {
+                    view.sendMessage()
+                }
+            }
+        }
+        return true
+    }
+
 }
