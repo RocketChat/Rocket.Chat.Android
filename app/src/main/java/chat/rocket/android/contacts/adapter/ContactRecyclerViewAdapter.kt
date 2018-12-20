@@ -75,8 +75,7 @@ class ContactRecyclerViewAdapter(
             holder.itemView.setOnClickListener {
                 shareApp();
             }
-
-        }
+         }
     }
 
 
