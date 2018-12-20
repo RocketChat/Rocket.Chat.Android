@@ -96,7 +96,7 @@ class PasswordFragment : Fragment(), PasswordView, ActionMode.Callback {
         }
     }
 
-    override fun showPasswordFailsUpdateMessage(error: String?) {
+    override fun showPasswordFailsUpdateMessage(error: String) {
         showToast(getString(R.string.msg_unable_to_update_password, error))
     }
 

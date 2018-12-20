@@ -123,6 +123,7 @@ class ChatRoomPresenter @Inject constructor(
     private var lastState = manager.state
     private var typingStatusList = arrayListOf<String>()
     private val roomChangesChannel = Channel<Room>(Channel.CONFLATED)
+    private lateinit var draftKey: String
 
     fun setupChatRoom(
         roomId: String,
@@ -130,12 +131,17 @@ class ChatRoomPresenter @Inject constructor(
         roomType: String,
         chatRoomMessage: String? = null
     ) {
+        draftKey = "${currentServer}_${LocalRepository.DRAFT_KEY}$roomId"
+        chatRoomId = roomId
+        chatRoomType = roomType
         launch(CommonPool + strategy.jobs) {
             try {
                 chatRoles = if (roomTypeOf(roomType) !is RoomType.DirectMessage) {
                     client.chatRoomRoles(roomType = roomTypeOf(roomType), roomName = roomName)
-                } else emptyList()
-            } catch (ex: RocketChatException) {
+                } else {
+                    emptyList()
+                }
+            } catch (ex: Exception) {
                 Timber.e(ex)
                 chatRoles = emptyList()
             } finally {
@@ -172,18 +178,20 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     private suspend fun subscribeRoomChanges() {
-        chatRoomId?.let {
-            manager.addRoomChannel(it, roomChangesChannel)
-            for (room in roomChangesChannel) {
-                dbManager.getRoom(room.id)?.let {
-                    view.onRoomUpdated(roomMapper.map(chatRoom = it, showLastMessage = true))
+        withContext(CommonPool + strategy.jobs) {
+            chatRoomId?.let {
+                manager.addRoomChannel(it, roomChangesChannel)
+                for (room in roomChangesChannel) {
+                    dbManager.getRoom(room.id)?.let {
+                        view.onRoomUpdated(roomMapper.map(chatRoom = it, showLastMessage = true))
+                    }
                 }
             }
         }
     }
 
     private fun unsubscribeRoomChanges() {
-        chatRoomId?.let { manager.removeRoomChannel(it)  }
+        chatRoomId?.let { manager.removeRoomChannel(it) }
     }
 
     private fun isOwnerOrMod(): Boolean {
@@ -364,6 +372,7 @@ class ChatRoomPresenter @Inject constructor(
                     client.updateMessage(chatRoomId, messageId, text)
                 }
 
+                clearUnfinishedMessage()
                 view.enableSendMessageButton()
             } catch (ex: Exception) {
                 Timber.d(ex, "Error sending message...")
@@ -909,7 +918,7 @@ class ChatRoomPresenter @Inject constructor(
         navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isMenuDisabled)
     }
 
-    fun loadChatRooms() {
+    fun loadChatRoomsSuggestions() {
         launchUI(strategy) {
             try {
                 val chatRooms = getChatRoomsAsync()
@@ -939,32 +948,32 @@ class ChatRoomPresenter @Inject constructor(
             dbManager.chatRoomDao().getSync(roomId)?.let {
                 with(it.chatRoom) {
                     ChatRoom(
-                            id = id,
-                            subscriptionId = subscriptionId,
-                            type = roomTypeOf(type),
-                            unread = unread,
-                            broadcast = broadcast ?: false,
-                            alert = alert,
-                            fullName = fullname,
-                            name = name,
-                            favorite = favorite ?: false,
-                            default = isDefault ?: false,
-                            readonly = readonly,
-                            open = open,
-                            lastMessage = null,
-                            archived = false,
-                            status = null,
-                            user = null,
-                            userMentions = userMentions,
-                            client = client,
-                            announcement = null,
-                            description = null,
-                            groupMentions = groupMentions,
-                            roles = null,
-                            topic = null,
-                            lastSeen = this.lastSeen,
-                            timestamp = timestamp,
-                            updatedAt = updatedAt
+                        id = id,
+                        subscriptionId = subscriptionId,
+                        type = roomTypeOf(type),
+                        unread = unread,
+                        broadcast = broadcast ?: false,
+                        alert = alert,
+                        fullName = fullname,
+                        name = name,
+                        favorite = favorite ?: false,
+                        default = isDefault ?: false,
+                        readonly = readonly,
+                        open = open,
+                        lastMessage = null,
+                        archived = false,
+                        status = null,
+                        user = null,
+                        userMentions = userMentions,
+                        client = client,
+                        announcement = null,
+                        description = null,
+                        groupMentions = groupMentions,
+                        roles = null,
+                        topic = null,
+                        lastSeen = this.lastSeen,
+                        timestamp = timestamp,
+                        updatedAt = updatedAt
                     )
                 }
             }
@@ -982,32 +991,32 @@ class ChatRoomPresenter @Inject constructor(
             }.map {
                 with(it.chatRoom) {
                     ChatRoom(
-                            id = id,
-                            subscriptionId = subscriptionId,
-                            type = roomTypeOf(type),
-                            unread = unread,
-                            broadcast = broadcast ?: false,
-                            alert = alert,
-                            fullName = fullname,
-                            name = name ?: "",
-                            favorite = favorite ?: false,
-                            default = isDefault ?: false,
-                            readonly = readonly,
-                            open = open,
-                            lastMessage = null,
-                            archived = false,
-                            status = null,
-                            user = null,
-                            userMentions = userMentions,
-                            client = client,
-                            announcement = null,
-                            description = null,
-                            groupMentions = groupMentions,
-                            roles = null,
-                            topic = null,
-                            lastSeen = this.lastSeen,
-                            timestamp = timestamp,
-                            updatedAt = updatedAt
+                        id = id,
+                        subscriptionId = subscriptionId,
+                        type = roomTypeOf(type),
+                        unread = unread,
+                        broadcast = broadcast ?: false,
+                        alert = alert,
+                        fullName = fullname,
+                        name = name ?: "",
+                        favorite = favorite ?: false,
+                        default = isDefault ?: false,
+                        readonly = readonly,
+                        open = open,
+                        lastMessage = null,
+                        archived = false,
+                        status = null,
+                        user = null,
+                        userMentions = userMentions,
+                        client = client,
+                        announcement = null,
+                        description = null,
+                        groupMentions = groupMentions,
+                        roles = null,
+                        topic = null,
+                        lastSeen = this.lastSeen,
+                        timestamp = timestamp,
+                        updatedAt = updatedAt
                     )
                 }
             }
@@ -1291,31 +1300,26 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     /**
-     * Save unfinished message, when user left chat room without sending a message. It also clears
-     * saved message from local repository when unfinishedMessage is blank.
+     * Save unfinished message, when user left chat room without sending a message.
      *
-     * @param chatRoomId Chat room Id.
      * @param unfinishedMessage The unfinished message to save.
      */
-    fun saveUnfinishedMessage(chatRoomId: String, unfinishedMessage: String) {
-        val key = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$chatRoomId"
+    fun saveUnfinishedMessage(unfinishedMessage: String) {
         if (unfinishedMessage.isNotBlank()) {
-            localRepository.save(key, unfinishedMessage)
-        } else {
-            localRepository.clear(key)
+            localRepository.save(draftKey, unfinishedMessage)
         }
     }
 
+    fun clearUnfinishedMessage() {
+        localRepository.clear(draftKey)
+    }
     /**
      * Get unfinished message from local repository, when user left chat room without
      * sending a message and now the user is back.
      *
-     * @param chatRoomId Chat room Id.
-     *
-     * @return Returns the unfinished message.
+     * @return Returns the unfinished message, null otherwise.
      */
-    fun getUnfinishedMessage(chatRoomId: String): String {
-        val key = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$chatRoomId"
-        return localRepository.get(key) ?: ""
+    fun getUnfinishedMessage(): String? {
+        return localRepository.get(draftKey)
     }
 }

@@ -168,7 +168,7 @@ class UiModelMapper @Inject constructor(
 
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
     private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(CommonPool) {
-        return@withContext dbManager.chatRoomDao().getSync(roomId)?.let {
+        return@withContext dbManager.getRoom(id = roomId)?.let {
             with(it.chatRoom) {
                 ChatRoom(
                     id = id,
