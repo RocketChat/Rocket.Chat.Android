@@ -127,6 +127,7 @@ class ContactsFragment : Fragment() {
 
         val searchItem = menu.findItem(R.id.action_search)
         searchView = searchItem?.actionView as? SearchView
+        searchView?.maxWidth = Integer.MAX_VALUE
         if (Constants.WIDECHAT) {
         setupWidechatSearchView()}
         searchView?.onQueryTextListener { queryContacts(it) }
@@ -155,7 +156,6 @@ class ContactsFragment : Fragment() {
         searchIcon = searchView?.findViewById(R.id.search_mag_icon)
         searchIcon?.setImageResource(R.drawable.ic_search_gray_24px)
 
-
         searchText = searchView?.findViewById(R.id.search_src_text)
         searchText?.setTextColor(Color.GRAY)
         searchText?.setHintTextColor(Color.GRAY)
@@ -167,8 +167,6 @@ class ContactsFragment : Fragment() {
             searchView?.clearFocus()
             searchView?.setQuery("", false)
         }
-
-
     }
 
     fun containsIgnoreCase(src: String, what: String): Boolean {

@@ -32,15 +32,6 @@ class ContactViewHolder(itemView: View) : ViewHolder<ContactItemHolder>(itemView
             } else {
                 contact_detail.text = contact!!.getEmailAddress()
             }
-
-            invite_contact.setOnClickListener{
-               // it.context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
-
-            }
-
-            setOnClickListener {
-
-            }
         }
     }
 

@@ -2,17 +2,14 @@ package chat.rocket.android.contacts.models
 
 import android.os.Parcel
 import android.os.Parcelable
-import chat.rocket.common.model.UserStatus
 
 
 class Contact() : Parcelable {
-    private var id: Int = 0
     private var name: String? = null
     private var phoneNumber: String? = null
     private var emailAddress: String? = null
     private var isPhone: Boolean = true
     private var username: String? = null
-    private var type:Int?=0
     private var avatarUrl: String? = null
 
 
@@ -20,13 +17,6 @@ class Contact() : Parcelable {
         return username
     }
 
-    fun setType(id: Int) {
-        this.type = id
-    }
-
-    fun getType():Int? {
-        return type;
-    }
 
     private fun formatPhoneNumber(phone: String): String {
         return phone.replace("-|\\s|\\(|\\)".toRegex(), "")
@@ -40,16 +30,9 @@ class Contact() : Parcelable {
         }
     }
 
-    fun getId(): Int {
-        return id
-    }
 
     fun getName(): String? {
         return name
-    }
-
-    fun setId(id: Int) {
-        this.id = id
     }
 
     fun setName(name: String) {
@@ -94,14 +77,12 @@ class Contact() : Parcelable {
     }
 
     constructor(parcel: Parcel) : this() {
-        this.id = parcel.readInt()
         this.name = parcel.readString()
         this.phoneNumber = parcel.readString()
     }
 
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest?.writeInt(id)
         dest?.writeString(name)
         dest?.writeString(phoneNumber)
     }

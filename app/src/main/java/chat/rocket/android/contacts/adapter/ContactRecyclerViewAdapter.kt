@@ -5,8 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.*
+import chat.rocket.android.contacts.models.Contact
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extensions.inflate
+import kotlinx.android.synthetic.main.item_contact.view.*
 import kotlin.collections.HashMap
 
 
@@ -64,15 +66,19 @@ class ContactRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder<*>, position: Int) {
         if (holder is ContactViewHolder) {
             holder.bind(contactArrayList[position] as ContactItemHolder)
-            holder.itemView.setOnClickListener {
-                //  it.context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
+            holder.itemView.setOnClickListener { view ->
+                run {
+                    val contact = holder.data!!.data
+                  if(contact.getUsername()==null)
+                    context.startActivity(Intent.createChooser(context.intent, context.getString(R.string.msg_share_using)))//                    if(contactCardViewHolder.contact!!.isPhone()){
+                }
             }
          } else if (holder is ContactHeaderViewHolder) {
             holder.bind(contactArrayList[position] as ContactHeaderItemHolder)
         } else if (holder is InviteViewHolder) {
             holder.bind(contactArrayList[position] as inviteItemHolder)
             holder.itemView.setOnClickListener {
-                shareApp();
+                shareApp()
             }
          }
     }
