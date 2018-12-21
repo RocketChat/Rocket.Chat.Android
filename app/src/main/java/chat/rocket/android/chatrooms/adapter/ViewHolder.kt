@@ -42,7 +42,7 @@ abstract class ViewHolder<T : ItemHolder<*>>(
                 val menuItems = view.context.inflate(R.menu.chatrooms_action).toList()
                 menuItems.find { it.itemId == R.id.action_favorite_room }?.apply {
                   setTitle(if ((it as RoomUiModel).favorite == true) R.string.action_unfavorite else R.string.action_favorite)
-                  setIcon(if (it.favorite == true) R.drawable.ic_star_black_24dp else R.drawable.ic_star_border_black_24dp)
+                  setIcon(if (it.favorite == true) R.drawable.ic_star_24dp else R.drawable.ic_star_border_24dp)
                   isChecked = (it.favorite==true)
                 }
                 menuItems.find { it.itemId == R.id.action_read }?.apply {

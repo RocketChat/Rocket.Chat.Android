@@ -4,22 +4,22 @@
 
   <item
     android:id="@+id/action_hide_room"
-    android:icon="@drawable/ic_visibility_off_black_24dp"
+    android:icon="@drawable/ic_visibility_off_24dp"
     android:title="@string/action_hide_room" />
 
   <item
     android:id="@+id/action_read"
-    android:icon="@drawable/ic_flag_black_24dp"
+    android:icon="@drawable/ic_flag_24dp"
     android:title="@string/action_mark_read" />
 
   <item
     android:id="@+id/action_favorite_room"
-    android:icon="@drawable/ic_star_border_black_24dp"
+    android:icon="@drawable/ic_star_border_24dp"
     android:title="@string/action_favorite" />
 
   <item
     android:id="@+id/action_leave_room"
-    android:icon="@drawable/ic_leave_room_black_24dp"
+    android:icon="@drawable/ic_leave_room_24dp"
     android:title="@string/action_leave_room" />
 
 </menu>
