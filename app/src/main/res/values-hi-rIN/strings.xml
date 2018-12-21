@@ -152,7 +152,7 @@
     <string name="msg_delete_message">संदेश को हटाएं</string>
     <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
     <string name="msg_welcome_to_rocket_chat">Rocket.Chat में आपका स्वागत है</string>
-    <string name="msg_team_communication">ओपन सोर्स कम्युनिकेशन</string>
+    <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
     <string name="msg_login_with_email">ई-मेल के साथ लॉगिन करें</string>
     <string name="msg_create_account">खाता बनाएं</string>
     <string name="msg_continue_with_facebook"><b>Facebook</b> के साथ जारी रखें</string>
@@ -184,11 +184,12 @@
     <string name="msg_no_topic">कोई विषय नहीं जोड़ा गया</string>
     <string name="msg_no_announcement">कोई घोषणा नहीं जोड़ा गया</string>
     <string name="msg_no_description">कोई विवरण नहीं जोड़ा गया</string>
-
+    <string name="msg_unable_to_update_password">पासवर्ड अपडेट करने में असमर्थ। त्रुटि संदेश: %1$s</string>
+    <string name="msg_password_updated_successfully">पासवर्ड सफलतापूर्वक अपडेट किया गया</string>
     <plurals name="msg_reacted_with_">
-        <item quantity="one">% 1 $ s ने% 2 $ %d s के साथ प्रतिक्रिया व्यक्त की</item>
-        <item quantity="few">% 1 $ s ने% 2 $ s के साथ प्रतिक्रिया व्यक्त की</item>
-        <item quantity="many">% 1 $ s ने% 2 $ s के साथ प्रतिक्रिया व्यक्त की</item>
+        <item quantity="one">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
+        <item quantity="few">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
+        <item quantity="many">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
     </plurals>
 
     <!-- Preferences messages -->
@@ -227,8 +228,7 @@
     <string name="action_title_editing">संपादन संदेश</string>
     <string name="action_msg_add_reaction">प्रतिक्रिया जोड़ें</string>
     <string name="action_msg_copy_permalink">परमालिंक कॉपी करें</string>
-    <!-- TODO - Add proper translation -->
-    <string name="action_msg_report">Report</string>
+    <string name="action_msg_report">रिपोर्ट</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">संपादन की अनुमति नहीं है</string>
@@ -310,13 +310,12 @@
     <string name="alert_title_default_skin_tone">डिफ़ॉल्ट त्वचा टोन</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">क्रम</string>
+    <string name="msg_sort">क्रम</string>
     <string name="dialog_sort_title">द्वारा सॉर्ट करें</string>
     <string name="dialog_sort_by_alphabet">वर्णानुक्रम</string>
     <string name="dialog_sort_by_activity">गतिविधि</string>
     <string name="dialog_group_by_type">प्रकार के आधार पर समूह</string>
     <string name="dialog_group_favourites">पसंदीदा समूह</string>
-    <string name="dialog_button_done">पूर्ण</string>
     <string name="chatroom_header">हैडर</string>
 
     <!--ChatRooms Headers-->
@@ -337,13 +336,13 @@
     <string name="message_room_changed_privacy">%2$s ने रूम का प्रकार बदलकर %1$s किया </string>
 
     <!-- User Details -->
-    <string name="message">Message</string> <!-- TODO - Add proper translation -->
-    <string name="timezone">Timezone</string> <!-- TODO - Add proper translation -->
-    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string> <!-- TODO - Add proper translation -->
-    <string name="retry">Retry</string> <!-- TODO - Add proper translation -->
+    <string name="message">संदेश</string>
+    <string name="timezone">समय क्षेत्र</string>
+    <string name="error_opening_dm">जब हम इस बातचीत को बना रहे थे तो कुछ गड़बड़ हुई …</string>
+    <string name="retry">पुन: प्रयास करें</string>
 
     <!-- Report -->
-    <string name="submit">Submit</string> <!-- TODO - Add proper translation -->
-    <string name="required">*required</string> <!-- TODO - Add proper translation -->
-    <string name="report_sent">Your report has been sent!</string>
+    <string name="submit">जमा करें</string>
+    <string name="required">* आवश्यक</string>
+    <string name="report_sent">आपकी रिपोर्ट भेज दी गई है!</string>
 </resources>

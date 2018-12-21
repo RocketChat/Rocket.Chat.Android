@@ -19,7 +19,6 @@ import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiRepository
-import chat.rocket.android.emoji.internal.isCustom
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.helper.UserHelper
@@ -32,7 +31,7 @@ import chat.rocket.android.server.domain.messageReadReceiptEnabled
 import chat.rocket.android.server.domain.messageReadReceiptStoreUsers
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
-import chat.rocket.android.util.extension.orFalse
+import chat.rocket.android.util.extension.isImage
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.ifNotNullNorEmpty
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
@@ -127,7 +126,12 @@ class UiModelMapper @Inject constructor(
 
             getChatRoomAsync(message.roomId)?.let { chatRoom ->
                 message.urls?.forEach { url ->
-                    mapUrl(message, url, chatRoom)?.let { list.add(it) }
+                    if (url.url.isImage()) {
+                        val attachment = Attachment(imageUrl = url.url)
+                        mapAttachment(message, attachment, chatRoom)?.let { list.add(it) }
+                    } else {
+                        mapUrl(message, url, chatRoom)?.let { list.add(it) }
+                    }
                 }
 
                 message.attachments?.mapNotNull { attachment ->
@@ -164,7 +168,7 @@ class UiModelMapper @Inject constructor(
 
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
     private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(CommonPool) {
-        return@withContext dbManager.chatRoomDao().getSync(roomId)?.let {
+        return@withContext dbManager.getRoom(id = roomId)?.let {
             with(it.chatRoom) {
                 ChatRoom(
                     id = id,

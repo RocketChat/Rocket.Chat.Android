@@ -180,7 +180,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_no_description">No description added</string>
     <string name="msg_send_email">Send email</string>
     <string name="msg_android_app_support">Android app support</string>
-
+    <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string>
+    <string name="msg_password_updated_successfully">Password updated successfully</string>
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s reacted with %2$s</item>
         <item quantity="other">%1$s reacted with %2$s</item>
@@ -322,13 +323,12 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="alert_title_default_skin_tone">Default skin tone</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">Sort</string>
+    <string name="msg_sort">Sort</string>
     <string name="dialog_sort_title">Sort by</string>
     <string name="dialog_sort_by_alphabet">Alphabetical</string>
     <string name="dialog_sort_by_activity">Activity</string>
     <string name="dialog_group_by_type">Group by type</string>
     <string name="dialog_group_favourites">Group favourites</string>
-    <string name="dialog_button_done">Done</string>
     <string name="chatroom_header">Header</string>
 
     <!--ChatRooms Headers-->

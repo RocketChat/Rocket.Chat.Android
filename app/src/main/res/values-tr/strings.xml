@@ -150,7 +150,7 @@
     <string name="msg_send">Gönder</string>
     <string name="msg_sent_attachment">Bir dosya eki gönderildi</string>
     <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string> <!-- TODO Add translation -->
-    <string name="msg_team_communication">Team Communication</string> <!-- TODO Add translation -->
+    <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
     <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->
     <string name="msg_create_account">Create an account</string> <!-- TODO Add translation -->
     <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string> <!-- TODO Add translation -->
@@ -185,7 +185,8 @@
     <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
     <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
     <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
-
+    <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
+    <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
         <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
@@ -311,13 +312,12 @@
     <string name="alert_title_default_skin_tone">Varsayılan tasarım tonu</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">Sırala</string>
+    <string name="msg_sort">Sırala</string>
     <string name="dialog_sort_title">Sırala</string>
     <string name="dialog_sort_by_alphabet">Alfabetik</string>
     <string name="dialog_sort_by_activity">Aktiviteye Göre</string>
     <string name="dialog_group_by_type">Türüne göre grupla</string>
     <string name="dialog_group_favourites">Favorileri grupla</string>
-    <string name="dialog_button_done">Tamam</string>
     <string name="chatroom_header">Başlık</string>
 
     <!--ChatRooms Headers-->
