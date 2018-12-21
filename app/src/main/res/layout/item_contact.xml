@@ -27,7 +27,7 @@
 
 
     <TextView
-        android:id="@+id/phone_number"
+        android:id="@+id/contact_detail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"
@@ -68,7 +68,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteY="4dp" />
     <TextView
-        android:id="@+id/text_email"
+        android:id="@+id/chat_username"
         style="@style/Sender.Name.TextView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

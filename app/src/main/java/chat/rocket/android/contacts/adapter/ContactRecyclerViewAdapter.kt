@@ -12,8 +12,7 @@ import kotlin.collections.HashMap
 
 class ContactRecyclerViewAdapter(
         private val context: MainActivity,
-        private val contactArrayList: List<ItemHolder<*>>,
-        private val contactHashMap: HashMap<String, String>
+        private val contactArrayList: List<ItemHolder<*>>
 
 
 ) : RecyclerView.Adapter<ViewHolder<*>>() {

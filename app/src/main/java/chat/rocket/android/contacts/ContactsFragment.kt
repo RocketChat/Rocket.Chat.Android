@@ -129,6 +129,7 @@ class ContactsFragment : Fragment() {
         searchView = searchItem?.actionView as? SearchView
         if (Constants.WIDECHAT) {
         setupWidechatSearchView()}
+        searchView?.onQueryTextListener { queryContacts(it) }
 
         val expandListener = object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
@@ -167,7 +168,7 @@ class ContactsFragment : Fragment() {
             searchView?.setQuery("", false)
         }
 
-        searchView?.onQueryTextListener { queryContacts(it) }
+
     }
 
     fun containsIgnoreCase(src: String, what: String): Boolean {
@@ -208,11 +209,6 @@ class ContactsFragment : Fragment() {
         }
     }
 
-    private fun populateContacts(actualContacts: Boolean) {
-        if (actualContacts) {
-            getContactList()
-        }
-    }
 
     override fun onRequestPermissionsResult(
             requestCode: Int,
@@ -227,9 +223,7 @@ class ContactsFragment : Fragment() {
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED
                 ) {
                     // Permission granted
-                    populateContacts(true)
-                } else {
-                    populateContacts(false)
+                    getContactList()
                 }
                 setupFrameLayout(contactArrayList)
                 return
@@ -254,7 +248,7 @@ class ContactsFragment : Fragment() {
                 ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED
         ) {
-            populateContacts(true)
+            getContactList()
             setupFrameLayout(contactArrayList)
         } else {
             requestPermissions(
@@ -305,34 +299,28 @@ class ContactsFragment : Fragment() {
 
             recyclerView!!.setHasFixedSize(true)
             recyclerView!!.layoutManager = LinearLayoutManager(context)
-            recyclerView!!.adapter = ContactRecyclerViewAdapter(this.activity as MainActivity, map(filteredContactArrayList)!!, contactHashMap)
+            recyclerView!!.adapter = ContactRecyclerViewAdapter(this.activity as MainActivity, map(filteredContactArrayList)!!)
         }
     }
 
-
-
-
-    fun map(contacts: List<Contact>): ArrayList<ItemHolder<*>> {
-        val list = ArrayList<ItemHolder<*>>(contacts.size + 2)
-        var lastType: String? = null
-        var type: String? = "1"
-        contacts.forEach { contact ->
-            if(contact.getUsername()!=null){
-                type="0";
-            }else{
-                type="1";
+        fun map(contacts: List<Contact>): ArrayList<ItemHolder<*>> {
+            val finalList = ArrayList<ItemHolder<*>>(contacts.size + 2)
+            val userList = ArrayList<ItemHolder<*>>(contacts.size)
+            val contactsList = ArrayList<ItemHolder<*>>(contacts.size)
+            contacts.forEach { contact ->
+                if(contact.getUsername()!=null){
+                    userList.add(ContactItemHolder(contact))
+                }else{
+                    contactsList.add(ContactItemHolder(contact))
+                }
             }
-            if ( lastType !=type) {
-                // even here item is added but not of type contact
-                list.add(ContactHeaderItemHolder("INVITE MEMBERS"))
-            }
-            list.add(ContactItemHolder(contact))
-            lastType = type
+            finalList.addAll(userList)
+            finalList.add(ContactHeaderItemHolder("INVITE CONTACTS"))
+            finalList.addAll(contactsList)
+            finalList.add(inviteItemHolder("invite"))
+            return finalList
         }
-        list.add(inviteItemHolder("invite"))
 
-        return list
-    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
