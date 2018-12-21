@@ -307,7 +307,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             showToolbarTitle(chatRoomName)
             showToolbarChatRoomIcon(chatRoomType)
         }
-        getUnfinishedMessage()
+        getDraftMessage()
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRoom)
     }
@@ -323,7 +323,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         recycler_view.removeOnScrollListener(onScrollListener)
         recycler_view.removeOnLayoutChangeListener(layoutChangeListener)
 
-        presenter.saveUnfinishedMessage(text_message.text.toString())
+        presenter.saveDraftMessage(text_message.text.toString())
         handler.removeCallbacksAndMessages(null)
         unsubscribeComposeTextMessage()
         presenter.disconnect()
@@ -437,6 +437,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
             presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
             empty_chat_view.isVisible = adapter.itemCount == 0
+            dismissEmojiKeyboard()
         }
     }
 
@@ -445,6 +446,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         adapter.clearData()
         adapter.prependData(dataSet)
         empty_chat_view.isVisible = adapter.itemCount == 0
+        dismissEmojiKeyboard()
     }
 
     override fun onRoomUpdated(roomUiModel: RoomUiModel) {
@@ -477,7 +479,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         var textMessage = citation ?: ""
         textMessage += text_message.textContent
         sendMessage(textMessage)
-        clearMessageComposition(true)
     }
 
     override fun showTypingStatus(usernameList: List<String>) {
@@ -508,25 +509,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         showMessage(getString(R.string.msg_invalid_file))
     }
 
-    override fun showNewMessage(message: List<BaseUiModel<*>>, isMessageReceived: Boolean) {
-        ui {
-            adapter.prependData(message)
-            if (isMessageReceived && button_fab.isVisible) {
-                newMessageCount++
-
-                if (newMessageCount <= 99)
-                    text_count.text = newMessageCount.toString()
-                else
-                    text_count.text = "99+"
-
-                text_count.isVisible = true
-            } else if (!button_fab.isVisible)
-                recycler_view.scrollToPosition(0)
-            verticalScrollOffset.set(0)
-            empty_chat_view.isVisible = adapter.itemCount == 0
-        }
-    }
-
     override fun disableSendMessageButton() {
         ui { button_send.isEnabled = false }
     }
@@ -549,6 +531,28 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
+    override fun showNewMessage(message: List<BaseUiModel<*>>, isMessageReceived: Boolean) {
+        ui {
+            adapter.prependData(message)
+            if (isMessageReceived && button_fab.isVisible) {
+                newMessageCount++
+                if (newMessageCount <= 99) {
+                    text_count.text = newMessageCount.toString()
+                } else {
+                    text_count.text = "99+"
+                }
+                text_count.isVisible = true
+            }
+
+            else if (!button_fab.isVisible) {
+                recycler_view.scrollToPosition(0)
+            }
+            verticalScrollOffset.set(0)
+            empty_chat_view.isVisible = adapter.itemCount == 0
+            dismissEmojiKeyboard()
+        }
+    }
+
     override fun dispatchUpdateMessage(index: Int, message: List<BaseUiModel<*>>) {
         ui {
             // TODO - investigate WHY we get a empty list here
@@ -561,6 +565,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             } else {
                 showNewMessage(message, true)
             }
+            dismissEmojiKeyboard()
         }
     }
 
@@ -728,8 +733,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun setReactionButtonIcon(@DrawableRes drawableId: Int) {
-        button_add_reaction.setImageResource(drawableId)
-        button_add_reaction.tag = drawableId
+        button_add_reaction_or_show_keyboard.setImageResource(drawableId)
+        button_add_reaction_or_show_keyboard.tag = drawableId
     }
 
     override fun showFileSelection(filter: Array<String>?) {
@@ -846,9 +851,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             subscribeComposeTextMessage()
             emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
+
             emojiKeyboardPopup.listener = this
+
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
-                override fun onKeyboardOpened() {}
+                override fun onKeyboardOpened() {
+                    KeyboardHelper.showSoftKeyboard(text_message)
+                }
 
                 override fun onKeyboardClosed() {
                     activity?.let {
@@ -877,9 +886,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 hideAttachmentOptions()
             }
 
-            button_add_reaction.setOnClickListener { _ ->
-                openEmojiKeyboardPopup()
-            }
+            button_add_reaction_or_show_keyboard.setOnClickListener { toggleKeyboard() }
 
             button_take_a_photo.setOnClickListener {
                 dispatchTakePictureIntent()
@@ -936,8 +943,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    private fun getUnfinishedMessage() {
-        val unfinishedMessage = presenter.getUnfinishedMessage()
+    private fun getDraftMessage() {
+        val unfinishedMessage = presenter.getDraftUnfinishedMessage()
         if (unfinishedMessage.isNotNullNorEmpty()) {
             text_message.setText(unfinishedMessage)
         }
@@ -971,19 +978,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         presenter.loadCommands()
     }
 
-    private fun openEmojiKeyboardPopup() {
+    // Shows the emoji or the system keyboard.
+    private fun toggleKeyboard() {
         if (!emojiKeyboardPopup.isShowing) {
-            // If keyboard is visible, simply show the  popup
-            if (emojiKeyboardPopup.isKeyboardOpen) {
-                emojiKeyboardPopup.showAtBottom()
-            } else {
-                // Open the text keyboard first and immediately after that show the emoji popup
-                text_message.isFocusableInTouchMode = true
-                text_message.requestFocus()
-                emojiKeyboardPopup.showAtBottomPending()
-                KeyboardHelper.showSoftKeyboard(text_message)
-            }
-            setReactionButtonIcon(R.drawable.ic_keyboard_black_24dp)
+            openEmojiKeyboard()
         } else {
             // If popup is showing, simply dismiss it to show the underlying text keyboard
             dismissEmojiKeyboard()
@@ -1149,6 +1147,20 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun reportMessage(id: String) {
         presenter.reportMessage(messageId = id,
             description = "This message was reported by a user from the Android app")
+    }
+
+    fun openEmojiKeyboard() {
+        // If keyboard is visible, simply show the  popup
+        if (emojiKeyboardPopup.isKeyboardOpen) {
+            emojiKeyboardPopup.showAtBottom()
+        } else {
+            // Open the text keyboard first and immediately after that show the emoji popup
+            text_message.isFocusableInTouchMode = true
+            text_message.requestFocus()
+            emojiKeyboardPopup.showAtBottomPending()
+            KeyboardHelper.showSoftKeyboard(text_message)
+        }
+        setReactionButtonIcon(R.drawable.ic_keyboard_black_24dp)
     }
 
     fun dismissEmojiKeyboard() {

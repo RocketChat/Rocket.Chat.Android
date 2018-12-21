@@ -158,13 +158,11 @@ class ChatRoomPresenter @Inject constructor(
                     chatIsBroadcast = it.chatRoom.broadcast ?: false
                     val roomUiModel = roomMapper.map(it, true)
                     launchUI(strategy) {
-                        view.onRoomUpdated(
-                            roomUiModel = roomUiModel.copy(
-                                broadcast = chatIsBroadcast,
-                                canModerate = canModerate,
-                                writable = roomUiModel.writable || canModerate
-                            )
-                        )
+                        view.onRoomUpdated(roomUiModel = roomUiModel.copy(
+                            broadcast = chatIsBroadcast,
+                            canModerate = canModerate,
+                            writable = roomUiModel.writable || canModerate
+                        ))
                     }
                 }
 
@@ -189,15 +187,9 @@ class ChatRoomPresenter @Inject constructor(
             chatRoomId?.let {
                 manager.addRoomChannel(it, roomChangesChannel)
                 for (room in roomChangesChannel) {
-                    dbManager.getRoom(room.id)
-                        ?.let {
-                            view.onRoomUpdated(
-                                roomMapper.map(
-                                    chatRoom = it,
-                                    showLastMessage = true
-                                )
-                            )
-                        }
+                    dbManager.getRoom(room.id)?.let {
+                        view.onRoomUpdated(roomMapper.map(chatRoom = it, showLastMessage = true))
+                    }
                 }
             }
         }
@@ -230,10 +222,10 @@ class ChatRoomPresenter @Inject constructor(
                     val localMessages = messagesRepository.getRecentMessages(chatRoomId, 50)
                     val oldMessages = mapper.map(
                         localMessages, RoomUiModel(
-                            roles = chatRoles,
-                            // FIXME: Why are we fixing isRoom attribute to true here?
-                            isBroadcast = chatIsBroadcast, isRoom = true
-                        )
+                        roles = chatRoles,
+                        // FIXME: Why are we fixing isRoom attribute to true here?
+                        isBroadcast = chatIsBroadcast, isRoom = true
+                    )
                     )
                     val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
                     if (oldMessages.isNotEmpty() && lastSyncDate != null) {
@@ -255,10 +247,9 @@ class ChatRoomPresenter @Inject constructor(
                 Timber.e(ex)
                 ex.message?.let {
                     view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
                 }
-                    .ifNull {
-                        view.showGenericErrorMessage()
-                    }
             } finally {
                 view.hideLoading()
             }
@@ -276,8 +267,7 @@ class ChatRoomPresenter @Inject constructor(
     ) {
         val messages =
             retryIO("loadAndShowMessages($chatRoomId, $chatRoomType, $offset") {
-                client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30)
-                    .result
+                client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
             }
         messagesRepository.saveAll(messages)
 
@@ -307,8 +297,7 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 view.showLoading()
                 val messages = retryIO("searchMessages($chatRoomId, $searchText)") {
-                    client.searchMessages(chatRoomId, searchText)
-                        .result
+                    client.searchMessages(chatRoomId, searchText).result
                 }
                 view.showSearchedMessages(
                     mapper.map(
@@ -320,10 +309,9 @@ class ChatRoomPresenter @Inject constructor(
                 Timber.e(ex)
                 ex.message?.let {
                     view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
                 }
-                    .ifNull {
-                        view.showGenericErrorMessage()
-                    }
             } finally {
                 view.hideLoading()
             }
@@ -334,9 +322,8 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 // ignore message for now, will receive it on the stream
-                val id = UUID.randomUUID()
-                    .toString()
                 if (messageId == null) {
+                    val id = UUID.randomUUID().toString()
                     val username = userHelper.username()
                     val newMessage = Message(
                         id = id,
@@ -389,13 +376,12 @@ class ChatRoomPresenter @Inject constructor(
                 } else {
                     client.updateMessage(chatRoomId, messageId, text)
                 }
-
-                clearUnfinishedMessage()
-                view.enableSendMessageButton()
+                clearDraftMessage()
             } catch (ex: Exception) {
-                Timber.d(ex, "Error sending message...")
+                Timber.e(ex, "Error sending message...")
                 jobSchedulerInteractor.scheduleSendingMessages()
             } finally {
+                view.clearMessageComposition(true)
                 view.enableSendMessageButton()
             }
         }
@@ -529,10 +515,9 @@ class ChatRoomPresenter @Inject constructor(
                 Timber.d(ex)
                 ex.message?.let {
                     view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
                 }
-                    .ifNull {
-                        view.showGenericErrorMessage()
-                    }
             } finally {
                 view.hideLoading()
             }
@@ -606,8 +591,7 @@ class ChatRoomPresenter @Inject constructor(
                 val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
                 // lastSyncDate or 0. LastSyncDate could be in case when we sent some messages offline(and saved them locally),
                 // but never has obtained chatMessages(or history) from remote. In this case we should sync all chat history from beginning
-                val instant = Instant.ofEpochMilli(lastSyncDate ?: 0)
-                    .toString()
+                val instant = Instant.ofEpochMilli(lastSyncDate ?: 0).toString()
                 //
                 try {
                     val messages =
@@ -620,21 +604,16 @@ class ChatRoomPresenter @Inject constructor(
                     Timber.d("History: $messages")
 
                     if (messages.result.isNotEmpty()) {
-                        val models = mapper.map(
-                            messages.result, RoomUiModel(
-                                roles = chatRoles,
-                                isBroadcast = chatIsBroadcast,
-                                // FIXME: Why are we fixing isRoom attribute to true here?
-                                isRoom = true
-                            )
-                        )
+                        val models = mapper.map(messages.result, RoomUiModel(
+                            roles = chatRoles,
+                            isBroadcast = chatIsBroadcast,
+                            // FIXME: Why are we fixing isRoom attribute to true here?
+                            isRoom = true
+                        ))
                         messagesRepository.saveAll(messages.result)
                         //if success - saving last synced time
                         //assume that BE returns ordered messages, the first message is the latest one
-                        messagesRepository.saveLastSyncDate(
-                            chatRoomId,
-                            messages.result.first().timestamp
-                        )
+                        messagesRepository.saveLastSyncDate(chatRoomId, messages.result.first().timestamp)
 
                         launchUI(strategy) {
                             view.showNewMessage(models, true)
@@ -692,8 +671,7 @@ class ChatRoomPresenter @Inject constructor(
     fun citeMessage(roomName: String, roomType: String, messageId: String, mentionAuthor: Boolean) {
         launchUI(strategy) {
             val message = messagesRepository.getById(messageId)
-            val currentUsername: String? = userHelper.user()
-                ?.username
+            val currentUsername: String? = userHelper.user()?.username
             message?.let { msg ->
                 val id = msg.id
                 val username = msg.sender?.username ?: ""
@@ -712,9 +690,9 @@ class ChatRoomPresenter @Inject constructor(
                     replyMarkdown = "[ ]($currentServer/$chatRoomType/$room?msg=$id) $mention ",
                     quotedMessage = mapper.map(
                         message, RoomUiModel(
-                            roles = chatRoles,
-                            isBroadcast = chatIsBroadcast
-                        )
+                        roles = chatRoles,
+                        isBroadcast = chatIsBroadcast
+                    )
                     ).last().preview?.message ?: ""
                 )
             }
@@ -734,11 +712,10 @@ class ChatRoomPresenter @Inject constructor(
     fun copyMessage(messageId: String) {
         launchUI(strategy) {
             try {
-                messagesRepository.getById(messageId)
-                    ?.let { m ->
-                        view.copyToClipboard(m.message)
-                        view.showMessage(R.string.msg_message_copied)
-                    }
+                messagesRepository.getById(messageId)?.let { m ->
+                    view.copyToClipboard(m.message)
+                    view.showMessage(R.string.msg_message_copied)
+                }
             } catch (e: RocketChatException) {
                 Timber.e(e)
             }
@@ -827,8 +804,7 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 val members = retryIO("getMembers($chatRoomId, $chatRoomType, $offset)") {
-                    client.getMembers(chatRoomId, roomTypeOf(chatRoomType), offset, 50)
-                        .result
+                    client.getMembers(chatRoomId, roomTypeOf(chatRoomType), offset, 50).result
                 }.take(50) // Get only 50, the backend is returning 7k+ users
                 usersRepository.saveAll(members)
                 dbManager.processUsersBatch(members)
@@ -930,10 +906,9 @@ class ChatRoomPresenter @Inject constructor(
                 Timber.e(e, "Error while trying to favorite/unfavorite chat room.")
                 e.message?.let {
                     view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
                 }
-                    .ifNull {
-                        view.showGenericErrorMessage()
-                    }
             }
         }
     }
@@ -974,88 +949,81 @@ class ChatRoomPresenter @Inject constructor(
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
     private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(CommonPool) {
         retryDB("getRoom($roomId)") {
-            dbManager.chatRoomDao()
-                .getSync(roomId)
-                ?.let {
-                    with(it.chatRoom) {
-                        ChatRoom(
-                            id = id,
-                            subscriptionId = subscriptionId,
-                            type = roomTypeOf(type),
-                            unread = unread,
-                            broadcast = broadcast ?: false,
-                            alert = alert,
-                            fullName = fullname,
-                            name = name,
-                            favorite = favorite ?: false,
-                            default = isDefault ?: false,
-                            readonly = readonly,
-                            open = open,
-                            lastMessage = null,
-                            archived = false,
-                            status = null,
-                            user = null,
-                            userMentions = userMentions,
-                            client = client,
-                            announcement = null,
-                            description = null,
-                            groupMentions = groupMentions,
-                            roles = null,
-                            topic = null,
-                            lastSeen = this.lastSeen,
-                            timestamp = timestamp,
-                            updatedAt = updatedAt
-                        )
-                    }
+            dbManager.chatRoomDao().getSync(roomId)?.let {
+                with(it.chatRoom) {
+                    ChatRoom(
+                        id = id,
+                        subscriptionId = subscriptionId,
+                        type = roomTypeOf(type),
+                        unread = unread,
+                        broadcast = broadcast ?: false,
+                        alert = alert,
+                        fullName = fullname,
+                        name = name,
+                        favorite = favorite ?: false,
+                        default = isDefault ?: false,
+                        readonly = readonly,
+                        open = open,
+                        lastMessage = null,
+                        archived = false,
+                        status = null,
+                        user = null,
+                        userMentions = userMentions,
+                        client = client,
+                        announcement = null,
+                        description = null,
+                        groupMentions = groupMentions,
+                        roles = null,
+                        topic = null,
+                        lastSeen = this.lastSeen,
+                        timestamp = timestamp,
+                        updatedAt = updatedAt
+                    )
                 }
+            }
         }
     }
 
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
-    private suspend fun getChatRoomsAsync(name: String? = null): List<ChatRoom> = withContext(
-        CommonPool
-    ) {
+    private suspend fun getChatRoomsAsync(name: String? = null): List<ChatRoom> = withContext(CommonPool) {
         retryDB("getAllSync()") {
-            dbManager.chatRoomDao()
-                .getAllSync()
-                .filter {
-                    if (name == null) {
-                        return@filter true
-                    }
-                    it.chatRoom.name == name || it.chatRoom.fullname == name
+            dbManager.chatRoomDao().getAllSync().filter {
+                if (name == null) {
+                    return@filter true
                 }
-                .map {
-                    with(it.chatRoom) {
-                        ChatRoom(
-                            id = id,
-                            subscriptionId = subscriptionId,
-                            type = roomTypeOf(type),
-                            unread = unread,
-                            broadcast = broadcast ?: false,
-                            alert = alert,
-                            fullName = fullname,
-                            name = name ?: "",
-                            favorite = favorite ?: false,
-                            default = isDefault ?: false,
-                            readonly = readonly,
-                            open = open,
-                            lastMessage = null,
-                            archived = false,
-                            status = null,
-                            user = null,
-                            userMentions = userMentions,
-                            client = client,
-                            announcement = null,
-                            description = null,
-                            groupMentions = groupMentions,
-                            roles = null,
-                            topic = null,
-                            lastSeen = this.lastSeen,
-                            timestamp = timestamp,
-                            updatedAt = updatedAt
-                        )
-                    }
+                it.chatRoom.name == name || it.chatRoom.fullname == name
+            }.map {
+                with(it.chatRoom) {
+                    ChatRoom(
+                        id = id,
+                        subscriptionId = subscriptionId,
+                        type = roomTypeOf(type),
+                        unread = unread,
+                        broadcast = broadcast ?: false,
+                        alert = alert,
+                        fullName = fullname,
+                        name = name ?: "",
+                        favorite = favorite ?: false,
+                        default = isDefault ?: false,
+                        readonly = readonly,
+                        open = open,
+                        lastMessage = null,
+                        archived = false,
+                        status = null,
+                        user = null,
+                        userMentions = userMentions,
+                        client = client,
+                        announcement = null,
+                        description = null,
+                        groupMentions = groupMentions,
+                        roles = null,
+                        topic = null,
+                        lastSeen = this.lastSeen,
+                        timestamp = timestamp,
+                        updatedAt = updatedAt
+                    )
                 }
+            }
         }
     }
 
@@ -1064,15 +1032,12 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 retryIO("joinChat($chatRoomId)") { client.joinChat(chatRoomId) }
                 val canPost = permissions.canPostToReadOnlyChannels()
-                dbManager.getRoom(chatRoomId)
-                    ?.let {
-                        val roomUiModel = roomMapper.map(it, true)
-                            .copy(
-                                writable = canPost
-                            )
-                        view.onJoined(roomUiModel = roomUiModel)
-                        view.onRoomUpdated(roomUiModel = roomUiModel)
-                    }
+                dbManager.getRoom(chatRoomId)?.let {
+                    val roomUiModel = roomMapper.map(it, true).copy(
+                        writable = canPost)
+                    view.onJoined(roomUiModel = roomUiModel)
+                    view.onRoomUpdated(roomUiModel = roomUiModel)
+                }
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
             }
@@ -1111,17 +1076,15 @@ class ChatRoomPresenter @Inject constructor(
     fun copyPermalink(messageId: String) {
         launchUI(strategy) {
             try {
-                messagesRepository.getById(messageId)
-                    ?.let { message ->
-                        getChatRoomAsync(message.roomId)?.let { chatRoom ->
-                            val models = mapper.map(message)
-                            models.firstOrNull()
-                                ?.permalink?.let {
-                                view.copyToClipboard(it)
-                                view.showMessage(R.string.msg_permalink_copied)
-                            }
+                messagesRepository.getById(messageId)?.let { message ->
+                    getChatRoomAsync(message.roomId)?.let { chatRoom ->
+                        val models = mapper.map(message)
+                        models.firstOrNull()?.permalink?.let {
+                            view.copyToClipboard(it)
+                            view.showMessage(R.string.msg_permalink_copied)
                         }
                     }
+                }
             } catch (ex: Exception) {
                 Timber.e(ex)
             }
@@ -1183,8 +1146,7 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 //TODO: cache the commands
                 val commands = retryIO("commands(0, 100)") {
-                    client.commands(0, 100)
-                        .result
+                    client.commands(0, 100).result
                 }
                 view.populateCommandSuggestions(commands.map {
                     CommandSuggestionUiModel(it.command, it.description ?: "", listOf(it.command))
@@ -1197,15 +1159,14 @@ class ChatRoomPresenter @Inject constructor(
 
     fun loadEmojis() {
         launchUI(strategy) {
-            val emojiSuggestionUiModels = EmojiRepository.getAll()
-                .map {
-                    EmojiSuggestionUiModel(
-                        text = it.shortname.replaceFirst(":", ""),
-                        pinned = false,
-                        emoji = it,
-                        searchList = listOf(it.shortname)
-                    )
-                }
+            val emojiSuggestionUiModels = EmojiRepository.getAll().map {
+                EmojiSuggestionUiModel(
+                    text = it.shortname.replaceFirst(":", ""),
+                    pinned = false,
+                    emoji = it,
+                    searchList = listOf(it.shortname)
+                )
+            }
             view.populateEmojiSuggestions(emojis = emojiSuggestionUiModels)
         }
     }
@@ -1273,13 +1234,12 @@ class ChatRoomPresenter @Inject constructor(
                         typingStatusList.add(typingStatus.first)
                     }
                 } else {
-                    typingStatusList.find { username -> username == typingStatus.first }
-                        ?.let {
-                            typingStatusList.remove(it)
-                            if (typingStatus.second) {
-                                typingStatusList.add(typingStatus.first)
-                            }
+                    typingStatusList.find { username -> username == typingStatus.first }?.let {
+                        typingStatusList.remove(it)
+                        if (typingStatus.second) {
+                            typingStatusList.add(typingStatus.first)
                         }
+                    }
                 }
 
                 if (typingStatusList.isNotEmpty()) {
@@ -1312,7 +1272,6 @@ class ChatRoomPresenter @Inject constructor(
                     roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
                 )
             )
-
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
             if (index > -1) {
@@ -1338,13 +1297,13 @@ class ChatRoomPresenter @Inject constructor(
      *
      * @param unfinishedMessage The unfinished message to save.
      */
-    fun saveUnfinishedMessage(unfinishedMessage: String) {
+    fun saveDraftMessage(unfinishedMessage: String) {
         if (unfinishedMessage.isNotBlank()) {
             localRepository.save(draftKey, unfinishedMessage)
         }
     }
 
-    fun clearUnfinishedMessage() {
+    fun clearDraftMessage() {
         localRepository.clear(draftKey)
     }
 
@@ -1354,7 +1313,7 @@ class ChatRoomPresenter @Inject constructor(
      *
      * @return Returns the unfinished message, null otherwise.
      */
-    fun getUnfinishedMessage(): String? {
+    fun getDraftUnfinishedMessage(): String? {
         return localRepository.get(draftKey)
     }
 
