@@ -345,4 +345,10 @@
     <string name="submit">Enviar</string>
     <string name="required">*obrigatório</string>
     <string name="report_sent">A mensagem foi reportada!</string>
+
+    <!-- Physical Keyboard Preferences -->
+    <string name="dialog_physical_keyboard_disable">Desabilitar</string>
+    <string name="physical_keyboard_preference_title">Teclado físico</string>
+    <string name="physical_keyboard_preference_description">Configuração para enviar uma mensagem com um teclado físico</string>
+
 </resources>

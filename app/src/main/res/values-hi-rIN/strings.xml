@@ -345,4 +345,10 @@
     <string name="submit">जमा करें</string>
     <string name="required">* आवश्यक</string>
     <string name="report_sent">आपकी रिपोर्ट भेज दी गई है!</string>
+
+    <!-- Physical Keyboard Preferences -->
+    <string name="dialog_physical_keyboard_disable">अक्षम</string>
+    <string name="physical_keyboard_preference_title">भौतिक कीबोर्ड</string>
+    <string name="physical_keyboard_preference_description">भौतिक कीबोर्ड के साथ संदेश भेजने के लिए विन्यास</string>
+
 </resources>

@@ -343,5 +343,11 @@
     <!-- Report -->
     <string name="submit">Submit</string> <!-- TODO - Add proper translation -->
     <string name="required">*required</string> <!-- TODO - Add proper translation -->
-    <string name="report_sent">Your report has been sent!</string> <!-- TODO - Add proper translation -->
+    <string name="report_sent">Your report has been sent!</string>
+
+    <!-- Physical Keyboard Preferences -->
+    <string name="dialog_physical_keyboard_disable">Відключити</string>
+    <string name="physical_keyboard_preference_title">Фізична клавіатура</string>
+    <string name="physical_keyboard_preference_description">Конфігурація для надсилання повідомлень з фізичної клавіатури</string>
+
 </resources>

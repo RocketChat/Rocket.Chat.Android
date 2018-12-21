@@ -346,5 +346,11 @@
     <!-- Report -->
     <string name="submit">Submit</string> <!-- TODO - Add proper translation -->
     <string name="required">*required</string> <!-- TODO - Add proper translation -->
-    <string name="report_sent">Your report has been sent!</string> <!-- TODO - Add proper translation -->
+    <string name="report_sent">Your report has been sent!</string>
+
+    <!-- Physical Keyboard Preferences -->
+    <string name="dialog_physical_keyboard_disable">Désactiver</string>
+    <string name="physical_keyboard_preference_title">Clavier physique</string>
+    <string name="physical_keyboard_preference_description">Configuration pour l\'envoi d\'un message à partir d\'un clavier physique</string>
+
 </resources>

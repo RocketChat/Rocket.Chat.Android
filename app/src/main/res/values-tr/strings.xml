@@ -345,5 +345,11 @@
     <!-- Report -->
     <string name="submit">Submit</string> <!--TODO - Add proper translation-->
     <string name="required">*required</string> <!--TODO - Add proper translation-->
-    <string name="report_sent">Your report has been sent!</string> <!--TODO - Add proper translation-->
+    <string name="report_sent">Your report has been sent!</string>
+
+    <!-- Physical Keyboard Preferences -->
+    <string name="dialog_physical_keyboard_disable">Devre dışı</string>
+    <string name="physical_keyboard_preference_title">Fiziksel klavye</string>
+    <string name="physical_keyboard_preference_description">Fiziksel klavyeyle mesaj göndermek için yapılandırın</string>
+
 </resources>

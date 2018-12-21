@@ -6,7 +6,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -316,7 +315,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         text_message.addTextChangedListener(EmojiKeyboardPopup.EmojiTextWatcher(text_message))
-        text_message.setOnKeyListener { v, keyCode, event -> presenter.onKeyEvent(keyCode, event) }
+        text_message.setOnKeyListener { _, keyCode, event -> presenter.onKeyEvent(keyCode, event) }
     }
 
     override fun onDestroyView() {

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/radio_physical_keyboard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <RadioButton
+        android:id="@+id/radio_physical_keyboard_enter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="@string/dialog_physical_keyboard_enter"
+        android:textSize="18sp" />
+
+    <RadioButton
+        android:id="@+id/radio_physical_keyboard_enter_shift"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="@string/dialog_physical_keyboard_enter_shift"
+        android:textSize="18sp" />
+
+    <RadioButton
+        android:id="@+id/radio_physical_keyboard_enter_control"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="@string/dialog_physical_keyboard_enter_control"
+        android:textSize="18sp" />
+
+    <RadioButton
+        android:id="@+id/radio_physical_keyboard_disabled"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="@string/dialog_physical_keyboard_disable"
+        android:textSize="18sp" />
+
+</RadioGroup>

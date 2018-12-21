@@ -339,4 +339,10 @@
     <string name="submit">einreichen</string>
     <string name="required">*erforderlich</string>
     <string name="report_sent">Ihr Bericht wurde gesendet!</string>
+
+    <!-- Physical Keyboard Preferences -->
+    <string name="dialog_physical_keyboard_disable">Deaktivieren</string>
+    <string name="physical_keyboard_preference_title">Physische Tastatur</string>
+    <string name="physical_keyboard_preference_description">Konfiguration zum Senden einer Nachricht von einer physischen Tastatur</string>
+
 </resources>
