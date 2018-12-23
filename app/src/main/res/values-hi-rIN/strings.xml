@@ -319,6 +319,7 @@
     <string name="chatroom_header">हैडर</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="header_channel">चैनलों</string>
     <string name="header_private_groups">निजी समूहों</string>
     <string name="header_direct_messages">प्रत्यक्ष संदेश</string>
