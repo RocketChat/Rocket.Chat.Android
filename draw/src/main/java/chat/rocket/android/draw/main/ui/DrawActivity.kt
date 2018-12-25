@@ -53,8 +53,18 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
     }
 
     private fun setupDrawTools() {
-        image_draw_eraser.setOnClickListener {
+        image_draw_eraser.setOnLongClickListener{
             custom_draw_view.clearCanvas()
+            return@setOnLongClickListener true
+        }
+
+        image_draw_eraser.setOnClickListener {
+            custom_draw_view.setColor(
+                    ResourcesCompat.getColor(
+                            resources,
+                            R.color.color_white, null
+                    )
+            )
             toggleDrawTools(draw_tools, false)
         }
 
