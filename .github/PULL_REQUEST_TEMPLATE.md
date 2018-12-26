@@ -4,4 +4,6 @@
 <!-- INSTRUCTION: Inform the issue number that this PR closes, or remove the line below -->
 Closes #ISSUE_NUMBER
 
-<!-- INSTRUCTION: Tell us more about your PR with screen shots if you can -->
+#### Changes: [Add here what changes were made in this issue and if possible provide links.]
+
+#### Screenshots or GIF for the change:
