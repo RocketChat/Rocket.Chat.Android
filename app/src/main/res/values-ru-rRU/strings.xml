@@ -149,7 +149,7 @@
     <string name="msg_channel_name">Название канала</string>
     <string name="msg_search">Поиск</string>
     <string name="msg_welcome_to_rocket_chat">Rocket.Chat</string>
-    <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
+    <string name="msg_team_communication">Командное общение</string>
     <string name="msg_login_with_email">Войти с помощью <b>e-mail</b></string>
     <string name="msg_create_account">Создать аккаунт</string>
     <string name="msg_continue_with_facebook">Войти с помощью <b>Facebook</b></string>
@@ -334,7 +334,7 @@
 
     <!-- User Details -->
     <string name="message">Сообщение</string>
-    <string name="timezone">Часовой поясe</string>
+    <string name="timezone">Часовой пояс</string>
     <string name="error_opening_dm">При создании этого диалога что-то пошло не так...</string>
     <string name="retry">Повторить</string>
 
