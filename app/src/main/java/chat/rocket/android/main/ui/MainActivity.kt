@@ -44,7 +44,7 @@ import javax.inject.Inject
 private const val CURRENT_STATE = "current_state"
 
 class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
-        HasSupportFragmentInjector {
+    HasSupportFragmentInjector {
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
     @Inject
@@ -105,13 +105,13 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> =
-            fragmentDispatchingAndroidInjector
+        fragmentDispatchingAndroidInjector
 
 
     override fun showUserStatus(userStatus: UserStatus) {
         headerLayout.apply {
             image_user_status.setImageDrawable(
-                    DrawableHelper.getUserStatusDrawable(userStatus, this.context)
+                DrawableHelper.getUserStatusDrawable(userStatus, this.context)
             )
         }
     }
@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             with(uiModel) {
                 if (userStatus != null) {
                     image_user_status.setImageDrawable(
-                            DrawableHelper.getUserStatusDrawable(userStatus, context)
+                        DrawableHelper.getUserStatusDrawable(userStatus, context)
                     )
                 }
                 if (userDisplayName != null) {
@@ -178,29 +178,29 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     override fun alertNotRecommendedVersion() {
         AlertDialog.Builder(this)
-                .setMessage(
-                        getString(
-                                R.string.msg_ver_not_recommended,
-                                BuildConfig.RECOMMENDED_SERVER_VERSION
-                        )
+            .setMessage(
+                getString(
+                    R.string.msg_ver_not_recommended,
+                    BuildConfig.RECOMMENDED_SERVER_VERSION
                 )
-                .setPositiveButton(R.string.msg_ok, null)
-                .create()
-                .show()
+            )
+            .setPositiveButton(R.string.msg_ok, null)
+            .create()
+            .show()
     }
 
     override fun blockAndAlertNotRequiredVersion() {
         AlertDialog.Builder(this)
-                .setMessage(
-                        getString(
-                                R.string.msg_ver_not_minimum,
-                                BuildConfig.REQUIRED_SERVER_VERSION
-                        )
+            .setMessage(
+                getString(
+                    R.string.msg_ver_not_minimum,
+                    BuildConfig.REQUIRED_SERVER_VERSION
                 )
-                .setOnDismissListener { presenter.logout() }
-                .setPositiveButton(R.string.msg_ok, null)
-                .create()
-                .show()
+            )
+            .setOnDismissListener { presenter.logout() }
+            .setPositiveButton(R.string.msg_ok, null)
+            .create()
+            .show()
     }
 
     override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
@@ -235,10 +235,10 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     fun showLogoutDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.title_are_you_sure)
-                .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout() }
-                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
-                .create()
-                .show()
+            .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout() }
+            .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
+            .create()
+            .show()
     }
 
     fun setAvatar(avatarUrl: String) {
@@ -254,7 +254,13 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     fun setCheckedNavDrawerItem(@IdRes item: Int) = view_navigation.setCheckedItem(item)
 
     override fun showProgress() {
-        progressDialog = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.msg_log_out), true, false)
+        progressDialog = ProgressDialog.show(
+            this,
+            getString(R.string.app_name),
+            getString(R.string.msg_log_out),
+            true,
+            false
+        )
     }
 
     override fun hideProgress() {
@@ -268,21 +274,27 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Choose Language")
         builder.setSingleChoiceItems(languages, -1) { dialog, which ->
-            if (which == 0) {
-                setLocale("en")
-                recreate()
-            } else if (which == 1) {
-                setLocale("hi")
-                recreate()
-            } else if (which == 2) {
-                setLocale("ja")
-                recreate()
-            } else if (which == 3) {
-                setLocale("ru")
-                recreate()
-            } else if (which == 4) {
-                setLocale("it")
-                recreate()
+            when(which){
+                0->{
+                    setLocale("en")
+                    recreate()
+                }
+                1->{
+                    setLocale("hi")
+                    recreate()
+                }
+                2->{
+                    setLocale("ja")
+                    recreate()
+                }
+                3->{
+                    setLocale("ru")
+                    recreate()
+                }
+                4->{
+                    setLocale("it")
+                    recreate()
+                }
             }
             dialog.dismiss()
         }
