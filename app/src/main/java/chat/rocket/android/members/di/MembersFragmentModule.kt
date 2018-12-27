@@ -22,7 +22,7 @@ class MembersFragmentModule {
 
     @Provides
     @PerFragment
-    fun provideChatRoomNavigator(activity: ChatDetailsActivity) = MembersNavigator(activity)
+    fun provideMembersNavigator(activity: ChatDetailsActivity) = MembersNavigator(activity)
 
     @Provides
     @PerFragment

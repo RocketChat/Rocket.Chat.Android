@@ -38,14 +38,14 @@ import chat.rocket.android.server.ui.ChangeServerActivity
 import chat.rocket.android.settings.di.SettingsFragmentProvider
 import chat.rocket.android.settings.password.di.PasswordFragmentProvider
 import chat.rocket.android.settings.password.ui.PasswordActivity
-import chat.rocket.android.userdetails.di.UserDetailsModule
-import chat.rocket.android.userdetails.ui.UserDetailsActivity
+import chat.rocket.android.userdetails.di.UserDetailsFragmentProvider
 import chat.rocket.android.webview.adminpanel.di.AdminPanelWebViewFragmentProvider
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class ActivityBuilder {
+
     @PerActivity
     @ContributesAndroidInjector(
         modules = [AuthenticationModule::class,
@@ -77,9 +77,9 @@ abstract class ActivityBuilder {
 
     @PerActivity
     @ContributesAndroidInjector(
-        modules = [
-            ChatRoomModule::class,
-            ChatRoomFragmentProvider::class
+        modules = [ChatRoomModule::class,
+            ChatRoomFragmentProvider::class,
+            UserDetailsFragmentProvider::class
         ]
     )
     abstract fun bindChatRoomActivity(): ChatRoomActivity
@@ -113,8 +113,4 @@ abstract class ActivityBuilder {
     @PerActivity
     @ContributesAndroidInjector(modules = [DrawModule::class])
     abstract fun bindDrawingActivity(): DrawingActivity
-
-    @PerActivity
-    @ContributesAndroidInjector(modules = [UserDetailsModule::class])
-    abstract fun bindUserDetailsActivity(): UserDetailsActivity
 }

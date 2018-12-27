@@ -331,10 +331,7 @@
     <string name="message_room_changed_privacy">Il tipo di stanza è cambiato in: %1$s da %2$s</string>
 
     <!-- User Details -->
-    <string name="message">Messaggio</string>
     <string name="timezone">Fuso Orario</string>
-    <string name="error_opening_dm">È successo qualcosa di sbagliato durante la creazione di questa conversazione...</string>
-    <string name="retry">Riprova</string>
 
     <!-- Report -->
     <string name="submit">Invia</string>
