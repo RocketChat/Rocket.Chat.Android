@@ -87,66 +87,84 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     implementation project(':player')
     implementation project(':emoji')
     implementation project(':draw')
     implementation project(':util')
     implementation project(':core')
     implementation project(':suggestions')
+
     implementation libraries.kotlin
     implementation libraries.coroutines
     implementation libraries.coroutinesAndroid
+
     implementation libraries.appCompat
     implementation libraries.recyclerview
     implementation libraries.constraintlayout
     implementation libraries.cardview
     implementation libraries.browser
+
     implementation libraries.androidKtx
     implementation libraries.fragmentsKtx
+
     implementation libraries.dagger
     implementation libraries.daggerSupport
     kapt libraries.daggerProcessor
     kapt libraries.daggerAndroidApt
+
     implementation libraries.flexbox
     implementation libraries.material
+
     implementation libraries.room
     kapt libraries.roomProcessor
     implementation libraries.lifecycleExtensions
     kapt libraries.lifecycleCompiler
     implementation libraries.viewmodelKtx
     implementation libraries.workmanager
+
     implementation libraries.rxKotlin
     implementation libraries.rxAndroid
+
     implementation libraries.moshi
     implementation libraries.okhttp
     implementation libraries.okhttpLogger
+
     implementation libraries.timber
     implementation libraries.threeTenABP
+
     implementation libraries.fresco
     api libraries.frescoOkHttp
     implementation libraries.frescoAnimatedGif
     implementation libraries.frescoWebP
     implementation libraries.frescoAnimatedWebP
+
     implementation libraries.glide
+
     kapt libraries.kotshiCompiler
     implementation libraries.kotshiApi
+
     implementation libraries.frescoImageViewer
+
     implementation libraries.markwon
+
     implementation libraries.aVLoadingIndicatorView
+
     implementation libraries.livedataKtx
+
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
     // Proprietary libraries
     playImplementation libraries.fcm
     playImplementation libraries.firebaseAnalytics
     playImplementation libraries.playServicesAuth
     playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') { transitive = true }
     playImplementation('com.crashlytics.sdk.android:answers:1.4.3@aar') { transitive = true }
+
     testImplementation libraries.junit
     testImplementation libraries.truth
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoIntents
-    implementation files('libs/common-54676f5.jar')
-    implementation files('libs/core-54676f5.jar')
 }
 
 kotlin {
