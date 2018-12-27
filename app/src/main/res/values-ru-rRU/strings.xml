@@ -149,7 +149,7 @@
     <string name="msg_channel_name">Название канала</string>
     <string name="msg_search">Поиск</string>
     <string name="msg_welcome_to_rocket_chat">Rocket.Chat</string>
-    <string name="msg_team_communication">Чат с открытым исходным кодом</string>
+    <string name="msg_team_communication">Командное общение</string>
     <string name="msg_login_with_email">Войти с помощью <b>e-mail</b></string>
     <string name="msg_create_account">Создать аккаунт</string>
     <string name="msg_continue_with_facebook">Войти с помощью <b>Facebook</b></string>
@@ -190,7 +190,7 @@
     <string name="msg_channel_created_successfully">Канал создан успешно</string>
 
     <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Отслеживание Analytics</string>
+    <string name="msg_analytics_tracking">Отслеживание аналитики</string>
     <string name="msg_send_analytics_tracking">Отправлять анонимную статистику для улучшения приложения.</string>
     <string name="msg_do_not_send_analytics_tracking">Не отправлять анонимную статистику для улучшения приложения</string>
     <string name="msg_not_applicable_since_it_is_a_foss_version">Не применимо, так как это FOSS версия</string>
@@ -307,13 +307,12 @@
     <string name="alert_title_default_skin_tone">Тон кожи по умолчанию</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">Сортировать</string>
+    <string name="msg_sort">Сортировать</string>
     <string name="dialog_sort_title">Сортировать по</string>
     <string name="dialog_sort_by_alphabet">По алфавиту</string>
     <string name="dialog_sort_by_activity">По активности</string>
     <string name="dialog_group_by_type">Группировать по типу</string>
     <string name="dialog_group_favourites">Группировать избранное</string>
-    <string name="dialog_button_done">Ок</string>
     <string name="chatroom_header">Заголовок</string>
 
     <!--ChatRooms Headers-->
@@ -335,7 +334,7 @@
 
     <!-- User Details -->
     <string name="message">Сообщение</string>
-    <string name="timezone">Часовой поясe</string>
+    <string name="timezone">Часовой пояс</string>
     <string name="error_opening_dm">При создании этого диалога что-то пошло не так...</string>
     <string name="retry">Повторить</string>
 
