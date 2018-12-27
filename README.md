@@ -22,6 +22,7 @@ This repository contains all the code related to the Android native application 
 
 - This version requires the [Kotlin SDK](https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK) for Rocket.Chat. Clone the Kotlin SDK in by running `git clone https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK.git`.
 - First, a build is required for the SDK, so that required jar files are generated. Make sure that the android repository and the kotlin sdk have the same immediate parent directory. Change the current directory to `Rocket.Chat.Android/app` and run the `build-sdk.sh` which will result in creating of the required jar file `core*.jar` and `common*.jar` in `Rocket.Chat.Android/app/libs`,by the following steps in your terminal window:
+**Note:** *To have Java 8 as default java for the system(Project won't build for Java > 8).*
 
 ```
 cd Rocket.Chat.Android/app
