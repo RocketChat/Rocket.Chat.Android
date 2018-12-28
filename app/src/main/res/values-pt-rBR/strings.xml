@@ -208,7 +208,7 @@
     <string name="message_pinned">Fixou uma mensagem:</string>
     <string name="message_muted">Usuário %1$s foi silenciado por %2$s</string>
     <string name="message_unmuted">Usuário %1$s saiu do modo silenciado por %2$s</string>
-    <string name="message_role_add">%3$s colocou o estatuto de %2$s a %1$s</string>
+    <string name="message_role_add">%3$s deu estatuto de %2$s a %1$s</string>
     <string name="message_role_removed">%3$s removeu o estatuto de %2$s de %1$s</string>
     <string name="message_credentials_saved_successfully">Credenciais salvas com sucesso</string>
 
