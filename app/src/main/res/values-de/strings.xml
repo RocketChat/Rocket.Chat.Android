@@ -164,7 +164,7 @@
     <string name="msg_permalink_copied">Permanenter Link kopiert</string>
 
     <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Google Analytics verfolgung</string>
+    <string name="msg_analytics_tracking">Daten für Analysezwecke</string>
     <string name="msg_send_analytics_tracking">Anonyme Statistiken senden um diese App weiter zu verbessern</string>
     <string name="msg_do_not_send_analytics_tracking">KEINE anonymen Statistiken senden um diese App weiter zu verbessern</string>
     <string name="msg_not_applicable_since_it_is_a_foss_version">Nicht anwendbar, da es sich um eine FOSS version handelt</string>
