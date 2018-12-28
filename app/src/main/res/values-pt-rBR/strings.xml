@@ -257,7 +257,7 @@
 
     <!-- Favorite Messages -->
     <string name="title_favorite_messages">Mensagens Favoritas</string>
-    <string name="no_favorite_messages">Nenhuma messagem favorita</string>
+    <string name="no_favorite_messages">Nenhuma mensagem favorita</string>
     <string name="no_favorite_description">Todas mensagens favoritas\naparecerão aqui</string>
 
     <!-- Files -->
