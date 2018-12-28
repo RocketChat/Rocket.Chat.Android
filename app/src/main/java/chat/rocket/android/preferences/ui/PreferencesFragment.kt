@@ -1,5 +1,6 @@
 package chat.rocket.android.preferences.ui
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,15 +16,36 @@ import chat.rocket.android.preferences.presentation.PreferencesView
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_preferences.*
+import kotlinx.android.synthetic.main.physical_keyboard_config_dialog.view.*
 import javax.inject.Inject
 
 internal const val TAG_PREFERENCES_FRAGMENT = "PreferencesFragment"
 
 class PreferencesFragment : Fragment(), PreferencesView {
+
     @Inject
     lateinit var presenter: PreferencesPresenter
     @Inject
     lateinit var analyticsManager: AnalyticsManager
+
+    private val physicalKeyboardDialog by lazy(LazyThreadSafetyMode.NONE) {
+        val dialogLayout = layoutInflater.inflate(R.layout.physical_keyboard_config_dialog, null)
+        dialogLayout.radio_physical_keyboard.setOnCheckedChangeListener { _, checkedId ->
+            presenter.onPhysicalKeyboardRadioChange(checkedId)
+        }
+        dialogLayout.radio_physical_keyboard.check(presenter.getPhysicalKeyboardRadioId())
+        AlertDialog.Builder(context)
+            .setTitle(R.string.physical_keyboard_preference_title)
+            .setPositiveButton(R.string.msg_ok) { dialog, _ ->
+                presenter.onPhysicalKeyboardDialogOkClicked()
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.msg_cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setView(dialogLayout)
+            .create()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +106,16 @@ class PreferencesFragment : Fragment(), PreferencesView {
                 presenter.disableAnalyticsTracking()
             }
         }
+        physical_keyboard_root.setOnClickListener {
+            physicalKeyboardDialog.show()
+        }
+    }
+
+    override fun onDestroyView() {
+        if (physicalKeyboardDialog.isShowing) {
+            physicalKeyboardDialog.dismiss()
+        }
+        super.onDestroyView()
     }
 
     companion object {

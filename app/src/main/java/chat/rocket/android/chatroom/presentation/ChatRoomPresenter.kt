@@ -2,6 +2,7 @@ package chat.rocket.android.chatroom.presentation
 
 import android.graphics.Bitmap
 import android.net.Uri
+import android.view.KeyEvent
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.SubscriptionTypeEvent
@@ -20,9 +21,11 @@ import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.emoji.EmojiRepository
+import chat.rocket.android.emoji.PhysicalKeyboardConfig
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.android.preferences.interactor.PhysicalKeyboardConfigInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.JobSchedulerInteractor
@@ -103,10 +106,12 @@ class ChatRoomPresenter @Inject constructor(
     private val jobSchedulerInteractor: JobSchedulerInteractor,
     private val messageHelper: MessageHelper,
     private val dbManager: DatabaseManager,
+    private val physicalKeyboardConfigInteractor: PhysicalKeyboardConfigInteractor,
     getSettingsInteractor: GetSettingsInteractor,
     serverInteractor: GetCurrentServerInteractor,
     factory: ConnectionManagerFactory
 ) {
+
     private val currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
@@ -1301,6 +1306,7 @@ class ChatRoomPresenter @Inject constructor(
     fun clearDraftMessage() {
         localRepository.clear(draftKey)
     }
+
     /**
      * Get unfinished message from local repository, when user left chat room without
      * sending a message and now the user is back.
@@ -1310,4 +1316,36 @@ class ChatRoomPresenter @Inject constructor(
     fun getDraftUnfinishedMessage(): String? {
         return localRepository.get(draftKey)
     }
+
+    fun onKeyEvent(keyCode: Int, keyEvent: KeyEvent): Boolean {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_ENTER -> {
+                when (physicalKeyboardConfigInteractor.getConfig()) {
+                    is PhysicalKeyboardConfig.Enter -> {
+                        if (!keyEvent.isShiftPressed && !keyEvent.isCtrlPressed) {
+                            view.sendMessage()
+                            true
+                        } else {
+                            false
+                        }
+                    }
+                    is PhysicalKeyboardConfig.EnterPlusControl -> {
+                        if (keyEvent.isCtrlPressed) {
+                            view.sendMessage()
+                        }
+                        true
+                    }
+                    is PhysicalKeyboardConfig.EnterPlusShift -> {
+                        if (keyEvent.isShiftPressed) {
+                            view.sendMessage()
+                        }
+                        true
+                    }
+                    else -> false
+                }
+            }
+            else -> false
+        }
+    }
+
 }

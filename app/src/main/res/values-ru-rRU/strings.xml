@@ -342,4 +342,10 @@
     <string name="submit">Отправить</string>
     <string name="required">*требуется</string>
     <string name="report_sent">Ваша жалоба была отправлена!</string>
+
+    <!-- Physical Keyboard Preferences -->
+    <string name="dialog_physical_keyboard_disable">запрещать</string>
+    <string name="physical_keyboard_preference_title">Физическая клавиатура</string>
+    <string name="physical_keyboard_preference_description">Конфигурация для отправки сообщения с физической клавиатуры</string>
+
 </resources>

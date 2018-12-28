@@ -340,4 +340,10 @@
     <string name="submit">Invia</string>
     <string name="required">*necessario</string>
     <string name="report_sent">Il tuo resoconto è stato inviato!</string>
+
+    <!-- Physical Keyboard Preferences -->
+    <string name="dialog_physical_keyboard_disable">Disattivare</string>
+    <string name="physical_keyboard_preference_title">Tastiera fisica</string>
+    <string name="physical_keyboard_preference_description">Configurazione per l\'invio di un messaggio con una tastiera fisica</string>
+
 </resources>

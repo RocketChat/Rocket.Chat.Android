@@ -9,7 +9,6 @@ import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 import chat.rocket.core.internal.realtime.socket.model.State
-import chat.rocket.core.model.ChatRoom
 
 interface ChatRoomView : LoadingView, MessageView {
 
@@ -41,6 +40,8 @@ interface ChatRoomView : LoadingView, MessageView {
      * @param text The text to send.
      */
     fun sendMessage(text: String)
+
+    fun sendMessage()
 
     /**
      * Shows the username(s) of the user(s) who is/are typing in the chat room.

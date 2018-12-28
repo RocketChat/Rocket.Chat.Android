@@ -347,5 +347,11 @@
     <!-- Report -->
     <string name="submit">Submit</string> <!--TODO - Add proper translation-->
     <string name="required">*required</string> <!--TODO - Add proper translation-->
-    <string name="report_sent">Your report has been sent!</string> <!--TODO - Add proper translation-->
+    <string name="report_sent">Your report has been sent!</string>
+
+    <!-- Physical Keyboard Preferences -->
+    <string name="dialog_physical_keyboard_disable">無効にする</string>
+    <string name="physical_keyboard_preference_title">物理キーボード</string>
+    <string name="physical_keyboard_preference_description">物理キーボードでメッセージを送信するための設定</string>
+
 </resources>

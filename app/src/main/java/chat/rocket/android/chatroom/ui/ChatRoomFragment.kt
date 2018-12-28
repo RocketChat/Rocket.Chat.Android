@@ -315,6 +315,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         text_message.addTextChangedListener(EmojiKeyboardPopup.EmojiTextWatcher(text_message))
+        text_message.setOnKeyListener { _, keyCode, event -> presenter.onKeyEvent(keyCode, event) }
     }
 
     override fun onDestroyView() {
@@ -462,7 +463,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-
     override fun sendMessage(text: String) {
         ui {
             if (!text.isBlank()) {
@@ -473,6 +473,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }
             }
         }
+    }
+
+    override fun sendMessage() {
+        var textMessage = citation ?: ""
+        textMessage += text_message.textContent
+        sendMessage(textMessage)
     }
 
     override fun showTypingStatus(usernameList: List<String>) {
@@ -513,7 +519,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             text_message.isEnabled = true
         }
     }
-
 
     override fun clearMessageComposition(deleteMessage: Boolean) {
         ui {
@@ -866,9 +871,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
 
             button_send.setOnClickListener {
-                var textMessage = citation ?: ""
-                textMessage += text_message.textContent
-                sendMessage(textMessage)
+                sendMessage()
             }
 
             button_show_attachment_options.setOnClickListener {
