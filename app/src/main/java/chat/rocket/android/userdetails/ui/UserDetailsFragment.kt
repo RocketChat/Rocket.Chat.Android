@@ -10,6 +10,7 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
+import chat.rocket.android.emoji.internal.GlideApp
 import chat.rocket.android.userdetails.presentation.UserDetailsPresenter
 import chat.rocket.android.userdetails.presentation.UserDetailsView
 import chat.rocket.android.util.extensions.inflate
@@ -17,7 +18,12 @@ import chat.rocket.android.util.extensions.setLightStatusBar
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import dagger.android.support.AndroidSupportInjection
+import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_user_details.*
 import javax.inject.Inject
@@ -62,6 +68,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar()
+        setupListeners()
         presenter.loadUserDetails(userId)
 
         analyticsManager.logScreenView(ScreenViewEvent.UserDetails)
@@ -74,14 +81,17 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         status: String,
         utcOffset: String
     ) {
-        Glide.with(this)
-            .asBitmap()
-            .load(avatarUrl)
+        val requestBuilder = Glide.with(this).load(avatarUrl)
+
+        requestBuilder.apply(RequestOptions.bitmapTransform(MultiTransformation(BlurTransformation(), CenterCrop())))
+            .into(image_blur)
+
+        requestBuilder.apply(RequestOptions.bitmapTransform(RoundedCorners(14)))
             .into(image_avatar)
 
         text_name.text = name
         text_username.text = username
-        text_description_status.text = status
+        text_description_status.text = status.substring(0, 1).toUpperCase() + status.substring(1)
         text_description_timezone.text = utcOffset
 
         // We should also setup the user details listeners.
@@ -113,5 +123,9 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
             view?.let { setLightStatusBar(it) }
             toolbar.isVisible = false
         }
+    }
+
+    private fun setupListeners() {
+        image_arrow_back.setOnClickListener { activity?.onBackPressed() }
     }
 }
