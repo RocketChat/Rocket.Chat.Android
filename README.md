@@ -4,14 +4,16 @@
 
 [![CircleCI](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop.svg?style=shield)](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop) [![Build Status](https://travis-ci.org/RocketChat/Rocket.Chat.Android.svg?branch=develop)](https://travis-ci.org/RocketChat/Rocket.Chat.Android) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a81156a8682e4649994270d3670c3c83)](https://www.codacy.com/app/matheusjardimb/Rocket.Chat.Android) 
 
+## Get it from the stores
+
+[![](https://user-images.githubusercontent.com/551004/48210434-74c07100-e35e-11e8-8eee-3ba84ffa74d7.png)](https://play.google.com/store/apps/details?id=chat.rocket.android) [![](https://user-images.githubusercontent.com/551004/48210349-50649480-e35e-11e8-97d9-74a4331faf3a.png)](https://f-droid.org/en/packages/chat.rocket.android/)
+
 ## Description
 
 This repository contains all the code related to the Android native application of [Rocket.Chat](https://github.com/RocketChat/Rocket.Chat/#about-rocketchat). To send new pull-requests, always use the branch `develop` as base and open an issue with the description of what you want/need to accomplish, if the issue wasn't created yet.
 
-
 ## How to build
 
-- You need to download the latest [Android Studio Preview](https://developer.android.com/studio/preview/) version since the stable IDE version does not support the [JetPack](https://developer.android.com/jetpack/) that is being used on this application. 
 - Make sure that you have the latest **gradle** and the **android plugin** versions installed. Go to `File > Project Structure > Project` and make sure that you have the latest versions installed. Refer [this](https://developer.android.com/studio/releases/gradle-plugin.html#updating-gradle) to see the compatible versions.
 - Kotlin is already configured in the project. To check, go to `Tools > Kotlin > Configure Kotlin in project`. A message saying kotlin is already configured in the project pops up. You can update kotlin to the latest version by going to `Tools > Kotlin > Configure Kotlin updates` and download the latest version of kotlin.
 

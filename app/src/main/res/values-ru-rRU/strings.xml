@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Ваш сервер</string>
     <string name="title_log_in">Войти</string>
+    <string name="title_share_the_app">добавить приложение</string>
     <string name="title_register_username">Зарегистрировать имя</string>
     <string name="title_reset_password">Сброс пароля</string>
     <string name="title_sign_up">Зарегистрироваться</string>
@@ -15,13 +16,18 @@
     <string name="title_settings">Настройки</string>
     <string name="title_preferences">Персональные</string>
     <string name="title_change_password">Изменить пароль</string>
+    <string name="title_rate_us">оцените нас</string>
     <string name="title_admin_panel">Панель админа</string>
     <string name="title_password">Изменить пароль</string>
     <string name="title_update_profile">Обновить профиль</string>
     <string name="title_about">О программе</string>
     <string name="title_create_channel">Создать новый канал</string>
-    <string name="title_confirmation">Вы действительно хотите выйти?</string>
-
+    <string name="title_channel_details">О канале</string>
+    <string name="title_topic">Тема</string>
+    <string name="title_announcement">Объявление</string>
+    <string name="title_description">Описание</string>
+    <string name="title_licence">Лицензия</string>
+    <string name="title_are_you_sure">Вы уверены?</string>
 
     <!-- Actions -->
     <string name="action_connect">Подключиться</string>
@@ -34,8 +40,7 @@
     <string name="action_create_channel">Создать канал</string>
     <string name="action_create">Создать</string>
     <string name="action_logout">Выйти</string>
-    <string name="action_stay">Остаться</string>
-    <string name="action_files">Файлы</string>
+    <string name="action_attach_a_files">Прикрепить файл</string>
     <string name="action_confirm_password">Подтверждение изменения пароля</string>
     <string name="action_join_chat">Присоединиться к чату</string>
     <string name="action_add_account">Добавить аккаунт</string>
@@ -46,24 +51,32 @@
     <string name="action_drawing">Рисунок</string>
     <string name="action_save_to_gallery">Сохранить в галерею</string>
     <string name="action_select_photo_from_gallery">Выбрать из галереи</string>
-    <string name="action_take_photo">Сделать снимок</string>
+    <string name="action_take_a_photo">Сделать снимок</string>
     <string name="action_reset_avatar">Восстановить аватар</string>
     <string name="action_connect_server">Соединиться с сервером</string>
     <string name="action_join_community">Сообщество</string>
     <string name="action_create_server">Создать новый сервер</string>
     <string name="action_register">Зарегистрировать</string>
     <string name="action_confirm">Подтвердить</string>
+    <string name="action_delete_account">Удалить аккаунт</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_preferences">Персональные</item>
         <item name="item_password">Изменить пароль</item>
-        <item name="item_password">О программе</item>
+        <item name="change_language">Change Language </item><!-- TODO Add translation -->
+        <item name="item_share_app">Поделиться приложением</item>
+        <item name="item_rate_us">Оцените нас</item>
+        <item name="item_contact_us">Связаться с нами</item>
+        <item name="item_licence">Лицензия</item>
+        <item name="item_about">О программе</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Произошла ошибка, повторите попытку.</string>
     <string name="msg_no_data_to_display">Нет данных для отображения</string>
+    <string name="msg_check_this_out">Проверь это</string>
+    <string name="msg_share_using">Совместное использование</string>
     <string name="msg_profile_update_successfully">Профиль успешно обновлен</string>
     <string name="msg_username">имя пользователя</string>
     <string name="msg_username_or_email">имя пользователя или e-mail</string>
@@ -137,7 +150,7 @@
     <string name="msg_channel_name">Название канала</string>
     <string name="msg_search">Поиск</string>
     <string name="msg_welcome_to_rocket_chat">Rocket.Chat</string>
-    <string name="msg_team_communication">Чат с открытым исходным кодом</string>
+    <string name="msg_team_communication">Командное общение</string>
     <string name="msg_login_with_email">Войти с помощью <b>e-mail</b></string>
     <string name="msg_create_account">Создать аккаунт</string>
     <string name="msg_continue_with_facebook">Войти с помощью <b>Facebook</b></string>
@@ -151,6 +164,19 @@
     <string name="msg_view_more">больше</string>
     <string name="msg_view_less">меньше</string>
     <string name="msg_permalink_copied">Ссылка скопирована</string>
+    <string name="msg_no_topic">Нет темы</string>
+    <string name="msg_no_announcement">Нет объявления</string>
+    <string name="msg_no_description">Нет описания</string>
+    <string name="msg_send_email">Отправить e-mail</string>
+    <string name="msg_android_app_support">Поддержка Android-приложения</string>
+    <string name="msg_muted_on_this_channel">Вы лишены дара речи на этом канале</string>
+    <string name="msg_unable_to_update_password">Невозможно обновить пароль. Ошибка: %1$s</string>
+    <string name="msg_password_updated_successfully">Пароль успешно обновлен</string>
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s реагирует с %2$s</item>
+        <item quantity="few">%1$s реагируют с %2$s</item>
+        <item quantity="many">%1$s реагируют с %2$s</item>
+    </plurals>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>
@@ -165,7 +191,7 @@
     <string name="msg_channel_created_successfully">Канал создан успешно</string>
 
     <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Отслеживание Analytics</string>
+    <string name="msg_analytics_tracking">Отслеживание аналитики</string>
     <string name="msg_send_analytics_tracking">Отправлять анонимную статистику для улучшения приложения.</string>
     <string name="msg_do_not_send_analytics_tracking">Не отправлять анонимную статистику для улучшения приложения</string>
     <string name="msg_not_applicable_since_it_is_a_foss_version">Не применимо, так как это FOSS версия</string>
@@ -200,6 +226,7 @@
     <string name="action_title_editing">Редактирование сообщения</string>
     <string name="action_msg_add_reaction">Отреагировать</string>
     <string name="action_msg_copy_permalink">Копировать ссылку</string>
+    <string name="action_msg_report">Пожаловаться</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редактирование запрещено</string>
@@ -281,13 +308,12 @@
     <string name="alert_title_default_skin_tone">Тон кожи по умолчанию</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">Сортировать</string>
+    <string name="msg_sort">Сортировать</string>
     <string name="dialog_sort_title">Сортировать по</string>
     <string name="dialog_sort_by_alphabet">По алфавиту</string>
     <string name="dialog_sort_by_activity">По активности</string>
     <string name="dialog_group_by_type">Группировать по типу</string>
     <string name="dialog_group_favourites">Группировать избранное</string>
-    <string name="dialog_button_done">Ок</string>
     <string name="chatroom_header">Заголовок</string>
 
     <!--ChatRooms Headers-->
@@ -306,4 +332,15 @@
     <string name="message_information_title">Информация о прочтении</string>
     <string name="msg_log_out">Выходим…</string>
     <string name="message_room_changed_privacy">Тип канала изменен на: %1$s пользователем %2$s</string>
+
+    <!-- User Details -->
+    <string name="message">Сообщение</string>
+    <string name="timezone">Часовой пояс</string>
+    <string name="error_opening_dm">При создании этого диалога что-то пошло не так...</string>
+    <string name="retry">Повторить</string>
+
+    <!-- Report -->
+    <string name="submit">Отправить</string>
+    <string name="required">*требуется</string>
+    <string name="report_sent">Ваша жалоба была отправлена!</string>
 </resources>

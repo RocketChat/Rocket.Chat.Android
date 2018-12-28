@@ -70,4 +70,10 @@ class AnalyticsManager @Inject constructor(
             analytics.forEach { it.logOpenAdmin() }
         }
     }
+
+    fun logResetPassword(resetPasswordSucceeded: Boolean) {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logResetPassword(resetPasswordSucceeded) }
+        }
+    }
 }

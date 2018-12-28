@@ -61,6 +61,10 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
                             reactionListener?.onReactionAdded(messageId, emoji)
                         }
                     }
+
+                    override fun onReactionLongClicked(shortname: String, isCustom: Boolean, url: String?, usernames: List<String>) {
+                        reactionListener?.onReactionLongClicked(shortname, isCustom,url, usernames)
+                    }
                 }
 
                 val context = itemView.context

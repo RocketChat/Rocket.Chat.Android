@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -22,12 +21,11 @@ import chat.rocket.android.emoji.internal.EmojiCategory
 import chat.rocket.android.emoji.internal.EmojiPagerAdapter
 import chat.rocket.android.emoji.internal.PREF_EMOJI_SKIN_TONE
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.dialog_skin_tone_chooser.view.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 
-
 class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow(context, view) {
-
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
     private lateinit var searchView: View
@@ -77,59 +75,50 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
     }
 
     private fun showSkinToneChooser() {
-        val view = LayoutInflater.from(context).inflate(R.layout.color_select_popup, null)
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_skin_tone_chooser, null)
         val dialog = AlertDialog.Builder(context, R.style.Dialog)
             .setView(view)
             .setTitle(context.getString(R.string.alert_title_default_skin_tone))
             .setCancelable(true)
             .create()
 
-        view.findViewById<TextView>(R.id.default_tone_text).also {
-            it.text = EmojiParser.parse(context, it.text)
-        }.setOnClickListener {
-            dialog.dismiss()
-            changeSkinTone(Fitzpatrick.Default)
+        with(view) {
+            image_view_default_tone.setOnClickListener {
+                dialog.dismiss()
+                changeSkinTone(Fitzpatrick.Default)
+            }
+
+            image_view_light_tone.setOnClickListener {
+                dialog.dismiss()
+                changeSkinTone(Fitzpatrick.LightTone)
+            }
+
+            image_view_medium_light.setOnClickListener {
+                dialog.dismiss()
+                changeSkinTone(Fitzpatrick.MediumLightTone)
+            }
+
+            image_view_medium_tone.setOnClickListener {
+                dialog.dismiss()
+                changeSkinTone(Fitzpatrick.MediumTone)
+            }
+
+            image_view_medium_dark_tone.setOnClickListener {
+                dialog.dismiss()
+                changeSkinTone(Fitzpatrick.MediumDarkTone)
+            }
+
+            image_view_dark_tone.setOnClickListener {
+                dialog.dismiss()
+                changeSkinTone(Fitzpatrick.DarkTone)
+            }
         }
 
-        view.findViewById<TextView>(R.id.light_tone_text).also {
-            it.text = EmojiParser.parse(context, it.text)
-        }.setOnClickListener {
-            dialog.dismiss()
-            changeSkinTone(Fitzpatrick.LightTone)
-        }
-
-        view.findViewById<TextView>(R.id.medium_light_text).also {
-            it.text = EmojiParser.parse(context, it.text)
-        }.setOnClickListener {
-            dialog.dismiss()
-            changeSkinTone(Fitzpatrick.MediumLightTone)
-        }
-
-        view.findViewById<TextView>(R.id.medium_tone_text).also {
-            it.text = EmojiParser.parse(context, it.text)
-        }.setOnClickListener {
-            dialog.dismiss()
-            changeSkinTone(Fitzpatrick.MediumTone)
-        }
-
-        view.findViewById<TextView>(R.id.medium_dark_tone_text).also {
-            it.text = EmojiParser.parse(context, it.text)
-        }.setOnClickListener {
-            dialog.dismiss()
-            changeSkinTone(Fitzpatrick.MediumDarkTone)
-        }
-
-        view.findViewById<TextView>(R.id.dark_tone_text).also {
-            it.text = EmojiParser.parse(context, it.text)
-        }.setOnClickListener {
-            dialog.dismiss()
-            changeSkinTone(Fitzpatrick.DarkTone)
-        }
         dialog.show()
     }
 
     private fun changeSkinTone(tone: Fitzpatrick) {
-        val drawable = ContextCompat.getDrawable(context, R.drawable.color_change_circle)!!
+        val drawable = ContextCompat.getDrawable(context, R.drawable.bg_skin_tone)!!
         val wrappedDrawable = DrawableCompat.wrap(drawable)
         DrawableCompat.setTint(wrappedDrawable, getFitzpatrickColor(tone))
         (changeColorView as ImageView).setImageDrawable(wrappedDrawable)
@@ -147,7 +136,10 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
         return when (tone) {
             Fitzpatrick.Default -> ContextCompat.getColor(context, R.color.tone_default)
             Fitzpatrick.LightTone -> ContextCompat.getColor(context, R.color.tone_light)
-            Fitzpatrick.MediumLightTone -> ContextCompat.getColor(context, R.color.tone_medium_light)
+            Fitzpatrick.MediumLightTone -> ContextCompat.getColor(
+                context,
+                R.color.tone_medium_light
+            )
             Fitzpatrick.MediumTone -> ContextCompat.getColor(context, R.color.tone_medium)
             Fitzpatrick.MediumDarkTone -> ContextCompat.getColor(context, R.color.tone_medium_dark)
             Fitzpatrick.DarkTone -> ContextCompat.getColor(context, R.color.tone_dark)
@@ -160,7 +152,7 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
                 is EmojiKeyboardListener -> it
                 else -> {
                     val fragments = (it as AppCompatActivity).supportFragmentManager.fragments
-                    if (fragments.size == 0 || !(fragments[0] is EmojiKeyboardListener)) {
+                    if (fragments.size == 0 || fragments[0] !is EmojiKeyboardListener) {
                         // Since the app can arrive in an inconsistent state at this point, do not throw
 //                        throw IllegalStateException("activity/fragment should implement Listener interface")
                         null
@@ -199,7 +191,6 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
     }
 
     class EmojiTextWatcher(private val editor: EditText) : TextWatcher {
-
         @Volatile
         private var emojiToRemove = mutableListOf<EmojiTypefaceSpan>()
 

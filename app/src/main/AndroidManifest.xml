@@ -79,6 +79,11 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
+            android:name=".chatdetails.ui.ChatDetailsActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
+        <activity
             android:name=".chatinformation.ui.MessageInfoActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
@@ -87,6 +92,16 @@
         <activity
             android:name=".settings.password.ui.PasswordActivity"
             android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".userdetails.ui.UserDetailsActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateAlwaysHidden">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".chatroom.ui.ChatRoomActivity" />
+        </activity>
 
         <receiver
             android:name=".push.DirectReplyReceiver"
@@ -105,6 +120,15 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="12ac6e94f850aaffcdff52001af77ca415d06a43" />
-    </application>
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="chat.rocket.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
 </manifest>

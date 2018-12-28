@@ -27,7 +27,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.newSingleThreadContext
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
-import java.security.InvalidParameterException
+import java.lang.IllegalArgumentException
 import kotlin.coroutines.experimental.coroutineContext
 
 
@@ -171,6 +171,6 @@ fun Query.asSortingOrder(): ChatRoomsRepository.Order {
                 ChatRoomsRepository.Order.ACTIVITY
             }
         }
-        else -> throw InvalidParameterException("Should be ByName or ByActivity")
+        else -> throw IllegalArgumentException("Should be ByName or ByActivity")
     }
 }

@@ -12,7 +12,7 @@
     android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
     android:paddingBottom="@dimen/message_item_top_and_bottom_padding">
 
-    <Button
+    <android.widget.Button
         android:id="@+id/button_message_reply"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

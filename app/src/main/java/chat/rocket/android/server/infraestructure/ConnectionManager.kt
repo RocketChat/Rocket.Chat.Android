@@ -22,6 +22,7 @@ import chat.rocket.core.internal.realtime.unsubscribe
 import chat.rocket.core.internal.rest.chatRooms
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
+import chat.rocket.core.model.Room
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.channels.Channel
@@ -45,6 +46,7 @@ class ConnectionManager(
 
     private val roomMessagesChannels = LinkedHashMap<String, Channel<Message>>()
     private val userDataChannels = ArrayList<Channel<Myself>>()
+    private val roomsChannels = LinkedHashMap<String, Channel<Room>>()
     private val subscriptionIdMap = HashMap<String, String>()
 
     private var subscriptionId: String? = null
@@ -127,6 +129,18 @@ class ConnectionManager(
                 maxSize = 10) { batch ->
             Timber.d("processing Stream batch: ${batch.size} - $batch")
             dbManager.processChatRoomsBatch(batch)
+
+            batch.forEach {
+                //TODO - Do we need to handle Type.Removed and Type.Inserted here?
+                if (it.type == Type.Updated) {
+                    if (it.data is Room) {
+                        val room = it.data as Room
+                        roomsChannels[it.data.id]?.let { channel ->
+                            channel.offer(room)
+                        }
+                    }
+                }
+            }
         }
 
         val messagesActor = createBatchActor<Message>(messagesContext, parent = connectJob,
@@ -240,6 +254,14 @@ class ConnectionManager(
     fun addUserDataChannel(channel: Channel<Myself>) = userDataChannels.add(channel)
 
     fun removeUserDataChannel(channel: Channel<Myself>) = userDataChannels.remove(channel)
+
+    fun addRoomChannel(roomId: String, channel: Channel<Room>) {
+        roomsChannels[roomId] = channel
+    }
+
+    fun removeRoomChannel(roomId: String) {
+        roomsChannels.remove(roomId)
+    }
 
     fun subscribeRoomMessages(roomId: String, channel: Channel<Message>) {
         val oldSub = roomMessagesChannels.put(roomId, channel)
