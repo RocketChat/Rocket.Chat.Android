@@ -317,6 +317,7 @@
     <string name="dialog_sort_by_alphabet">Alfabetik</string>
     <string name="dialog_sort_by_activity">Aktiviteye Göre</string>
     <string name="dialog_group_by_type">Türüne göre grupla</string>
+    <string name="dialog_unread_on_top">Üstte okunmadı</string>
     <string name="dialog_group_favourites">Favorileri grupla</string>
     <string name="chatroom_header">Başlık</string>
 

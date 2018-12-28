@@ -36,5 +36,14 @@
         android:text="@string/dialog_group_by_type"
         android:textSize="18sp" />
 
+    <CheckBox
+        android:id="@+id/checkbox_unread_on_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:padding="8dp"
+        android:text="@string/dialog_unread_on_top"
+        android:textSize="18sp" />
+
     <!--TODO Add checkbox for "Group favourites after sdk support"-->
 </LinearLayout>

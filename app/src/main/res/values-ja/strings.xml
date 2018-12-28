@@ -317,6 +317,7 @@
     <string name="dialog_sort_by_alphabet">アルファベット順</string>
     <string name="dialog_sort_by_activity">アクティビティ順</string>
     <string name="dialog_group_by_type">グループ別</string>
+    <string name="dialog_unread_on_top">上で未読</string>
     <string name="dialog_group_favourites">お気に入りのグループ</string>
     <string name="chatroom_header">ヘッダ</string>
 

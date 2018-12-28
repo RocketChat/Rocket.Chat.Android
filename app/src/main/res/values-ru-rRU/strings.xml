@@ -312,6 +312,7 @@
     <string name="dialog_sort_by_alphabet">По алфавиту</string>
     <string name="dialog_sort_by_activity">По активности</string>
     <string name="dialog_group_by_type">Группировать по типу</string>
+    <string name="dialog_unread_on_top">Непрочитано сверху</string>
     <string name="dialog_group_favourites">Группировать избранное</string>
     <string name="chatroom_header">Заголовок</string>
 

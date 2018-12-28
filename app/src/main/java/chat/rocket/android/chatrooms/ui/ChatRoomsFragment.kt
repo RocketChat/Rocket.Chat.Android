@@ -205,10 +205,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 )
                 val groupByType =
                     SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
+                val unreadFirst =
+                    SharedPreferenceHelper.getBoolean(Constants.CHATROOM_UNREAD_ON_TOP, false)
 
                 val radioGroup = dialogLayout.findViewById<RadioGroup>(R.id.radio_group_sort)
                 val groupByTypeCheckBox =
                     dialogLayout.findViewById<CheckBox>(R.id.checkbox_group_by_type)
+                val unreadFirstCheckBox =
+                    dialogLayout.findViewById<CheckBox>(R.id.checkbox_unread_on_top)
 
                 radioGroup.check(
                     when (sortType) {
@@ -236,6 +240,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     )
                 }
 
+                unreadFirstCheckBox.isChecked = unreadFirst
+                unreadFirstCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                    SharedPreferenceHelper.putBoolean(
+                            Constants.CHATROOM_UNREAD_ON_TOP,
+                            isChecked
+                    )
+                }
+
                 AlertDialog.Builder(context)
                     .setTitle(R.string.dialog_sort_title)
                     .setView(dialogLayout)
@@ -255,13 +267,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             ChatRoomsSortOrder.ACTIVITY
         )
         val grouped = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
+        val unreadFirst = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_UNREAD_ON_TOP, false)
 
         val query = when (sortType) {
             ChatRoomsSortOrder.ALPHABETICAL -> {
-                Query.ByName(grouped)
+                Query.ByName(grouped,unreadFirst)
             }
             ChatRoomsSortOrder.ACTIVITY -> {
-                Query.ByActivity(grouped)
+                Query.ByActivity(grouped,unreadFirst)
             }
             else -> Query.ByActivity()
         }

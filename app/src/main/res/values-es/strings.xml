@@ -310,6 +310,7 @@
     <string name="dialog_sort_by_alphabet">Alfabético</string>
     <string name="dialog_sort_by_activity">Actividad</string>
     <string name="dialog_group_by_type">Agrupar por tipo</string>
+    <string name="dialog_unread_on_top">Sin leer en la parte superior</string>
     <string name="dialog_group_favourites">Agrupar favoritos</string>
     <string name="chatroom_header">Cabezazo</string>
 

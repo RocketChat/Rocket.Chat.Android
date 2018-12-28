@@ -15,6 +15,10 @@ class ChatRoomsRepository @Inject constructor(private val dao: ChatRoomDao) {
             Order.GROUPED_ACTIVITY -> dao.getAllGrouped()
             Order.NAME -> dao.getAllAlphabetically()
             Order.GROUPED_NAME -> dao.getAllAlphabeticallyGrouped()
+            Order.UNREAD_ACTIVITY -> dao.getAllUnread()
+            Order.GROUPED_UNREAD_ACTIVITY -> dao.getAllUnreadGrouped()
+            Order.UNREAD_NAME -> dao.getAllUnreadAlphabetically()
+            Order.GROUPED_UNREAD_NAME -> dao.getAllUnreadAlphabeticallyGrouped()
         }
     }
 
@@ -28,8 +32,13 @@ class ChatRoomsRepository @Inject constructor(private val dao: ChatRoomDao) {
         GROUPED_ACTIVITY,
         NAME,
         GROUPED_NAME,
+        UNREAD_ACTIVITY,
+        GROUPED_UNREAD_ACTIVITY,
+        UNREAD_NAME,
+        GROUPED_UNREAD_NAME,
     }
 }
 
 fun ChatRoomsRepository.Order.isGrouped(): Boolean = this == ChatRoomsRepository.Order.GROUPED_ACTIVITY
-        || this == ChatRoomsRepository.Order.GROUPED_NAME
+        || this == ChatRoomsRepository.Order.GROUPED_NAME || this == ChatRoomsRepository.Order.GROUPED_UNREAD_ACTIVITY
+        || this == ChatRoomsRepository.Order.GROUPED_UNREAD_NAME

@@ -83,6 +83,54 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
         """)
     abstract fun getAllAlphabeticallyGrouped(): LiveData<List<ChatRoom>>
 
+    @Transaction
+    @Query("""
+        $BASE_QUERY
+        $FILTER_NOT_OPENED
+        ORDER BY
+            $UNREAD_ORDER,
+	        CASE
+		        WHEN lastMessageTimeStamp IS NOT NULL THEN lastMessageTimeStamp
+		        ELSE updatedAt
+	        END DESC
+        """)
+    abstract fun getAllUnread(): LiveData<List<ChatRoom>>
+
+    @Transaction
+    @Query("""
+        $BASE_QUERY
+        $FILTER_NOT_OPENED
+        ORDER BY
+            $TYPE_ORDER,
+            $UNREAD_ORDER,
+	        CASE
+		        WHEN lastMessageTimeStamp IS NOT NULL THEN lastMessageTimeStamp
+		        ELSE updatedAt
+	        END DESC
+        """)
+    abstract fun getAllUnreadGrouped(): LiveData<List<ChatRoom>>
+
+    @Transaction
+    @Query("""
+        $BASE_QUERY
+        $FILTER_NOT_OPENED
+        ORDER BY
+            $UNREAD_ORDER,
+            name
+        """)
+    abstract fun getAllUnreadAlphabetically(): LiveData<List<ChatRoom>>
+
+    @Transaction
+    @Query("""
+        $BASE_QUERY
+        $FILTER_NOT_OPENED
+        ORDER BY
+            $TYPE_ORDER,
+            $UNREAD_ORDER,
+            name
+        """)
+    abstract fun getAllUnreadAlphabeticallyGrouped(): LiveData<List<ChatRoom>>
+
     @Query("DELETE FROM chatrooms WHERE ID = :id")
     abstract fun delete(id: String)
 
@@ -137,6 +185,14 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
 		        WHEN type = 'd' THEN 3
 		        WHEN type = 'l' THEN 4
 		        ELSE 5
+	        END
+        """
+
+        const val UNREAD_ORDER = """
+            CASE
+		        WHEN unread > 0 THEN 1
+		        WHEN alert THEN 1
+                ELSE 2
 	        END
         """
     }

@@ -4,6 +4,7 @@ object Constants {
     const val CHATROOM_SORT_TYPE_KEY: String = "chatroom_sort_type"
     const val CHATROOM_GROUP_BY_TYPE_KEY: String = "chatroom_group_by_type"
     const val CHATROOM_GROUP_FAVOURITES_KEY: String = "chatroom_group_favourites"
+    const val CHATROOM_UNREAD_ON_TOP: String = "chatroom_unread_on_top"
 
     //Used to sort chat rooms
     const val CHATROOM_CHANNEL = 0

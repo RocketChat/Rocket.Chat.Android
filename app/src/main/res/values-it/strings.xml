@@ -311,6 +311,7 @@
     <string name="dialog_sort_by_alphabet">Alfabeto</string>
     <string name="dialog_sort_by_activity">Attività</string>
     <string name="dialog_group_by_type">Raggruppa per tipo</string>
+    <string name="dialog_unread_on_top">Non letti sopra</string>
     <string name="dialog_group_favourites">Raggruppa preferiti</string>
     <string name="chatroom_header">Intestazione</string>
 

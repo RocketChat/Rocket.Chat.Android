@@ -311,6 +311,7 @@
     <string name="dialog_sort_by_alphabet">Alphabetisch</string>
     <string name="dialog_sort_by_activity">Aktivität</string>
     <string name="dialog_group_by_type">Räume nach Typ</string>
+    <string name="dialog_unread_on_top">Ungelesen an der Spitze</string>
     <string name="dialog_group_favourites">Räume nach Favoriten</string>
     <string name="chatroom_header">Kopf</string>
 

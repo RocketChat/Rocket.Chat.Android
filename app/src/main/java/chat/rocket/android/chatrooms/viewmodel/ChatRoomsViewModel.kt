@@ -140,8 +140,8 @@ sealed class LoadingState {
 }
 
 sealed class Query {
-    data class ByActivity(val grouped: Boolean = false) : Query()
-    data class ByName(val grouped: Boolean = false) : Query()
+    data class ByActivity(val grouped: Boolean = false, val unreadFirst: Boolean = false) : Query()
+    data class ByName(val grouped: Boolean = false, val unreadFirst: Boolean = false) : Query()
     data class Search(val query: String) : Query()
 }
 
@@ -158,17 +158,33 @@ fun Query.isGrouped(): Boolean {
 fun Query.asSortingOrder(): ChatRoomsRepository.Order {
     return when(this) {
         is Query.ByName -> {
-            if (grouped) {
-                ChatRoomsRepository.Order.GROUPED_NAME
+            if (!unreadFirst) {
+                if (grouped) {
+                    ChatRoomsRepository.Order.GROUPED_NAME
+                } else {
+                    ChatRoomsRepository.Order.NAME
+                }
             } else {
-                ChatRoomsRepository.Order.NAME
+                if (grouped) {
+                    ChatRoomsRepository.Order.GROUPED_UNREAD_NAME
+                } else {
+                    ChatRoomsRepository.Order.UNREAD_NAME
+                }
             }
         }
         is Query.ByActivity -> {
-            if (grouped) {
-                ChatRoomsRepository.Order.GROUPED_ACTIVITY
+            if (!unreadFirst) {
+                if (grouped) {
+                    ChatRoomsRepository.Order.GROUPED_ACTIVITY
+                } else {
+                    ChatRoomsRepository.Order.ACTIVITY
+                }
             } else {
-                ChatRoomsRepository.Order.ACTIVITY
+                if (grouped) {
+                    ChatRoomsRepository.Order.GROUPED_UNREAD_ACTIVITY
+                } else {
+                    ChatRoomsRepository.Order.UNREAD_ACTIVITY
+                }
             }
         }
         else -> throw IllegalArgumentException("Should be ByName or ByActivity")
