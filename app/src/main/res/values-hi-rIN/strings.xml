@@ -1,0 +1,349 @@
+<resources>
+
+    <!-- Titles -->
+    <string name="title_sign_in_your_server">अपने सर्वर में साइन इन करें</string>
+    <string name="title_log_in">लॉग इन करें</string>
+    <string name="title_share_the_app">ऐप शेयर करे</string>
+    <string name="title_register_username">रजिस्टर उपयोगकर्ता नाम</string>
+    <string name="title_reset_password">पासवर्ड रीसेट करें</string>
+    <string name="title_sign_up">साइन अप करें</string>
+    <string name="title_authentication">प्रमाणीकरण</string>
+    <string name="title_legal_terms">कानूनी शर्तें</string>
+    <string name="title_chats">चैट</string>
+    <string name="title_profile">प्रोफाइल</string>
+    <string name="title_members">सदस्य</string>
+    <string name="title_counted_members">सदस्य (%d)</string>
+    <string name="title_settings">सेटिंग्स</string>
+    <string name="title_preferences">प्राथमिकताएँ</string>
+    <string name="title_change_password">पासवर्ड बदलें</string>
+    <string name="title_rate_us">हमें रेटिंग दें</string>
+    <string name="title_admin_panel">एडमिन पैनल</string>
+    <string name="title_password">पासवर्ड बदलें</string>
+    <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
+    <string name="title_about">परिचय</string>
+    <string name="title_create_channel">चैनल बनाएं</string>
+    <string name="title_licence">लाइसेंस</string>
+    <string name="title_are_you_sure">क्या आपको यकीन है?</string>
+    <string name="title_channel_details">चैनल विवरण</string>
+    <string name="title_topic">विषय</string>
+    <string name="title_announcement">घोषणा</string>
+    <string name="title_description">विवरण</string>
+
+    <!-- Actions -->
+    <string name="action_connect">जुडिये</string>
+    <string name="action_use_this_username">इस उपयोगकर्ता नाम का उपयोग करें</string>
+    <string name="action_terms_of_service">सेवा की शर्तें</string>
+    <string name="action_privacy_policy">गोपनीयता नीति</string>
+    <string name="action_search">खोजें</string>
+    <string name="action_update">अद्यतन करें</string>
+    <string name="action_settings">सेटिंग्स</string>
+    <string name="action_create_channel">चैनल बनाएं</string>
+    <string name="action_create">बनाएं</string>
+    <string name="action_logout">लोग आउट करें</string>
+    <string name="action_attach_a_files">एक फ़ाइल जोडो</string>
+    <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
+    <string name="action_join_chat">चैट में शामिल हों</string>
+    <string name="action_add_account">खाता जोड़ो</string>
+    <string name="action_online">ऑनलाइन</string>
+    <string name="action_away">दूर</string>
+    <string name="action_busy">व्यस्त</string>
+    <string name="action_invisible">अदृश्य</string>
+    <string name="action_save_to_gallery">गैलरी में सहेजें</string>
+    <string name="action_drawing">चित्रकारी</string>
+    <string name="action_select_photo_from_gallery">गैलरी से फोटो का चयन करें</string>
+    <string name="action_take_a_photo">फोटो खेचिये</string>
+    <string name="action_reset_avatar">अवतार रीसेट करें</string>
+    <string name="action_connect_server">सर्वर से कनेक्ट करें</string>
+    <string name="action_join_community">समुदाय में शामिल हों</string>
+    <string name="action_create_server">नया सर्वर बनाएं</string>
+    <string name="action_register">रजिस्टर</string>
+    <string name="action_confirm">पुष्टि करें</string>
+    <string name="action_delete_account">खाता हटा दो</string>
+
+    <!-- Settings List -->
+    <string-array name="settings_actions">
+        <item name="item_preferences">पसंद</item>
+        <item name="item_password">पासवर्ड बदलें</item>
+        <item name="change_language">भाषा बदलें</item>
+        <item name="item_share_app">ऐप शेयर करें</item>
+        <item name="item_rate_us">हमें रेटिंग दें</item>
+        <item name="item_contact_us">हमसे संपर्क करें</item>
+        <item name="item_licence">लाइसेंस</item>
+        <item name="item_about">के बारे में</item>
+    </string-array>
+
+    <!-- Regular information messages -->
+    <string name="msg_generic_error">क्षमा करें, एक त्रुटि हुई है, कृपया पुनः प्रयास करें</string>
+    <string name="msg_no_data_to_display">डेटा प्रदर्शित करने के लिए उपलब्ध नहीं हैं</string>
+    <string name="msg_check_this_out">इसकी जांच करें</string>
+    <string name="msg_share_using">उपयोग कर साझा करें</string>
+    <string name="msg_profile_update_successfully">प्रोफ़ाइल सफलतापूर्वक अपडेट हो गया है</string>
+    <string name="msg_username">यूजरनेम</string>
+    <string name="msg_username_or_email">यूजरनेम या ईमेल</string>
+    <string name="msg_password">पासवर्ड</string>
+    <string name="msg_name">नाम</string>
+    <string name="msg_email">ईमेल</string>
+    <string name="msg_avatar_url">अवतार यूआरएल</string>
+    <string name="msg_or_continue_using_social_accounts">या सामाजिक खाते का उपयोग करना जारी रखें</string>
+    <string name="msg_new_user">नया उपयोगकर्ता? %1$s</string>
+    <string name="msg_forgot__your_password">पासवर्ड भूल गए?</string>
+    <string name="msg_reset">रीसेट करें</string>
+    <string name="msg_check_your_email_to_reset_your_password">ईमेल गया गया है! अपना पासवर्ड रीसेट करने के लिए अपने इनबॉक्स की जांच करें।</string>
+    <string name="msg_invalid_email">कृपया एक वैध ई-मेल टाइप करें</string>
+    <string name="msg_new_user_agreement">आगे बढ़कर आप हमारे %1$s और %2$s से सहमत हो रहे हैं</string>
+    <string name="msg_yesterday">कल</string>
+    <string name="msg_today">आज</string>
+    <string name="msg_message">संदेश</string>
+    <string name="msg_this_room_is_read_only">यह रूम केवल पढ़ने के लिए है</string>
+    <string name="msg_invalid_2fa_code">अमान्य 2FA कोड</string>
+    <string name="msg_invalid_file">अवैध फाइल</string>
+    <string name="msg_invalid_server_url">अमान्य सर्वर यूआरL</string>
+    <string name="msg_content_description_log_in_using_facebook">Facebook द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_github">Github द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_google">Google द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_linkedin">Linkedin द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_meteor">Meteor द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_twitter">Twitter द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_gitlab">Gitlab द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_wordpress">WordPress द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_send_message">मेसेज भेजें</string>
+    <string name="msg_content_description_show_more_login_options">अधिक लॉगिन विकल्प दिखाएं</string>
+    <string name="msg_content_description_show_attachment_options">अटैचमेंट विकल्प दिखाएं</string>
+    <string name="msg_you">आप</string>
+    <string name="msg_unknown">अनजान</string>
+    <string name="msg_email_address">ई-मेल एड्रेस</string>
+    <string name="msg_utc_offset">यूटीसी ऑफ़सेट</string>
+    <string name="msg_new_password">नया पासवर्ड दर्ज करें</string>
+    <string name="msg_confirm_password">नए पासवर्ड की पुष्टि करें</string>
+    <string name="msg_preview_video">वीडियो</string>
+    <string name="msg_preview_audio">ऑडियो</string>
+    <string name="msg_preview_photo">तस्वीरें</string>
+    <string name="msg_preview_file">फ़ाइल</string>
+    <string name="msg_unread_messages">अपठित संदेश</string>
+    <string name="msg_no_messages_yet">अभी तक कोई पोस्ट नहीं</string>
+    <string name="msg_update_app_version_in_order_to_continue">पुराना सर्वर वर्शन। जारी रखने के लिए सर्वर वर्शन को अद्यतन करने के लिए कृपया सर्वर व्यवस्थापक से संपर्क करें।</string>
+    <string name="msg_ok">ठीक है</string>
+    <string name="msg_ver_not_recommended">
+        ऐसा लगता है कि आपका सर्वर संस्करण अनुशंसित संस्करण %1$s के नीचे है।\nआप अभी भी लॉगिन कर सकते हैं लेकिन आप अप्रत्याशित व्यवहार का अनुभव कर सकते हैं
+    </string>
+    <string name="msg_ver_not_minimum">
+        ऐसा लगता है कि आपका सर्वर संस्करण न्यूनतम आवश्यक संस्करण %1$s से कम है।\nकृपया लॉगिन करने के लिए अपने सर्वर को अपग्रेड करें!
+    </string>
+    <string name="msg_cancel">रद्द करना</string>
+    <string name="msg_http_insecure">HTTP का उपयोग करते समय, आप एक असुरक्षित सर्वर से कनेक्ट हो रहे हैं। हम आपको ऐसा करने की सलाह नहीं देते हैं।</string>
+    <string name="msg_error_checking_server_version">आपके सर्वर संस्करण की जांच करते समय एक त्रुटि आई है, कृपया पुनः प्रयास करें</string>
+    <string name="msg_invalid_server_protocol">चयनित प्रोटोकॉल इस सर्वर द्वारा स्वीकार नहीं किया गया है, HTTPS का उपयोग करने का प्रयास करें</string>
+    <string name="msg_image_saved_successfully">छवि गैलरी में सहेजा गया है</string>
+    <string name="msg_image_saved_failed">छवि को सहेजने में विफल</string>
+    <string name="msg_no_chat_title">कोई चैट संदेश नहीं</string>
+    <string name="msg_no_chat_description">यहां अपने संदेश देखने के लिए\nबातचीत शुरू करें।</string>
+    <string name="msg_edited">(संपादित)</string>
+    <string name="msg_and">\u0020और\u0020</string>
+    <string name="msg_is_typing">\u0020टाइप कर रहा/रही है…</string>
+    <string name="msg_are_typing">\u0020टाइप कर रहे हैं…</string>
+    <string name="msg_several_users_are_typing">कई उपयोगकर्ता टाइप कर रहे हैं…</string>
+    <string name="msg_no_search_found">कोई परिणाम नहीं मिला</string>
+    <string name="msg_channel_name">चैनल का नाम</string>
+    <string name="msg_search">खोजें</string>
+    <string name="msg_message_copied">संदेश कॉपी किया गया</string>
+    <string name="msg_upload_file">फाइल अपलोड करें</string>
+    <string name="msg_file_description">फाइल विवरण</string>
+    <string name="msg_send">भेजें</string>
+    <string name="msg_sent_attachment">एक अनुलग्नक भेजा</string>
+    <string name="msg_delete_message">संदेश को हटाएं</string>
+    <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
+    <string name="msg_welcome_to_rocket_chat">Rocket.Chat में आपका स्वागत है</string>
+    <string name="msg_team_communication">टीम संचार</string>
+    <string name="msg_login_with_email">ई-मेल के साथ लॉगिन करें</string>
+    <string name="msg_create_account">खाता बनाएं</string>
+    <string name="msg_continue_with_facebook"><b>Facebook</b> के साथ जारी रखें</string>
+    <string name="msg_continue_with_github"><b>Github</b> के साथ जारी रखें</string>
+    <string name="msg_continue_with_google"><b>Google</b> के साथ जारी रखें</string>
+    <string name="msg_continue_with_linkedin"><b>Linkedin</b> के साथ जारी रखें</string>
+    <string name="msg_continue_with_gitlab"><b>GitLab</b> के साथ जारी रखें</string>
+    <string name="msg_continue_with_wordpress"><b>WordPress</b> के साथ जारी रखें</string>
+    <string name="msg_two_factor_authentication">दो तरीकों से प्रमाणीकरण</string>
+    <string name="msg__your_2fa_code">आपका 2FA कोड क्या है?</string>
+
+    <!-- Create channel messages -->
+    <string name="msg_private_channel">प्राइवेट</string>
+    <string name="msg_public_channel">सार्वजनिक</string>
+    <string name="msg_private_channel_description">केवल आप और आमंत्रित सदस्य ही इस चैनल तक पहुंच सकते हैं</string>
+    <string name="msg_public_channel_description">हर कोई इस चैनल तक पहुंच सकता है</string>
+    <string name="msg_ready_only_channel">चैनल केवल पढ़ने के लिए है।</string>
+    <string name="msg_ready_only_channel_description">केवल एडमिन नए संदेश लिख सकते हैं</string>
+    <string name="msg_invite_members">सदस्यों को चैनल में आमंत्रित करें</string>
+    <string name="msg_member_already_added">आपने पहले से ही इस यूजर को चुन चुके है।</string>
+    <string name="msg_member_not_found">सदस्य नहीं मिला</string>
+    <string name="msg_channel_created_successfully">चैनल सफलतापूर्वक बनाया गया</string>
+    <string name="msg_view_more">और देखें</string>
+    <string name="msg_view_less">कम देखें</string>
+    <string name="msg_permalink_copied">पर्मलिंक की प्रतिलिपि बनाई गई</string>
+    <string name="msg_send_email">ईमेल भेजें</string>
+    <string name="msg_android_app_support">एंड्रॉइड ऐप समर्थन</string>
+    <string name="msg_muted_on_this_channel">आप इस चैनल पर म्यूट कर रहे हैं</string>
+    <string name="msg_no_topic">कोई विषय नहीं जोड़ा गया</string>
+    <string name="msg_no_announcement">कोई घोषणा नहीं जोड़ा गया</string>
+    <string name="msg_no_description">कोई विवरण नहीं जोड़ा गया</string>
+    <string name="msg_unable_to_update_password">पासवर्ड अपडेट करने में असमर्थ। त्रुटि संदेश: %1$s</string>
+    <string name="msg_password_updated_successfully">पासवर्ड सफलतापूर्वक अपडेट किया गया</string>
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
+        <item quantity="few">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
+        <item quantity="many">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
+    </plurals>
+
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">एनालिटिक्स ट्रैकिंग</string>
+    <string name="msg_send_analytics_tracking">इस ऐप को बेहतर बनाने में मदद के लिए अज्ञात स्टेटिक्स भेजें</string>
+    <string name="msg_do_not_send_analytics_tracking">इस ऐप को बेहतर बनाने में मदद के लिए अनाम स्टेटिक न भेजें</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">लागू नहीं है क्योंकि यह एक FOSS संस्करण है</string>
+
+    <!-- System messages -->
+    <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
+    <string name="message_user_added_by">उपयोगकर्ता %1$s द्वारा %2$s को जोड़ा गया</string>
+    <string name="message_user_removed_by">उपयोगकर्ता %1$s द्वारा %2$s को निकाला गया</string>
+    <string name="message_user_left">ने चैनल को छोड़ दिया है</string>
+    <string name="message_user_joined_channel">चैनल में शामिल हो गया है</string>
+    <string name="message_welcome">%s का स्वागत करते हैं</string>
+    <string name="message_removed">संदेश हटाया गया</string>
+    <string name="message_pinned">एक संदेश पिन किया:</string>
+    <string name="message_muted">उपयोगकर्ता %1$s %2$s द्वारा म्यूट किया गया</string>
+    <string name="message_unmuted">उपयोगकर्ता %1$s %2$s द्वारा अनम्यूट किया गया</string>
+    <string name="message_role_add">%1$s %3$s द्वारा %2$s सेट किया गया था</string>
+    <string name="message_role_removed">%1$s अब %3$s द्वारा %2$s नहीं है</string>
+    <string name="message_credentials_saved_successfully">प्रमाण पत्र सफलतापूर्वक सहेजे गए</string>
+
+    <!-- Message actions -->
+    <string name="action_msg_reply">जवाब दें</string>
+    <string name="action_msg_info">संदेश जानकारी</string>
+    <string name="action_msg_edit">संपादन करें</string>
+    <string name="action_msg_copy">कॉपी</string>
+    <string name="action_msg_quote">उद्धरण</string>
+    <string name="action_msg_delete">मिटायें</string>
+    <string name="action_msg_pin">संदेश को पिन करें</string>
+    <string name="action_msg_unpin">संदेश को पिन से हटाएँ</string>
+    <string name="action_msg_star">संदेश को स्टार करें</string>
+    <string name="action_msg_unstar">सन्देश अतारांकित करें</string>
+    <string name="action_msg_share">शेयर करें</string>
+    <string name="action_title_editing">संपादन संदेश</string>
+    <string name="action_msg_add_reaction">प्रतिक्रिया जोड़ें</string>
+    <string name="action_msg_copy_permalink">परमालिंक कॉपी करें</string>
+    <string name="action_msg_report">रिपोर्ट</string>
+
+    <!-- Permission messages -->
+    <string name="permission_editing_not_allowed">संपादन की अनुमति नहीं है</string>
+    <string name="permission_deleting_not_allowed">हटाने की अनुमति नहीं है</string>
+    <string name="permission_pinning_not_allowed">पिनि करने की अनुमति नहीं है</string>
+    <string name="permission_starring_not_allowed">तारांकित की अनुमति नहीं है</string>
+
+    <!-- Search message -->
+    <string name="title_search_message">संदेश खोजें</string>
+
+    <!-- Favorite/Unfavorite chat room -->
+    <string name="title_favorite_chat">पसंदीदा चैट</string>
+    <string name="title_unfavorite_chat">नापसंद चैट</string>
+
+    <!-- Members List -->
+    <string name="title_members_list">सदस्य</string>
+
+    <!-- Mentions -->
+    <string name="msg_mentions">ज़िक्र</string>
+    <string name="msg_no_mention">कोई ज़िक्र नहीं</string>
+    <string name="msg_all_the_mentions_appear_here">सभी ज़िक्र यहां दिखाई देते हैं</string>
+
+    <!-- Pinned Messages -->
+    <string name="title_pinned_messages">पिन किए गए संदेश</string>
+    <string name="no_pinned_messages">कोई पिन संदेश नहीं</string>
+    <string name="no_pinned_description">सभी पिन किए गए संदेश यहां\nदिखाई देते हैं।</string>
+
+    <!-- Favorite Messages -->
+    <string name="title_favorite_messages">पसंदीदा संदेश</string>
+    <string name="no_favorite_messages">कोई पसंदीदा संदेश है</string>
+    <string name="no_favorite_description">सभी पसंदीदा संदेश यहां\nदिखाई देते हैं</string>
+
+    <!-- Files -->
+    <string name="title_files">फ़ाइलें</string>
+    <string name="title_files_total">फ़ाइलें (%d)</string>
+    <string name="msg_no_files">कोई फाइल नहीं है</string>
+    <string name="msg_all_files_appear_here">सभी फाइलें यहां दिखाई देती हैं</string>
+
+    <!-- Upload Messages -->
+    <string name="max_file_size_exceeded">फ़ाइल का आकार %1$d बाइट्स ने %2$d बाइट्स के अधिकतम अपलोड आकार को पार कर लिया है</string>
+
+    <!-- Socket status -->
+    <string name="status_connected">कनेक्टेड</string>
+    <string name="status_disconnected">डिस्कनेक्टेड</string>
+    <string name="status_connecting">कनेक्टिंग</string>
+    <string name="status_authenticating">प्रमाणीकरण</string>
+    <string name="status_disconnecting">डिसकनेक्टिंग</string>
+    <string name="status_waiting">%d सेकेंड में कनेक्ट हो रहा है</string>
+
+    <!--Suggestions-->
+    <string name="suggest_all_description">इस कमरे में सभी को सूचित करें</string>
+    <string name="suggest_here_description">इस कमरे में सक्रिय उपयोगकर्ताओं को सूचित करना</string>
+
+    <!-- Slash Commands -->
+    <string name="Slash_Gimme_Description">आपके संदेश से पहले ༼ つ ◕_◕ ༽つ दिखाता है</string>
+    <string name="Slash_LennyFace_Description">आपके संदेश के बाद ( ͡° ͜ʖ ͡°) दिखाता है</string>
+    <string name="Slash_Shrug_Description">आपके संदेश के बाद ¯\_(ツ)_/¯ दिखाता है</string>
+    <string name="Slash_Tableflip_Description">(╯°□°）╯︵ ┻━┻ दिखाता है</string>
+    <string name="Slash_TableUnflip_Description">┬─┬ ノ( ゜-゜ノ) दिखाता है</string>
+    <string name="Create_A_New_Channel">एक नया चैनल बनाएं</string>
+    <string name="Show_the_keyboard_shortcut_list">कीबोर्ड शॉर्टकट सूची दिखाएं</string>
+    <string name="Invite_user_to_join_channel_all_from">इस चैनल में शामिल होने के लिए [#channel] से सभी उपयोगकर्ताओं को आमंत्रित करें</string>
+    <string name="Invite_user_to_join_channel_all_to">[# चैनल] में शामिल होने के लिए सभी उपयोगकर्ताओं को इस चैनल पर आमंत्रित करें</string>
+    <string name="Archive">संग्रहित करें</string>
+    <string name="Remove_someone_from_room">रूम से किसी को निकालें</string>
+    <string name="Leave_the_current_channel">मौजूदा चैनल को छोड़ दें</string>
+    <string name="Displays_action_text">कार्रवाई पाठ प्रदर्शित करता है</string>
+    <string name="Direct_message_someone">किसी को प्रत्यक्ष संदेश भेजें</string>
+    <string name="Mute_someone_in_room">रूम में किसी को म्यूट करें</string>
+    <string name="Unmute_someone_in_room">रूम में किसी को अनम्यूट करें</string>
+    <string name="Invite_user_to_join_channel">इस चैनल में शामिल होने के लिए एक उपयोगकर्ता को आमंत्रित करें</string>
+    <string name="Unarchive">असंग्रहित करें</string>
+    <string name="Join_the_given_channel">दिए गए चैनल से जुड़ें</string>
+    <string name="Guggy_Command_Description">दिए गए पाठ पर आधारित gif उत्पन्न करता</string>
+    <string name="Slash_Topic_Description">विषय सेट करें</string>
+
+    <!-- Emoji message-->
+    <string name="msg_no_recent_emoji"> कोई नया इमोजी नहीं</string>
+    <string name="alert_title_default_skin_tone">डिफ़ॉल्ट त्वचा टोन</string>
+
+    <!-- Sorting and grouping-->
+    <string name="msg_sort">क्रम</string>
+    <string name="dialog_sort_title">द्वारा सॉर्ट करें</string>
+    <string name="dialog_sort_by_alphabet">वर्णानुक्रम</string>
+    <string name="dialog_sort_by_activity">गतिविधि</string>
+    <string name="dialog_group_by_type">प्रकार के आधार पर समूह</string>
+    <string name="dialog_group_favourites">पसंदीदा समूह</string>
+    <string name="chatroom_header">हैडर</string>
+
+    <!--ChatRooms Headers-->
+    <string name="header_channel">चैनलों</string>
+    <string name="header_private_groups">निजी समूहों</string>
+    <string name="header_direct_messages">प्रत्यक्ष संदेश</string>
+    <string name="header_live_chats">लाइव चैट</string>
+    <string name="header_unknown">अज्ञात</string>
+
+    <!--Notifications-->
+    <string name="share_label">साझा संदेश संपादित करें</string>
+    <string name="notif_action_reply_hint">जवाब</string>
+    <string name="notif_error_sending">उत्तर विफल हुआ है। कृपया फिर से प्रयास करें।</string>
+    <string name="notif_success_sending">संदेश भेजा गया %1$s!</string>
+    <string name="read_by">द्वारा पढ़ें</string>
+    <string name="message_information_title">संदेश की जानकारी</string>
+    <string name="msg_log_out">लॉग आउट कर रहा हूं…</string>
+    <string name="message_room_changed_privacy">%2$s ने रूम का प्रकार बदलकर %1$s किया </string>
+
+    <!-- User Details -->
+    <string name="message">संदेश</string>
+    <string name="timezone">समय क्षेत्र</string>
+    <string name="error_opening_dm">जब हम इस बातचीत को बना रहे थे तो कुछ गड़बड़ हुई …</string>
+    <string name="retry">पुन: प्रयास करें</string>
+
+    <!-- Report -->
+    <string name="submit">जमा करें</string>
+    <string name="required">* आवश्यक</string>
+    <string name="report_sent">आपकी रिपोर्ट भेज दी गई है!</string>
+</resources>
