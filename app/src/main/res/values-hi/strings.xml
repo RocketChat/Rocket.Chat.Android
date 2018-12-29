@@ -64,6 +64,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">पसंद</item>
         <item name="item_password">पासवर्ड बदलें</item>
+        <item name="change_language">भाषा बदलें</item>
         <item name="item_share_app">ऐप शेयर करें</item>
         <item name="item_rate_us">हमें रेटिंग दें</item>
         <item name="item_contact_us">हमसे संपर्क करें</item>
@@ -152,7 +153,7 @@
     <string name="msg_delete_message">संदेश को हटाएं</string>
     <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
     <string name="msg_welcome_to_rocket_chat">Rocket.Chat में आपका स्वागत है</string>
-    <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
+    <string name="msg_team_communication">टीम संचार</string>
     <string name="msg_login_with_email">ई-मेल के साथ लॉगिन करें</string>
     <string name="msg_create_account">खाता बनाएं</string>
     <string name="msg_continue_with_facebook"><b>Facebook</b> के साथ जारी रखें</string>
