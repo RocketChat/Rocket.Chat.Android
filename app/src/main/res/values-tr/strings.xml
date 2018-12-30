@@ -59,6 +59,7 @@
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
     <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
+    <string name="action_delete_channel">Kanalı sil</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -178,6 +179,7 @@
     <string name="msg_delete_description">Bu mesajı silmek istediğinizden emin misiniz</string>
     <string name="msg_view_more">Daha fazla göster</string>
     <string name="msg_view_less">Daha az göster</string>
+    <string name="msg_delete_channel_description">Bu kanalı silmek istediğinden emin misin?</string>
     <string name="msg_permalink_copied">Permalink copied</string> <!-- TODO - Add proper translation -->
     <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
     <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->

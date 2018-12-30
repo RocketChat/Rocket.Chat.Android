@@ -71,6 +71,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_register">Register</string>
     <string name="action_confirm">Confirm</string>
     <string name="action_delete_account">Delete account</string>
+    <string name="action_delete_channel">Delete Channel</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -205,6 +206,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_view_more">view more</string>
     <string name="msg_view_less">view less</string>
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
+    <string name="msg_delete_channel_description">Are you sure you want to delete this channel</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string>

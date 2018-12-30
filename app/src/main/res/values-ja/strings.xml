@@ -61,6 +61,7 @@
     <string name="action_register">登録</string>
     <string name="action_confirm">確認</string>
     <string name="action_delete_account">アカウントを削除する</string>
+    <string name="action_delete_channel">チャンネルを削除</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -193,6 +194,7 @@
     <string name="msg_permalink_copied">パーマリンクのコピー</string>
     <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
     <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
+    <string name="msg_delete_channel_description">このチャンネルを削除してもよろしいですか</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">トラッキングの分析</string>

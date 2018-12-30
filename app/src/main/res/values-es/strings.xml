@@ -58,6 +58,7 @@
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
     <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
+    <string name="action_delete_channel">Delete channel</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -157,6 +158,7 @@
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
     <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
     <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+    <string name="msg_delete_channel_description">Are you sure you want to delete this channel</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>

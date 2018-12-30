@@ -98,7 +98,7 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
         button_delete.setOnClickListener {
             ui {
                 val builder = AlertDialog.Builder(it)
-                builder.setTitle(it.getString(R.string.msg_delete_message))
+                builder.setTitle(it.getString(R.string.action_delete_channel))
                         .setMessage(it.getString(R.string.msg_delete_description))
                         .setPositiveButton(it.getString(R.string.msg_ok)) { _, _ ->
                             presenter.deleteChannel(

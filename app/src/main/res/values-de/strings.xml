@@ -59,6 +59,7 @@
     <string name="action_register">Registrieren</string>
     <string name="action_confirm">Bestätigen</string>
     <string name="action_delete_account">Konto löschen</string>
+    <string name="action_delete_channel">Delete Channel</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -187,6 +188,7 @@
     <string name="msg_permalink_copied">Permalink kopiert</string>
     <string name="msg_send_email">E-Mail senden</string>
     <string name="msg_android_app_support">Android App-Unterstützung</string>
+    <string name="msg_delete_channel_description">Are you sure you want to delete this channel</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string>

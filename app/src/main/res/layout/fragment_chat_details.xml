@@ -111,10 +111,11 @@
                 android:layout_margin="5dp"
                 android:background="#f5455c"
                 android:fontFamily="sans-serif"
-                android:text="Delete"
+                android:text="@string/action_delete_channel"
                 android:textColor="@color/color_white"
                 android:textSize="17sp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:visibility="visible"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
