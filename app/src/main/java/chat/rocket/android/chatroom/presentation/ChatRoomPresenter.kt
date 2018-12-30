@@ -20,7 +20,6 @@ import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.emoji.EmojiRepository
-import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
@@ -180,10 +179,6 @@ class ChatRoomPresenter @Inject constructor(
                 subscribeRoomChanges()
             }
         }
-    }
-
-    fun onChatRoomDeleted() {
-        navigator.toChatList(Constants.CHATROOM_DELETED)
     }
 
     private suspend fun subscribeRoomChanges() {
@@ -928,10 +923,9 @@ class ChatRoomPresenter @Inject constructor(
         chatRoomType: String,
         isSubscribed: Boolean,
         isMenuDisabled: Boolean,
-        isOwner: Boolean,
-        REQUEST_CODE_FOR_CHAT_DETAILS: Int
+        isOwner: Boolean
     ) {
-        navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isMenuDisabled, isOwner, REQUEST_CODE_FOR_CHAT_DETAILS)
+        navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isMenuDisabled, isOwner)
     }
 
     fun loadChatRoomsSuggestions() {

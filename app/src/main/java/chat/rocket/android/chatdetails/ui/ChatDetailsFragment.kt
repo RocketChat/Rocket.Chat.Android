@@ -17,7 +17,6 @@ import chat.rocket.android.chatdetails.presentation.ChatDetailsPresenter
 import chat.rocket.android.chatdetails.presentation.ChatDetailsView
 import chat.rocket.android.chatdetails.viewmodel.ChatDetailsViewModel
 import chat.rocket.android.chatdetails.viewmodel.ChatDetailsViewModelFactory
-import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui

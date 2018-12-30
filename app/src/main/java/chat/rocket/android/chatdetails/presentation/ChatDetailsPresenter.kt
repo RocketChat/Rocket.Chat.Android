@@ -2,14 +2,11 @@ package chat.rocket.android.chatdetails.presentation
 
 import chat.rocket.android.chatdetails.domain.ChatDetails
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
-import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
-import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.deleteChannel
@@ -21,7 +18,6 @@ class ChatDetailsPresenter @Inject constructor(
     private val view: ChatDetailsView,
     private val navigator: ChatDetailsNavigator,
     private val strategy: CancelStrategy,
-    private val dbManager: DatabaseManager,
     serverInteractor: GetCurrentServerInteractor,
     factory: ConnectionManagerFactory
 ) {

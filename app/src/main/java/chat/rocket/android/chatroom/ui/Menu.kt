@@ -26,8 +26,7 @@ internal fun ChatRoomFragment.setOnMenuItemClickListener(item: MenuItem) {
             chatRoomType,
             isSubscribed,
             disableMenu,
-            isOwner,
-            REQUEST_CODE_FOR_CHAT_DETAILS
+            isOwner
         )
     }
 }

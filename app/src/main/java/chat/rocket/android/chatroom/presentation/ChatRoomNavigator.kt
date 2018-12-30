@@ -19,18 +19,16 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         chatRoomType: String,
         isChatRoomSubscribed: Boolean,
         isMenuDisabled: Boolean,
-        isOwner: Boolean,
-        REQUEST_CODE_FOR_CHAT_DETAILS: Int
+        isOwner: Boolean
     ) {
-        activity.startActivityForResult(
+        activity.startActivity(
             activity.chatDetailsIntent(
                 chatRoomId,
                 chatRoomType,
                 isChatRoomSubscribed,
                 isMenuDisabled,
                 isOwner
-            ),
-            REQUEST_CODE_FOR_CHAT_DETAILS
+            )
         )
     }
 
@@ -69,10 +67,5 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
     fun toMessageInformation(messageId: String) {
         activity.startActivity(activity.messageInformationIntent(messageId = messageId))
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
-    }
-
-    fun toChatList (resultCode: Int) {
-        activity.setResult(resultCode)
-        activity.finish()
     }
 }
