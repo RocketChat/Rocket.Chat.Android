@@ -61,10 +61,7 @@ import chat.rocket.android.emoji.EmojiPickerPopup
 import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.emoji.internal.GlideApp
 import chat.rocket.android.emoji.internal.isCustom
-import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
-import chat.rocket.android.helper.ImageHelper
-import chat.rocket.android.helper.KeyboardHelper
-import chat.rocket.android.helper.MessageParser
+import chat.rocket.android.helper.*
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.createImageFile
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
@@ -134,6 +131,7 @@ private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 private const val REQUEST_CODE_FOR_DRAW = 101
 private const val REQUEST_CODE_FOR_PERFORM_CAMERA = 102
+internal const val REQUEST_CODE_FOR_CHAT_DETAILS = 105
 private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 private const val BUNDLE_CHAT_ROOM_IS_CREATOR = "chat_room_is_creator"
@@ -169,6 +167,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     internal var citation: String? = null
     private var editingMessageId: String? = null
     internal var disableMenu: Boolean = false
+    internal var isOwner: Boolean = false
 
     private val compositeDisposable = CompositeDisposable()
     private var playComposeMessageButtonsAnimation = true
@@ -849,6 +848,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             emojiKeyboardPopup.listener = this
 
+
+
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
                 override fun onKeyboardOpened() {
                     KeyboardHelper.showSoftKeyboard(text_message)
@@ -1167,5 +1168,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             emojiKeyboardPopup.dismiss()
             setReactionButtonIcon(R.drawable.ic_reaction_24dp)
         }
+    }
+
+    override fun onIsOwnerUpdated (isOwner: Boolean) {
+        this.isOwner = isOwner
     }
 }

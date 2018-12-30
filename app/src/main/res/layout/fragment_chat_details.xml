@@ -1,75 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/whitesmoke"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <RelativeLayout
-            android:background="@color/colorWhite"
+        android:layout_height="match_parent">
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/view_loading"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:padding="15dp">
-            <TextView
-                android:id="@+id/name"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:indicatorColor="@color/colorBlack"
+            app:indicatorName="BallPulseIndicator"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/colorWhite"
+                android:padding="15dp">
+
+                <TextView
+                    android:id="@+id/name"
+                    style="@style/ChatDetails.Title.TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/text_view_drawable_padding"
+                    tools:text="#important" />
+
+                <TextView
+                    android:id="@+id/title_topic"
+                    style="@style/ChatDetails.Title.TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/name"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/title_topic" />
+
+                <TextView
+                    android:id="@+id/content_topic"
+                    style="@style/ChatDetails.Content.TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_topic"
+                    android:text="@string/msg_no_topic" />
+
+                <TextView
+                    android:id="@+id/title_announcement"
+                    style="@style/ChatDetails.Title.TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/content_topic"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/title_announcement" />
+
+                <TextView
+                    android:id="@+id/content_announcement"
+                    style="@style/ChatDetails.Content.TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_announcement"
+                    android:text="@string/msg_no_announcement" />
+
+                <TextView
+                    android:id="@+id/title_description"
+                    style="@style/ChatDetails.Title.TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/content_announcement"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/title_description" />
+
+                <TextView
+                    android:id="@+id/content_description"
+                    style="@style/ChatDetails.Content.TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_description"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/msg_no_description" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/options"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <android.widget.Button
+                android:id="@+id/button_delete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/ChatDetails.Title.TextView"
-                android:drawablePadding="@dimen/text_view_drawable_padding"
-                tools:text="#important"/>
-            <TextView
-                android:id="@+id/title_topic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/name"
-                android:layout_marginTop="20dp"
-                style="@style/ChatDetails.Title.TextView"
-                android:text="@string/title_topic" />
-            <TextView
-                android:id="@+id/content_topic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title_topic"
-                style="@style/ChatDetails.Content.TextView"
-                android:text="@string/msg_no_topic" />
-            <TextView
-                android:id="@+id/title_announcement"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/content_topic"
-                android:layout_marginTop="15dp"
-                style="@style/ChatDetails.Title.TextView"
-                android:text="@string/title_announcement" />
-            <TextView
-                android:id="@+id/content_announcement"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title_announcement"
-                style="@style/ChatDetails.Content.TextView"
-                android:text="@string/msg_no_announcement" />
-            <TextView
-                android:id="@+id/title_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/content_announcement"
-                android:layout_marginTop="15dp"
-                style="@style/ChatDetails.Title.TextView"
-                android:text="@string/title_description" />
-            <TextView
-                android:id="@+id/content_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title_description"
-                android:layout_marginBottom="10dp"
-                style="@style/ChatDetails.Content.TextView"
-                android:text="@string/msg_no_description" />
-        </RelativeLayout>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/options"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
+                android:layout_margin="5dp"
+                android:background="#f5455c"
+                android:fontFamily="sans-serif"
+                android:text="Delete"
+                android:textColor="@color/color_white"
+                android:textSize="17sp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

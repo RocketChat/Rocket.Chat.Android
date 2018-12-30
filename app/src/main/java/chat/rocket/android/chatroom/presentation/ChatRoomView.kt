@@ -145,4 +145,6 @@ interface ChatRoomView : LoadingView, MessageView {
 
     fun onRoomUpdated(roomUiModel: RoomUiModel)
 
+    fun onIsOwnerUpdated(isOwner: Boolean)
+
 }

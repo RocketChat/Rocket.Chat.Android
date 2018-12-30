@@ -20,6 +20,7 @@ import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.emoji.EmojiRepository
+import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
@@ -147,12 +148,16 @@ class ChatRoomPresenter @Inject constructor(
             } finally {
                 // User has at least an 'owner' or 'moderator' role.
                 val canModerate = isOwnerOrMod()
+
+                val isOwner = isOwner()
+
                 // Can post anyway if has the 'post-readonly' permission on server.
                 val room = dbManager.getRoom(roomId)
                 room?.let {
                     chatIsBroadcast = it.chatRoom.broadcast ?: false
                     val roomUiModel = roomMapper.map(it, true)
                     launchUI(strategy) {
+                        view.onIsOwnerUpdated(isOwner = isOwner)
                         view.onRoomUpdated(roomUiModel = roomUiModel.copy(
                             broadcast = chatIsBroadcast,
                             canModerate = canModerate,
@@ -177,6 +182,10 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
+    fun onChatRoomDeleted() {
+        navigator.toChatList(Constants.CHATROOM_DELETED)
+    }
+
     private suspend fun subscribeRoomChanges() {
         withContext(CommonPool + strategy.jobs) {
             chatRoomId?.let {
@@ -197,6 +206,12 @@ class ChatRoomPresenter @Inject constructor(
     private fun isOwnerOrMod(): Boolean {
         return chatRoles.firstOrNull { it.user.username == currentLoggedUsername }?.roles?.any {
             it == "owner" || it == "moderator"
+        } ?: false
+    }
+
+    private fun isOwner(): Boolean {
+        return chatRoles.firstOrNull { it.user.username == currentLoggedUsername }?.roles?.any {
+            it == "owner"
         } ?: false
     }
 
@@ -912,9 +927,11 @@ class ChatRoomPresenter @Inject constructor(
         chatRoomId: String,
         chatRoomType: String,
         isSubscribed: Boolean,
-        isMenuDisabled: Boolean
+        isMenuDisabled: Boolean,
+        isOwner: Boolean,
+        REQUEST_CODE_FOR_CHAT_DETAILS: Int
     ) {
-        navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isMenuDisabled)
+        navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isMenuDisabled, isOwner, REQUEST_CODE_FOR_CHAT_DETAILS)
     }
 
     fun loadChatRoomsSuggestions() {
