@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.chatdetails.ui.ChatDetailsActivity
+import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.files.adapter.FilesAdapter
 import chat.rocket.android.files.presentation.FilesPresenter
 import chat.rocket.android.files.presentation.FilesView
@@ -152,9 +152,11 @@ class FilesFragment : Fragment(), FilesView {
     }
 
     private fun setupToolbar(totalFiles: Long) {
-        (activity as ChatDetailsActivity).let {
-            it.setToolbarTitle(getString(R.string.title_files_total, totalFiles))
-            it.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        }
+        (activity as ChatRoomActivity).showToolbarTitle(
+            (getString(
+                R.string.title_files_total,
+                totalFiles
+            ))
+        )
     }
 }

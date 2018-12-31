@@ -12,8 +12,6 @@ import chat.rocket.android.authentication.signup.di.SignupFragmentProvider
 import chat.rocket.android.authentication.twofactor.di.TwoFAFragmentProvider
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.chatdetails.di.ChatDetailsFragmentProvider
-import chat.rocket.android.chatdetails.di.ChatDetailsModule
-import chat.rocket.android.chatdetails.ui.ChatDetailsActivity
 import chat.rocket.android.chatinformation.di.MessageInfoFragmentProvider
 import chat.rocket.android.chatinformation.ui.MessageInfoActivity
 import chat.rocket.android.chatroom.di.ChatRoomFragmentProvider
@@ -79,15 +77,7 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(
         modules = [ChatRoomModule::class,
             ChatRoomFragmentProvider::class,
-            UserDetailsFragmentProvider::class
-        ]
-    )
-    abstract fun bindChatRoomActivity(): ChatRoomActivity
-
-    @PerActivity
-    @ContributesAndroidInjector(
-        modules = [
-            ChatDetailsModule::class,
+            UserDetailsFragmentProvider::class,
             ChatDetailsFragmentProvider::class,
             MembersFragmentProvider::class,
             MentionsFragmentProvider::class,
@@ -96,7 +86,7 @@ abstract class ActivityBuilder {
             FilesFragmentProvider::class
         ]
     )
-    abstract fun bindChatDetailsActivity(): ChatDetailsActivity
+    abstract fun bindChatRoomActivity(): ChatRoomActivity
 
     @PerActivity
     @ContributesAndroidInjector(modules = [PasswordFragmentProvider::class])

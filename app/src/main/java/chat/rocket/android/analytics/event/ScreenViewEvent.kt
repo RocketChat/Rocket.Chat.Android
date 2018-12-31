@@ -19,7 +19,6 @@ sealed class ScreenViewEvent(val screenName: String) {
     object UserDetails : ScreenViewEvent("UserDetailsFragment")
     object FavoriteMessages : ScreenViewEvent("FavoriteMessagesFragment")
     object Files : ScreenViewEvent("FilesFragment")
-    object MemberBottomSheet : ScreenViewEvent("MemberBottomSheetFragment")
     object Members : ScreenViewEvent("MembersFragment")
     object Mentions : ScreenViewEvent("MentionsFragment")
     object MessageInfo : ScreenViewEvent("MessageInfoFragment")

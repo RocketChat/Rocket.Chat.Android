@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.chatdetails.ui.ChatDetailsActivity
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
@@ -116,9 +115,6 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
     }
 
     private fun setupToolbar() {
-        (activity as ChatDetailsActivity).let {
-            it.setToolbarTitle(getString(R.string.title_favorite_messages))
-            it.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        }
+        (activity as ChatRoomActivity).showToolbarTitle(getString(R.string.title_favorite_messages))
     }
 }
