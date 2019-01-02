@@ -162,7 +162,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_file_description">File description</string>
     <string name="msg_send">Send</string>
     <string name="msg_sent_attachment">Sent an attachment</string>
-    <string name="msg_welcome_to_rocket_chat">Welcome to Saba Chat</string>
+    <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string>
     <string name="msg_team_communication">Team Communication</string>
     <string name="msg_login_with_email">Login with <b>e-mail</b></string>
     <string name="msg_create_account">Create an account</string>
@@ -323,13 +323,12 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="alert_title_default_skin_tone">Default skin tone</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">Sort</string>
+    <string name="msg_sort">Sort</string>
     <string name="dialog_sort_title">Sort by</string>
     <string name="dialog_sort_by_alphabet">Alphabetical</string>
     <string name="dialog_sort_by_activity">Activity</string>
     <string name="dialog_group_by_type">Group by type</string>
     <string name="dialog_group_favourites">Group favourites</string>
-    <string name="dialog_button_done">Done</string>
     <string name="chatroom_header">Header</string>
 
     <!--ChatRooms Headers-->
