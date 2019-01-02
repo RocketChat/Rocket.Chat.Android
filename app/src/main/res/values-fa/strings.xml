@@ -6,7 +6,7 @@
     <string name="title_register_username">ثبت شناسه‌ی کاربری</string>
     <string name="title_reset_password">تعویض گذرواژه</string>
     <string name="title_sign_up">ثبت‌‌نام کنید</string>
-    <string name="title_authentication">تایید هویت</string>
+    <string name="title_authentication">Authentication</string>
     <string name="title_legal_terms">شروط حقوقی</string>
     <string name="title_chats">گفت‌وگوها</string>
     <string name="title_profile">نمایه</string>
@@ -149,7 +149,7 @@
     <string name="msg_file_description">توضیحات پرونده</string>
     <string name="msg_send">ارسال</string>
     <string name="msg_sent_attachment">ارسال ضمیمه</string>
-    <string name="msg_welcome_to_rocket_chat">به پیام‌رسان راکت خوش‌آمدید!</string>
+    <string name="msg_welcome_to_rocket_chat">به پیام‌رسان سبا خوش آمدید!</string>
     <string name="msg_team_communication">ارتباط تیمی</string>
     <string name="msg_login_with_email">ورود با  <b>ایمیل</b></string>
     <string name="msg_create_account">ایجاد حساب کاربری</string>
