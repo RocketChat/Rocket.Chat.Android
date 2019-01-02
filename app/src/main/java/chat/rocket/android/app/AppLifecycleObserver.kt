@@ -15,8 +15,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class AppLifecycleObserver @Inject constructor(
-    private val serverInteractor: GetCurrentServerInteractor,
-    private val factory: ConnectionManagerFactory
+        private val serverInteractor: GetCurrentServerInteractor,
+        private val factory: ConnectionManagerFactory
 ) : LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
