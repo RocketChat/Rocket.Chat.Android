@@ -6,7 +6,7 @@
     <string name="title_register_username">ثبت شناسه‌ی کاربری</string>
     <string name="title_reset_password">تعویض گذرواژه</string>
     <string name="title_sign_up">ثبت‌‌نام کنید</string>
-    <string name="title_authentication">Authentication</string>
+    <string name="title_authentication">تایید هویت</string>
     <string name="title_legal_terms">شروط حقوقی</string>
     <string name="title_chats">گفت‌وگوها</string>
     <string name="title_profile">نمایه</string>
@@ -82,14 +82,14 @@
     <string name="msg_name">نام</string>
     <string name="msg_email">ایمیل</string>
     <string name="msg_avatar_url">ULR تصویر نمایه</string>
-    <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
+    <string name="msg_or_continue_using_social_accounts">یا به استفاده از سرورهای اجتماعی ادامه دهید</string>
     <string name="msg_new_user">کاربر جدید? %1$s</string>
     <string name="msg_forgot__your_password">گذرواژه‌تان را فراموش کردید؟</string>
     <string name="msg_reset">راه اندازی مجدد</string>
     <string name="msg_check_your_email_to_reset_your_password">ایمیل فرستاده شد. صندوق ورودی خود را برای تعویض گذرواژه چک کنید</string>
     <string name="msg_invalid_email">لطفا یک ایمیل معتبر را بنویسید</string>
-    <string name="msg_new_user_agreement">By proceeding you are agreeing to our\n%1$s and %2$s</string>
-    <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
+    <string name="msg_new_user_agreement">با ادامه‌ی فرایند شما با\n%1$s و %2$sموافقت کرده‌اید.</string>
+
     <string name="msg_yesterday">دیروز</string>
     <string name="msg_today">امروز</string>
     <string name="msg_message">پیام</string>
@@ -122,9 +122,9 @@
     <string name="msg_preview_photo">تصویر</string>
     <string name="msg_preview_file">پرونده</string>
     <string name="msg_no_messages_yet">هنوز پیامی ندارید</string>
-    <string name="msg_build" tools:ignore="MissingTranslation">Build %1$d - %2$s - %3$s</string>
+    <string name="msg_build" tools:ignore="MissingTranslation">ساختن %1$d - %2$s - %3$s</string>
     <string name="msg_ok">تایید</string>
-    <string name="msg_update_app_version_in_order_to_continue">Out to date server version. Please contact the server admin to update the server version in order to continue.</string>
+    <string name="msg_update_app_version_in_order_to_continue">نسخه‌ی سرور منسوخ شده است. لطفا برای ادامه دادن با مدیر سرور خود تماس بگیرید تا سرور را به روز کند.</string>
     <string name="msg_ver_not_recommended">
         به نظر می‌رسد نسخه‌ی سرور شما پایین‌تر از نسخه‌ی پیشنهایست %1$s.\nشما همچنان می‌توانید وارد شوید ولی ممکن است برخی مشکلات غیر منتظره رخ دهد.</string>
     <string name="msg_ver_not_minimum">
@@ -295,7 +295,7 @@
     <string name="Archive">بایگانی</string>
     <string name="Remove_someone_from_room">حذف کردن کسی از این کانال</string>
     <string name="Leave_the_current_channel">کانال کنونی را ترک نمایید</string>
-    <string name="Displays_action_text">Displays action text</string>
+    <string name="Displays_action_text">نمایش فعالیت متن</string>
     <string name="Direct_message_someone">ارسال پیام مستقیم به کسی</string>
     <string name="Mute_someone_in_room">صامت کردن کسی در اتاق</string>
     <string name="Unmute_someone_in_room">صدا دار کردن کسی در این اتاق</string>
@@ -307,7 +307,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">هیچ ایموجی اخیری موجود نیست</string>
-    <string name="alert_title_default_skin_tone">Default skin tone</string>
+    <string name="alert_title_default_skin_tone">مدل پوسته‌ی پیش‌فرض</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">دسته بندی</string>
@@ -335,12 +335,12 @@
     <string name="message_information_title">اطلاعات پیام</string>
     <string name="message_room_changed_privacy">نوع اتاق تغییر پیدا کرد به: %1$s توسط %2$s</string>
 
-    <string name="foss" translatable="false">(FOSS)</string>
+  
 
     <!-- User Details -->
     <string name="message">پیام</string>
     <string name="timezone">منطقه‌ی زمانی</string>
-    <string name="status" translatable="false">Status</string>
+    
     <string name="error_opening_dm">زمانی که این گفت‌وگو را ایجاد کردیم مشکلی رخ داد…</string>
     <string name="retry">تلاش دوباره</string>
 
