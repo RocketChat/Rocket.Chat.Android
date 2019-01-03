@@ -8,9 +8,6 @@ import chat.rocket.android.chatrooms.adapter.*
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extensions.inflate
 
-// EAR test
-import timber.log.Timber
-
 class ContactRecyclerViewAdapter(
         private val context: MainActivity,
         private val contactArrayList: List<ItemHolder<*>>
@@ -68,10 +65,7 @@ class ContactRecyclerViewAdapter(
                     val contact = holder.data!!.data
 
                     if (contact.getUsername() == null) {
-                        Timber.d("#########  EAR >> this is the value for isPhone: ")
-                        Timber.d(contact!!.isPhone().toString())
                         if (contact!!.isPhone()) {
-                            Timber.d("#########  EAR >> inviting via sms now...")
                             context.presenter.inviteViaSMS(contact!!.getPhoneNumber()!!)
                         } else {
                             context.presenter.inviteViaEmail(contact!!.getEmailAddress()!!)
