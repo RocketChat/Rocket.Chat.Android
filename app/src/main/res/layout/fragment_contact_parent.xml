@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".contacts.ContactsFragment">
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
@@ -29,4 +28,5 @@
         android:layout_marginTop="16dp"
         android:visibility="gone"
         android:background="?android:attr/listDivider" />
+
 </RelativeLayout>

@@ -9,8 +9,6 @@ class ContactHeaderViewHolder(itemView: View) : ViewHolder<ContactHeaderItemHold
     override fun bindViews(data: ContactHeaderItemHolder) {
         with(itemView) {
             contacts_heading.text = data.data
-        }    }    }
-
-
-
-
+        }
+    }
+}

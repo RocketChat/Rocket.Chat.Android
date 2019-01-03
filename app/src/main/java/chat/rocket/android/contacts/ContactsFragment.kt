@@ -23,12 +23,9 @@ import chat.rocket.android.helper.Constants
 import com.facebook.drawee.view.SimpleDraweeView
 import android.view.LayoutInflater
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.chatrooms.adapter.ItemHolder
-import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModel
-import chat.rocket.android.chatrooms.viewmodel.Query
 import chat.rocket.android.contacts.adapter.ContactHeaderItemHolder
 import chat.rocket.android.contacts.adapter.ContactItemHolder
 import chat.rocket.android.contacts.adapter.ContactRecyclerViewAdapter
@@ -43,8 +40,6 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-
-
 /**
  * Load a list of contacts in a recycler view
  */
@@ -53,20 +48,15 @@ class ContactsFragment : Fragment() {
     lateinit var dbFactory: DatabaseManagerFactory
     @Inject
     lateinit var serverInteractor: GetCurrentServerInteractor
-    private var recyclerView :RecyclerView?= null
-    private var emptyTextView:  TextView?=null
+    private var recyclerView :RecyclerView? = null
+    private var emptyTextView:  TextView? = null
+
+    private val MY_PERMISSIONS_REQUEST_RW_CONTACTS = 0
 
     /**
      * The list of contacts to load in the recycler view
      */
     private var contactArrayList: ArrayList<Contact> = ArrayList()
-
-    /**
-     *  The mapping of contacts with their registration status
-     */
-    private var contactHashMap: HashMap<String, String> = HashMap()
-
-    private val MY_PERMISSIONS_REQUEST_RW_CONTACTS = 0
 
     private var searchView: SearchView? = null
     private var sortView: MenuItem? = null
@@ -74,13 +64,59 @@ class ContactsFragment : Fragment() {
     private var searchText:  TextView? = null
     private var searchCloseButton: ImageView? = null
 
-
     // WIDECHAT
     private var profileButton: SimpleDraweeView? = null
     private var widechatSearchView: SearchView? = null
-    private var onlineStatusButton: ImageView?=null
+    private var onlineStatusButton: ImageView? = null
 
+    companion object {
+        /**
+         * Create a new ContactList fragment that displays the given list of contacts
+         *
+         * @param contactArrayList the list of contacts to load in the recycler view
+         * @param contactHashMap the mapping of contacts with their registration status
+         * @return the newly created ContactList fragment
+         */
+        fun newInstance(
+                contactArrayList: ArrayList<Contact>,
+                contactHashMap: HashMap<String, String>
+        ): ContactsFragment {
+            val contactsFragment = ContactsFragment()
 
+            val arguments = Bundle()
+            arguments.putParcelableArrayList("CONTACT_ARRAY_LIST", contactArrayList)
+            arguments.putSerializable("CONTACT_HASH_MAP", contactHashMap)
+
+            contactsFragment.arguments = arguments
+            return contactsFragment
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        AndroidSupportInjection.inject(this)
+
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val contextThemeWrapper = ContextThemeWrapper(activity, R.style.AppTheme)
+
+        // clone the inflater using the ContextThemeWrapper
+        val localInflater = inflater.cloneInContext(contextThemeWrapper)
+
+        val view = localInflater.inflate(R.layout.fragment_contact_parent, container, false)
+
+        this.recyclerView = view.findViewById(R.id.recycler_view)
+        this.emptyTextView = view.findViewById(R.id.text_no_data_to_display)
+        getContactsPermissions()
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
+    }
 
     private fun getContactList() {
         val serverUrl = serverInteractor.get()!!
@@ -98,13 +134,13 @@ class ContactsFragment : Fragment() {
                                 run{
                                     val contact = Contact()
                                     contact.setName(contactEntity.name!!)
-                                    if(contactEntity.isPhone){
+                                    if (contactEntity.isPhone) {
                                         contact.setPhoneNumber(contactEntity.phoneNumber!!)
                                         contact.setIsPhone(true)
-                                    }else {
+                                    } else {
                                         contact.setEmailAddress(contactEntity.emailAddress!!)
                                     }
-                                    if(contactEntity.username != null){
+                                    if(contactEntity.username != null) {
                                         contact.setUsername(contactEntity.username)
                                     }
                                     contact.setAvatarUrl(serverUrl.avatarUrl(contact?.getUsername() ?: ""))
@@ -127,11 +163,14 @@ class ContactsFragment : Fragment() {
 
         val searchItem = menu.findItem(R.id.action_search)
         searchView = searchItem?.actionView as? SearchView
-        searchView?.maxWidth = Integer.MAX_VALUE
-        if (Constants.WIDECHAT) {
-        setupWidechatSearchView()}
         searchView?.onQueryTextListener { queryContacts(it) }
 
+        if (Constants.WIDECHAT) {
+            setupWidechatSearchView()
+            return
+        }
+
+        searchView?.maxWidth = Integer.MAX_VALUE
         val expandListener = object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 // Simply setting sortView to visible won't work, so we invalidate the options
@@ -148,6 +187,25 @@ class ContactsFragment : Fragment() {
         searchItem?.setOnActionExpandListener(expandListener)
     }
 
+    fun setupToolbar(){
+        (activity as MainActivity).toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        (activity as MainActivity).toolbar.setNavigationOnClickListener { activity?.onBackPressed()}
+        with((activity as AppCompatActivity?)?.supportActionBar) {
+            this?.setDisplayShowTitleEnabled(true)
+            this?.title = getString(R.string.title_contacts)
+        }
+
+        if (Constants.WIDECHAT) {
+            with((activity as AppCompatActivity?)?.supportActionBar) {
+                profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
+                profileButton?.visibility = View.GONE
+                onlineStatusButton=this?.getCustomView()?.findViewById(R.id.text_online)
+                onlineStatusButton?.visibility = View.GONE
+                widechatSearchView = this?.getCustomView()?.findViewById(R.id.action_widechat_search)
+                widechatSearchView?.visibility = View.GONE
+            }
+        }
+    }
 
     private fun setupWidechatSearchView() {
         searchView?.setBackgroundResource(R.drawable.widechat_search_white_background)
@@ -186,7 +244,6 @@ class ContactsFragment : Fragment() {
             if (src.regionMatches(i, what, 0, length, ignoreCase = true))
                 return true
         }
-
         return false
     }
 
@@ -196,10 +253,7 @@ class ContactsFragment : Fragment() {
         } else {
             var filteredContactArrayList: ArrayList<Contact> = ArrayList()
             for (contact in contactArrayList) {
-                if (containsIgnoreCase(contact.getName()!!, query)
-                        || (contact.isPhone() && containsIgnoreCase(contact.getPhoneNumber()!!, query))
-                        || (!contact.isPhone() && containsIgnoreCase(contact.getEmailAddress()!!, query))
-                ) {
+                if (containsIgnoreCase(contact.getName()!!, query)) {
                     filteredContactArrayList.add(contact)
                 }
             }
@@ -207,12 +261,10 @@ class ContactsFragment : Fragment() {
         }
     }
 
-
     override fun onRequestPermissionsResult(
             requestCode: Int,
             permissions: Array<String>,
-            grantResults: IntArray
-    ) {
+            grantResults: IntArray) {
         when (requestCode) {
             MY_PERMISSIONS_REQUEST_RW_CONTACTS -> {
                 if (
@@ -230,15 +282,6 @@ class ContactsFragment : Fragment() {
                 // Ignore all other requests.
             }
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        AndroidSupportInjection.inject(this)
-
-        setHasOptionsMenu(true)
-
-
     }
 
     private fun getContactsPermissions() {
@@ -259,34 +302,7 @@ class ContactsFragment : Fragment() {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
-    }
-
-    fun setupToolbar(){
-        (activity as MainActivity).toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        (activity as MainActivity).toolbar.setNavigationOnClickListener { activity?.onBackPressed()}
-        with((activity as AppCompatActivity?)?.supportActionBar) {
-            this?.setDisplayShowTitleEnabled(true)
-            this?.title = getString(R.string.title_contacts)
-        }
-
-        if (Constants.WIDECHAT) {
-            with((activity as AppCompatActivity?)?.supportActionBar) {
-                profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
-                profileButton?.visibility = View.GONE
-                onlineStatusButton=this?.getCustomView()?.findViewById(R.id.text_online)
-                onlineStatusButton?.visibility=View.GONE
-                widechatSearchView = this?.getCustomView()?.findViewById(R.id.action_widechat_search)
-                widechatSearchView?.visibility = View.GONE
-            }
-        }
-    }
-
-
     fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>) {
-
 
         if (filteredContactArrayList!!.size == 0) {
             emptyTextView!!.visibility = View.VISIBLE
@@ -301,66 +317,21 @@ class ContactsFragment : Fragment() {
         }
     }
 
-        fun map(contacts: List<Contact>): ArrayList<ItemHolder<*>> {
-            val finalList = ArrayList<ItemHolder<*>>(contacts.size + 2)
-            val userList = ArrayList<ItemHolder<*>>(contacts.size)
-            val contactsList = ArrayList<ItemHolder<*>>(contacts.size)
-            contacts.forEach { contact ->
-                if(contact.getUsername()!=null){
-                    userList.add(ContactItemHolder(contact))
-                }else{
-                    contactsList.add(ContactItemHolder(contact))
-                }
+    fun map(contacts: List<Contact>): ArrayList<ItemHolder<*>> {
+        val finalList = ArrayList<ItemHolder<*>>(contacts.size + 2)
+        val userList = ArrayList<ItemHolder<*>>(contacts.size)
+        val contactsList = ArrayList<ItemHolder<*>>(contacts.size)
+        contacts.forEach { contact ->
+            if(contact.getUsername()!= null){
+                userList.add(ContactItemHolder(contact))
+            } else {
+                contactsList.add(ContactItemHolder(contact))
             }
-            finalList.addAll(userList)
-            finalList.add(ContactHeaderItemHolder("INVITE CONTACTS"))
-            finalList.addAll(contactsList)
-            finalList.add(inviteItemHolder("invite"))
-            return finalList
         }
-
-
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val contextThemeWrapper = ContextThemeWrapper(activity, R.style.AppTheme)
-
-        // clone the inflater using the ContextThemeWrapper
-        val localInflater = inflater.cloneInContext(contextThemeWrapper)
-
-        val view = localInflater.inflate(R.layout.fragment_contact_parent, container, false)
-
-        this.recyclerView = view.findViewById(R.id.recycler_view)
-        this.emptyTextView = view.findViewById(R.id.text_no_data_to_display)
-        getContactsPermissions()
-        return view
+        finalList.addAll(userList)
+        finalList.add(ContactHeaderItemHolder("INVITE CONTACTS"))
+        finalList.addAll(contactsList)
+        finalList.add(inviteItemHolder("invite"))
+        return finalList
     }
-
-    companion object {
-
-        /**
-         * Create a new ContactList fragment that displays the given list of contacts
-         *
-         * @param contactArrayList the list of contacts to load in the recycler view
-         * @param contactHashMap the mapping of contacts with their registration status
-         * @return the newly created ContactList fragment
-         */
-        fun newInstance(
-                contactArrayList: ArrayList<Contact>,
-                contactHashMap: HashMap<String, String>
-        ): ContactsFragment {
-            val contactsFragment = ContactsFragment()
-
-            val arguments = Bundle()
-            arguments.putParcelableArrayList("CONTACT_ARRAY_LIST", contactArrayList)
-            arguments.putSerializable("CONTACT_HASH_MAP", contactHashMap)
-
-            contactsFragment.arguments = arguments
-
-            return contactsFragment
-        }
-    }
-
-
-
-
 }

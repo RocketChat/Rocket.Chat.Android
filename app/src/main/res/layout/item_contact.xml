@@ -8,8 +8,8 @@
     android:background="?android:attr/selectableItemBackground"
     android:paddingStart="@dimen/screen_edge_left_and_right_padding"
     android:paddingTop="@dimen/chat_item_top_and_bottom_padding"
-    android:paddingEnd="@dimen/screen_edge_left_and_right_padding">
-
+    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+    android:paddingBottom="@dimen/chat_item_top_and_bottom_padding">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/contact_image_avatar"
@@ -25,19 +25,17 @@
         fresco:roundingBorderPadding="2dp"
         fresco:roundingBorderWidth="2dp" />
 
-
     <TextView
         android:id="@+id/contact_detail"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
+        android:paddingLeft="12dp"
         android:maxLines="2"
-        android:textDirection="locale"
+        android:textStyle="bold"
         android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="@+id/contact_image_avatar"
         app:layout_constraintTop_toBottomOf="@+id/contact_name"
+        app:layout_constraintLeft_toRightOf="@+id/contact_image_avatar"
         tools:text="Phone number goes here" />
-
 
     <TextView
         android:id="@+id/contact_name"
@@ -56,17 +54,17 @@
         android:fontFamily="@string/font_fontFamily_widechat"
         tools:text="Name goes here" />
 
-    <Button
+    <TextView
         android:id="@+id/invite_contact"
-        style="?android:attr/borderlessButtonStyle"
+        style="@style/ChatRoom.Name.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Invite"
         android:textColor="@color/color_invite"
         android:fontFamily="@string/font_fontFamily_widechat"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteY="4dp" />
+        app:layout_constraintBottom_toBottomOf="parent" />
+
     <TextView
         android:id="@+id/chat_username"
         style="@style/Sender.Name.TextView"
@@ -80,12 +78,12 @@
         android:fontFamily="@string/font_fontFamily_widechat"
         tools:text="alex.johnson" />
 
-
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

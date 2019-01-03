@@ -165,7 +165,6 @@ dependencies {
     testImplementation libraries.truth
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoIntents
-
 }
 
 kotlin {

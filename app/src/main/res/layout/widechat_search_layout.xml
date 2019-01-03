@@ -8,16 +8,13 @@
     android:paddingEnd="8dp"
     android:paddingStart="0dp">
 
-
-
     <RelativeLayout
         android:id="@+id/rl_image_avatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="24dp"
-        >
+        android:layout_marginEnd="24dp">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/profile_image_avatar"
@@ -40,8 +37,7 @@
             android:layout_alignBottom="@+id/profile_image_avatar"
             android:src="@drawable/ic_status_online_12dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/circle_background_white"
-          />
+            android:background="@drawable/circle_background_white" />
     </RelativeLayout>
 
    <androidx.appcompat.widget.SearchView
@@ -49,7 +45,6 @@
        android:layout_height="match_parent"
        android:id="@+id/action_widechat_search"
        android:icon="@drawable/ic_search_white_24dp"
-
        android:iconifiedByDefault="false"
        android:imeOptions="actionSearch|flagNoExtractUi|flagNoFullscreen"
        android:title="@string/action_search"

@@ -12,11 +12,9 @@ class Contact() : Parcelable {
     private var username: String? = null
     private var avatarUrl: String? = null
 
-
     fun getUsername(): String? {
         return username
     }
-
 
     private fun formatPhoneNumber(phone: String): String {
         return phone.replace("-|\\s|\\(|\\)".toRegex(), "")
@@ -29,7 +27,6 @@ class Contact() : Parcelable {
             return getEmailAddress()
         }
     }
-
 
     fun getName(): String? {
         return name
@@ -81,7 +78,6 @@ class Contact() : Parcelable {
         this.phoneNumber = parcel.readString()
     }
 
-
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         dest?.writeString(name)
         dest?.writeString(phoneNumber)
@@ -100,5 +96,4 @@ class Contact() : Parcelable {
             return arrayOfNulls(size)
         }
     }
-
 }

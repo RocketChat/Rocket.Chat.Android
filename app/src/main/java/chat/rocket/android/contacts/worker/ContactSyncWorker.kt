@@ -141,7 +141,6 @@ class ContactSyncWorker(context : Context, params : WorkerParameters)
         })
     }
 
-
     private fun hashString(input: String): String {
         val HEX_CHARS = "0123456789abcdef"
         val bytes = MessageDigest

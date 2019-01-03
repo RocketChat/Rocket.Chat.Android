@@ -5,24 +5,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.*
-import chat.rocket.android.contacts.models.Contact
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extensions.inflate
-import kotlinx.android.synthetic.main.item_contact.view.*
-import kotlin.collections.HashMap
 
+// EAR test
+import timber.log.Timber
 
 class ContactRecyclerViewAdapter(
         private val context: MainActivity,
         private val contactArrayList: List<ItemHolder<*>>
-
 
 ) : RecyclerView.Adapter<ViewHolder<*>>() {
 
     init {
         setHasStableIds(true)
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> {
         return when (viewType) {
@@ -69,12 +66,23 @@ class ContactRecyclerViewAdapter(
             holder.itemView.setOnClickListener { view ->
                 run {
                     val contact = holder.data!!.data
-                  if(contact.getUsername()==null)
-                    context.startActivity(Intent.createChooser(context.intent, context.getString(R.string.msg_share_using)))//                    if(contactCardViewHolder.contact!!.isPhone()){
+
+                    if (contact.getUsername() == null) {
+                        Timber.d("#########  EAR >> this is the value for isPhone: ")
+                        Timber.d(contact!!.isPhone().toString())
+                        if (contact!!.isPhone()) {
+                            Timber.d("#########  EAR >> inviting via sms now...")
+                            context.presenter.inviteViaSMS(contact!!.getPhoneNumber()!!)
+                        } else {
+                            context.presenter.inviteViaEmail(contact!!.getEmailAddress()!!)
+                        }
+                    }
                 }
             }
+
          } else if (holder is ContactHeaderViewHolder) {
             holder.bind(contactArrayList[position] as ContactHeaderItemHolder)
+
         } else if (holder is InviteViewHolder) {
             holder.bind(contactArrayList[position] as inviteItemHolder)
             holder.itemView.setOnClickListener {
@@ -82,7 +90,6 @@ class ContactRecyclerViewAdapter(
             }
          }
     }
-
 
     private fun shareApp() {
         with(Intent(Intent.ACTION_SEND)) {
@@ -98,5 +105,4 @@ class ContactRecyclerViewAdapter(
         const val VIEW_TYPE_HEADER = 2
         const val VIEW_TYPE_INVITE = 4
     }
-
 }
