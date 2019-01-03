@@ -17,6 +17,7 @@ class MemberUiModel(
     val realName: String?
     val username: String?
     val email: String?
+    var roles: List<String>?
     val utcOffset: Float?
     val status: UserStatus?
 
@@ -27,6 +28,7 @@ class MemberUiModel(
         username = getUserUsername()
         email = getUserEmail()
         utcOffset = getUserUtcOffset()
+        roles = getUserRoles()
         status = getUserStatus()
     }
 
@@ -51,6 +53,8 @@ class MemberUiModel(
     private fun getUserEmail(): String? = member.emails?.get(0)?.address
 
     private fun getUserUtcOffset(): Float? = member.utcOffset
+
+    private fun getUserRoles(): List<String>? = member.roles
 
     private fun getUserStatus(): UserStatus? = member.status
 }

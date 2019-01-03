@@ -244,6 +244,13 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="Sender.Role.TextView" parent="TextAppearance.AppCompat.Title">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/darkGray</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="Message.TextView" parent="android:TextAppearance">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/colorPrimaryText</item>

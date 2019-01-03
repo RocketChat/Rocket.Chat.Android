@@ -31,4 +31,40 @@
         tools:drawableStart="@drawable/ic_status_invisible_12dp"
         tools:text="Ronald Perkins" />
 
+    <TextView
+        android:id="@+id/text_member_owner"
+        style="@style/Sender.Role.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:drawablePadding="@dimen/text_view_drawable_padding"
+        app:layout_constraintBottom_toBottomOf="@+id/text_member"
+        app:layout_constraintLeft_toRightOf="@+id/text_member"
+        app:layout_constraintTop_toTopOf="@+id/text_member"
+        tools:text="Owner" />
+
+    <TextView
+        android:id="@+id/text_member_leader"
+        style="@style/Sender.Role.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:drawablePadding="@dimen/text_view_drawable_padding"
+        app:layout_constraintBottom_toBottomOf="@+id/text_member_owner"
+        app:layout_constraintLeft_toRightOf="@+id/text_member_owner"
+        app:layout_constraintTop_toTopOf="@+id/text_member_owner"
+        tools:text="Leader" />
+
+    <TextView
+        android:id="@+id/text_member_moderator"
+        style="@style/Sender.Role.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:drawablePadding="@dimen/text_view_drawable_padding"
+        app:layout_constraintBottom_toBottomOf="@+id/text_member_leader"
+        app:layout_constraintLeft_toRightOf="@+id/text_member_leader"
+        app:layout_constraintTop_toTopOf="@+id/text_member_leader"
+        tools:text="Mod" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

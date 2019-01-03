@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_member_set_owner"
+        android:icon="@drawable/ic_action_message_info_outline_24dp"
+        android:title="Set as Owner" />
+    <item
+        android:id="@+id/action_member_set_leader"
+        android:icon="@drawable/ic_action_message_reply_24dp"
+        android:title="Set as Leader" />
+    <item
+        android:id="@+id/action_member_set_moderator"
+        android:icon="@drawable/ic_action_message_edit_24dp"
+        android:title="Set as Moderator" />
+
+    <item
+        android:id="@+id/action_member_ignore"
+        android:icon="@drawable/ic_add_reaction"
+        android:title="Ignore" />
+
+    <item
+        android:id="@+id/action_member_mute"
+        android:icon="@drawable/ic_action_message_link_24dp"
+        android:title="Mute user" />
+
+    <item
+        android:id="@+id/action_member_remove"
+        android:icon="@drawable/ic_logout_black_24dp"
+        android:title="Remove from room" />
+
+</menu>

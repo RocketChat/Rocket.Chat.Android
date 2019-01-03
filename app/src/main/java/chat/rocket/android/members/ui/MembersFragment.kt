@@ -41,8 +41,7 @@ class MembersFragment : Fragment(), MembersView {
     lateinit var presenter: MembersPresenter
     @Inject
     lateinit var analyticsManager: AnalyticsManager
-    private val adapter: MembersAdapter =
-        MembersAdapter { memberUiModel -> presenter.toMemberDetails(memberUiModel) }
+    private lateinit var adapter: MembersAdapter
     private val linearLayoutManager = LinearLayoutManager(context)
     private lateinit var chatRoomId: String
 
@@ -117,13 +116,9 @@ class MembersFragment : Fragment(), MembersView {
 
     private fun setupRecyclerView() {
         ui {
-            recycler_view.layoutManager = LinearLayoutManager(context)
-            recycler_view.addItemDecoration(
-                DividerItemDecoration(
-                    it,
-                    DividerItemDecoration.HORIZONTAL
-                )
-            )
+            adapter = MembersAdapter ({ memberUiModel -> presenter.toMemberDetails(memberUiModel) }, presenter)
+            recycler_view.layoutManager = linearLayoutManager
+            recycler_view.addItemDecoration(DividerItemDecoration(it, DividerItemDecoration.HORIZONTAL))
             recycler_view.adapter = adapter
         }
     }
