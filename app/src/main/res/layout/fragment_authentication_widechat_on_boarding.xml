@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="24dp"
-        android:src="@drawable/ic_viasat_logo_full"/>
+        android:src="@drawable/ic_viasat_logo_tm_white"/>
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/widechat_view_loading"
