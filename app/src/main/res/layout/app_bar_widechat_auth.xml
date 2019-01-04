@@ -19,7 +19,7 @@
             android:contentDescription="Viasat logo"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/ic_viasat_logo_full"/>
+            android:src="@drawable/ic_viasat_logo_tm_white"/>
 
     </androidx.appcompat.widget.Toolbar>
 

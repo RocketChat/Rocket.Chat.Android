@@ -214,4 +214,11 @@
         <item name="android:paddingBottom">9dp</item>
     </style>
 
+    <style name="WelcomeToViasatCo"	parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/unineue_bold_webfont</item>
+        <item name="android:textColor">#FFFFFFFF</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>
