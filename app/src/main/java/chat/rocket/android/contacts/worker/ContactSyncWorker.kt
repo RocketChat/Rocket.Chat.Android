@@ -10,7 +10,9 @@ import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.common.RocketChatException
 import chat.rocket.core.RocketChatClient
+import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.rest.queryContacts
 import chat.rocket.core.model.ContactHolder
 import kotlinx.coroutines.experimental.runBlocking
@@ -36,22 +38,29 @@ class ContactSyncWorker(context : Context, params : WorkerParameters)
     override fun doWork(): Result {
         AndroidWorkerInjection.inject(this)
 
-        val currentServer = serverInteractor.get()!!
+        val currentServer = serverInteractor.get()
+        if (currentServer == null){
+            return Result.RETRY
+        }
         val client: RocketChatClient = factory.create(currentServer)
+        if (!(client.state is State.Connected)){
+            return Result.RETRY
+        }
 
         getContactList()
         val dbManager = dbFactory.create(serverInteractor.get()!!)
 
         val strongHashes: List<String> = (contactArrayList.map { contact -> hashString(contact.getDetail()!!) })
         val weakHashes: List<String> = strongHashes.map{ strongHash -> strongHash.substring(3,9) }
+        var retryFlag:Boolean = false
         runBlocking {
-            val apiResult: List<ContactHolder>? = client.queryContacts(weakHashes)
-            if (apiResult != null) {
-                try {
+            try {
+                val apiResult: List<ContactHolder>? = client.queryContacts(weakHashes)
+                if (apiResult != null) {
                     val intersectionMap: HashMap<String, String> = HashMap()
                     val intersection: List<String> = apiResult!!.mapIndexed { index, list ->
                         run {
-                           intersectionMap.put(list.h, list.u)
+                            intersectionMap.put(list.h, list.u)
                             list.h
                         }
                     }
@@ -63,15 +72,18 @@ class ContactSyncWorker(context : Context, params : WorkerParameters)
                             }
                         }
                     }
-                } finally {
-                    dbManager.processContacts(contactArrayList)
                 }
-
+                Timber.d("Contacts fetched in background.")
+            }catch (ex: RocketChatException){
+                retryFlag = true
+            }finally {
+                dbManager.processContacts(contactArrayList)
             }
-            Timber.d("Contacts fetched in background.")
+        }
+        if(retryFlag){
+            return Result.RETRY
         }
         return Result.SUCCESS
-
     }
 
     private fun getContactList() {
@@ -128,7 +140,6 @@ class ContactSyncWorker(context : Context, params : WorkerParameters)
             o1.getName()!!.compareTo(o2.getName()!!)
         })
     }
-
 
     private fun hashString(input: String): String {
         val HEX_CHARS = "0123456789abcdef"
