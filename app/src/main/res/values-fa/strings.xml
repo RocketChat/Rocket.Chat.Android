@@ -149,7 +149,7 @@
     <string name="msg_file_description">توضیحات پرونده</string>
     <string name="msg_send">ارسال</string>
     <string name="msg_sent_attachment">ارسال ضمیمه</string>
-    <string name="msg_welcome_to_rocket_chat">به پیام‌رسان سبا خوش آمدید!</string>
+    <string name="msg_welcome_to_rocket_chat">به پیام‌رسان راکت خوش آمدید!</string>
     <string name="msg_team_communication">ارتباط تیمی</string>
     <string name="msg_login_with_email">ورود با  <b>ایمیل</b></string>
     <string name="msg_create_account">ایجاد حساب کاربری</string>
