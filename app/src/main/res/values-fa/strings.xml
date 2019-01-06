@@ -310,13 +310,11 @@
     <string name="alert_title_default_skin_tone">مدل پوسته‌ی پیش‌فرض</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">دسته بندی</string>
     <string name="dialog_sort_title">دسته بندی بر اساس</string>
     <string name="dialog_sort_by_alphabet">الفبا</string>
     <string name="dialog_sort_by_activity">فعالیت</string>
     <string name="dialog_group_by_type">گروه کردن بر اساس نوع</string>
     <string name="dialog_group_favourites">گروه کردن موردعلاقه‌ها</string>
-    <string name="dialog_button_done">انجام شد</string>
     <string name="chatroom_header">سرپیام</string>
 
     <!--ChatRooms Headers-->
