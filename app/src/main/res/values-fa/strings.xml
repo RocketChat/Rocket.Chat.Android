@@ -32,7 +32,7 @@
     <string name="action_connect">متصل</string>
     <string name="action_use_this_username">از این شناسه‌ی کاربری استفاده کنید</string>
     <string name="action_terms_of_service">شرایط خدمات رسانی</string>
-    <string name="action_privacy_policy">Privacy Policy</string>
+    <string name="action_privacy_policy">سیاست حفظ جریم خصوصی</string>
     <string name="action_search">جست‌وجو</string>
     <string name="action_update">به روزرسانی</string>
     <string name="action_settings">تنظیمات</string>
@@ -159,10 +159,10 @@
     <string name="msg_continue_with_linkedin">ادامه دادن با <b>لینکدین</b></string>
     <string name="msg_continue_with_gitlab">ادامه دادن با <b>گیت‌لب</b></string>
     <string name="msg_continue_with_wordpress">ادامه دادن با <b>وردپرس</b></string>
-    <string name="msg_two_factor_authentication">Two-factor Authentication</string>
-    <string name="msg__your_2fa_code">What’s your 2FA code?</string>
-    <string name="msg_permalink_copied">Permalink copied</string>
-    <string name="msg_no_topic">هیچ موضوعی اضافه نشد</string>
+    <string name="msg_two_factor_authentication">تایید هویت دو فاکتوره</string>
+	<string name="msg__your_2fa_code">کد 2FA تان چیست؟</string>
+	    <string name="msg_permalink_copied">پیوند کپی شد</string>
+	    <string name="msg_no_topic">هیچ موضوعی اضافه نشد</string>
     <string name="msg_no_announcement">هیچ اعلانی اضافه نشد</string>
     <string name="msg_no_description">هیچ توضیحی اضافه نشد</string>
     <string name="msg_send_email">ارسال ایمیل</string>
@@ -191,12 +191,11 @@
     <string name="msg_view_more">مشاهده‌ی بیشتر</string>
     <string name="msg_view_less">مشاهده‌ی کمتر</string>
     <string name="msg_muted_on_this_channel">آیا این کانال را بی‌صدا کردید؟</string>
-
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">ردگیری تحلیلی</string>
-    <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string>
-    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">قابل اجرا نیست زیرا نسخه‌ی FOSS است</string>
+    <string name="msg_send_analytics_tracking">برای بهبود این کاره آمار ناشناس بفرستید</string>
+    <string name="msg_do_not_send_analytics_tracking">برای بهبود این کاره آمار ناشناس نفرستید</string>
+      <string name="msg_not_applicable_since_it_is_a_foss_version">قابل اجرا نیست زیرا نسخه‌ی FOSS است</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">نام اتاق تغییر پیدا کرد به: %1$s توسط %2$s</string>
@@ -209,9 +208,9 @@
     <string name="message_pinned">پیام سوزن شده:</string>
     <string name="message_muted">کاربر %1$s توسط %2$s صامت شد</string>
     <string name="message_unmuted">کاربر %1$s توسط %2$s صدادار شد</string>
-    <string name="message_role_add">%1$s was set %2$s by %3$s</string>
-    <string name="message_role_removed">%1$s is no longer %2$s by %3$s</string>
-    <string name="message_credentials_saved_successfully">اختیارها با موفقیت ذخیره شد</string>
+    <string name="message_role_add">%1$s به این تغییر داده شد %2$s توسط %3$s</string>
+       <string name="message_role_removed">%1$s دیگر این نیست %2$s توسط %3$s</string>
+       <string name="message_credentials_saved_successfully">اختیارها با موفقیت ذخیره شد</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">جواب</string>
@@ -268,8 +267,9 @@
     <string name="msg_all_files_appear_here">تمام پرونده‌ها اینجا نمایش داده شده‌اند</string>
 
     <!-- Upload Messages -->
-    <string name="max_file_size_exceeded">File size %1$d bytes exceeded max upload size of %2$d bytes</string>
-
+    <string name="max_file_size_exceeded">اندازه‌ی فایل %1$d بایت است و اندازه‌ی ماکسیمم %2$d بایت بیشتر شده</string>
+    
+    
     <!-- Socket status -->
     <string name="status_connected">متصل</string>
     <string name="status_disconnected">قطع شده</string>
@@ -289,8 +289,8 @@
     <string name="Slash_Tableflip_Description"> (╯°□°）╯︵ ┻━┻ را نمایش می‌دهد</string>
     <string name="Slash_TableUnflip_Description"> ┬─┬ ノ( ゜-゜ノ) را نمایش می‌دهد</string>
     <string name="Create_A_New_Channel">ایجاد کانال جدید</string>
-    <string name="Show_the_keyboard_shortcut_list">Show the keyboard shortcut list</string>
-    <string name="Invite_user_to_join_channel_all_from">دعوت کردن تمام اعضاء از کانال [#channel] تا به این کانال بپیوندند</string>
+    <string name="Show_the_keyboard_shortcut_list">نمایش لیست میانبر کیبورد</string>
+     <string name="Invite_user_to_join_channel_all_from">دعوت کردن تمام اعضاء از کانال [#channel] تا به این کانال بپیوندند</string>
     <string name="Invite_user_to_join_channel_all_to">دعوت از تمامی اعضای این کانال برای پیوستن به کانال [#channel]</string>
     <string name="Archive">بایگانی</string>
     <string name="Remove_someone_from_room">حذف کردن کسی از این کانال</string>
@@ -335,12 +335,12 @@
     <string name="message_information_title">اطلاعات پیام</string>
     <string name="message_room_changed_privacy">نوع اتاق تغییر پیدا کرد به: %1$s توسط %2$s</string>
 
-  
+
 
     <!-- User Details -->
     <string name="message">پیام</string>
     <string name="timezone">منطقه‌ی زمانی</string>
-    
+
     <string name="error_opening_dm">زمانی که این گفت‌وگو را ایجاد کردیم مشکلی رخ داد…</string>
     <string name="retry">تلاش دوباره</string>
 
