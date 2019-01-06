@@ -2,13 +2,13 @@
    <!-- Titles -->
     <string name="title_sign_in_your_server">به سرور خود متصل شوید</string>
     <string name="title_log_in">ورود</string>
-    <string name="title_share_the_app">به اشتراک‌گذاری اپلیکیشن</string>
-    <string name="title_register_username">ثبت شناسه‌ی کاربری</string>
+    <string name="title_share_the_app">به اشتراک گذاری اپلیکیشن</string>
+    <string name="title_register_username">ثبت شناس ی کاربری</string>
     <string name="title_reset_password">تعویض گذرواژه</string>
-    <string name="title_sign_up">ثبت‌‌نام کنید</string>
+    <string name="title_sign_up">ثبت نام کنید</string>
     <string name="title_authentication">Authentication</string>
     <string name="title_legal_terms">شروط حقوقی</string>
-    <string name="title_chats">گفت‌وگوها</string>
+    <string name="title_chats">گفت وگوها</string>
     <string name="title_profile">نمایه</string>
     <string name="title_members">اعضاء</string>
     <string name="title_counted_members">اعضاء (%d)</string>
@@ -33,7 +33,7 @@
     <string name="action_use_this_username">از این شناسه‌ی کاربری استفاده کنید</string>
     <string name="action_terms_of_service">شرایط خدمات رسانی</string>
     <string name="action_privacy_policy">Privacy Policy</string>
-    <string name="action_search">جست‌وجو</string>
+    <string name="action_search">جست وجو</string>
     <string name="action_update">به روزرسانی</string>
     <string name="action_settings">تنظیمات</string>
     <string name="action_create_channel">ایجاد کانال</string>
@@ -41,7 +41,7 @@
     <string name="action_logout">خروج</string>
     <string name="action_attach_a_files">ضمیمه کردن پرونده</string>
     <string name="action_confirm_password">موافقت با تغییر گذرواژه</string>
-    <string name="action_join_chat">به گفت‌وگو بپیوندید</string>
+    <string name="action_join_chat">به گفت وگو بپیوندید</string>
     <string name="action_add_account">اضافه کردن حساب کاربری</string>
     <string name="action_online">آنلاین</string>
     <string name="action_away">Away</string>
@@ -55,19 +55,21 @@
     <string name="action_connect_server">اتصال به سرور</string>
     <string name="action_join_community">به انجمن بپیوندید</string>
     <string name="action_create_server">ایجاد سرور جدید</string>
-    <string name="action_register">ثبت‌نام</string>
+    <string name="action_register">ثب نام</string>
     <string name="action_confirm">تایید</string>
     <string name="action_delete_account">حذف حساب کاربری</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
+
         <item name="item_preferences">ترجیحات</item>
         <item name="item_password">تغییر گذرواژه</item>
-        <item name="item_share_app">به اشتراک‌گذاری اپلیکیشن</item>
+        <item name="item_share_app">به اشتراک گذاری اپلیکیشن</item>
         <item name="item_rate_us">به ما امتیاز دهید</item>
         <item name="item_contact_us">تماس با ما</item>
         <item name="item_licence">مجوز</item>
         <item name="item_about">درباره</item>
+
     </string-array>
 
     <!-- Regular information messages -->
@@ -84,7 +86,7 @@
     <string name="msg_avatar_url">ULR تصویر نمایه</string>
     <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
     <string name="msg_new_user">کاربر جدید? %1$s</string>
-    <string name="msg_forgot__your_password">گذرواژه‌تان را فراموش کردید؟</string>
+    <string name="msg_forgot__your_password">گذرواژه تان را فراموش کردید؟</string>
     <string name="msg_reset">راه اندازی مجدد</string>
     <string name="msg_check_your_email_to_reset_your_password">ایمیل فرستاده شد. صندوق ورودی خود را برای تعویض گذرواژه چک کنید</string>
     <string name="msg_invalid_email">لطفا یک ایمیل معتبر را بنویسید</string>
@@ -97,26 +99,26 @@
     <string name="msg_invalid_2fa_code">Invalid 2FA Code</string>
     <string name="msg_invalid_file">پرونده‌ی نامعتبر</string>
     <string name="msg_invalid_server_url">سرور  نامعتبر URL</string>
-    <string name="msg_content_description_log_in_using_facebook">با فیس‌بوک وارد شوید</string>
-    <string name="msg_content_description_log_in_using_github">با گیت‌هاب وارد شوید</string>
+    <string name="msg_content_description_log_in_using_facebook">با فیس بوک وارد شوید</string>
+    <string name="msg_content_description_log_in_using_github">با گیت هاب وارد شوید</string>
     <string name="msg_content_description_log_in_using_google">با گوگل وارد شوید</string>
     <string name="msg_content_description_log_in_using_linkedin">با لینکدین وارد شوید</string>
     <string name="msg_content_description_log_in_using_meteor">با میتور وارد شوید</string>
     <string name="msg_content_description_log_in_using_twitter">با توییتر وارد شوید</string>
-    <string name="msg_content_description_log_in_using_gitlab">با گیت‌لب وارد شوید</string>
+    <string name="msg_content_description_log_in_using_gitlab">با گیت لب وارد شوید</string>
     <string name="msg_content_description_log_in_using_wordpress">با وردپرس وارد شوید</string>
     <string name="msg_content_description_send_message">ارسال پیام</string>
-    <string name="msg_content_description_show_more_login_options">نمایش گزینه‌های ورود بیشتر</string>
-    <string name="msg_content_description_show_attachment_options">نمایش گزینه‌های ضمیمه</string>
+    <string name="msg_content_description_show_more_login_options">نمایش گزینه های ورود بیشتر</string>
+    <string name="msg_content_description_show_attachment_options">نمایش گزینه های ضمیمه</string>
     <string name="msg_you">شما</string>
     <string name="msg_unknown">ناشناس</string>
     <string name="msg_email_address">آدرس ایمیل</string>
     <string name="msg_utc_offset">UTC offset</string>
-    <string name="msg_new_password">گذرواژه‌ی جدید را وارد کنید</string>
-    <string name="msg_confirm_password">گذرواژه‌ی جدید را تصدیق کنید</string>
+    <string name="msg_new_password">گذرواژه ی جدید را وارد کنید</string>
+    <string name="msg_confirm_password">گذرواژه ی جدید را تصدیق کنید</string>
     <string name="msg_channel_name">نام کانال</string>
-    <string name="msg_search">جست‌وجو</string>
-    <string name="msg_unread_messages">پیام خوانده‌نشده</string>
+    <string name="msg_search">جست وجو</string>
+    <string name="msg_unread_messages">پیام خوانده نشده</string>
     <string name="msg_preview_video">ویدیو</string>
     <string name="msg_preview_audio">صدا</string>
     <string name="msg_preview_photo">تصویر</string>
@@ -126,38 +128,38 @@
     <string name="msg_ok">تایید</string>
     <string name="msg_update_app_version_in_order_to_continue">Out to date server version. Please contact the server admin to update the server version in order to continue.</string>
     <string name="msg_ver_not_recommended">
-        به نظر می‌رسد نسخه‌ی سرور شما پایین‌تر از نسخه‌ی پیشنهایست %1$s.\nشما همچنان می‌توانید وارد شوید ولی ممکن است برخی مشکلات غیر منتظره رخ دهد.</string>
+        به نظر میرسد نسخه ی سرور شما پایینتر از نسخه ی پیشنهایست %1$s.\nشما همچنان میتوانید وارد شوید ولی ممکن است برخی مشکلات غیر منتظره رخ دهد.</string>
     <string name="msg_ver_not_minimum">
-        به نظر می‌رسد نسخه‌ی سرور شما پایین‌تر از نسخه‌ی پیشنهادیست %1$s.\nلطفا سرور خود را ارتقاع دهید تا وارد شوید!
+        به نظر میرسد نسخه ی سرور شما پایینتر از نسخه ی پیشنهادیست %1$s.\nلطفا سرور خود را ارتقاع دهید تا وارد شوید!
     </string>
-    <string name="msg_no_chat_title">هیچ پیام گفت‌وگویی نیست</string>
-    <string name="msg_no_chat_description">لطفا گفت‌و گو را شروع کنید تا پیام‌ها را اینجا\nmessages ببینید.</string>
+    <string name="msg_no_chat_title">هیچ پیام گفت وگویی نیست</string>
+    <string name="msg_no_chat_description">لطفا گفت و گو را شروع کنید تا پیامها را اینجا\nmessages ببینید.</string>
     <string name="msg_cancel">انصراف</string>
-    <string name="msg_http_insecure">زمانی که از HTTP استفاده می‌کنید در حال وصل شدن به یک سرور ناامن هستید. ما این کار را پیشنهاد نمی‌کنیم.</string>
-    <string name="msg_error_checking_server_version">موقع چک کردن نسخه‌ی سرور شما اشکالی رخ داد. لطفا دوباره تلاش کنید</string>
-    <string name="msg_invalid_server_protocol">پروتکل انتخاب شده برای این سرور قابل‌قبول نیست. لطفا از HTTPS استفاده کنید</string>
+    <string name="msg_http_insecure">زمانی که از HTTP استفاده میکنید در حال وصل شدن به یک سرور ناامن هستید. ما این کار را پیشنهاد نمیکنیم.</string>
+    <string name="msg_error_checking_server_version">موقع چک کردن نسخه ی سرور شما اشکالی رخ داد. لطفا دوباره تلاش کنید</string>
+    <string name="msg_invalid_server_protocol">پروتکل انتخاب شده برای این سرور قابل قبول نیست. لطفا از HTTPS استفاده کنید</string>
     <string name="msg_image_saved_successfully">تصویر در آلبوم ذخیره شد</string>
-    <string name="msg_image_saved_failed">ذخیره‌ی تصویر انجام نشد</string>
-    <string name="msg_edited">(ویرایش‌شده)</string>
+    <string name="msg_image_saved_failed">ذخیره ی تصویر انجام نشد</string>
+    <string name="msg_edited">(ویرایش شده)</string>
     <string name="msg_and">\u0020و\u0020</string>
     <string name="msg_is_typing">\u0020is در حال تایپ…</string>
     <string name="msg_are_typing">\u0020are درحال تایپ…</string>
     <string name="msg_several_users_are_typing">چند کاربر در حال تایپ کردن…</string>
-    <string name="msg_no_search_found">نتیجه‌ای یافت نشد</string>
+    <string name="msg_no_search_found">نتیجه ای یافت نشد</string>
     <string name="msg_log_out">در حال خروج…</string>
     <string name="msg_upload_file">بارگذاری پرونده</string>
     <string name="msg_file_description">توضیحات پرونده</string>
     <string name="msg_send">ارسال</string>
     <string name="msg_sent_attachment">ارسال ضمیمه</string>
-    <string name="msg_welcome_to_rocket_chat">به پیام‌رسان سبا خوش آمدید!</string>
+    <string name="msg_welcome_to_rocket_chat">به پیام رسان سبا خوش آمدید!</string>
     <string name="msg_team_communication">ارتباط تیمی</string>
     <string name="msg_login_with_email">ورود با  <b>ایمیل</b></string>
     <string name="msg_create_account">ایجاد حساب کاربری</string>
-    <string name="msg_continue_with_facebook">ادامه دادن با <b>فیس‌بوک</b></string>
-    <string name="msg_continue_with_github">ادامه دادن با  <b>گیت‌هاب</b></string>
+    <string name="msg_continue_with_facebook">ادامه دادن با <b>فیس بوک</b></string>
+    <string name="msg_continue_with_github">ادامه دادن با  <b>گیت هاب</b></string>
     <string name="msg_continue_with_google">ادامه دادن با <b>گوگل</b></string>
     <string name="msg_continue_with_linkedin">ادامه دادن با <b>لینکدین</b></string>
-    <string name="msg_continue_with_gitlab">ادامه دادن با <b>گیت‌لب</b></string>
+    <string name="msg_continue_with_gitlab">ادامه دادن با <b>گیت لب</b></string>
     <string name="msg_continue_with_wordpress">ادامه دادن با <b>وردپرس</b></string>
     <string name="msg_two_factor_authentication">Two-factor Authentication</string>
     <string name="msg__your_2fa_code">What’s your 2FA code?</string>
@@ -177,26 +179,26 @@
     <!-- Create channel messages -->
     <string name="msg_private_channel">خصوصی</string>
     <string name="msg_public_channel">عمومی</string>
-    <string name="msg_private_channel_description">فقط شما و اعضای دعوت‌شده می‌توانند به این کاال دسترسی داشته باشند</string>
-    <string name="msg_public_channel_description">همه می‌توانند به این کانال دسترسی داشته باشند</string>
+    <string name="msg_private_channel_description">فقط شما و اعضای دعوت شده میتوانند به این کاال دسترسی داشته باشند</string>
+    <string name="msg_public_channel_description">همه میتوانند به این کانال دسترسی داشته باشند</string>
     <string name="msg_ready_only_channel">کانال فقط خواندنی</string>
-    <string name="msg_ready_only_channel_description">تنها مدیر می‌تواند پیام جدیدی بنویسد</string>
+    <string name="msg_ready_only_channel_description">تنها مدیر میتواند پیام جدیدی بنویسد</string>
     <string name="msg_invite_members">دعوت اعضا به کانال</string>
     <string name="msg_member_already_added">شما قبلا این کاربر را انتخاب کرده بودید</string>
     <string name="msg_member_not_found">عضو پیدا نشد</string>
     <string name="msg_channel_created_successfully">کانال با موفقیت ایجاد شد</string>
     <string name="msg_message_copied">پیام کپی شد</string>
     <string name="msg_delete_message">پاک کردن پیام</string>
-    <string name="msg_delete_description">آیا مطمئنید که می‌خواهید این پیام را پاک کنید؟</string>
-    <string name="msg_view_more">مشاهده‌ی بیشتر</string>
-    <string name="msg_view_less">مشاهده‌ی کمتر</string>
-    <string name="msg_muted_on_this_channel">آیا این کانال را بی‌صدا کردید؟</string>
+    <string name="msg_delete_description">آیا مطمئنید که میخواهید این پیام را پاک کنید؟</string>
+    <string name="msg_view_more">مشاهده ی بیشتر</string>
+    <string name="msg_view_less">مشاهده ی کمتر</string>
+    <string name="msg_muted_on_this_channel">آیا این کانال را بی صدا کردید؟</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">ردگیری تحلیلی</string>
     <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string>
     <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">قابل اجرا نیست زیرا نسخه‌ی FOSS است</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">قابل اجرا نیست زیرا نسخه ی FOSS است</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">نام اتاق تغییر پیدا کرد به: %1$s توسط %2$s</string>
@@ -222,7 +224,7 @@
     <string name="action_msg_delete">حذف</string>
     <string name="action_msg_pin">سوزن کردن پیام</string>
     <string name="action_msg_unpin">از سوزن دراوردن پیام</string>
-    <string name="action_msg_star">ستاره‌دار کردن پیام</string>
+    <string name="action_msg_star">ستاره دار کردن پیام</string>
     <string name="action_msg_unstar">از ستاره دراوردن پیام</string>
     <string name="action_msg_share">اشتراک</string>
     <string name="action_title_editing">ویرایش پیام</string>
@@ -231,17 +233,17 @@
     <string name="action_msg_report">گزارش</string>
 
     <!-- Permission messages -->
-    <string name="permission_editing_not_allowed">اجازه‌ی ویرایش نیست</string>
-    <string name="permission_deleting_not_allowed">اجازه‌ی حذف نیست</string>
-    <string name="permission_pinning_not_allowed">اجازه‌ی سوزن کردن نیست</string>
-    <string name="permission_starring_not_allowed">اجازه‌ی ستاره‌دار شدن نیست</string>
+    <string name="permission_editing_not_allowed">اجازه ی ویرایش نیست</string>
+    <string name="permission_deleting_not_allowed">اجازه ی حذف نیست</string>
+    <string name="permission_pinning_not_allowed">اجازه ی سوزن کردن نیست</string>
+    <string name="permission_starring_not_allowed">اجازه ی ستاره دار شدن نیست</string>
 
     <!-- Search message -->
-    <string name="title_search_message">جست‌وجوی پیام</string>
+    <string name="title_search_message">جست وجوی پیام</string>
 
     <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">مورد علاقه کردن گفت‌وگو</string>
-    <string name="title_unfavorite_chat">از مورد علاقه دراوردن گفت‌وگو</string>
+    <string name="title_favorite_chat">مورد علاقه کردن گفت وگو</string>
+    <string name="title_unfavorite_chat">از مورد علاقه دراوردن گفت وگو</string>
 
     <!-- Members List -->
     <string name="title_members_list">اعضاء</string>
@@ -249,23 +251,23 @@
     <!-- Mentions -->
     <string name="msg_mentions">صدا زدن</string>
     <string name="msg_no_mention">صدا زدنی موجود نیست</string>
-    <string name="msg_all_the_mentions_appear_here">تمام صدا زدن‌ها اینجا\nنمایش داده شده‌اند</string>
+    <string name="msg_all_the_mentions_appear_here">تمام صدا زدن ها اینجا\nنمایش داده شده اند</string>
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">پیام سوزن شده</string>
-    <string name="no_pinned_messages">پیام سوزن‌شده‌ای موجود نیست</string>
-    <string name="no_pinned_description">تمام پیام‌های سوزن‌شده اینجا\nنمایش داده شده‌اند</string>
+    <string name="no_pinned_messages">پیام سوزن شده ای موجود نیست</string>
+    <string name="no_pinned_description">تمام پیامهای سوزن شده اینجا\nنمایش داده شده اند</string>
 
     <!-- Favorite Messages -->
-    <string name="title_favorite_messages">پیام‌های مورد علاقه</string>
-    <string name="no_favorite_messages">هیچ پیام موردعلاقه‌ای موجود نیست</string>
-    <string name="no_favorite_description">تمام پیام‌های موردعلاقه اینجا\nنمایش داده شده‌اند</string>
+    <string name="title_favorite_messages">پیام های مورد علاقه</string>
+    <string name="no_favorite_messages">هیچ پیام موردعلاقه ای موجود نیست</string>
+    <string name="no_favorite_description">تمام پیام های موردعلاقه اینجا\nنمایش داده شده اند</string>
 
     <!-- Files -->
     <string name="title_files">پروندها</string>
-    <string name="title_files_total">پرونده‌ها (%d)</string>
-    <string name="msg_no_files">هیچ پرونده‌ای موجود نیست</string>
-    <string name="msg_all_files_appear_here">تمام پرونده‌ها اینجا نمایش داده شده‌اند</string>
+    <string name="title_files_total">پرونده ها (%d)</string>
+    <string name="msg_no_files">هیچ پرونده ای موجود نیست</string>
+    <string name="msg_all_files_appear_here">تمام پرونده ها اینجا نمایش داده شده اند</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">File size %1$d bytes exceeded max upload size of %2$d bytes</string>
@@ -283,11 +285,11 @@
     <string name="suggest_here_description">به کاربران فعال در این اتاق خبر بده</string>
 
     <!-- Slash Commands -->
-    <string name="Slash_Gimme_Description"> ༼ つ ◕_◕ ༽つ را قبل از پیامتان نمایش می‌دهد</string>
-    <string name="Slash_LennyFace_Description"> ( ͡° ͜ʖ ͡°) را بعد از پیامتان نمایش می‌دهد</string>
-    <string name="Slash_Shrug_Description">¯\_(ツ)_/¯ را بعد از پیامتان نمایش می‌دهد</string>
-    <string name="Slash_Tableflip_Description"> (╯°□°）╯︵ ┻━┻ را نمایش می‌دهد</string>
-    <string name="Slash_TableUnflip_Description"> ┬─┬ ノ( ゜-゜ノ) را نمایش می‌دهد</string>
+    <string name="Slash_Gimme_Description"> ༼ つ ◕_◕ ༽つ را قبل از پیامتان نمایش میدهد</string>
+    <string name="Slash_LennyFace_Description"> ( ͡° ͜ʖ ͡°) را بعد از پیامتان نمایش میدهد</string>
+    <string name="Slash_Shrug_Description">¯\_(ツ)_/¯ را بعد از پیامتان نمایش میدهد</string>
+    <string name="Slash_Tableflip_Description"> (╯°□°）╯︵ ┻━┻ را نمایش میدهد</string>
+    <string name="Slash_TableUnflip_Description"> ┬─┬ ノ( ゜-゜ノ) را نمایش میدهد</string>
     <string name="Create_A_New_Channel">ایجاد کانال جدید</string>
     <string name="Show_the_keyboard_shortcut_list">Show the keyboard shortcut list</string>
     <string name="Invite_user_to_join_channel_all_from">دعوت کردن تمام اعضاء از کانال [#channel] تا به این کانال بپیوندند</string>
@@ -302,7 +304,7 @@
     <string name="Invite_user_to_join_channel">دعوت از یک کاربر برای پیوستن به این کانال</string>
     <string name="Unarchive">Unarchive</string>
     <string name="Join_the_given_channel">پیوستن به کانال داده شده</string>
-    <string name="Guggy_Command_Description">ساخت یک gif بر اساس متن آماده‌شده</string>
+    <string name="Guggy_Command_Description">ساخت یک gif بر اساس متن آماده شده</string>
     <string name="Slash_Topic_Description">تعیین موضوع</string>
 
     <!-- Emoji message-->
@@ -315,15 +317,15 @@
     <string name="dialog_sort_by_alphabet">الفبا</string>
     <string name="dialog_sort_by_activity">فعالیت</string>
     <string name="dialog_group_by_type">گروه کردن بر اساس نوع</string>
-    <string name="dialog_group_favourites">گروه کردن موردعلاقه‌ها</string>
+    <string name="dialog_group_favourites">گروه کردن موردعلاقه ها</string>
     <string name="dialog_button_done">انجام شد</string>
     <string name="chatroom_header">سرپیام</string>
 
     <!--ChatRooms Headers-->
-    <string name="header_channel">کانال‌ها</string>
-    <string name="header_private_groups">گروه‌های خصوصی</string>
-    <string name="header_direct_messages">پیام‌های خصوصی</string>
-    <string name="header_live_chats">گفت‌وگوهای زنده</string>
+    <string name="header_channel">کانال ها</string>
+    <string name="header_private_groups">گروه های خصوصی</string>
+    <string name="header_direct_messages">پیام های خصوصی</string>
+    <string name="header_live_chats">گفت وگوهای زنده</string>
     <string name="header_unknown">ناشناس</string>
 
     <!--Notifications-->
@@ -339,9 +341,9 @@
 
     <!-- User Details -->
     <string name="message">پیام</string>
-    <string name="timezone">منطقه‌ی زمانی</string>
+    <string name="timezone">منطقه ی زمانی</string>
     <string name="status" translatable="false">Status</string>
-    <string name="error_opening_dm">زمانی که این گفت‌وگو را ایجاد کردیم مشکلی رخ داد…</string>
+    <string name="error_opening_dm">زمانی که این گفت وگو را ایجاد کردیم مشکلی رخ داد…</string>
     <string name="retry">تلاش دوباره</string>
 
     <!-- Report -->
