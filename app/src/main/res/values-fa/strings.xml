@@ -310,6 +310,7 @@
     <string name="alert_title_default_skin_tone">مدل پوسته‌ی پیش‌فرض</string>
 
     <!-- Sorting and grouping-->
+    <string name="msg_sort">دسته بندی</string>
     <string name="dialog_sort_title">دسته بندی بر اساس</string>
     <string name="dialog_sort_by_alphabet">الفبا</string>
     <string name="dialog_sort_by_activity">فعالیت</string>
