@@ -89,6 +89,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var searchText:  TextView? = null
     private var searchCloseButton: ImageView? = null
     private var profileButton: SimpleDraweeView? = null
+    private var onlineStatusButton:ImageView?=null
     // handles that recurring connection status bug in widechat
     private var currentlyConnected: Boolean? = false
 
@@ -477,6 +478,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 val myAvatarUrl: String? =  serverUrl?.avatarUrl(user?.username ?: "")
 
                 profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
+                onlineStatusButton=this?.getCustomView()?.findViewById(R.id.text_online)
                 profileButton?.setImageURI(myAvatarUrl)
                 profileButton?.setOnClickListener { v ->
 

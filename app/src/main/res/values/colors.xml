@@ -70,4 +70,5 @@
     <color name="default_background">#FAFAFA</color>
 
     <color name="reaction_text">#868585</color>
+    <color name="color_invite">#3dc338</color>
 </resources>

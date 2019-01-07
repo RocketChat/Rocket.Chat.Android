@@ -5,11 +5,28 @@ import android.os.Parcelable
 
 
 class Contact() : Parcelable {
-    private var id: Int = 0
     private var name: String? = null
     private var phoneNumber: String? = null
     private var emailAddress: String? = null
     private var isPhone: Boolean = true
+    private var username: String? = null
+    private var avatarUrl: String? = null
+
+    fun getUsername(): String? {
+        return username
+    }
+
+    private fun formatPhoneNumber(phone: String): String {
+        return phone.replace("-|\\s|\\(|\\)".toRegex(), "")
+    }
+
+    fun getDetail(): String? {
+        if(this.isPhone){
+            return getPhoneNumber()
+        }else{
+            return getEmailAddress()
+        }
+    }
 
     fun getName(): String? {
         return name
@@ -19,12 +36,20 @@ class Contact() : Parcelable {
         this.name = name
     }
 
+    fun setUsername(username: String?) {
+        this.username = username
+    }
+
+    fun setIsPhone(isPhone: Boolean) {
+        this.isPhone = isPhone
+    }
+
     fun getPhoneNumber(): String? {
         return phoneNumber
     }
 
     fun setPhoneNumber(phoneNumber: String) {
-        this.phoneNumber = phoneNumber
+        this.phoneNumber = formatPhoneNumber(phoneNumber)
     }
 
     fun getEmailAddress(): String? {
@@ -40,15 +65,20 @@ class Contact() : Parcelable {
         return this.isPhone
     }
 
+    fun getAvatarUrl(): String? {
+        return avatarUrl
+    }
+
+    fun setAvatarUrl(url: String) {
+        this.avatarUrl = url
+    }
+
     constructor(parcel: Parcel) : this() {
-        this.id = parcel.readInt()
         this.name = parcel.readString()
         this.phoneNumber = parcel.readString()
     }
 
-
     override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest?.writeInt(id)
         dest?.writeString(name)
         dest?.writeString(phoneNumber)
     }
@@ -66,5 +96,4 @@ class Contact() : Parcelable {
             return arrayOfNulls(size)
         }
     }
-
 }

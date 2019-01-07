@@ -221,4 +221,11 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="contact.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="queryHint">@string/msg_search</item>
+        <item name="searchIcon">@drawable/ic_search_white_24dp</item>
+        <item name="searchHintIcon">@drawable/ic_search_grey_24dp</item>
+        <item name="closeIcon">@drawable/ic_close_white_24dp</item>
+    </style>
+
 </resources>
