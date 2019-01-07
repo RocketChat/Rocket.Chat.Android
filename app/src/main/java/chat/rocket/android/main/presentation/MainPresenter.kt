@@ -8,8 +8,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.startActivity
 import chat.rocket.android.R
+import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
+import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.emoji.Emoji
 import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.emoji.Fitzpatrick
@@ -34,20 +37,29 @@ import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.extension.orFalse
 import chat.rocket.android.util.extensions.adminPanelUrl
 import chat.rocket.android.util.extensions.serverLogoUrl
+import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.UserStatus
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
+import chat.rocket.core.internal.rest.createDirectMessage
 import chat.rocket.core.internal.rest.getCustomEmojis
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.inviteViaEmail
 import chat.rocket.core.internal.rest.inviteViaSMS
+import chat.rocket.common.model.roomTypeOf
+import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Myself
+import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.userStatusOf
 import kotlinx.coroutines.experimental.channels.Channel
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -84,11 +96,138 @@ class MainPresenter @Inject constructor(
 ) {
     private val currentServer = serverInteractor.get()!!
     private val manager = managerFactory.create(currentServer)
+    private val dbManager = dbManagerFactory.create(currentServer)
     private val client: RocketChatClient = factory.create(currentServer)
+    private val chatRoomsInteractor = FetchChatRoomsInteractor(client,dbManager)
     private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
     private val userDataChannel = Channel<Myself>()
 
     fun toChatList(chatRoomId: String? = null) = navigator.toChatList(chatRoomId)
+
+    fun openDirectMessageChatRoom(username: String) {
+
+        launchUI(strategy) {
+            try {
+                val openedChatRooms = chatRoomByName(name = username, dbManager = dbManager)
+                val chatRoom: ChatRoom? = openedChatRooms.firstOrNull()
+                if (chatRoom == null) {
+                    createDirectMessage(id = username)
+                } else {
+                    toDirectMessage(chatRoom)
+                }
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
+        }
+    }
+
+    fun createDirectMessage(id: String) = launchUI(strategy) {
+        try {
+            val result = retryIO("createDirectMessage($id") {
+                client.createDirectMessage(username = id)
+            }
+
+            chatRoomsInteractor.refreshChatRooms()
+
+            val chatRoom = ChatRoom(
+                    id = result.id,
+                    type = roomTypeOf(RoomType.DIRECT_MESSAGE),
+                    name = id,
+                    fullName = id,
+                    favorite = false,
+                    open = false,
+                    alert = false,
+                    status = null,
+                    client = client,
+                    broadcast = false,
+                    archived = false,
+                    default = false,
+                    description = null,
+                    groupMentions = null,
+                    userMentions = null,
+                    lastMessage = null,
+                    lastSeen = null,
+                    topic = null,
+                    announcement = null,
+                    roles = null,
+                    unread = 0,
+                    readonly = false,
+                    muted = null,
+                    subscriptionId = "",
+                    timestamp = null,
+                    updatedAt = result.updatedAt,
+                    user = null
+            )
+
+            withContext(CommonPool + strategy.jobs) {
+                dbManager.chatRoomDao().insertOrReplace(chatRoom = ChatRoomEntity(
+                        id = chatRoom.id,
+                        name = chatRoom.name,
+                        type = chatRoom.type.toString(),
+                        fullname = chatRoom.fullName,
+                        subscriptionId = chatRoom.subscriptionId,
+                        updatedAt = chatRoom.updatedAt
+                ))
+            }
+
+            toDirectMessage(chatRoom)
+        } catch (ex: Exception) {
+            Timber.e(ex)
+        }
+    }
+
+    private fun toDirectMessage(chatRoom: ChatRoom) {
+        navigator.toChatRoom(
+                chatRoomId = chatRoom.id,
+                chatRoomName = chatRoom.name,
+                chatRoomType = chatRoom.type.toString(),
+                isReadOnly = chatRoom.readonly.orFalse(),
+                chatRoomLastSeen = chatRoom.lastSeen ?: 0,
+                isSubscribed = chatRoom.open,
+                isCreator = false,
+                isFavorite = chatRoom.favorite
+        )
+    }
+
+    private suspend fun chatRoomByName(name: String? = null, dbManager: DatabaseManager ): List<ChatRoom> = withContext(CommonPool) {
+        return@withContext dbManager.chatRoomDao().getAllSync().filter {
+            if (name == null) {
+                return@filter true
+            }
+            it.chatRoom.name == name || it.chatRoom.fullname == name
+        }.map {
+            with(it.chatRoom) {
+                ChatRoom(
+                        id = id,
+                        subscriptionId = subscriptionId,
+                        type = roomTypeOf(type),
+                        unread = unread,
+                        broadcast = broadcast ?: false,
+                        alert = alert,
+                        fullName = fullname,
+                        name = name ?: "",
+                        favorite = favorite ?: false,
+                        default = isDefault ?: false,
+                        readonly = readonly,
+                        open = open,
+                        lastMessage = null,
+                        archived = false,
+                        status = null,
+                        user = null,
+                        userMentions = userMentions,
+                        client = client,
+                        announcement = null,
+                        description = null,
+                        groupMentions = groupMentions,
+                        roles = null,
+                        topic = null,
+                        lastSeen = this.lastSeen,
+                        timestamp = timestamp,
+                        updatedAt = updatedAt
+                )
+            }
+        }
+    }
 
     fun toUserProfile() = navigator.toUserProfile()
 
