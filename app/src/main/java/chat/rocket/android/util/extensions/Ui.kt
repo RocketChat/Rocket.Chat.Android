@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.annotation.ColorInt
 import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
 import androidx.annotation.StringRes
@@ -22,12 +23,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import chat.rocket.android.R
 
-fun FragmentActivity.setLightStatusBar(view: View) {
+fun FragmentActivity.setLightStatusBar(view: View, @ColorInt color: Int = 0) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         var flags = view.systemUiVisibility
         flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         view.systemUiVisibility = flags
-        window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
+        window.statusBarColor = if (color == 0) {
+            ContextCompat.getColor(this, R.color.colorWhite)
+        } else {
+            color
+        }
     }
 }
 

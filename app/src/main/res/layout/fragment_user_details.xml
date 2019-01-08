@@ -112,15 +112,6 @@
             app:layout_constraintTop_toBottomOf="@+id/text_title_timezone"
             tools:text="(UTC-2) 11:08 AM" />
 
-        <View
-            android:id="@+id/view_gray_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            android:background="#FFF3f4f5"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_description_timezone" />
-
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/view_loading"
             style="@style/Authentication.AVLoadingIndicatorView"
@@ -134,6 +125,6 @@
             android:id="@+id/group_user_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="image_blur, image_avatar, text_name, text_username, text_message, text_title_status, text_description_status, text_title_timezone, text_description_timezone, view_gray_bottom" />
+            app:constraint_referenced_ids="image_blur, image_avatar, text_name, text_username, text_message, text_title_status, text_description_status, text_title_timezone, text_description_timezone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

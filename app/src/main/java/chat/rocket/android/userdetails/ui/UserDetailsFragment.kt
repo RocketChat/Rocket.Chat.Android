@@ -1,16 +1,17 @@
 package chat.rocket.android.userdetails.ui
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
-import chat.rocket.android.emoji.internal.GlideApp
 import chat.rocket.android.userdetails.presentation.UserDetailsPresenter
 import chat.rocket.android.userdetails.presentation.UserDetailsView
 import chat.rocket.android.util.extensions.inflate
@@ -45,6 +46,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     @Inject
     lateinit var analyticsManager: AnalyticsManager
     private lateinit var userId: String
+    private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +76,11 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         analyticsManager.logScreenView(ScreenViewEvent.UserDetails)
     }
 
+    override fun onDestroyView() {
+        handler.removeCallbacksAndMessages(null)
+        super.onDestroyView()
+    }
+
     override fun showUserDetails(
         avatarUrl: String,
         name: String,
@@ -83,8 +90,9 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     ) {
         val requestBuilder = Glide.with(this).load(avatarUrl)
 
-        requestBuilder.apply(RequestOptions.bitmapTransform(MultiTransformation(BlurTransformation(), CenterCrop())))
-            .into(image_blur)
+        requestBuilder.apply(
+            RequestOptions.bitmapTransform(MultiTransformation(BlurTransformation(), CenterCrop()))
+        ).into(image_blur)
 
         requestBuilder.apply(RequestOptions.bitmapTransform(RoundedCorners(14)))
             .into(image_avatar)
@@ -119,10 +127,17 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     private fun setupToolbar() {
-        with(activity as ChatRoomActivity) {
-            view?.let { setLightStatusBar(it) }
-            toolbar.isVisible = false
-        }
+        handler.postDelayed({
+            with(activity as ChatRoomActivity) {
+                view?.let {
+                    setLightStatusBar(
+                        it,
+                        ContextCompat.getColor(this, R.color.whitesmoke)
+                    )
+                }
+                toolbar.isVisible = false
+            }
+        }, 400)
     }
 
     private fun setupListeners() {
