@@ -72,7 +72,6 @@ class ContactRecyclerViewAdapter(
                         }
                     } else {
                         context.presenter.openDirectMessageChatRoom(contact!!.getUsername().toString())
-                        context.getSupportFragmentManager().popBackStack()
                     }
                 }
             }

@@ -108,12 +108,20 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     override fun onResume() {
+        val fragment = supportFragmentManager.findFragmentByTag("contactsFragment")
+        if (fragment != null && fragment.isAdded()) {
+            supportFragmentManager.popBackStack()
+        }
         super.onResume()
         syncContacts()
         if (!isFragmentAdded) {
             presenter.toChatList(chatRoomId)
             isFragmentAdded = true
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 
     override fun onDestroy() {

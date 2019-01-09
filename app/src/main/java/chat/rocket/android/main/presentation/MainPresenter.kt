@@ -40,7 +40,6 @@ import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extension.orFalse
 import chat.rocket.android.util.extensions.adminPanelUrl
 import chat.rocket.android.util.extensions.serverLogoUrl
-import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
@@ -56,7 +55,6 @@ import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Myself
 import chat.rocket.common.model.RoomType
-import chat.rocket.common.model.userStatusOf
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.withContext
@@ -121,7 +119,7 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    fun createDirectMessage(id: String) = launchUI(strategy) {
+    private fun createDirectMessage(id: String) = launchUI(strategy) {
         try {
             val result = retryIO("createDirectMessage($id") {
                 client.createDirectMessage(username = id)

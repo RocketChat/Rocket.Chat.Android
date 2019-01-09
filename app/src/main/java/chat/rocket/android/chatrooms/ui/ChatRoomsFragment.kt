@@ -512,7 +512,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             val transaction = activity?.supportFragmentManager?.beginTransaction();
             transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
             transaction?.replace(this.id, contactsFragment, "contactsFragment");
-            transaction?.addToBackStack(null)?.commit();
+            transaction?.addToBackStack("contactsFragment")?.commit();
         }
     }
 }
