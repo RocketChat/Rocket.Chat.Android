@@ -1,5 +1,6 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-   <!-- Titles -->
+<resources>
+
+    <!-- Titles -->
     <string name="title_sign_in_your_server">به سرور خود متصل شوید</string>
     <string name="title_log_in">ورود</string>
     <string name="title_share_the_app">به اشتراک‌گذاری اپلیکیشن</string>
@@ -16,7 +17,7 @@
     <string name="title_preferences">ترجیحات</string>
     <string name="title_change_password">تغییر گذرواژه</string>
     <string name="title_rate_us">به ما امتیاز دهید</string>
-    <string name="title_admin_panel">Admin panel</string>
+    <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
     <string name="title_password">تغییر گذرواژه</string>
     <string name="title_update_profile">به روزرسانی نمایه</string>
     <string name="title_about">درباره</string>
@@ -44,7 +45,7 @@
     <string name="action_join_chat">به گفت‌وگو بپیوندید</string>
     <string name="action_add_account">اضافه کردن حساب کاربری</string>
     <string name="action_online">آنلاین</string>
-    <string name="action_away">Away</string>
+    <string name="action_away">Away</string> <!-- TODO Add translation -->
     <string name="action_busy">مشغول</string>
     <string name="action_invisible">نامرئی</string>
     <string name="action_drawing">کشیدن</string>
@@ -64,6 +65,7 @@
         <item name="item_preferences">ترجیحات</item>
         <item name="item_password">تغییر گذرواژه</item>
         <item name="item_share_app">به اشتراک‌گذاری اپلیکیشن</item>
+        <item name="change_language">Change language</item> <!-- TODO Add translation -->
         <item name="item_rate_us">به ما امتیاز دهید</item>
         <item name="item_contact_us">تماس با ما</item>
         <item name="item_licence">مجوز</item>
@@ -81,7 +83,7 @@
     <string name="msg_password">گذرواژه</string>
     <string name="msg_name">نام</string>
     <string name="msg_email">ایمیل</string>
-    <string name="msg_avatar_url">ULR تصویر نمایه</string>
+    <string name="msg_avatar_url">URL تصویر نمایه</string>
     <string name="msg_or_continue_using_social_accounts">یا به استفاده از سرورهای اجتماعی ادامه دهید</string>
     <string name="msg_new_user">کاربر جدید? %1$s</string>
     <string name="msg_forgot__your_password">گذرواژه‌تان را فراموش کردید؟</string>
@@ -94,7 +96,7 @@
     <string name="msg_today">امروز</string>
     <string name="msg_message">پیام</string>
     <string name="msg_this_room_is_read_only">این اتاق فقط خواندنی است</string>
-    <string name="msg_invalid_2fa_code">Invalid 2FA Code</string>
+    <string name="msg_invalid_2fa_code">Invalid 2FA Code</string> <!-- TODO Add translation -->
     <string name="msg_invalid_file">پرونده‌ی نامعتبر</string>
     <string name="msg_invalid_server_url">سرور  نامعتبر URL</string>
     <string name="msg_content_description_log_in_using_facebook">با فیس‌بوک وارد شوید</string>
@@ -111,7 +113,7 @@
     <string name="msg_you">شما</string>
     <string name="msg_unknown">ناشناس</string>
     <string name="msg_email_address">آدرس ایمیل</string>
-    <string name="msg_utc_offset">UTC offset</string>
+    <string name="msg_utc_offset">UTC offset</string> <!-- TODO Add translation -->
     <string name="msg_new_password">گذرواژه‌ی جدید را وارد کنید</string>
     <string name="msg_confirm_password">گذرواژه‌ی جدید را تصدیق کنید</string>
     <string name="msg_channel_name">نام کانال</string>
@@ -122,7 +124,7 @@
     <string name="msg_preview_photo">تصویر</string>
     <string name="msg_preview_file">پرونده</string>
     <string name="msg_no_messages_yet">هنوز پیامی ندارید</string>
-    <string name="msg_build" tools:ignore="MissingTranslation">ساختن %1$d - %2$s - %3$s</string>
+    <string name="msg_build">ساختن %1$d - %2$s - %3$s</string>
     <string name="msg_ok">تایید</string>
     <string name="msg_update_app_version_in_order_to_continue">نسخه‌ی سرور منسوخ شده است. لطفا برای ادامه دادن با مدیر سرور خود تماس بگیرید تا سرور را به روز کند.</string>
     <string name="msg_ver_not_recommended">
@@ -131,7 +133,7 @@
         به نظر می‌رسد نسخه‌ی سرور شما پایین‌تر از نسخه‌ی پیشنهادیست %1$s.\nلطفا سرور خود را ارتقاع دهید تا وارد شوید!
     </string>
     <string name="msg_no_chat_title">هیچ پیام گفت‌وگویی نیست</string>
-    <string name="msg_no_chat_description">لطفا گفت‌و گو را شروع کنید تا پیام‌ها را اینجا\nmessages ببینید.</string>
+    <string name="msg_no_chat_description">لطفا گفت‌و گو را شروع کنید تا پیام‌ها را اینجا\messages ببینید.</string> <!-- TODO Add translation -->
     <string name="msg_cancel">انصراف</string>
     <string name="msg_http_insecure">زمانی که از HTTP استفاده می‌کنید در حال وصل شدن به یک سرور ناامن هستید. ما این کار را پیشنهاد نمی‌کنیم.</string>
     <string name="msg_error_checking_server_version">موقع چک کردن نسخه‌ی سرور شما اشکالی رخ داد. لطفا دوباره تلاش کنید</string>
@@ -140,8 +142,8 @@
     <string name="msg_image_saved_failed">ذخیره‌ی تصویر انجام نشد</string>
     <string name="msg_edited">(ویرایش‌شده)</string>
     <string name="msg_and">\u0020و\u0020</string>
-    <string name="msg_is_typing">\u0020is در حال تایپ…</string>
-    <string name="msg_are_typing">\u0020are درحال تایپ…</string>
+    <string name="msg_is_typing">\u0020is در حال تایپ…</string> <!-- TODO Add translation -->
+    <string name="msg_are_typing">\u0020are درحال تایپ…</string> <!-- TODO Add translation -->
     <string name="msg_several_users_are_typing">چند کاربر در حال تایپ کردن…</string>
     <string name="msg_no_search_found">نتیجه‌ای یافت نشد</string>
     <string name="msg_log_out">در حال خروج…</string>
@@ -161,8 +163,8 @@
     <string name="msg_continue_with_wordpress">ادامه دادن با <b>وردپرس</b></string>
     <string name="msg_two_factor_authentication">تایید هویت دو فاکتوره</string>
 	<string name="msg__your_2fa_code">کد 2FA تان چیست؟</string>
-	    <string name="msg_permalink_copied">پیوند کپی شد</string>
-	    <string name="msg_no_topic">هیچ موضوعی اضافه نشد</string>
+	<string name="msg_permalink_copied">پیوند کپی شد</string>
+	<string name="msg_no_topic">هیچ موضوعی اضافه نشد</string>
     <string name="msg_no_announcement">هیچ اعلانی اضافه نشد</string>
     <string name="msg_no_description">هیچ توضیحی اضافه نشد</string>
     <string name="msg_send_email">ارسال ایمیل</string>
@@ -170,8 +172,8 @@
     <string name="msg_unable_to_update_password">خطا در به روزرسانی گذرواژه. پیام خطا: %1$s</string>
     <string name="msg_password_updated_successfully">گذرواژه با موفقیت به روزرسانی شد</string>
     <plurals name="msg_reacted_with_">
-        <item quantity="one">%1$s واکنش با %2$s</item>
-        <item quantity="other">%1$s واکنش با %2$s</item>
+        <item quantity="one">%1$s %2$s واکنش با</item>
+        <item quantity="other">%1$s %2$s واکنش با</item>
     </plurals>
 
     <!-- Create channel messages -->
@@ -191,11 +193,12 @@
     <string name="msg_view_more">مشاهده‌ی بیشتر</string>
     <string name="msg_view_less">مشاهده‌ی کمتر</string>
     <string name="msg_muted_on_this_channel">آیا این کانال را بی‌صدا کردید؟</string>
+
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">ردگیری تحلیلی</string>
     <string name="msg_send_analytics_tracking">برای بهبود این کاره آمار ناشناس بفرستید</string>
     <string name="msg_do_not_send_analytics_tracking">برای بهبود این کاره آمار ناشناس نفرستید</string>
-      <string name="msg_not_applicable_since_it_is_a_foss_version">قابل اجرا نیست زیرا نسخه‌ی FOSS است</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">قابل اجرا نیست زیرا نسخه‌ی FOSS است</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">نام اتاق تغییر پیدا کرد به: %1$s توسط %2$s</string>
@@ -203,14 +206,14 @@
     <string name="message_user_removed_by">کاربر  %1$s توسط %2$sحذف شد</string>
     <string name="message_user_left">کانال را ترک کرد</string>
     <string name="message_user_joined_channel">به کانال پیوست</string>
-    <string name="message_welcome"> %s خوش‌آمدی</string>
+    <string name="message_welcome">%s خوش‌آمدی</string>
     <string name="message_removed">پیام پاک شد</string>
     <string name="message_pinned">پیام سوزن شده:</string>
     <string name="message_muted">کاربر %1$s توسط %2$s صامت شد</string>
     <string name="message_unmuted">کاربر %1$s توسط %2$s صدادار شد</string>
     <string name="message_role_add">%1$s به این تغییر داده شد %2$s توسط %3$s</string>
-       <string name="message_role_removed">%1$s دیگر این نیست %2$s توسط %3$s</string>
-       <string name="message_credentials_saved_successfully">اختیارها با موفقیت ذخیره شد</string>
+    <string name="message_role_removed">%1$s دیگر این نیست %2$s توسط %3$s</string>
+    <string name="message_credentials_saved_successfully">اختیارها با موفقیت ذخیره شد</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">جواب</string>
@@ -226,7 +229,7 @@
     <string name="action_msg_share">اشتراک</string>
     <string name="action_title_editing">ویرایش پیام</string>
     <string name="action_msg_add_reaction">اضافه کردن واکنش</string>
-    <string name="action_msg_copy_permalink">Copy permalink</string>
+    <string name="action_msg_copy_permalink">Copy permalink</string> <!-- TODO Add translation -->
     <string name="action_msg_report">گزارش</string>
 
     <!-- Permission messages -->
@@ -268,8 +271,7 @@
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">اندازه‌ی فایل %1$d بایت است و اندازه‌ی ماکسیمم %2$d بایت بیشتر شده</string>
-    
-    
+
     <!-- Socket status -->
     <string name="status_connected">متصل</string>
     <string name="status_disconnected">قطع شده</string>
@@ -290,8 +292,8 @@
     <string name="Slash_TableUnflip_Description"> ┬─┬ ノ( ゜-゜ノ) را نمایش می‌دهد</string>
     <string name="Create_A_New_Channel">ایجاد کانال جدید</string>
     <string name="Show_the_keyboard_shortcut_list">نمایش لیست میانبر کیبورد</string>
-     <string name="Invite_user_to_join_channel_all_from">دعوت کردن تمام اعضاء از کانال [#channel] تا به این کانال بپیوندند</string>
-    <string name="Invite_user_to_join_channel_all_to">دعوت از تمامی اعضای این کانال برای پیوستن به کانال [#channel]</string>
+    <string name="Invite_user_to_join_channel_all_from">دعوت کردن تمام اعضاء از کانال [#channel] تا به این کانال بپیوندند</string> <!-- TODO Add translation -->
+    <string name="Invite_user_to_join_channel_all_to">دعوت از تمامی اعضای این کانال برای پیوستن به کانال [#channel]</string> <!-- TODO Add translation -->
     <string name="Archive">بایگانی</string>
     <string name="Remove_someone_from_room">حذف کردن کسی از این کانال</string>
     <string name="Leave_the_current_channel">کانال کنونی را ترک نمایید</string>
@@ -300,7 +302,7 @@
     <string name="Mute_someone_in_room">صامت کردن کسی در اتاق</string>
     <string name="Unmute_someone_in_room">صدا دار کردن کسی در این اتاق</string>
     <string name="Invite_user_to_join_channel">دعوت از یک کاربر برای پیوستن به این کانال</string>
-    <string name="Unarchive">Unarchive</string>
+    <string name="Unarchive">Unarchive</string> <!-- TODO Add translation -->
     <string name="Join_the_given_channel">پیوستن به کانال داده شده</string>
     <string name="Guggy_Command_Description">ساخت یک gif بر اساس متن آماده‌شده</string>
     <string name="Slash_Topic_Description">تعیین موضوع</string>
@@ -334,8 +336,6 @@
     <string name="message_information_title">اطلاعات پیام</string>
     <string name="message_room_changed_privacy">نوع اتاق تغییر پیدا کرد به: %1$s توسط %2$s</string>
 
-
-
     <!-- User Details -->
     <string name="message">پیام</string>
     <string name="timezone">منطقه‌ی زمانی</string>
@@ -345,6 +345,6 @@
 
     <!-- Report -->
     <string name="submit">واگذاری</string>
-    <string name="required">*required</string>
+    <string name="required">*required</string> <!-- TODO Add translation -->
     <string name="report_sent">گزارش شما فرستاده شد</string>
 </resources>

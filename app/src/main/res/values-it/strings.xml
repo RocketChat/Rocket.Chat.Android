@@ -64,7 +64,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferenze</item>
         <item name="item_password">Cambia password</item>
-        <item name="change_language">Change Language</item><!-- TODO Add translation -->
+        <item name="change_language">Change language</item><!-- TODO Add translation -->
         <item name="item_share_app">Condividi app</item>
         <item name="item_rate_us">Votaci</item>
         <item name="item_contact_us">Contattaci</item>
@@ -123,6 +123,7 @@
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_preview_file">Documento</string>
     <string name="msg_no_messages_yet">Nessun nuovo messaggio</string>
+    <string name="msg_build">Build %1$d - %2$s - %3$s</string> <!-- TODO Add translation -->
     <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">Versione server non aggiornata. Si prega di contattare l\'amministratore del server per aggiornare la versione del server per continuare.</string>
     <string name="msg_ver_not_recommended">Sembra che la versione del tuo server sia inferiore alla versione consigliata %1$s.\nÈ ancora possibile accedere ma è possibile che si verifichino comportamenti imprevisti.</string>

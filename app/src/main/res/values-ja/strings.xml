@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <string name="app_name" translatable="false">Rocket.Chat</string>
 
@@ -66,7 +65,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Change password</item> <!-- TODO Add translation -->
-        <item name="change_language">Change Language </item><!-- TODO Add translation -->
+        <item name="change_language">Change language </item><!-- TODO Add translation -->
         <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
         <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
         <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
@@ -125,6 +124,7 @@
     <string name="msg_preview_photo">写真</string>
     <string name="msg_preview_file">ファイル</string>
     <string name="msg_no_messages_yet">メッセージはまだありません</string>
+    <string name="msg_build">Build %1$d - %2$s - %3$s</string> <!-- TODO Add translation -->
     <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">古いバージョンのサーバーを使用しています。続行するには、管理者にサーバーのバージョンを更新するよう連絡してください。</string>
     <string name="msg_ver_not_recommended">

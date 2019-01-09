@@ -64,6 +64,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferências</item>
         <item name="item_password">Alterar senha</item>
+        <item name="change_language">Alterar idioma</item>
         <item name="item_share_app">Compartilhar app</item>
         <item name="item_rate_us">Classifique-nos</item>
         <item name="item_contact_us">Contate-nos</item>
@@ -120,6 +121,7 @@
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_preview_file">Arquivo</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
+    <string name="msg_build">Versão %1$d - %2$s - %3$s</string>
     <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">Versão do servidor desatualizada. Por favor, entre em contato com o administrador do sistema para continuar.</string>
     <string name="msg_ver_not_recommended">

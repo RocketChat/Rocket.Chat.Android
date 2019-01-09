@@ -71,6 +71,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Eigenschaften</item>
         <item name="item_password">Passwort ändern</item>
+        <item name="change_language">Change language</item> <!-- TODO Add translation -->
         <item name="item_share_app">Link zur App teilen</item>
         <item name="item_rate_us">Bewerten Sie uns</item>
         <item name="item_contact_us">Kontaktieren Sie uns</item>
@@ -132,6 +133,7 @@
     <string name="msg_preview_photo">Bild</string>
     <string name="msg_preview_file">Datei</string>
     <string name="msg_no_messages_yet">Noch keine Nachrichten</string>
+    <string name="msg_build">Build %1$d - %2$s - %3$s</string> <!-- TODO Add translation -->
     <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">Server Version veraltet. Bitte kontaktieren Sie ihren Server Administrator.</string>
     <string name="msg_ver_not_recommended">Die Server Version scheint älter als die empfolene Version %1$s zu sein.\nSie können sich trotzdem einloggen, aber es kann zu einem unerwartetem Verhalten kommen.</string>
