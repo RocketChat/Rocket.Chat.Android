@@ -333,10 +333,7 @@
     <string name="message_room_changed_privacy">Тип канала изменен на: %1$s пользователем %2$s</string>
 
     <!-- User Details -->
-    <string name="message">Сообщение</string>
     <string name="timezone">Часовой поясe</string>
-    <string name="error_opening_dm">При создании этого диалога что-то пошло не так...</string>
-    <string name="retry">Повторить</string>
 
     <!-- Report -->
     <string name="submit">Отправить</string>

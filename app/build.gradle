@@ -140,6 +140,7 @@ dependencies {
     implementation libraries.frescoAnimatedWebP
 
     implementation libraries.glide
+    implementation libraries.glideTransformations
 
     kapt libraries.kotshiCompiler
     implementation libraries.kotshiApi
