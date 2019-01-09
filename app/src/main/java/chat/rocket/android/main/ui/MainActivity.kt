@@ -108,10 +108,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     override fun onResume() {
-        val fragment = supportFragmentManager.findFragmentByTag("contactsFragment")
-        if (fragment != null && fragment.isAdded()) {
-            supportFragmentManager.popBackStack()
-        }
+        supportFragmentManager.popBackStackImmediate("contactsFragment", 1)
         super.onResume()
         syncContacts()
         if (!isFragmentAdded) {
