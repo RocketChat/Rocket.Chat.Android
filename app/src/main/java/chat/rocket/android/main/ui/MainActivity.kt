@@ -108,12 +108,17 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     override fun onResume() {
+        supportFragmentManager.popBackStackImmediate("contactsFragment", 1)
         super.onResume()
         syncContacts()
         if (!isFragmentAdded) {
             presenter.toChatList(chatRoomId)
             isFragmentAdded = true
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 
     override fun onDestroy() {

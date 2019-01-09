@@ -70,6 +70,8 @@ class ContactRecyclerViewAdapter(
                         } else {
                             context.presenter.inviteViaEmail(contact!!.getEmailAddress()!!)
                         }
+                    } else {
+                        context.presenter.openDirectMessageChatRoom(contact!!.getUsername().toString())
                     }
                 }
             }
