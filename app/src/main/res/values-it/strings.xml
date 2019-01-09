@@ -64,6 +64,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferenze</item>
         <item name="item_password">Cambia password</item>
+        <item name="change_language">Change Language</item><!-- TODO Add translation -->
         <item name="item_share_app">Condividi app</item>
         <item name="item_rate_us">Votaci</item>
         <item name="item_contact_us">Contattaci</item>
@@ -146,7 +147,7 @@
     <string name="msg_send">Inviare</string>
     <string name="msg_sent_attachment">Inviato allegato</string>
     <string name="msg_welcome_to_rocket_chat">Benvenuto in Rocket.Chat </string>
-    <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
+    <string name="msg_team_communication">Comunicazione dei Gruppi</string>
     <string name="msg_login_with_email">Accedi con <b>e-mail</b></string>
     <string name="msg_create_account">Crea un utente</string>
     <string name="msg_continue_with_facebook">Continua con <b>Facebook</b></string>
@@ -163,8 +164,8 @@
     <string name="msg_no_description">Nessuna descrizione aggiunta</string>
     <string name="msg_send_email">Invia una email</string>
     <string name="msg_android_app_support">Supporto per le app Android</string>
-    <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
-    <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
+    <string name="msg_unable_to_update_password">Impossibile aggiornare la password. Messaggio di errore: %1$s</string>
+    <string name="msg_password_updated_successfully">Password aggiornata con successo</string>
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s ha reagito con %2$s</item>
         <item quantity="other">%1$s ha reagito con %2$s</item>
