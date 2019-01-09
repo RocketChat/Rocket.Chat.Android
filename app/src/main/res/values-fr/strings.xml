@@ -59,6 +59,7 @@
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
     <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
+    <string name="action_delete_channel">Supprimer le canal</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -149,6 +150,7 @@
     <string name="msg_send">envoyer</string>
     <string name="msg_delete_message">Supprimer Message</string>
     <string name="msg_delete_description">Êtes-vous sûr de vouloir supprimer ce message</string>
+    <string name="msg_delete_channel_description">Êtes-vous sûr de vouloir supprimer ce canal?</string>
     <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string> <!-- TODO Add translation -->
     <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
     <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->

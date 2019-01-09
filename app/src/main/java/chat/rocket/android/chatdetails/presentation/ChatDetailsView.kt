@@ -4,6 +4,6 @@ import chat.rocket.android.chatdetails.domain.ChatDetails
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 
-interface ChatDetailsView: MessageView {
+interface ChatDetailsView: LoadingView, MessageView {
     fun displayDetails(room: ChatDetails)
 }

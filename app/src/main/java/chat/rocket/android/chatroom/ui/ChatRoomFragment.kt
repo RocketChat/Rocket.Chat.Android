@@ -169,6 +169,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     internal var citation: String? = null
     private var editingMessageId: String? = null
     internal var disableMenu: Boolean = false
+    internal var isOwner: Boolean = false
 
     private val compositeDisposable = CompositeDisposable()
     private var playComposeMessageButtonsAnimation = true
@@ -1167,5 +1168,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             emojiKeyboardPopup.dismiss()
             setReactionButtonIcon(R.drawable.ic_reaction_24dp)
         }
+    }
+
+    override fun onIsOwnerUpdated (isOwner: Boolean) {
+        this.isOwner = isOwner
     }
 }

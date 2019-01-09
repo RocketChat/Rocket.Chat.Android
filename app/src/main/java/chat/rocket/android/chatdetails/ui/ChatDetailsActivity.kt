@@ -18,13 +18,15 @@ fun Context.chatDetailsIntent(
         chatRoomId: String,
         chatRoomType: String,
         isSubscribed: Boolean = true,
-        isMenuDisabled: Boolean = false
+        isMenuDisabled: Boolean = false,
+        isOwner: Boolean = false
 ): Intent {
     return Intent(this, ChatDetailsActivity::class.java).apply {
         putExtra(INTENT_CHAT_ROOM_ID, chatRoomId)
         putExtra(INTENT_CHAT_ROOM_TYPE, chatRoomType)
         putExtra(INTENT_CHAT_IS_SUBSCRIBED, isSubscribed)
         putExtra(INTENT_CHAT_DISABLED_MENU, isMenuDisabled)
+        putExtra(INTENT_CHAT_IS_OWNER, isOwner)
     }
 }
 
@@ -32,6 +34,7 @@ private const val INTENT_CHAT_ROOM_ID = "chat_room_id"
 private const val INTENT_CHAT_ROOM_TYPE = "chat_room_type"
 private const val INTENT_CHAT_IS_SUBSCRIBED = "is_chat_room_subscribed"
 private const val INTENT_CHAT_DISABLED_MENU = "is_menu_disabled"
+private const val INTENT_CHAT_IS_OWNER = "is_owner"
 
 class ChatDetailsActivity: AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
@@ -51,10 +54,11 @@ class ChatDetailsActivity: AppCompatActivity(), HasSupportFragmentInjector {
 
         val isSubscribed = intent.getBooleanExtra(INTENT_CHAT_IS_SUBSCRIBED, true)
         val disableMenu = intent.getBooleanExtra(INTENT_CHAT_DISABLED_MENU, false)
+        val isOwner = intent.getBooleanExtra(INTENT_CHAT_IS_OWNER,false)
 
         if (supportFragmentManager.findFragmentByTag(TAG_CHAT_DETAILS_FRAGMENT) == null) {
             addFragment(TAG_CHAT_DETAILS_FRAGMENT, R.id.fragment_container) {
-                newInstance(chatRoomId, chatRoomType, isSubscribed, disableMenu)
+                newInstance(chatRoomId, chatRoomType, isSubscribed, disableMenu, isOwner)
             }
         }
     }

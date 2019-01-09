@@ -59,6 +59,7 @@
     <string name="action_register">Registra</string>
     <string name="action_confirm">Conferma</string>
     <string name="action_delete_account">Elimina utente</string>
+    <string name="action_delete_channel">Elimina canale</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -188,6 +189,7 @@
     <string name="msg_view_more">vedere di più</string>
     <string name="msg_view_less">vedere di meno</string>
     <string name="msg_muted_on_this_channel">Sei disattivato su questo canale</string>
+    <string name="msg_delete_channel_description">Sei sicuro di voler eliminare questo canale</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Tracciamento Analitico</string>

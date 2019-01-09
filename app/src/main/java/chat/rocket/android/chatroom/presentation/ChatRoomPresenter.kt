@@ -147,12 +147,16 @@ class ChatRoomPresenter @Inject constructor(
             } finally {
                 // User has at least an 'owner' or 'moderator' role.
                 val canModerate = isOwnerOrMod()
+
+                val isOwner = isOwner()
+
                 // Can post anyway if has the 'post-readonly' permission on server.
                 val room = dbManager.getRoom(roomId)
                 room?.let {
                     chatIsBroadcast = it.chatRoom.broadcast ?: false
                     val roomUiModel = roomMapper.map(it, true)
                     launchUI(strategy) {
+                        view.onIsOwnerUpdated(isOwner = isOwner)
                         view.onRoomUpdated(roomUiModel = roomUiModel.copy(
                             broadcast = chatIsBroadcast,
                             canModerate = canModerate,
@@ -197,6 +201,12 @@ class ChatRoomPresenter @Inject constructor(
     private fun isOwnerOrMod(): Boolean {
         return chatRoles.firstOrNull { it.user.username == currentLoggedUsername }?.roles?.any {
             it == "owner" || it == "moderator"
+        } ?: false
+    }
+
+    private fun isOwner(): Boolean {
+        return chatRoles.firstOrNull { it.user.username == currentLoggedUsername }?.roles?.any {
+            it == "owner"
         } ?: false
     }
 
@@ -912,9 +922,10 @@ class ChatRoomPresenter @Inject constructor(
         chatRoomId: String,
         chatRoomType: String,
         isSubscribed: Boolean,
-        isMenuDisabled: Boolean
+        isMenuDisabled: Boolean,
+        isOwner: Boolean
     ) {
-        navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isMenuDisabled)
+        navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isMenuDisabled, isOwner)
     }
 
     fun loadChatRoomsSuggestions() {

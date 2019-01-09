@@ -6,8 +6,10 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryIO
+import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
+import chat.rocket.core.internal.rest.deleteChannel
 import chat.rocket.core.internal.rest.getInfo
 import chat.rocket.core.model.Room
 import javax.inject.Inject
@@ -59,6 +61,27 @@ class ChatDetailsPresenter @Inject constructor(
 
     fun toFavorites(chatRoomId: String) {
         navigator.toFavoriteMessageList(chatRoomId)
+    }
+
+    fun deleteChannel(chatRoomType: String, chatRoomId: String) {
+        launchUI(strategy) {
+            view.showLoading()
+            try {
+                retryIO(description = "deleteChannel(${roomTypeOf(chatRoomType)},$chatRoomId") {
+                    client.deleteChannel(roomTypeOf(chatRoomType),chatRoomId)
+                }
+                navigator.toChatList()
+
+            } catch (exception: RocketChatException) {
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideLoading()
+            }
+        }
     }
 
     private fun roomToChatDetails(room: Room): ChatDetails {

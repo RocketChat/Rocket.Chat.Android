@@ -1,9 +1,11 @@
 package chat.rocket.android.chatdetails.ui
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -29,7 +31,8 @@ fun newInstance(
     chatRoomId: String,
     chatRoomType: String,
     isSubscribed: Boolean,
-    disableMenu: Boolean
+    disableMenu: Boolean,
+    isOwner: Boolean
 ): ChatDetailsFragment {
     return ChatDetailsFragment().apply {
         arguments = Bundle(1).apply {
@@ -37,6 +40,7 @@ fun newInstance(
             putString(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
             putBoolean(BUNDLE_IS_SUBSCRIBED, isSubscribed)
             putBoolean(BUNDLE_DISABLE_MENU, disableMenu)
+            putBoolean(BUNDLE_IS_OWNER, isOwner)
         }
     }
 }
@@ -47,6 +51,7 @@ private const val BUNDLE_CHAT_ROOM_ID = "BUNDLE_CHAT_ROOM_ID"
 private const val BUNDLE_CHAT_ROOM_TYPE = "BUNDLE_CHAT_ROOM_TYPE"
 private const val BUNDLE_IS_SUBSCRIBED = "BUNDLE_IS_SUBSCRIBED"
 private const val BUNDLE_DISABLE_MENU = "BUNDLE_DISABLE_MENU"
+private const val BUNDLE_IS_OWNER = "BUNDLE_IS_OWNER"
 
 class ChatDetailsFragment: Fragment(), ChatDetailsView {
     @Inject
@@ -62,6 +67,7 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
     private var chatRoomType: String? = null
     private var isSubscribed: Boolean = true
     private var disableMenu: Boolean = false
+    private var isOwner: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +78,7 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
             chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
             isSubscribed = bundle.getBoolean(BUNDLE_IS_SUBSCRIBED)
             disableMenu = bundle.getBoolean(BUNDLE_DISABLE_MENU)
+            isOwner = bundle.getBoolean(BUNDLE_IS_OWNER)
         }
     }
 
@@ -87,6 +94,22 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
         setupOptions()
         setupToolbar()
         getDetails()
+
+        button_delete.setOnClickListener {
+            ui {
+                val builder = AlertDialog.Builder(it)
+                builder.setTitle(it.getString(R.string.action_delete_channel))
+                        .setMessage(it.getString(R.string.msg_delete_description))
+                        .setPositiveButton(it.getString(R.string.msg_ok)) { _, _ ->
+                            presenter.deleteChannel(
+                                    chatRoomType!!,
+                                    chatRoomId!!
+                            )
+                        }
+                        .setNegativeButton(it.getString(R.string.msg_cancel)) { _, _ -> }
+                        .show()
+            }
+        }
     }
 
     override fun displayDetails(room: ChatDetails) {
@@ -97,10 +120,24 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
             content_topic.text = if (room.topic.isNullOrEmpty()) getString(R.string.msg_no_topic) else room.topic
             content_announcement.text = if (room.announcement.isNullOrEmpty()) getString(R.string.msg_no_announcement) else room.announcement
             content_description.text = if (room.description.isNullOrEmpty()) getString(R.string.msg_no_description) else room.description
+            button_delete.isVisible = isOwner and (chatRoomType != RoomType.DIRECT_MESSAGE)
         }
     }
 
     override fun showGenericErrorMessage() = showMessage(R.string.msg_generic_error)
+
+    override fun showLoading() {
+        ui {
+            view_loading.isVisible = true
+        }
+    }
+
+    override fun hideLoading() {
+        ui {
+            view_loading.isVisible = false
+        }
+    }
+
 
     override fun showMessage(resId: Int) {
         ui {

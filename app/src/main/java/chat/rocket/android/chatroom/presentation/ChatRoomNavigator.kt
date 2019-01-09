@@ -18,14 +18,16 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         chatRoomId: String,
         chatRoomType: String,
         isChatRoomSubscribed: Boolean,
-        isMenuDisabled: Boolean
+        isMenuDisabled: Boolean,
+        isOwner: Boolean
     ) {
         activity.startActivity(
             activity.chatDetailsIntent(
                 chatRoomId,
                 chatRoomType,
                 isChatRoomSubscribed,
-                isMenuDisabled
+                isMenuDisabled,
+                isOwner
             )
         )
     }

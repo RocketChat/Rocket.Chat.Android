@@ -59,6 +59,7 @@
     <string name="action_register">रजिस्टर</string>
     <string name="action_confirm">पुष्टि करें</string>
     <string name="action_delete_account">खाता हटा दो</string>
+    <string name="action_delete_channel">चैनल हटाएं</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -164,6 +165,7 @@
     <string name="msg_continue_with_wordpress"><b>WordPress</b> के साथ जारी रखें</string>
     <string name="msg_two_factor_authentication">दो तरीकों से प्रमाणीकरण</string>
     <string name="msg__your_2fa_code">आपका 2FA कोड क्या है?</string>
+    <string name="msg_delete_channel_description">क्या आप वाकई इस चैनल को हटाना चाहते हैं?</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">प्राइवेट</string>

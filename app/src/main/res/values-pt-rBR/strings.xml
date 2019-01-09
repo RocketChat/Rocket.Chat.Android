@@ -59,6 +59,7 @@
     <string name="action_register">Registrar</string>
     <string name="action_confirm">Confirmar</string>
     <string name="action_delete_account">Deletar conta</string>
+    <string name="action_delete_channel">Excluir canal</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -174,6 +175,7 @@
     <string name="msg_unable_to_update_password">Não foi possível atualizar a senha. Mensagem de erro: %1$s</string>
     <string name="msg_password_updated_successfully">Senha alterada com sucesso</string>
     <string name="msg_sort">Ordenar</string>
+    <string name="msg_delete_channel_description">Tem certeza de que deseja excluir este canal?</string>
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s reagiu com %2$s</item>
         <item quantity="other">%1$s reagiram com %2$s</item>

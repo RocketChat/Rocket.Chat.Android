@@ -59,6 +59,7 @@
     <string name="action_register">Зарегистрировать</string>
     <string name="action_confirm">Подтвердить</string>
     <string name="action_delete_account">Удалить аккаунт</string>
+    <string name="action_delete_channel">Удалить канал</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -172,6 +173,7 @@
     <string name="msg_muted_on_this_channel">Вы лишены дара речи на этом канале</string>
     <string name="msg_unable_to_update_password">Невозможно обновить пароль. Ошибка: %1$s</string>
     <string name="msg_password_updated_successfully">Пароль успешно обновлен</string>
+    <string name="msg_delete_channel_description">Вы уверены, что хотите удалить этот канал?</string>
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s реагирует с %2$s</item>
         <item quantity="few">%1$s реагируют с %2$s</item>
