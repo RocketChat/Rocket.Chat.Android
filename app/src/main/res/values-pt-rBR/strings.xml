@@ -208,8 +208,8 @@
     <string name="message_pinned">Fixou uma mensagem:</string>
     <string name="message_muted">Usuário %1$s foi silenciado por %2$s</string>
     <string name="message_unmuted">Usuário %1$s saiu do modo silenciado por %2$s</string>
-    <string name="message_role_add">%3$s deu estatuto de %2$s a %1$s</string>
-    <string name="message_role_removed">%3$s removeu o estatuto de %2$s de %1$s</string>
+    <string name="message_role_add">%1$s foi definido %2$s por %3$s</string>
+    <string name="message_role_removed">%1$s não é mais %2$s por %3$s</string>
     <string name="message_credentials_saved_successfully">Credenciais salvas com sucesso</string>
 
     <!-- Message actions -->
@@ -253,7 +253,7 @@
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Mensagens Fixadas</string>
     <string name="no_pinned_messages">Nenhuma mensagem fixada</string>
-    <string name="no_pinned_description">Todas as mensagens fixadas\naparecerão aqui</string>
+    <string name="no_pinned_description">Todas mensagens fixadas\naparecerão aqui</string>
 
     <!-- Favorite Messages -->
     <string name="title_favorite_messages">Mensagens Favoritas</string>
