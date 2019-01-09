@@ -2,13 +2,12 @@ package chat.rocket.android.contacts.adapter
 
 import android.content.Intent
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.*
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extensions.inflate
-
-import android.widget.Button
 
 class ContactRecyclerViewAdapter(
         private val context: MainActivity,
