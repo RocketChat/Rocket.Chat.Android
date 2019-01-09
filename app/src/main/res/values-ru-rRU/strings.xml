@@ -64,6 +64,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Персональные</item>
         <item name="item_password">Изменить пароль</item>
+        <item name="change_language">Изменить язык</item>
         <item name="item_share_app">Поделиться приложением</item>
         <item name="item_rate_us">Оцените нас</item>
         <item name="item_contact_us">Связаться с нами</item>
@@ -149,7 +150,7 @@
     <string name="msg_channel_name">Название канала</string>
     <string name="msg_search">Поиск</string>
     <string name="msg_welcome_to_rocket_chat">Rocket.Chat</string>
-    <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
+    <string name="msg_team_communication">Командное общение</string>
     <string name="msg_login_with_email">Войти с помощью <b>e-mail</b></string>
     <string name="msg_create_account">Создать аккаунт</string>
     <string name="msg_continue_with_facebook">Войти с помощью <b>Facebook</b></string>
