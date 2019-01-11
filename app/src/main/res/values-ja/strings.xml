@@ -340,10 +340,7 @@
     <string name="message_room_changed_privacy">ルームタイプを %2$s から %1$s に変更しました</string>
 
     <!-- User Details -->
-    <string name="message">Message</string> <!--TODO - Add proper translation-->
     <string name="timezone">Timezone</string> <!--TODO - Add proper translation-->
-    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string> <!-- TODO - Add proper translation -->
-    <string name="retry">Retry</string> <!-- TODO - Add proper translation -->
 
     <!-- Report -->
     <string name="submit">Submit</string> <!--TODO - Add proper translation-->
