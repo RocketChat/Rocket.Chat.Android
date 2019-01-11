@@ -312,6 +312,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             showToolbarChatRoomIcon(chatRoomType)
         }
         getDraftMessage()
+        subscribeComposeTextMessage()
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRoom)
     }
@@ -848,7 +849,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 true
             )
 
-            subscribeComposeTextMessage()
             emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
 
             emojiKeyboardPopup.listener = this
@@ -1000,12 +1000,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun subscribeComposeTextMessage() {
-        val editTextObservable = text_message.asObservable()
-
-        compositeDisposable.addAll(
-            subscribeComposeButtons(editTextObservable),
-            subscribeComposeTypingStatus(editTextObservable)
-        )
+        text_message.asObservable().let {
+            compositeDisposable.addAll(
+                subscribeComposeButtons(it),
+                subscribeComposeTypingStatus(it)
+            )
+        }
     }
 
     private fun unsubscribeComposeTextMessage() {
