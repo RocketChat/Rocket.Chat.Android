@@ -1,6 +1,5 @@
 package chat.rocket.android.contacts.adapter
 
-import android.content.Intent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
@@ -88,12 +87,7 @@ class ContactRecyclerViewAdapter(
     }
 
     private fun shareApp() {
-        with(Intent(Intent.ACTION_SEND)) {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.msg_check_this_out))
-            putExtra(Intent.EXTRA_TEXT, context.getString(R.string.play_store_link))
-            context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
-        }
+        context.presenter.shareViaApp(context)
     }
 
     companion object {

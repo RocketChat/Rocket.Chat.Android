@@ -2,9 +2,11 @@ package chat.rocket.android.main.presentation
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.startActivity
 import chat.rocket.android.R
@@ -55,8 +57,12 @@ import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Myself
 import chat.rocket.common.model.RoomType
+import com.google.firebase.dynamiclinks.DynamicLink
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import com.google.firebase.dynamiclinks.ShortDynamicLink
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import javax.inject.Inject
@@ -351,6 +357,42 @@ class MainPresenter @Inject constructor(
                         inviteIntent.type = "text/plain"
                         startActivity(context, inviteIntent, null)
                     }.show()
+        }
+    }
+
+    fun shareViaApp(context: Context){
+        launch {
+            //get serverUrl and username
+            val server = serverInteractor.get()!!
+            val account = getAccountInteractor.get(server)!!
+            val userName = account.userName
+
+            FirebaseDynamicLinks.getInstance().createDynamicLink()
+                .setLink(Uri.parse("$server/direct/$userName"))
+                .setDomainUriPrefix("https://dylinktesting.page.link")
+                .setAndroidParameters(
+                    DynamicLink.AndroidParameters.Builder("chat.veranda.android.dev").build())
+                .setSocialMetaTagParameters(
+                    DynamicLink.SocialMetaTagParameters.Builder()
+                        .setTitle(userName)
+                        .setDescription("Chat with $userName on Rocket.Chat")
+                        .build())
+                .buildShortDynamicLink(ShortDynamicLink.Suffix.SHORT)
+                .addOnSuccessListener { result ->
+                    val link = result.shortLink.toString()
+                    Toast.makeText(context, link, Toast.LENGTH_SHORT).show()
+
+                    with(Intent(Intent.ACTION_SEND)) {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.msg_check_this_out))
+                        putExtra(Intent.EXTRA_TEXT, "Default Invitation Text : $link")
+                        context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
+                    }
+
+                }.addOnFailureListener {
+                    // Error
+                    Toast.makeText(context, "Error dynamic link", Toast.LENGTH_SHORT).show()
+                }
         }
     }
 
