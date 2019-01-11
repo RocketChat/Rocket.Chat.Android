@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     override fun onResume() {
         supportFragmentManager.popBackStackImmediate("contactsFragment", 1)
         super.onResume()
-        syncContacts()
+        //syncContacts()
         if (!isFragmentAdded) {
             presenter.toChatList(chatRoomId)
             isFragmentAdded = true
@@ -305,7 +305,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             WorkManager.getInstance().enqueue(contactSyncWork)
             WorkManager.getInstance().getStatusById(contactSyncWork.getId()).observe(this, Observer { info ->
                 if (info != null && info.state.isFinished) {
-                    showToast("Contacts synced in background")
+                    //showToast("Contacts synced in background")
                 }
             })
         }

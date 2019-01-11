@@ -2,6 +2,7 @@ package chat.rocket.android.contacts.adapter
 
 import android.content.Intent
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.*
@@ -60,19 +61,26 @@ class ContactRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder<*>, position: Int) {
         if (holder is ContactViewHolder) {
             holder.bind(contactArrayList[position] as ContactItemHolder)
-            holder.itemView.setOnClickListener { view ->
+            val inviteButton: Button = holder.itemView.findViewById(R.id.invite_contact)
+            val dmButton: Button = holder.itemView.findViewById(R.id.chat_username)
+
+            inviteButton.setOnClickListener { view ->
                 run {
+                    inviteButton.setText("INVITED")
                     val contact = holder.data!!.data
 
-                    if (contact.getUsername() == null) {
-                        if (contact!!.isPhone()) {
-                            context.presenter.inviteViaSMS(contact!!.getPhoneNumber()!!)
-                        } else {
-                            context.presenter.inviteViaEmail(contact!!.getEmailAddress()!!)
-                        }
+                    if (contact!!.isPhone()) {
+                        context.presenter.inviteViaSMS(contact!!.getPhoneNumber()!!)
                     } else {
-                        context.presenter.openDirectMessageChatRoom(contact!!.getUsername().toString())
+                        context.presenter.inviteViaEmail(contact!!.getEmailAddress()!!)
                     }
+                }
+            }
+
+            dmButton.setOnClickListener { view ->
+                run {
+                    val contact = holder.data!!.data
+                    context.presenter.openDirectMessageChatRoom(contact!!.getUsername().toString())
                 }
             }
 

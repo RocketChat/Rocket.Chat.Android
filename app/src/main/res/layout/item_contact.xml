@@ -54,20 +54,21 @@
         android:fontFamily="@string/font_fontFamily_widechat"
         tools:text="Name goes here" />
 
-    <TextView
+    <Button
         android:id="@+id/invite_contact"
         style="@style/ChatRoom.Name.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Invite"
         android:textColor="@color/color_invite"
-        android:fontFamily="@string/font_fontFamily_widechat"
+        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <TextView
+    <Button
         android:id="@+id/chat_username"
         style="@style/Sender.Name.TextView"
+        android:background="@android:color/transparent"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginStart="16dp"
@@ -75,6 +76,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/contact_image_avatar"
         android:textColor="@color/colorPrimaryText"
+        android:textAllCaps="false"
         android:fontFamily="@string/font_fontFamily_widechat"
         tools:text="alex.johnson" />
 
