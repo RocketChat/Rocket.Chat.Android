@@ -83,6 +83,20 @@ class ChatRoomsViewModel(
         }
     }
 
+    fun getChatRoomOfUsernameDB(string: String): List<ItemHolder<*>> {
+        val rooms = async(CommonPool) {
+            return@async repository.search(string).let { mapper.map(it, showLastMessage = showLastMessage) }
+        }
+        return runBlocking { rooms.await() }
+    }
+
+    fun getChatRoomOfUsernameSpotlight(string: String): List<ItemHolder<*>>? {
+        val rooms = async(CommonPool) {
+            return@async spotlight(string)?.let { mapper.map(it, showLastMessage = showLastMessage) }
+        }
+        return runBlocking { rooms.await() }
+    }
+
     private suspend fun spotlight(query: String): SpotlightResult? {
         return try {
             retryIO { client.spotlight(query) }

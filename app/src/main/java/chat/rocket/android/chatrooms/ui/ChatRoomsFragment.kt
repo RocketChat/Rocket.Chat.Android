@@ -44,7 +44,9 @@ import javax.inject.Inject
 
 // WIDECHAT
 import android.graphics.Color
+import android.net.Uri
 import android.widget.*
+import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.profile.ui.ProfileFragment
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -114,16 +116,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 chatRoomId = null
             }
         }
-        getDeepLink()
-    }
-
-    private fun getDeepLink() {
-        deepLink = SharedPreferenceHelper.getString(Constants.DEEP_LINK, "null")
-        SharedPreferenceHelper.remove(Constants.DEEP_LINK)
-        TimberLogger.debug("Retrieved deep link on ChatRooms : $deepLink")
-        Toast.makeText(context, "Retrieved : $deepLink", Toast.LENGTH_SHORT).show()
-
-        //Navigate to ChatRoom
     }
 
     override fun onDestroy() {
@@ -156,6 +148,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         setupToolbar()
         setupFab()
+        getDeepLink()
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
     }
@@ -524,4 +517,50 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             transaction?.addToBackStack("contactsFragment")?.commit();
         }
     }
+
+    private fun getDeepLink() {
+
+        deepLink = SharedPreferenceHelper.getString(Constants.DEEP_LINK, "null")
+        SharedPreferenceHelper.remove(Constants.DEEP_LINK)
+        TimberLogger.debug("Retrieved deep link on ChatRooms : $deepLink")
+
+		if(deepLink.isNullOrBlank() || deepLink.equals("null")){
+            return
+        } else {
+            Toast.makeText(context, "Deep link : $deepLink", Toast.LENGTH_SHORT).show()
+        }
+
+		val uri = Uri.parse(deepLink)
+		val username = uri.lastPathSegment
+
+		username.ifNotNullNorEmpty {
+			val localRooms = viewModel.getChatRoomOfUsernameDB(username!!)
+			val filteredLocalRooms = localRooms.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+
+			if (filteredLocalRooms.isNotEmpty()) {
+				presenter.loadChatRoom(filteredLocalRooms.first().data as RoomUiModel)
+			} else {
+				//check from spotlight when connected
+				val statusLiveData = viewModel.getStatus()
+				statusLiveData.observe(viewLifecycleOwner, object: Observer<State>{
+					override fun onChanged(status: State?) {
+						if (status is State.Connected) {
+							val rooms = viewModel.getChatRoomOfUsernameSpotlight(username)
+							val filteredRooms = rooms?.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+
+							filteredRooms?.let {
+								if (filteredRooms.isNotEmpty()) {
+									presenter.loadChatRoom(filteredRooms.first().data as RoomUiModel)
+								} else {
+									Toast.makeText(context, "User not found or No internet connection", Toast.LENGTH_SHORT).show()
+								}
+							}
+
+							statusLiveData.removeObserver(this)
+						}
+					}
+				})
+			}
+		}
+	}
 }
