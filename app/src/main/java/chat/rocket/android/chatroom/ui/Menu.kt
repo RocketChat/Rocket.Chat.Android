@@ -108,7 +108,7 @@ private fun ChatRoomFragment.setupDetailsMenuItem(menu: Menu) {
             Menu.NONE,
             MENU_ACTION_SHOW_DETAILS,
             Menu.NONE,
-            "Channel Details"
+            R.string.title_channel_details
     ).setIcon(R.drawable.ic_info_outline_white_24dp)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
 }

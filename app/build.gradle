@@ -16,7 +16,7 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 2055
+        versionCode 2056
         versionName "3.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -140,6 +140,7 @@ dependencies {
     implementation libraries.frescoAnimatedWebP
 
     implementation libraries.glide
+    implementation libraries.glideTransformations
 
     kapt libraries.kotshiCompiler
     implementation libraries.kotshiApi

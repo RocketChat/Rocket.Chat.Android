@@ -337,10 +337,7 @@
     <string name="message_room_changed_privacy">%2$s ने रूम का प्रकार बदलकर %1$s किया </string>
 
     <!-- User Details -->
-    <string name="message">संदेश</string>
     <string name="timezone">समय क्षेत्र</string>
-    <string name="error_opening_dm">जब हम इस बातचीत को बना रहे थे तो कुछ गड़बड़ हुई …</string>
-    <string name="retry">पुन: प्रयास करें</string>
 
     <!-- Report -->
     <string name="submit">जमा करें</string>

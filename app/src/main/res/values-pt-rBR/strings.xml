@@ -205,13 +205,12 @@
     <string name="message_user_joined_channel">Entrou na sala</string>
     <string name="message_welcome">Bem-vindo, %s</string>
     <string name="message_removed">Mensagem removida</string>
-    <string name="message_pinned">Pinou uma mensagem:</string>
+    <string name="message_pinned">Fixou uma mensagem:</string>
     <string name="message_muted">Usuário %1$s foi silenciado por %2$s</string>
     <string name="message_unmuted">Usuário %1$s saiu do modo silenciado por %2$s</string>
     <string name="message_role_add">%1$s foi definido %2$s por %3$s</string>
     <string name="message_role_removed">%1$s não é mais %2$s por %3$s</string>
-    // TODO:Add proper translation.
-    <string name="message_credentials_saved_successfully">Credentials saved successfully</string>
+    <string name="message_credentials_saved_successfully">Credenciais salvas com sucesso</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Responder</string>
@@ -233,7 +232,7 @@
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Edição não permitida</string>
     <string name="permission_deleting_not_allowed">Remoção não permitida</string>
-    <string name="permission_pinning_not_allowed">Pinagem não permitida</string>
+    <string name="permission_pinning_not_allowed">Fixagem não permitida</string>
     <string name="permission_starring_not_allowed">Marcar como favorita não permitido</string>
 
     <!-- Search message -->
@@ -252,13 +251,13 @@
     <string name="msg_all_the_mentions_appear_here">Todas menções\naparecerão aqui</string>
 
     <!-- Pinned Messages -->
-    <string name="title_pinned_messages">Mensagens Pinadas</string>
-    <string name="no_pinned_messages">Nenhuma mensagem pinada</string>
-    <string name="no_pinned_description">Todas mensagens pinadas\naparecerão aqui</string>
+    <string name="title_pinned_messages">Mensagens Fixadas</string>
+    <string name="no_pinned_messages">Nenhuma mensagem fixada</string>
+    <string name="no_pinned_description">Todas mensagens fixadas\naparecerão aqui</string>
 
     <!-- Favorite Messages -->
-    <string name="title_favorite_messages">Messagens Favoritas</string>
-    <string name="no_favorite_messages">Nenhuma messagem favorita</string>
+    <string name="title_favorite_messages">Mensagens Favoritas</string>
+    <string name="no_favorite_messages">Nenhuma mensagem favorita</string>
     <string name="no_favorite_description">Todas mensagens favoritas\naparecerão aqui</string>
 
     <!-- Files -->
@@ -336,10 +335,7 @@
     <string name="message_room_changed_privacy">O tipo da sala mudou para: %1$s por %2$s</string>
 
     <!-- User Details -->
-    <string name="message">Mensagem</string>
     <string name="timezone">Fuso horário</string>
-    <string name="error_opening_dm">Algo deu errado quando tentamos abrir esta conversa…</string>
-    <string name="retry">Retentar</string>
 
     <!-- Report -->
     <string name="submit">Enviar</string>
