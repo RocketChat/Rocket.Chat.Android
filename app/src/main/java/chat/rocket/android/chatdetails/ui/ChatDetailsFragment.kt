@@ -1,5 +1,6 @@
 package chat.rocket.android.chatdetails.ui
 
+import DrawableHelper
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import chat.rocket.android.chatdetails.presentation.ChatDetailsPresenter
 import chat.rocket.android.chatdetails.presentation.ChatDetailsView
 import chat.rocket.android.chatdetails.viewmodel.ChatDetailsViewModel
 import chat.rocket.android.chatdetails.viewmodel.ChatDetailsViewModelFactory
+import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
@@ -32,7 +34,7 @@ fun newInstance(
     disableMenu: Boolean
 ): ChatDetailsFragment {
     return ChatDetailsFragment().apply {
-        arguments = Bundle(1).apply {
+        arguments = Bundle(4).apply {
             putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
             putString(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
             putBoolean(BUNDLE_IS_SUBSCRIBED, isSubscribed)
@@ -48,14 +50,12 @@ private const val BUNDLE_CHAT_ROOM_TYPE = "BUNDLE_CHAT_ROOM_TYPE"
 private const val BUNDLE_IS_SUBSCRIBED = "BUNDLE_IS_SUBSCRIBED"
 private const val BUNDLE_DISABLE_MENU = "BUNDLE_DISABLE_MENU"
 
-class ChatDetailsFragment: Fragment(), ChatDetailsView {
+class ChatDetailsFragment : Fragment(), ChatDetailsView {
     @Inject
     lateinit var presenter: ChatDetailsPresenter
     @Inject
     lateinit var factory: ChatDetailsViewModelFactory
-
     private var adapter: ChatDetailsAdapter? = null
-
     private lateinit var viewModel: ChatDetailsViewModel
 
     private var chatRoomId: String? = null
@@ -72,13 +72,15 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
             chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
             isSubscribed = bundle.getBoolean(BUNDLE_IS_SUBSCRIBED)
             disableMenu = bundle.getBoolean(BUNDLE_DISABLE_MENU)
+        } else {
+            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? = container?.inflate(R.layout.fragment_chat_details)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -94,9 +96,12 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
             val text = room.name
             name.text = text
             bindImage(chatRoomType!!)
-            content_topic.text = if (room.topic.isNullOrEmpty()) getString(R.string.msg_no_topic) else room.topic
-            content_announcement.text = if (room.announcement.isNullOrEmpty()) getString(R.string.msg_no_announcement) else room.announcement
-            content_description.text = if (room.description.isNullOrEmpty()) getString(R.string.msg_no_description) else room.description
+            content_topic.text =
+                    if (room.topic.isNullOrEmpty()) getString(R.string.msg_no_topic) else room.topic
+            content_announcement.text =
+                    if (room.announcement.isNullOrEmpty()) getString(R.string.msg_no_announcement) else room.announcement
+            content_description.text =
+                    if (room.description.isNullOrEmpty()) getString(R.string.msg_no_description) else room.description
         }
     }
 
@@ -126,15 +131,24 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
                 it.addOption(getString(R.string.msg_mentions), R.drawable.ic_at_black_20dp) {
                     presenter.toMentions(chatRoomId!!)
                 }
-                it.addOption(getString(R.string.title_members), R.drawable.ic_people_outline_black_24dp) {
+                it.addOption(
+                    getString(R.string.title_members),
+                    R.drawable.ic_people_outline_black_24dp
+                ) {
                     presenter.toMembers(chatRoomId!!)
                 }
             }
 
-            it.addOption(getString(R.string.title_favorite_messages), R.drawable.ic_star_border_white_24dp) {
+            it.addOption(
+                getString(R.string.title_favorite_messages),
+                R.drawable.ic_star_border_white_24dp
+            ) {
                 presenter.toFavorites(chatRoomId!!)
             }
-            it.addOption(getString(R.string.title_pinned_messages), R.drawable.ic_action_message_pin_24dp) {
+            it.addOption(
+                getString(R.string.title_pinned_messages),
+                R.drawable.ic_action_message_pin_24dp
+            ) {
                 presenter.toPinned(chatRoomId!!)
             }
         }
@@ -178,9 +192,9 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
                     layoutManager = LinearLayoutManager(it)
                     addItemDecoration(
                         DividerItemDecoration(
-                                it,
-                                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
-                                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)
+                            it,
+                            resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
+                            resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)
                         )
                     )
                     itemAnimator = DefaultItemAnimator()
@@ -192,9 +206,9 @@ class ChatDetailsFragment: Fragment(), ChatDetailsView {
     }
 
     private fun setupToolbar() {
-        (activity as ChatDetailsActivity).let {
-            it.setNavigationIcon(R.drawable.ic_close_white_24dp)
-            it.setToolbarTitle(getString(R.string.title_channel_details))
+        with((activity as ChatRoomActivity)) {
+            hideToolbarChatRoomIcon()
+            showToolbarTitle(getString(R.string.title_channel_details))
         }
     }
 }

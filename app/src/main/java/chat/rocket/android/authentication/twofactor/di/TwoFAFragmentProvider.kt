@@ -5,7 +5,8 @@ import chat.rocket.android.dagger.scope.PerFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
-@Module abstract class TwoFAFragmentProvider {
+@Module
+abstract class TwoFAFragmentProvider {
 
     @ContributesAndroidInjector(modules = [TwoFAFragmentModule::class])
     @PerFragment

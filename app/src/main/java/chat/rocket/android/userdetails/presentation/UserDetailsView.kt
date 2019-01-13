@@ -1,12 +1,24 @@
 package chat.rocket.android.userdetails.presentation
 
-import chat.rocket.core.model.ChatRoom
+import chat.rocket.android.core.behaviours.LoadingView
+import chat.rocket.android.core.behaviours.MessageView
 
-interface UserDetailsView {
+interface UserDetailsView : LoadingView, MessageView {
 
-    fun showUserDetails(avatarUrl: String?, username: String?, name: String?, utcOffset: Float?, status: String, chatRoom: ChatRoom?)
-
-    fun toDirectMessage(chatRoom: ChatRoom)
-
-    fun onOpenDirectMessageError()
+    /**
+     * Shows user detail.
+     *
+     * @param avatarUrl The user avatar URL.
+     * @param name The user's name.
+     * @param username The user's username.
+     * @param status The user's status.
+     * @param utcOffset The user's UTC offset.
+     */
+    fun showUserDetails(
+        avatarUrl: String,
+        name: String,
+        username: String,
+        status: String,
+        utcOffset: String
+    )
 }

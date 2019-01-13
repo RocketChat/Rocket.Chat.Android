@@ -40,6 +40,7 @@ import chat.rocket.android.chatroom.adapter.EmojiSuggestionsAdapter
 import chat.rocket.android.chatroom.adapter.PEOPLE
 import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter
 import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter
+import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.ui.bottomsheet.MessageActionsBottomSheet
@@ -68,6 +69,7 @@ import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.createImageFile
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
+import chat.rocket.android.util.extensions.clearLightStatusBar
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.getBitmpap
@@ -85,6 +87,7 @@ import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.emoji_image_row_item.view.*
 import kotlinx.android.synthetic.main.emoji_row_item.view.*
 import kotlinx.android.synthetic.main.fragment_chat_room.*
@@ -145,13 +148,14 @@ internal const val MENU_ACTION_SHOW_DETAILS = 2
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener,
     ChatRoomAdapter.OnActionSelected, Drawable.Callback {
-
     @Inject
     lateinit var presenter: ChatRoomPresenter
     @Inject
     lateinit var parser: MessageParser
     @Inject
     lateinit var analyticsManager: AnalyticsManager
+    @Inject
+    lateinit var navigator: ChatRoomNavigator
     private lateinit var adapter: ChatRoomAdapter
     internal lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -284,7 +288,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
 
-        adapter = ChatRoomAdapter(chatRoomId, chatRoomType, chatRoomName, this, reactionListener = this)
+        adapter = ChatRoomAdapter(chatRoomId, chatRoomType, chatRoomName, this, reactionListener = this, navigator = navigator)
     }
 
     override fun onCreateView(
@@ -1055,7 +1059,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun setupToolbar(toolbarTitle: String) {
-        (activity as ChatRoomActivity).showToolbarTitle(toolbarTitle)
+        with(activity as ChatRoomActivity) {
+            this.clearLightStatusBar()
+            this.showToolbarTitle(toolbarTitle)
+            toolbar.isVisible = true
+        }
     }
 
     override fun unscheduleDrawable(who: Drawable?, what: Runnable?) {

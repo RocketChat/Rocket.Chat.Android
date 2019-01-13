@@ -155,6 +155,43 @@
     </style>
     <!-- End chat list -->
 
+    <!-- User details -->
+    <style name="UserDetails.TextView.Name" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorUserDetailsNameText</item>
+    </style>
+
+    <style name="UserDetails.TextView.Username" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorUserDetailsUsernameText</item>
+    </style>
+
+    <style name="UserDetails.TextView.Actions" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="UserDetails.TextView.Title" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorAuthenticationSecondaryText</item>
+    </style>
+
+    <style name="UserDetails.TextView.Description" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+    <!-- End user details-->
+
     <style name="EditText.Password" parent="TextAppearance.AppCompat">
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@color/colorPrimaryDark</item>
