@@ -342,9 +342,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 REQUEST_CODE_FOR_PERFORM_CAMERA -> takenPhotoUri?.let { uri ->
-                    uri.getBitmpap(requireContext())?.let { bitmap ->
-                        presenter.uploadImage(chatRoomId, "image/png", uri, bitmap, "")
-                    }
+                    showCameraImageAttachmentDialog(uri)
                 }
                 REQUEST_CODE_FOR_PERFORM_SAF -> resultData?.data?.let {
                     showFileAttachmentDialog(it)

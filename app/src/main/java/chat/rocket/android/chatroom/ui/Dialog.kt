@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.core.view.isVisible
 import chat.rocket.android.emoji.internal.GlideApp
+import chat.rocket.android.util.extensions.getBitmpap
 import chat.rocket.android.util.extensions.getFileName
 import chat.rocket.android.util.extensions.getMimeType
 import chat.rocket.common.util.ifNull
@@ -92,6 +93,46 @@ fun ChatRoomFragment.showDrawAttachmentDialog(byteArray: ByteArray) {
             byteArray,
             (citation ?: "") + description.text.toString()
         )
+        alertDialog.dismiss()
+    }
+
+    cancelButton.setOnClickListener { alertDialog.dismiss() }
+    alertDialog.show()
+}
+
+fun ChatRoomFragment.showCameraImageAttachmentDialog(uri: Uri) {
+    imagePreview.isVisible = false
+    audioVideoAttachment.isVisible = false
+    textFile.isVisible = false
+
+    activity?.let { context ->
+        description.text.clear()
+        GlideApp
+                .with(context)
+                .asBitmap()
+                .load(uri)
+                .fitCenter()
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(
+                            resource: Bitmap,
+                            transition: Transition<in Bitmap>?
+                    ) {
+                        imagePreview.setImageBitmap(resource)
+                    }
+                })
+        imagePreview.isVisible = true
+
+    }
+
+    sendButton.setOnClickListener {
+        uri.getBitmpap(requireContext())?.let { bitmap ->
+            presenter.uploadImage(
+                    chatRoomId,
+                    "image/png",
+                    uri,
+                    bitmap,
+                    (citation ?: "") + description.text.toString())
+        }
         alertDialog.dismiss()
     }
 
