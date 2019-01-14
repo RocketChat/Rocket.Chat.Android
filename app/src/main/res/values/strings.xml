@@ -76,6 +76,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item>
         <item name="item_password">Change password</item>
+        <item name="change_language">Change Language </item>
         <item name="item_share_app">Share app</item>
         <item name="item_rate_us">Rate us</item>
         <item name="item_contact_us">Contact us</item>
@@ -351,11 +352,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="foss" translatable="false">(FOSS)</string>
 
     <!-- User Details -->
-    <string name="message">Message</string>
     <string name="timezone">Timezone</string>
     <string name="status" translatable="false">Status</string>
-    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string>
-    <string name="retry">Retry</string>
 
     <!-- Report -->
     <string name="submit">Submit</string>
