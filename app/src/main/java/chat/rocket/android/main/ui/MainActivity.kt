@@ -2,7 +2,7 @@ package chat.rocket.android.main.ui
 
 import DrawableHelper
 import android.app.Activity
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.annotation.IdRes
