@@ -299,13 +299,13 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         context?.let {
             val builder = AlertDialog.Builder(it)
             builder.setTitle(R.string.title_are_you_sure)
-                    .setView(passwordEditText)
-                    .setPositiveButton(R.string.action_delete_account) { _, _ ->
-                        presenter.deleteAccount(passwordEditText.text.toString())
-                    }
-                    .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
-                    .create()
-                    .show()
+                .setView(passwordEditText)
+                .setPositiveButton(R.string.action_delete_account) { _, _ ->
+                    presenter.deleteAccount(passwordEditText.text.toString())
+                }
+                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
+                .create()
+                .show()
         }
     }
 }

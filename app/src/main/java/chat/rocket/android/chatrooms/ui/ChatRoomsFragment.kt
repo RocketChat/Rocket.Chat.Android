@@ -238,13 +238,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
                 context?.let {
                     AlertDialog.Builder(it)
-                            .setTitle(R.string.dialog_sort_title)
-                            .setView(dialogLayout)
-                            .setPositiveButton(R.string.msg_sort) { dialog, _ ->
-                                invalidateQueryOnSearch()
-                                updateSort()
-                                dialog.dismiss()
-                            }.show()
+                        .setTitle(R.string.dialog_sort_title)
+                        .setView(dialogLayout)
+                        .setPositiveButton(R.string.msg_sort) { dialog, _ ->
+                            invalidateQueryOnSearch()
+                            updateSort()
+                            dialog.dismiss()
+                        }.show()
                 }
             }
         }
