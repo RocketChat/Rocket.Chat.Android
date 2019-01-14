@@ -2,7 +2,7 @@ package chat.rocket.android.profile.ui
 
 import DrawableHelper
 import android.app.Activity
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
@@ -296,14 +296,16 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         val passwordEditText = EditText(context)
         passwordEditText.hint = getString(R.string.msg_password)
 
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle(R.string.title_are_you_sure)
-            .setView(passwordEditText)
-            .setPositiveButton(R.string.action_delete_account) { _, _ ->
-                presenter.deleteAccount(passwordEditText.text.toString())
-            }
-            .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
-            .create()
-            .show()
+        context?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.setTitle(R.string.title_are_you_sure)
+                    .setView(passwordEditText)
+                    .setPositiveButton(R.string.action_delete_account) { _, _ ->
+                        presenter.deleteAccount(passwordEditText.text.toString())
+                    }
+                    .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
+                    .create()
+                    .show()
+        }
     }
 }
