@@ -13,6 +13,7 @@ import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.server.infraestructure.ConnectionManager
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -41,11 +42,31 @@ class ChatRoomsPresenter @Inject constructor(
     private val client = manager.client
     private val settings = settingsRepository.get(currentServer)
 
+    fun loadChatRoom(roomId: String) {
+        launchUI(strategy) {
+            view.showLoadingRoom("")
+            try {
+                val room = dbManager.getRoom(roomId)
+                if (room != null) {
+                    loadChatRoom(room.chatRoom, true)
+                } else {
+                    Timber.d("Error loading channel")
+                    view.showGenericErrorMessage()
+                }
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error loading channel")
+                view.showGenericErrorMessage()
+            } finally {
+                view.hideLoadingRoom()
+            }
+        }
+    }
+
     fun loadChatRoom(chatRoom: RoomUiModel) {
         launchUI(strategy) {
             view.showLoadingRoom(chatRoom.name)
             try {
-                val room = dbManager.getRoom(chatRoom.id)
+                val room = retryDB("getRoom(${chatRoom.id}") { dbManager.getRoom(chatRoom.id) }
                 if (room != null) {
                     loadChatRoom(room.chatRoom, true)
                 } else {
@@ -56,7 +77,8 @@ class ChatRoomsPresenter @Inject constructor(
                             type = type.toString(),
                             name = username ?: name.toString(),
                             fullname = name.toString(),
-                            open = open
+                            open = open,
+                            muted = muted
                         )
                         loadChatRoom(entity, false)
                     }

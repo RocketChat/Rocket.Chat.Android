@@ -1,4 +1,5 @@
 <resources>
     <string name="msg_no_recent_emoji">No recent emoji</string>
     <string name="alert_title_default_skin_tone">Default skin tone</string>
+    <string name="msg_reactions" translatable="false">Reactions</string>
 </resources>

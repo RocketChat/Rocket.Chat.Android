@@ -23,6 +23,7 @@ fun Context.changeServerIntent(serverUrl: String? = null, chatRoomId: String? = 
         flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
 }
+
 class ChangeServerActivity : AppCompatActivity(), ChangeServerView {
     @Inject lateinit var presenter: ChangeServerPresenter
 

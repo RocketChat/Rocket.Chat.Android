@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">अपने सर्वर में साइन इन करें</string>
     <string name="title_log_in">लॉग इन करें</string>
+    <string name="title_share_the_app">ऐप शेयर करे</string>
     <string name="title_register_username">रजिस्टर उपयोगकर्ता नाम</string>
     <string name="title_reset_password">पासवर्ड रीसेट करें</string>
     <string name="title_sign_up">साइन अप करें</string>
@@ -15,13 +16,18 @@
     <string name="title_settings">सेटिंग्स</string>
     <string name="title_preferences">प्राथमिकताएँ</string>
     <string name="title_change_password">पासवर्ड बदलें</string>
+    <string name="title_rate_us">हमें रेटिंग दें</string>
     <string name="title_admin_panel">एडमिन पैनल</string>
     <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
     <string name="title_create_channel">चैनल बनाएं</string>
-    <string name="title_confirmation">Are You Sure you want to logout?</string> <!-- TODO Add translation -->
-
+    <string name="title_licence">लाइसेंस</string>
+    <string name="title_are_you_sure">क्या आपको यकीन है?</string>
+    <string name="title_channel_details">चैनल विवरण</string>
+    <string name="title_topic">विषय</string>
+    <string name="title_announcement">घोषणा</string>
+    <string name="title_description">विवरण</string>
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
@@ -34,8 +40,7 @@
     <string name="action_create_channel">चैनल बनाएं</string>
     <string name="action_create">बनाएं</string>
     <string name="action_logout">लोग आउट करें</string>
-    <string name="action_stay">Stay</string> <!-- TODO Add translation -->
-    <string name="action_files">फ़ाइलें</string>
+    <string name="action_attach_a_files">एक फ़ाइल जोडो</string>
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
     <string name="action_join_chat">चैट में शामिल हों</string>
     <string name="action_add_account">खाता जोड़ो</string>
@@ -46,24 +51,32 @@
     <string name="action_save_to_gallery">गैलरी में सहेजें</string>
     <string name="action_drawing">चित्रकारी</string>
     <string name="action_select_photo_from_gallery">गैलरी से फोटो का चयन करें</string>
-    <string name="action_take_photo">फोटो खेचिये</string>
+    <string name="action_take_a_photo">फोटो खेचिये</string>
     <string name="action_reset_avatar">अवतार रीसेट करें</string>
     <string name="action_connect_server">सर्वर से कनेक्ट करें</string>
     <string name="action_join_community">समुदाय में शामिल हों</string>
     <string name="action_create_server">नया सर्वर बनाएं</string>
     <string name="action_register">रजिस्टर</string>
     <string name="action_confirm">पुष्टि करें</string>
+    <string name="action_delete_account">खाता हटा दो</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
-        <item name="item_preferences">प्राथमिकताएँ</item>
+        <item name="item_preferences">पसंद</item>
         <item name="item_password">पासवर्ड बदलें</item>
-        <item name="item_password">परिचय</item>
+        <item name="change_language">भाषा बदलें</item>
+        <item name="item_share_app">ऐप शेयर करें</item>
+        <item name="item_rate_us">हमें रेटिंग दें</item>
+        <item name="item_contact_us">हमसे संपर्क करें</item>
+        <item name="item_licence">लाइसेंस</item>
+        <item name="item_about">के बारे में</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">क्षमा करें, एक त्रुटि हुई है, कृपया पुनः प्रयास करें</string>
     <string name="msg_no_data_to_display">डेटा प्रदर्शित करने के लिए उपलब्ध नहीं हैं</string>
+    <string name="msg_check_this_out">इसकी जांच करें</string>
+    <string name="msg_share_using">उपयोग कर साझा करें</string>
     <string name="msg_profile_update_successfully">प्रोफ़ाइल सफलतापूर्वक अपडेट हो गया है</string>
     <string name="msg_username">यूजरनेम</string>
     <string name="msg_username_or_email">यूजरनेम या ईमेल</string>
@@ -140,7 +153,7 @@
     <string name="msg_delete_message">संदेश को हटाएं</string>
     <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
     <string name="msg_welcome_to_rocket_chat">Rocket.Chat में आपका स्वागत है</string>
-    <string name="msg_team_communication">ओपन सोर्स कम्युनिकेशन</string>
+    <string name="msg_team_communication">टीम संचार</string>
     <string name="msg_login_with_email">ई-मेल के साथ लॉगिन करें</string>
     <string name="msg_create_account">खाता बनाएं</string>
     <string name="msg_continue_with_facebook"><b>Facebook</b> के साथ जारी रखें</string>
@@ -165,8 +178,20 @@
     <string name="msg_channel_created_successfully">चैनल सफलतापूर्वक बनाया गया</string>
     <string name="msg_view_more">और देखें</string>
     <string name="msg_view_less">कम देखें</string>
-    <!-- TODO - Add proper translation -->
-    <string name="msg_permalink_copied">Permalink copied</string>
+    <string name="msg_permalink_copied">पर्मलिंक की प्रतिलिपि बनाई गई</string>
+    <string name="msg_send_email">ईमेल भेजें</string>
+    <string name="msg_android_app_support">एंड्रॉइड ऐप समर्थन</string>
+    <string name="msg_muted_on_this_channel">आप इस चैनल पर म्यूट कर रहे हैं</string>
+    <string name="msg_no_topic">कोई विषय नहीं जोड़ा गया</string>
+    <string name="msg_no_announcement">कोई घोषणा नहीं जोड़ा गया</string>
+    <string name="msg_no_description">कोई विवरण नहीं जोड़ा गया</string>
+    <string name="msg_unable_to_update_password">पासवर्ड अपडेट करने में असमर्थ। त्रुटि संदेश: %1$s</string>
+    <string name="msg_password_updated_successfully">पासवर्ड सफलतापूर्वक अपडेट किया गया</string>
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
+        <item quantity="few">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
+        <item quantity="many">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
+    </plurals>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">एनालिटिक्स ट्रैकिंग</string>
@@ -203,8 +228,8 @@
     <string name="action_msg_share">शेयर करें</string>
     <string name="action_title_editing">संपादन संदेश</string>
     <string name="action_msg_add_reaction">प्रतिक्रिया जोड़ें</string>
-    <!-- TODO - Add proper translation -->
-    <string name="action_msg_copy_permalink">Copy permalink</string>
+    <string name="action_msg_copy_permalink">परमालिंक कॉपी करें</string>
+    <string name="action_msg_report">रिपोर्ट</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">संपादन की अनुमति नहीं है</string>
@@ -286,13 +311,12 @@
     <string name="alert_title_default_skin_tone">डिफ़ॉल्ट त्वचा टोन</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">क्रम</string>
+    <string name="msg_sort">क्रम</string>
     <string name="dialog_sort_title">द्वारा सॉर्ट करें</string>
     <string name="dialog_sort_by_alphabet">वर्णानुक्रम</string>
     <string name="dialog_sort_by_activity">गतिविधि</string>
     <string name="dialog_group_by_type">प्रकार के आधार पर समूह</string>
     <string name="dialog_group_favourites">पसंदीदा समूह</string>
-    <string name="dialog_button_done">पूर्ण</string>
     <string name="chatroom_header">हैडर</string>
 
     <!--ChatRooms Headers-->
@@ -311,4 +335,12 @@
     <string name="message_information_title">संदेश की जानकारी</string>
     <string name="msg_log_out">लॉग आउट कर रहा हूं…</string>
     <string name="message_room_changed_privacy">%2$s ने रूम का प्रकार बदलकर %1$s किया </string>
+
+    <!-- User Details -->
+    <string name="timezone">समय क्षेत्र</string>
+
+    <!-- Report -->
+    <string name="submit">जमा करें</string>
+    <string name="required">* आवश्यक</string>
+    <string name="report_sent">आपकी रिपोर्ट भेज दी गई है!</string>
 </resources>

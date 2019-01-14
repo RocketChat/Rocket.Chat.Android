@@ -5,6 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import chat.rocket.android.emoji.internal.db.StringListConverter
 
 @Entity(tableName = "chatrooms",
         indices = [
@@ -20,6 +22,7 @@ import androidx.room.PrimaryKey
             ForeignKey(entity = UserEntity::class, parentColumns = ["id"], childColumns = ["lastMessageUserId"])
         ]
 )
+@TypeConverters(StringListConverter::class)
 data class ChatRoomEntity(
     @PrimaryKey var id: String,
     var subscriptionId: String,
@@ -31,6 +34,9 @@ data class ChatRoomEntity(
     var readonly: Boolean? = false,
     var isDefault: Boolean? = false,
     var favorite: Boolean? = false,
+    var topic: String? = null,
+    var announcement: String? = null,
+    var description: String? = null,
     var open: Boolean = true,
     var alert: Boolean = false,
     var unread: Long = 0,
@@ -42,7 +48,8 @@ data class ChatRoomEntity(
     var lastMessageText: String? = null,
     var lastMessageUserId: String? = null,
     var lastMessageTimestamp: Long? = null,
-    var broadcast: Boolean? = false
+    var broadcast: Boolean? = false,
+    var muted: List<String>? = null
 )
 
 data class ChatRoom(

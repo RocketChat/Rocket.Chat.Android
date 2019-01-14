@@ -6,15 +6,12 @@
 
     <TextView
         android:id="@+id/text_total_unread_messages"
-        style="@style/TextAppearance.AppCompat.Caption"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
+        style="@style/ChatList.Badge.TextView"
+        android:layout_width="21dp"
+        android:layout_height="21dp"
         android:background="@drawable/style_total_unread_messages"
-        android:gravity="center"
-        android:textColor="@color/colorWhite"
-        android:textSize="10sp"
         android:visibility="gone"
-        tools:text="99+"
+        tools:text="1"
         tools:visibility="visible" />
 
 </LinearLayout>

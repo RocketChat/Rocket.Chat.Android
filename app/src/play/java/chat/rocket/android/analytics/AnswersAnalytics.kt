@@ -67,4 +67,11 @@ class AnswersAnalytics : Analytics {
             )
 
     override fun logOpenAdmin() = Answers.getInstance().logCustom(CustomEvent("open_admin"))
+
+    override fun logResetPassword(resetPasswordSucceeded: Boolean) =
+        Answers.getInstance()
+            .logCustom(
+                CustomEvent("reset_password")
+                    .putCustomAttribute("resetPasswordSucceeded", resetPasswordSucceeded.toString())
+            )
 }

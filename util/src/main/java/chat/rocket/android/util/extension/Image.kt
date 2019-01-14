@@ -2,13 +2,19 @@ package chat.rocket.android.util.extension
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.os.Environment
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import kotlinx.coroutines.experimental.DefaultDispatcher
 import kotlinx.coroutines.experimental.withContext
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.io.IOException
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Compress a [Bitmap] image.
@@ -104,4 +110,16 @@ fun Fragment.dispatchTakePicture(requestCode: Int) {
     if (takePictureIntent.resolveActivity(context?.packageManager) != null) {
         startActivityForResult(takePictureIntent, requestCode)
     }
+}
+
+@Throws(IOException::class)
+fun FragmentActivity.createImageFile(): File {
+    // Create an image file name
+    val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+    val storageDir: File =  getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+    return File.createTempFile(
+        "PNG_${timeStamp}_", /* prefix */
+        ".png", /* suffix */
+        storageDir /* directory */
+    )
 }

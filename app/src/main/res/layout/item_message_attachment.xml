@@ -131,7 +131,7 @@
 
     <TextView
         android:id="@+id/text_message_time"
-        style="@style/Timestamp.TextView"
+        style="@style/ChatList.Timestamp.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"

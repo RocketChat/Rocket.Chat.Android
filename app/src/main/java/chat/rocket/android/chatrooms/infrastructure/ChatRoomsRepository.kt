@@ -3,9 +3,12 @@ package chat.rocket.android.chatrooms.infrastructure
 import androidx.lifecycle.LiveData
 import chat.rocket.android.db.ChatRoomDao
 import chat.rocket.android.db.model.ChatRoom
+import chat.rocket.android.util.retryDB
 import javax.inject.Inject
 
-class ChatRoomsRepository @Inject constructor(private val dao: ChatRoomDao){
+class ChatRoomsRepository @Inject constructor(private val dao: ChatRoomDao) {
+
+    // TODO - check how to use retryDB here - suspend
     fun getChatRooms(order: Order): LiveData<List<ChatRoom>> {
         return when(order) {
             Order.ACTIVITY -> dao.getAll()
@@ -15,9 +18,10 @@ class ChatRoomsRepository @Inject constructor(private val dao: ChatRoomDao){
         }
     }
 
-    fun search(query: String) = dao.searchSync(query)
+    suspend fun search(query: String) =
+        retryDB("roomSearch($query)") { dao.searchSync(query) }
 
-    fun count() = dao.count()
+    suspend fun count() = retryDB("roomsCount") { dao.count() }
 
     enum class Order {
         ACTIVITY,
