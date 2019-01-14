@@ -66,7 +66,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Change password</item> <!-- TODO Add translation -->
-        <item name="change_language">Change Language </item><!-- TODO Add translation -->
+        <item name="change_language">Change Language</item><!-- TODO Add translation -->
         <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
         <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
         <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
