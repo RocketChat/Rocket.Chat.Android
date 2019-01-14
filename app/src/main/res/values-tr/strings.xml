@@ -91,7 +91,6 @@
     <string name="msg_check_your_email_to_reset_your_password">Eposta gönderilmiştir! Şifrenizi sıfırlamak için eposta kutunuzu kontrol ediniz.</string>
     <string name="msg_invalid_email">Lütfen, geçerli bir eposta adresi giriniz</string>
     <string name="msg_new_user_agreement">Devam ederek \n%1$s ve %2$s kabul ediyorsunuz</string>
-    <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
     <string name="msg_yesterday">Dün</string>
     <string name="msg_today">Bugün</string>
     <string name="msg_message">Mesaj</string>

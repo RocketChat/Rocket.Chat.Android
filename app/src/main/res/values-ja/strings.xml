@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <resources>
-    <string name="app_name" translatable="false">Rocket.Chat</string>
 
     <!-- Titles -->
     <string name="title_sign_in_your_server">サーバーに接続</string>
