@@ -199,12 +199,33 @@
         <item name="android:lineSpacingExtra">4sp</item>
     </style>
 
+    <style name="Widechat.Authentication.Button" parent="Widget.AppCompat.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/screen_edge_left_and_right_margins</item>
+        <item name="android:layout_marginEnd">@dimen/screen_edge_left_and_right_margins</item>
+        <item name="android:layout_marginBottom">24dp</item>
+        <item name="android:autoSizeTextType">uniform</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">@font/source_sans_pro_semibold</item>
+        <item name="android:paddingStart">30dp</item>
+        <item name="android:paddingEnd">30dp</item>
+        <item name="android:paddingTop">9dp</item>
+        <item name="android:paddingBottom">9dp</item>
+    </style>
+
+    <style name="WelcomeToViasatCo"	parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/unineue_bold_webfont</item>
+        <item name="android:textColor">#FFFFFFFF</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="contact.SearchView" parent="Widget.AppCompat.SearchView">
         <item name="queryHint">@string/msg_search</item>
         <item name="searchIcon">@drawable/ic_search_white_24dp</item>
         <item name="searchHintIcon">@drawable/ic_search_grey_24dp</item>
         <item name="closeIcon">@drawable/ic_close_white_24dp</item>
     </style>
-
 
 </resources>

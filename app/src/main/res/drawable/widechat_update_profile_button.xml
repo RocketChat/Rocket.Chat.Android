@@ -2,25 +2,25 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
     <item>
         <shape>
-            <solid android:color="@color/colorWhite" />
+            <solid android:color="#21000000" />
             <corners android:radius="100dp"/>
         </shape>
-        <padding android:left="4dp"
+        <padding android:left="0dp"
             android:bottom="4dp"
-            android:right="4dp"
+            android:right="0dp"
             android:top="4dp"/>
     </item>
 
-    <item android:right="2dp" android:left="2dp" android:bottom="2dp" android:top="2dp">
+    <item android:right="0dp" android:left="0dp" android:bottom="2dp">
         <shape>
-            <solid android:color="@color/widechatGreenGradientDark"/>
+            <solid android:color="@color/widechatGreenGradientLight"/>
             <corners android:radius="100dp"/>
         </shape>
 
         <padding android:left="0dp"
-            android:bottom="0dp"
+            android:bottom="4dp"
             android:right="0dp"
-            android:top="0dp"/>
+            android:top="4dp"/>
     </item>
 
 </layer-list>
