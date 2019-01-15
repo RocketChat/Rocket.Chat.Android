@@ -100,18 +100,18 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     override fun onBackPressed() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START))
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             closeDrawer()
-        else
+        } else {
             supportFragmentManager.findFragmentById(R.id.fragment_container)?.let {
-                if (it !is ChatRoomsFragment && supportFragmentManager.backStackEntryCount==0) {
+                if (it !is ChatRoomsFragment && supportFragmentManager.backStackEntryCount == 0) {
                     presenter.toChatList(chatRoomId)
                     setCheckedNavDrawerItem(R.id.menu_action_chats)
-                }
-                else{
+                } else {
                     super.onBackPressed()
                 }
             }
+        }
     }
 
     override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
