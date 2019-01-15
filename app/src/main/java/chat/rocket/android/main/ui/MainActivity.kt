@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
+import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
@@ -96,6 +97,21 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         if (isFinishing) {
             presenter.disconnect()
         }
+    }
+
+    override fun onBackPressed() {
+        if (drawer_layout.isDrawerOpen(GravityCompat.START))
+            closeDrawer()
+        else
+            supportFragmentManager.findFragmentById(R.id.fragment_container)?.let {
+                if (it !is ChatRoomsFragment && supportFragmentManager.backStackEntryCount==0) {
+                    presenter.toChatList(chatRoomId)
+                    setCheckedNavDrawerItem(R.id.menu_action_chats)
+                }
+                else{
+                    super.onBackPressed()
+                }
+            }
     }
 
     override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
