@@ -7,7 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".profile.ui.ProfileFragment">
 
-        <RelativeLayout
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
             android:id="@+id/widechat_profile_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,18 +29,17 @@
                 layout="@layout/widechat_avatar_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_marginTop="24dp" />
 
             <TableLayout
                 android:id="@+id/widechat_profile_table"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_avatar_profile"
                 android:layout_margin="@dimen/screen_edge_left_and_right_margins"
                 android:gravity="center"
                 android:shrinkColumns="1,2"
-                android:stretchColumns="1,2">
+                android:stretchColumns="1,2"
+                app:layout_constraintTop_toBottomOf="@id/layout_avatar_profile">
 
                 <TableRow
                     android:layout_marginTop="12dp"
@@ -94,32 +97,26 @@
             <Button
                 android:id="@+id/edit_profile_button"
                 style="@style/Widechat.Authentication.Button"
-                android:layout_alignBottom="@id/space"
+                android:layout_marginTop="56dp"
+                android:layout_marginBottom="18dp"
                 android:background="@drawable/widechat_update_profile_button"
                 android:textColor="@color/colorWhite"
                 android:text="@string/edit_profile" />
 
-            <Space
-                android:id="@+id/space"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_alignTop="@id/delete_account_button"/>
-
             <Button
                 android:id="@+id/delete_account_button"
                 style="@style/Widechat.Authentication.Button"
-                android:layout_alignBottom="@id/space1"
-                android:background="@drawable/widechat_signup_button"
+                android:background="@drawable/widechat_delete_account_button"
                 android:textColor="@color/colorWhite"
                 android:text="@string/delete_account" />
 
             <Space
-                android:id="@+id/space1"
+                android:id="@+id/space"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_alignParentBottom="true"/>
+                android:layout_height="12dp" />
 
-        </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/widechat_view_loading"
