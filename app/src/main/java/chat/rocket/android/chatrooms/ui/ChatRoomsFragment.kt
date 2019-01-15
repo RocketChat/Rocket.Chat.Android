@@ -1,6 +1,6 @@
 package chat.rocket.android.chatrooms.ui
 
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
@@ -236,14 +236,16 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     )
                 }
 
-                AlertDialog.Builder(context)
-                    .setTitle(R.string.dialog_sort_title)
-                    .setView(dialogLayout)
-                    .setPositiveButton(R.string.msg_sort) { dialog, _ ->
-                        invalidateQueryOnSearch()
-                        updateSort()
-                        dialog.dismiss()
-                    }.show()
+                context?.let {
+                    AlertDialog.Builder(it)
+                        .setTitle(R.string.dialog_sort_title)
+                        .setView(dialogLayout)
+                        .setPositiveButton(R.string.msg_sort) { dialog, _ ->
+                            invalidateQueryOnSearch()
+                            updateSort()
+                            dialog.dismiss()
+                        }.show()
+                }
             }
         }
         return super.onOptionsItemSelected(item)
