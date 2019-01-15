@@ -369,7 +369,7 @@ class MainPresenter @Inject constructor(
 
             FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLink(Uri.parse("$server/direct/$userName"))
-                .setDomainUriPrefix("https://dylinktesting.page.link")
+                .setDomainUriPrefix("https://viasatconnect.page.link")
                 .setAndroidParameters(
                     DynamicLink.AndroidParameters.Builder("chat.veranda.android.dev").build())
                 .setSocialMetaTagParameters(
