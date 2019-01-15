@@ -64,6 +64,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferências</item>
         <item name="item_password">Alterar senha</item>
+        <item name="change_language">Alterar idioma</item>
         <item name="item_share_app">Compartilhar app</item>
         <item name="item_rate_us">Classifique-nos</item>
         <item name="item_contact_us">Contate-nos</item>
