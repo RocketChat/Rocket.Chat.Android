@@ -325,41 +325,6 @@ class MainPresenter @Inject constructor(
         super.logout(userDataChannel)
     }
 
-     /**
-     * Invite
-     */
-    fun invite(context: Context) {
-        launchUI(strategy) {
-
-            //get serverUrl and username
-            val server = serverInteractor.get()!!
-            val account = getAccountInteractor.get(server)!!
-            val userName = account.userName
-
-            val defaultMessage = "Hey! I’m on Veranda. If you sign up we can chat for free. \nMy username is “$userName” on server $server "
-
-            //Dialog
-            val layoutInflater = LayoutInflater.from(context)
-            val dialogLayout = layoutInflater.inflate(R.layout.invite_dialog, null)
-            val editText = dialogLayout.findViewById<EditText>(R.id.invite_text)
-            editText.setText(defaultMessage, TextView.BufferType.NORMAL)
-
-            AlertDialog.Builder(context)
-                    .setTitle(R.string.invite_label)
-                    .setView(dialogLayout)
-                    .setPositiveButton(R.string.action_invite) { dialog, _ ->
-                        dialog.dismiss()
-
-                        //intent
-                        val inviteIntent = Intent()
-                        inviteIntent.action = Intent.ACTION_SEND
-                        inviteIntent.putExtra(Intent.EXTRA_TEXT, editText.text.toString())
-                        inviteIntent.type = "text/plain"
-                        startActivity(context, inviteIntent, null)
-                    }.show()
-        }
-    }
-
     fun shareViaApp(context: Context){
         launch {
             //get serverUrl and username
@@ -369,13 +334,13 @@ class MainPresenter @Inject constructor(
 
             FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLink(Uri.parse("$server/direct/$userName"))
-                .setDomainUriPrefix("https://viasatconnect.page.link")
+                .setDomainUriPrefix("https://" + context.getString(R.string.widechat_deeplink_host))
                 .setAndroidParameters(
-                    DynamicLink.AndroidParameters.Builder("chat.veranda.android.dev").build())
+                    DynamicLink.AndroidParameters.Builder(context.getString(R.string.widechat_package_name)).build())
                 .setSocialMetaTagParameters(
                     DynamicLink.SocialMetaTagParameters.Builder()
                         .setTitle(userName)
-                        .setDescription("Chat with $userName on Rocket.Chat")
+                        .setDescription("Chat with $userName on " + context.getString(R.string.widechat_server_url))
                         .build())
                 .buildShortDynamicLink(ShortDynamicLink.Suffix.SHORT)
                 .addOnSuccessListener { result ->

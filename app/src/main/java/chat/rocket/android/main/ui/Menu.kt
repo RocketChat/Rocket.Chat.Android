@@ -68,7 +68,6 @@ internal fun MainActivity.onNavDrawerItemSelected(menuItem: MenuItem) {
     when (menuItem.itemId) {
         R.id.menu_action_chats-> presenter.toChatList()
         R.id.menu_action_create_channel -> presenter.toCreateChannel()
-        R.id.menu_action_invite -> presenter.invite(this)
         R.id.menu_action_profile -> presenter.toUserProfile()
         R.id.menu_action_settings -> presenter.toSettings()
         R.id.menu_action_admin_panel -> presenter.toAdminPanel()
