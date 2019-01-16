@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                     BuildConfig.RECOMMENDED_SERVER_VERSION
                 )
             )
-            .setPositiveButton(R.string.msg_ok, null)
+            .setPositiveButton(android.R.string.ok, null)
             .create()
             .show()
     }
@@ -210,7 +210,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                 )
             )
             .setOnDismissListener { presenter.logout() }
-            .setPositiveButton(R.string.msg_ok, null)
+            .setPositiveButton(android.R.string.ok, null)
             .create()
             .show()
     }

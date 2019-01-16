@@ -124,13 +124,11 @@
     <string name="msg_preview_file">文件</string>
     <string name="msg_no_messages_yet">尚无消息</string>
     <string name="msg_build">Build %1$d - %2$s - %3$s</string>
-    <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">服务器版本过老。请联系服务器管理员更新服务器版本。</string>
     <string name="msg_ver_not_recommended">您的服务器版本低于建议的版本%1$s.\n仍然可以登录，但是可能存在部分功能不正常的情况.</string>
     <string name="msg_ver_not_minimum">您的服务器版本低于建议的版本%1$s.\n必须更新服务器才能登录!</string>
     <string name="msg_no_chat_title">没有聊天信息</string>
     <string name="msg_no_chat_description">开始您的对话\n消息在此.</string>
-    <string name="msg_cancel">取消</string>
     <string name="msg_http_insecure">您正在使用HTTP方式不加密连接到服务器. 我们不建议您这么做.</string>
     <string name="msg_error_checking_server_version">检查服务器版本时发生错误，请重试</string>
     <string name="msg_invalid_server_protocol">您选择的协议被服务器拒绝，请使用HTTPS</string>
@@ -342,5 +340,4 @@
     <string name="submit">提交</string>
     <string name="required">*必须</string>
     <string name="report_sent">您的报告已提交!</string>
-
 </resources>

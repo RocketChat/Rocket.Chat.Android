@@ -64,7 +64,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Change password</item> <!-- TODO Add translation -->
-        <item name="change_language">Change Language</item><!-- TODO Add translation -->
+        <item name="change_language">Change language </item><!-- TODO Add translation -->
         <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
         <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
         <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
@@ -123,7 +123,7 @@
     <string name="msg_preview_photo">写真</string>
     <string name="msg_preview_file">ファイル</string>
     <string name="msg_no_messages_yet">メッセージはまだありません</string>
-    <string name="msg_ok">OK</string>
+    <string name="msg_build">Build %1$d - %2$s - %3$s</string> <!-- TODO Add translation -->
     <string name="msg_update_app_version_in_order_to_continue">古いバージョンのサーバーを使用しています。続行するには、管理者にサーバーのバージョンを更新するよう連絡してください。</string>
     <string name="msg_ver_not_recommended">
         ご使用のサーバーのバージョンは推薦バージョン %1$s よりも古いものです。\nログインは可能ですが、予期しない動作が発生する可能性があります。</string>
@@ -132,7 +132,6 @@
     </string>
     <string name="msg_no_chat_title">メッセージがまだありません</string>
     <string name="msg_no_chat_description">ここから会話を始めましょう</string>
-    <string name="msg_cancel">キャンセル</string>
     <string name="msg_http_insecure">HTTPを使用している場合、安全ではないサーバーに接続します。安全なサーバーに接続することをお勧めします。</string>
     <string name="msg_error_checking_server_version">サーバーのバージョンを確認中にエラーが発生しました。もう一度お試しください。</string>
     <string name="msg_invalid_server_protocol">選択したプロトコルはこのサーバーでは使用できません。HTTPSを選択してください。</string>
@@ -228,8 +227,7 @@
     <string name="action_title_editing">メッセージの編集</string>
     <string name="action_msg_add_reaction">リアクションする</string>
     <string name="action_msg_copy_permalink">パーマリンクのコピー</string>
-    <!-- TODO - Add proper translation -->
-    <string name="action_msg_report">Report</string>
+    <string name="action_msg_report">Report</string> <!-- TODO - Add proper translation -->
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">編集は許可されていません</string>

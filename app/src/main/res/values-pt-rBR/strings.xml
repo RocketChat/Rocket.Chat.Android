@@ -121,7 +121,7 @@
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_preview_file">Arquivo</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
-    <string name="msg_ok">OK</string>
+    <string name="msg_build">Versão %1$d - %2$s - %3$s</string>
     <string name="msg_update_app_version_in_order_to_continue">Versão do servidor desatualizada. Por favor, entre em contato com o administrador do sistema para continuar.</string>
     <string name="msg_ver_not_recommended">
         Parece que a versão do seu servidor está abaixo da recomendada %1$s.\nVocê ainda assim pode logar e continuar mas podem ocorrer alguns problemas inesperados.
@@ -131,7 +131,6 @@
     </string>
     <string name="msg_no_chat_title">Nenhuma mensagem de chat</string>
     <string name="msg_no_chat_description">Comece a conversar para ver suas\nmensagens aqui.</string>
-    <string name="msg_cancel">CANCELAR</string>
     <string name="msg_http_insecure">Usando HTTP, você estará conectando a um servidor não seguro, não recomendamos sua utilização.</string>
     <string name="msg_error_checking_server_version">Ocorreu um erro verificando a versão do servidor, por favor tente novamente</string>
     <string name="msg_invalid_server_protocol">O protocolo selecionado não é suportado pelo servidor, por favor utilize HTTPS e tente novamente</string>
