@@ -104,6 +104,8 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
         // We should also setup the user details listeners.
         text_message.setOnClickListener { presenter.createDirectMessage(username) }
+
+        text_video_call.setOnClickListener { presenter.startVideoCall() }
     }
 
     override fun showLoading() {

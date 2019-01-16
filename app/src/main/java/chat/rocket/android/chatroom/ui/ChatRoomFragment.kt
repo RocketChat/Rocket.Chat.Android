@@ -142,9 +142,6 @@ private const val BUNDLE_CHAT_ROOM_IS_CREATOR = "chat_room_is_creator"
 private const val BUNDLE_CHAT_ROOM_IS_FAVORITE = "chat_room_is_favorite"
 private const val BUNDLE_CHAT_ROOM_MESSAGE = "chat_room_message"
 
-internal const val MENU_ACTION_FAVORITE_UNFAVOURITE_CHAT = 1
-internal const val MENU_ACTION_SHOW_DETAILS = 2
-
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener,
     ChatRoomAdapter.OnActionSelected, Drawable.Callback {
     @Inject
@@ -307,8 +304,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         setupSuggestionsView()
         setupActionSnackbar()
         with(activity as ChatRoomActivity) {
-            showToolbarTitle(chatRoomName)
-            showToolbarChatRoomIcon(chatRoomType)
+            setupToolbarTitle(chatRoomName)
+            setupExpandMoreForToolbar {
+                presenter.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isFavorite, disableMenu)
+            }
         }
         getDraftMessage()
         subscribeComposeTextMessage()
@@ -364,15 +363,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        setOnMenuItemClickListener(item)
-        return true
-    }
-
-    override fun showFavoriteIcon(isFavorite: Boolean) {
-        this.isFavorite = isFavorite
-        activity?.invalidateOptionsMenu()
-    }
 
     override fun showMessages(dataSet: List<BaseUiModel<*>>, clearDataSet: Boolean) {
         ui {
@@ -1060,7 +1050,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private fun setupToolbar(toolbarTitle: String) {
         with(activity as ChatRoomActivity) {
             this.clearLightStatusBar()
-            this.showToolbarTitle(toolbarTitle)
+            this.setupToolbarTitle(toolbarTitle)
             toolbar.isVisible = true
         }
     }

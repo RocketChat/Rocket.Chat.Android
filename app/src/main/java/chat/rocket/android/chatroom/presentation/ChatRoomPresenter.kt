@@ -889,32 +889,14 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    fun toggleFavoriteChatRoom(roomId: String, isFavorite: Boolean) {
-        launchUI(strategy) {
-            try {
-                // Note that if it is favorite then the user wants to unfavorite - and vice versa.
-                retryIO("favorite($roomId, $isFavorite)") {
-                    client.favorite(roomId, !isFavorite)
-                }
-                view.showFavoriteIcon(!isFavorite)
-            } catch (e: RocketChatException) {
-                Timber.e(e, "Error while trying to favorite/unfavorite chat room.")
-                e.message?.let {
-                    view.showMessage(it)
-                }.ifNull {
-                    view.showGenericErrorMessage()
-                }
-            }
-        }
-    }
-
     fun toChatDetails(
         chatRoomId: String,
         chatRoomType: String,
         isSubscribed: Boolean,
+        isFavorite: Boolean,
         isMenuDisabled: Boolean
     ) {
-        navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isMenuDisabled)
+        navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isFavorite, isMenuDisabled)
     }
 
     fun loadChatRoomsSuggestions() {

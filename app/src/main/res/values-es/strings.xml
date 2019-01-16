@@ -59,6 +59,8 @@
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
     <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -94,6 +96,7 @@
     <string name="msg_yesterday">Ayer</string>
     <string name="msg_today">Hoy</string>
     <string name="msg_message">Mensaje</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">Esta sala es de solo lectura</string>
     <string name="msg_invalid_2fa_code">Código 2FA no válido</string>
     <string name="msg_invalid_file">Archivo inválido</string>
@@ -176,9 +179,9 @@
     <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
     <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string> <!-- TODO - Add proper translation -->
-    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
-    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
-    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
     <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
     <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
@@ -234,10 +237,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">Búsqueda de mensajes</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Chat favorito</string>
-    <string name="title_unfavorite_chat">Deshacer chat favorito</string>
 
     <!-- Members List -->
     <string name="title_members_list">Miembros</string>

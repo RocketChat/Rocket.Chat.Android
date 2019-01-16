@@ -59,6 +59,8 @@
     <string name="action_register">ثبت‌نام</string>
     <string name="action_confirm">تایید</string>
     <string name="action_delete_account">حذف حساب کاربری</string>
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -94,6 +96,7 @@
     <string name="msg_yesterday">دیروز</string>
     <string name="msg_today">امروز</string>
     <string name="msg_message">پیام</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">این اتاق فقط خواندنی است</string>
     <string name="msg_invalid_2fa_code">Invalid 2FA Code</string> <!-- TODO Add translation -->
     <string name="msg_invalid_file">پرونده‌ی نامعتبر</string>
@@ -161,9 +164,9 @@
     <string name="msg_two_factor_authentication">تایید هویت دو فاکتوره</string>
 	<string name="msg__your_2fa_code">کد 2FA تان چیست؟</string>
 	<string name="msg_permalink_copied">پیوند کپی شد</string>
-	<string name="msg_no_topic">هیچ موضوعی اضافه نشد</string>
-    <string name="msg_no_announcement">هیچ اعلانی اضافه نشد</string>
-    <string name="msg_no_description">هیچ توضیحی اضافه نشد</string>
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
     <string name="msg_send_email">ارسال ایمیل</string>
     <string name="msg_android_app_support">حمایت از اپ اندروید</string>
     <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO Add translation -->
@@ -237,10 +240,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">جست‌وجوی پیام</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">مورد علاقه کردن گفت‌وگو</string>
-    <string name="title_unfavorite_chat">از مورد علاقه دراوردن گفت‌وگو</string>
 
     <!-- Members List -->
     <string name="title_members_list">اعضاء</string>

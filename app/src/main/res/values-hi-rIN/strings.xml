@@ -59,6 +59,8 @@
     <string name="action_register">रजिस्टर</string>
     <string name="action_confirm">पुष्टि करें</string>
     <string name="action_delete_account">खाता हटा दो</string>
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -94,6 +96,7 @@
     <string name="msg_yesterday">कल</string>
     <string name="msg_today">आज</string>
     <string name="msg_message">संदेश</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">यह रूम केवल पढ़ने के लिए है</string>
     <string name="msg_invalid_2fa_code">अमान्य 2FA कोड</string>
     <string name="msg_invalid_file">अवैध फाइल</string>
@@ -181,9 +184,9 @@
     <string name="msg_send_email">ईमेल भेजें</string>
     <string name="msg_android_app_support">एंड्रॉइड ऐप समर्थन</string>
     <string name="msg_muted_on_this_channel">आप इस चैनल पर म्यूट कर रहे हैं</string>
-    <string name="msg_no_topic">कोई विषय नहीं जोड़ा गया</string>
-    <string name="msg_no_announcement">कोई घोषणा नहीं जोड़ा गया</string>
-    <string name="msg_no_description">कोई विवरण नहीं जोड़ा गया</string>
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
     <string name="msg_unable_to_update_password">पासवर्ड अपडेट करने में असमर्थ। त्रुटि संदेश: %1$s</string>
     <string name="msg_password_updated_successfully">पासवर्ड सफलतापूर्वक अपडेट किया गया</string>
     <plurals name="msg_reacted_with_">
@@ -238,10 +241,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">संदेश खोजें</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">पसंदीदा चैट</string>
-    <string name="title_unfavorite_chat">नापसंद चैट</string>
 
     <!-- Members List -->
     <string name="title_members_list">सदस्य</string>

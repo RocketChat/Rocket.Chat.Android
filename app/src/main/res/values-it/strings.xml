@@ -59,6 +59,8 @@
     <string name="action_register">Registra</string>
     <string name="action_confirm">Conferma</string>
     <string name="action_delete_account">Elimina utente</string>
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -94,6 +96,7 @@
     <string name="msg_yesterday">Ieri</string>
     <string name="msg_today">Oggi</string>
     <string name="msg_message">Messaggio</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">Questa stanza è di sola lettura</string>
     <string name="msg_invalid_2fa_code">Invalido Codice 2FA non valido</string>
     <string name="msg_invalid_file">Documento non valido</string>
@@ -158,9 +161,9 @@
     <string name="msg_two_factor_authentication">Autenticazione a 2 fattori (2FA)</string>
     <string name="msg__your_2fa_code">Qual è il tuo codice 2FA ?</string>
     <string name="msg_permalink_copied">Permalink copiato</string>
-    <string name="msg_no_topic">Nessun argomento aggiunto</string>
-    <string name="msg_no_announcement">Nessun annuncio aggiunto</string>
-    <string name="msg_no_description">Nessuna descrizione aggiunta</string>
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
     <string name="msg_send_email">Invia una email</string>
     <string name="msg_android_app_support">Supporto per le app Android</string>
     <string name="msg_unable_to_update_password">Impossibile aggiornare la password. Messaggio di errore: %1$s</string>
@@ -234,10 +237,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">Cerca messaggio</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Stanza preferita</string>
-    <string name="title_unfavorite_chat">Stanza normale</string>
 
     <!-- Members List -->
     <string name="title_members_list">Partecipanti</string>

@@ -59,6 +59,8 @@
     <string name="action_register">注册</string>
     <string name="action_confirm">确定</string>
     <string name="action_delete_account">删除账户</string>
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -94,6 +96,7 @@
     <string name="msg_yesterday">昨天</string>
     <string name="msg_today">今天</string>
     <string name="msg_message">消息</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">这个频道只读</string>
     <string name="msg_invalid_2fa_code">无效的2FA码</string>
     <string name="msg_invalid_file">无效文件</string>
@@ -158,9 +161,9 @@
     <string name="msg_two_factor_authentication">两步认证</string>
     <string name="msg__your_2fa_code">什么是2FA 码?</string>
     <string name="msg_permalink_copied">永久链接已拷贝</string>
-    <string name="msg_no_topic">没有添加主题</string>
-    <string name="msg_no_announcement">没有添加公告</string>
-    <string name="msg_no_description">没有添加描述</string>
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
     <string name="msg_send_email">发送邮件</string>
     <string name="msg_android_app_support">安卓app支持</string>
     <string name="msg_unable_to_update_password">无法更新密码，错误信息: %1$s</string>
@@ -234,10 +237,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">搜索消息</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">收藏</string>
-    <string name="title_unfavorite_chat">取消收藏</string>
 
     <!-- Members List -->
     <string name="title_members_list">成员</string>

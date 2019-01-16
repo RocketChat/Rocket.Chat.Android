@@ -51,6 +51,7 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         chatRoomId: String,
         chatRoomType: String,
         isChatRoomSubscribed: Boolean,
+        isChatRoomFavorite: Boolean,
         isMenuDisabled: Boolean
     ) {
         activity.addFragmentBackStack(TAG_CHAT_DETAILS_FRAGMENT, R.id.fragment_container) {
@@ -58,6 +59,7 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
                 chatRoomId,
                 chatRoomType,
                 isChatRoomSubscribed,
+                isChatRoomFavorite,
                 isMenuDisabled
             )
         }

@@ -118,4 +118,7 @@ class UserDetailsPresenter @Inject constructor(
             }
         }
     }
+
+    // TODO
+    fun startVideoCall() {}
 }

@@ -59,6 +59,8 @@
     <string name="action_register">Зарегистрировать</string>
     <string name="action_confirm">Подтвердить</string>
     <string name="action_delete_account">Удалить аккаунт</string>
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -94,6 +96,7 @@
     <string name="msg_yesterday">Вчера</string>
     <string name="msg_today">Сегодня</string>
     <string name="msg_message">Сообщение</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">Канал только для чтения</string>
     <string name="msg_invalid_2fa_code">Неверный код 2FA</string>
     <string name="msg_invalid_file">Неверный файл</string>
@@ -162,9 +165,9 @@
     <string name="msg_view_more">больше</string>
     <string name="msg_view_less">меньше</string>
     <string name="msg_permalink_copied">Ссылка скопирована</string>
-    <string name="msg_no_topic">Нет темы</string>
-    <string name="msg_no_announcement">Нет объявления</string>
-    <string name="msg_no_description">Нет описания</string>
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
     <string name="msg_send_email">Отправить e-mail</string>
     <string name="msg_android_app_support">Поддержка Android-приложения</string>
     <string name="msg_muted_on_this_channel">Вы лишены дара речи на этом канале</string>
@@ -234,10 +237,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">Поиск сообщения</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Добавить в избранное</string>
-    <string name="title_unfavorite_chat">Удалить из избранного</string>
 
     <!-- Members List -->
     <string name="title_members_list">Пользователи</string>
