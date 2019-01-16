@@ -32,7 +32,6 @@
     <string name="title_description">Beschreibung</string>
     <string name="title_licence">Lizenz</string>
 
-
     <!-- Actions -->
     <string name="action_connect">Verbinde</string>
     <string name="action_use_this_username">Benutze den Benutzernamen</string>
@@ -44,9 +43,7 @@
     <string name="action_create_channel">Erstelle Raum</string>
     <string name="action_create">Erstelle</string>
     <string name="action_logout">Abmelden</string>
-
     <string name="action_attach_a_files">Eine Datei anhängen</string>
-  
     <string name="action_confirm_password">Bestätige Passwort Änderung</string>
     <string name="action_join_chat">Trete Chat bei</string>
     <string name="action_add_account">Erstelle Account</string>
@@ -55,8 +52,7 @@
     <string name="action_busy">Beschäftigt</string>
     <string name="action_invisible">Unsichtbar</string>
     <string name="action_drawing">Zeichnung</string>
-    <string name="action_save_to_gallery">Sichern in Gallerie</string>
-
+    <string name="action_save_to_gallery">Sichern in Galerie</string>
     <string name="action_select_photo_from_gallery">Foto aus der Galerie auswählen</string>
     <string name="action_take_a_photo">Ein Foto aufnehmen und senden</string>
     <string name="action_reset_avatar">Avatar zurücksetzen</string>
@@ -77,7 +73,6 @@
         <item name="item_contact_us">Kontaktieren Sie uns</item>
         <item name="item_licence">Lizenz</item>
         <item name="item_about">Über</item>
-
     </string-array>
 
     <!-- Regular information messages -->
@@ -140,11 +135,10 @@
     <string name="msg_ver_not_minimum">Die Server Version scheint älter als die minimale Version %1$s zu sein.\nBitte updaten Sie Ihren Server um sich einloggen zu können!</string>
     <string name="msg_no_chat_title">Keine Chat Nachrichten</string>
     <string name="msg_no_chat_description">Starte die Konversation um Ihre \nNachrichten hier zu sehen.</string>
-    <string name="msg_cancel">ABBRUCH</string>
     <string name="msg_http_insecure">Bei HTTP verbinden Sie sich usicher zu einem Server. Wir empfehlen HTTPS zu benutzen.</string>
     <string name="msg_error_checking_server_version">Ein Fehler ist aufgetreten beim prüfen der Server Version, bitte versuchen Sie es noch einmal</string>
     <string name="msg_invalid_server_protocol">Das ausgewählte Protokoll wird vom Server nicht akzeptiert, versuchen Sie HTTPS</string>
-    <string name="msg_image_saved_successfully">Bild wurde in der Gallerie gespeichert</string>
+    <string name="msg_image_saved_successfully">Bild wurde in der Galerie gespeichert</string>
     <string name="msg_image_saved_failed">Bild speichern fehlgeschlagen</string>
     <string name="msg_edited">(bearbeitet)</string>
     <string name="msg_and">\u0020und\u0020</string>
@@ -319,7 +313,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Keine letzten Emojis</string>
-    <string name="alert_title_default_skin_tone">Standart Hautton</string>
+    <string name="alert_title_default_skin_tone">Standard Hautton</string>
 
     <!-- Sorting and grouping-->
     <string name="msg_sort">Sortiere</string>
@@ -344,14 +338,10 @@
     <string name="notif_success_sending">Nachricht gesendet nach %1$s!</string>
     <string name="read_by">Gelesen von</string>
     <string name="message_information_title">Nachricht Information</string>
-
     <string name="message_room_changed_privacy">Raumtyp geändert zu: %1$s durch %2$s</string>
 
     <!-- User Details -->
-    <string name="message">Nachrticht</string>
     <string name="timezone">Zeitzone</string>
-    <string name="error_opening_dm">Etwas ist schiefgegangen, als wir dieses Gespräch erstellt haben…</string>
-    <string name="retry">Wiederholen</string>
 
     <!-- Report -->
     <string name="submit">Senden</string>

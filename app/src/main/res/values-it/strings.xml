@@ -130,7 +130,6 @@
     <string name="msg_ver_not_minimum">Sembra che la versione del tuo server sia inferiore alla versione minima richiesta %1$s.\nSi prega di aggiornare il server per accedere!</string>
     <string name="msg_no_chat_title">Nessun messaggio chat</string>
     <string name="msg_no_chat_description">Inizia a conversare per vedere i tuoi\nmessagggi qui.</string>
-    <string name="msg_cancel">CANCELLARE</string>
     <string name="msg_http_insecure">Quando si utilizza HTTP, ci si connette a un server non sicuro. Non ti consigliamo di farlo.</string>
     <string name="msg_error_checking_server_version">Si è verificato un errore durante il controllo della versione del server, riprovare</string>
     <string name="msg_invalid_server_protocol">Il protocollo selezionato non è accettato da questo server, prova a utilizzare HTTPS</string>
@@ -333,10 +332,7 @@
     <string name="message_room_changed_privacy">Il tipo di stanza è cambiato in: %1$s da %2$s</string>
 
     <!-- User Details -->
-    <string name="message">Messaggio</string>
     <string name="timezone">Fuso Orario</string>
-    <string name="error_opening_dm">È successo qualcosa di sbagliato durante la creazione di questa conversazione...</string>
-    <string name="retry">Riprova</string>
 
     <!-- Report -->
     <string name="submit">Invia</string>

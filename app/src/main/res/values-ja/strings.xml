@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">Rocket.Chat</string>
 
     <!-- Titles -->
     <string name="title_sign_in_your_server">サーバーに接続</string>
@@ -134,7 +133,6 @@
     </string>
     <string name="msg_no_chat_title">メッセージがまだありません</string>
     <string name="msg_no_chat_description">ここから会話を始めましょう</string>
-    <string name="msg_cancel">キャンセル</string>
     <string name="msg_http_insecure">HTTPを使用している場合、安全ではないサーバーに接続します。安全なサーバーに接続することをお勧めします。</string>
     <string name="msg_error_checking_server_version">サーバーのバージョンを確認中にエラーが発生しました。もう一度お試しください。</string>
     <string name="msg_invalid_server_protocol">選択したプロトコルはこのサーバーでは使用できません。HTTPSを選択してください。</string>
@@ -230,8 +228,7 @@
     <string name="action_title_editing">メッセージの編集</string>
     <string name="action_msg_add_reaction">リアクションする</string>
     <string name="action_msg_copy_permalink">パーマリンクのコピー</string>
-    <!-- TODO - Add proper translation -->
-    <string name="action_msg_report">Report</string>
+    <string name="action_msg_report">Report</string> <!-- TODO - Add proper translation -->
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">編集は許可されていません</string>
@@ -340,10 +337,7 @@
     <string name="message_room_changed_privacy">ルームタイプを %2$s から %1$s に変更しました</string>
 
     <!-- User Details -->
-    <string name="message">Message</string> <!--TODO - Add proper translation-->
     <string name="timezone">Timezone</string> <!--TODO - Add proper translation-->
-    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string> <!-- TODO - Add proper translation -->
-    <string name="retry">Retry</string> <!-- TODO - Add proper translation -->
 
     <!-- Report -->
     <string name="submit">Submit</string> <!--TODO - Add proper translation-->

@@ -23,6 +23,7 @@ import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.webview.ui.webViewIntent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -73,8 +74,8 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             resources.getStringArray(R.array.settings_actions)[1] ->
                 activity?.startActivity(Intent(activity, PasswordActivity::class.java))
 
-            // TODO Change app language support (https://github.com/RocketChat/Rocket.Chat.Android/pull/1918)
-            // resources.getStringArray(R.array.settings_actions)[2] ->
+            // TODO (https://github.com/RocketChat/Rocket.Chat.Android/pull/1918)
+            resources.getStringArray(R.array.settings_actions)[2] -> showToast("Coming soon")
 
             resources.getStringArray(R.array.settings_actions)[3] -> shareApp()
 

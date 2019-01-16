@@ -12,7 +12,7 @@
     <string name="title_chats">گفت‌وگوها</string>
     <string name="title_profile">نمایه</string>
     <string name="title_members">اعضاء</string>
-    <string name="title_counted_members">اعضاء (%d)</string>
+    <string name="title_counted_members">(%d) اعضاء</string>
     <string name="title_settings">تنظیمات</string>
     <string name="title_preferences">ترجیحات</string>
     <string name="title_change_password">تغییر گذرواژه</string>
@@ -85,13 +85,12 @@
     <string name="msg_email">ایمیل</string>
     <string name="msg_avatar_url">URL تصویر نمایه</string>
     <string name="msg_or_continue_using_social_accounts">یا به استفاده از سرورهای اجتماعی ادامه دهید</string>
-    <string name="msg_new_user">کاربر جدید? %1$s</string>
+    <string name="msg_new_user">%1$s کاربر جدید?</string>
     <string name="msg_forgot__your_password">گذرواژه‌تان را فراموش کردید؟</string>
     <string name="msg_reset">راه اندازی مجدد</string>
     <string name="msg_check_your_email_to_reset_your_password">ایمیل فرستاده شد. صندوق ورودی خود را برای تعویض گذرواژه چک کنید</string>
     <string name="msg_invalid_email">لطفا یک ایمیل معتبر را بنویسید</string>
-    <string name="msg_new_user_agreement">با ادامه‌ی فرایند شما با\n%1$s و %2$sموافقت کرده‌اید.</string>
-
+    <string name="msg_new_user_agreement">By proceeding you are agreeing to our\n%1$s and %2$s</string> <!-- TODO Add translation -->
     <string name="msg_yesterday">دیروز</string>
     <string name="msg_today">امروز</string>
     <string name="msg_message">پیام</string>
@@ -124,17 +123,16 @@
     <string name="msg_preview_photo">تصویر</string>
     <string name="msg_preview_file">پرونده</string>
     <string name="msg_no_messages_yet">هنوز پیامی ندارید</string>
-    <string name="msg_build">ساختن %1$d - %2$s - %3$s</string>
+    <string name="msg_build">Build %1$d - %2$s - %3$s</string> <!-- TODO Add translation -->
     <string name="msg_ok">تایید</string>
     <string name="msg_update_app_version_in_order_to_continue">نسخه‌ی سرور منسوخ شده است. لطفا برای ادامه دادن با مدیر سرور خود تماس بگیرید تا سرور را به روز کند.</string>
     <string name="msg_ver_not_recommended">
-        به نظر می‌رسد نسخه‌ی سرور شما پایین‌تر از نسخه‌ی پیشنهایست %1$s.\nشما همچنان می‌توانید وارد شوید ولی ممکن است برخی مشکلات غیر منتظره رخ دهد.</string>
-    <string name="msg_ver_not_minimum">
-        به نظر می‌رسد نسخه‌ی سرور شما پایین‌تر از نسخه‌ی پیشنهادیست %1$s.\nلطفا سرور خود را ارتقاع دهید تا وارد شوید!
-    </string>
+        Looks like your server version is below the recommended version %1$s.\nYou can still login but you may experience unexpected behaviors.</string>
+    <string name="msg_ver_not_minimum"> <!-- TODO Add translation -->
+        Looks like your server version is below the minimum required version %1$s.\nPlease upgrade your server to login!
+    </string> <!-- TODO Add translation -->
     <string name="msg_no_chat_title">هیچ پیام گفت‌وگویی نیست</string>
     <string name="msg_no_chat_description">لطفا گفت‌و گو را شروع کنید تا پیام‌ها را اینجا\messages ببینید.</string> <!-- TODO Add translation -->
-    <string name="msg_cancel">انصراف</string>
     <string name="msg_http_insecure">زمانی که از HTTP استفاده می‌کنید در حال وصل شدن به یک سرور ناامن هستید. ما این کار را پیشنهاد نمی‌کنیم.</string>
     <string name="msg_error_checking_server_version">موقع چک کردن نسخه‌ی سرور شما اشکالی رخ داد. لطفا دوباره تلاش کنید</string>
     <string name="msg_invalid_server_protocol">پروتکل انتخاب شده برای این سرور قابل‌قبول نیست. لطفا از HTTPS استفاده کنید</string>
@@ -169,12 +167,12 @@
     <string name="msg_no_description">هیچ توضیحی اضافه نشد</string>
     <string name="msg_send_email">ارسال ایمیل</string>
     <string name="msg_android_app_support">حمایت از اپ اندروید</string>
-    <string name="msg_unable_to_update_password">خطا در به روزرسانی گذرواژه. پیام خطا: %1$s</string>
+    <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO Add translation -->
     <string name="msg_password_updated_successfully">گذرواژه با موفقیت به روزرسانی شد</string>
     <plurals name="msg_reacted_with_">
-        <item quantity="one">%1$s %2$s واکنش با</item>
-        <item quantity="other">%1$s %2$s واکنش با</item>
-    </plurals>
+        <item quantity="one">%1$s reacted with %2$s</item>
+        <item quantity="other">%1$s reacted with %2$s</item>
+    </plurals> <!-- TODO Add translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">خصوصی</string>
@@ -201,18 +199,18 @@
     <string name="msg_not_applicable_since_it_is_a_foss_version">قابل اجرا نیست زیرا نسخه‌ی FOSS است</string>
 
     <!-- System messages -->
-    <string name="message_room_name_changed">نام اتاق تغییر پیدا کرد به: %1$s توسط %2$s</string>
-    <string name="message_user_added_by">کاربر %1$s توسط %2$s اضافه شد</string>
-    <string name="message_user_removed_by">کاربر  %1$s توسط %2$sحذف شد</string>
+    <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string> <!-- TODO Add translation -->
+    <string name="message_user_added_by">User %1$s added by %2$s</string> <!-- TODO Add translation -->
+    <string name="message_user_removed_by">User %1$s removed by %2$s</string> <!-- TODO Add translation -->
     <string name="message_user_left">کانال را ترک کرد</string>
     <string name="message_user_joined_channel">به کانال پیوست</string>
     <string name="message_welcome">%s خوش‌آمدی</string>
     <string name="message_removed">پیام پاک شد</string>
     <string name="message_pinned">پیام سوزن شده:</string>
-    <string name="message_muted">کاربر %1$s توسط %2$s صامت شد</string>
-    <string name="message_unmuted">کاربر %1$s توسط %2$s صدادار شد</string>
-    <string name="message_role_add">%1$s به این تغییر داده شد %2$s توسط %3$s</string>
-    <string name="message_role_removed">%1$s دیگر این نیست %2$s توسط %3$s</string>
+    <string name="message_muted">User %1$s muted by %2$s</string> <!-- TODO Add translation -->
+    <string name="message_unmuted">User %1$s unmuted by %2$s</string> <!-- TODO Add translation -->
+    <string name="message_role_add">%1$s was set %2$s by %3$s</string> <!-- TODO Add translation -->
+    <string name="message_role_removed">%1$s is no longer %2$s by %3$s</string> <!-- TODO Add translation -->
     <string name="message_credentials_saved_successfully">اختیارها با موفقیت ذخیره شد</string>
 
     <!-- Message actions -->
@@ -251,26 +249,26 @@
     <!-- Mentions -->
     <string name="msg_mentions">صدا زدن</string>
     <string name="msg_no_mention">صدا زدنی موجود نیست</string>
-    <string name="msg_all_the_mentions_appear_here">تمام صدا زدن‌ها اینجا\nنمایش داده شده‌اند</string>
+    <string name="msg_all_the_mentions_appear_here">All the mentions\nappear here</string> <!-- TODO Add translation -->
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">پیام سوزن شده</string>
     <string name="no_pinned_messages">پیام سوزن‌شده‌ای موجود نیست</string>
-    <string name="no_pinned_description">تمام پیام‌های سوزن‌شده اینجا\nنمایش داده شده‌اند</string>
+    <string name="no_pinned_description">All the pinned messages\nappear here</string> <!-- TODO Add translation -->
 
     <!-- Favorite Messages -->
     <string name="title_favorite_messages">پیام‌های مورد علاقه</string>
     <string name="no_favorite_messages">هیچ پیام موردعلاقه‌ای موجود نیست</string>
-    <string name="no_favorite_description">تمام پیام‌های موردعلاقه اینجا\nنمایش داده شده‌اند</string>
+    <string name="no_favorite_description">All the favorite messages\nappear here</string> <!-- TODO Add translation -->
 
     <!-- Files -->
     <string name="title_files">پروندها</string>
-    <string name="title_files_total">پرونده‌ها (%d)</string>
+    <string name="title_files_total">(%d) پرونده‌ها</string>
     <string name="msg_no_files">هیچ پرونده‌ای موجود نیست</string>
     <string name="msg_all_files_appear_here">تمام پرونده‌ها اینجا نمایش داده شده‌اند</string>
 
     <!-- Upload Messages -->
-    <string name="max_file_size_exceeded">اندازه‌ی فایل %1$d بایت است و اندازه‌ی ماکسیمم %2$d بایت بیشتر شده</string>
+    <string name="max_file_size_exceeded">File size %1$d bytes exceeded max upload size of %2$d bytes</string> <!-- TODO Add translation -->
 
     <!-- Socket status -->
     <string name="status_connected">متصل</string>
@@ -278,7 +276,7 @@
     <string name="status_connecting">درحال اتصال</string>
     <string name="status_authenticating">تصدیق کردن</string>
     <string name="status_disconnecting">درحال قطع شده</string>
-    <string name="status_waiting">اتصال در %d ثانیه</string>
+    <string name="status_waiting">Connecting in %d seconds</string> <!-- TODO Add translation -->
 
     <!--Suggestions-->
     <string name="suggest_all_description">به همه در این اتاق خبر بده</string>
@@ -331,17 +329,13 @@
     <string name="share_label">ویراش پیام به اشتراک گذاشته شده</string>
     <string name="notif_action_reply_hint">جواب دادن</string>
     <string name="notif_error_sending">جواب با شکست مواجه شد. لطفا دوباره تلاش کنید.</string>
-    <string name="notif_success_sending">پیام به %1$s!فرستاده شد</string>
+    <string name="notif_success_sending">Message sent to %1$s!</string> <!-- TODO Add translation -->
     <string name="read_by">خوانده شده توسط</string>
     <string name="message_information_title">اطلاعات پیام</string>
-    <string name="message_room_changed_privacy">نوع اتاق تغییر پیدا کرد به: %1$s توسط %2$s</string>
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string> <!-- TODO Add translation -->
 
     <!-- User Details -->
-    <string name="message">پیام</string>
     <string name="timezone">منطقه‌ی زمانی</string>
-
-    <string name="error_opening_dm">زمانی که این گفت‌وگو را ایجاد کردیم مشکلی رخ داد…</string>
-    <string name="retry">تلاش دوباره</string>
 
     <!-- Report -->
     <string name="submit">واگذاری</string>

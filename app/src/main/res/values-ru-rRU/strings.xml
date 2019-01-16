@@ -128,7 +128,6 @@
     <string name="msg_ver_not_minimum">Похоже, версия сервера меньше минимально необходимой %1$s.\nДля работы потребуется обновить сервер!</string>
     <string name="msg_no_chat_title">Нет сообщений</string>
     <string name="msg_no_chat_description">Начните общаться, чтобы увидеть\nтут сообщения.</string>
-    <string name="msg_cancel">ОТМЕНА</string>
     <string name="msg_http_insecure">При использовании HTTP вы подключаетесь к небезопасному серверу. Мы не рекомендуем вам это делать.</string>
     <string name="msg_error_checking_server_version">При проверке версии вашего сервера произошла ошибка, повторите попытку.</string>
     <string name="msg_invalid_server_protocol">Выбранный протокол не разрешен на этом сервере, попробуйте использовать HTTPS</string>
@@ -334,10 +333,7 @@
     <string name="message_room_changed_privacy">Тип канала изменен на: %1$s пользователем %2$s</string>
 
     <!-- User Details -->
-    <string name="message">Сообщение</string>
-    <string name="timezone">Часовой пояс</string>
-    <string name="error_opening_dm">При создании этого диалога что-то пошло не так...</string>
-    <string name="retry">Повторить</string>
+    <string name="timezone">Часовой поясe</string>
 
     <!-- Report -->
     <string name="submit">Отправить</string>
