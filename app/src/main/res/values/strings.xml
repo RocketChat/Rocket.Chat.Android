@@ -137,7 +137,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_preview_file">File</string>
     <string name="msg_no_messages_yet">No messages yet</string>
     <string name="msg_build">Build %1$d - %2$s - %3$s</string>
-    <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">Out to date server version. Please contact the server admin to update the server version in order to continue.</string>
     <string name="msg_ver_not_recommended">
         Looks like your server version is below the recommended version %1$s.\nYou can still login but you may experience unexpected behaviors.</string>

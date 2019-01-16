@@ -122,7 +122,6 @@
     <string name="msg_preview_file">Файл</string>
     <string name="msg_no_messages_yet">Нет сообщений</string>
     <string name="msg_build">Сборка %1$d - %2$s - %3$s</string>
-    <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">Версия сервера устарела. Пожалуйста, свяжитесь с администратором, чтобы обновить сервер.</string>
     <string name="msg_ver_not_recommended">Похоже, версия сервера меньше рекомендуемой %1$s.\nМожно войти, но могут возникнуть те или иные проблемы при работе.\n</string>
     <string name="msg_ver_not_minimum">Похоже, версия сервера меньше минимально необходимой %1$s.\nДля работы потребуется обновить сервер!</string>

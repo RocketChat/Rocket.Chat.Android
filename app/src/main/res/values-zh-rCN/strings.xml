@@ -124,7 +124,6 @@
     <string name="msg_preview_file">文件</string>
     <string name="msg_no_messages_yet">尚无消息</string>
     <string name="msg_build">Build %1$d - %2$s - %3$s</string>
-    <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">服务器版本过老。请联系服务器管理员更新服务器版本。</string>
     <string name="msg_ver_not_recommended">您的服务器版本低于建议的版本%1$s.\n仍然可以登录，但是可能存在部分功能不正常的情况.</string>
     <string name="msg_ver_not_minimum">您的服务器版本低于建议的版本%1$s.\n必须更新服务器才能登录!</string>

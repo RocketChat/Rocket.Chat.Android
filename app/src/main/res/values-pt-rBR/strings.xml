@@ -122,7 +122,6 @@
     <string name="msg_preview_file">Arquivo</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
     <string name="msg_build">Versão %1$d - %2$s - %3$s</string>
-    <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">Versão do servidor desatualizada. Por favor, entre em contato com o administrador do sistema para continuar.</string>
     <string name="msg_ver_not_recommended">
         Parece que a versão do seu servidor está abaixo da recomendada %1$s.\nVocê ainda assim pode logar e continuar mas podem ocorrer alguns problemas inesperados.

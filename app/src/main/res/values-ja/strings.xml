@@ -124,7 +124,6 @@
     <string name="msg_preview_file">ファイル</string>
     <string name="msg_no_messages_yet">メッセージはまだありません</string>
     <string name="msg_build">Build %1$d - %2$s - %3$s</string> <!-- TODO Add translation -->
-    <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">古いバージョンのサーバーを使用しています。続行するには、管理者にサーバーのバージョンを更新するよう連絡してください。</string>
     <string name="msg_ver_not_recommended">
         ご使用のサーバーのバージョンは推薦バージョン %1$s よりも古いものです。\nログインは可能ですが、予期しない動作が発生する可能性があります。</string>
