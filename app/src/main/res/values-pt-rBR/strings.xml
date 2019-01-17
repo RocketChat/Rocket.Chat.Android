@@ -181,6 +181,7 @@
         <item quantity="one">%1$s reagiu com %2$s</item>
         <item quantity="other">%1$s reagiram com %2$s</item>
     </plurals>
+    <string name="msg_credentials_saved_successfully">Credenciais salvas com sucesso</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
@@ -213,7 +214,7 @@
     <string name="message_unmuted">Usuário %1$s saiu do modo silenciado por %2$s</string>
     <string name="message_role_add">%1$s foi definido %2$s por %3$s</string>
     <string name="message_role_removed">%1$s não é mais %2$s por %3$s</string>
-    <string name="message_credentials_saved_successfully">Credenciais salvas com sucesso</string>
+    <string name="message_video_call_started">Videochamada iniciada por %1$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Responder</string>

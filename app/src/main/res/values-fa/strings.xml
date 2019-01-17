@@ -175,6 +175,7 @@
         <item quantity="one">%1$s reacted with %2$s</item>
         <item quantity="other">%1$s reacted with %2$s</item>
     </plurals> <!-- TODO Add translation -->
+    <string name="msg_credentials_saved_successfully">اختیارها با موفقیت ذخیره شد</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">خصوصی</string>
@@ -213,7 +214,7 @@
     <string name="message_unmuted">User %1$s unmuted by %2$s</string> <!-- TODO Add translation -->
     <string name="message_role_add">%1$s was set %2$s by %3$s</string> <!-- TODO Add translation -->
     <string name="message_role_removed">%1$s is no longer %2$s by %3$s</string> <!-- TODO Add translation -->
-    <string name="message_credentials_saved_successfully">اختیارها با موفقیت ذخیره شد</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">جواب</string>

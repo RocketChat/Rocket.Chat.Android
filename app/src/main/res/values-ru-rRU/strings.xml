@@ -178,6 +178,7 @@
         <item quantity="few">%1$s реагируют с %2$s</item>
         <item quantity="many">%1$s реагируют с %2$s</item>
     </plurals>
+    <string name="msg_credentials_saved_successfully">Учетные данные успешно сохранены</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>
@@ -210,7 +211,7 @@
     <string name="message_unmuted">Пользователю %1$s вернули дар речи по решению %2$s</string>
     <string name="message_role_add">%1$s был назначен %2$s пользователем %3$s</string>
     <string name="message_role_removed">%1$s больше не %2$s по решению %3$s</string>
-    <string name="message_credentials_saved_successfully">Учетные данные успешно сохранены</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">Ответить</string>

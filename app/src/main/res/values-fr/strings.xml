@@ -179,6 +179,7 @@
         <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
         <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
+    <string name="msg_credentials_saved_successfully">Certificats sauvegardés</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privé</string>
@@ -211,8 +212,7 @@
     <string name="message_unmuted">Utilisateur %1$s a retrouvé la parole grâce à %2$s</string>
     <string name="message_role_add">%1$s a été défini %2$s par %3$s</string>
     <string name="message_role_removed">%1$s n\'est plus %2$s par %3$s</string>
-
-    <string name="message_credentials_saved_successfully">Certificats sauvegardés</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">Répondre</string>

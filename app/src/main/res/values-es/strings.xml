@@ -188,6 +188,7 @@
         <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
         <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
+    <string name="msg_credentials_saved_successfully">Credenciales guardadas con éxito</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
@@ -208,7 +209,7 @@
     <string name="message_unmuted">Usuario %1$s no silenciado por %2$s</string>
     <string name="message_role_add">%1$s fue establecido %2$s por %3$s</string>
     <string name="message_role_removed">%1$s ya no es %2$s por %3$s</string>
-    <string name="message_credentials_saved_successfully">Credenciales guardadas con éxito</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">Respuesta</string>

@@ -175,6 +175,7 @@
         <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
         <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
+    <string name="msg_credentials_saved_successfully">資格情報を正常に保存しました</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">プライベート</string>
@@ -213,7 +214,7 @@
     <string name="message_unmuted">ユーザー %1$s は %2$s によってミュートされていません</string>
     <string name="message_role_add">%1$s は %3$s によって %2$s に設定されました</string>
     <string name="message_role_removed">%1$s は %3$s で、もう %2$s ではありません</string>
-    <string name="message_credentials_saved_successfully">資格情報を正常に保存しました</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">返信</string>

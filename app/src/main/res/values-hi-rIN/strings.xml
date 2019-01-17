@@ -194,6 +194,7 @@
         <item quantity="few">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
         <item quantity="many">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
     </plurals>
+    <string name="msg_credentials_saved_successfully">प्रमाण पत्र सफलतापूर्वक सहेजे गए</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">एनालिटिक्स ट्रैकिंग</string>
@@ -214,7 +215,7 @@
     <string name="message_unmuted">उपयोगकर्ता %1$s %2$s द्वारा अनम्यूट किया गया</string>
     <string name="message_role_add">%1$s %3$s द्वारा %2$s सेट किया गया था</string>
     <string name="message_role_removed">%1$s अब %3$s द्वारा %2$s नहीं है</string>
-    <string name="message_credentials_saved_successfully">प्रमाण पत्र सफलतापूर्वक सहेजे गए</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">जवाब दें</string>

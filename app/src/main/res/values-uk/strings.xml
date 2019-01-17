@@ -177,6 +177,7 @@
         <item quantity="few">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
         <item quantity="many">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
+    <string name="msg_credentials_saved_successfully">Облікові дані було успішно збережено</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватний</string>
@@ -209,7 +210,7 @@
     <string name="message_unmuted">Користувачу і%1$s повернули дар мови за рішенням %2$s</string>
     <string name="message_role_add">%1$s був призначений як %2$s користувачем %3$s</string>
     <string name="message_role_removed">%1$s більше не %2$s за рішенням %3$s</string>
-    <string name="message_credentials_saved_successfully">Облікові дані було успішно збережено</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">Відповісти</string>

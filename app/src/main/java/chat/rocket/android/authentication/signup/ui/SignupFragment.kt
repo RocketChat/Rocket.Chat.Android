@@ -63,7 +63,7 @@ class SignupFragment : Fragment(), SignupView {
         if (resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 if (requestCode == SAVE_CREDENTIALS) {
-                    showMessage(getString(R.string.message_credentials_saved_successfully))
+                    showMessage(getString(R.string.msg_credentials_saved_successfully))
                 }
             }
         }

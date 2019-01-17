@@ -37,10 +37,11 @@ fun newInstance(
     disableMenu: Boolean
 ): ChatDetailsFragment {
     return ChatDetailsFragment().apply {
-        arguments = Bundle(4).apply {
+        arguments = Bundle(5).apply {
             putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
             putString(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
             putBoolean(BUNDLE_IS_SUBSCRIBED, isSubscribed)
+            putBoolean(BUNDLE_IS_FAVORITE, isFavorite)
             putBoolean(BUNDLE_DISABLE_MENU, disableMenu)
         }
     }

@@ -542,30 +542,67 @@ class UiModelMapper @Inject constructor(
         }
     }
 
-    private fun getSystemMessage(message: Message): CharSequence {
+    private fun s(message: Message): CharSequence {
         val content = when (message.type) {
             //TODO: Add implementation for Welcome type.
             is MessageType.MessageRemoved -> context.getString(R.string.message_removed)
             is MessageType.UserJoined -> context.getString(R.string.message_user_joined_channel)
             is MessageType.UserLeft -> context.getString(R.string.message_user_left)
-            is MessageType.UserAdded -> context.getString(R.string.message_user_added_by, message.message, message.sender?.username)
-            is MessageType.RoomNameChanged -> context.getString(R.string.message_room_name_changed, message.message, message.sender?.username)
-            is MessageType.UserRemoved -> context.getString(R.string.message_user_removed_by, message.message, message.sender?.username)
+            is MessageType.UserAdded -> context.getString(
+                R.string.message_user_added_by,
+                message.message,
+                message.sender?.username
+            )
+            is MessageType.RoomNameChanged -> context.getString(
+                R.string.message_room_name_changed, message.message, message.sender?.username
+            )
+            is MessageType.UserRemoved -> context.getString(
+                R.string.message_user_removed_by,
+                message.message,
+                message.sender?.username
+            )
             is MessageType.MessagePinned -> context.getString(R.string.message_pinned)
-            is MessageType.UserMuted -> context.getString(R.string.message_muted, message.message, message.sender?.username)
-            is MessageType.UserUnMuted -> context.getString(R.string.message_unmuted, message.message, message.sender?.username)
-            is MessageType.SubscriptionRoleAdded -> context.getString(R.string.message_role_add, message.message, message.role, message.sender?.username)
-            is MessageType.SubscriptionRoleRemoved -> context.getString(R.string.message_role_removed, message.message, message.role, message.sender?.username)
-            is MessageType.RoomChangedPrivacy -> context.getString(R.string.message_room_changed_privacy, message.message, message.sender?.username)
+            is MessageType.UserMuted -> context.getString(
+                R.string.message_muted,
+                message.message,
+                message.sender?.username
+            )
+            is MessageType.UserUnMuted -> context.getString(
+                R.string.message_unmuted,
+                message.message,
+                message.sender?.username
+            )
+            is MessageType.SubscriptionRoleAdded -> context.getString(
+                R.string.message_role_add,
+                message.message,
+                message.role,
+                message.sender?.username
+            )
+            is MessageType.SubscriptionRoleRemoved -> context.getString(
+                R.string.message_role_removed,
+                message.message,
+                message.role,
+                message.sender?.username
+            )
+            is MessageType.RoomChangedPrivacy -> context.getString(
+                R.string.message_room_changed_privacy,
+                message.message,
+                message.sender?.username
+            )
+            is MessageType.JitsiCallStarted -> context.getString(
+                R.string.message_video_call_started, message.sender?.username
+            )
             else -> {
                 throw InvalidParameterException("Invalid message type: ${message.type}")
             }
         }
         val spannableMsg = SpannableStringBuilder(content)
-        spannableMsg.setSpan(StyleSpan(Typeface.ITALIC), 0, spannableMsg.length,
-            0)
-        spannableMsg.setSpan(ForegroundColorSpan(Color.GRAY), 0, spannableMsg.length,
-            0)
+        spannableMsg.setSpan(
+            StyleSpan(Typeface.ITALIC), 0, spannableMsg.length, 0
+        )
+        spannableMsg.setSpan(
+            ForegroundColorSpan(Color.GRAY), 0, spannableMsg.length, 0
+        )
 
         return spannableMsg
     }

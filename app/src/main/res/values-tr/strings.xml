@@ -193,6 +193,7 @@
         <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
         <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
+    <string name="msg_credentials_saved_successfully">Kimlik bilgileri başarıyla kaydedildi</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">İstatistik takibi</string>
@@ -213,7 +214,7 @@
     <string name="message_unmuted">%1$s kullanıcısı %2$s tarafından sessizden çıkarıldı</string>
     <string name="message_role_add">%1$s, %3$s tarafından %2$s olacak şekilde değiştirildi</string>
     <string name="message_role_removed">%1$s, artık %2$s olmayacak şekilde %3$s tarafından değiştirildi</string>
-    <string name="message_credentials_saved_successfully">Kimlik bilgileri başarıyla kaydedildi</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">Kaydet</string>

@@ -31,10 +31,7 @@ internal fun ChatDetailsFragment.setupMenu(menu: Menu) {
 
 internal fun ChatDetailsFragment.setOnMenuItemClickListener(item: MenuItem) {
     if (item.itemId == MENU_ACTION_FAVORITE_REMOVE_FAVORITE) {
-        presenter.toggleFavoriteChatRoom(
-            chatRoomId,
-            isFavorite
-        )
+        presenter.toggleFavoriteChatRoom(chatRoomId, isFavorite)
     } else if (item.itemId == MENU_ACTION_VIDEO_CALL) {
         // TODO
     }

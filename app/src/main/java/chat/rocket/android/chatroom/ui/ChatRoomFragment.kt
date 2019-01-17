@@ -158,7 +158,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     internal lateinit var chatRoomType: String
     private var newMessageCount: Int = 0
     private var chatRoomMessage: String? = null
-    internal var isSubscribed: Boolean = true
+    private var isSubscribed: Boolean = true
     private var isReadOnly: Boolean = false
     private var isCreator: Boolean = false
     internal var isFavorite: Boolean = false
@@ -168,7 +168,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private lateinit var actionSnackbar: ActionSnackbar
     internal var citation: String? = null
     private var editingMessageId: String? = null
-    internal var disableMenu: Boolean = false
+    private var disableMenu: Boolean = false
 
     private val compositeDisposable = CompositeDisposable()
     private var playComposeMessageButtonsAnimation = true

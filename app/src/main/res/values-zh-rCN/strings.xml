@@ -172,6 +172,7 @@
         <item quantity="one">%1$s 使用了 %2$s</item>
         <item quantity="other">%1$s 使用了 %2$s</item>
     </plurals>
+    <string name="msg_credentials_saved_successfully">凭证成功保存</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">隐私</string>
@@ -210,7 +211,7 @@
     <string name="message_unmuted">用户 %1$s被%2$s取消禁言</string>
     <string name="message_role_add">%1$s被设置为%2$s 由%3$s操作</string>
     <string name="message_role_removed">%1$s不在是%2$s 由%3$s操作</string>
-    <string name="message_credentials_saved_successfully">凭证成功保存</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">回复</string>

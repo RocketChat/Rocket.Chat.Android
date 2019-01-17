@@ -176,6 +176,7 @@
         <item quantity="one">%1$ s reagierte mit %2$s</item>
         <item quantity="other">%1$s reagierte mit %2$s</item>
     </plurals>
+    <string name="msg_credentials_saved_successfully">Login-Daten erfolgreich gespeichert</string>
 
 
     <!-- Create channel messages -->
@@ -219,7 +220,7 @@
     <string name="message_unmuted">Benutzer %1$s nicht mehr stumm geschaltet von %2$s</string>
     <string name="message_role_add">%1$s wurde gesetzt %2$s von %3$s</string>
     <string name="message_role_removed">%1$s ist nicht länger %2$s von %3$s</string>
-    <string name="message_credentials_saved_successfully">Login-Daten erfolgreich gespeichert</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">Antworten</string>

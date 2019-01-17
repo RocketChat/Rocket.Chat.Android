@@ -30,8 +30,8 @@ class ChatDetailsPresenter @Inject constructor(
     fun toggleFavoriteChatRoom(roomId: String, isFavorite: Boolean) {
         launchUI(strategy) {
             try {
-                // Note that if it is favorite then the user wants to unfavorite - and vice versa.
-                retryIO("favorite($roomId, $isFavorite)") {
+                // Note: If it is favorite then the user wants to remove the favorite - and vice versa.
+                retryIO("favorite($roomId, ${!isFavorite})") {
                     client.favorite(roomId, !isFavorite)
                 }
                 view.showFavoriteIcon(!isFavorite)
@@ -45,6 +45,9 @@ class ChatDetailsPresenter @Inject constructor(
             }
         }
     }
+
+    // TODO
+    fun startVideoCall() {}
 
     fun getDetails(chatRoomId: String, chatRoomType: String) {
         launchUI(strategy) {

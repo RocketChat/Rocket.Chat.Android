@@ -93,7 +93,7 @@ class LoginFragment : Fragment(), LoginView {
                             text_username_or_email.setText(credential.first)
                             text_password.setText(credential.second)
                         }
-                    REQUEST_CODE_FOR_SAVE_RESOLUTION -> showMessage(getString(R.string.message_credentials_saved_successfully))
+                    REQUEST_CODE_FOR_SAVE_RESOLUTION -> showMessage(getString(R.string.msg_credentials_saved_successfully))
                 }
             }
         }
