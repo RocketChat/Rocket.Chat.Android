@@ -542,7 +542,7 @@ class UiModelMapper @Inject constructor(
         }
     }
 
-    private fun s(message: Message): CharSequence {
+    private fun getSystemMessage(message: Message): CharSequence {
         val content = when (message.type) {
             //TODO: Add implementation for Welcome type.
             is MessageType.MessageRemoved -> context.getString(R.string.message_removed)
