@@ -81,12 +81,13 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         super.onDestroyView()
     }
 
-    override fun showUserDetails(
+    override fun showUserDetailsAndActions(
         avatarUrl: String,
         name: String,
         username: String,
         status: String,
-        utcOffset: String
+        utcOffset: String,
+        isVideoCallAllowed: Boolean
     ) {
         val requestBuilder = Glide.with(this).load(avatarUrl)
 
@@ -105,7 +106,12 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         // We should also setup the user details listeners.
         text_message.setOnClickListener { presenter.createDirectMessage(username) }
 
-        text_video_call.setOnClickListener { presenter.startVideoCall() }
+        if (isVideoCallAllowed) {
+            text_video_call.isVisible = true
+            text_video_call.setOnClickListener { presenter.startVideoCall() }
+        } else {
+            text_video_call.isVisible = false
+        }
     }
 
     override fun showLoading() {

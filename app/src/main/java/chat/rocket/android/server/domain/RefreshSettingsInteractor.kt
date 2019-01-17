@@ -21,7 +21,6 @@ class RefreshSettingsInteractor @Inject constructor(
         LDAP_ENABLE,
         CAS_ENABLE,
         CAS_LOGIN_URL,
-
         ACCOUNT_REGISTRATION,
         ACCOUNT_LOGIN_FORM,
         ACCOUNT_PASSWORD_RESET,
@@ -36,6 +35,12 @@ class RefreshSettingsInteractor @Inject constructor(
         ACCOUNT_GITLAB_URL,
         ACCOUNT_WORDPRESS,
         ACCOUNT_WORDPRESS_URL,
+
+        JITSI_ENABLED,
+        JISTI_ENABLE_CHANNELS,
+        JITSI_SSL,
+        JITSI_DOMAIN,
+        JITSI_URL_ROOM_PREFIX,
 
         SITE_URL,
         SITE_NAME,

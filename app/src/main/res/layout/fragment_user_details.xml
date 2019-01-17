@@ -79,9 +79,11 @@
             android:layout_marginTop="24dp"
             android:drawableTop="@drawable/ic_video_24dp"
             android:text="@string/msg_video_call"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/text_message"
-            app:layout_constraintTop_toBottomOf="@+id/text_username" />
+            app:layout_constraintTop_toBottomOf="@+id/text_username"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/text_title_status"

@@ -19,6 +19,9 @@ import chat.rocket.android.chatdetails.presentation.ChatDetailsView
 import chat.rocket.android.chatdetails.viewmodel.ChatDetailsViewModel
 import chat.rocket.android.chatdetails.viewmodel.ChatDetailsViewModelFactory
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
+import chat.rocket.android.server.domain.CurrentServerRepository
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
@@ -62,6 +65,10 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
     lateinit var presenter: ChatDetailsPresenter
     @Inject
     lateinit var factory: ChatDetailsViewModelFactory
+    @Inject
+    lateinit var serverUrl: CurrentServerRepository
+    @Inject
+    lateinit var settings: GetSettingsInteractor
     private var adapter: ChatDetailsAdapter? = null
     private lateinit var viewModel: ChatDetailsViewModel
 
