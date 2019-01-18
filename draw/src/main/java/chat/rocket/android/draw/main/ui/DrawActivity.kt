@@ -60,10 +60,7 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
 
         image_draw_eraser.setOnClickListener {
             custom_draw_view.setColor(
-                    ResourcesCompat.getColor(
-                            resources,
-                            R.color.color_white, null
-                    )
+                ResourcesCompat.getColor(resources, R.color.color_white, null)
             )
             toggleDrawTools(draw_tools, false)
         }

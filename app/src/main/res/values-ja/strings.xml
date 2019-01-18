@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <resources>
-    <string name="app_name" translatable="false">Rocket.Chat</string>
 
     <!-- Titles -->
     <string name="title_sign_in_your_server">サーバーに接続</string>
@@ -22,7 +20,7 @@
     <string name="title_admin_panel">管理パネル</string>
     <string name="title_password">パスワードの変更</string>
     <string name="title_update_profile">プロフィールの更新</string>
-    <string name="title_about">About</string>
+    <string name="title_about">About</string><!-- TODO Add translation -->
     <string name="title_licence">Licence</string> <!-- TODO Add translation -->
     <string name="title_create_channel">新しいチャネルを作成</string>
     <string name="title_are_you_sure">本気ですか？</string>
@@ -66,6 +64,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Change password</item> <!-- TODO Add translation -->
+        <item name="change_language">Change Language</item><!-- TODO Add translation -->
         <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
         <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
         <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
@@ -339,10 +338,7 @@
     <string name="message_room_changed_privacy">ルームタイプを %2$s から %1$s に変更しました</string>
 
     <!-- User Details -->
-    <string name="message">Message</string> <!--TODO - Add proper translation-->
     <string name="timezone">Timezone</string> <!--TODO - Add proper translation-->
-    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string> <!-- TODO - Add proper translation -->
-    <string name="retry">Retry</string> <!-- TODO - Add proper translation -->
 
     <!-- Report -->
     <string name="submit">Submit</string> <!--TODO - Add proper translation-->
