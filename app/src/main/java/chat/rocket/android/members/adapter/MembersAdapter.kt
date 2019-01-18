@@ -60,16 +60,16 @@ class MembersAdapter(private val listener: (MemberUiModel) -> Unit, presenter: M
                     R.id.action_member_set_leader-> {
                         presenter?.toggleLeader(this.userId, this.roles?.contains("leader") == true)
                     }
-                    R.id.action_member_set_moderator->{
+                    R.id.action_member_set_moderator-> {
                         presenter?.toggleModerator(this.userId, this.roles?.contains("moderator") == true)
                     }
-                    R.id.action_member_ignore->{
-                        presenter?.toggleIgnore(this.userId, true)
+                    R.id.action_member_ignore-> {
+                        presenter?.toggleIgnore(this.userId, false)
                     }
-                    R.id.action_member_mute->{
-                        presenter?.toggleMute(this.username, true)
+                    R.id.action_member_mute-> {
+                        presenter?.toggleMute(this.username, this.muted)
                     }
-                    R.id.action_member_remove->{
+                    R.id.action_member_remove-> {
                         presenter?.removeUser(this.userId)
                     }
                     else -> TODO("Not implemented")

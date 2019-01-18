@@ -1,6 +1,7 @@
 package chat.rocket.android.members.presentation
 
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
+import android.util.Log
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.helper.UserHelper
@@ -8,6 +9,7 @@ import chat.rocket.android.members.uimodel.MemberUiModel
 import chat.rocket.android.members.uimodel.MemberUiModelMapper
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.extensions.isNotNullNorEmpty
 import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
@@ -16,7 +18,6 @@ import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.*
-import chat.rocket.core.model.ChatRoomRole
 import chat.rocket.core.model.Command
 import timber.log.Timber
 import javax.inject.Inject
@@ -36,6 +37,7 @@ class MembersPresenter @Inject constructor(
     private var offset: Long = 0
     private lateinit var roomType: RoomType
     private lateinit var roomId: String
+    var isRoomOwner: Boolean = false
 
     /**
      * Loads all the chat room members for the given room id.
@@ -55,10 +57,16 @@ class MembersPresenter @Inject constructor(
                         } else {
                             emptyList()
                         }
-                    var memberUiModels = mapper.mapToUiModelList(members.result)
+                    val muted = it.chatRoom.muted
+                    val currentUserId = client.me().id
+
+                    val memberUiModels = mapper.mapToUiModelList(members.result)
                     memberUiModels.forEach {
                         val userId = it.userId
+                        val username = it.username
                         it.roles = chatRoomRole.find { it.user.id ==  userId}?.roles
+                        if (it.userId == currentUserId) this@MembersPresenter.isRoomOwner = it.roles?.contains("owner") == true
+                        it.muted = muted?.find { it == username }.isNotNullNorEmpty()
                     }
                     view.showMembers(memberUiModels, members.total)
                     offset += 1 * 60L
@@ -92,6 +100,7 @@ class MembersPresenter @Inject constructor(
                     retryIO(description = "removeOwner($roomId, $roomType, $userId)") { client.removeOwner(roomId, roomType, userId) }
                 else
                     retryIO(description = "addOwner($roomId, $roomType, $userId)") { client.addOwner(roomId, roomType, userId) }
+                offset = 0
                 this@MembersPresenter.loadChatRoomsMembers(roomId)
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.
@@ -107,7 +116,7 @@ class MembersPresenter @Inject constructor(
                     retryIO(description = "removeLeader($roomId, $roomType, $userId)") { client.removeLeader(roomId, roomType, userId) }
                 else
                     retryIO(description = "addLeader($roomId, $roomType, $userId)") { client.addLeader(roomId, roomType, userId) }
-                this@MembersPresenter.loadChatRoomsMembers(roomId)
+//                this@MembersPresenter.loadChatRoomsMembers(roomId)
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.
                 Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
@@ -122,7 +131,7 @@ class MembersPresenter @Inject constructor(
                     retryIO(description = "removeModerator($roomId, $roomType, $userId)") { client.removeModerator(roomId, roomType, userId) }
                 else
                     retryIO(description = "addModerator($roomId, $roomType, $userId)") { client.addModerator(roomId, roomType, userId) }
-                this@MembersPresenter.loadChatRoomsMembers(roomId)
+//                this@MembersPresenter.loadChatRoomsMembers(roomId)
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.
                 Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
@@ -162,7 +171,7 @@ class MembersPresenter @Inject constructor(
     fun removeUser(userId: String) {
         launchUI(strategy) {
             try {
-                    retryIO(description = "removeUser($roomId, $roomType, $userId)") { client.removeOwner(roomId, roomType, userId) }
+                    retryIO(description = "removeUser($roomId, $roomType, $userId)") { client.removeUser(roomId, roomType, userId) }
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.
                 Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.

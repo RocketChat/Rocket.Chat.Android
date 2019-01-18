@@ -1,5 +1,6 @@
 package chat.rocket.android.members.adapter
 
+import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.MenuItem
 import android.view.View
@@ -23,9 +24,9 @@ class ViewHolder(
 ) : RecyclerView.ViewHolder(itemView), MenuItem.OnMenuItemClickListener {
     var data: MemberUiModel? = null
 
-    init {
-            setupActionMenu(itemView)
-    }
+//    init {
+//            setupActionMenu(itemView)
+//    }
 
     fun bind(memberUiModel: MemberUiModel, listener: (MemberUiModel) -> Unit) = with(itemView) {
         data = memberUiModel
@@ -39,6 +40,7 @@ class ViewHolder(
         text_member_leader.isVisible = memberUiModel.roles?.contains("leader") == true
         text_member_moderator.isVisible = memberUiModel.roles?.contains("moderator") == true
         setOnClickListener { listener(memberUiModel) }
+        setupActionMenu(itemView)
     }
 
     interface ActionsListener {
@@ -49,7 +51,8 @@ class ViewHolder(
     internal fun setupActionMenu(view: View) {
         view.setOnLongClickListener{
                 data?.let {
-                        val menuItems = view.context.inflate(R.menu.group_member_actions).toList()
+                        var menuItems = view.context.inflate(R.menu.group_member_actions).toList()
+//                        if(!isRoomOwner) menuItems = menuItems.filter { it.itemId == R.id.action_member_mute || it.itemId == R.id.action_member_ignore }
                         menuItems.find { it.itemId == R.id.action_member_set_owner }?.apply {
                             if (it.roles?.contains("owner") == true) title = "Remove as Owner"
                         }
@@ -60,7 +63,10 @@ class ViewHolder(
                             if (it.roles?.contains("moderator") == true) title = "Remove as Moderator"
                         }
                         menuItems.find { it.itemId == R.id.action_member_mute }?.apply {
-//                            if (it.roles.contains("owner")) title = "Remove Owner"
+                            if (it.muted) {
+                                title = "Unmute user"
+                                setIcon(R.drawable.ic_mic_on_24dp)
+                            }
                         }
                         menuItems.find { it.itemId == R.id.action_member_ignore }?.apply {
 //                            if (it.roles.contains("owner")) title = "Remove Owner"

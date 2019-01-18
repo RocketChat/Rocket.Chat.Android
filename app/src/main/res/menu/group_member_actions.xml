@@ -16,12 +16,12 @@
 
     <item
         android:id="@+id/action_member_ignore"
-        android:icon="@drawable/ic_add_reaction"
+        android:icon="@drawable/ic_ignore_24dp"
         android:title="Ignore" />
 
     <item
         android:id="@+id/action_member_mute"
-        android:icon="@drawable/ic_action_message_link_24dp"
+        android:icon="@drawable/ic_mic_off_24dp"
         android:title="Mute user" />
 
     <item

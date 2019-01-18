@@ -18,6 +18,7 @@ class MemberUiModel(
     val username: String?
     val email: String?
     var roles: List<String>?
+    var muted: Boolean
     val utcOffset: Float?
     val status: UserStatus?
 
@@ -29,6 +30,7 @@ class MemberUiModel(
         email = getUserEmail()
         utcOffset = getUserUtcOffset()
         roles = getUserRoles()
+        muted = false
         status = getUserStatus()
     }
 
