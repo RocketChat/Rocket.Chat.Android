@@ -101,7 +101,7 @@ class MembersPresenter @Inject constructor(
                 else
                     retryIO(description = "addOwner($roomId, $roomType, $userId)") { client.addOwner(roomId, roomType, userId) }
                 offset = 0
-                this@MembersPresenter.loadChatRoomsMembers(roomId)
+                navigator.toMembersList(roomId)
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.
                 Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
@@ -116,7 +116,7 @@ class MembersPresenter @Inject constructor(
                     retryIO(description = "removeLeader($roomId, $roomType, $userId)") { client.removeLeader(roomId, roomType, userId) }
                 else
                     retryIO(description = "addLeader($roomId, $roomType, $userId)") { client.addLeader(roomId, roomType, userId) }
-//                this@MembersPresenter.loadChatRoomsMembers(roomId)
+                    navigator.toMembersList(roomId)
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.
                 Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
@@ -131,7 +131,7 @@ class MembersPresenter @Inject constructor(
                     retryIO(description = "removeModerator($roomId, $roomType, $userId)") { client.removeModerator(roomId, roomType, userId) }
                 else
                     retryIO(description = "addModerator($roomId, $roomType, $userId)") { client.addModerator(roomId, roomType, userId) }
-//                this@MembersPresenter.loadChatRoomsMembers(roomId)
+                    navigator.toMembersList(roomId)
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.
                 Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.

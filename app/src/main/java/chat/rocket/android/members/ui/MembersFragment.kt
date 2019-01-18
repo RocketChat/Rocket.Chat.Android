@@ -117,8 +117,13 @@ class MembersFragment : Fragment(), MembersView {
     private fun setupRecyclerView() {
         ui {
             adapter = MembersAdapter ({ memberUiModel -> presenter.toMemberDetails(memberUiModel) }, presenter)
-            recycler_view.layoutManager = linearLayoutManager
-            recycler_view.addItemDecoration(DividerItemDecoration(it, DividerItemDecoration.HORIZONTAL))
+            recycler_view.layoutManager = LinearLayoutManager(context)
+            recycler_view.addItemDecoration(
+                    DividerItemDecoration(
+                            it,
+                            DividerItemDecoration.HORIZONTAL
+                    )
+            )
             recycler_view.adapter = adapter
         }
     }
