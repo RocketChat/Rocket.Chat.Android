@@ -4,16 +4,24 @@ import android.view.Menu
 import android.view.MenuItem
 import chat.rocket.android.R
 import chat.rocket.android.server.domain.isJitsiEnabled
+import chat.rocket.android.server.domain.isJitsiEnabledForChannels
+import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.roomTypeOf
 
 internal fun ChatDetailsFragment.setupMenu(menu: Menu) {
     serverUrl.get()?.let {
-        if (settings.get(it).isJitsiEnabled()) {
-            menu.add(
-                Menu.NONE,
-                MENU_ACTION_VIDEO_CALL,
-                Menu.NONE,
-                R.string.msg_video_call
-            ).setIcon(R.drawable.ic_video_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+        with(settings.get(it)) {
+            if (isJitsiEnabled()) {
+                if (roomTypeOf(chatRoomType) !is RoomType.DirectMessage && !isJitsiEnabledForChannels()) {
+                    return
+                }
+                menu.add(
+                    Menu.NONE,
+                    MENU_ACTION_VIDEO_CALL,
+                    Menu.NONE,
+                    R.string.msg_video_call
+                ).setIcon(R.drawable.ic_video_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+            }
         }
     }
 

@@ -73,7 +73,7 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
     private lateinit var viewModel: ChatDetailsViewModel
 
     internal lateinit var chatRoomId: String
-    private lateinit var chatRoomType: String
+    internal lateinit var chatRoomType: String
     private var isSubscribed: Boolean = true
     internal var isFavorite: Boolean = false
     private var disableMenu: Boolean = false
