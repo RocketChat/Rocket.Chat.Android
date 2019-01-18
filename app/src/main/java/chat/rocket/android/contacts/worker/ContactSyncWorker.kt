@@ -1,7 +1,9 @@
 package chat.rocket.android.contacts.worker
 
 import android.content.Context
+import android.os.Build
 import android.provider.ContactsContract
+import android.telephony.PhoneNumberUtils
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import chat.rocket.android.contacts.models.Contact
@@ -87,6 +89,13 @@ class ContactSyncWorker(context : Context, params : WorkerParameters)
     }
 
     private fun getContactList() {
+        var country = ""
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            country = applicationContext.getResources().getConfiguration().locales.get(0).country
+        } else{
+            country = applicationContext.getResources().getConfiguration().locale.getCountry();
+        }
+
         val cr = applicationContext.contentResolver
 
         val cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
@@ -108,10 +117,13 @@ class ContactSyncWorker(context : Context, params : WorkerParameters)
                     while (pCur!!.moveToNext()) {
                         val phoneNo = pCur.getString(pCur.getColumnIndex(
                                 ContactsContract.CommonDataKinds.Phone.NUMBER))
-                        val contact = Contact()
-                        contact.setName(name)
-                        contact.setPhoneNumber(phoneNo)
-                        contactArrayList.add(contact)
+                        val formattedPhone = formatPhoneNumber(phoneNo, country)
+                        if(formattedPhone!=null) {
+                            val contact = Contact()
+                            contact.setName(name)
+                            contact.setPhoneNumber(formattedPhone)
+                            contactArrayList.add(contact)
+                        }
                     }
                     pCur.close()
                 }
@@ -156,4 +168,9 @@ class ContactSyncWorker(context : Context, params : WorkerParameters)
 
         return result.toString()
     }
+
+    private fun formatPhoneNumber(phone: String, country:String): String? {
+        return PhoneNumberUtils.formatNumberToE164(phone.replace("-|\\s|\\(|\\)".toRegex(), ""), country)
+    }
+
 }
