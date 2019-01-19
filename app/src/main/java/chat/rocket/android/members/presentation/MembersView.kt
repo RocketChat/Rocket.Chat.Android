@@ -13,4 +13,11 @@ interface MembersView: LoadingView, MessageView {
      * @param total The total number of members.
      */
     fun showMembers(dataSet: List<MemberUiModel>, total: Long)
+
+    /**
+     * Set count of members of a room.
+     *
+     * @param totalMembers The total number of members.
+     */
+    fun setMemberCount(totalMembers: Long?)
 }

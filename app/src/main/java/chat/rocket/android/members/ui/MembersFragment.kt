@@ -96,6 +96,10 @@ class MembersFragment : Fragment(), MembersView {
         ui { view_loading.isVisible = true }
     }
 
+    override fun setMemberCount(totalMembers: Long?){
+        setupToolbar(totalMembers)
+    }
+
     override fun hideLoading() {
         ui { view_loading.isVisible = false }
     }

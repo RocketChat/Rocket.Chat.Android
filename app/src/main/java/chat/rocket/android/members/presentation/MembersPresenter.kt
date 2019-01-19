@@ -37,6 +37,7 @@ class MembersPresenter @Inject constructor(
     private var offset: Long = 0
     private lateinit var roomType: RoomType
     private lateinit var roomId: String
+    private var totalMembers: Long = 0
     var isRoomOwner: Boolean = false
 
     /**
@@ -69,6 +70,7 @@ class MembersPresenter @Inject constructor(
                         it.muted = muted?.find { it == username }.isNotNullNorEmpty()
                     }
                     view.showMembers(memberUiModels, members.total)
+                    totalMembers = members.total
                     offset += 1 * 60L
                 }.ifNull {
                     Timber.e("Couldn't find a room with id: $roomId at current server.")
@@ -93,15 +95,14 @@ class MembersPresenter @Inject constructor(
         }
     }
 
-    fun toggleOwner(userId: String, isOwner: Boolean = false) {
+    fun toggleOwner(userId: String, isOwner: Boolean = false, notifier: () ->Unit) {
         launchUI(strategy) {
             try {
                 if (isOwner)
                     retryIO(description = "removeOwner($roomId, $roomType, $userId)") { client.removeOwner(roomId, roomType, userId) }
                 else
                     retryIO(description = "addOwner($roomId, $roomType, $userId)") { client.addOwner(roomId, roomType, userId) }
-                offset = 0
-                navigator.toMembersList(roomId)
+                notifier()
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.
                 Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
@@ -109,14 +110,14 @@ class MembersPresenter @Inject constructor(
         }
     }
 
-    fun toggleLeader(userId: String, isLeader: Boolean = false) {
+    fun toggleLeader(userId: String, isLeader: Boolean = false, notifier: () ->Unit) {
         launchUI(strategy) {
             try {
                 if (isLeader)
                     retryIO(description = "removeLeader($roomId, $roomType, $userId)") { client.removeLeader(roomId, roomType, userId) }
                 else
                     retryIO(description = "addLeader($roomId, $roomType, $userId)") { client.addLeader(roomId, roomType, userId) }
-                    navigator.toMembersList(roomId)
+                notifier()
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.
                 Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
@@ -124,14 +125,14 @@ class MembersPresenter @Inject constructor(
         }
     }
 
-    fun toggleModerator(userId: String, isModerator: Boolean = false) {
+    fun toggleModerator(userId: String, isModerator: Boolean = false, notifier: () ->Unit) {
         launchUI(strategy) {
             try {
                 if (isModerator)
                     retryIO(description = "removeModerator($roomId, $roomType, $userId)") { client.removeModerator(roomId, roomType, userId) }
                 else
                     retryIO(description = "addModerator($roomId, $roomType, $userId)") { client.addModerator(roomId, roomType, userId) }
-                    navigator.toMembersList(roomId)
+                notifier()
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.
                 Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
@@ -139,10 +140,11 @@ class MembersPresenter @Inject constructor(
         }
     }
 
-    fun toggleIgnore(userId: String, isIgnored: Boolean = false) {
+    fun toggleIgnore(userId: String, isIgnored: Boolean = false, notifier: () ->Unit) {
         launchUI(strategy) {
             try {
                     retryIO(description = "ignoreUser($roomId, $userId, ${!isIgnored})") { client.ignoreUser(roomId, userId, !isIgnored) }
+                notifier()
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.
                 Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
@@ -150,7 +152,7 @@ class MembersPresenter @Inject constructor(
         }
     }
 
-    fun toggleMute(username: String?, isMuted: Boolean = false) {
+    fun toggleMute(username: String?, isMuted: Boolean = false,  notifier: () ->Unit) {
         launchUI(strategy) {
             try {
                 if (isMuted)
@@ -161,6 +163,7 @@ class MembersPresenter @Inject constructor(
                     retryIO("runCommand(mute, $username, $roomId)") {
                         client.runCommand(Command("mute", username), roomId)
                     }
+                notifier()
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.
                 Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
@@ -168,10 +171,12 @@ class MembersPresenter @Inject constructor(
         }
     }
 
-    fun removeUser(userId: String) {
+    fun removeUser(userId: String,  notifier: () ->Unit) {
         launchUI(strategy) {
             try {
                     retryIO(description = "removeUser($roomId, $roomType, $userId)") { client.removeUser(roomId, roomType, userId) }
+                notifier()
+                view.setMemberCount(--totalMembers)
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.
                 Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.

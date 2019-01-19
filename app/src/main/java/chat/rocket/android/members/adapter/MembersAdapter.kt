@@ -19,7 +19,7 @@ class MembersAdapter(private val listener: (MemberUiModel) -> Unit, presenter: M
         ViewHolder(parent.inflate(R.layout.item_member), actionsListener)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        holder.bind(dataSet[position], listener)
+        holder.bind(dataSet[position], position, listener)
 
     override fun getItemCount(): Int = dataSet.size
 
@@ -51,26 +51,55 @@ class MembersAdapter(private val listener: (MemberUiModel) -> Unit, presenter: M
 =======
     private val actionsListener = object : ViewHolder.ActionsListener {
         override fun isActionsEnabled(): Boolean = enableActions
-        override fun onActionSelected(item: MenuItem, member: MemberUiModel) {
+        override fun onActionSelected(item: MenuItem, member: MemberUiModel, index: Int) {
             member.apply {
                 when (item.itemId) {
                     R.id.action_member_set_owner-> {
-                        presenter?.toggleOwner(this.userId, this.roles?.contains("owner") == true )
+                        val isOwner = this.roles?.contains("owner") == true
+                        presenter?.toggleOwner(this.userId, isOwner) {
+                            if (isOwner)
+                                dataSet[index].roles = dataSet[index].roles?.filterNot { it == "owner"}
+                            else
+                                dataSet[index].roles = dataSet[index].roles?.plus("owner")
+                            notifyItemChanged(index)
+                        }
                     }
                     R.id.action_member_set_leader-> {
-                        presenter?.toggleLeader(this.userId, this.roles?.contains("leader") == true)
+                        val isLeader = this.roles?.contains("leader") == true
+                        presenter?.toggleLeader(this.userId, isLeader) {
+                        if (isLeader)
+                            dataSet[index].roles = dataSet[index].roles?.filterNot { it == "leader"}
+                        else
+                            dataSet[index].roles = dataSet[index].roles?.plus("leader")
+                        notifyItemChanged(index)
+                        }
                     }
                     R.id.action_member_set_moderator-> {
-                        presenter?.toggleModerator(this.userId, this.roles?.contains("moderator") == true)
+                        val isMod = this.roles?.contains("moderator") == true
+                        presenter?.toggleModerator(this.userId, isMod) {
+                            if (isMod)
+                                dataSet[index].roles = dataSet[index].roles?.filterNot { it == "moderator" }
+                            else
+                                dataSet[index].roles = dataSet[index].roles?.plus("moderator")
+                            notifyItemChanged(index)
+                        }
                     }
                     R.id.action_member_ignore-> {
-                        presenter?.toggleIgnore(this.userId, false)
+                            TODO("not implemented")
+//                        presenter?.toggleIgnore(this.userId, false){}
                     }
                     R.id.action_member_mute-> {
-                        presenter?.toggleMute(this.username, this.muted)
+                        presenter?.toggleMute(this.username, this.muted) {
+                            dataSet[index].muted = !this.muted
+                            notifyItemChanged(index)
+                        }
                     }
                     R.id.action_member_remove-> {
-                        presenter?.removeUser(this.userId)
+                        presenter?.removeUser(this.userId) {
+                            dataSet = dataSet.filterIndexed{ position, _-> position != index }
+                            notifyItemRemoved(index)
+                            notifyItemRangeChanged(index, dataSet.size)
+                        }
                     }
                     else -> TODO("Not implemented")
                 }

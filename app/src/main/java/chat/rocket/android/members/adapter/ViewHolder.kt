@@ -6,9 +6,9 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.members.ui.GroupMemberBottomSheet
 import chat.rocket.android.members.uimodel.MemberUiModel
 import chat.rocket.android.util.extensions.content
@@ -23,13 +23,15 @@ class ViewHolder(
         private val listener: ActionsListener
 ) : RecyclerView.ViewHolder(itemView), MenuItem.OnMenuItemClickListener {
     var data: MemberUiModel? = null
+    var index: Int = 0
 
 //    init {
 //            setupActionMenu(itemView)
 //    }
 
-    fun bind(memberUiModel: MemberUiModel, listener: (MemberUiModel) -> Unit) = with(itemView) {
+    fun bind(memberUiModel: MemberUiModel, position: Int, listener: (MemberUiModel) -> Unit) = with(itemView) {
         data = memberUiModel
+        index = position
         image_avatar.setImageURI(memberUiModel.avatarUri)
         text_member.content = memberUiModel.displayName
         text_member.setCompoundDrawablesRelativeWithIntrinsicBounds(DrawableHelper.getUserStatusDrawable(memberUiModel.status, context), null, null, null)
@@ -45,7 +47,7 @@ class ViewHolder(
 
     interface ActionsListener {
         fun isActionsEnabled(): Boolean
-        fun onActionSelected(item: MenuItem, member: MemberUiModel)
+        fun onActionSelected(item: MenuItem, member: MemberUiModel, index: Int)
     }
 
     internal fun setupActionMenu(view: View) {
@@ -74,12 +76,14 @@ class ViewHolder(
                         menuItems.find { it.itemId == R.id.action_member_remove }?.apply {
 //                            if (it.roles.contains("owner")) title = "Remove Owner"
                         }
-                        view.context?.let {
-                            if (it is ContextThemeWrapper && it is AppCompatActivity) {
-                                with(it) {
-                                    val actionsBottomSheet = GroupMemberBottomSheet()
-                                    actionsBottomSheet.addItems(menuItems, this@ViewHolder)
-                                    actionsBottomSheet.show(supportFragmentManager, null)
+                    view.context?.let {
+                            if (it is ContextThemeWrapper && it.baseContext is AppCompatActivity) {
+                                with(it.baseContext as AppCompatActivity) {
+                                    if (this.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                                        val actionsBottomSheet = GroupMemberBottomSheet()
+                                        actionsBottomSheet.addItems(menuItems, this@ViewHolder)
+                                        actionsBottomSheet.show(supportFragmentManager, null)
+                                    }
                                 }
                             }
                         }
@@ -90,7 +94,7 @@ class ViewHolder(
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         data?.let {
-            listener.onActionSelected(item, it)
+            listener.onActionSelected(item, it, index)
         }
         return true
     }
