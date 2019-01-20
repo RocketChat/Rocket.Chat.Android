@@ -15,6 +15,7 @@ object Constants {
     // Use both WIDECHAT and WIDECHAT_DEV switches == true to allow for normal RC login sequence including login to any server
     const val WIDECHAT = true
     const val WIDECHAT_DEV = false
+    const val AVATAR_SHAPE_CIRCLE = true
 }
 
 object ChatRoomsSortOrder {

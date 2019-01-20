@@ -1,8 +1,11 @@
 package chat.rocket.android.contacts.adapter
 
 import android.content.Intent
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.*
@@ -22,8 +25,9 @@ class ContactRecyclerViewAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> {
         return when (viewType) {
             VIEW_TYPE_CONTACT -> {
-                val view = parent.inflate(R.layout.item_contact)
-                ContactViewHolder(view)
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding: ViewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_contact, parent, false)
+                ContactViewHolder(binding.root)
             }
             VIEW_TYPE_HEADER -> {
                 val view = parent.inflate(R.layout.item_heading)

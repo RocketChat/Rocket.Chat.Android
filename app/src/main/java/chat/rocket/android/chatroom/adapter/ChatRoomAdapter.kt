@@ -1,9 +1,12 @@
 package chat.rocket.android.chatroom.adapter
 
+import android.view.LayoutInflater
 import androidx.recyclerview.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.uimodel.*
 import chat.rocket.android.util.extensions.inflate
@@ -33,8 +36,9 @@ class ChatRoomAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         return when (viewType.toViewType()) {
             BaseUiModel.ViewType.MESSAGE -> {
-                val view = parent.inflate(R.layout.item_message)
-                MessageViewHolder(view, actionsListener, reactionListener)
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding: ViewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_message, parent, false)
+                MessageViewHolder(binding.root, actionsListener, reactionListener)
             }
             BaseUiModel.ViewType.URL_PREVIEW -> {
                 val view = parent.inflate(R.layout.message_url_preview)
