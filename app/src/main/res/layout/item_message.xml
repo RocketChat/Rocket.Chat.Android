@@ -1,170 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/message_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
-    android:clickable="true"
-    android:focusable="true"
-    android:paddingStart="@dimen/screen_edge_left_and_right_padding"
-    android:paddingTop="@dimen/message_item_top_and_bottom_padding"
-    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
-    android:paddingBottom="@dimen/message_item_top_and_bottom_padding">
-
-    <LinearLayout
-        android:id="@+id/day_marker_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_messages_notif">
-
-        <View
-            android:layout_width="0px"
-            android:layout_height="1dp"
-            android:layout_weight="1"
-            android:background="@color/colorDivider" />
-
-        <TextView
-            android:id="@+id/day"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:textAppearance="@style/Message.DayMarker"
-            tools:text="Wednesday" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"
-            android:background="@color/colorDivider" />
-    </LinearLayout>
-
-    <include
-        android:id="@+id/layout_avatar"
-        layout="@layout/avatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/message_header" />
-
-    <LinearLayout
-        android:id="@+id/new_messages_notif"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="shape"
+            type="chat.rocket.android.helper.Constants"/>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/message_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible">
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingStart="@dimen/screen_edge_left_and_right_padding"
+        android:paddingTop="@dimen/message_item_top_and_bottom_padding"
+        android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+        android:paddingBottom="@dimen/message_item_top_and_bottom_padding">
 
-        <View
+        <LinearLayout
+            android:id="@+id/day_marker_layout"
             android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/new_messages_notif">
+
+            <View
+                android:layout_width="0px"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@color/colorDivider" />
+
+            <TextView
+                android:id="@+id/day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:textAppearance="@style/Message.DayMarker"
+                tools:text="Wednesday" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@color/colorDivider" />
+        </LinearLayout>
+
+        <include
+            android:id="@+id/layout_avatar"
+            layout="@layout/avatar"
+            bind:shape="@{shape}"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/message_header" />
+
+        <LinearLayout
+            android:id="@+id/new_messages_notif"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:background="@color/colorRed" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/msg_unread_messages"
+                android:textColor="@color/colorRed" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:background="@color/colorRed" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/message_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="16dp"
+            app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
+            app:layout_constraintStart_toEndOf="@+id/layout_avatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/day_marker_layout">
+
+            <TextView
+                android:id="@+id/text_sender"
+                style="@style/Sender.Name.TextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                tools:text="User Name with long name" />
+
+            <TextView
+                android:id="@+id/text_message_time"
+                style="@style/Timestamp.TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                tools:text="11:45 PM" />
+
+            <TextView
+                android:id="@+id/text_edit_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/msg_edited"
+                android:textStyle="italic"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/image_star_indicator"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="2dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_action_message_star_24dp"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/read_receipt_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_check_unread_24dp"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_content"
+            style="@style/Message.TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="4dp"
-            android:layout_weight="1"
-            android:background="@color/colorRed" />
+            android:layout_marginBottom="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/message_header"
+            app:layout_constraintTop_toBottomOf="@+id/message_header"
+            tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/msg_unread_messages"
-            android:textColor="@color/colorRed" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="4dp"
-            android:layout_weight="1"
-            android:background="@color/colorRed" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/message_header"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
-        app:layout_constraintStart_toEndOf="@+id/layout_avatar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/day_marker_layout">
-
-        <TextView
-            android:id="@+id/text_sender"
-            style="@style/Sender.Name.TextView"
+        <include
+            layout="@layout/layout_reactions"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            tools:text="User Name with long name" />
+            app:layout_constraintEnd_toEndOf="@+id/text_content"
+            app:layout_constraintStart_toStartOf="@+id/text_content"
+            app:layout_constraintTop_toBottomOf="@+id/text_content" />
 
-        <TextView
-            android:id="@+id/text_message_time"
-            style="@style/Timestamp.TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            tools:text="11:45 PM" />
-
-        <TextView
-            android:id="@+id/text_edit_indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="@string/msg_edited"
-            android:textStyle="italic"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <ImageView
-            android:id="@+id/image_star_indicator"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="2dp"
-            android:visibility="gone"
-            app:srcCompat="@drawable/ic_action_message_star_24dp"
-            tools:visibility="visible" />
-
-        <ImageView
-            android:id="@+id/read_receipt_view"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:visibility="gone"
-            app:srcCompat="@drawable/ic_check_unread_24dp"
-            tools:visibility="visible" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/text_content"
-        style="@style/Message.TextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/message_header"
-        app:layout_constraintTop_toBottomOf="@+id/message_header"
-        tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
-
-    <include
-        layout="@layout/layout_reactions"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/text_content"
-        app:layout_constraintStart_toStartOf="@+id/text_content"
-        app:layout_constraintTop_toBottomOf="@+id/text_content" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
