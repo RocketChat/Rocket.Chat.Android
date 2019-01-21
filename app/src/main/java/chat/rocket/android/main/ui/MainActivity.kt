@@ -7,7 +7,6 @@ import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.text.Layout
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -15,7 +14,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.OneTimeWorkRequestBuilder
@@ -48,8 +46,16 @@ import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 import javax.inject.Inject
 
+// TEST
+import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
+import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
+
+
 // WIDECHAT
 import chat.rocket.android.helper.Constants
+
+// test
+import timber.log.Timber
 
 private const val CURRENT_STATE = "current_state"
 
@@ -73,6 +79,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
+
         if (Constants.WIDECHAT) {
             setContentView(R.layout.widechat_activity_main)
         } else {
@@ -109,16 +116,21 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     override fun onResume() {
         supportFragmentManager.popBackStackImmediate("contactsFragment", 1)
+
+        Timber.d("###########  EAR >> just hit onResume in main activity...")
+
         super.onResume()
         syncContacts()
         if (!isFragmentAdded) {
             presenter.toChatList(chatRoomId)
             isFragmentAdded = true
         }
-    }
 
-    override fun onPause() {
-        super.onPause()
+
+        var myFrag  = supportFragmentManager.findFragmentByTag("ChatRoomsFragment") as ChatRoomsFragment?
+        myFrag?.getDeepLink()
+        Timber.d("#######  EAR >> this is myFrag to string fwiw...")
+        Timber.d(myFrag.toString())
     }
 
     override fun onDestroy() {
