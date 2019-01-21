@@ -110,7 +110,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="chat.viasat.android.fileprovider"
+            android:authorities="chat.veranda.android.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
