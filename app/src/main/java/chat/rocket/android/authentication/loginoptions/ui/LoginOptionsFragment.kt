@@ -16,15 +16,18 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
+import chat.rocket.android.authentication.domain.model.OauthDeepLinkInfo
 import chat.rocket.android.authentication.loginoptions.presentation.LoginOptionsPresenter
 import chat.rocket.android.authentication.loginoptions.presentation.LoginOptionsView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
+import chat.rocket.android.helper.Constants
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
 import chat.rocket.android.webview.sso.ui.INTENT_SSO_TOKEN
 import chat.rocket.android.webview.sso.ui.ssoWebViewIntent
+import chat.rocket.common.RocketChatAuthException
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_authentication_login_options.*
@@ -200,6 +203,16 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         setupAccounts()
         analyticsManager.logScreenView(ScreenViewEvent.LoginOptions)
         deepLinkInfo?.let { presenter.authenticateWithDeepLink(it) }
+    }
+
+    public fun handleOauthResponse(oauthDeepLinkInfo: OauthDeepLinkInfo) {
+        if (state == oauthDeepLinkInfo.state) {
+            presenter.authenticateWithOauth(
+                    oauthDeepLinkInfo.credentialToken,
+                    oauthDeepLinkInfo.credentialSecret)
+        } else {
+            throw RocketChatAuthException("Invalid AuthenticationEvent Oauth state mismatch...")
+        }
     }
 
     private fun setupToolbar() {
@@ -478,23 +491,28 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         argument: String,
         requestCode: Int
     ) {
-        ui { activity ->
-            button.setOnClickListener {
-                when (requestCode) {
-                    REQUEST_CODE_FOR_OAUTH -> startActivityForResult(
-                        activity.oauthWebViewIntent(accountUrl, argument), REQUEST_CODE_FOR_OAUTH
-                    )
-                    REQUEST_CODE_FOR_CAS -> startActivityForResult(
-                        activity.ssoWebViewIntent(accountUrl, argument), REQUEST_CODE_FOR_CAS
-                    )
-                    REQUEST_CODE_FOR_SAML -> startActivityForResult(
-                        activity.ssoWebViewIntent(accountUrl, argument), REQUEST_CODE_FOR_SAML
-                    )
-                }
+        if (Constants.OAUTH_WITH_CHROME_CUSTOM_TAB && REQUEST_CODE_FOR_OAUTH == requestCode) {
+            view?.openTabbedUrl(accountUrl)
+        } else {
+            ui { activity ->
+                button.setOnClickListener {
+                    when (requestCode) {
+                        REQUEST_CODE_FOR_OAUTH -> startActivityForResult(
+                                activity.oauthWebViewIntent(accountUrl, argument), REQUEST_CODE_FOR_OAUTH
+                        )
+                        REQUEST_CODE_FOR_CAS -> startActivityForResult(
+                                activity.ssoWebViewIntent(accountUrl, argument), REQUEST_CODE_FOR_CAS
+                        )
+                        REQUEST_CODE_FOR_SAML -> startActivityForResult(
+                                activity.ssoWebViewIntent(accountUrl, argument), REQUEST_CODE_FOR_SAML
+                        )
+                    }
 
-                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+                    activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+                }
             }
         }
+
     }
 
     /**

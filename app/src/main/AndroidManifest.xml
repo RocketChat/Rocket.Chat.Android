@@ -23,7 +23,8 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleInstance">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,6 +46,11 @@
                 <data
                     android:host="go.rocket.chat"
                     android:path="/auth"
+                    android:scheme="https" />
+
+                <data
+                    android:host="viasatconnect.com"
+                    android:path="/_oauth/viasatsso"
                     android:scheme="https" />
             </intent-filter>
         </activity>

@@ -9,8 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.authentication.loginoptions.ui.LoginOptionsFragment
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
+import chat.rocket.android.authentication.domain.model.getOauthDeepLinkInfo
+import chat.rocket.android.authentication.domain.model.OauthDeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.common.util.ifNull
@@ -33,6 +36,15 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setContentView(R.layout.activity_authentication)
         setupToolbar()
         loadCredentials()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.getOauthDeepLinkInfo()?.let{
+            showLoginOptionsFragment(it)
+        } .ifNull {
+            loadCredentials()
+        }
     }
 
     private fun setupToolbar() {
@@ -99,6 +111,14 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         ) {
             chat.rocket.android.authentication.server.ui.newInstance()
         }
+    }
+
+    private fun showLoginOptionsFragment(oauthDeepLinkInfo: OauthDeepLinkInfo) {
+        val fragment = supportFragmentManager.findFragmentByTag(ScreenViewEvent.LoginOptions.screenName) as LoginOptionsFragment
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment, ScreenViewEvent.LoginOptions.screenName)
+                .commit()
+        fragment.handleOauthResponse(oauthDeepLinkInfo)
     }
 
     private fun showChatList() = presenter.toChatList()
