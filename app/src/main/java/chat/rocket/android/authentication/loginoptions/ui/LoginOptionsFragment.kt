@@ -492,7 +492,9 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         requestCode: Int
     ) {
         if (Constants.OAUTH_WITH_CHROME_CUSTOM_TAB && REQUEST_CODE_FOR_OAUTH == requestCode) {
-            view?.openTabbedUrl(accountUrl)
+            button.setOnClickListener {
+                view?.openTabbedUrl(accountUrl)
+            }
         } else {
             ui { activity ->
                 button.setOnClickListener {
