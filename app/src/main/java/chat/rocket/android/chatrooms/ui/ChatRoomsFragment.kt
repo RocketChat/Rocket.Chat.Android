@@ -124,6 +124,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     override fun onResume() {
+        getDeepLink()
         // WIDECHAT - cleanup any titles set by other fragments; clear any previous search
         if (Constants.WIDECHAT) {
             (activity as AppCompatActivity?)?.supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -142,10 +143,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel = ViewModelProviders.of(this, factory).get(ChatRoomsViewModel::class.java)
         subscribeUi()
-
         setupToolbar()
         setupFab()
         getDeepLink()
@@ -524,10 +523,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         SharedPreferenceHelper.remove(Constants.DEEP_LINK)
         TimberLogger.debug("Retrieved deep link on ChatRooms : $deepLink")
 
-		if(deepLink.isNullOrBlank() || deepLink.equals("null")){
+		if(deepLink.isNullOrBlank() || deepLink.equals("null")) {
             return
-        } else {
-            Toast.makeText(context, "Deep link : $deepLink", Toast.LENGTH_SHORT).show()
         }
 
 		val uri = Uri.parse(deepLink)

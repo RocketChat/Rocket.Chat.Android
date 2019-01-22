@@ -23,6 +23,7 @@
         <activity
             android:name=".authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
@@ -54,7 +55,7 @@
         <activity
             android:name=".main.ui.MainActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
 
         <activity
             android:name=".webview.ui.WebViewActivity"

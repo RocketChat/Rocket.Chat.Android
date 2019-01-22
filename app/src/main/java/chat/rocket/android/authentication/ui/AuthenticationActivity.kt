@@ -41,7 +41,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setContentView(R.layout.activity_authentication)
         setupToolbar()
         loadCredentials()
-        getDynamicLink()
+        getDynamicLink(false, intent)
     }
 
     private fun setupToolbar() {
@@ -82,7 +82,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
             val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
             presenter.loadCredentials(newServer) { isAuthenticated ->
                 if (isAuthenticated) {
-                    showChatList()
+                    getDynamicLink(true, intent)
                 } else {
                     showOnBoardingFragment()
                 }
@@ -110,9 +110,11 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
     }
 
-    private fun showChatList() = presenter.toChatList()
+    private fun showChatList() {
+        presenter.toChatList()
+    }
 
-	private fun getDynamicLink() {
+	private fun getDynamicLink(authenticated: Boolean = false, intent: Intent) {
 		FirebaseDynamicLinks.getInstance()
 			.getDynamicLink(intent)
 			.addOnSuccessListener(this) { pendingDynamicLinkData ->
@@ -121,11 +123,19 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
 					deepLink = pendingDynamicLinkData.link
 				}
 
-				TimberLogger.debug("DeepLink : deepLink.toString()")
+				TimberLogger.debug("DeepLink:" + deepLink.toString())
 				SharedPreferenceHelper.putString(Constants.DEEP_LINK, deepLink.toString())
+                if (authenticated) {
+                    showChatList()
+                }
 			}
 			.addOnFailureListener(this) { e -> TimberLogger.debug("getDynamicLink:onFailure : $e") }
 	}
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        getDynamicLink(false, intent)
+    }
 }
 
 const val INTENT_ADD_NEW_SERVER = "INTENT_ADD_NEW_SERVER"
