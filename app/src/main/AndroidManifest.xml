@@ -47,11 +47,6 @@
                     android:host="go.rocket.chat"
                     android:path="/auth"
                     android:scheme="https" />
-
-                <data
-                    android:host="viasatconnect.com"
-                    android:path="/_oauth/viasatsso"
-                    android:scheme="https" />
             </intent-filter>
         </activity>
 
