@@ -44,7 +44,6 @@ import javax.inject.Inject
 
 // WIDECHAT
 import android.graphics.Color
-import android.net.Uri
 import android.widget.*
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
@@ -52,7 +51,6 @@ import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.profile.ui.ProfileFragment
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.settings.ui.SettingsFragment
-import chat.rocket.android.util.TimberLogger
 import chat.rocket.android.util.extensions.avatarUrl
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.app_bar.*

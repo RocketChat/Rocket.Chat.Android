@@ -10,20 +10,17 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.dynamiclinks.ShortDynamicLink
 import javax.inject.Inject
 
-import kotlinx.coroutines.experimental.runBlocking
-
 // DEBUG
 import android.widget.Toast
 
-class DynamicLinksForFirebase @Inject constructor(private val context: Context) :
+
+class DynamicLinksForFirebase @Inject constructor(private var context: Context) :
         DynamicLinks {
 
     private var deepLink: Uri? = null
     private var newDeepLink: String? = null
 
-    override fun getDynamicLink(intent: Intent) : Uri? {
-
-        runBlocking {
+    override fun getDynamicLink(intent: Intent, deepLinkCallback: (Uri?) -> Unit?) {
 
             FirebaseDynamicLinks.getInstance()
                     .getDynamicLink(intent)
@@ -31,18 +28,12 @@ class DynamicLinksForFirebase @Inject constructor(private val context: Context) 
                         if (pendingDynamicLinkData != null) {
                             deepLink = pendingDynamicLinkData.link
                         }
-
-                        TimberLogger.debug("DeepLink:" + deepLink.toString())
-//                    deepLink?.context.getDeepLinkInfo()?.let {
-//                        context.routeDeepLink(it)
-//                    }
+                        deepLinkCallback(deepLink)
                     }
                     .addOnFailureListener { e -> TimberLogger.debug("getDynamicLink:onFailure : $e") }
-        }
-        return deepLink
     }
 
-    override fun createDynamicLink(username: String, server: String ) : String? {
+    override fun createDynamicLink(username: String, server: String, deepLinkCallback: (String?) -> Unit? ) {
 
         FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLink(Uri.parse("$server/direct/$username"))
@@ -58,12 +49,12 @@ class DynamicLinksForFirebase @Inject constructor(private val context: Context) 
                 .addOnSuccessListener { result ->
                     newDeepLink = result.shortLink.toString()
                     Toast.makeText(context, newDeepLink, Toast.LENGTH_SHORT).show()
+                    deepLinkCallback(newDeepLink)
 
                 }.addOnFailureListener {
                     // Error
                     Toast.makeText(context, "Error dynamic link", Toast.LENGTH_SHORT).show()
                 }
-        return newDeepLink
     }
 }
 

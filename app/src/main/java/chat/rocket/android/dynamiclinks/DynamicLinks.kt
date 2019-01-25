@@ -5,7 +5,7 @@ import android.net.Uri
 
 interface DynamicLinks {
 
-    fun getDynamicLink(intent: Intent) : Uri?
+    fun getDynamicLink(intent: Intent, deepLinkCallback: (Uri?) -> Unit? )
 
-    fun createDynamicLink(username: String, server: String) : String?
+    fun createDynamicLink(username: String, server: String, deepLinkCallback: (String?) -> Unit?)
 }

@@ -327,39 +327,15 @@ class MainPresenter @Inject constructor(
             val account = getAccountInteractor.get(server)!!
             val userName = account.userName
 
-//            FirebaseDynamicLinks.getInstance().createDynamicLink()
-//                .setLink(Uri.parse("$server/direct/$userName"))
-//                .setDomainUriPrefix("https://" + context.getString(R.string.widechat_deeplink_host))
-//                .setAndroidParameters(
-//                    DynamicLink.AndroidParameters.Builder(context.getString(R.string.widechat_package_name)).build())
-//                .setSocialMetaTagParameters(
-//                    DynamicLink.SocialMetaTagParameters.Builder()
-//                        .setTitle(userName)
-//                        .setDescription("Chat with $userName on " + context.getString(R.string.widechat_server_url))
-//                        .build())
-//                .buildShortDynamicLink(ShortDynamicLink.Suffix.SHORT)
-//                .addOnSuccessListener { result ->
-//                    val link = result.shortLink.toString()
-//                    Toast.makeText(context, link, Toast.LENGTH_SHORT).show()
-//
-//                    with(Intent(Intent.ACTION_SEND)) {
-//                        type = "text/plain"
-//                        putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.msg_check_this_out))
-//                        putExtra(Intent.EXTRA_TEXT, "Default Invitation Text : $link")
-//                        context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
-//                    }
-//
-//                }.addOnFailureListener {
-//                    // Error
-//                    Toast.makeText(context, "Error dynamic link", Toast.LENGTH_SHORT).show()
-//                }
-            val link = dynamicLinksManager.createDynamicLink(userName, server)
-            with(Intent(Intent.ACTION_SEND)) {
-                type = "text/plain"
-                putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.msg_check_this_out))
-                putExtra(Intent.EXTRA_TEXT, "Default Invitation Text : $link")
-                context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
+            var deepLinkCallback = { returnedString: String? ->
+                with(Intent(Intent.ACTION_SEND)) {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.msg_check_this_out))
+                    putExtra(Intent.EXTRA_TEXT, "Default Invitation Text : $returnedString")
+                    context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
+                }
             }
+            dynamicLinksManager.createDynamicLink(userName, server, deepLinkCallback)
         }
     }
 

@@ -16,7 +16,6 @@ import chat.rocket.android.authentication.domain.model.isSupportedLink
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
 import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
 import chat.rocket.android.helper.Constants
-import chat.rocket.android.util.TimberLogger
 import chat.rocket.common.util.ifNull
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -25,9 +24,6 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.coroutines.experimental.Job
 import javax.inject.Inject
-
-// Test
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 
 class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
@@ -72,37 +68,13 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun resolveDynamicLink(intent: Intent) {
-        var dynamicLink: Uri? = null
-        dynamicLink = dynamicLinksManager.getDynamicLink(intent)
-
-        dynamicLink?.getDeepLinkInfo()?.let {
-            routeDeepLink(it)
+        var deepLinkCallback =  { returnedUri: Uri? ->
+            returnedUri?.getDeepLinkInfo()?.let{
+                routeDeepLink(it)
+            }
         }
+        dynamicLinksManager.getDynamicLink(intent, deepLinkCallback)
     }
-
-
-
-
-
-//        FirebaseDynamicLinks.getInstance()
-//                .getDynamicLink(intent)
-//                .addOnSuccessListener(this) { pendingDynamicLinkData ->
-//                    var deepLink: Uri? = null
-//                    if (pendingDynamicLinkData != null) {
-//                        deepLink = pendingDynamicLinkData.link
-//                    }
-//
-//                    TimberLogger.debug("Resolved DeepLink:" + deepLink.toString())
-//                    deepLink?.getDeepLinkInfo()?.let{
-//                        routeDeepLink(it)
-//                    }
-//                }
-//                .addOnFailureListener(this) {
-//                    e -> TimberLogger.debug("getDynamicLink:onFailure : $e")
-//                    routeNoLink()
-//                }
-//    }
-
 
     private fun setupToolbar() {
         with(toolbar) {
