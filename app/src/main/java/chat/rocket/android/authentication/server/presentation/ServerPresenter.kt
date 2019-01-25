@@ -1,9 +1,14 @@
 package chat.rocket.android.authentication.server.presentation
 
+import android.security.KeyChain
+import android.security.KeyChainAliasCallback;
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.authentication.ui.AuthenticationActivity
+import chat.rocket.android.helper.ClientCertHelper
+import chat.rocket.android.server.domain.SaveClientCertInteractor
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
@@ -23,9 +28,12 @@ class ServerPresenter @Inject constructor(
     private val serverInteractor: SaveConnectingServerInteractor,
     private val refreshSettingsInteractor: RefreshSettingsInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
+    private val saveClientCertInteractor: SaveClientCertInteractor,
+    private val clientCertHelper: ClientCertHelper,
     val settingsInteractor: GetSettingsInteractor,
-    val factory: RocketChatClientFactory
-) : CheckServerPresenter(
+    val factory: RocketChatClientFactory,
+    internal val activity: AuthenticationActivity
+) : KeyChainAliasCallback, CheckServerPresenter(
     strategy = strategy,
     factory = factory,
     settingsInteractor = settingsInteractor,
@@ -116,5 +124,20 @@ class ServerPresenter @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun alias(alias: String) {
+        saveClientCertInteractor.save(alias)
+        clientCertHelper.getClient()
+    }
+
+    fun requestClientCert() {
+        KeyChain.choosePrivateKeyAlias(activity,
+                this, // Callback
+                null, // Any key types.
+                null, // Any issuers.
+                null, // Any host
+                -1, // Any port
+                "RocketChat")
     }
 }

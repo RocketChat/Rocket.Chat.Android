@@ -2,17 +2,17 @@ package chat.rocket.android.server.infraestructure
 
 import android.os.Build
 import chat.rocket.android.BuildConfig
+import chat.rocket.android.helper.ClientCertHelper
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
-import okhttp3.OkHttpClient
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class RocketChatClientFactory @Inject constructor(
-    private val okHttpClient: OkHttpClient,
+    private val clientCertHelper: ClientCertHelper,
     private val repository: TokenRepository,
     private val logger: PlatformLogger
 ) {
@@ -25,7 +25,7 @@ class RocketChatClientFactory @Inject constructor(
         }
 
         val client = RocketChatClient.create {
-            httpClient = okHttpClient
+            httpClient = clientCertHelper.getClient()
             restUrl = url
             userAgent = "RC Mobile; Android ${Build.VERSION.RELEASE}; v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
             tokenRepository = repository
@@ -34,7 +34,14 @@ class RocketChatClientFactory @Inject constructor(
         }
 
         Timber.d("Returning NEW client for: $url")
-        cache[url] = client
+        if (clientCertHelper.getEnabled()) {
+            if (clientCertHelper.getSetSslSocket()) {
+                cache[url] = client
+            }
+        } else {
+            cache[url] = client
+        }
+
         return client
     }
 }
