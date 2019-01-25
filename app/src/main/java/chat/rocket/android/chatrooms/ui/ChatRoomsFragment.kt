@@ -152,6 +152,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         deepLinkInfo?.let {
             processDeepLink(it)
         }
+        deepLinkInfo = null
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
     }
