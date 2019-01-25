@@ -33,6 +33,9 @@ class DynamicLinksForFirebase @Inject constructor(private val context: Context) 
                         }
 
                         TimberLogger.debug("DeepLink:" + deepLink.toString())
+//                    deepLink?.context.getDeepLinkInfo()?.let {
+//                        context.routeDeepLink(it)
+//                    }
                     }
                     .addOnFailureListener { e -> TimberLogger.debug("getDynamicLink:onFailure : $e") }
         }
@@ -41,28 +44,25 @@ class DynamicLinksForFirebase @Inject constructor(private val context: Context) 
 
     override fun createDynamicLink(username: String, server: String ) : String? {
 
-        runBlocking {
+        FirebaseDynamicLinks.getInstance().createDynamicLink()
+                .setLink(Uri.parse("$server/direct/$username"))
+                .setDomainUriPrefix("https://" + context.getString(R.string.widechat_deeplink_host))
+                .setAndroidParameters(
+                        DynamicLink.AndroidParameters.Builder(context.getString(R.string.widechat_package_name)).build())
+                .setSocialMetaTagParameters(
+                        DynamicLink.SocialMetaTagParameters.Builder()
+                                .setTitle(username)
+                                .setDescription("Chat with $username on " + context.getString(R.string.widechat_server_url))
+                                .build())
+                .buildShortDynamicLink(ShortDynamicLink.Suffix.SHORT)
+                .addOnSuccessListener { result ->
+                    newDeepLink = result.shortLink.toString()
+                    Toast.makeText(context, newDeepLink, Toast.LENGTH_SHORT).show()
 
-            FirebaseDynamicLinks.getInstance().createDynamicLink()
-                    .setLink(Uri.parse("$server/direct/$username"))
-                    .setDomainUriPrefix("https://" + context.getString(R.string.widechat_deeplink_host))
-                    .setAndroidParameters(
-                            DynamicLink.AndroidParameters.Builder(context.getString(R.string.widechat_package_name)).build())
-                    .setSocialMetaTagParameters(
-                            DynamicLink.SocialMetaTagParameters.Builder()
-                                    .setTitle(username)
-                                    .setDescription("Chat with $username on " + context.getString(R.string.widechat_server_url))
-                                    .build())
-                    .buildShortDynamicLink(ShortDynamicLink.Suffix.SHORT)
-                    .addOnSuccessListener { result ->
-                        newDeepLink = result.shortLink.toString()
-                        Toast.makeText(context, newDeepLink, Toast.LENGTH_SHORT).show()
-
-                    }.addOnFailureListener {
-                        // Error
-                        Toast.makeText(context, "Error dynamic link", Toast.LENGTH_SHORT).show()
-                    }
-        }
+                }.addOnFailureListener {
+                    // Error
+                    Toast.makeText(context, "Error dynamic link", Toast.LENGTH_SHORT).show()
+                }
         return newDeepLink
     }
 }

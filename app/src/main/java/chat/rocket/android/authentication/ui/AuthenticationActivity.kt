@@ -26,6 +26,9 @@ import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.coroutines.experimental.Job
 import javax.inject.Inject
 
+// Test
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+
 class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
@@ -77,10 +80,10 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
     }
 
-//
-//
-//
-//
+
+
+
+
 //        FirebaseDynamicLinks.getInstance()
 //                .getDynamicLink(intent)
 //                .addOnSuccessListener(this) { pendingDynamicLinkData ->
