@@ -522,7 +522,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
     }
 
-    public fun processDeepLink(deepLinkInfo: DeepLinkInfo) {
+    fun processDeepLink(deepLinkInfo: DeepLinkInfo) {
 
 		val username = deepLinkInfo.roomName
 		username.ifNotNullNorEmpty {

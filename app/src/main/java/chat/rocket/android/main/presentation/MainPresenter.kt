@@ -2,13 +2,6 @@ package chat.rocket.android.main.presentation
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.view.LayoutInflater
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat.startActivity
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
@@ -16,6 +9,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.model.ChatRoomEntity
+import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
 import chat.rocket.android.emoji.Emoji
 import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.emoji.Fitzpatrick
@@ -58,9 +52,6 @@ import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Myself
 import chat.rocket.common.model.RoomType
-import com.google.firebase.dynamiclinks.DynamicLink
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
-import com.google.firebase.dynamiclinks.ShortDynamicLink
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
@@ -99,6 +90,9 @@ class MainPresenter @Inject constructor(
     tokenView = view,
     navigator = navigator
 ) {
+    @Inject
+    lateinit var dynamicLinksManager : DynamicLinksForFirebase
+
     private val currentServer = serverInteractor.get()!!
     private val manager = managerFactory.create(currentServer)
     private val dbManager = dbManagerFactory.create(currentServer)
@@ -333,32 +327,39 @@ class MainPresenter @Inject constructor(
             val account = getAccountInteractor.get(server)!!
             val userName = account.userName
 
-            FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLink(Uri.parse("$server/direct/$userName"))
-                .setDomainUriPrefix("https://" + context.getString(R.string.widechat_deeplink_host))
-                .setAndroidParameters(
-                    DynamicLink.AndroidParameters.Builder(context.getString(R.string.widechat_package_name)).build())
-                .setSocialMetaTagParameters(
-                    DynamicLink.SocialMetaTagParameters.Builder()
-                        .setTitle(userName)
-                        .setDescription("Chat with $userName on " + context.getString(R.string.widechat_server_url))
-                        .build())
-                .buildShortDynamicLink(ShortDynamicLink.Suffix.SHORT)
-                .addOnSuccessListener { result ->
-                    val link = result.shortLink.toString()
-                    Toast.makeText(context, link, Toast.LENGTH_SHORT).show()
-
-                    with(Intent(Intent.ACTION_SEND)) {
-                        type = "text/plain"
-                        putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.msg_check_this_out))
-                        putExtra(Intent.EXTRA_TEXT, "Default Invitation Text : $link")
-                        context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
-                    }
-
-                }.addOnFailureListener {
-                    // Error
-                    Toast.makeText(context, "Error dynamic link", Toast.LENGTH_SHORT).show()
-                }
+//            FirebaseDynamicLinks.getInstance().createDynamicLink()
+//                .setLink(Uri.parse("$server/direct/$userName"))
+//                .setDomainUriPrefix("https://" + context.getString(R.string.widechat_deeplink_host))
+//                .setAndroidParameters(
+//                    DynamicLink.AndroidParameters.Builder(context.getString(R.string.widechat_package_name)).build())
+//                .setSocialMetaTagParameters(
+//                    DynamicLink.SocialMetaTagParameters.Builder()
+//                        .setTitle(userName)
+//                        .setDescription("Chat with $userName on " + context.getString(R.string.widechat_server_url))
+//                        .build())
+//                .buildShortDynamicLink(ShortDynamicLink.Suffix.SHORT)
+//                .addOnSuccessListener { result ->
+//                    val link = result.shortLink.toString()
+//                    Toast.makeText(context, link, Toast.LENGTH_SHORT).show()
+//
+//                    with(Intent(Intent.ACTION_SEND)) {
+//                        type = "text/plain"
+//                        putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.msg_check_this_out))
+//                        putExtra(Intent.EXTRA_TEXT, "Default Invitation Text : $link")
+//                        context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
+//                    }
+//
+//                }.addOnFailureListener {
+//                    // Error
+//                    Toast.makeText(context, "Error dynamic link", Toast.LENGTH_SHORT).show()
+//                }
+            val link = dynamicLinksManager.createDynamicLink(userName, server)
+            with(Intent(Intent.ACTION_SEND)) {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.msg_check_this_out))
+                putExtra(Intent.EXTRA_TEXT, "Default Invitation Text : $link")
+                context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
+            }
         }
     }
 

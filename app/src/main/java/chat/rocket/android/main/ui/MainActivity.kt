@@ -137,8 +137,6 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     override fun onResume() {
         supportFragmentManager.popBackStackImmediate("contactsFragment", 1)
 
-        Timber.d("###########  EAR >> just hit onResume in main activity...")
-
         super.onResume()
         syncContacts()
         if (!isFragmentAdded) {
