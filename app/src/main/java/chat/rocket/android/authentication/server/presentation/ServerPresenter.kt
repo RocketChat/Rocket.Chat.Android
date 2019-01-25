@@ -1,6 +1,6 @@
 package chat.rocket.android.authentication.server.presentation
 
-import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
@@ -79,7 +79,7 @@ class ServerPresenter @Inject constructor(
         }
     }
 
-    fun deepLink(deepLinkInfo: LoginDeepLinkInfo) {
+    fun deepLink(deepLinkInfo: DeepLinkInfo) {
         connectToServer(deepLinkInfo.url) {
             navigator.toLoginOptions(deepLinkInfo.url, deepLinkInfo = deepLinkInfo)
         }
