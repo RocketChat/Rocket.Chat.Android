@@ -79,7 +79,7 @@ private inline fun Uri.isAuthenticationDeepLink(): Boolean {
 }
 
 private inline fun Uri.isCustomSchemeRoomLink(): Boolean {
-    if (scheme.startsWith("http") &&
+    if (scheme.startsWith("rocketchat") &&
             host == "room")
         return true
     return false
