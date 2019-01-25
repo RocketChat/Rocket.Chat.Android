@@ -69,9 +69,12 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private fun resolveDynamicLink(intent: Intent) {
         var deepLinkCallback =  { returnedUri: Uri? ->
-            returnedUri?.getDeepLinkInfo()?.let{
+            if (returnedUri == null) {
+                routeNoLink()
+            } else {
+            returnedUri?.getDeepLinkInfo()?.let {
                 routeDeepLink(it)
-            }
+            } }
         }
         dynamicLinksManager.getDynamicLink(intent, deepLinkCallback)
     }
