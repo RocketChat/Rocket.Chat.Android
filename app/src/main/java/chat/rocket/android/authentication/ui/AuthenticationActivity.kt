@@ -9,18 +9,14 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
-import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.domain.model.getDeepLinkInfo
 import chat.rocket.android.authentication.domain.model.isDynamicLink
 import chat.rocket.android.authentication.domain.model.isSupportedLink
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
+import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
 import chat.rocket.android.helper.Constants
-import chat.rocket.android.helper.SharedPreferenceHelper
-import chat.rocket.android.util.TimberLogger
-import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.common.util.ifNull
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -34,6 +30,8 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
     lateinit var presenter: AuthenticationPresenter
+    @Inject
+    lateinit var dynamicLinksManager: DynamicLinksForFirebase
     val job = Job()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,25 +68,16 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun resolveDynamicLink(intent: Intent) {
-        FirebaseDynamicLinks.getInstance()
-                .getDynamicLink(intent)
-                .addOnSuccessListener(this) { pendingDynamicLinkData ->
-                    var deepLink: Uri? = null
-                    if (pendingDynamicLinkData != null) {
-                        deepLink = pendingDynamicLinkData.link
-                    }
-
-                    TimberLogger.debug("Resolved DeepLink:" + deepLink.toString())
-                    deepLink?.getDeepLinkInfo()?.let{
-                        routeDeepLink(it)
-                    }
-                }
-                .addOnFailureListener(this) {
-                    e -> TimberLogger.debug("getDynamicLink:onFailure : $e")
-                    routeNoLink()
-                }
+        var deepLinkCallback =  { returnedUri: Uri? ->
+            if (returnedUri == null) {
+                routeNoLink()
+            } else {
+            returnedUri?.getDeepLinkInfo()?.let {
+                routeDeepLink(it)
+            } }
+        }
+        dynamicLinksManager.getDynamicLink(intent, deepLinkCallback)
     }
-
 
     private fun setupToolbar() {
         with(toolbar) {

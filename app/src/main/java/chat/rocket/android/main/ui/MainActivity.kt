@@ -22,6 +22,8 @@ import androidx.work.WorkManager
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
+import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
+import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
 import chat.rocket.android.contacts.worker.ContactSyncWorker
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.adapter.Selector
@@ -49,16 +51,8 @@ import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 import javax.inject.Inject
 
-// TEST
-import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
-import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
-
-
 // WIDECHAT
 import chat.rocket.android.helper.Constants
-
-// test
-import timber.log.Timber
 
 private const val CURRENT_STATE = "current_state"
 
@@ -136,8 +130,6 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     override fun onResume() {
         supportFragmentManager.popBackStackImmediate("contactsFragment", 1)
-
-        Timber.d("###########  EAR >> just hit onResume in main activity...")
 
         super.onResume()
         syncContacts()
