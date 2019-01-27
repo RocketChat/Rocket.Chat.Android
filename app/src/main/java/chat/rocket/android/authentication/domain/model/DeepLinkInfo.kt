@@ -70,6 +70,7 @@ fun Uri.isDynamicLink(): Boolean {
     return (host != null && host.contains("page.link", ignoreCase = true))
 }
 
+// Authentication deep link defined here: https://rocket.chat/docs/developer-guides/deeplink/#authentication
 private inline fun Uri.isAuthenticationDeepLink(): Boolean {
     if (host == "auth")
         return true
@@ -78,6 +79,7 @@ private inline fun Uri.isAuthenticationDeepLink(): Boolean {
     return false
 }
 
+// Custom scheme room deep link defined here: https://rocket.chat/docs/developer-guides/deeplink/#channel--group--dm
 private inline fun Uri.isCustomSchemeRoomLink(): Boolean {
     if (scheme.startsWith("rocketchat") &&
             host == "room")
@@ -85,6 +87,7 @@ private inline fun Uri.isCustomSchemeRoomLink(): Boolean {
     return false
 }
 
+// http(s) scheme deep link not yet documented. Ex: https://viasatconnect.com/direct/testuser1
 private inline fun Uri.isWebSchemeRoomLink(): Boolean {
     val roomType = path.split("/")[1]
     if (scheme.startsWith("http") &&
