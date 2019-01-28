@@ -138,26 +138,23 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
         activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
     }
 
-    fun toChatList() {
-        savedDeepLinkInfo?.let {
-            toChatList(it)
-        } .ifNull {
-            activity.startActivity(Intent(activity, MainActivity::class.java))
-            activity.finish()
-        }
-        savedDeepLinkInfo = null
-    }
-
     fun toChatList(serverUrl: String) {
         activity.startActivity(activity.changeServerIntent(serverUrl))
         activity.finish()
     }
 
-    fun toChatList(deepLinkInfo: DeepLinkInfo) {
-        activity.startActivity(Intent(activity, MainActivity::class.java).also {
-            it.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            it.putExtra(Constants.DEEP_LINK_INFO, deepLinkInfo)
-        })
+    fun toChatList(passedDeepLinkInfo: DeepLinkInfo? = null) {
+        val deepLinkInfo = if (passedDeepLinkInfo != null) passedDeepLinkInfo else savedDeepLinkInfo
+        savedDeepLinkInfo = null
+
+        if (deepLinkInfo != null) {
+            activity.startActivity(Intent(activity, MainActivity::class.java).also {
+                it.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                it.putExtra(Constants.DEEP_LINK_INFO, deepLinkInfo)
+            })
+        } else {
+            activity.startActivity(Intent(activity, MainActivity::class.java))
+        }
         activity.finish()
     }
 }
