@@ -146,7 +146,7 @@ class ContactsFragment : Fragment() {
                                     if(contactEntity.username != null) {
                                         contact.setUsername(contactEntity.username)
                                     }
-                                    contact.setAvatarUrl(serverUrl.avatarUrl(contact?.getUsername() ?: ""))
+                                    contact.setAvatarUrl(serverUrl.avatarUrl(contact?.getUsername() ?: contact?.getName() ?: ""))
                                     contact
                                 }
                             })

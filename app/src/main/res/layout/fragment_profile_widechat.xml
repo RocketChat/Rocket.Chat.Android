@@ -18,6 +18,7 @@
             android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
             android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
             android:layout_marginTop="24dp"
+            android:layout_marginBottom="48dp"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone"
@@ -28,42 +29,17 @@
                 layout="@layout/widechat_avatar_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"/>
+                android:layout_marginTop="24dp" />
 
             <TableLayout
                 android:id="@+id/widechat_profile_table"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/screen_edge_left_and_right_margins"
                 android:gravity="center"
                 android:shrinkColumns="1,2"
-                android:stretchColumns="1,2" >
-
-                <TableRow
-                    android:layout_marginBottom="4dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:layout_marginRight="24dp"
-                        android:gravity="center_vertical"
-                        android:textSize="18sp"
-                        android:text="Name" />
-
-                    <TextView
-                        android:id="@+id/widechat_text_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:gravity="center_vertical"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="4dp"
-                        android:background="@drawable/widechat_table_cell_border"
-                        android:text=""
-                        android:textSize="18sp"
-                        android:autoSizeTextType="uniform"
-                        android:autoSizeMaxTextSize="18sp"
-                        android:textColor="@color/colorBlack" />
-                </TableRow>
+                android:stretchColumns="1,2"
+                app:layout_constraintTop_toBottomOf="@id/layout_avatar_profile">
 
                 <TableRow
                     android:layout_marginTop="12dp"
@@ -72,78 +48,72 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="36dp"
-                        android:layout_marginEnd="24dp"
+                        android:layout_marginEnd="12dp"
                         android:gravity="center_vertical"
-                        android:textSize="18sp"
-                        android:text="Username" />
+                        android:text="Username"
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/widechat_text_username"
                         android:layout_width="match_parent"
                         android:layout_height="36dp"
+                        android:autoSizeMaxTextSize="18sp"
+                        android:autoSizeTextType="uniform"
+                        android:background="@drawable/widechat_table_cell_border"
                         android:gravity="center_vertical"
                         android:paddingStart="8dp"
                         android:paddingEnd="4dp"
-                        android:background="@drawable/widechat_table_cell_border"
                         android:text=""
-                        android:textSize="18sp"
-                        android:autoSizeTextType="uniform"
-                        android:autoSizeMaxTextSize="18sp"
-                        android:textColor="@color/colorBlack" />
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp" />
                 </TableRow>
 
-                <TableRow
-                    android:layout_marginTop="12dp">
+                <TableRow android:layout_marginTop="12dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="36dp"
-                        android:layout_marginEnd="24dp"
+                        android:layout_marginEnd="12dp"
                         android:gravity="center_vertical"
-                        android:textSize="18sp"
-                        android:text="Email" />
+                        android:text="Email"
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/widechat_text_email"
                         android:layout_width="match_parent"
                         android:layout_height="36dp"
+                        android:autoSizeMaxTextSize="18sp"
+                        android:autoSizeTextType="uniform"
+                        android:background="@drawable/widechat_table_cell_border"
                         android:gravity="center_vertical"
                         android:paddingStart="8dp"
                         android:paddingEnd="4dp"
-                        android:background="@drawable/widechat_table_cell_border"
                         android:text=""
-                        android:textSize="18sp"
-                        android:autoSizeTextType="uniform"
-                        android:autoSizeMaxTextSize="18sp"
-                        android:textColor="@color/colorBlack" />
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp" />
                 </TableRow>
             </TableLayout>
 
             <Button
                 android:id="@+id/edit_profile_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
-                android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
-                android:background="@drawable/widechat_login_button"
+                style="@style/Widechat.Authentication.Button"
+                android:layout_marginTop="56dp"
+                android:layout_marginBottom="18dp"
+                android:background="@drawable/widechat_update_profile_button"
                 android:textColor="@color/colorWhite"
                 android:text="@string/edit_profile" />
 
             <Button
                 android:id="@+id/delete_account_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
-                android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
-                android:background="@drawable/widechat_login_button"
+                style="@style/Widechat.Authentication.Button"
+                android:background="@drawable/widechat_delete_account_button"
                 android:textColor="@color/colorWhite"
                 android:text="@string/delete_account" />
 
             <Space
+                android:id="@+id/space"
                 android:layout_width="match_parent"
-                android:layout_height="48dp" />
+                android:layout_height="12dp" />
 
         </LinearLayout>
     </ScrollView>

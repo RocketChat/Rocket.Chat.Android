@@ -1,10 +1,13 @@
 package chat.rocket.android.chatrooms.adapter
 
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.util.extensions.inflate
+import android.view.LayoutInflater
+import androidx.databinding.ViewDataBinding
 
 class RoomsAdapter(private val listener: (RoomUiModel) -> Unit) : RecyclerView.Adapter<ViewHolder<*>>() {
 
@@ -21,8 +24,9 @@ class RoomsAdapter(private val listener: (RoomUiModel) -> Unit) : RecyclerView.A
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> {
         return when (viewType) {
             VIEW_TYPE_ROOM -> {
-                val view = parent.inflate(R.layout.item_chat)
-                RoomViewHolder(view, listener)
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding: ViewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_chat, parent, false)
+                RoomViewHolder(binding.root, listener)
             }
             VIEW_TYPE_HEADER -> {
                 val view = parent.inflate(R.layout.item_chatroom_header)

@@ -9,54 +9,56 @@
     <LinearLayout
         android:id="@+id/widechat_login_button_container"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="44dp"
-        android:orientation="horizontal"
+        android:layout_height="0dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="12dp"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
             android:id="@+id/widechat_login_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            style="@style/Widechat.Authentication.Button"
             android:background="@drawable/widechat_login_button"
+            android:textSize="16sp"
             android:text="@string/log_in"
-            android:textColor="@color/colorWhite"
-            android:layout_marginEnd="24dp"/>
+            android:textColor="@color/widechatGreenGradientLight" />
 
         <Button
             android:id="@+id/widechat_signup_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            style="@style/Widechat.Authentication.Button"
             android:background="@drawable/widechat_signup_button"
+            android:textSize="16sp"
             android:text="@string/sign_up"
             android:textColor="@color/colorWhite"/>
     </LinearLayout>
 
     <TextView
         android:id="@+id/text_widechat_on_boarding_title"
-        style="@style/Authentication.TextView.Headline"
+        style="@style/WelcomeToViasatCo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:gravity="left"
+        android:layout_marginBottom="32dp"
+        android:textSize="24dp"
+        android:textStyle="bold"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
         android:text="@string/msg_welcome_to_widechat"
         android:textColor="@color/colorWhite"
-        android:autoSizeTextType="uniform"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/widechat_login_button_container" />
+        app:layout_constraintBottom_toTopOf="@id/widechat_login_button_container"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/image_widechat_on_boarding"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@mipmap/hello"
+        android:layout_height="0dp"
+        android:src="@mipmap/widechat_hola_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/widechat_login_button_container"
         tools:ignore="ContentDescription" />
 
     <com.wang.avi.AVLoadingIndicatorView

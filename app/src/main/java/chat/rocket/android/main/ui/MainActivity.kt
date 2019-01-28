@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         Timber.d("###########  EAR >> just hit onResume in main activity...")
 
         super.onResume()
-        syncContacts()
+        //syncContacts()
         if (!isFragmentAdded) {
             presenter.toChatList(chatRoomId)
             isFragmentAdded = true
@@ -317,7 +317,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             WorkManager.getInstance().enqueue(contactSyncWork)
             WorkManager.getInstance().getStatusById(contactSyncWork.getId()).observe(this, Observer { info ->
                 if (info != null && info.state.isFinished) {
-                    showToast("Contacts synced in background")
+                    //showToast("Contacts synced in background")
                 }
             })
         }
