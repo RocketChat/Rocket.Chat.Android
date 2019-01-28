@@ -143,7 +143,7 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
         activity.finish()
     }
 
-    fun toChatList(passedDeepLinkInfo: DeepLinkInfo) {
+    fun toChatList(passedDeepLinkInfo: DeepLinkInfo? = null) {
         val deepLinkInfo = if (passedDeepLinkInfo != null) passedDeepLinkInfo else savedDeepLinkInfo
         savedDeepLinkInfo = null
 
