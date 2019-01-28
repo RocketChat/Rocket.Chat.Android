@@ -44,19 +44,22 @@ import javax.inject.Inject
  * Load a list of contacts in a recycler view
  */
 class ContactsFragment : Fragment() {
+
     @Inject
     lateinit var dbFactory: DatabaseManagerFactory
+
     @Inject
     lateinit var serverInteractor: GetCurrentServerInteractor
+
     private var recyclerView :RecyclerView? = null
     private var emptyTextView:  TextView? = null
-
-    private val MY_PERMISSIONS_REQUEST_RW_CONTACTS = 0
 
     /**
      * The list of contacts to load in the recycler view
      */
     private var contactArrayList: ArrayList<Contact> = ArrayList()
+
+    private val MY_PERMISSIONS_REQUEST_RW_CONTACTS = 0
 
     private var searchView: SearchView? = null
     private var sortView: MenuItem? = null

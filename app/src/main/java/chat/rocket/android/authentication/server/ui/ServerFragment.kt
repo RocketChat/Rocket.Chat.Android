@@ -20,10 +20,11 @@ import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
+import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.hintContent
@@ -42,16 +43,20 @@ import kotlinx.android.synthetic.main.fragment_authentication_server.*
 import okhttp3.HttpUrl
 import javax.inject.Inject
 
-fun newInstance() = ServerFragment()
-
-private const val DEEP_LINK_INFO = "DeepLinkInfo"
+fun newInstance(deepLinkInfo: DeepLinkInfo?): ServerFragment {
+    val fragment = ServerFragment()
+    val args = Bundle()
+    args.putParcelable(Constants.DEEP_LINK_INFO, deepLinkInfo)
+    fragment.setArguments(args)
+    return fragment
+}
 
 class ServerFragment : Fragment(), ServerView {
     @Inject
     lateinit var presenter: ServerPresenter
     @Inject
     lateinit var analyticsManager: AnalyticsManager
-    private var deepLinkInfo: LoginDeepLinkInfo? = null
+    private var deepLinkInfo: DeepLinkInfo? = null
     private var protocol = "https://"
     private var isDomainAppended = false
     private var appendedText = ""
@@ -66,7 +71,7 @@ class ServerFragment : Fragment(), ServerView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        deepLinkInfo = arguments?.getParcelable(DEEP_LINK_INFO)
+        deepLinkInfo = arguments?.getParcelable(Constants.DEEP_LINK_INFO)
     }
 
     override fun onCreateView(

@@ -2,17 +2,14 @@ package chat.rocket.android.main.presentation
 
 import android.content.Context
 import android.content.Intent
-import android.view.LayoutInflater
-import android.widget.EditText
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat.startActivity
 import chat.rocket.android.R
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.model.ChatRoomEntity
+import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
 import chat.rocket.android.emoji.Emoji
 import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.emoji.Fitzpatrick
@@ -57,6 +54,7 @@ import chat.rocket.core.model.Myself
 import chat.rocket.common.model.RoomType
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import javax.inject.Inject
@@ -92,6 +90,9 @@ class MainPresenter @Inject constructor(
     tokenView = view,
     navigator = navigator
 ) {
+    @Inject
+    lateinit var dynamicLinksManager : DynamicLinksForFirebase
+
     private val currentServer = serverInteractor.get()!!
     private val manager = managerFactory.create(currentServer)
     private val dbManager = dbManagerFactory.create(currentServer)
@@ -100,7 +101,7 @@ class MainPresenter @Inject constructor(
     private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
     private val userDataChannel = Channel<Myself>()
 
-    fun toChatList(chatRoomId: String? = null) = navigator.toChatList(chatRoomId)
+    fun toChatList(chatRoomId: String? = null, deepLinkInfo: DeepLinkInfo? = null) = navigator.toChatList(chatRoomId, deepLinkInfo)
 
     fun openDirectMessageChatRoom(username: String) {
 
@@ -319,38 +320,22 @@ class MainPresenter @Inject constructor(
         super.logout(userDataChannel)
     }
 
-     /**
-     * Invite
-     */
-    fun invite(context: Context) {
-        launchUI(strategy) {
-
+    fun shareViaApp(context: Context){
+        launch {
             //get serverUrl and username
             val server = serverInteractor.get()!!
             val account = getAccountInteractor.get(server)!!
             val userName = account.userName
 
-            val defaultMessage = "Hey! I’m on Veranda. If you sign up we can chat for free. \nMy username is “$userName” on server $server "
-
-            //Dialog
-            val layoutInflater = LayoutInflater.from(context)
-            val dialogLayout = layoutInflater.inflate(R.layout.invite_dialog, null)
-            val editText = dialogLayout.findViewById<EditText>(R.id.invite_text)
-            editText.setText(defaultMessage, TextView.BufferType.NORMAL)
-
-            AlertDialog.Builder(context)
-                    .setTitle(R.string.invite_label)
-                    .setView(dialogLayout)
-                    .setPositiveButton(R.string.action_invite) { dialog, _ ->
-                        dialog.dismiss()
-
-                        //intent
-                        val inviteIntent = Intent()
-                        inviteIntent.action = Intent.ACTION_SEND
-                        inviteIntent.putExtra(Intent.EXTRA_TEXT, editText.text.toString())
-                        inviteIntent.type = "text/plain"
-                        startActivity(context, inviteIntent, null)
-                    }.show()
+            var deepLinkCallback = { returnedString: String? ->
+                with(Intent(Intent.ACTION_SEND)) {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.msg_check_this_out))
+                    putExtra(Intent.EXTRA_TEXT, "Default Invitation Text : $returnedString")
+                    context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
+                }
+            }
+            dynamicLinksManager.createDynamicLink(userName, server, deepLinkCallback)
         }
     }
 

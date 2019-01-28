@@ -5,9 +5,9 @@ import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.text.Layout
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -15,13 +15,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
+import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
+import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
 import chat.rocket.android.contacts.worker.ContactSyncWorker
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.adapter.Selector
@@ -38,6 +40,7 @@ import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.invalidateFirebaseToken
 import chat.rocket.common.model.UserStatus
+import chat.rocket.common.util.ifNull
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -67,12 +70,14 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     private var expanded = false
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
     private var chatRoomId: String? = null
+    private var deepLinkInfo: DeepLinkInfo? = null
     private var progressDialog: ProgressDialog? = null
     private val PERMISSIONS_REQUEST_RW_CONTACTS = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
+
         if (Constants.WIDECHAT) {
             setContentView(R.layout.widechat_activity_main)
         } else {
@@ -81,6 +86,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         refreshPushToken()
         syncContacts()
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
+        deepLinkInfo = intent.getParcelableExtra(Constants.DEEP_LINK_INFO)
         presenter.clearNotificationsForChatroom(chatRoomId)
 
         presenter.connect()
@@ -97,6 +103,21 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            var deepLinkInfo = it.getParcelableExtra<DeepLinkInfo>(Constants.DEEP_LINK_INFO)
+            if (deepLinkInfo != null) {
+                val chatRoomsFragment = supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOMS_FRAGMENT) as ChatRoomsFragment
+                chatRoomsFragment?.let {
+                    it.processDeepLink(deepLinkInfo)
+                } .ifNull {
+                    isFragmentAdded = false
+                }
+            }
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putBoolean(CURRENT_STATE, isFragmentAdded)
@@ -109,16 +130,14 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     override fun onResume() {
         supportFragmentManager.popBackStackImmediate("contactsFragment", 1)
+
         super.onResume()
         //syncContacts()
         if (!isFragmentAdded) {
-            presenter.toChatList(chatRoomId)
+            presenter.toChatList(chatRoomId, deepLinkInfo)
+            deepLinkInfo = null
             isFragmentAdded = true
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 
     override fun onDestroy() {

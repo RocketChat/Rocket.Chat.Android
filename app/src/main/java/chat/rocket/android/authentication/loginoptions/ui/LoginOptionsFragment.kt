@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.loginoptions.presentation.LoginOptionsPresenter
 import chat.rocket.android.authentication.loginoptions.presentation.LoginOptionsView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
@@ -59,7 +59,6 @@ private const val SAML_SERVICE_BUTTON_COLOR = "saml_service_button_color"
 private const val TOTAL_SOCIAL_ACCOUNTS = "total_social_accounts"
 private const val IS_LOGIN_FORM_ENABLED = "is_login_form_enabled"
 private const val IS_NEW_ACCOUNT_CREATION_ENABLED = "is_new_account_creation_enabled"
-private const val DEEP_LINK_INFO = "deep-link-info"
 
 internal const val REQUEST_CODE_FOR_OAUTH = 1
 internal const val REQUEST_CODE_FOR_CAS = 2
@@ -91,7 +90,7 @@ fun newInstance(
     totalSocialAccountsEnabled: Int = 0,
     isLoginFormEnabled: Boolean,
     isNewAccountCreationEnabled: Boolean,
-    deepLinkInfo: LoginDeepLinkInfo? = null
+    deepLinkInfo: DeepLinkInfo? = null
 ): Fragment {
     return LoginOptionsFragment().apply {
         arguments = Bundle(23).apply {
@@ -120,7 +119,7 @@ fun newInstance(
             putInt(TOTAL_SOCIAL_ACCOUNTS, totalSocialAccountsEnabled)
             putBoolean(IS_LOGIN_FORM_ENABLED, isLoginFormEnabled)
             putBoolean(IS_NEW_ACCOUNT_CREATION_ENABLED, isNewAccountCreationEnabled)
-            putParcelable(DEEP_LINK_INFO, deepLinkInfo)
+            putParcelable(Constants.DEEP_LINK_INFO, deepLinkInfo)
         }
     }
 }
@@ -155,7 +154,7 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     private var totalSocialAccountsEnabled = 0
     private var isLoginFormEnabled = false
     private var isNewAccountCreationEnabled = false
-    private var deepLinkInfo: LoginDeepLinkInfo? = null
+    private var deepLinkInfo: DeepLinkInfo? = null
 
     // WIDECHAT - replace the RC login screen with our welcome and login buttons view
     private var auth_fragment: Int = R.layout.fragment_authentication_widechat_login_options
@@ -195,7 +194,7 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
             totalSocialAccountsEnabled = bundle.getInt(TOTAL_SOCIAL_ACCOUNTS)
             isLoginFormEnabled = bundle.getBoolean(IS_LOGIN_FORM_ENABLED)
             isNewAccountCreationEnabled = bundle.getBoolean(IS_NEW_ACCOUNT_CREATION_ENABLED)
-            deepLinkInfo = bundle.getParcelable(DEEP_LINK_INFO)
+            deepLinkInfo = bundle.getParcelable(Constants.DEEP_LINK_INFO)
         }
     }
 

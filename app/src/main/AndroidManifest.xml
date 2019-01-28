@@ -23,6 +23,7 @@
         <activity
             android:name=".authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
@@ -41,13 +42,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data
-                    android:host="auth"
-                    android:scheme="rocketchat" />
-
-                <data
-                    android:host="go.rocket.chat"
-                    android:path="/auth"
+                    android:host="viasatconnect.page.link"
                     android:scheme="https" />
+
             </intent-filter>
         </activity>
 
@@ -58,7 +55,7 @@
         <activity
             android:name=".main.ui.MainActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
 
         <activity
             android:name=".webview.ui.WebViewActivity"
