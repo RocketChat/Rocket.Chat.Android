@@ -16,9 +16,8 @@ object Constants {
     const val WIDECHAT = true
     const val WIDECHAT_DEV = false
 
-    const val DEEP_LINK = "deep_link"
-    
     const val AVATAR_SHAPE_CIRCLE = true
+    const val DEEP_LINK_INFO = "deep_link_info"
 }
 
 object ChatRoomsSortOrder {

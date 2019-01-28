@@ -44,14 +44,13 @@ import javax.inject.Inject
 
 // WIDECHAT
 import android.graphics.Color
-import android.net.Uri
 import android.widget.*
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.profile.ui.ProfileFragment
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.settings.ui.SettingsFragment
-import chat.rocket.android.util.TimberLogger
 import chat.rocket.android.util.extensions.avatarUrl
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.app_bar.*
@@ -90,15 +89,16 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var searchCloseButton: ImageView? = null
     private var profileButton: SimpleDraweeView? = null
     private var onlineStatusButton:ImageView?=null
-    private var deepLink: String? = null
+    private var deepLinkInfo: DeepLinkInfo? = null
     // handles that recurring connection status bug in widechat
     private var currentlyConnected: Boolean? = false
 
     companion object {
-        fun newInstance(chatRoomId: String? = null): ChatRoomsFragment {
+        fun newInstance(chatRoomId: String? = null, deepLinkInfo: DeepLinkInfo? = null): ChatRoomsFragment {
             return ChatRoomsFragment().apply {
                 arguments = Bundle(1).apply {
                     putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
+                    putParcelable(Constants.DEEP_LINK_INFO, deepLinkInfo)
                 }
             }
         }
@@ -115,6 +115,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 presenter.loadChatRoom(it)
                 chatRoomId = null
             }
+            deepLinkInfo = bundle.getParcelable<DeepLinkInfo>(Constants.DEEP_LINK_INFO)
         }
     }
 
@@ -124,7 +125,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     override fun onResume() {
-        getDeepLink()
         // WIDECHAT - cleanup any titles set by other fragments; clear any previous search
         if (Constants.WIDECHAT) {
             (activity as AppCompatActivity?)?.supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -147,7 +147,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         subscribeUi()
         setupToolbar()
         setupFab()
-        getDeepLink()
+        deepLinkInfo?.let {
+            processDeepLink(it)
+        }
+        deepLinkInfo = null
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
     }
@@ -517,19 +520,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
     }
 
-    private fun getDeepLink() {
+    fun processDeepLink(deepLinkInfo: DeepLinkInfo) {
 
-        deepLink = SharedPreferenceHelper.getString(Constants.DEEP_LINK, "null")
-        SharedPreferenceHelper.remove(Constants.DEEP_LINK)
-        TimberLogger.debug("Retrieved deep link on ChatRooms : $deepLink")
-
-		if(deepLink.isNullOrBlank() || deepLink.equals("null")) {
-            return
-        }
-
-		val uri = Uri.parse(deepLink)
-		val username = uri.lastPathSegment
-
+		val username = deepLinkInfo.roomName
 		username.ifNotNullNorEmpty {
 			val localRooms = viewModel.getChatRoomOfUsernameDB(username!!)
 			val filteredLocalRooms = localRooms.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
