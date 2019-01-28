@@ -6,7 +6,7 @@ ext {
             targetSdk             : 28,
             minSdk                : 21,
             buildTools            : '28.0.3',
-            dokka                 : '0.9.16',
+            dokka                 : '0.9.17',
 
             // For app
             kotlin                : '1.2.71',
@@ -18,6 +18,7 @@ ext {
             cardview              : '1.0.0',
             browser               : '1.0.0',
             androidKtx            : '1.0.0',
+            legacySupportv4       : '1.0.0',
             workmanager           : '1.0.0-alpha09',
 
             dagger                : '2.16',
@@ -75,6 +76,7 @@ ext {
             browser               : "androidx.browser:browser:${versions.browser}",
             androidKtx            : "androidx.core:core-ktx:${versions.androidKtx}",
             fragmentsKtx          : "androidx.fragment:fragment-ktx:${versions.androidKtx}",
+            legacySupportv4       : "androidx.legacy:legacy-support-v4:${versions.legacySupportv4}",
             workmanager           : "android.arch.work:work-runtime-ktx:${versions.workmanager}",
             workmanagerFirebase   : "android.arch.work:work-firebase:${versions.workmanager}",
 

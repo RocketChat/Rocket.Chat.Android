@@ -52,4 +52,8 @@
     <dimen name="widechat_toolbar_height">81dp</dimen>
     <dimen name="widechat_chatroom_title_text_size">30sp</dimen>
 
+    <!--WIDECHAT Avatar Shape -->
+    <dimen name="circle_avatar_corner_radius">20dp</dimen>
+    <dimen name="square_avatar_corner_radius">3dp</dimen>
+
 </resources>

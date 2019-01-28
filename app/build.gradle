@@ -30,6 +30,9 @@ android {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
+        dataBinding {
+            enabled = true
+        }
     }
 
     signingConfigs {
