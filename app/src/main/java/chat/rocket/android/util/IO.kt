@@ -5,6 +5,7 @@ import chat.rocket.common.RocketChatNetworkErrorException
 import kotlinx.coroutines.experimental.TimeoutCancellationException
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.isActive
+import kotlinx.coroutines.experimental.yield
 import timber.log.Timber
 import kotlin.coroutines.experimental.coroutineContext
 
@@ -48,19 +49,15 @@ suspend fun <T> retryDB(
 {
     var currentDelay = initialDelay
     repeat(times - 1) { currentTry ->
-        if (!coroutineContext.isActive) throw TimeoutCancellationException("job canceled")
         try {
             return block()
         } catch (e: SQLiteDatabaseLockedException) {
             Timber.d(e, "failed call($currentTry): $description")
             e.printStackTrace()
         }
-
-        if (!coroutineContext.isActive) throw TimeoutCancellationException("job canceled")
         delay(currentDelay)
         currentDelay = (currentDelay * factor).toLong().coerceAtMost(maxDelay)
     }
-
-    if (!coroutineContext.isActive) throw TimeoutCancellationException("job canceled")
+    yield()
     return block() // last attempt
 }
