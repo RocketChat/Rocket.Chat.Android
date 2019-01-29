@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/widechat_green_gradient"
+    android:background="@drawable/widechat_less_dark_green_gradient"
     android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
     <androidx.appcompat.widget.Toolbar
@@ -27,7 +27,6 @@
             android:maxLines="1"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/widechat_chatroom_title_text_size"
-            android:textStyle="bold"
             tools:text="general" />
     </androidx.appcompat.widget.Toolbar>
 

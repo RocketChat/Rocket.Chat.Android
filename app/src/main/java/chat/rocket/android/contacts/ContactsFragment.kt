@@ -324,18 +324,23 @@ class ContactsFragment : Fragment() {
         val finalList = ArrayList<ItemHolder<*>>(contacts.size + 2)
         val userList = ArrayList<ItemHolder<*>>(contacts.size)
         val userContactList: ArrayList<Contact> = ArrayList()
+        val unfilteredContactsList: ArrayList<Contact> = ArrayList()
         val contactsList = ArrayList<ItemHolder<*>>(contacts.size)
         contacts.forEach { contact ->
             if(contact.getUsername()!= null){
                 // Users in their own list for filtering before adding to an ItemHolder
                 userContactList.add(contact)
             } else {
-                contactsList.add(ContactItemHolder(contact))
+                unfilteredContactsList.add(contact)
             }
         }
         // Filter for dupes
         userContactList.distinctBy { it.getUsername() }.forEach { contact ->
             userList.add(ContactItemHolder(contact))
+        }
+
+        unfilteredContactsList.distinctBy { listOf(it.getPhoneNumber(), it.getEmailAddress())}.forEach { contact ->
+            contactsList.add(ContactItemHolder(contact))
         }
 
         finalList.addAll(userList)
