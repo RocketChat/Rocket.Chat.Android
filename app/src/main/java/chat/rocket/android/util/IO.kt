@@ -22,20 +22,17 @@ suspend fun <T> retryIO(
 {
     var currentDelay = initialDelay
     repeat(times - 1) { currentTry ->
-        if (!coroutineContext.isActive) throw TimeoutCancellationException("job canceled")
+        yield()
         try {
             return block()
         } catch (e: RocketChatNetworkErrorException) {
             Timber.d(e, "failed call($currentTry): $description")
             e.printStackTrace()
         }
-
-        if (!coroutineContext.isActive) throw TimeoutCancellationException("job canceled")
         delay(currentDelay)
         currentDelay = (currentDelay * factor).toLong().coerceAtMost(maxDelay)
     }
-
-    if (!coroutineContext.isActive) throw TimeoutCancellationException("job canceled")
+    yield()
     return block() // last attempt
 }
 
