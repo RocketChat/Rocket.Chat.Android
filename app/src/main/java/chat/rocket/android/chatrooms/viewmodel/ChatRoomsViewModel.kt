@@ -20,12 +20,12 @@ import chat.rocket.core.model.SpotlightResult
 import com.shopify.livedataktx.distinct
 import com.shopify.livedataktx.map
 import com.shopify.livedataktx.nonNull
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.newSingleThreadContext
 import kotlinx.coroutines.experimental.withContext
 import kotlinx.coroutines.experimental.yield
-import kotlinx.coroutines.experimental.android.UI
 import timber.log.Timber
 
 class ChatRoomsViewModel(
