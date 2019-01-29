@@ -23,7 +23,6 @@ import com.shopify.livedataktx.nonNull
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
 import timber.log.Timber
-import java.lang.IllegalArgumentException
 
 class ChatRoomsViewModel(
     private val connectionManager: ConnectionManager,
@@ -43,23 +42,19 @@ class ChatRoomsViewModel(
 
             return@switchMap if (query.isSearch()) {
                 this@ChatRoomsViewModel.query.wrap(runContext) { _, data: MutableLiveData<RoomsModel> ->
-                    try {
-                        val string = (query as Query.Search).query
+                    val string = (query as Query.Search).query
 
-                        // debounce, to not query while the user is writing
-                        delay(200)
-                        val rooms = repository.search(string).let { mapper.map(it, showLastMessage = this.showLastMessage) }
-                        data.postValue(rooms.toMutableList() + LoadingItemHolder())
-                        yield()
-                        val spotlight = spotlight(query.query)?.let { mapper.map(it, showLastMessage = this.showLastMessage) }
-                        yield()
-                        spotlight?.let {
-                            data.postValue(rooms.toMutableList() + spotlight)
-                        }.ifNull {
-                            data.postValue(rooms)
-                        }
-                    } catch (ignore: CancellationException) {
-
+                    // debounce, to not query while the user is writing
+                    delay(200)
+                    val rooms = repository.search(string).let { mapper.map(it, showLastMessage = this.showLastMessage) }
+                    data.postValue(rooms.toMutableList() + LoadingItemHolder())
+                    yield()
+                    val spotlight = spotlight(query.query)?.let { mapper.map(it, showLastMessage = this.showLastMessage) }
+                    yield()
+                    spotlight?.let {
+                        data.postValue(rooms.toMutableList() + spotlight)
+                    }.ifNull {
+                        data.postValue(rooms)
                     }
                 }
             } else {
