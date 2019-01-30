@@ -522,35 +522,48 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     fun processDeepLink(deepLinkInfo: DeepLinkInfo) {
 
-		val username = deepLinkInfo.roomName
-		username.ifNotNullNorEmpty {
-			val localRooms = viewModel.getChatRoomOfUsernameDB(username!!)
-			val filteredLocalRooms = localRooms.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+        val type = deepLinkInfo.roomType
+        val name = deepLinkInfo.roomName
 
-			if (filteredLocalRooms.isNotEmpty()) {
-				presenter.loadChatRoom(filteredLocalRooms.first().data as RoomUiModel)
-			} else {
-				//check from spotlight when connected
-				val statusLiveData = viewModel.getStatus()
-				statusLiveData.observe(viewLifecycleOwner, object: Observer<State>{
-					override fun onChanged(status: State?) {
-						if (status is State.Connected) {
-							val rooms = viewModel.getChatRoomOfUsernameSpotlight(username)
-							val filteredRooms = rooms?.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+        type.ifNotNullNorEmpty {
+            name.ifNotNullNorEmpty {
+                val localRooms = viewModel.getChatRoomByNameDB(it.toString())
+                val filteredLocalRooms = localRooms.filter { itemHolder -> itemHolder.data is RoomUiModel && getCheckString(type!!, itemHolder.data as RoomUiModel) == name }
 
-							filteredRooms?.let {
-								if (filteredRooms.isNotEmpty()) {
-									presenter.loadChatRoom(filteredRooms.first().data as RoomUiModel)
-								} else {
-									Toast.makeText(context, "User not found or No internet connection", Toast.LENGTH_SHORT).show()
-								}
-							}
+                if (filteredLocalRooms.isNotEmpty()) {
+                    presenter.loadChatRoom(filteredLocalRooms.first().data as RoomUiModel)
+                } else {
+                    //check from spotlight when connected
+                    val statusLiveData = viewModel.getStatus()
+                    statusLiveData.observe(viewLifecycleOwner, object : Observer<State> {
+                        override fun onChanged(status: State?) {
+                            if (status is State.Connected) {
+                                val rooms = viewModel.getChatRoomByNameSpotlight(name.toString())
+                                val filteredRooms = rooms?.filter { itemHolder -> itemHolder.data is RoomUiModel && getCheckString(type!!, itemHolder.data as RoomUiModel) == name }
 
-							statusLiveData.removeObserver(this)
-						}
-					}
-				})
-			}
-		}
-	}
+                                filteredRooms?.let {
+                                    if (filteredRooms.isNotEmpty()) {
+                                        presenter.loadChatRoom(filteredRooms.first().data as RoomUiModel)
+                                    } else {
+                                        Toast.makeText(context, "Room not found or No internet connection", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+
+                                statusLiveData.removeObserver(this)
+                            }
+                        }
+                    })
+                }
+            }
+        }
+    }
+
+    fun getCheckString(type: String, roomUiModel: RoomUiModel): String? {
+        return when (type) {
+            "direct" -> roomUiModel.username
+            "channel" -> roomUiModel.name.toString()
+            "group" -> roomUiModel.name.toString()
+            else -> ""
+        }
+    }
 }
