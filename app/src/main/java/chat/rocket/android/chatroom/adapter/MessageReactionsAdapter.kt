@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
@@ -35,17 +34,17 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
             }
             else -> {
                 view = inflater.inflate(R.layout.item_reaction, parent, false)
-                SingleReactionViewHolder(view, listener)
+                ReactionViewHolder(view, listener)
             }
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is SingleReactionViewHolder) {
+        if (holder is ReactionViewHolder) {
             holder.bind(reactions[position])
         } else {
             holder as AddReactionViewHolder
-            holder.bind(reactions[0].messageId)
+            holder.bind(reactions.first().messageId)
         }
     }
 
@@ -73,10 +72,10 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
     fun contains(reactionShortname: String) =
         reactions.firstOrNull { it.shortname == reactionShortname } != null
 
-    class SingleReactionViewHolder(
+    class ReactionViewHolder(
         view: View,
         private val listener: EmojiReactionListener?
-    ) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    ) : RecyclerView.ViewHolder(view), View.OnClickListener, View.OnLongClickListener {
 
         @Inject
         lateinit var localRepository: LocalRepository
@@ -97,9 +96,11 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
             this.reaction = reaction
             with(itemView) {
                 if (reaction.url.isNullOrEmpty()) {
-                    text_emoji.text = reaction.unicode
+                    // The view at index 0 corresponds to the one to display unicode text emoji.
                     view_flipper_reaction.displayedChild = 0
+                    text_emoji.text = reaction.unicode
                 } else {
+                    // The view at index 1 corresponds to the one to display custom emojis which are images.
                     view_flipper_reaction.displayedChild = 1
                     val glideRequest = if (reaction.url!!.endsWith("gif", true)) {
                         GlideApp.with(context).asGif()
@@ -110,15 +111,18 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
                     glideRequest.load(reaction.url).into(image_emoji)
                 }
 
-                text_count.text = reaction.count.toString()
                 val myself = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
                 if (reaction.usernames.contains(myself)) {
                     val context = itemView.context
                     text_count.setTextColor(ContextCompat.getColor(context, R.color.colorAccent))
                 }
 
-                view_flipper_reaction.setOnClickListener(this@SingleReactionViewHolder)
-                text_count.setOnClickListener(this@SingleReactionViewHolder)
+                text_count.text = reaction.count.toString()
+
+                view_flipper_reaction.setOnClickListener(this@ReactionViewHolder)
+                text_count.setOnClickListener(this@ReactionViewHolder)
+                view_flipper_reaction.setOnLongClickListener(this@ReactionViewHolder)
+                text_count.setOnLongClickListener(this@ReactionViewHolder)
             }
         }
 
@@ -129,6 +133,11 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
                     listener?.onReactionTouched(reaction.messageId, reaction.shortname)
                 }
             }
+        }
+
+        override fun onLongClick(v: View?): Boolean {
+            listener?.onReactionLongClicked(reaction.shortname, reaction.isCustom, reaction.url, reaction.usernames)
+            return true
         }
     }
 

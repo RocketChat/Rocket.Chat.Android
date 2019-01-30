@@ -18,7 +18,8 @@ import kotlinx.android.synthetic.main.item_message.view.*
 class MessageViewHolder(
     itemView: View,
     listener: ActionsListener,
-    reactionListener: EmojiReactionListener? = null
+    reactionListener: EmojiReactionListener? = null,
+    private val avatarListener: (String) -> Unit
 ) : BaseViewHolder<MessageUiModel>(itemView, listener, reactionListener), Drawable.Callback {
 
     init {
@@ -69,6 +70,12 @@ class MessageViewHolder(
                     }
                 )
                 read_receipt_view.isVisible = true
+            }
+
+            image_avatar.setOnClickListener {
+                data.message.sender?.id?.let { userId ->
+                    avatarListener(userId)
+                }
             }
         }
     }

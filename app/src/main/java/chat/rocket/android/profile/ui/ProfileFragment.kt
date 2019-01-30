@@ -2,6 +2,7 @@ package chat.rocket.android.profile.ui
 
 import DrawableHelper
 import android.app.Activity
+import androidx.appcompat.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
@@ -11,6 +12,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.MenuInflater
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.net.toUri
@@ -29,6 +32,7 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.invalidateFirebaseToken
 import com.facebook.drawee.backends.pipeline.Fresco
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
@@ -61,6 +65,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -98,6 +103,25 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        if (actionMode != null) {
+            menu.clear()
+        }
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.profile, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_delete_account -> showDeleteAccountDialog()
+        }
+        return true
+    }
+
     override fun showProfile(avatarUrl: String, name: String, username: String, email: String?) {
         ui {
             image_avatar.setImageURI(avatarUrl)
@@ -122,6 +146,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun showProfileUpdateSuccessfullyMessage() {
         showMessage(getString(R.string.msg_profile_update_successfully))
     }
+
+    override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
 
     override fun showLoading() {
         enableUserInput(false)
@@ -148,7 +174,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-        mode.menuInflater.inflate(R.menu.profile, menu)
+        mode.menuInflater.inflate(R.menu.action_mode_profile, menu)
         mode.title = getString(R.string.title_update_profile)
         return true
     }
@@ -191,7 +217,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             hideUpdateAvatarOptions()
         }
 
-        button_take_photo.setOnClickListener {
+        button_take_a_photo.setOnClickListener {
             dispatchTakePicture(REQUEST_CODE_FOR_PERFORM_CAMERA)
             hideUpdateAvatarOptions()
         }
@@ -239,6 +265,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                     text_username.toString() != currentUsername ||
                     text_email.toString() != currentEmail)
         }.subscribe { isValid ->
+            activity?.invalidateOptionsMenu()
             if (isValid) {
                 startActionMode()
             } else {
@@ -262,6 +289,23 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             text_username.isEnabled = value
             text_username.isEnabled = value
             text_email.isEnabled = value
+        }
+    }
+
+    fun showDeleteAccountDialog() {
+        val passwordEditText = EditText(context)
+        passwordEditText.hint = getString(R.string.msg_password)
+
+        context?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.setTitle(R.string.title_are_you_sure)
+                .setView(passwordEditText)
+                .setPositiveButton(R.string.action_delete_account) { _, _ ->
+                    presenter.deleteAccount(passwordEditText.text.toString())
+                }
+                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
+                .create()
+                .show()
         }
     }
 }

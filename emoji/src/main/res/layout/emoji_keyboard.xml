@@ -43,7 +43,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/color_change_circle" />
+            app:srcCompat="@drawable/bg_skin_tone" />
 
         <ImageView
             android:id="@+id/emoji_search"

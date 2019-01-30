@@ -18,7 +18,9 @@ import chat.rocket.android.util.extensions.toList
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
 import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 
 abstract class BaseViewHolder<T : BaseUiModel<*>>(
     itemView: View,
@@ -41,13 +43,12 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
     private fun bindReactions() {
         data?.let {
             val recyclerView = itemView.findViewById(R.id.recycler_view_reactions) as RecyclerView
-            val adapter: MessageReactionsAdapter
-            if (recyclerView.adapter == null) {
-                adapter = MessageReactionsAdapter()
+            val adapter: MessageReactionsAdapter = if (recyclerView.adapter == null) {
+                MessageReactionsAdapter()
             } else {
-                adapter = recyclerView.adapter as MessageReactionsAdapter
-                adapter.clear()
+                recyclerView.adapter as MessageReactionsAdapter
             }
+            adapter.clear()
 
             if (it.nextDownStreamMessage == null) {
                 adapter.listener = object : EmojiReactionListener {
@@ -60,14 +61,21 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
                             reactionListener?.onReactionAdded(messageId, emoji)
                         }
                     }
+
+                    override fun onReactionLongClicked(shortname: String, isCustom: Boolean, url: String?, usernames: List<String>) {
+                        reactionListener?.onReactionLongClicked(shortname, isCustom,url, usernames)
+                    }
                 }
+
                 val context = itemView.context
                 val manager = FlexboxLayoutManager(context, FlexDirection.ROW)
+                manager.justifyContent = JustifyContent.FLEX_START
                 recyclerView.layoutManager = manager
                 recyclerView.adapter = adapter
-                adapter.addReactions(it.reactions.filterNot { reactionUiModel ->
-                    reactionUiModel.unicode.startsWith(":") && reactionUiModel.url.isNullOrEmpty()
-                })
+
+                if (it.reactions.isNotEmpty()) {
+                    itemView.post { adapter.addReactions(it.reactions) }
+                }
             }
         }
     }

@@ -6,7 +6,8 @@ import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.util.extensions.inflate
 
-class RoomsAdapter(private val listener: (RoomUiModel) -> Unit) : RecyclerView.Adapter<ViewHolder<*>>() {
+class RoomsAdapter(private val listener: (RoomUiModel) -> Unit) :
+    RecyclerView.Adapter<ViewHolder<*>>() {
 
     init {
         setHasStableIds(true)
@@ -19,33 +20,37 @@ class RoomsAdapter(private val listener: (RoomUiModel) -> Unit) : RecyclerView.A
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> {
-        if (viewType == VIEW_TYPE_ROOM) {
-            val view = parent.inflate(R.layout.item_chat)
-            return RoomViewHolder(view, listener)
-        } else if (viewType == VIEW_TYPE_HEADER) {
-            val view = parent.inflate(R.layout.item_chatroom_header)
-            return HeaderViewHolder(view)
-        } else if (viewType == VIEW_TYPE_LOADING) {
-            val view = parent.inflate(R.layout.item_loading)
-            return LoadingViewHolder(view)
+        return when (viewType) {
+            VIEW_TYPE_ROOM -> {
+                val view = parent.inflate(R.layout.item_chat)
+                RoomViewHolder(view, listener)
+            }
+            VIEW_TYPE_HEADER -> {
+                val view = parent.inflate(R.layout.item_chatroom_header)
+                HeaderViewHolder(view)
+            }
+            VIEW_TYPE_LOADING -> {
+                val view = parent.inflate(R.layout.item_loading)
+                LoadingViewHolder(view)
+            }
+            else -> throw IllegalStateException("View type must be either Room, Header or Loading")
         }
-        throw IllegalStateException("View type must be either Room, Header or Loading")
     }
 
     override fun getItemCount() = values.size
 
     override fun getItemId(position: Int): Long {
         val item = values[position]
-        return when(item) {
-            is HeaderItemHolder -> item.data.hashCode().toLong()
+        return when (item) {
             is RoomItemHolder -> item.data.id.hashCode().toLong()
+            is HeaderItemHolder -> item.data.hashCode().toLong()
             is LoadingItemHolder -> "loading".hashCode().toLong()
             else -> throw IllegalStateException("View type must be either Room, Header or Loading")
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when(values[position]) {
+        return when (values[position]) {
             is RoomItemHolder -> VIEW_TYPE_ROOM
             is HeaderItemHolder -> VIEW_TYPE_HEADER
             is LoadingItemHolder -> VIEW_TYPE_LOADING

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path
+        name="rocket_chat_images"
+        path="Android/data/chat.rocket.android.dev/files/Pictures" />
+</paths>

@@ -2,7 +2,7 @@ package chat.rocket.android.main.ui
 
 import DrawableHelper
 import android.app.Activity
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.annotation.IdRes
@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
+import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
@@ -62,10 +63,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         setContentView(R.layout.activity_main)
 
         refreshPushToken()
-
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
-
-        println("ChatRoomId: $chatRoomId")
         presenter.clearNotificationsForChatroom(chatRoomId)
 
         presenter.connect()
@@ -98,6 +96,21 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         super.onDestroy()
         if (isFinishing) {
             presenter.disconnect()
+        }
+    }
+
+    override fun onBackPressed() {
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            closeDrawer()
+        } else {
+            supportFragmentManager.findFragmentById(R.id.fragment_container)?.let {
+                if (it !is ChatRoomsFragment && supportFragmentManager.backStackEntryCount == 0) {
+                    presenter.toChatList(chatRoomId)
+                    setCheckedNavDrawerItem(R.id.menu_action_chats)
+                } else {
+                    super.onBackPressed()
+                }
+            }
         }
     }
 
@@ -183,7 +196,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                     BuildConfig.RECOMMENDED_SERVER_VERSION
                 )
             )
-            .setPositiveButton(R.string.msg_ok, null)
+            .setPositiveButton(android.R.string.ok, null)
             .create()
             .show()
     }
@@ -197,13 +210,12 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                 )
             )
             .setOnDismissListener { presenter.logout() }
-            .setPositiveButton(R.string.msg_ok, null)
+            .setPositiveButton(android.R.string.ok, null)
             .create()
             .show()
     }
 
-    override fun invalidateToken(token: String) =
-        invalidateFirebaseToken(token)
+    override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
 
     override fun showMessage(resId: Int) = showToast(resId)
 
@@ -230,6 +242,15 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
         toolbar.setNavigationOnClickListener { openDrawer() }
+    }
+
+    fun showLogoutDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.title_are_you_sure)
+            .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout()}
+            .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
+            .create()
+            .show()
     }
 
     fun setAvatar(avatarUrl: String) {

@@ -1,6 +1,6 @@
 package chat.rocket.android.chatrooms.ui
 
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
@@ -36,6 +36,8 @@ import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
+import chat.rocket.android.util.extensions.ifNotNullNorEmpty
+import chat.rocket.android.util.extensions.ifNotNullNotEmpty
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
@@ -83,9 +85,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         val bundle = arguments
         if (bundle != null) {
             chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
-            chatRoomId?.let {
-                // TODO - bring back support to load a room from id.
-                //presenter.goToChatRoomWithId(it)
+            chatRoomId.ifNotNullNotEmpty { roomId ->
+                presenter.loadChatRoom(roomId)
                 chatRoomId = null
             }
         }
@@ -235,14 +236,16 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     )
                 }
 
-                AlertDialog.Builder(context)
-                    .setTitle(R.string.dialog_sort_title)
-                    .setView(dialogLayout)
-                    .setPositiveButton(R.string.dialog_button_done) { dialog, _ ->
-                        invalidateQueryOnSearch()
-                        updateSort()
-                        dialog.dismiss()
-                    }.show()
+                context?.let {
+                    AlertDialog.Builder(it)
+                        .setTitle(R.string.dialog_sort_title)
+                        .setView(dialogLayout)
+                        .setPositiveButton(R.string.msg_sort) { dialog, _ ->
+                            invalidateQueryOnSearch()
+                            updateSort()
+                            dialog.dismiss()
+                        }.show()
+                }
             }
         }
         return super.onOptionsItemSelected(item)
