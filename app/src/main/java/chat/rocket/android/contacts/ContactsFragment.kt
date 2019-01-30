@@ -200,12 +200,7 @@ class ContactsFragment : Fragment() {
 
         if (Constants.WIDECHAT) {
             with((activity as AppCompatActivity?)?.supportActionBar) {
-                profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
-                profileButton?.visibility = View.GONE
-                onlineStatusButton=this?.getCustomView()?.findViewById(R.id.text_online)
-                onlineStatusButton?.visibility = View.GONE
-                widechatSearchView = this?.getCustomView()?.findViewById(R.id.action_widechat_search)
-                widechatSearchView?.visibility = View.GONE
+                this?.setDisplayShowCustomEnabled(false)
             }
         }
     }
