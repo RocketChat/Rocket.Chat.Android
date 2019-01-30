@@ -1,91 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
-    android:paddingBottom="@dimen/chat_item_top_and_bottom_padding"
-    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
-    android:paddingStart="@dimen/screen_edge_left_and_right_padding"
-    android:paddingTop="@dimen/chat_item_top_and_bottom_padding">
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/image_avatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:roundedCornerRadius="3dp" />
-
-    <ImageView
-        android:id="@+id/image_chat_icon"
-        android:layout_width="12dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/text_chat_name"
-        app:layout_constraintStart_toEndOf="@+id/image_avatar"
-        app:layout_constraintTop_toTopOf="@+id/text_chat_name"
-        tools:src="@drawable/ic_hashtag_unread_12dp" />
-
-    <TextView
-        android:id="@+id/text_last_message"
-        android:layout_width="0dp"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="shape"
+            type="chat.rocket.android.helper.Constants"/>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="2dp"
-        android:layout_weight="0.8"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textDirection="locale"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/image_chat_icon"
-        app:layout_constraintTop_toBottomOf="@+id/text_chat_name"
-        tools:text="Filipe de Lima Brito: Type something that is very big and need at least to lines, or maybe even more" />
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingBottom="@dimen/chat_item_top_and_bottom_padding"
+        android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+        android:paddingStart="@dimen/screen_edge_left_and_right_padding"
+        android:paddingTop="@dimen/chat_item_top_and_bottom_padding">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:roundedCornerRadius='@{shape.AVATAR_SHAPE_CIRCLE ? @dimen/circle_avatar_corner_radius : @dimen/square_avatar_corner_radius}' />
+
+        <ImageView
+            android:id="@+id/image_chat_icon"
+            android:layout_width="12dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/text_chat_name"
+            app:layout_constraintStart_toEndOf="@+id/image_avatar"
+            app:layout_constraintTop_toTopOf="@+id/text_chat_name"
+            tools:src="@drawable/ic_hashtag_unread_12dp" />
+
+        <TextView
+            android:id="@+id/text_last_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="0.8"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textDirection="locale"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/image_chat_icon"
+            app:layout_constraintTop_toBottomOf="@+id/text_chat_name"
+            tools:text="Filipe de Lima Brito: Type something that is very big and need at least to lines, or maybe even more" />
 
 
-    <TextView
-        android:id="@+id/text_chat_name"
-        style="@style/ChatRoom.Name.TextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/text_view_drawable_padding"
-        android:ellipsize="end"
-        android:lines="1"
-        android:maxLines="1"
-        android:textDirection="locale"
-        android:textColor="@color/colorSecondaryText"
-        app:layout_constraintBottom_toTopOf="@+id/text_last_message"
-        app:layout_constraintEnd_toStartOf="@+id/text_last_message_date_time"
-        app:layout_constraintStart_toEndOf="@+id/image_chat_icon"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="general" />
+        <TextView
+            android:id="@+id/text_chat_name"
+            style="@style/ChatRoom.Name.TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/text_view_drawable_padding"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1"
+            android:textDirection="locale"
+            android:textColor="@color/colorSecondaryText"
+            app:layout_constraintBottom_toTopOf="@+id/text_last_message"
+            app:layout_constraintEnd_toStartOf="@+id/text_last_message_date_time"
+            app:layout_constraintStart_toEndOf="@+id/image_chat_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="general" />
 
-    <TextView
-        android:id="@+id/text_last_message_date_time"
-        style="@style/Timestamp.TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/layout_unread_messages_badge"
-        android:layout_marginTop="2dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textDirection="locale"
-        app:layout_constraintEnd_toStartOf="@+id/layout_unread_messages_badge"
-        app:layout_constraintTop_toTopOf="@+id/text_chat_name"
-        tools:text="11:45 AM" />
+        <TextView
+            android:id="@+id/text_last_message_date_time"
+            style="@style/Timestamp.TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/layout_unread_messages_badge"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textDirection="locale"
+            app:layout_constraintEnd_toStartOf="@+id/layout_unread_messages_badge"
+            app:layout_constraintTop_toTopOf="@+id/text_chat_name"
+            tools:text="11:45 AM" />
 
-    <include
-        android:id="@+id/layout_unread_messages_badge"
-        layout="@layout/unread_messages_badge"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_chat_name" />
+        <include
+            android:id="@+id/layout_unread_messages_badge"
+            layout="@layout/unread_messages_badge"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_chat_name" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

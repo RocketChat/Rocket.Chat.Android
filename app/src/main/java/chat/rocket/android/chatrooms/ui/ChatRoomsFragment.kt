@@ -10,8 +10,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -46,8 +44,9 @@ import javax.inject.Inject
 
 // WIDECHAT
 import android.graphics.Color
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
+import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.profile.ui.ProfileFragment
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -89,14 +88,17 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var searchText:  TextView? = null
     private var searchCloseButton: ImageView? = null
     private var profileButton: SimpleDraweeView? = null
+    private var onlineStatusButton:ImageView?=null
+    private var deepLinkInfo: DeepLinkInfo? = null
     // handles that recurring connection status bug in widechat
     private var currentlyConnected: Boolean? = false
 
     companion object {
-        fun newInstance(chatRoomId: String? = null): ChatRoomsFragment {
+        fun newInstance(chatRoomId: String? = null, deepLinkInfo: DeepLinkInfo? = null): ChatRoomsFragment {
             return ChatRoomsFragment().apply {
                 arguments = Bundle(1).apply {
                     putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
+                    putParcelable(Constants.DEEP_LINK_INFO, deepLinkInfo)
                 }
             }
         }
@@ -113,6 +115,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 presenter.loadChatRoom(it)
                 chatRoomId = null
             }
+            deepLinkInfo = bundle.getParcelable<DeepLinkInfo>(Constants.DEEP_LINK_INFO)
         }
     }
 
@@ -140,12 +143,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel = ViewModelProviders.of(this, factory).get(ChatRoomsViewModel::class.java)
         subscribeUi()
-
         setupToolbar()
         setupFab()
+        deepLinkInfo?.let {
+            processDeepLink(it)
+        }
+        deepLinkInfo = null
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
     }
@@ -477,6 +482,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 val myAvatarUrl: String? =  serverUrl?.avatarUrl(user?.username ?: "")
 
                 profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
+                onlineStatusButton=this?.getCustomView()?.findViewById(R.id.text_online)
                 profileButton?.setImageURI(myAvatarUrl)
                 profileButton?.setOnClickListener { v ->
 
@@ -510,7 +516,41 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             val transaction = activity?.supportFragmentManager?.beginTransaction();
             transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
             transaction?.replace(this.id, contactsFragment, "contactsFragment");
-            transaction?.addToBackStack(null)?.commit();
+            transaction?.addToBackStack("contactsFragment")?.commit();
         }
     }
+
+    fun processDeepLink(deepLinkInfo: DeepLinkInfo) {
+
+		val username = deepLinkInfo.roomName
+		username.ifNotNullNorEmpty {
+			val localRooms = viewModel.getChatRoomOfUsernameDB(username!!)
+			val filteredLocalRooms = localRooms.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+
+			if (filteredLocalRooms.isNotEmpty()) {
+				presenter.loadChatRoom(filteredLocalRooms.first().data as RoomUiModel)
+			} else {
+				//check from spotlight when connected
+				val statusLiveData = viewModel.getStatus()
+				statusLiveData.observe(viewLifecycleOwner, object: Observer<State>{
+					override fun onChanged(status: State?) {
+						if (status is State.Connected) {
+							val rooms = viewModel.getChatRoomOfUsernameSpotlight(username)
+							val filteredRooms = rooms?.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+
+							filteredRooms?.let {
+								if (filteredRooms.isNotEmpty()) {
+									presenter.loadChatRoom(filteredRooms.first().data as RoomUiModel)
+								} else {
+									Toast.makeText(context, "User not found or No internet connection", Toast.LENGTH_SHORT).show()
+								}
+							}
+
+							statusLiveData.removeObserver(this)
+						}
+					}
+				})
+			}
+		}
+	}
 }

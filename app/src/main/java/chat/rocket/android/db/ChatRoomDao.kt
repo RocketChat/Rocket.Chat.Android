@@ -9,7 +9,6 @@ import androidx.room.Transaction
 import androidx.room.Update
 import chat.rocket.android.db.model.ChatRoom
 import chat.rocket.android.db.model.ChatRoomEntity
-import chat.rocket.common.model.RoomType
 
 @Dao
 abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {

@@ -205,7 +205,7 @@ object EmojiRepository {
     internal suspend fun getCustomEmojisAsync(): List<Emoji> {
         return withContext(CommonPool) {
             db.emojiDao().loadAllCustomEmojis().also {
-                this.customEmojis = it
+                customEmojis = it
             }
         }
     }

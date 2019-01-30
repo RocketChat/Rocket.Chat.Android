@@ -211,6 +211,9 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string>
     <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string>
     <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string>
+    <string name="msg_public_account">Public Account</string>
+    <string name="msg_public_account_description">Send anonymous statics to help improving this app</string>
+
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
@@ -314,6 +317,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="Unmute_someone_in_room">Unmute someone in the room</string>
     <string name="Invite_user_to_join_channel">Invite one user to join this channel</string>
     <string name="Invite">Invite</string>
+    <string name="Invite_contacts">INVITE CONTACTS</string>
     <string name="Unarchive">Unarchive</string>
     <string name="Join_the_given_channel">Join the given channel</string>
     <string name="Guggy_Command_Description">Generates a gif based upon the provided text</string>
@@ -359,7 +363,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="delete_account">Delete My Account</string>
     <string name="log_out">Log Out</string>
     <string name="widechat_new_channel">New Group Chat</string>
-    <string name="msg_widechat_no_chats_to_display">You Can get started by searching for people to chat with or by inviting your friends and family to get the app too.</string>
+    <string name="share_via_another_app">Share via another App</string>
+    <string name="msg_widechat_no_chats_to_display">You can get started by searching for people to chat with or by inviting your friends and family to get the app too.</string>
     <string name="msg_widechat_welcome_to_app">Welcome to Viasat Connect.</string>
 
 </resources>

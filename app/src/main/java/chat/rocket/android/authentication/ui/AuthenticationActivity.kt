@@ -2,17 +2,20 @@ package chat.rocket.android.authentication.ui
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
-import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
-import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
+import chat.rocket.android.authentication.domain.model.getDeepLinkInfo
+import chat.rocket.android.authentication.domain.model.isDynamicLink
+import chat.rocket.android.authentication.domain.model.isSupportedLink
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
-import chat.rocket.android.util.extensions.addFragment
+import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
+import chat.rocket.android.helper.Constants
 import chat.rocket.common.util.ifNull
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -27,6 +30,8 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
     lateinit var presenter: AuthenticationPresenter
+    @Inject
+    lateinit var dynamicLinksManager: DynamicLinksForFirebase
     val job = Job()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +39,44 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication)
         setupToolbar()
-        loadCredentials()
+
+        processIncomingIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            processIncomingIntent(it)
+        }
+    }
+
+    private fun processIncomingIntent(intent: Intent) {
+        if (intent.isSupportedLink()) {
+            val uri = intent.data
+            if (uri.isDynamicLink()) {
+                resolveDynamicLink(intent)
+            } else {
+                uri.getDeepLinkInfo()?.let{
+                    routeDeepLink(it)
+                } .ifNull {
+                    routeNoLink()
+                }
+            }
+        } else {
+            routeNoLink()
+        }
+    }
+
+    private fun resolveDynamicLink(intent: Intent) {
+        var deepLinkCallback =  { returnedUri: Uri? ->
+            if (returnedUri == null) {
+                routeNoLink()
+            } else {
+            returnedUri?.getDeepLinkInfo()?.let {
+                routeDeepLink(it)
+            } }
+        }
+        dynamicLinksManager.getDynamicLink(intent, deepLinkCallback)
     }
 
     private fun setupToolbar() {
@@ -68,42 +110,30 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun loadCredentials() {
-        intent.getLoginDeepLinkInfo()?.let {
-            showServerFragment(it)
-        }.ifNull {
-            val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
-            presenter.loadCredentials(newServer) { isAuthenticated ->
+    private fun routeDeepLink(deepLinkInfo: DeepLinkInfo) {
+        if (Constants.WIDECHAT)
+            presenter.loadCredentials(false) { isAuthenticated ->
                 if (isAuthenticated) {
-                    showChatList()
+                    presenter.toChatList(deepLinkInfo)
                 } else {
-                    showOnBoardingFragment()
+                    presenter.saveDeepLinkInfo(deepLinkInfo)
+                    presenter.toOnBoarding()
                 }
+            }
+        else
+            presenter.toSignInToYourServer(deepLinkInfo)
+    }
+
+    private fun routeNoLink() {
+        val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
+        presenter.loadCredentials(newServer) { isAuthenticated ->
+            if (isAuthenticated) {
+                presenter.toChatList()
+            } else {
+                presenter.toOnBoarding()
             }
         }
     }
-
-    private fun showOnBoardingFragment() {
-        addFragment(
-            ScreenViewEvent.OnBoarding.screenName,
-            R.id.fragment_container,
-            allowStateLoss = true
-        ) {
-            chat.rocket.android.authentication.onboarding.ui.newInstance()
-        }
-    }
-
-    private fun showServerFragment(deepLinkInfo: LoginDeepLinkInfo) {
-        addFragment(
-            ScreenViewEvent.Server.screenName,
-            R.id.fragment_container,
-            allowStateLoss = true
-        ) {
-            chat.rocket.android.authentication.server.ui.newInstance()
-        }
-    }
-
-    private fun showChatList() = presenter.toChatList()
 }
 
 const val INTENT_ADD_NEW_SERVER = "INTENT_ADD_NEW_SERVER"

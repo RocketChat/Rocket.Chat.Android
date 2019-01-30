@@ -2,9 +2,11 @@ package chat.rocket.android.db
 
 import android.app.Application
 import chat.rocket.android.R
+import chat.rocket.android.contacts.models.Contact
 import chat.rocket.android.db.model.BaseMessageEntity
 import chat.rocket.android.db.model.BaseUserEntity
 import chat.rocket.android.db.model.ChatRoomEntity
+import chat.rocket.android.db.model.ContactEntity
 import chat.rocket.android.db.model.MessageChannels
 import chat.rocket.android.db.model.MessageEntity
 import chat.rocket.android.db.model.MessageFavoritesRelation
@@ -62,6 +64,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     fun chatRoomDao(): ChatRoomDao = database.chatRoomDao()
     fun userDao(): UserDao = database.userDao()
     fun messageDao(): MessageDao = database.messageDao()
+    fun contactsDao(): ContactDao = database.contactDao()
 
     init {
         start()
@@ -183,6 +186,16 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
             }
 
             sendOperation(Operation.InsertMessages(list))
+        }
+    }
+
+    fun processContacts(contacts: List<Contact>) {
+        launch(dbManagerContext){
+            val list = mutableListOf<ContactEntity>()
+            contacts.forEach { contact ->
+                list.add(contact.toEntity())
+            }
+            sendOperation(Operation.CleanInsertContacts(list))
         }
     }
 
@@ -560,6 +573,9 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                 is Operation.CleanInsertRooms -> {
                     chatRoomDao().cleanInsert(operation.chatRooms)
                 }
+                is Operation.CleanInsertContacts -> {
+                    contactsDao().cleanInsert(operation.contacts)
+                }
                 is Operation.InsertUsers -> {
                     val time = measureTimeMillis { userDao().upsert(operation.users) }
                     Timber.d("Upserted users batch(${operation.users.size}) in $time MS")
@@ -592,6 +608,7 @@ sealed class Operation {
 
     data class InsertRooms(val chatRooms: List<ChatRoomEntity>) : Operation()
     data class CleanInsertRooms(val chatRooms: List<ChatRoomEntity>) : Operation()
+    data class CleanInsertContacts(val contacts: List<ContactEntity>) : Operation()
 
     data class InsertUsers(val users: List<BaseUserEntity>) : Operation()
     data class UpsertUser(val user: BaseUserEntity) : Operation()

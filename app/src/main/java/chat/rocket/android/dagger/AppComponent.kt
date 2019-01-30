@@ -8,6 +8,7 @@ import chat.rocket.android.dagger.module.AndroidWorkerInjectionModule
 import chat.rocket.android.dagger.module.AppModule
 import chat.rocket.android.dagger.module.ReceiverBuilder
 import chat.rocket.android.dagger.module.ServiceBuilder
+import chat.rocket.android.dagger.module.WorkerBuilder
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
@@ -16,7 +17,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [AndroidSupportInjectionModule::class,
     AppModule::class, ActivityBuilder::class, ServiceBuilder::class, ReceiverBuilder::class,
-    AndroidWorkerInjectionModule::class])
+    AndroidWorkerInjectionModule::class, WorkerBuilder::class])
 interface AppComponent {
 
     @Component.Builder

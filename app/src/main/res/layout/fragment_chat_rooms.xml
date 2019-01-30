@@ -33,13 +33,14 @@
 
     <TextView
         android:id="@+id/widechat_welcome_to_app"
-        style="@style/Widechat.NoChats.Text"
+        style="@style/WelcomeToViasatCo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/widechat_text_no_data_to_display"
         android:layout_marginBottom="16dp"
-        android:paddingStart="8dp"
+        android:paddingStart="16dp"
         android:text="@string/msg_widechat_welcome_to_app"
+        android:textColor="@color/colorBlack"
         android:textStyle="bold"
         android:textSize="28sp"
         android:visibility="gone"
@@ -48,6 +49,7 @@
     <TextView
         android:id="@+id/widechat_text_no_data_to_display"
         style="@style/Widechat.NoChats.Text"
+        android:fontFamily="@string/font_fontFamily_widechat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -60,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:alpha="0"
-        android:background="@color/colorPrimary"
+        android:background="@color/widechatFab"
         android:elevation="4dp"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"

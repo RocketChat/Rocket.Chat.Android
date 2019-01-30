@@ -126,7 +126,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     fun showWidechatProfile(avatarUrl: String, name: String, username: String, email: String?) {
         ui {
             image_avatar.setImageURI(avatarUrl)
-            widechat_text_name.text = name
             widechat_text_username.textContent = username
             widechat_text_email.textContent = email ?: ""
 
@@ -139,6 +138,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             menu.clear()
         }
         super.onPrepareOptionsMenu(menu)
+        if (Constants.WIDECHAT) {
+            menu.findItem(R.id.action_delete_account).isVisible = false
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

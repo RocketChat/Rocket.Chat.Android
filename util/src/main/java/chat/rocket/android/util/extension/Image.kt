@@ -29,7 +29,7 @@ suspend fun Bitmap.compressImageAndGetInputStream(mimeType: String): InputStream
         val byteArrayOutputStream = ByteArrayOutputStream()
         // TODO: Add an option the the app to the user be able to select the quality of the compressed image
         val isCompressed =
-            this.compress(mimeType.getCompressFormat(), 70, byteArrayOutputStream)
+            compress(mimeType.getCompressFormat(), 70, byteArrayOutputStream)
         if (isCompressed) {
             inputStream = ByteArrayInputStream(byteArrayOutputStream.toByteArray())
         }
@@ -77,7 +77,7 @@ suspend fun Bitmap.compressImageAndGetByteArray(mimeType: String, quality: Int =
     withContext(DefaultDispatcher) {
         val byteArrayOutputStream = ByteArrayOutputStream()
         val isCompressed =
-            this.compress(mimeType.getCompressFormat(), quality, byteArrayOutputStream)
+            compress(mimeType.getCompressFormat(), quality, byteArrayOutputStream)
         if (isCompressed) {
             byteArray = byteArrayOutputStream.toByteArray()
         }
