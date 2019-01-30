@@ -20,7 +20,6 @@ import kotlin.collections.HashMap
 
 // WIDECHAT
 import chat.rocket.android.helper.Constants
-import com.facebook.drawee.view.SimpleDraweeView
 import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -66,11 +65,6 @@ class ContactsFragment : Fragment() {
     private var searchIcon: ImageView? = null
     private var searchText:  TextView? = null
     private var searchCloseButton: ImageView? = null
-
-    // WIDECHAT
-    private var profileButton: SimpleDraweeView? = null
-    private var widechatSearchView: SearchView? = null
-    private var onlineStatusButton: ImageView? = null
 
     companion object {
         /**
