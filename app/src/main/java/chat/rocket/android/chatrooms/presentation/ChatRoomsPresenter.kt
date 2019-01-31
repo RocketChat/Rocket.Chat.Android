@@ -141,9 +141,11 @@ class ChatRoomsPresenter @Inject constructor(
         }
     }
 
-    private suspend fun getCurrentUser(): User? {
-        userHelper.user()?.let {
-            return it
+    suspend fun getCurrentUser(local: Boolean = true): User? {
+        if (local) {
+            userHelper.user()?.let {
+                return it
+            }
         }
         try {
             val myself = retryIO { client.me() }
@@ -157,6 +159,7 @@ class ChatRoomsPresenter @Inject constructor(
                 roles = myself.roles
             )
             localRepository.saveCurrentUser(url = currentServer, user = user)
+            return user
         } catch (ex: RocketChatException) {
             Timber.e(ex)
         }
