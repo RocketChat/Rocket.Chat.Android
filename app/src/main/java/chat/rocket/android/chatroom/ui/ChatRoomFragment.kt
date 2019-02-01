@@ -1,7 +1,7 @@
 package chat.rocket.android.chatroom.ui
 
 import android.app.Activity
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -72,7 +72,6 @@ import chat.rocket.android.util.extensions.circularRevealOrUnreveal
 import chat.rocket.android.util.extensions.clearLightStatusBar
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
-import chat.rocket.android.util.extensions.getBitmpap
 import chat.rocket.android.util.extensions.hideKeyboard
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
@@ -200,7 +199,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private var verticalScrollOffset = AtomicInteger(0)
 
     private val dialogView by lazy { View.inflate(context, R.layout.file_attachments_dialog, null) }
-    internal val alertDialog by lazy { AlertDialog.Builder(activity).setView(dialogView).create() }
+    internal val alertDialog by lazy { activity?.let { AlertDialog.Builder(it).setView(dialogView).create() } }
     internal val imagePreview by lazy { dialogView.findViewById<ImageView>(R.id.image_preview) }
     internal val sendButton by lazy { dialogView.findViewById<android.widget.Button>(R.id.button_send) }
     internal val cancelButton by lazy { dialogView.findViewById<android.widget.Button>(R.id.button_cancel) }
@@ -312,6 +311,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             showToolbarChatRoomIcon(chatRoomType)
         }
         getDraftMessage()
+        subscribeComposeTextMessage()
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRoom)
     }
@@ -345,10 +345,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                REQUEST_CODE_FOR_PERFORM_CAMERA -> takenPhotoUri?.let { uri ->
-                    uri.getBitmpap(requireContext())?.let { bitmap ->
-                        presenter.uploadImage(chatRoomId, "image/png", uri, bitmap, "")
-                    }
+                REQUEST_CODE_FOR_PERFORM_CAMERA -> takenPhotoUri?.let {
+                    showFileAttachmentDialog(it)
                 }
                 REQUEST_CODE_FOR_PERFORM_SAF -> resultData?.data?.let {
                     showFileAttachmentDialog(it)
@@ -848,7 +846,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 true
             )
 
-            subscribeComposeTextMessage()
             emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
 
             emojiKeyboardPopup.listener = this
@@ -1000,12 +997,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun subscribeComposeTextMessage() {
-        val editTextObservable = text_message.asObservable()
-
-        compositeDisposable.addAll(
-            subscribeComposeButtons(editTextObservable),
-            subscribeComposeTypingStatus(editTextObservable)
-        )
+        text_message.asObservable().let {
+            compositeDisposable.addAll(
+                subscribeComposeButtons(it),
+                subscribeComposeTypingStatus(it)
+            )
+        }
     }
 
     private fun unsubscribeComposeTextMessage() {
@@ -1122,13 +1119,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             val builder = AlertDialog.Builder(it)
             builder.setTitle(it.getString(R.string.msg_delete_message))
                 .setMessage(it.getString(R.string.msg_delete_description))
-                .setPositiveButton(it.getString(R.string.msg_ok)) { _, _ ->
+                .setPositiveButton(it.getString(android.R.string.ok)) { _, _ ->
                     presenter.deleteMessage(
                         roomId,
                         id
                     )
                 }
-                .setNegativeButton(it.getString(R.string.msg_cancel)) { _, _ -> }
+                .setNegativeButton(it.getString(android.R.string.cancel)) { _, _ -> }
                 .show()
         }
     }
