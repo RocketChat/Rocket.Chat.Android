@@ -74,7 +74,9 @@ class ContactRecyclerViewAdapter(
             if (username != null) {
                 launch {
                     user = context.presenter.getUser(username!!)
-                    contact.setStatus(user!!.status)
+                    if (user != null) {
+                        contact.setStatus(user!!.status)
+                    }
                     holder.setContactStatus(contact)
                 }
             }
