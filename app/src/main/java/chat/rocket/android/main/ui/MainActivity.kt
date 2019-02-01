@@ -43,6 +43,8 @@ import java.util.Locale
 import javax.inject.Inject
 
 private const val CURRENT_STATE = "current_state"
+private const val SETTING = "Settings"
+private const val MY_LANG = "My_Lang"
 
 class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     HasSupportFragmentInjector {
@@ -325,14 +327,14 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         config.locale = locale
         baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
 
-        val editor = getSharedPreferences("Settings", Context.MODE_PRIVATE).edit()
-        editor.putString("My_Lang", lang)
+        val editor = getSharedPreferences(SETTING, Context.MODE_PRIVATE).edit()
+        editor.putString(MY_LANG, lang)
         editor.apply()
     }
 
     private fun loadLocale() {
-        val sharedPreferences = getSharedPreferences("Settings", Activity.MODE_PRIVATE)
-        val language = sharedPreferences.getString("My_Lang", "")
+        val sharedPreferences = getSharedPreferences(SETTING, Activity.MODE_PRIVATE)
+        val language = sharedPreferences.getString(MY_LANG, "")
         setLocale(language)
     }
 }
