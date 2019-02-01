@@ -46,11 +46,14 @@ class ContactViewHolder(itemView: View) : ViewHolder<ContactItemHolder>(itemView
         }
     }
 
-    fun setContactStatus(contact: Contact) {
-        itemView.contact_status.setImageDrawable(getStatusDrawable(contact.getStatus()!!))
+    fun setContactStatus(contact: Contact?) {
+        itemView.contact_status.setImageDrawable(getStatusDrawable(contact?.getStatus()))
     }
 
-    private fun getStatusDrawable(status: String): Drawable {
+    private fun getStatusDrawable(status: String?): Drawable {
+        if (status == null) {
+            return offline
+        }
         return when(status) {
             "online" -> online
             "away" -> away
