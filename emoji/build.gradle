@@ -41,6 +41,7 @@ dependencies {
     implementation libraries.recyclerview
     implementation libraries.material
     implementation libraries.glide
+    implementation libraries.timber
     kapt libraries.glideProcessor
     implementation libraries.room
     kapt libraries.roomProcessor

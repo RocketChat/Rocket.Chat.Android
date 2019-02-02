@@ -7,13 +7,13 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ImageSpan
-import android.util.Log
 import chat.rocket.android.emoji.internal.GlideApp
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.async
+import timber.log.Timber
 
 class EmojiParser {
 
@@ -81,7 +81,7 @@ class EmojiParser {
 
             return spannable.also { sp ->
                 regex.findAll(spannable).iterator().forEach { match ->
-                    customEmojis.find { it.shortname.toLowerCase() == match.value.toLowerCase() }?.let { emoji ->
+                    customEmojis.find { matchEmoji(it, match.value) }?.let { emoji ->
                         emoji.url?.let { url ->
                             try {
                                 val glideRequest = if (url.endsWith("gif", true)) {
@@ -107,11 +107,24 @@ class EmojiParser {
                                     }
                                 }
                             } catch (ex: Throwable) {
-                                Log.e("EmojiParser", "", ex)
+                                Timber.e( ex)
                             }
                         }
                     }
                 }
+            }
+        }
+
+        private fun matchEmoji(it: Emoji, text: String): Boolean {
+            if (it.shortname== text) {
+                return true
+            } else {
+                it.shortnameAlternates.forEach {
+                    if (":$it:" == text) {
+                        return true
+                    }
+                }
+                return false
             }
         }
 
