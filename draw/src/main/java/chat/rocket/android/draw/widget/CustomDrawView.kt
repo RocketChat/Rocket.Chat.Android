@@ -27,6 +27,7 @@ class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attr
     private var mStartY = 0f
     private var mIsSaving = false
     private var mIsStrokeWidthBarEnabled = false
+    private var mIsEraserEnabled = false
 
     init {
         mPaint.apply {
@@ -71,8 +72,13 @@ class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attr
     }
 
     fun setColor(newColor: Int) {
+        val alpha = if(!mIsEraserEnabled) {
+            mPaintOptions.alpha
+        }else {
+            255
+        }
         @ColorInt
-        val alphaColor = ColorUtils.setAlphaComponent(newColor, mPaintOptions.alpha)
+        val alphaColor = ColorUtils.setAlphaComponent(newColor, alpha)
         mPaintOptions.color = alphaColor
         if (mIsStrokeWidthBarEnabled) {
             invalidate()
@@ -83,6 +89,10 @@ class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attr
         val alpha = (newAlpha*255)/100
         mPaintOptions.alpha = alpha
         setColor(mPaintOptions.color)
+    }
+
+    fun setEraser(value: Boolean){
+        mIsEraserEnabled = value
     }
 
     fun setStrokeWidth(newStrokeWidth: Float) {

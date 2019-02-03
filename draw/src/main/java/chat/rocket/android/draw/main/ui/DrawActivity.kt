@@ -54,8 +54,17 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
 
     private fun setupDrawTools() {
         image_draw_eraser.setOnClickListener {
+            custom_draw_view.setEraser(true)
+            custom_draw_view.setColor(
+                    ResourcesCompat.getColor(resources, R.color.color_white, null)
+            )
+            toggleDrawTools(draw_tools, false)
+        }
+
+        image_draw_eraser.setOnLongClickListener {
             custom_draw_view.clearCanvas()
             toggleDrawTools(draw_tools, false)
+            true
         }
 
         image_draw_width.setOnClickListener {
@@ -111,7 +120,16 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
     }
 
     private fun colorSelector() {
+        image_color_black.setOnClickListener {
+            custom_draw_view.setEraser(false)
+            custom_draw_view.setColor(
+                    ResourcesCompat.getColor(resources, R.color.color_black, null)
+            )
+            scaleColorView(image_color_black)
+        }
+
         image_color_red.setOnClickListener {
+            custom_draw_view.setEraser(false)
             custom_draw_view.setColor(
                 ResourcesCompat.getColor(resources, R.color.color_red, null)
             )
@@ -119,6 +137,7 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
         }
 
         image_color_yellow.setOnClickListener {
+            custom_draw_view.setEraser(false)
             custom_draw_view.setColor(
                 ResourcesCompat.getColor(
                     resources,
@@ -129,6 +148,7 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
         }
 
         image_color_green.setOnClickListener {
+            custom_draw_view.setEraser(false)
             custom_draw_view.setColor(
                 ResourcesCompat.getColor(
                     resources,
@@ -139,6 +159,7 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
         }
 
         image_color_blue.setOnClickListener {
+            custom_draw_view.setEraser(false)
             custom_draw_view.setColor(
                 ResourcesCompat.getColor(resources, R.color.color_blue, null)
             )
@@ -146,6 +167,7 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
         }
 
         image_color_pink.setOnClickListener {
+            custom_draw_view.setEraser(false)
             custom_draw_view.setColor(
                 ResourcesCompat.getColor(
                     resources,
@@ -156,6 +178,7 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
         }
 
         image_color_brown.setOnClickListener {
+            custom_draw_view.setEraser(false)
             custom_draw_view.setColor(
                 ResourcesCompat.getColor(
                     resources,
