@@ -136,12 +136,7 @@ class MembersFragment : Fragment(), MembersView {
     private fun setupToolbar(totalMembers: Long? = null) {
         with((activity as ChatRoomActivity)) {
             if (totalMembers != null) {
-                showToolbarTitle(
-                    (getString(
-                        R.string.title_counted_members,
-                        totalMembers
-                    ))
-                )
+                showToolbarTitle((getString(R.string.title_counted_members, totalMembers)))
             } else {
                 showToolbarTitle((getString(R.string.title_members)))
             }

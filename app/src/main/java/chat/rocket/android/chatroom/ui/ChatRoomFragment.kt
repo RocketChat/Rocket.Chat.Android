@@ -72,7 +72,6 @@ import chat.rocket.android.util.extensions.circularRevealOrUnreveal
 import chat.rocket.android.util.extensions.clearLightStatusBar
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
-import chat.rocket.android.util.extensions.getBitmpap
 import chat.rocket.android.util.extensions.hideKeyboard
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
@@ -346,10 +345,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                REQUEST_CODE_FOR_PERFORM_CAMERA -> takenPhotoUri?.let { uri ->
-                    uri.getBitmpap(requireContext())?.let { bitmap ->
-                        presenter.uploadImage(chatRoomId, "image/png", uri, bitmap, "")
-                    }
+                REQUEST_CODE_FOR_PERFORM_CAMERA -> takenPhotoUri?.let {
+                    showFileAttachmentDialog(it)
                 }
                 REQUEST_CODE_FOR_PERFORM_SAF -> resultData?.data?.let {
                     showFileAttachmentDialog(it)
@@ -1122,13 +1119,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             val builder = AlertDialog.Builder(it)
             builder.setTitle(it.getString(R.string.msg_delete_message))
                 .setMessage(it.getString(R.string.msg_delete_description))
-                .setPositiveButton(it.getString(R.string.msg_ok)) { _, _ ->
+                .setPositiveButton(it.getString(android.R.string.ok)) { _, _ ->
                     presenter.deleteMessage(
                         roomId,
                         id
                     )
                 }
-                .setNegativeButton(it.getString(R.string.msg_cancel)) { _, _ -> }
+                .setNegativeButton(it.getString(android.R.string.cancel)) { _, _ -> }
                 .show()
         }
     }
