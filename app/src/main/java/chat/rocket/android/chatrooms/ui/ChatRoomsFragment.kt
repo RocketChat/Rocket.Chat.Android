@@ -45,6 +45,7 @@ import javax.inject.Inject
 // WIDECHAT
 import android.graphics.Color
 import android.widget.*
+import androidx.core.view.isGone
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.helper.UserHelper
@@ -54,6 +55,7 @@ import chat.rocket.android.settings.ui.SettingsFragment
 import chat.rocket.android.util.extensions.avatarUrl
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.app_bar.*
+import kotlinx.coroutines.experimental.launch
 
 internal const val TAG_CHAT_ROOMS_FRAGMENT = "ChatRoomsFragment"
 
@@ -88,7 +90,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var searchText:  TextView? = null
     private var searchCloseButton: ImageView? = null
     private var profileButton: SimpleDraweeView? = null
-    private var onlineStatusButton:ImageView?=null
+    private var currentUserStatusIcon: ImageView? = null
     private var deepLinkInfo: DeepLinkInfo? = null
     // handles that recurring connection status bug in widechat
     private var currentlyConnected: Boolean? = false
@@ -132,6 +134,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             searchView?.setQuery("", false)
             viewModel.showLastMessage = true
         }
+        setCurrentUserStatusIcon()
         super.onResume()
     }
 
@@ -440,6 +443,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 is State.Connected -> {
                     text_connection_status.text = getString(R.string.status_connected)
                     handler.postDelayed(dismissStatus, 2000)
+                    setCurrentUserStatusIcon()
                 }
                 is State.Disconnected -> text_connection_status.text =
                         getString(R.string.status_disconnected)
@@ -482,7 +486,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 val myAvatarUrl: String? =  serverUrl?.avatarUrl(user?.username ?: "")
 
                 profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
-                onlineStatusButton=this?.getCustomView()?.findViewById(R.id.text_online)
                 profileButton?.setImageURI(myAvatarUrl)
                 profileButton?.setOnClickListener { v ->
 
@@ -501,6 +504,20 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
     }
 
+    private fun setCurrentUserStatusIcon() {
+        with((activity as AppCompatActivity?)?.supportActionBar) {
+            currentUserStatusIcon = this?.getCustomView()?.findViewById(R.id.self_status)
+        }
+        launch {
+            val currentUser = presenter.getCurrentUser(false)
+            val drawable = DrawableHelper.getUserStatusDrawable(currentUser?.status, context!!)
+            ui {
+                currentUserStatusIcon?.isVisible = true
+                currentUserStatusIcon?.setImageDrawable(drawable)
+            }
+        }
+    }
+
     private fun queryChatRoomsByName(name: String?): Boolean {
         if (name.isNullOrEmpty()) {
             updateSort()
@@ -512,6 +529,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun setupFab() {
         create_new_channel_fab.setOnClickListener { view ->
+            currentUserStatusIcon?.isGone = true
             val contactsFragment = ContactsFragment()
             val transaction = activity?.supportFragmentManager?.beginTransaction();
             transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
