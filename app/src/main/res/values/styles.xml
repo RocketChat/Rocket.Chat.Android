@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -31,6 +31,7 @@
         <item name="android:fontFamily">@string/font_fontFamily_widechat</item>
         <item name="android:textSize">24sp</item>
         <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:fontFamily">sans-serif</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -40,7 +41,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:lineSpacingExtra">4sp</item>
         <item name="android:textColor">#FF54585E</item>
         <item name="android:textStyle">normal</item>
     </style>
@@ -50,7 +50,6 @@
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:letterSpacing">0.04</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
@@ -64,7 +63,6 @@
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/colorAuthenticationSecondaryText</item>
-        <item name="android:letterSpacing">0.04</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
@@ -74,7 +72,6 @@
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColorHint">@color/colorAuthenticationSecondaryText</item>
-        <item name="android:lineSpacingExtra">3sp</item>
     </style>
 
     <style name="Authentication.EditText.Border" parent="Widget.AppCompat.EditText">
@@ -98,7 +95,6 @@
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:lineSpacingExtra">2sp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:background">@drawable/rounded_color_accent</item>
     </style>
@@ -111,15 +107,103 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:lineSpacingExtra">2sp</item>
     </style>
 
+    // REMARK: To be removed as soon as we have our loading view.
     <style name="Authentication.AVLoadingIndicatorView" parent="AVLoadingIndicatorView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="indicatorColor">@color/colorPrimary</item>
         <item name="indicatorName">BallPulseIndicator</item>
     </style>
+    <!-- End Authentication -->
+
+    <!-- Chat list -->
+    <style name="ChatList.ChatName.TextView" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="ChatList.ChatName.Unread.TextView" parent="ChatList.ChatName.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ChatList.LastMessage.TextView" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorLastMessageText</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
+    <style name="ChatList.LastMessage.Unread.TextView" parent="ChatList.LastMessage.TextView">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="ChatList.Timestamp.TextView" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTimestampText</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="ChatList.Timestamp.Unread.TextView" parent="ChatList.Timestamp.TextView">
+        <item name="android:textColor">@color/colorTimestampTextUnread</item>
+    </style>
+
+    <style name="ChatList.Badge.TextView" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <!-- End chat list -->
+
+    <!-- User details -->
+    <style name="UserDetails.TextView.Name" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorUserDetailsNameText</item>
+    </style>
+
+    <style name="UserDetails.TextView.Username" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorUserDetailsUsernameText</item>
+    </style>
+
+    <style name="UserDetails.TextView.Actions" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="UserDetails.TextView.Title" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorAuthenticationSecondaryText</item>
+    </style>
+
+    <style name="UserDetails.TextView.Description" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+    <!-- End user details-->
 
     <style name="EditText.Password" parent="TextAppearance.AppCompat">
         <!-- Hint color and label color in FALSE state -->
@@ -129,13 +213,6 @@
         <item name="colorControlActivated">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="AuthenticationLabel" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">50dp</item>
-        <item name="android:layout_marginStart">@dimen/screen_edge_left_and_right_margins</item>
-        <item name="android:paddingStart">@dimen/edit_text_margin</item>
-    </style>
-
     <style name="ChatRoom.SearchView" parent="Widget.AppCompat.SearchView">
         <item name="queryHint">@string/title_search_message</item>
         <item name="searchIcon">@drawable/ic_search_white_24dp</item>
@@ -143,14 +220,22 @@
         <item name="closeIcon">@drawable/ic_close_white_24dp</item>
     </style>
 
+    <style name="ChatRoom.Timestamp.TextView" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">10sp</item>
+    </style>
+
     <style name="ChatRooms.Header" parent="TextAppearance.AppCompat.Headline">
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="ChatRoom.Name.TextView" parent="TextAppearance.AppCompat.Title">
-        <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">1</item>
+    <style name="ChatDetails.Title.TextView" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="ChatDetails.Content.TextView" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorSecondaryTextLight</item>
     </style>
 
     <style name="Sender.Name.TextView" parent="TextAppearance.AppCompat.Title">
@@ -172,10 +257,6 @@
 
     <style name="Message.Quote.TextView" parent="Message.TextView">
         <item name="android:textColor">@color/colorPrimaryText</item>
-    </style>
-
-    <style name="Timestamp.TextView" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:textSize">10sp</item>
     </style>
 
     // REMARK: To be removed.

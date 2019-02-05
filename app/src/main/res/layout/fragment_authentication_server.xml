@@ -63,7 +63,7 @@
                 android:inputType="text|textUri" />
         </RelativeLayout>
 
-        <Button
+        <android.widget.Button
             android:id="@+id/button_connect"
             style="@style/Authentication.Button"
             android:layout_marginTop="20dp"

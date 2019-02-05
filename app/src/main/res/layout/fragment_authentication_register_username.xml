@@ -26,7 +26,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_sign_in_to_your_server" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/button_use_this_username"
         style="@style/Authentication.Button"
         android:layout_marginTop="20dp"

@@ -115,9 +115,6 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
     }
 
     private fun setupToolbar() {
-        (activity as ChatRoomActivity).let {
-            it.showToolbarTitle(getString(R.string.title_favorite_messages))
-            it.hideToolbarChatRoomIcon()
-        }
+        (activity as ChatRoomActivity).showToolbarTitle(getString(R.string.title_favorite_messages))
     }
 }

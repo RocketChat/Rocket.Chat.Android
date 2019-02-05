@@ -29,6 +29,9 @@ abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(
         notifyDataSetChanged()
     }
 
+    private var currentCount = 0;
+    private var currentItems = listOf<SuggestionModel>()
+
     init {
         setHasStableIds(true)
     }
@@ -41,10 +44,10 @@ abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(
         holder.bind(getItem(position), itemClickListener)
     }
 
-    override fun getItemCount() = strategy.autocompleteItems(currentTerm).size
+    override fun getItemCount() = currentCount
 
     private fun getItem(position: Int): SuggestionModel {
-        return strategy.autocompleteItems(currentTerm)[position]
+        return currentItems[position]
     }
 
     /**
@@ -58,12 +61,15 @@ abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(
 
     fun autocomplete(newTerm: String) {
         this.currentTerm = newTerm.toLowerCase().trim()
+        currentItems = strategy.autocompleteItems(currentTerm)
+        currentCount = currentItems.size
     }
 
     fun addItems(list: List<SuggestionModel>) {
         strategy.addAll(list)
         // Since we've just added new items we should check for possible new completion suggestions.
-        strategy.autocompleteItems(currentTerm)
+        //strategy.autocompleteItems(currentTerm)
+        autocomplete(currentTerm)
         notifyDataSetChanged()
     }
 

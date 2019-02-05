@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/action_message_info"
         android:icon="@drawable/ic_action_message_info_outline_24dp"
         android:title="@string/action_msg_info" />
-
     <item
         android:id="@+id/action_message_reply"
         android:icon="@drawable/ic_action_message_reply_24dp"
         android:title="@string/action_msg_reply" />
+    <item
+        android:id="@+id/action_message_edit"
+        android:icon="@drawable/ic_action_message_edit_24dp"
+        android:title="@string/action_msg_edit" />
+
+    <item
+        android:id="@+id/action_menu_msg_react"
+        android:icon="@drawable/ic_add_reaction"
+        android:title="@string/action_msg_add_reaction" />
 
     <item
         android:id="@+id/action_message_permalink"
@@ -26,11 +33,6 @@
         android:id="@+id/action_message_copy"
         android:icon="@drawable/ic_action_message_copy_24dp"
         android:title="@string/action_msg_copy" />
-
-    <item
-        android:id="@+id/action_menu_msg_react"
-        android:icon="@drawable/ic_add_reaction"
-        android:title="@string/action_msg_add_reaction" />
 
     <!--<item-->
     <!--android:id="@+id/action_menu_msg_share"-->
@@ -48,9 +50,9 @@
         android:title="@string/action_msg_pin" />
 
     <item
-        android:id="@+id/action_message_edit"
-        android:icon="@drawable/ic_action_message_edit_24dp"
-        android:title="@string/action_msg_edit" />
+        android:id="@+id/action_message_report"
+        android:icon="@drawable/ic_action_message_report_24dp"
+        android:title="@string/action_msg_report" />
 
     <item
         android:id="@+id/action_message_delete"
