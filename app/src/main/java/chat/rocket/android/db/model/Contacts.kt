@@ -8,6 +8,7 @@ data class ContactEntity(
         @PrimaryKey(autoGenerate = true)
         var id: Int,
         var name: String? = null,
+        var userId: String? = null,
         var username: String? = null,
         var phoneNumber: String? = null,
         var emailAddress: String? = null,
