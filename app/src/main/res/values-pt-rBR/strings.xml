@@ -225,7 +225,7 @@
     <string name="action_msg_unpin">Desfixar mensagem</string>
     <string name="action_msg_star">Marcar como favorita</string>
     <string name="action_msg_unstar">Desmarcar como favorita</string>
-    <string name="action_msg_share">Compartilhar</string>
+    <string name="action_msg_invite">Compartilhar</string>
     <string name="action_title_editing">Editando mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
     <string name="action_msg_copy_permalink">Copiar permalink</string>

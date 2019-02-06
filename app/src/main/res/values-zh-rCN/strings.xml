@@ -220,7 +220,7 @@
     <string name="action_msg_unpin">取消固定</string>
     <string name="action_msg_star">标记消息</string>
     <string name="action_msg_unstar">取消标记</string>
-    <string name="action_msg_share">分享消息</string>
+    <string name="action_msg_invite">分享消息</string>
     <string name="action_title_editing">编辑消息</string>
     <string name="action_msg_add_reaction">增加操作</string>
     <string name="action_msg_copy_permalink">拷贝永久链接</string>
@@ -322,7 +322,7 @@
     <string name="header_unknown">未知</string>
 
     <!--Notifications-->
-    <string name="share_label">编辑分享的消息</string>
+    <string name="invite_label">编辑分享的消息</string>
     <string name="notif_action_reply_hint">回复</string>
     <string name="notif_error_sending">回复失败，请重试.</string>
     <string name="notif_success_sending">消息发送给 %1$s!</string>

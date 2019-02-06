@@ -223,7 +223,7 @@
     <string name="action_msg_unpin">از سوزن دراوردن پیام</string>
     <string name="action_msg_star">ستاره‌دار کردن پیام</string>
     <string name="action_msg_unstar">از ستاره دراوردن پیام</string>
-    <string name="action_msg_share">اشتراک</string>
+    <string name="action_msg_invite">اشتراک</string>
     <string name="action_title_editing">ویرایش پیام</string>
     <string name="action_msg_add_reaction">اضافه کردن واکنش</string>
     <string name="action_msg_copy_permalink">Copy permalink</string> <!-- TODO Add translation -->
@@ -325,7 +325,7 @@
     <string name="header_unknown">ناشناس</string>
 
     <!--Notifications-->
-    <string name="share_label">ویراش پیام به اشتراک گذاشته شده</string>
+    <string name="invite_label">ویراش پیام به اشتراک گذاشته شده</string>
     <string name="notif_action_reply_hint">جواب دادن</string>
     <string name="notif_error_sending">جواب با شکست مواجه شد. لطفا دوباره تلاش کنید.</string>
     <string name="notif_success_sending">Message sent to %1$s!</string> <!-- TODO Add translation -->
