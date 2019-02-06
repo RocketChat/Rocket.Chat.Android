@@ -9,6 +9,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.model.ChatRoomEntity
+import chat.rocket.android.db.model.UserEntity
 import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
 import chat.rocket.android.emoji.Emoji
 import chat.rocket.android.emoji.EmojiRepository
@@ -118,6 +119,10 @@ class MainPresenter @Inject constructor(
                 Timber.e(ex)
             }
         }
+    }
+
+    fun getUser(username: String): UserEntity? {
+        return dbManager.userDao().getUserFromUsername(username)
     }
 
     private fun createDirectMessage(id: String) = launchUI(strategy) {
@@ -259,6 +264,7 @@ class MainPresenter @Inject constructor(
     }
 
     fun loadCurrentInfo() {
+        setupConnectionInfo(currentServer)
         checkServerInfo(currentServer)
         launchUI(strategy) {
             try {

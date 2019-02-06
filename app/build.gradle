@@ -16,8 +16,8 @@ android {
         applicationId "chat.veranda.android"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 2050
-        versionName "0.4.2"
+        versionCode 2057
+        versionName "0.4.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -143,6 +143,7 @@ dependencies {
     implementation libraries.frescoAnimatedWebP
 
     implementation libraries.glide
+    implementation libraries.glideTransformations
 
     kapt libraries.kotshiCompiler
     implementation libraries.kotshiApi

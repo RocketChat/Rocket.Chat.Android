@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:fillViewport="true">-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp">
+
+        <!--<com.google.android.material.appbar.AppBarLayout-->
+        <!--android:id="@+id/appBarLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/colorPrimary"-->
+        <!--android:theme="@style/Theme.AppCompat.Light.NoActionBar">-->
+
+        <!--<androidx.appcompat.widget.Toolbar-->
+        <!--android:id="@+id/toolbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="?attr/actionBarSize"-->
+        <!--app:layout_scrollFlags="scroll|enterAlways"-->
+        <!--app:navigationIcon="?android:attr/homeAsUpIndicator"-->
+        <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
+        <!--app:theme="@style/ActionModeStyle">-->
+
+        <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/text_change_password"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:ellipsize="end"-->
+        <!--android:maxLines="1"-->
+        <!--android:text="@string/action_msg_report"-->
+        <!--android:textColor="@color/colorWhite"-->
+        <!--android:textSize="18sp"-->
+        <!--android:textStyle="bold" />-->
+        <!--</RelativeLayout>-->
+        <!--</androidx.appcompat.widget.Toolbar>-->
+
+        <!--</com.google.android.material.appbar.AppBarLayout>-->
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="24dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="24dp" />
+
+        <!--<TextView-->
+        <!--android:id="@+id/text_view_report_label"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Description"-->
+        <!--android:textColor="@color/darkGray"-->
+        <!--app:layout_constraintStart_toStartOf="@+id/guideline_start"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/text_view_required"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:text="(required)"-->
+        <!--android:textColor="@color/darkGray"-->
+        <!--android:textSize="14sp"-->
+        <!--app:layout_constraintEnd_toEndOf="@+id/guideline_end"-->
+        <!--app:layout_constraintStart_toEndOf="@id/text_view_report_label"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+        <EditText
+            android:id="@+id/edit_text_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="4"
+            android:overScrollMode="always"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Jot something untoward..." />
+
+        <TextView
+            android:id="@+id/text_view_error"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/required"
+            android:textColor="@color/colorRed"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/edit_text_description"
+            tools:visibility="visible" />
+
+        <android.widget.Button
+            android:id="@+id/button_send_report"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_color_accent"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/submit"
+            android:textColor="@android:color/white"
+            app:layout_constraintEnd_toEndOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/text_view_error" />1
+    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--</androidx.core.widget.NestedScrollView>-->

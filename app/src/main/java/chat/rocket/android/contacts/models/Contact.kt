@@ -11,6 +11,7 @@ class Contact() : Parcelable {
     private var isPhone: Boolean = true
     private var username: String? = null
     private var avatarUrl: String? = null
+    private var status: String? = null
 
     fun getUsername(): String? {
         return username
@@ -67,6 +68,14 @@ class Contact() : Parcelable {
 
     fun setAvatarUrl(url: String) {
         this.avatarUrl = url
+    }
+
+    fun getStatus(): String? {
+        return status
+    }
+
+    fun setStatus(status: String) {
+        this.status = status
     }
 
     constructor(parcel: Parcel) : this() {

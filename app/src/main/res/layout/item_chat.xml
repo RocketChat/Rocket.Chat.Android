@@ -33,66 +33,51 @@
             app:layout_constraintBottom_toBottomOf="@+id/text_chat_name"
             app:layout_constraintStart_toEndOf="@+id/image_avatar"
             app:layout_constraintTop_toTopOf="@+id/text_chat_name"
-            tools:src="@drawable/ic_hashtag_unread_12dp" />
+            tools:src="@drawable/ic_hashtag_12dp" />
+
+        <TextView
+            android:id="@+id/text_chat_name"
+            style="@style/ChatList.ChatName.TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/text_view_drawable_padding"
+            android:textDirection="locale"
+            app:layout_constraintEnd_toStartOf="@+id/text_timestamp"
+            app:layout_constraintStart_toEndOf="@+id/image_chat_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Margaret Hanson" />
+
+        <TextView
+            android:id="@+id/text_timestamp"
+            style="@style/ChatList.Timestamp.TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:textDirection="locale"
+            app:layout_constraintBaseline_toBaselineOf="@+id/text_chat_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="11:45 AM" />
 
         <TextView
             android:id="@+id/text_last_message"
+            style="@style/ChatList.LastMessage.TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginTop="2dp"
-            android:layout_weight="0.8"
-            android:ellipsize="end"
-            android:maxLines="2"
+            android:layout_marginEnd="12dp"
             android:textDirection="locale"
-            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/layout_unread_messages_badge"
             app:layout_constraintStart_toStartOf="@+id/image_chat_icon"
             app:layout_constraintTop_toBottomOf="@+id/text_chat_name"
             tools:text="Filipe de Lima Brito: Type something that is very big and need at least to lines, or maybe even more" />
 
-
-        <TextView
-            android:id="@+id/text_chat_name"
-            style="@style/ChatRoom.Name.TextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/text_view_drawable_padding"
-            android:ellipsize="end"
-            android:lines="1"
-            android:maxLines="1"
-            android:textDirection="locale"
-            android:textColor="@color/colorSecondaryText"
-            app:layout_constraintBottom_toTopOf="@+id/text_last_message"
-            app:layout_constraintEnd_toStartOf="@+id/text_last_message_date_time"
-            app:layout_constraintStart_toEndOf="@+id/image_chat_icon"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="general" />
-
-        <TextView
-            android:id="@+id/text_last_message_date_time"
-            style="@style/Timestamp.TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:gravity="center"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/layout_unread_messages_badge"
-            android:layout_marginTop="2dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textDirection="locale"
-            app:layout_constraintEnd_toStartOf="@+id/layout_unread_messages_badge"
-            app:layout_constraintTop_toTopOf="@+id/text_chat_name"
-            tools:text="11:45 AM" />
-
         <include
             android:id="@+id/layout_unread_messages_badge"
             layout="@layout/unread_messages_badge"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/text_chat_name" />
+            app:layout_constraintTop_toTopOf="@+id/text_last_message" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</layout> 

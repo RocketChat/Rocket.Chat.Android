@@ -1,6 +1,6 @@
 package chat.rocket.android.chatrooms.ui
 
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
@@ -34,7 +34,13 @@ import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extension.onQueryTextListener
-import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.extensions.fadeIn
+import chat.rocket.android.util.extensions.fadeOut
+import chat.rocket.android.util.extensions.ifNotNullNorEmpty
+import chat.rocket.android.util.extensions.ifNotNullNotEmpty
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
@@ -45,6 +51,7 @@ import javax.inject.Inject
 // WIDECHAT
 import android.graphics.Color
 import android.widget.*
+import androidx.core.view.isGone
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.helper.UserHelper
@@ -54,6 +61,7 @@ import chat.rocket.android.settings.ui.SettingsFragment
 import chat.rocket.android.util.extensions.avatarUrl
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.app_bar.*
+import kotlinx.coroutines.experimental.launch
 
 internal const val TAG_CHAT_ROOMS_FRAGMENT = "ChatRoomsFragment"
 
@@ -88,7 +96,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var searchText:  TextView? = null
     private var searchCloseButton: ImageView? = null
     private var profileButton: SimpleDraweeView? = null
-    private var onlineStatusButton:ImageView?=null
+    private var currentUserStatusIcon: ImageView? = null
     private var deepLinkInfo: DeepLinkInfo? = null
     // handles that recurring connection status bug in widechat
     private var currentlyConnected: Boolean? = false
@@ -111,8 +119,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         val bundle = arguments
         if (bundle != null) {
             chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
-            chatRoomId?.let {
-                presenter.loadChatRoom(it)
+            chatRoomId.ifNotNullNotEmpty { roomId ->
+                presenter.loadChatRoom(roomId)
                 chatRoomId = null
             }
             deepLinkInfo = bundle.getParcelable<DeepLinkInfo>(Constants.DEEP_LINK_INFO)
@@ -132,6 +140,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             searchView?.setQuery("", false)
             viewModel.showLastMessage = true
         }
+        setCurrentUserStatusIcon()
         super.onResume()
     }
 
@@ -303,14 +312,16 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     )
                 }
 
-                AlertDialog.Builder(context)
-                    .setTitle(R.string.dialog_sort_title)
-                    .setView(dialogLayout)
-                    .setPositiveButton(R.string.dialog_button_done) { dialog, _ ->
-                        invalidateQueryOnSearch()
-                        updateSort()
-                        dialog.dismiss()
-                    }.show()
+                context?.let {
+                    AlertDialog.Builder(it)
+                        .setTitle(R.string.dialog_sort_title)
+                        .setView(dialogLayout)
+                        .setPositiveButton(R.string.msg_sort) { dialog, _ ->
+                            invalidateQueryOnSearch()
+                            updateSort()
+                            dialog.dismiss()
+                        }.show()
+                }
             }
         }
         
@@ -440,6 +451,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 is State.Connected -> {
                     text_connection_status.text = getString(R.string.status_connected)
                     handler.postDelayed(dismissStatus, 2000)
+                    setCurrentUserStatusIcon()
                 }
                 is State.Disconnected -> text_connection_status.text =
                         getString(R.string.status_disconnected)
@@ -482,7 +494,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 val myAvatarUrl: String? =  serverUrl?.avatarUrl(user?.username ?: "")
 
                 profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
-                onlineStatusButton=this?.getCustomView()?.findViewById(R.id.text_online)
                 profileButton?.setImageURI(myAvatarUrl)
                 profileButton?.setOnClickListener { v ->
 
@@ -501,6 +512,20 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
     }
 
+    private fun setCurrentUserStatusIcon() {
+        with((activity as AppCompatActivity?)?.supportActionBar) {
+            currentUserStatusIcon = this?.getCustomView()?.findViewById(R.id.self_status)
+        }
+        launch {
+            val currentUser = presenter.getCurrentUser(false)
+            val drawable = DrawableHelper.getUserStatusDrawable(currentUser?.status, context!!)
+            ui {
+                currentUserStatusIcon?.isVisible = true
+                currentUserStatusIcon?.setImageDrawable(drawable)
+            }
+        }
+    }
+
     private fun queryChatRoomsByName(name: String?): Boolean {
         if (name.isNullOrEmpty()) {
             updateSort()
@@ -512,6 +537,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun setupFab() {
         create_new_channel_fab.setOnClickListener { view ->
+            currentUserStatusIcon?.isGone = true
             val contactsFragment = ContactsFragment()
             val transaction = activity?.supportFragmentManager?.beginTransaction();
             transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);

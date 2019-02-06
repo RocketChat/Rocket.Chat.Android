@@ -1,6 +1,5 @@
 package chat.rocket.android.contacts.adapter
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
@@ -9,8 +8,11 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.*
+import chat.rocket.android.contacts.models.Contact
+import chat.rocket.android.db.model.UserEntity
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extensions.inflate
+import kotlinx.coroutines.experimental.launch
 
 class ContactRecyclerViewAdapter(
         private val context: MainActivity,
@@ -65,26 +67,37 @@ class ContactRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder<*>, position: Int) {
         if (holder is ContactViewHolder) {
             holder.bind(contactArrayList[position] as ContactItemHolder)
+
+            val contact: Contact = holder.data!!.data
+            val username = contact.getUsername()
+            var user: UserEntity?
+            if (username != null) {
+                launch {
+                    user = context.presenter.getUser(username!!)
+                    if (user != null) {
+                        contact.setStatus(user!!.status)
+                    }
+                    holder.setContactStatus(contact)
+                }
+            }
+
             val inviteButton: Button = holder.itemView.findViewById(R.id.invite_contact)
             val dmButton: Button = holder.itemView.findViewById(R.id.chat_username)
 
             inviteButton.setOnClickListener { view ->
                 run {
                     inviteButton.setText("INVITED")
-                    val contact = holder.data!!.data
-
-                    if (contact!!.isPhone()) {
-                        context.presenter.inviteViaSMS(contact!!.getPhoneNumber()!!)
+                    if (contact.isPhone()) {
+                        context.presenter.inviteViaSMS(contact.getPhoneNumber()!!)
                     } else {
-                        context.presenter.inviteViaEmail(contact!!.getEmailAddress()!!)
+                        context.presenter.inviteViaEmail(contact.getEmailAddress()!!)
                     }
                 }
             }
 
             dmButton.setOnClickListener { view ->
                 run {
-                    val contact = holder.data!!.data
-                    context.presenter.openDirectMessageChatRoom(contact!!.getUsername().toString())
+                    context.presenter.openDirectMessageChatRoom(contact.getUsername().toString())
                 }
             }
 
