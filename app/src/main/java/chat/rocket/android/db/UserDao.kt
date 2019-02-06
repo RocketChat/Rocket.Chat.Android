@@ -29,7 +29,7 @@ abstract class UserDao : BaseDao<UserEntity> {
     abstract fun findUser(id: String): String?
 
     @Query("SELECT * FROM users WHERE ID = :id")
-    abstract fun getUser(id:String): UserEntity?
+    abstract fun getUser(id: String): UserEntity?
 
     @Query("SELECT * FROM users WHERE USERNAME = :username")
     abstract fun getUserFromUsername(username:String): UserEntity?

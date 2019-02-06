@@ -264,6 +264,7 @@ class MainPresenter @Inject constructor(
     }
 
     fun loadCurrentInfo() {
+        setupConnectionInfo(currentServer)
         checkServerInfo(currentServer)
         launchUI(strategy) {
             try {

@@ -17,7 +17,14 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
         $BASE_QUERY
         WHERE chatrooms.id = :id
         """)
-    abstract fun get(id: String): ChatRoom?
+    abstract fun get(id: String): LiveData<ChatRoom>
+
+    @Transaction
+    @Query("""
+        $BASE_QUERY
+        WHERE chatrooms.id = :id
+        """)
+    abstract fun getSync(id: String): ChatRoom?
 
     @Transaction
     @Query("$BASE_QUERY $FILTER_NOT_OPENED")
