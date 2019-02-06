@@ -48,9 +48,6 @@ import chat.rocket.android.util.extensions.openTabbedUrl
 import kotlinx.android.synthetic.main.app_bar.* // need this for back button in setupToolbar
 import kotlinx.android.synthetic.main.fragment_profile_widechat.*
 
-// EAR EX: https://mysso.test.viasat.com/federation/custom/ViasatConnectProfile.jsp?access_token=8040d939-bbd3-4dec-ab1d-e62456a3ec2e
-internal const val WIDECHAT_PROFILE_UPDATE_PATH = "/federation/custom/ViasatConnectProfile.jsp"
-
 internal const val TAG_PROFILE_FRAGMENT = "ProfileFragment"
 
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 1
@@ -274,11 +271,10 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         if (Constants.WIDECHAT) {
             widechat_view_dim.setOnClickListener { hideUpdateAvatarOptions() }
 
-            presenter.getCustomOauthUrl()
-//            var link: String? = "https://devsup1-myexede.cs33.force.com/viasatconnectredirecttest"
+            presenter.setCurrentAccessToken()
+
             edit_profile_button.setOnClickListener { view: View ->
-                // EAR > TODO: append the access token??  Once custom tab used for initial login this won't be neccessary?
-                view.openTabbedUrl(presenter.widechatCustomOauthHost + WIDECHAT_PROFILE_UPDATE_PATH)
+                view.openTabbedUrl("${presenter.widechatCustomOauthHost}${getString(R.string.widechat_sso_profile_update_path)}${presenter.currentAccessToken}")
             }
             delete_account_button.setOnClickListener { showToast("Delete Account Button Clicked") }
         } else {
