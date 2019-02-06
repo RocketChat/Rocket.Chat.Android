@@ -15,7 +15,7 @@ fun View.openTabbedUrl(url: String?) {
         val tabsbuilder = CustomTabsIntent.Builder()
         tabsbuilder.setToolbarColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, context.theme))
         val customTabsIntent = tabsbuilder.build()
-        // EAR test - what to do about this, do we just let the user choose what app to use?
+        // WIDECHAT NOTE: - Use chrome if they have it.
         customTabsIntent.intent.setPackage("com.android.chrome")
         try {
             customTabsIntent.launchUrl(context, uri)

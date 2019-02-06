@@ -211,7 +211,6 @@ abstract class CheckServerPresenter constructor(
             }
 
             if (services.isNotEmpty()) {
-                //state = OauthHelper.getState()
                 checkEnabledCustomOauthAccounts(services, serverUrl)
             }
         } catch (exception: RocketChatException) {

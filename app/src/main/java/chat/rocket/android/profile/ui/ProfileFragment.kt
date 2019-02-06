@@ -272,10 +272,10 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             widechat_view_dim.setOnClickListener { hideUpdateAvatarOptions() }
 
             presenter.setCurrentAccessToken()
-
             edit_profile_button.setOnClickListener { view: View ->
                 view.openTabbedUrl("${presenter.widechatCustomOauthHost}${getString(R.string.widechat_sso_profile_update_path)}${presenter.currentAccessToken}")
             }
+
             delete_account_button.setOnClickListener { showToast("Delete Account Button Clicked") }
         } else {
             view_dim.setOnClickListener { hideUpdateAvatarOptions() }

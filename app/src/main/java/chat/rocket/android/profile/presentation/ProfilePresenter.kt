@@ -97,8 +97,6 @@ class ProfilePresenter @Inject constructor(
                 view.showMessage(ex)
             }
         }
-
-
     }
 
     fun updateUserProfile(email: String, name: String, username: String) {
