@@ -335,7 +335,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             // Permission is not granted
 
             ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.READ_CONTACTS),
+                    arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS),
                     PERMISSIONS_REQUEST_RW_CONTACTS)
         } else {
             // Permission has already been granted
