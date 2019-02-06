@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module abstract class MessageServiceProvider {
+
     @ContributesAndroidInjector(modules = [AppModule::class])
     abstract fun provideMessageService(): MessageService
 }

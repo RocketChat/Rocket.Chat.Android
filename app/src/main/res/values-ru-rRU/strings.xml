@@ -23,6 +23,10 @@
     <string name="title_update_profile">Обновить профиль</string>
     <string name="title_about">О программе</string>
     <string name="title_create_channel">Создать новый канал</string>
+    <string name="title_channel_details">О канале</string>
+    <string name="title_topic">Тема</string>
+    <string name="title_announcement">Объявление</string>
+    <string name="title_description">Описание</string>
     <string name="title_licence">Лицензия</string>
     <string name="title_are_you_sure">Вы уверены?</string>
 
@@ -62,6 +66,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Персональные</item>
         <item name="item_password">Изменить пароль</item>
+        <item name="change_language">Изменить язык</item>
         <item name="item_share_app">Поделиться приложением</item>
         <item name="item_rate_us">Оцените нас</item>
         <item name="item_contact_us">Связаться с нами</item>
@@ -119,13 +124,11 @@
     <string name="msg_preview_file">Файл</string>
     <string name="msg_no_messages_yet">Нет сообщений</string>
     <string name="msg_build">Сборка %1$d - %2$s - %3$s</string>
-    <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">Версия сервера устарела. Пожалуйста, свяжитесь с администратором, чтобы обновить сервер.</string>
     <string name="msg_ver_not_recommended">Похоже, версия сервера меньше рекомендуемой %1$s.\nМожно войти, но могут возникнуть те или иные проблемы при работе.\n</string>
     <string name="msg_ver_not_minimum">Похоже, версия сервера меньше минимально необходимой %1$s.\nДля работы потребуется обновить сервер!</string>
     <string name="msg_no_chat_title">Нет сообщений</string>
     <string name="msg_no_chat_description">Начните общаться, чтобы увидеть\nтут сообщения.</string>
-    <string name="msg_cancel">ОТМЕНА</string>
     <string name="msg_http_insecure">При использовании HTTP вы подключаетесь к небезопасному серверу. Мы не рекомендуем вам это делать.</string>
     <string name="msg_error_checking_server_version">При проверке версии вашего сервера произошла ошибка, повторите попытку.</string>
     <string name="msg_invalid_server_protocol">Выбранный протокол не разрешен на этом сервере, попробуйте использовать HTTPS</string>
@@ -147,7 +150,7 @@
     <string name="msg_channel_name">Название канала</string>
     <string name="msg_search">Поиск</string>
     <string name="msg_welcome_to_rocket_chat">Rocket.Chat</string>
-    <string name="msg_team_communication">Чат с открытым исходным кодом</string>
+    <string name="msg_team_communication">Командное общение</string>
     <string name="msg_login_with_email">Войти с помощью <b>e-mail</b></string>
     <string name="msg_create_account">Создать аккаунт</string>
     <string name="msg_continue_with_facebook">Войти с помощью <b>Facebook</b></string>
@@ -161,9 +164,14 @@
     <string name="msg_view_more">больше</string>
     <string name="msg_view_less">меньше</string>
     <string name="msg_permalink_copied">Ссылка скопирована</string>
+    <string name="msg_no_topic">Нет темы</string>
+    <string name="msg_no_announcement">Нет объявления</string>
+    <string name="msg_no_description">Нет описания</string>
     <string name="msg_send_email">Отправить e-mail</string>
     <string name="msg_android_app_support">Поддержка Android-приложения</string>
     <string name="msg_muted_on_this_channel">Вы лишены дара речи на этом канале</string>
+    <string name="msg_unable_to_update_password">Невозможно обновить пароль. Ошибка: %1$s</string>
+    <string name="msg_password_updated_successfully">Пароль успешно обновлен</string>
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s реагирует с %2$s</item>
         <item quantity="few">%1$s реагируют с %2$s</item>
@@ -183,7 +191,7 @@
     <string name="msg_channel_created_successfully">Канал создан успешно</string>
 
     <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Отслеживание Analytics</string>
+    <string name="msg_analytics_tracking">Отслеживание аналитики</string>
     <string name="msg_send_analytics_tracking">Отправлять анонимную статистику для улучшения приложения.</string>
     <string name="msg_do_not_send_analytics_tracking">Не отправлять анонимную статистику для улучшения приложения</string>
     <string name="msg_not_applicable_since_it_is_a_foss_version">Не применимо, так как это FOSS версия</string>
@@ -218,6 +226,7 @@
     <string name="action_title_editing">Редактирование сообщения</string>
     <string name="action_msg_add_reaction">Отреагировать</string>
     <string name="action_msg_copy_permalink">Копировать ссылку</string>
+    <string name="action_msg_report">Пожаловаться</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редактирование запрещено</string>
@@ -299,13 +308,12 @@
     <string name="alert_title_default_skin_tone">Тон кожи по умолчанию</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">Сортировать</string>
+    <string name="msg_sort">Сортировать</string>
     <string name="dialog_sort_title">Сортировать по</string>
     <string name="dialog_sort_by_alphabet">По алфавиту</string>
     <string name="dialog_sort_by_activity">По активности</string>
     <string name="dialog_group_by_type">Группировать по типу</string>
     <string name="dialog_group_favourites">Группировать избранное</string>
-    <string name="dialog_button_done">Ок</string>
     <string name="chatroom_header">Заголовок</string>
 
     <!--ChatRooms Headers-->
@@ -325,6 +333,7 @@
     <string name="msg_log_out">Выходим…</string>
     <string name="message_room_changed_privacy">Тип канала изменен на: %1$s пользователем %2$s</string>
 
+    <!-- TODO: Need proper translations. -->
     <!-- WIDECHAT -->
     <string name="msg_welcome_to_widechat">Welcome to Viasat Connect</string>
     <string name="sign_up">Sign Up</string>
@@ -333,4 +342,12 @@
     <string name="delete_account">Delete My Account</string>
     <string name="log_out">Log Out</string>
     <string name="widechat_new_channel">New Group Chat</string>
+
+    <!-- User Details -->
+    <string name="timezone">Часовой поясe</string>
+
+    <!-- Report -->
+    <string name="submit">Отправить</string>
+    <string name="required">*требуется</string>
+    <string name="report_sent">Ваша жалоба была отправлена!</string>
 </resources>

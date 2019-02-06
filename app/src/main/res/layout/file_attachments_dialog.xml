@@ -79,7 +79,7 @@
             android:layout_margin="16dp"
             android:hint="@string/msg_file_description" />
 
-        <Button
+        <android.widget.Button
             android:id="@+id/button_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
             android:text="@string/msg_send"
             android:textColor="@color/colorWhite" />
 
-        <Button
+        <android.widget.Button
             android:id="@+id/button_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
             app:layout_constraintEnd_toStartOf="@id/button_send"
             android:layout_margin="16dp"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:text="@string/msg_cancel" />
+            android:text="@android:string/cancel" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

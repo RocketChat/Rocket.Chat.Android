@@ -10,6 +10,7 @@ import android.text.TextWatcher
 import android.transition.Slide
 import android.transition.TransitionManager
 import android.util.AttributeSet
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.EditText
@@ -24,6 +25,7 @@ import chat.rocket.android.suggestions.model.SuggestionModel
 import chat.rocket.android.suggestions.ui.SuggestionsAdapter.Companion.CONSTRAINT_BOUND_TO_START
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.system.measureTimeMillis
 
 //  This is a special index that means we're not at an autocompleting state.
 private const val NO_STATE_INDEX = 0
@@ -72,7 +74,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
         // If we don't have any adapter bound to any token bail out.
         if (adaptersByToken.isEmpty()) return
 
-        if (editor?.get() != null && editor?.get()?.selectionStart ?: 0 <= completionOffset.get()) {
+        if (editor?.get() != null && editor?.get()?.selectionStart ?: 0 < completionOffset.get()) {
             completionOffset.set(NO_STATE_INDEX)
             collapse()
         }
@@ -101,22 +103,32 @@ class SuggestionsView : FrameLayout, TextWatcher {
             return
         }
 
-        val prefixEndIndex = this.editor?.get()?.selectionStart ?: NO_STATE_INDEX
-        if (prefixEndIndex == NO_STATE_INDEX || prefixEndIndex < completionOffset.get()) return
-        val prefix = s.subSequence(completionOffset.get(), this.editor?.get()?.selectionStart
-            ?: completionOffset.get()).toString()
-        recyclerView.adapter?.let {
-            it as SuggestionsAdapter
-            // we need to look up only after the '@'
-            it.autocomplete(prefix)
-            val cacheMap = localProvidersByToken[it.token]
-            if (cacheMap != null && cacheMap[prefix] != null) {
-                it.addItems(cacheMap[prefix]!!)
-            } else {
-                // fetch more suggestions from an external source if any
-                externalProvidersByToken[it.token]?.invoke(prefix)
-            }
+        if (completionOffset.get() == NO_STATE_INDEX) {
+            return
         }
+
+        measureTimeMillis {
+            val prefixEndIndex = this.editor?.get()?.selectionStart ?: NO_STATE_INDEX
+            if (prefixEndIndex == NO_STATE_INDEX || prefixEndIndex < completionOffset.get()) return
+            val prefix = s.subSequence(completionOffset.get(), this.editor?.get()?.selectionStart
+                    ?: completionOffset.get()).toString()
+            recyclerView.adapter?.also {
+                it as SuggestionsAdapter
+                // we need to look up only after the '@'
+                measureTimeMillis { it.autocomplete(prefix) }.let { time ->
+                    Log.d("SuggestionsView", "autocomplete($prefix) in $time ms")
+                }
+                val cacheMap = localProvidersByToken[it.token]
+                if (cacheMap != null && cacheMap[prefix] != null) {
+                    if (it.itemCount == 0) {
+                        it.addItems(cacheMap[prefix]!!)
+                    }
+                } else {
+                    // fetch more suggestions from an external source if any
+                    externalProvidersByToken[it.token]?.invoke(prefix)
+                }
+            }
+        }.let { Log.d("SuggestionsView", "whole prefix in $it ms") }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

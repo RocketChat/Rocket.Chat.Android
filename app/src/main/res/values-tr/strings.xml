@@ -25,6 +25,10 @@
     <string name="title_create_channel">Yeni Kanal Oluştur</string>
     <string name="title_licence">Licence</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
+    <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
+    <string name="title_topic">konu</string>
+    <string name="title_announcement">duyuru</string>
+    <string name="title_description">Açıklama</string>
 
     <!-- Actions -->
     <string name="action_connect">Bağlan</string>
@@ -61,6 +65,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Change password</item> <!-- TODO Add translation -->
+        <item name="change_language">Change language</item> <!-- TODO Add translation -->
         <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
         <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
         <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
@@ -87,7 +92,6 @@
     <string name="msg_check_your_email_to_reset_your_password">Eposta gönderilmiştir! Şifrenizi sıfırlamak için eposta kutunuzu kontrol ediniz.</string>
     <string name="msg_invalid_email">Lütfen, geçerli bir eposta adresi giriniz</string>
     <string name="msg_new_user_agreement">Devam ederek \n%1$s ve %2$s kabul ediyorsunuz</string>
-    <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
     <string name="msg_yesterday">Dün</string>
     <string name="msg_today">Bugün</string>
     <string name="msg_message">Mesaj</string>
@@ -120,7 +124,7 @@
     <string name="msg_preview_photo">Fotoğraf</string>
     <string name="msg_preview_file">Dosya</string>
     <string name="msg_no_messages_yet">Henüz mesaj gönderilmedi</string>
-    <string name="msg_ok">Tamam</string>
+    <string name="msg_build">Build %1$d - %2$s - %3$s</string> <!-- TODO Add translation -->
     <string name="msg_update_app_version_in_order_to_continue">Geçerliliğini yitirmiş uygulamanızın sürümü. Lütfen, sistem yöneticisine bildiriniz.</string>
     <string name="msg_ver_not_recommended">
         Görünüşe göre uygulamanızın sürümü önerilen %1$s sürümünden daha düşük.\nBuna rağmen sisteme giriş yapıp kullanabilirsiniz, fakat beklenmeyen hatalarla karşılaşabilirsiniz.</string>
@@ -129,7 +133,6 @@
     </string>
     <string name="msg_no_chat_title">Mesaj bulunmamaktadır</string>
     <string name="msg_no_chat_description">Mesajlarınızı burada görmek için \nyazışmaya başlayın.</string>
-    <string name="msg_cancel">İPTAL</string>
     <string name="msg_http_insecure">HTTP kullanırken güvensiz bir sunucuya bağlanıyorsunuz, bunu önermiyoruz.</string>
     <string name="msg_error_checking_server_version">Sunucu sürümünüzü kontrol ederken bir hata oluştu, lütfen tekrar deneyiniz</string>
     <string name="msg_invalid_server_protocol">Seçilen protokol bu sunucu tarafından kabul edilmiyor, lütfen HTTPS kullanın</string>
@@ -147,7 +150,7 @@
     <string name="msg_send">Gönder</string>
     <string name="msg_sent_attachment">Bir dosya eki gönderildi</string>
     <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string> <!-- TODO Add translation -->
-    <string name="msg_team_communication">Team Communication</string> <!-- TODO Add translation -->
+    <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
     <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->
     <string name="msg_create_account">Create an account</string> <!-- TODO Add translation -->
     <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string> <!-- TODO Add translation -->
@@ -179,10 +182,16 @@
     <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
     <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string> <!-- TODO - Add proper translation -->
+    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
+    <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
+    <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
         <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
+
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">İstatistik takibi</string>
     <string name="msg_send_analytics_tracking">Uygulamanın gelişmesine katkıda bulunmak için anonim istatistik bilgisi gönder</string>
@@ -220,6 +229,8 @@
     <string name="action_msg_add_reaction">Tepki Ekle</string>
     <!-- TODO - Add proper translation -->
     <string name="action_msg_copy_permalink">Copy permalink</string>
+    <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">Report</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Düzenlemeye izin verilmiyor</string>
@@ -301,13 +312,12 @@
     <string name="alert_title_default_skin_tone">Varsayılan tasarım tonu</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">Sırala</string>
+    <string name="msg_sort">Sırala</string>
     <string name="dialog_sort_title">Sırala</string>
     <string name="dialog_sort_by_alphabet">Alfabetik</string>
     <string name="dialog_sort_by_activity">Aktiviteye Göre</string>
     <string name="dialog_group_by_type">Türüne göre grupla</string>
     <string name="dialog_group_favourites">Favorileri grupla</string>
-    <string name="dialog_button_done">Tamam</string>
     <string name="chatroom_header">Başlık</string>
 
     <!--ChatRooms Headers-->
@@ -324,9 +334,12 @@
     <string name="notif_success_sending">Mesaj %1$s\'a gönderildi!</string>
     <string name="read_by">ile oku</string>
     <string name="message_information_title">Mesaj bilgisi</string>
-    <!--TODO - Add proper translation-->
-    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string>
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string> <!--TODO - Add proper translation-->
 
+    <!-- User Details -->
+    <string name="timezone">Timezone</string> <!--TODO - Add proper translation-->
+
+    <!-- TODO: Need proper translations. -->
     <!-- WIDECHAT -->
     <string name="msg_welcome_to_widechat">Welcome to Viasat Connect</string>
     <string name="sign_up">Sign Up</string>
@@ -336,4 +349,8 @@
     <string name="log_out">Log Out</string>
     <string name="widechat_new_channel">New Group Chat</string>
 
+    <!-- Report -->
+    <string name="submit">Submit</string> <!--TODO - Add proper translation-->
+    <string name="required">*required</string> <!--TODO - Add proper translation-->
+    <string name="report_sent">Your report has been sent!</string> <!--TODO - Add proper translation-->
 </resources>

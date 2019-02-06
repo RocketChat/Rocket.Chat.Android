@@ -8,68 +8,28 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.res.ResourcesCompat
 import chat.rocket.android.R
 import chat.rocket.android.util.extension.onQueryTextListener
-import chat.rocket.common.model.RoomType
 
 // WIDECHAT
 import chat.rocket.android.helper.Constants
 
 internal fun ChatRoomFragment.setupMenu(menu: Menu) {
     setupSearchMessageMenuItem(menu, requireContext())
-    if (!Constants.WIDECHAT) {
-        setupFavoriteMenuItem(menu)
-
-        menu.add(
-            Menu.NONE,
-            MENU_ACTION_PINNED_MESSAGES,
-            Menu.NONE,
-            R.string.title_pinned_messages
-        )
-
-        menu.add(
-            Menu.NONE,
-            MENU_ACTION_FAVORITE_MESSAGES,
-            Menu.NONE,
-            R.string.title_favorite_messages
-        )
-    }
-
-    if (chatRoomType != RoomType.DIRECT_MESSAGE && !disableMenu) {
-        menu.add(
-            Menu.NONE,
-            MENU_ACTION_MEMBER,
-            Menu.NONE,
-            R.string.title_members_list
-        )
-
-        menu.add(
-            Menu.NONE,
-            MENU_ACTION_MENTIONS,
-            Menu.NONE,
-            R.string.msg_mentions
-        )
-    }
-
-    if (!disableMenu) {
-        menu.add(
-            Menu.NONE,
-            MENU_ACTION_FILES,
-            Menu.NONE,
-            R.string.title_files
-        )
-    }
+    setupFavoriteMenuItem(menu)
+    setupDetailsMenuItem(menu)
 }
 
 internal fun ChatRoomFragment.setOnMenuItemClickListener(item: MenuItem) {
     when (item.itemId) {
-        MENU_ACTION_FAVORITE_UNFAVORITE_CHAT -> presenter.toggleFavoriteChatRoom(
+        MENU_ACTION_FAVORITE_UNFAVOURITE_CHAT -> presenter.toggleFavoriteChatRoom(
             chatRoomId,
             isFavorite
         )
-        MENU_ACTION_MEMBER -> presenter.toMembersList(chatRoomId)
-        MENU_ACTION_MENTIONS -> presenter.toMentions(chatRoomId)
-        MENU_ACTION_PINNED_MESSAGES -> presenter.toPinnedMessageList(chatRoomId)
-        MENU_ACTION_FAVORITE_MESSAGES -> presenter.toFavoriteMessageList(chatRoomId)
-        MENU_ACTION_FILES -> presenter.toFileList(chatRoomId)
+        MENU_ACTION_SHOW_DETAILS -> presenter.toChatDetails(
+            chatRoomId,
+            chatRoomType,
+            isSubscribed,
+            disableMenu
+        )
     }
 }
 
@@ -146,7 +106,7 @@ private fun ChatRoomFragment.setupFavoriteMenuItem(menu: Menu) {
     if (isFavorite) {
         menu.add(
             Menu.NONE,
-            MENU_ACTION_FAVORITE_UNFAVORITE_CHAT,
+            MENU_ACTION_FAVORITE_UNFAVOURITE_CHAT,
             Menu.NONE,
             R.string.title_unfavorite_chat
         ).setIcon(R.drawable.ic_star_yellow_24dp)
@@ -154,11 +114,21 @@ private fun ChatRoomFragment.setupFavoriteMenuItem(menu: Menu) {
     } else {
         menu.add(
             Menu.NONE,
-            MENU_ACTION_FAVORITE_UNFAVORITE_CHAT,
+            MENU_ACTION_FAVORITE_UNFAVOURITE_CHAT,
             Menu.NONE,
             R.string.title_favorite_chat
         ).setIcon(R.drawable.ic_star_border_white_24dp)
             // WIDECHAT - all items in the overflow menu
                 .setShowAsAction(actionFlags)
     }
+}
+
+private fun ChatRoomFragment.setupDetailsMenuItem(menu: Menu) {
+    menu.add(
+            Menu.NONE,
+            MENU_ACTION_SHOW_DETAILS,
+            Menu.NONE,
+            R.string.title_channel_details
+    ).setIcon(R.drawable.ic_info_outline_white_24dp)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
 }

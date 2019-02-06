@@ -30,6 +30,7 @@ class RocketChatClientFactory @Inject constructor(
             userAgent = "RC Mobile; Android ${Build.VERSION.RELEASE}; v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
             tokenRepository = repository
             platformLogger = logger
+            enableLogger = false
         }
 
         Timber.d("Returning NEW client for: $url")
