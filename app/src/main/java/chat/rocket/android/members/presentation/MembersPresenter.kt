@@ -58,7 +58,7 @@ class MembersPresenter @Inject constructor(
         }
     }
 
-    fun toMemberDetails(memberUiModel: MemberUiModel) {
-        navigator.toMemberDetails(memberUiModel.userId)
+    fun toMemberDetails(memberUiModel: MemberUiModel, chatRoomId: String) {
+        navigator.toMemberDetails(memberUiModel.userId,chatRoomId)
     }
 }

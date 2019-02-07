@@ -16,9 +16,9 @@ import chat.rocket.android.util.extensions.addFragmentBackStack
 
 class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
 
-    fun toUserDetails(userId: String) {
+    fun toUserDetails(userId: String,chatRoomId: String) {
         activity.addFragmentBackStack(TAG_USER_DETAILS_FRAGMENT, R.id.fragment_container) {
-            chat.rocket.android.userdetails.ui.newInstance(userId)
+            chat.rocket.android.userdetails.ui.newInstance(userId,chatRoomId)
         }
     }
 
@@ -69,9 +69,9 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         }
     }
 
-    fun toMemberDetails(userId: String) {
+    fun toMemberDetails(userId: String, chatRoomId: String) {
         activity.addFragmentBackStack(TAG_USER_DETAILS_FRAGMENT, R.id.fragment_container) {
-            chat.rocket.android.userdetails.ui.newInstance(userId)
+            chat.rocket.android.userdetails.ui.newInstance(userId,chatRoomId)
         }
     }
 

@@ -12,8 +12,10 @@ import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.createDirectMessage
+import chat.rocket.core.internal.rest.kickUser
 import kotlinx.coroutines.experimental.DefaultDispatcher
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
@@ -69,6 +71,33 @@ class UserDetailsPresenter @Inject constructor(
                 view.hideLoading()
             }
         }
+    }
+
+    fun kickUser(userId: String,chatRoomId:String){
+        launchUI(strategy){
+            try {
+                view.showLoading()
+                val chatRoomType = getRoomType(chatRoomId)
+                val result = retryIO ("kickUser($userId,$chatRoomId,$chatRoomType)"){
+                    client.kickUser(chatRoomId,chatRoomType,userId)
+                }
+                Timber.d(result.toString())
+            }catch (exception: Exception){
+                Timber.e(exception)
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            }finally {
+                view.hideLoading()
+            }
+        }
+    }
+
+    suspend fun getRoomType(chatRoomId: String): RoomType {
+        var room = dbManager.getRoom(chatRoomId)
+        return roomTypeOf(room?.chatRoom?.type!!)
     }
 
     fun createDirectMessage(username: String) {
