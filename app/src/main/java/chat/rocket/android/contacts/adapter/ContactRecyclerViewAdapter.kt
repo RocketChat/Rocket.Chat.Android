@@ -9,9 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.*
 import chat.rocket.android.contacts.models.Contact
-import chat.rocket.android.db.model.UserEntity
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.common.model.UserPresence
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 
 class ContactRecyclerViewAdapter(
@@ -69,15 +70,16 @@ class ContactRecyclerViewAdapter(
             holder.bind(contactArrayList[position] as ContactItemHolder)
 
             val contact: Contact = holder.data!!.data
-            val username = contact.getUsername()
-            var user: UserEntity?
-            if (username != null) {
+            val userId = contact.getUserId()
+            if (userId != null) {
                 launch {
-                    user = context.presenter.getUser(username!!)
-                    if (user != null) {
-                        contact.setStatus(user!!.status)
+                    var userPresence: UserPresence? = context.presenter.getUserPresence(userId)
+                    if (userPresence != null) {
+                        contact.setStatus(userPresence.presence!!)
                     }
-                    holder.setContactStatus(contact)
+                    launch(UI) {
+                        holder.setContactStatus(contact)
+                    }
                 }
             }
 

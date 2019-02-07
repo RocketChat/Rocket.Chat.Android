@@ -139,6 +139,7 @@ class ContactsFragment : Fragment() {
                                     }
                                     if(contactEntity.username != null) {
                                         contact.setUsername(contactEntity.username)
+                                        contact.setUserId(contactEntity.userId)
                                     }
                                     contact.setAvatarUrl(serverUrl.avatarUrl(contact?.getUsername() ?: contact?.getName() ?: ""))
                                     contact
