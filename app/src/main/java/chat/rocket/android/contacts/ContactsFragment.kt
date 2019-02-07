@@ -333,7 +333,7 @@ class ContactsFragment : Fragment() {
         }
 
         finalList.addAll(userList)
-        finalList.add(ContactHeaderItemHolder("INVITE CONTACTS"))
+        finalList.add(ContactHeaderItemHolder(getString(R.string.Invite_contacts)))
         finalList.addAll(contactsList)
         finalList.add(inviteItemHolder("invite"))
         return finalList

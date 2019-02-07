@@ -86,7 +86,7 @@ class ContactRecyclerViewAdapter(
 
             inviteButton.setOnClickListener { view ->
                 run {
-                    inviteButton.setText("INVITED")
+                    inviteButton.setText(context.getString(R.string.Invited))
                     if (contact.isPhone()) {
                         context.presenter.inviteViaSMS(contact.getPhoneNumber()!!)
                     } else {
