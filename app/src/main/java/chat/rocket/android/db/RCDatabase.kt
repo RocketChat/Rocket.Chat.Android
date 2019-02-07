@@ -26,7 +26,7 @@ import chat.rocket.android.emoji.internal.db.StringListConverter
         AttachmentFieldEntity::class, AttachmentActionEntity::class, UrlEntity::class,
         ReactionEntity::class, MessagesSync::class, ContactEntity::class
     ],
-    version = 14,
+    version = 15,
     exportSchema = true
 )
 @TypeConverters(StringListConverter::class)
