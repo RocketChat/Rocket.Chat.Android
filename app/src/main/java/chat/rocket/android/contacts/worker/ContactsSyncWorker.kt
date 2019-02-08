@@ -23,7 +23,7 @@ import java.security.MessageDigest
 import java.util.ArrayList
 import javax.inject.Inject
 
-class ContactSyncWorker(context : Context, params : WorkerParameters)
+class ContactsSyncWorker(context : Context, params : WorkerParameters)
     : Worker(context, params) {
     @Inject
     lateinit var dbFactory: DatabaseManagerFactory
