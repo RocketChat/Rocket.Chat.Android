@@ -67,23 +67,25 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         chatRoomId: String,
         chatRoomType: String,
         isChatRoomSubscribed: Boolean,
-        isChatRoomFavorite: Boolean,
-        isMenuDisabled: Boolean
+        isMenuDisabled: Boolean,
+        isOwner: Boolean,
+        isModerator: Boolean
     ) {
         activity.addFragmentBackStack(TAG_CHAT_DETAILS_FRAGMENT, R.id.fragment_container) {
             chat.rocket.android.chatdetails.ui.newInstance(
                 chatRoomId,
                 chatRoomType,
                 isChatRoomSubscribed,
-                isChatRoomFavorite,
-                isMenuDisabled
+                isMenuDisabled,
+                isOwner,
+                isModerator
             )
         }
     }
 
-    fun toMembersList(chatRoomId: String) {
+    fun toMembersList(chatRoomId: String, isOwner: Boolean, isMod: Boolean) {
         activity.addFragmentBackStack(TAG_MEMBERS_FRAGMENT, R.id.fragment_container) {
-            chat.rocket.android.members.ui.newInstance(chatRoomId)
+            chat.rocket.android.members.ui.newInstance(chatRoomId, isOwner, isMod)
         }
     }
 

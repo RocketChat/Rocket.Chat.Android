@@ -35,8 +35,9 @@ fun newInstance(
     chatRoomId: String,
     chatRoomType: String,
     isSubscribed: Boolean,
-    isFavorite: Boolean,
-    disableMenu: Boolean
+    disableMenu: Boolean,
+    isOwner: Boolean,
+    isMod: Boolean
 ): ChatDetailsFragment {
     return ChatDetailsFragment().apply {
         arguments = Bundle(5).apply {
@@ -45,6 +46,8 @@ fun newInstance(
             putBoolean(BUNDLE_IS_SUBSCRIBED, isSubscribed)
             putBoolean(BUNDLE_IS_FAVORITE, isFavorite)
             putBoolean(BUNDLE_DISABLE_MENU, disableMenu)
+            putBoolean(BUNDLE_CHAT_ROOM_OWNER, isOwner)
+            putBoolean(BUNDLE_CHAT_ROOM_MOD, isMod)
         }
    }
 }
@@ -54,6 +57,8 @@ internal const val MENU_ACTION_FAVORITE_REMOVE_FAVORITE = 1
 internal const val MENU_ACTION_VIDEO_CALL = 2
 
 private const val BUNDLE_CHAT_ROOM_ID = "BUNDLE_CHAT_ROOM_ID"
+private const val BUNDLE_CHAT_ROOM_MOD = "BUNDLE_CHAT_ROOM_MOD"
+private const val BUNDLE_CHAT_ROOM_OWNER = "BUNDLE_CHAT_ROOM_OWNER"
 private const val BUNDLE_CHAT_ROOM_TYPE = "BUNDLE_CHAT_ROOM_TYPE"
 private const val BUNDLE_IS_SUBSCRIBED = "BUNDLE_IS_SUBSCRIBED"
 private const val BUNDLE_IS_FAVORITE = "BUNDLE_IS_FAVORITE"
@@ -74,22 +79,24 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
     internal lateinit var chatRoomId: String
     internal lateinit var chatRoomType: String
     private var isSubscribed: Boolean = true
-    internal var isFavorite: Boolean = false
+    private var isOwner: Boolean = false
+    private var isMod: Boolean = false
     private var disableMenu: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-
-        arguments?.run {
-            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID)
-            chatRoomType = getString(BUNDLE_CHAT_ROOM_TYPE)
-            isSubscribed = getBoolean(BUNDLE_IS_SUBSCRIBED)
-            isFavorite = getBoolean(BUNDLE_IS_FAVORITE)
-            disableMenu = getBoolean(BUNDLE_DISABLE_MENU)
-        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
-
-        setHasOptionsMenu(true)
+        val bundle = arguments
+        if (bundle != null) {
+            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
+            chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
+            isSubscribed = bundle.getBoolean(BUNDLE_IS_SUBSCRIBED)
+            disableMenu = bundle.getBoolean(BUNDLE_DISABLE_MENU)
+            isOwner = bundle.getBoolean(BUNDLE_CHAT_ROOM_OWNER)
+            isMod = bundle.getBoolean(BUNDLE_CHAT_ROOM_MOD)
+        } else {
+            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
+        }
     }
 
     override fun onCreateView(
@@ -166,7 +173,7 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
                     getString(R.string.title_members),
                     R.drawable.ic_people_outline_black_24dp
                 ) {
-                    presenter.toMembers(chatRoomId!!)
+                    presenter.toMembers(chatRoomId!!, isOwner, isMod)
                 }
             }
 

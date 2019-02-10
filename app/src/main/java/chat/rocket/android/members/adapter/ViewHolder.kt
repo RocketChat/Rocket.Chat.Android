@@ -20,14 +20,12 @@ import kotlinx.android.synthetic.main.item_member.view.*
 
 class ViewHolder(
         itemView: View,
-        private val listener: ActionsListener
+        private val listener: ActionsListener,
+        private val isOwner: Boolean,
+        private val isMod: Boolean
 ) : RecyclerView.ViewHolder(itemView), MenuItem.OnMenuItemClickListener {
     var data: MemberUiModel? = null
     var index: Int = 0
-
-//    init {
-//            setupActionMenu(itemView)
-//    }
 
     fun bind(memberUiModel: MemberUiModel, position: Int, listener: (MemberUiModel) -> Unit) = with(itemView) {
         data = memberUiModel
@@ -54,8 +52,11 @@ class ViewHolder(
         view.setOnLongClickListener{
                 data?.let {
                         var menuItems = view.context.inflate(R.menu.group_member_actions).toList()
-//                        if(!isRoomOwner) menuItems = menuItems.filter { it.itemId == R.id.action_member_mute || it.itemId == R.id.action_member_ignore }
-                        menuItems.find { it.itemId == R.id.action_member_set_owner }?.apply {
+                        if (!isOwner && !isMod)
+                            menuItems = menuItems.filter { it.itemId == R.id.action_member_mute || it.itemId == R.id.action_member_ignore }
+                        else if (isMod)
+                            menuItems = menuItems.filter { it.itemId == R.id.action_member_mute || it.itemId == R.id.action_member_ignore || it.itemId == R.id.action_member_remove}
+                    menuItems.find { it.itemId == R.id.action_member_set_owner }?.apply {
                             if (it.roles?.contains("owner") == true) title = "Remove as Owner"
                         }
                         menuItems.find { it.itemId == R.id.action_member_set_leader }?.apply {

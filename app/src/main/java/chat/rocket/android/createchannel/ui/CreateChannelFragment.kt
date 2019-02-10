@@ -48,7 +48,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         if (it.username != null) {
             processSelectedMember(it.username)
         }
-    }, null)
+    }, null, true, false)
     private val compositeDisposable = CompositeDisposable()
     private var channelType: String = RoomType.CHANNEL
     private var isChannelReadOnly: Boolean = false

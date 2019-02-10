@@ -2,7 +2,6 @@ package chat.rocket.android.chatroom.presentation
 
 import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.SubscriptionTypeEvent
@@ -140,16 +139,12 @@ class ChatRoomPresenter @Inject constructor(
                 } else {
                     emptyList()
                 }
-                Log.d("OPOPOP",chatRoles.toString())
             } catch (ex: Exception) {
                 Timber.e(ex)
                 chatRoles = emptyList()
             } finally {
                 // User has at least an 'owner' or 'moderator' role.
-                val isOwner = isOwner()
-                val isMod= isModerator()
-                val isLeader = isLeader()
-//                val canModerate = isOwnerOrMod()
+                val canModerate = isOwner() || isModerator()
                 // Can post anyway if has the 'post-readonly' permission on server.
                 val room = dbManager.getRoom(roomId)
                 room?.let {
@@ -158,11 +153,8 @@ class ChatRoomPresenter @Inject constructor(
                     launchUI(strategy) {
                         view.onRoomUpdated(roomUiModel = roomUiModel.copy(
                             broadcast = chatIsBroadcast,
-                            isOwner = isOwner,
-                            isLeader = isLeader,
-                            isMod = isMod,
-                            canModerate = isOwner || isMod,
-                            writable = roomUiModel.writable || isOwner || isLeader
+                            canModerate = canModerate,
+                            writable = roomUiModel.writable || canModerate
                         ))
                     }
                 }
@@ -200,12 +192,6 @@ class ChatRoomPresenter @Inject constructor(
         chatRoomId?.let { manager.removeRoomChannel(it) }
     }
 
-//    private fun isOwnerOrMod(): Boolean {
-//        return chatRoles.firstOrNull { it.user.username == currentLoggedUsername }?.roles?.any {
-//            it == "owner" || it == "moderator"
-//        } ?: false
-//    }
-
     private fun isOwner(): Boolean {
         return chatRoles.find { it.user.username == currentLoggedUsername }?.roles?.any {
             it == "owner"
@@ -215,12 +201,6 @@ class ChatRoomPresenter @Inject constructor(
     private fun isModerator(): Boolean {
         return chatRoles.find { it.user.username == currentLoggedUsername }?.roles?.any {
             it == "moderator"
-        } ?: false
-    }
-
-    private fun isLeader(): Boolean {
-        return chatRoles.find { it.user.username == currentLoggedUsername }?.roles?.any {
-            it == "leader"
         } ?: false
     }
 
@@ -922,7 +902,7 @@ class ChatRoomPresenter @Inject constructor(
         isFavorite: Boolean,
         isMenuDisabled: Boolean
     ) {
-        navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isFavorite, isMenuDisabled)
+        navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isMenuDisabled, isOwner(), isModerator())
     }
 
     fun loadChatRoomsSuggestions() {

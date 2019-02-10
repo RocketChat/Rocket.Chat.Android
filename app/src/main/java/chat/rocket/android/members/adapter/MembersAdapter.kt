@@ -9,14 +9,13 @@ import chat.rocket.android.members.presentation.MembersPresenter
 import chat.rocket.android.members.uimodel.MemberUiModel
 import chat.rocket.android.util.extensions.inflate
 
-
-class MembersAdapter(private val listener: (MemberUiModel) -> Unit, presenter: MembersPresenter?) :
+class MembersAdapter(private val listener: (MemberUiModel) -> Unit, presenter: MembersPresenter?, private val isOwner: Boolean, private val isMod: Boolean) :
     RecyclerView.Adapter<ViewHolder>() {
     private var dataSet: List<MemberUiModel> = ArrayList()
     private val enableActions: Boolean = true
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(parent.inflate(R.layout.item_member), actionsListener)
+        ViewHolder(parent.inflate(R.layout.item_member), actionsListener, isOwner, isMod)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(dataSet[position], position, listener)
@@ -39,16 +38,6 @@ class MembersAdapter(private val listener: (MemberUiModel) -> Unit, presenter: M
         notifyItemRangeInserted(previousDataSetSize, dataSet.size)
     }
 
-<<<<<<< HEAD
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        fun bind(memberUiModel: MemberUiModel, listener: (MemberUiModel) -> Unit) = with(itemView) {
-            image_avatar.setImageURI(memberUiModel.avatarUri)
-            text_member.content = memberUiModel.displayName
-            text_member.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    DrawableHelper.getUserStatusDrawable(memberUiModel.status, context), null, null, null)
-            setOnClickListener { listener(memberUiModel) }
-=======
     private val actionsListener = object : ViewHolder.ActionsListener {
         override fun isActionsEnabled(): Boolean = enableActions
         override fun onActionSelected(item: MenuItem, member: MemberUiModel, index: Int) {
@@ -104,7 +93,6 @@ class MembersAdapter(private val listener: (MemberUiModel) -> Unit, presenter: M
                     else -> TODO("Not implemented")
                 }
             }
->>>>>>> e494c1b5... add bottomSheet for members
         }
     }
 }
