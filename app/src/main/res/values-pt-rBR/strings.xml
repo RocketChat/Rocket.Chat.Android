@@ -23,8 +23,12 @@
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
     <string name="title_create_channel">Criar chat</string>
-    <string name="title_licence">Licença</string> <!-- TODO Add translation -->
+    <string name="title_licence">Licença</string>
     <string name="title_are_you_sure">Você tem certeza?</string>
+    <string name="title_channel_details">Detalhes do canal</string>
+    <string name="title_topic">Tópico</string>
+    <string name="title_announcement">Anúncio</string>
+    <string name="title_description">Descrição</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
@@ -62,6 +66,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferências</item>
         <item name="item_password">Alterar senha</item>
+        <item name="change_language">Alterar idioma</item>
         <item name="item_share_app">Compartilhar app</item>
         <item name="item_rate_us">Classifique-nos</item>
         <item name="item_contact_us">Contate-nos</item>
@@ -118,7 +123,7 @@
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_preview_file">Arquivo</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
-    <string name="msg_ok">OK</string>
+    <string name="msg_build">Versão %1$d - %2$s - %3$s</string>
     <string name="msg_update_app_version_in_order_to_continue">Versão do servidor desatualizada. Por favor, entre em contato com o administrador do sistema para continuar.</string>
     <string name="msg_ver_not_recommended">
         Parece que a versão do seu servidor está abaixo da recomendada %1$s.\nVocê ainda assim pode logar e continuar mas podem ocorrer alguns problemas inesperados.
@@ -128,7 +133,6 @@
     </string>
     <string name="msg_no_chat_title">Nenhuma mensagem de chat</string>
     <string name="msg_no_chat_description">Comece a conversar para ver suas\nmensagens aqui.</string>
-    <string name="msg_cancel">CANCELAR</string>
     <string name="msg_http_insecure">Usando HTTP, você estará conectando a um servidor não seguro, não recomendamos sua utilização.</string>
     <string name="msg_error_checking_server_version">Ocorreu um erro verificando a versão do servidor, por favor tente novamente</string>
     <string name="msg_invalid_server_protocol">O protocolo selecionado não é suportado pelo servidor, por favor utilize HTTPS e tente novamente</string>
@@ -148,24 +152,30 @@
     <string name="msg_send">Enviar</string>
     <string name="msg_delete_message">Remove mensagem</string>
     <string name="msg_delete_description">Tem certeza que quer apagar esta mensagem?</string>
-    <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string> <!-- TODO Add translation -->
-    <string name="msg_team_communication">Open Source Communication</string> <!-- TODO Add translation -->
-    <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->
-    <string name="msg_create_account">Create an account</string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_github">Continue with <b>Github</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_google">Continue with <b>Google</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
-    <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
-    <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+    <string name="msg_welcome_to_rocket_chat">Bem-vindo ao Rocket.Chat</string>
+    <string name="msg_team_communication">Comunicação para equipes</string>
+    <string name="msg_login_with_email">Fazer login com <b>e-mail</b></string>
+    <string name="msg_create_account">Criar conta</string>
+    <string name="msg_continue_with_facebook">Continuar com <b>Facebook</b></string>
+    <string name="msg_continue_with_github">Continuar com <b>Github</b></string>
+    <string name="msg_continue_with_google">Continuar com <b>Google</b></string>
+    <string name="msg_continue_with_linkedin">Continuar com <b>Linkedin</b></string>
+    <string name="msg_continue_with_gitlab">Continuar com <b>GitLab</b></string>
+    <string name="msg_continue_with_wordpress">Continuar com <b>WordPress</b></string>
+    <string name="msg_two_factor_authentication">Autenticação de dois fatores</string>
+    <string name="msg__your_2fa_code">Qual é o seu código da autenticação de dois fatores?</string>
     <string name="msg_view_more">visualizar mais</string>
     <string name="msg_view_less">visualizar menos</string>
     <string name="msg_permalink_copied">Permalink copiado</string>
     <string name="msg_send_email">Enviar e-mail</string>
     <string name="msg_android_app_support">Suporte ao aplicativo Android</string>
     <string name="msg_muted_on_this_channel">Você está silenciado neste canal</string>
+    <string name="msg_no_topic">Nenhum tópico adicionado</string>
+    <string name="msg_no_announcement">Nenhum anúncio adicionado</string>
+    <string name="msg_no_description">Nenhuma descrição adicionada</string>
+    <string name="msg_unable_to_update_password">Não foi possível atualizar a senha. Mensagem de erro: %1$s</string>
+    <string name="msg_password_updated_successfully">Senha alterada com sucesso</string>
+    <string name="msg_sort">Ordenar</string>
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s reagiu com %2$s</item>
         <item quantity="other">%1$s reagiram com %2$s</item>
@@ -187,7 +197,7 @@
     <string name="msg_analytics_tracking">Rastreamento de análises</string>
     <string name="msg_send_analytics_tracking">Envie estatísticas anônimas para ajudar a melhorar este app</string>
     <string name="msg_do_not_send_analytics_tracking">Não envie estatísticas anônimas para ajudar a melhorar este app</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Not aplicável devido a versão do aplicativo ser FOSS</string> <!-- TODO Add translation -->
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Não aplicável devido a versão do aplicativo ser FOSS</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
@@ -197,13 +207,12 @@
     <string name="message_user_joined_channel">Entrou na sala</string>
     <string name="message_welcome">Bem-vindo, %s</string>
     <string name="message_removed">Mensagem removida</string>
-    <string name="message_pinned">Pinou uma mensagem:</string>
+    <string name="message_pinned">Fixou uma mensagem:</string>
     <string name="message_muted">Usuário %1$s foi silenciado por %2$s</string>
     <string name="message_unmuted">Usuário %1$s saiu do modo silenciado por %2$s</string>
     <string name="message_role_add">%1$s foi definido %2$s por %3$s</string>
     <string name="message_role_removed">%1$s não é mais %2$s por %3$s</string>
-    // TODO:Add proper translation.
-    <string name="message_credentials_saved_successfully">Credentials saved successfully</string>
+    <string name="message_credentials_saved_successfully">Credenciais salvas com sucesso</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Responder</string>
@@ -212,27 +221,28 @@
     <string name="action_msg_copy">Copiar</string>
     <string name="action_msg_quote">Citar</string>
     <string name="action_msg_delete">Remover</string>
-    <string name="action_msg_pin">Pinar mensagem</string>
-    <string name="action_msg_unpin">Despinar mensagem</string>
-    <string name="action_msg_star">Favoritar mensagem</string>
-    <string name="action_msg_unstar">Desfavoritar messagem</string>
+    <string name="action_msg_pin">Fixar mensagem</string>
+    <string name="action_msg_unpin">Desfixar mensagem</string>
+    <string name="action_msg_star">Marcar como favorita</string>
+    <string name="action_msg_unstar">Desmarcar como favorita</string>
     <string name="action_msg_invite">Compartilhar</string>
     <string name="action_title_editing">Editando mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
     <string name="action_msg_copy_permalink">Copiar permalink</string>
+    <string name="action_msg_report">Reportar</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Edição não permitida</string>
     <string name="permission_deleting_not_allowed">Remoção não permitida</string>
-    <string name="permission_pinning_not_allowed">Pinagem não permitida</string>
-    <string name="permission_starring_not_allowed">Favoritar não permitido</string>
+    <string name="permission_pinning_not_allowed">Fixagem não permitida</string>
+    <string name="permission_starring_not_allowed">Marcar como favorita não permitido</string>
 
     <!-- Search message -->
     <string name="title_search_message">Procurar mensagem</string>
 
     <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Favoritar canal</string>
-    <string name="title_unfavorite_chat">Desfavoritar canal</string>
+    <string name="title_favorite_chat">Marcar canal como favorito</string>
+    <string name="title_unfavorite_chat">Desmarcar canal como favorito</string>
 
     <!-- Members List -->
     <string name="title_members_list">Membros</string>
@@ -243,13 +253,13 @@
     <string name="msg_all_the_mentions_appear_here">Todas menções\naparecerão aqui</string>
 
     <!-- Pinned Messages -->
-    <string name="title_pinned_messages">Mensagens Pinadas</string>
-    <string name="no_pinned_messages">Nenhuma mensagem pinada</string>
-    <string name="no_pinned_description">Todas mensagens pinadas\naparecerão aqui</string>
+    <string name="title_pinned_messages">Mensagens Fixadas</string>
+    <string name="no_pinned_messages">Nenhuma mensagem fixada</string>
+    <string name="no_pinned_description">Todas mensagens fixadas\naparecerão aqui</string>
 
     <!-- Favorite Messages -->
-    <string name="title_favorite_messages">Messagens Favoritas</string>
-    <string name="no_favorite_messages">Nenhuma messagem favorita</string>
+    <string name="title_favorite_messages">Mensagens Favoritas</string>
+    <string name="no_favorite_messages">Nenhuma mensagem favorita</string>
     <string name="no_favorite_description">Todas mensagens favoritas\naparecerão aqui</string>
 
     <!-- Files -->
@@ -301,13 +311,11 @@
     <string name="alert_title_default_skin_tone">Tom de pele padrão</string>
 
     <!-- Sorting and grouping-->
-    <string name="menu_chatroom_sort">Ordenar</string>
     <string name="dialog_sort_title">Ordenar por</string>
     <string name="dialog_sort_by_alphabet">Alfabeticamente</string>
     <string name="dialog_sort_by_activity">Atividade</string>
     <string name="dialog_group_by_type">Agrupar por tipo</string>
     <string name="dialog_group_favourites">Grupos favoritos</string>
-    <string name="dialog_button_done">Done</string><!-- TODO Add translation -->
     <string name="chatroom_header">Cabeçalho</string>
 
     <!--ChatRooms Headers-->
@@ -328,6 +336,7 @@
     <string name="msg_sent_attachment">Enviou um arquivo</string>
     <string name="message_room_changed_privacy">O tipo da sala mudou para: %1$s por %2$s</string>
 
+    <!-- TODO: Need proper translations. -->
     <!-- WIDECHAT -->
     <string name="msg_welcome_to_widechat">Welcome to Viasat Connect</string>
     <string name="sign_up">Sign Up</string>
@@ -336,4 +345,12 @@
     <string name="delete_account">Delete My Account</string>
     <string name="log_out">Log Out</string>
     <string name="widechat_new_channel">New Group Chat</string>
+
+    <!-- User Details -->
+    <string name="timezone">Fuso horário</string>
+
+    <!-- Report -->
+    <string name="submit">Enviar</string>
+    <string name="required">*obrigatório</string>
+    <string name="report_sent">A mensagem foi reportada!</string>
 </resources>

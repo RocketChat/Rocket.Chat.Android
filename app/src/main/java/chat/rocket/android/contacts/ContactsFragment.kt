@@ -139,6 +139,7 @@ class ContactsFragment : Fragment() {
                                     }
                                     if(contactEntity.username != null) {
                                         contact.setUsername(contactEntity.username)
+                                        contact.setUserId(contactEntity.userId)
                                     }
                                     contact.setAvatarUrl(serverUrl.avatarUrl(contact?.getUsername() ?: contact?.getName() ?: ""))
                                     contact
@@ -333,7 +334,7 @@ class ContactsFragment : Fragment() {
         }
 
         finalList.addAll(userList)
-        finalList.add(ContactHeaderItemHolder("INVITE CONTACTS"))
+        finalList.add(ContactHeaderItemHolder(getString(R.string.Invite_contacts)))
         finalList.addAll(contactsList)
         finalList.add(inviteItemHolder("invite"))
         return finalList

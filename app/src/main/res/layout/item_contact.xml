@@ -51,7 +51,7 @@
 
             <TextView
                 android:id="@+id/contact_name"
-                style="@style/ChatRoom.Name.TextView"
+                style="@style/ChatList.ChatName.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -74,9 +74,9 @@
 
         </LinearLayout>
 
-        <Button
+        <android.widget.Button
             android:id="@+id/invite_contact"
-            style="@style/ChatRoom.Name.TextView"
+            style="@style/ChatList.ChatName.TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/Invite"
@@ -85,7 +85,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-        <Button
+        <android.widget.Button
             android:id="@+id/chat_username"
             style="@style/Sender.Name.TextView"
             android:background="@android:color/transparent"

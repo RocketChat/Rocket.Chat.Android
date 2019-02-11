@@ -6,7 +6,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.view.ActionMode
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
@@ -16,6 +15,7 @@ import chat.rocket.android.settings.password.presentation.PasswordPresenter
 import chat.rocket.android.settings.password.presentation.PasswordView
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
@@ -33,11 +33,7 @@ class PasswordFragment : Fragment(), PasswordView, ActionMode.Callback {
     @Inject
     lateinit var analyticsManager: AnalyticsManager
     private var actionMode: ActionMode? = null
-    private val disposables = CompositeDisposable()
-
-    companion object {
-        fun newInstance() = PasswordFragment()
-    }
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -52,14 +48,12 @@ class PasswordFragment : Fragment(), PasswordView, ActionMode.Callback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        disposables.add(listenToChanges())
-
+        compositeDisposable.add(listenToChanges())
         analyticsManager.logScreenView(ScreenViewEvent.Password)
     }
 
     override fun onDestroyView() {
-        disposables.clear()
+        compositeDisposable.clear()
         super.onDestroyView()
     }
 
@@ -78,21 +72,19 @@ class PasswordFragment : Fragment(), PasswordView, ActionMode.Callback {
                 mode.finish()
                 return true
             }
-            else -> {
-                false
-            }
+            else -> false
         }
     }
 
-    override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
+    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         mode.menuInflater.inflate(R.menu.password, menu)
         mode.title = resources.getString(R.string.action_confirm_password)
         return true
     }
 
-    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean = false
+    override fun onPrepareActionMode(mode: ActionMode, menu: Menu?): Boolean = false
 
-    override fun onDestroyActionMode(mode: ActionMode?) {
+    override fun onDestroyActionMode(mode: ActionMode) {
         actionMode = null
     }
 
@@ -104,12 +96,12 @@ class PasswordFragment : Fragment(), PasswordView, ActionMode.Callback {
         }
     }
 
-    override fun showPasswordFailsUpdateMessage(error: String?) {
-        showToast("Password fails to update: " + error)
+    override fun showPasswordFailsUpdateMessage(error: String) {
+        showToast(getString(R.string.msg_unable_to_update_password, error))
     }
 
     override fun showPasswordSuccessfullyUpdatedMessage() {
-        showToast("Password was successfully updated!")
+        showToast(R.string.msg_password_updated_successfully)
     }
 
     private fun finishActionMode() = actionMode?.finish()
@@ -119,22 +111,13 @@ class PasswordFragment : Fragment(), PasswordView, ActionMode.Callback {
             text_new_password.asObservable(),
             text_confirm_password.asObservable()
         ).subscribe {
-            val textPassword = text_new_password.textContent
-            val textConfirmPassword = text_confirm_password.textContent
-
-            if (textPassword.length > 5 && textConfirmPassword.length > 5 && textPassword.equals(
-                    textConfirmPassword
-                )
-            )
+            val newPassword = it.first.toString()
+            val newPasswordConfirmation = it.second.toString()
+            if (newPassword.length > 5 && newPassword == newPasswordConfirmation) {
                 startActionMode()
-            else
+            } else {
                 finishActionMode()
-        }
-    }
-
-    private fun showToast(msg: String?) {
-        ui {
-            Toast.makeText(it, msg, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -142,5 +125,9 @@ class PasswordFragment : Fragment(), PasswordView, ActionMode.Callback {
         if (actionMode == null) {
             actionMode = (activity as PasswordActivity).startSupportActionMode(this)
         }
+    }
+
+    companion object {
+        fun newInstance() = PasswordFragment()
     }
 }

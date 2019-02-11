@@ -18,10 +18,12 @@ import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.presentation.MembersPresenter
 import chat.rocket.android.members.presentation.MembersView
 import chat.rocket.android.members.uimodel.MemberUiModel
+import chat.rocket.android.util.extensions.clearLightStatusBar
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_members.*
 import javax.inject.Inject
 
@@ -120,20 +122,26 @@ class MembersFragment : Fragment(), MembersView {
 
     private fun setupRecyclerView() {
         ui {
-            recycler_view.layoutManager = linearLayoutManager
-            recycler_view.addItemDecoration(DividerItemDecoration(it, DividerItemDecoration.HORIZONTAL))
+            recycler_view.layoutManager = LinearLayoutManager(context)
+            recycler_view.addItemDecoration(
+                DividerItemDecoration(
+                    it,
+                    DividerItemDecoration.HORIZONTAL
+                )
+            )
             recycler_view.adapter = adapter
         }
     }
 
     private fun setupToolbar(totalMembers: Long? = null) {
-        (activity as ChatRoomActivity).let {
+        with((activity as ChatRoomActivity)) {
             if (totalMembers != null) {
-                it.showToolbarTitle(getString(R.string.title_counted_members, totalMembers))
+                showToolbarTitle((getString(R.string.title_counted_members, totalMembers)))
             } else {
-                it.showToolbarTitle(getString(R.string.title_members))
+                showToolbarTitle((getString(R.string.title_members)))
             }
-            it.hideToolbarChatRoomIcon()
+            this.clearLightStatusBar()
+            toolbar.isVisible = true
         }
     }
 }

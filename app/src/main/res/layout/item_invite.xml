@@ -28,13 +28,13 @@
 
     <TextView
         android:id="@+id/contact_name"
-        style="@style/ChatRoom.Name.TextView"
+        style="@style/ChatList.ChatName.TextView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginStart="12dp"
         android:layout_marginLeft="12dp"
         android:gravity="center"
-        android:text="Invite friend via another app"
+        android:text="@string/Invite_with_other_app"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintLeft_toRightOf="@+id/image_avatar"
         app:layout_constraintTop_toTopOf="parent" />

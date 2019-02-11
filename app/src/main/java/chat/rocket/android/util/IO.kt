@@ -9,7 +9,7 @@ import timber.log.Timber
 import kotlin.coroutines.experimental.coroutineContext
 
 const val DEFAULT_RETRY = 3
-private const val DEFAULT_DB_RETRY = 5
+private const val DEFAULT_DB_RETRY = 15
 
 suspend fun <T> retryIO(
         description: String = "<missing description>",
@@ -42,7 +42,7 @@ suspend fun <T> retryDB(
         description: String = "<missing description>",
         times: Int = DEFAULT_DB_RETRY,
         initialDelay: Long = 100, // 0.1 second
-        maxDelay: Long = 500,    // 0.5 second
+        maxDelay: Long = 1500,    // 1.5 second
         factor: Double = 1.2,
         block: suspend () -> T): T
 {
