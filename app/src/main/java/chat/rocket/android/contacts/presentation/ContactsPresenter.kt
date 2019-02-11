@@ -184,7 +184,7 @@ class ContactsPresenter @Inject constructor(
             } catch (ex: Exception) {
                 when (ex) {
                     is RocketChatAuthException -> {
-//                        throw RocketChatAuthException("Not authenticated...")
+                        throw RocketChatAuthException("Not authenticated...")
                     }
                     else -> {
                         Timber.d(ex, "Error while inviting via email")
@@ -211,7 +211,7 @@ class ContactsPresenter @Inject constructor(
             } catch (ex: Exception) {
                 when (ex) {
                     is RocketChatAuthException -> {
-//                        throw RocketChatAuthException("Not authenticated...")
+                        throw RocketChatAuthException("Not authenticated...")
                     }
                     else -> {
                         Timber.d(ex, "Error while inviting via SMS")
