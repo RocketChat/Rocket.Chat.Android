@@ -101,7 +101,7 @@
                 android:layout_marginTop="32dp"
                 android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
                 android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
-                android:background="@drawable/widechat_update_profile_button"
+                android:background="@drawable/widechat_update_profile_button_grey"
                 android:textColor="@color/colorWhite"
                 android:text="@string/edit_profile" />
 

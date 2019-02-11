@@ -84,7 +84,7 @@ class ProfilePresenter @Inject constructor(
     }
 
     // WIDECHAT
-    fun setCurrentAccessToken() {
+    fun setUpdateUrl(updatePath: String?, onClickCallback: (String?) -> Unit?) {
         launchUI(strategy) {
             try {
                 withContext(DefaultDispatcher) {
@@ -93,6 +93,7 @@ class ProfilePresenter @Inject constructor(
                     checkForCustomOauthAccount(serverUrl)
                 }
                 retryIO { currentAccessToken = client.getAccessToken(customOauthServiceName.toString())}
+                onClickCallback("${widechatCustomOauthHost}${updatePath}${currentAccessToken}")
             } catch (ex: Exception) {
                 view.showMessage(ex)
             }
