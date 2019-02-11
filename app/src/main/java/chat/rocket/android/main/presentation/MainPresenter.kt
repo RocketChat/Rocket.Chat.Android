@@ -54,6 +54,7 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
@@ -387,7 +388,7 @@ class MainPresenter @Inject constructor(
     fun inviteViaEmail(email:String) {
         launchUI(strategy) {
             try {
-                val result:Boolean = retryIO("inviteViaEmail") { client.inviteViaEmail(email) }
+                val result:Boolean = retryIO("inviteViaEmail") { client.inviteViaEmail(email, Locale.getDefault().getLanguage()) }
                 if (result) {
                     view.showMessage("Invitation Email Sent")
                 } else{
@@ -414,7 +415,7 @@ class MainPresenter @Inject constructor(
     fun inviteViaSMS(phone:String) {
         launchUI(strategy) {
             try {
-                val result:Boolean = retryIO("inviteViaSMS") { client.inviteViaSMS(phone) }
+                val result:Boolean = retryIO("inviteViaSMS") { client.inviteViaSMS(phone, Locale.getDefault().getLanguage()) }
                 if (result) {
                     view.showMessage("Invitation SMS Sent")
                 } else{
