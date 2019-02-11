@@ -55,7 +55,19 @@
         <activity
             android:name=".main.ui.MainActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="profile.update"
+                    android:scheme="connect" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".webview.ui.WebViewActivity"

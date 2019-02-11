@@ -44,6 +44,7 @@ import javax.inject.Inject
 
 // WIDECHAT
 import chat.rocket.android.helper.Constants
+import chat.rocket.android.util.extensions.openTabbedUrl
 import kotlinx.android.synthetic.main.app_bar.* // need this for back button in setupToolbar
 import kotlinx.android.synthetic.main.fragment_profile_widechat.*
 
@@ -269,7 +270,16 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
         if (Constants.WIDECHAT) {
             widechat_view_dim.setOnClickListener { hideUpdateAvatarOptions() }
-            edit_profile_button.setOnClickListener { showToast("Edit Profile Button Clicked") }
+
+            var onClickCallback = {url: String? ->
+                edit_profile_button.setOnClickListener { view: View ->
+                    view.openTabbedUrl(url)
+                }
+                edit_profile_button.setBackgroundResource(R.drawable.widechat_update_profile_button)
+            }
+
+            presenter.setUpdateUrl(getString(R.string.widechat_sso_profile_update_path), onClickCallback)
+
             delete_account_button.setOnClickListener { showToast("Delete Account Button Clicked") }
         } else {
             view_dim.setOnClickListener { hideUpdateAvatarOptions() }

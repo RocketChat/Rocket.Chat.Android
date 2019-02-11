@@ -3,9 +3,11 @@
     <string name="default_protocol" translatable="false">https://</string>
     <string name="server_hint_url" translatable="false">viasatconnect.com</string>
     <string name="widechat_server_url" translatable="false">viasatconnect.com</string>
+    <string name="widechat_sso_profile_update_path" translatable="false">/federation/custom/ViasatConnectProfile.jsp?access_token=</string>
     <string name="widechat_deeplink_host" translatable="false">viasatconnect.page.link</string>
     <string name="widechat_package_name" translatable="false">chat.veranda.android</string>
-    <!--WIDECHAT deal with these strings!!-->
+
+    <!--WIDECHAT deal with these strings??-->
     <string name="community_server_url" translatable="false">open.rocket.chat</string>
     <string name="create_server_url" translatable="false">cloud.rocket.chat/trial</string>
     <string name="play_store_link" translatable="false">https://play.google.com/store/apps/details?id=chat.rocket.android</string>

@@ -32,6 +32,9 @@ import kotlinx.coroutines.experimental.withContext
 import java.util.*
 import javax.inject.Inject
 
+// WIDECHAT
+import chat.rocket.core.internal.rest.getAccessToken
+
 class ProfilePresenter @Inject constructor(
     private val view: ProfileView,
     private val strategy: CancelStrategy,
@@ -59,6 +62,9 @@ class ProfilePresenter @Inject constructor(
     private val client: RocketChatClient = factory.create(serverUrl)
     private val user = userHelper.user()
 
+    // WIDECHAT
+    var currentAccessToken: String? = null
+
     fun loadUserProfile() {
         launchUI(strategy) {
             view.showLoading()
@@ -73,6 +79,23 @@ class ProfilePresenter @Inject constructor(
                 view.showMessage(exception)
             } finally {
                 view.hideLoading()
+            }
+        }
+    }
+
+    // WIDECHAT
+    fun setUpdateUrl(updatePath: String?, onClickCallback: (String?) -> Unit?) {
+        launchUI(strategy) {
+            try {
+                withContext(DefaultDispatcher) {
+                    setupConnectionInfo(serverUrl)
+                    refreshServerAccounts()
+                    checkForCustomOauthAccount(serverUrl)
+                }
+                retryIO { currentAccessToken = client.getAccessToken(customOauthServiceName.toString())}
+                onClickCallback("${widechatCustomOauthHost}${updatePath}${currentAccessToken}")
+            } catch (ex: Exception) {
+                view.showMessage(ex)
             }
         }
     }

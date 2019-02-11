@@ -103,6 +103,9 @@ abstract class CheckServerPresenter constructor(
     internal var isLoginFormEnabled = false
     internal var isNewAccountCreationEnabled = false
 
+    // WIDECHAT
+    internal var widechatCustomOauthHost: String? = null
+
     internal fun setupConnectionInfo(serverUrl: String) {
         currentServer = serverUrl
         client = factory.create(serverUrl)
@@ -194,6 +197,21 @@ abstract class CheckServerPresenter constructor(
                 checkEnabledCasAccounts(services, serverUrl)
                 checkEnabledCustomOauthAccounts(services, serverUrl)
                 checkEnabledSamlAccounts(services, serverUrl)
+            }
+        } catch (exception: RocketChatException) {
+            Timber.e(exception)
+        }
+    }
+
+    // WIDECHAT
+    internal suspend fun checkForCustomOauthAccount(serverUrl: String) {
+        try {
+            val services = retryIO("settingsOauth()") {
+                client.settingsOauth().services
+            }
+
+            if (services.isNotEmpty()) {
+                checkEnabledCustomOauthAccounts(services, serverUrl)
             }
         } catch (exception: RocketChatException) {
             Timber.e(exception)
@@ -378,6 +396,7 @@ abstract class CheckServerPresenter constructor(
                     getServiceNameColor(serviceMap)
                 val serviceButtonColor = getServiceButtonColor(serviceMap)
 
+                widechatCustomOauthHost = host
                 if (customOauthServiceName != null &&
                     host != null &&
                     authorizePath != null &&
