@@ -9,7 +9,6 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.model.ChatRoomEntity
-import chat.rocket.android.db.model.UserEntity
 import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
 import chat.rocket.android.emoji.Emoji
 import chat.rocket.android.emoji.EmojiRepository
@@ -44,20 +43,18 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.UserStatus
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.rest.createDirectMessage
-import chat.rocket.core.internal.rest.getCustomEmojis
-import chat.rocket.core.internal.rest.me
-import chat.rocket.core.internal.rest.inviteViaEmail
-import chat.rocket.core.internal.rest.inviteViaSMS
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Myself
 import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.UserPresence
+import chat.rocket.core.internal.rest.*
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
@@ -121,8 +118,13 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    fun getUser(username: String): UserEntity? {
-        return dbManager.userDao().getUserFromUsername(username)
+    suspend fun getUserPresence(userId: String): UserPresence? {
+        try {
+            return retryIO { client.usersGetPresence(userId) }
+        } catch (ex: Exception) {
+            Timber.e(ex)
+        }
+        return null
     }
 
     private fun createDirectMessage(id: String) = launchUI(strategy) {
@@ -386,7 +388,7 @@ class MainPresenter @Inject constructor(
     fun inviteViaEmail(email:String) {
         launchUI(strategy) {
             try {
-                val result:Boolean = retryIO("inviteViaEmail") { client.inviteViaEmail(email) }
+                val result:Boolean = retryIO("inviteViaEmail") { client.inviteViaEmail(email, Locale.getDefault().getLanguage()) }
                 if (result) {
                     view.showMessage("Invitation Email Sent")
                 } else{
@@ -413,7 +415,7 @@ class MainPresenter @Inject constructor(
     fun inviteViaSMS(phone:String) {
         launchUI(strategy) {
             try {
-                val result:Boolean = retryIO("inviteViaSMS") { client.inviteViaSMS(phone) }
+                val result:Boolean = retryIO("inviteViaSMS") { client.inviteViaSMS(phone, Locale.getDefault().getLanguage()) }
                 if (result) {
                     view.showMessage("Invitation SMS Sent")
                 } else{

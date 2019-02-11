@@ -326,7 +326,9 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="Unmute_someone_in_room">Unmute someone in the room</string>
     <string name="Invite_user_to_join_channel">Invite one user to join this channel</string>
     <string name="Invite">Invite</string>
+    <string name="Invited">Invited</string>
     <string name="Invite_contacts">INVITE CONTACTS</string>
+    <string name="Invite_with_other_app">Invite friend via another app</string>
     <string name="Unarchive">Unarchive</string>
     <string name="Join_the_given_channel">Join the given channel</string>
     <string name="Guggy_Command_Description">Generates a gif based upon the provided text</string>

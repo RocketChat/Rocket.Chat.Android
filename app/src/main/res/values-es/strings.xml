@@ -10,7 +10,7 @@
     <string name="title_authentication">Autenticación</string>
     <string name="title_legal_terms">Términos legales</string>
     <string name="title_chats">Chats</string>
-    <string name="title_contacts">New Chat</string>
+    <string name="title_contacts">Nueva conversación</string>
     <string name="title_profile">Perfil</string>
     <string name="title_members">Miembros</string>
     <string name="title_counted_members">Miembros (%d)</string>
@@ -297,6 +297,10 @@
     <string name="Show_the_keyboard_shortcut_list">Mostrar la lista de atajos de teclado</string>
     <string name="Invite_user_to_join_channel_all_from">Invita a todos los usuarios de [#canal] a unirse a este canal</string>
     <string name="Invite_user_to_join_channel_all_to">Invita a todos los usuarios de este canal a unirse a [#canal]</string>
+    <string name="Invite">Invitación</string>
+    <string name="Invited">Invitado</string>
+    <string name="Invite_contacts">INVITAR A CONTACTOS</string>
+    <string name="Invite_with_other_app">Invita a un amigo a través de otra aplicación.</string>
     <string name="Archive">Archivo</string>
     <string name="Remove_someone_from_room">Quita a alguien de la sala</string>
     <string name="Leave_the_current_channel">Deja el canal actual</string>

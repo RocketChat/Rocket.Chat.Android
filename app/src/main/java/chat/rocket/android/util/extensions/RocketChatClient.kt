@@ -56,6 +56,7 @@ fun Contact.toEntity(): ContactEntity {
     return ContactEntity(
             id=0,
             name = getName(),
+            userId = getUserId(),
             username = getUsername(),
             phoneNumber = getPhoneNumber(),
             emailAddress = getEmailAddress(),

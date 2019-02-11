@@ -54,15 +54,15 @@ class ContactSyncWorker(context : Context, params : WorkerParameters)
 
         val strongHashes: List<String> = (contactArrayList.map { contact -> hashString(contact.getDetail()!!) })
         val weakHashes: List<String> = strongHashes.map{ strongHash -> strongHash.substring(3,9) }
-        var retryFlag:Boolean = false
+        var retryFlag = false
         runBlocking {
             try {
                 val apiResult: List<ContactHolder>? = client.queryContacts(weakHashes)
                 if (apiResult != null) {
-                    val intersectionMap: HashMap<String, String> = HashMap()
-                    val intersection: List<String> = apiResult!!.mapIndexed { index, list ->
+                    val intersectionMap: HashMap<String, List<String>> = HashMap()
+                    val intersection: List<String> = apiResult.mapIndexed { index, list ->
                         run {
-                            intersectionMap.put(list.h, list.u)
+                            intersectionMap.put(list.h, listOf(list.id, list.u))
                             list.h
                         }
                     }
@@ -70,19 +70,20 @@ class ContactSyncWorker(context : Context, params : WorkerParameters)
                     contactArrayList.forEachIndexed { index, contact ->
                         run {
                             if (strongHashes[index] in intersectionSet) {
-                                contact.setUsername(intersectionMap[strongHashes[index]])
+                                contact.setUserId(intersectionMap[strongHashes[index]]?.first())
+                                contact.setUsername(intersectionMap[strongHashes[index]]?.last())
                             }
                         }
                     }
                 }
                 Timber.d("Contacts fetched in background.")
-            }catch (ex: RocketChatException){
+            } catch (ex: RocketChatException){
                 retryFlag = true
-            }finally {
+            } finally {
                 dbManager.processContacts(contactArrayList)
             }
         }
-        if(retryFlag){
+        if (retryFlag) {
             return Result.RETRY
         }
         return Result.SUCCESS
