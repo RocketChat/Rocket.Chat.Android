@@ -76,11 +76,19 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        if (Constants.WIDECHAT) {
+            widechatOnItemClick(parent, view, position, id)
+        } else {
+            rocketChatOnItemClick(parent, view, position, id)
+        }
+    }
+
+    private fun rocketChatOnItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         when (parent?.getItemAtPosition(position).toString()) {
             resources.getStringArray(R.array.settings_actions)[0] -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
-                    TAG_PREFERENCES_FRAGMENT,
-                    R.id.fragment_container
+                        TAG_PREFERENCES_FRAGMENT,
+                        R.id.fragment_container
                 ) {
                     PreferencesFragment.newInstance()
                 }
@@ -99,27 +107,50 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             resources.getStringArray(R.array.settings_actions)[5] -> contactSupport()
 
             resources.getStringArray(R.array.settings_actions)[6] -> activity?.startActivity(
-                context?.webViewIntent(
-                    getString(R.string.license_url),
-                    getString(R.string.title_licence)
-                )
+                    context?.webViewIntent(
+                            getString(R.string.license_url),
+                            getString(R.string.title_licence)
+                    )
             )
 
             resources.getStringArray(R.array.settings_actions)[7] -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
-                    TAG_ABOUT_FRAGMENT,
-                    R.id.fragment_container
+                        TAG_ABOUT_FRAGMENT,
+                        R.id.fragment_container
                 ) {
                     AboutFragment.newInstance()
                 }
             }
-            // WIDECHAT
-            resources.getString(R.string.log_out) -> {
+        }
+    }
+
+    private fun widechatOnItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        when (parent?.getItemAtPosition(position).toString()) {
+            resources.getStringArray(R.array.widechat_settings_actions)[0] -> {
+                (activity as AppCompatActivity).addFragmentBackStack(
+                        TAG_PREFERENCES_FRAGMENT,
+                        R.id.fragment_container
+                ) {
+                    PreferencesFragment.newInstance()
+                }
+            }
+
+            resources.getStringArray(R.array.widechat_settings_actions)[1] -> {
+                (activity as AppCompatActivity).addFragmentBackStack(
+                        TAG_ABOUT_FRAGMENT,
+                        R.id.fragment_container
+                ) {
+                    AboutFragment.newInstance()
+                }
+            }
+
+            resources.getStringArray(R.array.widechat_settings_actions)[2] -> {
                 with((activity as MainActivity).presenter) {
                     logout()
                 }
             }
         }
+
     }
 
     private fun showAppOnStore() {
