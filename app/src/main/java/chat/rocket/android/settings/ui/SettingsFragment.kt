@@ -1,5 +1,6 @@
 package chat.rocket.android.settings.ui
 
+import androidx.appcompat.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
@@ -115,10 +116,22 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             }
             // WIDECHAT
             resources.getString(R.string.log_out) -> {
-                with((activity as MainActivity).presenter) {
-                    logout()
-                }
+               showLogoutDialog()
             }
+        }
+    }
+
+    private fun showLogoutDialog() {
+        context?.let {
+            AlertDialog.Builder(it)
+                    .setTitle(R.string.title_are_you_sure)
+                    .setPositiveButton(resources.getString(R.string.action_logout)) { _, _ ->
+                        with((activity as MainActivity).presenter) {
+                            logout()
+                        }
+                    }
+                    .setNegativeButton(resources.getString(android.R.string.no)) { dialog, _ -> dialog.cancel() }
+                    .show()
         }
     }
 
