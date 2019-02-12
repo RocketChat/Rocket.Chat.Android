@@ -1,4 +1,4 @@
-package chat.rocket.android.contacts
+package chat.rocket.android.contacts.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -25,13 +25,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.chatrooms.adapter.ItemHolder
-import chat.rocket.android.contacts.adapter.ContactHeaderItemHolder
-import chat.rocket.android.contacts.adapter.ContactItemHolder
-import chat.rocket.android.contacts.adapter.ContactRecyclerViewAdapter
-import chat.rocket.android.contacts.adapter.inviteItemHolder
+import chat.rocket.android.contacts.adapter.ContactsHeaderItemHolder
+import chat.rocket.android.contacts.adapter.ContactsItemHolder
+import chat.rocket.android.contacts.adapter.ContactsRecyclerViewAdapter
+import chat.rocket.android.contacts.adapter.InviteItemHolder
+import chat.rocket.android.contacts.presentation.ContactsPresenter
+import chat.rocket.android.contacts.presentation.ContactsView
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -42,7 +46,10 @@ import javax.inject.Inject
 /**
  * Load a list of contacts in a recycler view
  */
-class ContactsFragment : Fragment() {
+class ContactsFragment : Fragment(), ContactsView {
+
+    @Inject
+    lateinit var presenter: ContactsPresenter
 
     @Inject
     lateinit var dbFactory: DatabaseManagerFactory
@@ -306,7 +313,7 @@ class ContactsFragment : Fragment() {
 
             recyclerView!!.setHasFixedSize(true)
             recyclerView!!.layoutManager = LinearLayoutManager(context)
-            recyclerView!!.adapter = ContactRecyclerViewAdapter(this.activity as MainActivity, map(filteredContactArrayList)!!)
+            recyclerView!!.adapter = ContactsRecyclerViewAdapter(this.activity as MainActivity, presenter, map(filteredContactArrayList))
         }
     }
 
@@ -326,17 +333,38 @@ class ContactsFragment : Fragment() {
         }
         // Filter for dupes
         userContactList.distinctBy { it.getUsername() }.forEach { contact ->
-            userList.add(ContactItemHolder(contact))
+            userList.add(ContactsItemHolder(contact))
         }
 
         unfilteredContactsList.distinctBy { listOf(it.getPhoneNumber(), it.getEmailAddress())}.forEach { contact ->
-            contactsList.add(ContactItemHolder(contact))
+            contactsList.add(ContactsItemHolder(contact))
         }
 
         finalList.addAll(userList)
-        finalList.add(ContactHeaderItemHolder(getString(R.string.Invite_contacts)))
+        finalList.add(ContactsHeaderItemHolder(getString(R.string.Invite_contacts)))
         finalList.addAll(contactsList)
-        finalList.add(inviteItemHolder("invite"))
+        finalList.add(InviteItemHolder("invite"))
         return finalList
     }
+
+    override fun showLoading() {
+    }
+
+    override fun hideLoading() {
+    }
+
+    override fun showMessage(resId: Int) {
+        ui {
+            showToast(resId)
+        }
+    }
+
+    override fun showMessage(message: String) {
+        ui {
+            showToast(message)
+        }
+    }
+
+    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+
 }

@@ -24,7 +24,7 @@ import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
-import chat.rocket.android.contacts.worker.ContactSyncWorker
+import chat.rocket.android.contacts.worker.ContactsSyncWorker
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
@@ -344,9 +344,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                     PERMISSIONS_REQUEST_RW_CONTACTS)
         } else {
             // Permission has already been granted
-            val contactSyncWork = OneTimeWorkRequestBuilder<ContactSyncWorker>().build()
-            WorkManager.getInstance().enqueue(contactSyncWork)
-            WorkManager.getInstance().getStatusById(contactSyncWork.getId()).observe(this, Observer { info ->
+            val contactsSyncWork = OneTimeWorkRequestBuilder<ContactsSyncWorker>().build()
+            WorkManager.getInstance().enqueue(contactsSyncWork)
+            WorkManager.getInstance().getStatusById(contactsSyncWork.getId()).observe(this, Observer { info ->
                 if (info != null && info.state.isFinished) {
                     //showToast("Contacts synced in background")
                 }

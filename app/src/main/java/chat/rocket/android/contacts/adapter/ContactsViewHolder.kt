@@ -10,7 +10,7 @@ import chat.rocket.android.chatrooms.adapter.ViewHolder
 import chat.rocket.android.contacts.models.Contact
 import kotlinx.android.synthetic.main.item_contact.view.*
 
-class ContactViewHolder(itemView: View) : ViewHolder<ContactItemHolder>(itemView) {
+class ContactsViewHolder(itemView: View) : ViewHolder<ContactsItemHolder>(itemView) {
 
     private val resources: Resources = itemView.resources
     private val online: Drawable = resources.getDrawable(R.drawable.ic_status_online_12dp)
@@ -18,7 +18,7 @@ class ContactViewHolder(itemView: View) : ViewHolder<ContactItemHolder>(itemView
     private val busy: Drawable = resources.getDrawable(R.drawable.ic_status_busy_12dp)
     private val offline: Drawable = resources.getDrawable(R.drawable.ic_status_invisible_12dp)
 
-    override fun bindViews(data: ContactItemHolder) {
+    override fun bindViews(data: ContactsItemHolder) {
         val contact: Contact = data.data
         with(itemView) {
             contact_image_avatar.setImageURI(contact.getAvatarUrl())
