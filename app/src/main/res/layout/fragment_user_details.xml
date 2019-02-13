@@ -126,5 +126,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="image_blur, image_avatar, text_name, text_username, text_message, text_title_status, text_description_status, text_title_timezone, text_description_timezone" />
+
+        <Button
+            android:id="@+id/button_kick"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="kick user"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_description_timezone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

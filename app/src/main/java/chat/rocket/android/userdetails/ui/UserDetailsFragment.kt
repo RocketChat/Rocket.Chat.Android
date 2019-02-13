@@ -31,7 +31,7 @@ import javax.inject.Inject
 
 fun newInstance(userId: String,chatRoomId: String): Fragment {
     return UserDetailsFragment().apply {
-        arguments = Bundle(1).apply {
+        arguments = Bundle(2).apply {
             putString(BUNDLE_USER_ID, userId)
             putString(BUNDLE_USER_CHATROOM_ID,chatRoomId)
         }
@@ -76,7 +76,8 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         setupToolbar()
         setupListeners()
         presenter.loadUserDetails(userId)
-
+        presenter.checkDirectMessageRoomType(chatRoomId)
+        button_kick.setOnClickListener { presenter.kickUser(userId,chatRoomId) }
         analyticsManager.logScreenView(ScreenViewEvent.UserDetails)
     }
 
@@ -111,13 +112,23 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     }
 
     override fun showLoading() {
-        group_user_details.isVisible = false
         view_loading.isVisible = true
     }
 
     override fun hideLoading() {
-        group_user_details.isVisible = true
         view_loading.isVisible = false
+    }
+
+    override fun enableKickButton() {
+        button_kick.isVisible = true
+    }
+
+    override fun disableKickButton() {
+        button_kick.isVisible = false
+    }
+
+    override fun showKickedUserSuccessfullyMessage() {
+        showMessage("Successfully kicked user")
     }
 
     override fun showMessage(resId: Int) {

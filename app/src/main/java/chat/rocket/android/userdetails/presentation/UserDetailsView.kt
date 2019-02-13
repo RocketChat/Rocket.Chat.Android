@@ -21,4 +21,17 @@ interface UserDetailsView : LoadingView, MessageView {
         status: String,
         utcOffset: String
     )
+    /**
+     * Disable Kick Button
+     */
+    fun disableKickButton()
+    /**
+     * Enable Kick Button
+     */
+    fun enableKickButton()
+
+    /**
+     * Shows a message that a channel was successfully created.
+     */
+    fun showKickedUserSuccessfullyMessage()
 }
