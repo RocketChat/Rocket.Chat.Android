@@ -41,13 +41,14 @@
             app:layout_constraintEnd_toEndOf="@+id/contact_image_avatar" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:orientation="vertical"
+            app:layout_constraintWidth_percent=".6"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/contact_image_avatar" >
+            app:layout_constraintStart_toEndOf="@+id/contact_image_avatar">
 
             <TextView
                 android:id="@+id/contact_name"
@@ -60,13 +61,15 @@
                 android:maxLines="1"
                 android:textColor="@color/colorPrimaryText"
                 android:textDirection="locale"
-                tools:text="Alex Johnson" />
+                tools:text="Alex Johnson with a really long name" />
 
             <TextView
                 android:id="@+id/contact_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="2"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
                 android:textStyle="bold"
                 android:visibility="gone"
                 tools:text="9876543210"
