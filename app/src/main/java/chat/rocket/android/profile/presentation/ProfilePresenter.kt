@@ -33,7 +33,11 @@ import java.util.*
 import javax.inject.Inject
 
 // WIDECHAT
+import chat.rocket.android.util.extensions.openTabbedUrl
 import chat.rocket.core.internal.rest.getAccessToken
+
+// Test
+import timber.log.Timber
 
 class ProfilePresenter @Inject constructor(
     private val view: ProfileView,
@@ -209,6 +213,27 @@ class ProfilePresenter @Inject constructor(
                     retryIO { client.deleteOwnAccount(password.gethash().toHex().toLowerCase()) }
                     setupConnectionInfo(serverUrl)
                     logout(null)
+                }
+            } catch (exception: Exception) {
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideLoading()
+            }
+        }
+    }
+
+    // WIDECHAT
+    fun deleteAccount(username: String, ssoDeleteCallback: () -> Unit?) {
+        launchUI(strategy) {
+            view.showLoading()
+            try {
+                withContext(DefaultDispatcher) {
+                    retryIO { client.deleteOwnAccount(username) }
+                    ssoDeleteCallback()
                 }
             } catch (exception: Exception) {
                 exception.message?.let {

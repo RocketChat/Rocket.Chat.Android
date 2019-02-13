@@ -66,6 +66,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     // WIDECHAT
     private var profileFragment: Int = R.layout.fragment_profile_widechat
+    // EAR Test >>
+    private var ssoUpdateUrl: String? = null
 
     companion object {
         fun newInstance() = ProfileFragment()
@@ -272,6 +274,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             widechat_view_dim.setOnClickListener { hideUpdateAvatarOptions() }
 
             var onClickCallback = {url: String? ->
+                // EAR Test >>
+                ssoUpdateUrl = url
                 edit_profile_button.setOnClickListener { view: View ->
                     view.openTabbedUrl(url)
                 }
@@ -280,7 +284,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
             presenter.setUpdateUrl(getString(R.string.widechat_sso_profile_update_path), onClickCallback)
 
-            delete_account_button.setOnClickListener { showToast("Delete Account Button Clicked") }
+//            delete_account_button.setOnClickListener { showToast("Delete Account Button Clicked") }
+            delete_account_button.setOnClickListener { showDeleteAccountDialog() }
         } else {
             view_dim.setOnClickListener { hideUpdateAvatarOptions() }
         }
@@ -376,15 +381,27 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     fun showDeleteAccountDialog() {
-        val passwordEditText = EditText(context)
-        passwordEditText.hint = getString(R.string.msg_password)
+        val verificationStringEditText = EditText(context)
+        if (Constants.WIDECHAT) {
+            verificationStringEditText.hint = getString(R.string.msg_username)
+        } else {
+            verificationStringEditText.hint = getString(R.string.msg_password)
+        }
+
+        var ssoDeleteCallback = { ->
+            view?.openTabbedUrl(ssoUpdateUrl)
+        }
 
         context?.let {
             val builder = AlertDialog.Builder(it)
             builder.setTitle(R.string.title_are_you_sure)
-                .setView(passwordEditText)
+                .setView(verificationStringEditText)
                 .setPositiveButton(R.string.action_delete_account) { _, _ ->
-                    presenter.deleteAccount(passwordEditText.text.toString())
+                    if (Constants.WIDECHAT) {
+                        presenter.deleteAccount(verificationStringEditText.text.toString(), ssoDeleteCallback)
+                    } else {
+                        presenter.deleteAccount(verificationStringEditText.text.toString())
+                    }
                 }
                 .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
                 .create()
