@@ -127,9 +127,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         button_kick.isVisible = false
     }
 
-    override fun showKickedUserSuccessfullyMessage() {
-        showMessage("Successfully kicked user")
-    }
+    override fun showKickedUserSuccessfullyMessage() = showMessage(getString(R.string.msg_kick_user_successfully))
 
     override fun showMessage(resId: Int) {
         ui { showToast(resId) }

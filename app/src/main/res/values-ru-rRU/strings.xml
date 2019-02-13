@@ -59,6 +59,7 @@
     <string name="action_register">Зарегистрировать</string>
     <string name="action_confirm">Подтвердить</string>
     <string name="action_delete_account">Удалить аккаунт</string>
+    <string name="action_kick_user">Kick user</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -73,6 +74,7 @@
     </string-array>
 
     <!-- Regular information messages -->
+    <string name="msg_kick_user_successfully">Kicked user successfully</string> <!-- TODO Add translation -->
     <string name="msg_generic_error">Произошла ошибка, повторите попытку.</string>
     <string name="msg_no_data_to_display">Нет данных для отображения</string>
     <string name="msg_check_this_out">Проверь это</string>
