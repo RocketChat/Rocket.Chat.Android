@@ -14,8 +14,10 @@ import chat.rocket.android.helper.Constants
 
 internal fun ChatRoomFragment.setupMenu(menu: Menu) {
     setupSearchMessageMenuItem(menu, requireContext())
-    setupFavoriteMenuItem(menu)
-    setupDetailsMenuItem(menu)
+    if (!Constants.WIDECHAT) {
+        setupFavoriteMenuItem(menu)
+        setupDetailsMenuItem(menu)
+    }
 }
 
 internal fun ChatRoomFragment.setOnMenuItemClickListener(item: MenuItem) {
