@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/msg_no_data_to_display"
+        android:text="@string/msg_no_contacts_to_display"
         android:visibility="gone"
         tools:visibility="visible" />
     <View
