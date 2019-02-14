@@ -125,7 +125,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             image_avatar.setImageURI(avatarUrl)
             widechat_text_username.textContent = username
             widechat_text_email.textContent = email ?: ""
-
             widechat_profile_container.isVisible = true
         }
     }
@@ -173,9 +172,13 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun reloadUserAvatar(avatarUrl: String) {
-        Fresco.getImagePipeline().evictFromCache(avatarUrl.toUri())
+        Fresco.getImagePipeline().clearCaches()
         image_avatar.setImageURI(avatarUrl)
-        (activity as MainActivity).setAvatar(avatarUrl)
+        if (!Constants.WIDECHAT) {
+            (activity as MainActivity).setAvatar(avatarUrl)
+        } else {
+            presenter.loadUserProfile()
+        }
     }
 
     override fun showProfileUpdateSuccessfullyMessage() {
