@@ -84,6 +84,7 @@
     <!-- Regular information messages -->
     <string name="msg_generic_error">Lo sentimos, ha ocurrido un error, por favor intente de nuevo</string>
     <string name="msg_no_data_to_display">No hay información para mostrar</string>
+    <string name="msg_no_contacts_to_display">No se encontraron contactos</string>
     <string name="msg_check_this_out">Mira esto</string>
     <string name="msg_share_using">Compartir usando</string>
     <string name="msg_profile_update_successfully">Actualización de perfil con éxito</string>
