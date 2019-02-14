@@ -35,6 +35,8 @@ import javax.inject.Inject
 // WIDECHAT
 import chat.rocket.android.util.extensions.openTabbedUrl
 import chat.rocket.core.internal.rest.getAccessToken
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.RefreshSettingsInteractor
 
 // Test
 import timber.log.Timber
@@ -46,6 +48,8 @@ class ProfilePresenter @Inject constructor(
     val userHelper: UserHelper,
     navigator: MainNavigator,
     serverInteractor: GetCurrentServerInteractor,
+    refreshSettingsInteractor: RefreshSettingsInteractor,
+    settingsInteractor: GetSettingsInteractor,
     factory: RocketChatClientFactory,
     removeAccountInteractor: RemoveAccountInteractor,
     tokenRepository: TokenRepository,
@@ -55,6 +59,8 @@ class ProfilePresenter @Inject constructor(
     strategy = strategy,
     factory = factory,
     serverInteractor = serverInteractor,
+    settingsInteractor = settingsInteractor,
+    refreshSettingsInteractor = refreshSettingsInteractor,
     removeAccountInteractor = removeAccountInteractor,
     tokenRepository = tokenRepository,
     dbManagerFactory = dbManagerFactory,
@@ -94,10 +100,10 @@ class ProfilePresenter @Inject constructor(
                 withContext(DefaultDispatcher) {
                     setupConnectionInfo(serverUrl)
                     refreshServerAccounts()
-                    checkForCustomOauthAccount(serverUrl)
+                    checkEnabledAccounts(serverUrl)
                 }
-                retryIO { currentAccessToken = client.getAccessToken(customOauthServiceName.toString())}
-                onClickCallback("${widechatCustomOauthHost}${updatePath}${currentAccessToken}")
+                retryIO { currentAccessToken = client.getAccessToken(customOauthServiceName.toString()) }
+                onClickCallback("${customOauthHost}${updatePath}${currentAccessToken}")
             } catch (ex: Exception) {
                 view.showMessage(ex)
             }
