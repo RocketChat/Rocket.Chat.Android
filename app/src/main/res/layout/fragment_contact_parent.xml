@@ -13,7 +13,7 @@
         tools:listitem="@layout/item_contact" />
 
     <TextView
-        android:id="@+id/text_no_data_to_display"
+        android:id="@+id/text_no_contacts_to_display"
         style="@style/TextAppearance.AppCompat.Subhead"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"

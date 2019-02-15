@@ -118,7 +118,7 @@ class ContactsFragment : Fragment(), ContactsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.recyclerView = view.findViewById(R.id.recycler_view)
-        this.emptyTextView = view.findViewById(R.id.text_no_data_to_display)
+        this.emptyTextView = view.findViewById(R.id.text_no_contacts_to_display)
         getContactsPermissions()
         setupToolbar()
     }
@@ -311,13 +311,25 @@ class ContactsFragment : Fragment(), ContactsView {
         emptyTextView!!.visibility = View.GONE
         showLoading()
 
+        val serverUrl = serverInteractor.get()!!
+        val dbManager = dbFactory.create(serverUrl)
+        val contactList = dbManager.contactsDao().getAllSync()
+
         ui {
             (activity as MainActivity).contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
                 when (state) {
-                    is LoadingState.Loading -> if (state.count == 0L) showLoading()
+                    is LoadingState.Loading -> {
+                        if (contactList.isEmpty()) {
+                            showLoading()
+                        } else {
+                            hideLoading()
+                            getContactList()
+                        }
+                    }
                     is LoadingState.Loaded -> {
-                        getContactList()
                         hideLoading()
+                        getContactList()
+                        showToast("Contacts synced successfully", 1)
                     }
                     is LoadingState.Error -> {
                         hideLoading()
@@ -339,7 +351,6 @@ class ContactsFragment : Fragment(), ContactsView {
             recyclerView!!.layoutManager = LinearLayoutManager(context)
             recyclerView!!.adapter = ContactsRecyclerViewAdapter(this.activity as MainActivity, presenter, map(filteredContactArrayList))
         }
-        hideLoading()
     }
 
     fun map(contacts: List<Contact>): ArrayList<ItemHolder<*>> {

@@ -91,7 +91,10 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             setContentView(R.layout.activity_main)
         }
         refreshPushToken()
+
+        contactsLoadingState.postValue(LoadingState.Loading(0))
         syncContacts()
+
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
         deepLinkInfo = intent.getParcelableExtra(Constants.DEEP_LINK_INFO)
         presenter.clearNotificationsForChatroom(chatRoomId)
