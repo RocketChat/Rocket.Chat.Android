@@ -54,6 +54,8 @@ import javax.inject.Inject
 // WIDECHAT
 import chat.rocket.android.helper.Constants
 import androidx.core.net.toUri
+//test
+import timber.log.Timber
 
 private const val CURRENT_STATE = "current_state"
 
@@ -81,6 +83,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
         if (Constants.WIDECHAT) {
             setContentView(R.layout.widechat_activity_main)
+            presenter.clearAvatarUrlFromCache()
         } else {
             setContentView(R.layout.activity_main)
         }
