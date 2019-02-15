@@ -41,6 +41,12 @@ import kotlinx.coroutines.experimental.channels.Channel
 import timber.log.Timber
 import javax.inject.Inject
 
+// WIDECHAT
+import androidx.core.net.toUri
+import com.facebook.drawee.backends.pipeline.Fresco
+import chat.rocket.android.infrastructure.username
+import chat.rocket.android.util.extensions.avatarUrl
+
 class MainPresenter @Inject constructor(
     private val view: MainView,
     private val strategy: CancelStrategy,
@@ -77,6 +83,9 @@ class MainPresenter @Inject constructor(
     private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
     private val userDataChannel = Channel<Myself>()
 
+    // WIDECHAT
+    private val currentUsername = localRepository.username()
+
     fun toChatList(chatRoomId: String? = null, deepLinkInfo: DeepLinkInfo? = null) = navigator.toChatList(chatRoomId, deepLinkInfo)
 
     fun toUserProfile() = navigator.toUserProfile()
@@ -107,6 +116,11 @@ class MainPresenter @Inject constructor(
                 }
             }
         }
+    }
+
+    fun clearAvatarUrlFromCache() {
+        val myAvatarUrl: String? =  currentServer.avatarUrl(currentUsername ?: "")
+        Fresco.getImagePipeline().evictFromCache(myAvatarUrl?.toUri())
     }
 
     fun loadCurrentInfo() {

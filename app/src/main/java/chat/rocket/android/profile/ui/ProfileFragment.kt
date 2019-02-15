@@ -28,12 +28,8 @@ import chat.rocket.android.profile.presentation.ProfileView
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.dispatchImageSelection
 import chat.rocket.android.util.extension.dispatchTakePicture
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.textContent
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.invalidateFirebaseToken
-import com.facebook.drawee.backends.pipeline.Fresco
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
@@ -44,7 +40,6 @@ import javax.inject.Inject
 
 // WIDECHAT
 import chat.rocket.android.helper.Constants
-import chat.rocket.android.util.extensions.openTabbedUrl
 import kotlinx.android.synthetic.main.app_bar.* // need this for back button in setupToolbar
 import kotlinx.android.synthetic.main.fragment_profile_widechat.*
 
@@ -125,7 +120,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             image_avatar.setImageURI(avatarUrl)
             widechat_text_username.textContent = username
             widechat_text_email.textContent = email ?: ""
-
             widechat_profile_container.isVisible = true
         }
     }
@@ -173,9 +167,13 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun reloadUserAvatar(avatarUrl: String) {
-        Fresco.getImagePipeline().evictFromCache(avatarUrl.toUri())
+        (activity as MainActivity).presenter.clearAvatarUrlFromCache()
         image_avatar.setImageURI(avatarUrl)
-        (activity as MainActivity).setAvatar(avatarUrl)
+        if (!Constants.WIDECHAT) {
+            (activity as MainActivity).setAvatar(avatarUrl)
+        } else {
+            presenter.loadUserProfile()
+        }
     }
 
     override fun showProfileUpdateSuccessfullyMessage() {
