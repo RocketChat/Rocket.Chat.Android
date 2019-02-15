@@ -1,7 +1,6 @@
 package chat.rocket.android.main.presentation
 
 import android.content.Context
-import androidx.core.net.toUri
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
@@ -29,7 +28,6 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.adminPanelUrl
-import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
@@ -44,8 +42,10 @@ import timber.log.Timber
 import javax.inject.Inject
 
 // WIDECHAT
+import androidx.core.net.toUri
 import com.facebook.drawee.backends.pipeline.Fresco
 import chat.rocket.android.infrastructure.username
+import chat.rocket.android.util.extensions.avatarUrl
 
 class MainPresenter @Inject constructor(
     private val view: MainView,
