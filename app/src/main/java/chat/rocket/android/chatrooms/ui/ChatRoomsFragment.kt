@@ -51,7 +51,6 @@ import javax.inject.Inject
 // WIDECHAT
 import android.graphics.Color
 import android.widget.*
-import androidx.core.net.toUri
 import androidx.core.view.isGone
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
@@ -63,10 +62,6 @@ import chat.rocket.android.util.extensions.avatarUrl
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.coroutines.experimental.launch
-
-//test
-import com.facebook.drawee.backends.pipeline.Fresco
-
 
 internal const val TAG_CHAT_ROOMS_FRAGMENT = "ChatRoomsFragment"
 
@@ -497,7 +492,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 val serverUrl = serverInteractor.get()
                 val user = userHelper.user()
                 val myAvatarUrl: String? =  serverUrl?.avatarUrl(user?.username ?: "")
-                //Fresco.getImagePipeline().evictFromCache(myAvatarUrl?.toUri())
 
                 profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
                 profileButton?.setImageURI(myAvatarUrl)

@@ -54,8 +54,6 @@ import javax.inject.Inject
 // WIDECHAT
 import chat.rocket.android.helper.Constants
 import androidx.core.net.toUri
-//test
-import timber.log.Timber
 
 private const val CURRENT_STATE = "current_state"
 

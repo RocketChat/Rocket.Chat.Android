@@ -2,7 +2,6 @@ package chat.rocket.android.profile.presentation
 
 import android.graphics.Bitmap
 import android.net.Uri
-import androidx.core.net.toUri
 import chat.rocket.android.chatroom.domain.UriInteractor
 import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
