@@ -28,6 +28,7 @@ import chat.rocket.android.profile.presentation.ProfileView
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.dispatchImageSelection
 import chat.rocket.android.util.extension.dispatchTakePicture
+import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.invalidateFirebaseToken
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
@@ -39,7 +40,6 @@ import javax.inject.Inject
 
 // WIDECHAT
 import chat.rocket.android.helper.Constants
-import chat.rocket.android.util.extensions.*
 import kotlinx.android.synthetic.main.app_bar.* // need this for back button in setupToolbar
 import kotlinx.android.synthetic.main.fragment_profile_widechat.*
 
