@@ -116,6 +116,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 if (isAuthenticated) {
                     presenter.toChatList(deepLinkInfo)
                 } else {
+                    setTheme(R.style.AppTheme)
                     presenter.saveDeepLinkInfo(deepLinkInfo)
                     presenter.toOnBoarding()
                 }
