@@ -189,6 +189,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     if (rooms.isNotEmpty()) {
                         if (Constants.WIDECHAT) {
                             widechat_welcome_to_app.isVisible = false
+                            widechat_text_no_data_to_display.isVisible = false
                         } else {
                             text_no_data_to_display.isVisible = false
                         }
@@ -201,7 +202,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             viewModel.loadingState.observe(viewLifecycleOwner, Observer { state ->
                 when (state) {
                     is LoadingState.Loading -> if (state.count == 0L) showLoading()
-
+                    is LoadingState.Loaded -> {
+                        hideLoading()
+                    }
                     is LoadingState.Error -> {
                         hideLoading()
                         showGenericErrorMessage()

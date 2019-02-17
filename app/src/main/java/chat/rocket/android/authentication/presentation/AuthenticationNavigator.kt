@@ -13,6 +13,10 @@ import chat.rocket.android.util.extensions.toPreviousView
 import chat.rocket.android.webview.ui.webViewIntent
 import chat.rocket.common.util.ifNull
 
+//test
+import chat.rocket.android.util.extensions.addFragment
+
+
 class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
     public var savedDeepLinkInfo: DeepLinkInfo? = null
 
@@ -58,6 +62,7 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
         isNewAccountCreationEnabled: Boolean = true,
         deepLinkInfo: DeepLinkInfo? = null
     ) {
+//        activity.addFragment(
         activity.addFragmentBackStack(
             ScreenViewEvent.LoginOptions.screenName,
             R.id.fragment_container
@@ -91,6 +96,7 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
                 deepLinkInfo
             )
         }
+        activity.overridePendingTransition(0,0)
     }
 
     fun toTwoFA(username: String, password: String) {
@@ -135,8 +141,11 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
 
     fun toWebPage(url: String, toolbarTitle: String? = null) {
         activity.startActivity(activity.webViewIntent(url, toolbarTitle))
-        //activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
-        activity.overridePendingTransition(0,0)
+//        if (Constants.WIDECHAT) {
+//            activity.overridePendingTransition(0, 0)
+//        } else {
+            activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+//        }
     }
 
     fun toChatList(serverUrl: String) {
