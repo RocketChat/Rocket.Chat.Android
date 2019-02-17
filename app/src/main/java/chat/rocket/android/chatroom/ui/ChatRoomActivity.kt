@@ -71,7 +71,6 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         AndroidInjection.inject(this)
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_chat_room)
 
         // Workaround for when we are coming to the app via the recents app and the app was killed.

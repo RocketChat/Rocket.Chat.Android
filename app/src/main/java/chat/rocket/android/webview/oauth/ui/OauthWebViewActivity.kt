@@ -19,11 +19,8 @@ import org.json.JSONObject
 
 // WIDECHAT
 import android.content.res.Resources
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.widget.ImageView
 import androidx.core.os.ConfigurationCompat
-import androidx.core.view.isVisible
 import chat.rocket.android.helper.Constants
 
 fun Context.oauthWebViewIntent(webPageUrl: String, state: String): Intent {
