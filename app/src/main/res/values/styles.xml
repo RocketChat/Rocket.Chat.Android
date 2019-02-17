@@ -1,16 +1,14 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <!-- Splash screen theme. -->
+    <style name="WidechatSplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/widechatStatusBar</item>
         <item name="android:windowBackground">@drawable/widechat_green_gradient</item>
-
         <item name="windowActionModeOverlay">true</item>
-        <!--<item name="searchViewStyle">@style/ChatRoom.SearchView</item>-->
     </style>
 
 
@@ -28,10 +26,6 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="searchViewStyle">@style/ChatRoom.SearchView</item>
     </style>
-
-
-
-
 
     <style name="AuthenticationTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:statusBarColor">@color/widechatStatusBar</item>

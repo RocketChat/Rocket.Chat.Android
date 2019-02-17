@@ -182,16 +182,18 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             recycler_view.adapter = adapter
 
             viewModel.getChatRooms().observe(viewLifecycleOwner, Observer { rooms ->
+                hideLoading()
                 rooms?.let {
                     Timber.d("Got items: $it")
                     adapter.values = it
                     if (rooms.isNotEmpty()) {
                         if (Constants.WIDECHAT) {
                             widechat_welcome_to_app.isVisible = false
-                            widechat_text_no_data_to_display.isVisible = false
                         } else {
                             text_no_data_to_display.isVisible = false
                         }
+                    } else {
+                        showNoChatRoomsToDisplay()
                     }
                 }
             })
@@ -199,10 +201,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             viewModel.loadingState.observe(viewLifecycleOwner, Observer { state ->
                 when (state) {
                     is LoadingState.Loading -> if (state.count == 0L) showLoading()
-                    is LoadingState.Loaded -> {
-                        hideLoading()
-                        if (state.count == 0L) showNoChatRoomsToDisplay()
-                    }
+
                     is LoadingState.Error -> {
                         hideLoading()
                         showGenericErrorMessage()

@@ -135,7 +135,8 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
 
     fun toWebPage(url: String, toolbarTitle: String? = null) {
         activity.startActivity(activity.webViewIntent(url, toolbarTitle))
-        activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+        //activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+        activity.overridePendingTransition(0,0)
     }
 
     fun toChatList(serverUrl: String) {
@@ -153,8 +154,11 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
                 it.putExtra(Constants.DEEP_LINK_INFO, deepLinkInfo)
             })
         } else {
-            activity.startActivity(Intent(activity, MainActivity::class.java))
+            val intent = Intent(activity, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            activity.startActivity(intent)
         }
         activity.finish()
+        activity.overridePendingTransition(0,0)
     }
 }
