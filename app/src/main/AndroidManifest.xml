@@ -62,7 +62,7 @@
 
         <activity
             android:name=".server.ui.ChangeServerActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/WidechatSplashTheme" />
 
         <activity
             android:name=".main.ui.MainActivity"
@@ -88,7 +88,7 @@
 
         <activity
             android:name=".webview.sso.ui.SsoWebViewActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/WidechatSplashTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
@@ -98,12 +98,12 @@
 
         <activity
             android:name=".chatroom.ui.ChatRoomActivity"
-            android:theme="@style/WidechatSplashTheme.test"
+            android:theme="@style/WidechatSplashTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".chatinformation.ui.MessageInfoActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/WidechatSplashTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <!-- TODO: Change to fragment-->
