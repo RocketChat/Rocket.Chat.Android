@@ -23,8 +23,7 @@
         <activity
             android:name=".authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
-            android:launchMode="singleInstance"
-            android:noHistory="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/WidechatSplashTheme"
             android:windowSoftInputMode="adjustResize">
@@ -63,12 +62,11 @@
 
         <activity
             android:name=".server.ui.ChangeServerActivity"
-            android:theme="@style/WidechatSplashTheme" />
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".main.ui.MainActivity"
-            android:theme="@style/WidechatSplashTheme.test"
-            android:windowDisablePreview="true"
+            android:theme="@style/WidechatSplashTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
 
             <intent-filter>
@@ -90,7 +88,7 @@
 
         <activity
             android:name=".webview.sso.ui.SsoWebViewActivity"
-            android:theme="@style/WidechatSplashTheme"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
@@ -100,7 +98,7 @@
 
         <activity
             android:name=".chatroom.ui.ChatRoomActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/WidechatSplashTheme.test"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
