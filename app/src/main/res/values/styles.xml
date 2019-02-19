@@ -24,13 +24,6 @@
         <item name="searchViewStyle">@style/ChatRoom.SearchView</item>
     </style>
 
-    <style name="AuthenticationTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:statusBarColor">@color/widechatStatusBar</item>
-        <item name="android:windowBackground">@color/colorPrimary</item>
-        <item name="actionModeBackground">@color/colorPrimary</item>
-        <item name="android:actionModeBackground">@color/colorPrimary</item>
-    </style>
-
     <!-- Widget styles. -->
     <!-- Authentication -->
     <style name="Authentication.TextView.Headline" parent="TextAppearance.AppCompat">
