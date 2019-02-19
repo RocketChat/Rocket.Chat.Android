@@ -24,6 +24,7 @@
             android:name=".authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
             android:launchMode="singleInstance"
+            android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/WidechatSplashTheme"
             android:windowSoftInputMode="adjustResize">
@@ -66,7 +67,8 @@
 
         <activity
             android:name=".main.ui.MainActivity"
-            android:theme="@style/WidechatSplashTheme"
+            android:theme="@style/WidechatSplashTheme.test"
+            android:windowDisablePreview="true"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
 
             <intent-filter>
@@ -98,12 +100,12 @@
 
         <activity
             android:name=".chatroom.ui.ChatRoomActivity"
-            android:theme="@style/WidechatSplashTheme"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".chatinformation.ui.MessageInfoActivity"
-            android:theme="@style/WidechatSplashTheme"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <!-- TODO: Change to fragment-->

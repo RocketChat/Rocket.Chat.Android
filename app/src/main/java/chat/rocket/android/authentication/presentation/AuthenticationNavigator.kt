@@ -91,7 +91,7 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
                 deepLinkInfo
             )
         }
-//        activity.overridePendingTransition(0,0)
+        activity.overridePendingTransition(0,0)
     }
 
     fun toTwoFA(username: String, password: String) {
@@ -137,6 +137,7 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
     fun toWebPage(url: String, toolbarTitle: String? = null) {
         activity.startActivity(activity.webViewIntent(url, toolbarTitle))
         activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+
     }
 
     fun toChatList(serverUrl: String) {
@@ -159,6 +160,6 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
             activity.startActivity(intent)
         }
         activity.finish()
-        activity.overridePendingTransition(0,0)
+        activity.overridePendingTransition(0, 0)
     }
 }
