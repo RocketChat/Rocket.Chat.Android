@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/widechatStatusBar</item>
         <item name="android:windowBackground">@drawable/widechat_green_gradient</item>
+
         <item name="windowActionModeOverlay">true</item>
     </style>
 

@@ -42,6 +42,8 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
 
         if ((!Constants.WIDECHAT) || (Constants.WIDECHAT_DEV)) {
             auth_fragment = R.layout.fragment_authentication_on_boarding
+        } else {
+            showLoading()
         }
     }
 

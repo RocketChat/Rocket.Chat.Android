@@ -29,7 +29,7 @@
         android:layout_centerInParent="true"
         android:text="@string/msg_no_data_to_display"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <TextView
         android:id="@+id/widechat_welcome_to_app"
@@ -81,7 +81,7 @@
         android:text="@string/msg_no_search_found"
         android:textSize="20sp"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_new_channel_fab"

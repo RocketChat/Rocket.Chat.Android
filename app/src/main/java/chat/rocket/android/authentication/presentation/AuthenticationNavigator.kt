@@ -91,7 +91,7 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
                 deepLinkInfo
             )
         }
-        activity.overridePendingTransition(0,0)
+//        activity.overridePendingTransition(0,0)
     }
 
     fun toTwoFA(username: String, password: String) {
