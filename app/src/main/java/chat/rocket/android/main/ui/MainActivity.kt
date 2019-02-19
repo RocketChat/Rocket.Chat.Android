@@ -82,6 +82,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
         if (Constants.WIDECHAT) {
             setContentView(R.layout.widechat_activity_main)
+            // Loads new avatar when changed on server side
+            presenter.clearAvatarUrlFromCache()
         } else {
             setContentView(R.layout.activity_main)
         }
