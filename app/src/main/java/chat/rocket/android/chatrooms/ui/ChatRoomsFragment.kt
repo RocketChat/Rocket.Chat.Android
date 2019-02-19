@@ -197,7 +197,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 when (state) {
                     is LoadingState.Loading -> if (state.count == 0L) showLoading()
                     is LoadingState.Loaded -> {
-                        Timber.d("#########  EAR >> loadingState.count is ${state.count}")
                         if (state.count == 0L) showNoChatRoomsToDisplay(true)
                     }
                     is LoadingState.Error -> {
