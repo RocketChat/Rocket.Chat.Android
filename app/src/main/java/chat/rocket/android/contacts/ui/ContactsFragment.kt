@@ -315,28 +315,28 @@ class ContactsFragment : Fragment(), ContactsView {
         val dbManager = dbFactory.create(serverUrl)
         val contactList = dbManager.contactsDao().getAllSync()
 
-        ui {
-            (activity as MainActivity).contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
-                when (state) {
-                    is LoadingState.Loading -> {
-                        if (contactList.isEmpty()) {
-                            showLoading()
-                        } else {
+        if (contactList.isEmpty()) {
+            ui {
+                (activity as MainActivity).contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
+                    when (state) {
+                        is LoadingState.Loading -> {
+                                showLoading()
+                        }
+                        is LoadingState.Loaded -> {
                             hideLoading()
                             getContactList()
+                            showToast("Contacts synced successfully", 1)
+                        }
+                        is LoadingState.Error -> {
+                            hideLoading()
+                            showGenericErrorMessage()
                         }
                     }
-                    is LoadingState.Loaded -> {
-                        hideLoading()
-                        getContactList()
-                        showToast("Contacts synced successfully", 1)
-                    }
-                    is LoadingState.Error -> {
-                        hideLoading()
-                        showGenericErrorMessage()
-                    }
-                }
-            })
+                })
+            }
+        } else {
+            hideLoading()
+            getContactList()
         }
     }
 
