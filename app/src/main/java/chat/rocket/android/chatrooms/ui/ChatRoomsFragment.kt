@@ -135,6 +135,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     override fun onResume() {
         // WIDECHAT - cleanup any titles set by other fragments; clear any previous search
         if (Constants.WIDECHAT) {
+            widechat_welcome_to_app.isVisible = false
+            widechat_text_no_data_to_display.isVisible = false
             (activity as AppCompatActivity?)?.supportActionBar?.setDisplayShowTitleEnabled(false)
             searchView?.clearFocus()
             searchView?.setQuery("", false)
@@ -186,12 +188,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     Timber.d("Got items: $it")
                     adapter.values = it
                     if (rooms.isNotEmpty()) {
-                        if (Constants.WIDECHAT) {
-                            widechat_welcome_to_app.isVisible = false
-                            widechat_text_no_data_to_display.isVisible = false
-                        } else {
-                            text_no_data_to_display.isVisible = false
-                        }
+                        showNoChatRoomsToDisplay(false)
                     }
                 }
             })
@@ -200,11 +197,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 when (state) {
                     is LoadingState.Loading -> if (state.count == 0L) showLoading()
                     is LoadingState.Loaded -> {
-                        hideLoading()
-                        if (state.count == 0L) showNoChatRoomsToDisplay()
+                        if (state.count == 0L) showNoChatRoomsToDisplay(true)
                     }
                     is LoadingState.Error -> {
-                        hideLoading()
                         showGenericErrorMessage()
                     }
                 }
@@ -400,13 +395,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         searchView?.onQueryTextListener { queryChatRoomsByName(it) }
     }
 
-    private fun showNoChatRoomsToDisplay() {
+    private fun showNoChatRoomsToDisplay(show: Boolean) {
+        hideLoading()
         if (Constants.WIDECHAT) {
-            ui { widechat_welcome_to_app.isVisible = true
-                 widechat_text_no_data_to_display.isVisible = true
+            ui { widechat_welcome_to_app.isVisible = show
+                 widechat_text_no_data_to_display.isVisible = show
             }
         } else {
-            ui { text_no_data_to_display.isVisible = true }
+            ui { text_no_data_to_display.isVisible = show }
         }
     }
 

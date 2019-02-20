@@ -83,6 +83,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
 
         if (Constants.WIDECHAT) {

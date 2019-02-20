@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone"
+        android:visibility="visible"
         app:indicatorColor="@color/colorBlack"
         app:indicatorName="BallPulseIndicator" />
 
@@ -29,7 +29,7 @@
         android:layout_centerInParent="true"
         android:text="@string/msg_no_data_to_display"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <TextView
         android:id="@+id/widechat_welcome_to_app"
@@ -44,7 +44,7 @@
         android:textStyle="bold"
         android:textSize="28sp"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <TextView
         android:id="@+id/widechat_text_no_data_to_display"
@@ -55,7 +55,7 @@
         android:layout_centerInParent="true"
         android:text="@string/msg_widechat_no_chats_to_display"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <TextView
         android:id="@+id/text_connection_status"
@@ -81,7 +81,7 @@
         android:text="@string/msg_no_search_found"
         android:textSize="20sp"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_new_channel_fab"

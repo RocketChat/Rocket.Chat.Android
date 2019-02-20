@@ -111,7 +111,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun routeDeepLink(deepLinkInfo: DeepLinkInfo) {
-        if (Constants.WIDECHAT)
+        if (Constants.WIDECHAT) {
             presenter.loadCredentials(false) { isAuthenticated ->
                 if (isAuthenticated) {
                     presenter.toChatList(deepLinkInfo)
@@ -120,8 +120,10 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
                     presenter.toOnBoarding()
                 }
             }
-        else
+        } else {
+            setTheme(R.style.AppTheme)
             presenter.toSignInToYourServer(deepLinkInfo)
+        }
     }
 
     private fun routeNoLink() {

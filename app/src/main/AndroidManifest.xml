@@ -23,9 +23,9 @@
         <activity
             android:name=".authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
+            android:theme="@style/WidechatSplashTheme"
             android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
@@ -62,11 +62,11 @@
 
         <activity
             android:name=".server.ui.ChangeServerActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/WidechatSplashTheme" />
 
         <activity
             android:name=".main.ui.MainActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/WidechatSplashTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
 
             <intent-filter>
@@ -83,33 +83,33 @@
 
         <activity
             android:name=".webview.ui.WebViewActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/WidechatSplashTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".webview.sso.ui.SsoWebViewActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/WidechatSplashTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".webview.oauth.ui.OauthWebViewActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/WidechatSplashTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".chatroom.ui.ChatRoomActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/WidechatSplashTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".chatinformation.ui.MessageInfoActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/WidechatSplashTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <!-- TODO: Change to fragment-->
         <activity
             android:name=".settings.password.ui.PasswordActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/WidechatSplashTheme" />
 
         <receiver
             android:name=".push.DirectReplyReceiver"

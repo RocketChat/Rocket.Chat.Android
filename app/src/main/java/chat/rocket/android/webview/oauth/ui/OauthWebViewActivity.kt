@@ -19,7 +19,9 @@ import org.json.JSONObject
 
 // WIDECHAT
 import android.content.res.Resources
+import android.graphics.Color
 import androidx.core.os.ConfigurationCompat
+import chat.rocket.android.helper.Constants
 
 fun Context.oauthWebViewIntent(webPageUrl: String, state: String): Intent {
     return Intent(this, OauthWebViewActivity::class.java).apply {
@@ -82,6 +84,9 @@ class OauthWebViewActivity : AppCompatActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
+        if (Constants.WIDECHAT) {
+            web_view.setBackgroundColor(Color.TRANSPARENT)
+        }
         with(web_view.settings) {
             javaScriptEnabled = true
             domStorageEnabled = true
@@ -92,6 +97,11 @@ class OauthWebViewActivity : AppCompatActivity() {
             }
         }
         web_view.webViewClient = object : WebViewClient() {
+            override fun onPageCommitVisible(view: WebView?, url: String?) {
+                super.onPageCommitVisible(view, url)
+                view_loading.hide()
+            }
+
             override fun onPageFinished(view: WebView, url: String) {
                 if (url.contains(JSON_CREDENTIAL_TOKEN) && url.contains(JSON_CREDENTIAL_SECRET)) {
                     if (isStateValid(url)) {
@@ -105,7 +115,6 @@ class OauthWebViewActivity : AppCompatActivity() {
                         }
                     }
                 }
-                view_loading.hide()
             }
         }
         // WIDECHAT
