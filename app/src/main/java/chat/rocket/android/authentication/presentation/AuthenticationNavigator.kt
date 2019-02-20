@@ -11,10 +11,9 @@ import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.extensions.toPreviousView
 import chat.rocket.android.webview.ui.webViewIntent
-import chat.rocket.common.util.ifNull
 
 class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
-    public var savedDeepLinkInfo: DeepLinkInfo? = null
+    var savedDeepLinkInfo: DeepLinkInfo? = null
 
     fun saveDeepLinkInfo(deepLinkInfo: DeepLinkInfo) {
         savedDeepLinkInfo = deepLinkInfo
@@ -91,7 +90,6 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
                 deepLinkInfo
             )
         }
-        activity.overridePendingTransition(0,0)
     }
 
     fun toTwoFA(username: String, password: String) {
