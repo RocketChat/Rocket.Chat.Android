@@ -22,9 +22,12 @@ import kotlin.collections.HashMap
 import chat.rocket.android.helper.Constants
 import android.view.LayoutInflater
 import android.widget.TextView
+import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.chatrooms.adapter.ItemHolder
+import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.contacts.adapter.ContactsHeaderItemHolder
 import chat.rocket.android.contacts.adapter.ContactsItemHolder
 import chat.rocket.android.contacts.adapter.ContactsRecyclerViewAdapter
@@ -34,6 +37,7 @@ import chat.rocket.android.contacts.presentation.ContactsView
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
@@ -41,6 +45,9 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_contact_parent.*
+import kotlinx.coroutines.experimental.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -103,22 +110,16 @@ class ContactsFragment : Fragment(), ContactsView {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val contextThemeWrapper = ContextThemeWrapper(activity, R.style.AppTheme)
-
-        // clone the inflater using the ContextThemeWrapper
-        val localInflater = inflater.cloneInContext(contextThemeWrapper)
-
-        val view = localInflater.inflate(R.layout.fragment_contact_parent, container, false)
-
-        this.recyclerView = view.findViewById(R.id.recycler_view)
-        this.emptyTextView = view.findViewById(R.id.text_no_data_to_display)
-        getContactsPermissions()
-        return view
-    }
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_contact_parent)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        this.recyclerView = view.findViewById(R.id.recycler_view)
+        this.emptyTextView = view.findViewById(R.id.text_no_contacts_to_display)
+        getContactsPermissions()
         setupToolbar()
     }
 
@@ -273,9 +274,10 @@ class ContactsFragment : Fragment(), ContactsView {
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED
                 ) {
                     // Permission granted
-                    getContactList()
+                    launch {
+                        getContactListWhenSynced()
+                    }
                 }
-                setupFrameLayout(contactArrayList)
                 return
             }
             else -> {
@@ -289,8 +291,9 @@ class ContactsFragment : Fragment(), ContactsView {
                 ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED
         ) {
-            getContactList()
-            setupFrameLayout(contactArrayList)
+            launch {
+                getContactListWhenSynced()
+            }
         } else {
             requestPermissions(
                     arrayOf(
@@ -302,9 +305,43 @@ class ContactsFragment : Fragment(), ContactsView {
         }
     }
 
-    fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>) {
+    private fun getContactListWhenSynced() {
+        // Show loading while sync in progress
+        recyclerView!!.visibility = View.GONE
+        emptyTextView!!.visibility = View.GONE
+        showLoading()
 
-        if (filteredContactArrayList!!.size == 0) {
+        val serverUrl = serverInteractor.get()!!
+        val dbManager = dbFactory.create(serverUrl)
+        val contactList = dbManager.contactsDao().getAllSync()
+
+        if (contactList.isEmpty()) {
+            ui {
+                (activity as MainActivity).contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
+                    when (state) {
+                        is LoadingState.Loading -> {
+                                showLoading()
+                        }
+                        is LoadingState.Loaded -> {
+                            hideLoading()
+                            getContactList()
+                            showToast("Contacts synced successfully", 1)
+                        }
+                        is LoadingState.Error -> {
+                            hideLoading()
+                            showGenericErrorMessage()
+                        }
+                    }
+                })
+            }
+        } else {
+            hideLoading()
+            getContactList()
+        }
+    }
+
+    fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>) {
+        if (filteredContactArrayList.size == 0) {
             emptyTextView!!.visibility = View.VISIBLE
             recyclerView!!.visibility = View.GONE
         } else {
@@ -348,9 +385,17 @@ class ContactsFragment : Fragment(), ContactsView {
     }
 
     override fun showLoading() {
+        ui {
+            view_loading.isVisible = true
+            view_loading.show()
+        }
     }
 
     override fun hideLoading() {
+        ui {
+            view_loading.isVisible = false
+            view_loading.hide()
+        }
     }
 
     override fun showMessage(resId: Int) {

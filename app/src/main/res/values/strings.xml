@@ -97,6 +97,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <!-- Regular information messages -->
     <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
     <string name="msg_no_data_to_display">No data to display</string>
+    <string name="msg_no_contacts_to_display">No contacts found.</string>
     <string name="msg_check_this_out">Check this out</string>
     <string name="msg_share_using">Share using</string>
     <string name="msg_profile_update_successfully">Profile update successfully</string>
