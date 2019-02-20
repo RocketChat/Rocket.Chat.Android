@@ -343,6 +343,7 @@ class ContactsFragment : Fragment(), ContactsView {
     fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>) {
         if (filteredContactArrayList.size == 0) {
             emptyTextView!!.visibility = View.VISIBLE
+            recyclerView!!.visibility = View.GONE
         } else {
             emptyTextView!!.visibility = View.GONE
             recyclerView!!.visibility = View.VISIBLE
