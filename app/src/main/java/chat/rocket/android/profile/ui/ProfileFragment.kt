@@ -388,16 +388,17 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             verificationStringEditText.hint = getString(R.string.msg_password)
         }
 
-        var ssoDeleteCallback = { ->
-            view?.openTabbedUrl(ssoUpdateUrl)
-        }
-
         context?.let {
             val builder = AlertDialog.Builder(it)
             builder.setTitle(R.string.title_are_you_sure)
                 .setView(verificationStringEditText)
                 .setPositiveButton(R.string.action_delete_account) { _, _ ->
                     if (Constants.WIDECHAT) {
+                        var ssoDeleteCallback = { ->
+
+                            presenter.testDeleteSsoAccount()
+//                            view?.openTabbedUrl(ssoUpdateUrl)
+                        }
                         presenter.deleteAccount(verificationStringEditText.text.toString(), ssoDeleteCallback)
                     } else {
                         presenter.deleteAccount(verificationStringEditText.text.toString())
