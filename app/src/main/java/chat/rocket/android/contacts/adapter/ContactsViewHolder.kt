@@ -37,6 +37,7 @@ class ContactsViewHolder(itemView: View) : ViewHolder<ContactsItemHolder>(itemVi
                 }
 
             } else {
+                contact_detail.isGone = true
                 invite_contact.isGone = true
                 chat_username.isVisible = true
                 chat_username.text = "@${contact.getUsername()}"
