@@ -386,7 +386,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                 .setPositiveButton(R.string.action_delete_account) { _, _ ->
                     if (Constants.WIDECHAT) {
                         var ssoDeleteCallback = { ->
-                            presenter.widechatDeleteSsoAccount(R.string.widechat_sso_profile_delete_path)
+                            presenter.widechatDeleteSsoAccount(getString(R.string.widechat_sso_profile_delete_path))
                         }
                         presenter.deleteAccount(verificationStringEditText.text.toString(), ssoDeleteCallback)
 
