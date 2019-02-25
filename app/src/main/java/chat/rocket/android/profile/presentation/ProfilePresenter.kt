@@ -75,8 +75,7 @@ class ProfilePresenter @Inject constructor(
 
     // WIDECHAT
     var currentAccessToken: String? = null
-
-    private val testClient = OkHttpClient().newBuilder().protocols(Arrays.asList(Protocol.HTTP_1_1))
+    private val ssoApiClient = OkHttpClient().newBuilder().protocols(Arrays.asList(Protocol.HTTP_1_1))
 
     fun loadUserProfile() {
         launchUI(strategy) {
@@ -272,7 +271,7 @@ class ProfilePresenter @Inject constructor(
                 .build()
 
         // TODO: Implement validation check? What action upon failure?
-        val response = testClient.build().newCall(request).execute()
+        val response = ssoApiClient.build().newCall(request).execute()
 
     }
 }
