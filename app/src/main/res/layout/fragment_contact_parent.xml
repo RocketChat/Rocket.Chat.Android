@@ -13,11 +13,13 @@
         tools:listitem="@layout/item_contact" />
 
     <TextView
-        android:id="@+id/text_no_data_to_display"
+        android:id="@+id/text_no_contacts_to_display"
         style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/msg_no_data_to_display"
+        android:text="@string/msg_no_contacts_to_display"
         android:visibility="gone"
         tools:visibility="visible" />
     <View
@@ -28,5 +30,16 @@
         android:layout_marginTop="16dp"
         android:visibility="gone"
         android:background="?android:attr/listDivider" />
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/view_loading"
+        style="@style/Authentication.AVLoadingIndicatorView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:indicatorColor="@color/colorBlack"
+        tools:visibility="visible" />
 
 </RelativeLayout>

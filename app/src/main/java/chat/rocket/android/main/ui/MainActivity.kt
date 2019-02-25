@@ -53,7 +53,10 @@ import javax.inject.Inject
 
 // WIDECHAT
 import chat.rocket.android.helper.Constants
+import timber.log.Timber
 import androidx.core.net.toUri
+import androidx.lifecycle.MutableLiveData
+import chat.rocket.android.chatrooms.viewmodel.LoadingState
 
 private const val CURRENT_STATE = "current_state"
 
@@ -75,17 +78,26 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     private var progressDialog: ProgressDialog? = null
     private val PERMISSIONS_REQUEST_RW_CONTACTS = 0
 
+    // WIDECHAT
+    val contactsLoadingState = MutableLiveData<LoadingState>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
 
         if (Constants.WIDECHAT) {
             setContentView(R.layout.widechat_activity_main)
+            // Loads new avatar when changed on server side
+            presenter.clearAvatarUrlFromCache()
         } else {
             setContentView(R.layout.activity_main)
         }
         refreshPushToken()
+
+        contactsLoadingState.postValue(LoadingState.Loading(0))
         syncContacts()
+
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
         deepLinkInfo = intent.getParcelableExtra(Constants.DEEP_LINK_INFO)
         presenter.clearNotificationsForChatroom(chatRoomId)
@@ -347,8 +359,14 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             val contactsSyncWork = OneTimeWorkRequestBuilder<ContactsSyncWorker>().build()
             WorkManager.getInstance().enqueue(contactsSyncWork)
             WorkManager.getInstance().getStatusById(contactsSyncWork.getId()).observe(this, Observer { info ->
-                if (info != null && info.state.isFinished) {
-                    //showToast("Contacts synced in background")
+                if (info !=null) {
+                    if (info.state.name == "RUNNING") {
+                        contactsLoadingState.postValue(LoadingState.Loading(0))
+                        Timber.d("Contact sync running")
+                    } else if (info.state.isFinished || info.state.name == "FAILED") {
+                        contactsLoadingState.postValue(LoadingState.Loaded(0))
+                        Timber.d("Contact sync ended")
+                    }
                 }
             })
         }

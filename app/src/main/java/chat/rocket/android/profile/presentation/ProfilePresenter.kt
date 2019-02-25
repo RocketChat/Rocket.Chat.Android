@@ -110,7 +110,7 @@ class ProfilePresenter @Inject constructor(
         }
     }
 
-    // WIDECHAT
+    // WIDECHAT - profile update with SSO
     fun setUpdateUrl(updatePath: String?, onClickCallback: (String?) -> Unit?) {
         launchUI(strategy) {
             try {

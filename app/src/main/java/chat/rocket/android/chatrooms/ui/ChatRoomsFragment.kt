@@ -135,6 +135,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     override fun onResume() {
         // WIDECHAT - cleanup any titles set by other fragments; clear any previous search
         if (Constants.WIDECHAT) {
+            widechat_welcome_to_app.isVisible = false
+            widechat_text_no_data_to_display.isVisible = false
             (activity as AppCompatActivity?)?.supportActionBar?.setDisplayShowTitleEnabled(false)
             searchView?.clearFocus()
             searchView?.setQuery("", false)
@@ -186,12 +188,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     Timber.d("Got items: $it")
                     adapter.values = it
                     if (rooms.isNotEmpty()) {
-                        if (Constants.WIDECHAT) {
-                            widechat_welcome_to_app.isVisible = false
-                            widechat_text_no_data_to_display.isVisible = false
-                        } else {
-                            text_no_data_to_display.isVisible = false
-                        }
+                        showNoChatRoomsToDisplay(false)
                     }
                 }
             })
@@ -200,11 +197,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 when (state) {
                     is LoadingState.Loading -> if (state.count == 0L) showLoading()
                     is LoadingState.Loaded -> {
-                        hideLoading()
-                        if (state.count == 0L) showNoChatRoomsToDisplay()
+                        if (state.count == 0L) showNoChatRoomsToDisplay(true)
                     }
                     is LoadingState.Error -> {
-                        hideLoading()
                         showGenericErrorMessage()
                     }
                 }
@@ -400,13 +395,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         searchView?.onQueryTextListener { queryChatRoomsByName(it) }
     }
 
-    private fun showNoChatRoomsToDisplay() {
+    private fun showNoChatRoomsToDisplay(show: Boolean) {
+        hideLoading()
         if (Constants.WIDECHAT) {
-            ui { widechat_welcome_to_app.isVisible = true
-                 widechat_text_no_data_to_display.isVisible = true
+            ui { widechat_welcome_to_app.isVisible = show
+                 widechat_text_no_data_to_display.isVisible = show
             }
         } else {
-            ui { text_no_data_to_display.isVisible = true }
+            ui { text_no_data_to_display.isVisible = show }
         }
     }
 
@@ -548,35 +544,48 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     fun processDeepLink(deepLinkInfo: DeepLinkInfo) {
 
-		val username = deepLinkInfo.roomName
-		username.ifNotNullNorEmpty {
-			val localRooms = viewModel.getChatRoomOfUsernameDB(username!!)
-			val filteredLocalRooms = localRooms.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+        val type = deepLinkInfo.roomType
+        val name = deepLinkInfo.roomName
 
-			if (filteredLocalRooms.isNotEmpty()) {
-				presenter.loadChatRoom(filteredLocalRooms.first().data as RoomUiModel)
-			} else {
-				//check from spotlight when connected
-				val statusLiveData = viewModel.getStatus()
-				statusLiveData.observe(viewLifecycleOwner, object: Observer<State>{
-					override fun onChanged(status: State?) {
-						if (status is State.Connected) {
-							val rooms = viewModel.getChatRoomOfUsernameSpotlight(username)
-							val filteredRooms = rooms?.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+        type.ifNotNullNorEmpty {
+            name.ifNotNullNorEmpty {
+                val localRooms = viewModel.getChatRoomByNameDB(it.toString())
+                val filteredLocalRooms = localRooms.filter { itemHolder -> itemHolder.data is RoomUiModel && getCheckString(type!!, itemHolder.data as RoomUiModel) == name }
 
-							filteredRooms?.let {
-								if (filteredRooms.isNotEmpty()) {
-									presenter.loadChatRoom(filteredRooms.first().data as RoomUiModel)
-								} else {
-									Toast.makeText(context, "User not found or No internet connection", Toast.LENGTH_SHORT).show()
-								}
-							}
+                if (filteredLocalRooms.isNotEmpty()) {
+                    presenter.loadChatRoom(filteredLocalRooms.first().data as RoomUiModel)
+                } else {
+                    //check from spotlight when connected
+                    val statusLiveData = viewModel.getStatus()
+                    statusLiveData.observe(viewLifecycleOwner, object : Observer<State> {
+                        override fun onChanged(status: State?) {
+                            if (status is State.Connected) {
+                                val rooms = viewModel.getChatRoomByNameSpotlight(name.toString())
+                                val filteredRooms = rooms?.filter { itemHolder -> itemHolder.data is RoomUiModel && getCheckString(type!!, itemHolder.data as RoomUiModel) == name }
 
-							statusLiveData.removeObserver(this)
-						}
-					}
-				})
-			}
-		}
-	}
+                                filteredRooms?.let {
+                                    if (filteredRooms.isNotEmpty()) {
+                                        presenter.loadChatRoom(filteredRooms.first().data as RoomUiModel)
+                                    } else {
+                                        Toast.makeText(context, "Room not found or No internet connection", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+
+                                statusLiveData.removeObserver(this)
+                            }
+                        }
+                    })
+                }
+            }
+        }
+    }
+
+    fun getCheckString(type: String, roomUiModel: RoomUiModel): String? {
+        return when (type) {
+            "direct" -> roomUiModel.username
+            "channel" -> roomUiModel.name.toString()
+            "group" -> roomUiModel.name.toString()
+            else -> ""
+        }
+    }
 }
