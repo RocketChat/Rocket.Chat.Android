@@ -33,28 +33,14 @@ import java.util.*
 import javax.inject.Inject
 
 // WIDECHAT
-import chat.rocket.android.util.extensions.openTabbedUrl
 import chat.rocket.core.internal.rest.getAccessToken
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
-
-// Test
-import timber.log.Timber
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.MediaType
 import okhttp3.Protocol
-
-import okhttp3.CacheControl
-import okio.BufferedSink
-
-
-import se.ansman.kotshi.JsonSerializable
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.JsonAdapter
-import org.json.JSONObject
-
 
 class ProfilePresenter @Inject constructor(
     private val view: ProfileView,
@@ -272,57 +258,21 @@ class ProfilePresenter @Inject constructor(
         }
     }
 
-    fun testDeleteSsoAccount() {
-
-//        val payload = WidechatSsoDeletePayload(WidechatSsoDeleteProfile("earTest2"))
-//        val adapter = Moshi.adapter(WidechatSsoDeletePayload::class.java)
-
-
-//        HTTP/1.1
-//        Content-Type: application/json
-//        Authorization: Bearer 20b826d5-2402-4586-9d70-b86c0e400dfc
-//        cache-control: no-cache
-//
-//        val payloadObject = JSONObject()
-//        val profilemapObject = JSONObject()
-//
-//        profilemapObject.put("username", "earTest2")
-//        payloadObject.put("profilemap", profilemapObject)
-
+    // TODO: Is it neccessary to move this into the Kotlin SDK?
+    fun widechatDeleteSsoAccount() {
         val MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8")
-
-        val json = """{"profilemap":{"username":"${user?.username}"}}""".trimIndent()
-        Timber.d("#########  EAR >> this is the profilemap json string: ${json}")
-
+        val json = """{"profilemap":{"username":"userid"}}""".trimIndent()
 
         var request: Request = Request.Builder()
                 .url("https://mysso.test.viasat.com/federation/custom/json/viasatconnect/user")
-//                .method("DELETE", RequestBody.create(MEDIA_TYPE_JSON, "${json}" ))
                 .delete(RequestBody.create(MEDIA_TYPE_JSON, json))
-//                .delete(RequestBody.create(MEDIA_TYPE_JSON, "{\"profilemap\":{\"username\":\"earTest2\"}}" ))
                 .addHeader("Authorization", "Bearer ${currentAccessToken}")
                 .addHeader("Content-Type", "application/json")
                 .addHeader("cache-control", "no-cache")
                 .build()
 
-        Timber.d("########  EAR >> this is the request: ${request} body: ${request.body()} headers: ${request.headers()}")
-
-//        val response = testClient.newCall(request).execute()
+        // TODO: Implement validation check? What action upon failure?
         val response = testClient.build().newCall(request).execute()
-        Timber.d("#########  EAR >> this is the response from call to delete sso account: ${response}")
-        Timber.d("#########  EAR >> this is the response body from call to delete sso account: ${response.body()?.string()}")
-
-
 
     }
 }
-
-//@JsonSerializable
-//data class WidechatSsoDeletePayload(
-//        val profilemap: WidechatSsoDeleteProfile
-//)
-//
-//@JsonSerializable
-//data class WidechatSsoDeleteProfile(
-//        val username: String
-//)

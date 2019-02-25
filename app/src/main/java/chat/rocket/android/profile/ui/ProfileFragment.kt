@@ -16,7 +16,6 @@ import android.view.MenuInflater
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
-import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
@@ -40,7 +39,7 @@ import javax.inject.Inject
 
 // WIDECHAT
 import chat.rocket.android.helper.Constants
-import kotlinx.android.synthetic.main.app_bar.* // need this for back button in setupToolbar
+import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_profile_widechat.*
 
 internal const val TAG_PROFILE_FRAGMENT = "ProfileFragment"
@@ -61,8 +60,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     // WIDECHAT
     private var profileFragment: Int = R.layout.fragment_profile_widechat
-    // EAR Test >>
-    private var ssoUpdateUrl: String? = null
 
     companion object {
         fun newInstance() = ProfileFragment()
@@ -251,7 +248,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     private fun setupToolbar() {
         if (Constants.WIDECHAT) {
-            // WIDECHAT - added this to get the back button
             with((activity as MainActivity).toolbar) {
                 title = getString(R.string.title_profile)
                 setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
@@ -272,18 +268,15 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             widechat_view_dim.setOnClickListener { hideUpdateAvatarOptions() }
 
             var onClickCallback = {url: String? ->
-                // EAR Test >>
-                ssoUpdateUrl = url
                 edit_profile_button.setOnClickListener { view: View ->
                     view.openTabbedUrl(url)
                 }
                 edit_profile_button.setBackgroundResource(R.drawable.widechat_update_profile_button)
             }
-
             presenter.setUpdateUrl(getString(R.string.widechat_sso_profile_update_path), onClickCallback)
 
-//            delete_account_button.setOnClickListener { showToast("Delete Account Button Clicked") }
             delete_account_button.setOnClickListener { showDeleteAccountDialog() }
+
         } else {
             view_dim.setOnClickListener { hideUpdateAvatarOptions() }
         }
@@ -393,11 +386,10 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                 .setPositiveButton(R.string.action_delete_account) { _, _ ->
                     if (Constants.WIDECHAT) {
                         var ssoDeleteCallback = { ->
-
-                            presenter.testDeleteSsoAccount()
-//                            view?.openTabbedUrl(ssoUpdateUrl)
+                            presenter.widechatDeleteSsoAccount()
                         }
                         presenter.deleteAccount(verificationStringEditText.text.toString(), ssoDeleteCallback)
+
                     } else {
                         presenter.deleteAccount(verificationStringEditText.text.toString())
                     }
