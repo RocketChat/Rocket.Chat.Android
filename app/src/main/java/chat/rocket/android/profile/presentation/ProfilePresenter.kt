@@ -258,12 +258,12 @@ class ProfilePresenter @Inject constructor(
     }
 
     // TODO: Is it neccessary to move this into the Kotlin SDK?
-    fun widechatDeleteSsoAccount() {
+    fun widechatDeleteSsoAccount(ssoProfileDeletePath: String?) {
         val MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8")
         val json = """{"profilemap":{"username":"userid"}}""".trimIndent()
 
         var request: Request = Request.Builder()
-                .url("https://mysso.test.viasat.com/federation/custom/json/viasatconnect/user")
+                .url("${customOauthHost}/${ssoProfileDeletePath}")
                 .delete(RequestBody.create(MEDIA_TYPE_JSON, json))
                 .addHeader("Authorization", "Bearer ${currentAccessToken}")
                 .addHeader("Content-Type", "application/json")
