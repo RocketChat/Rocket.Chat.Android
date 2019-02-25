@@ -71,6 +71,7 @@ class ContactsRecyclerViewAdapter(
             holder.bind(contactArrayList[position] as ContactsItemHolder)
 
             val contact: Contact = holder.data!!.data
+
             val userId = contact.getUserId()
             if (userId != null) {
                 launch {
@@ -81,6 +82,10 @@ class ContactsRecyclerViewAdapter(
                     launch(UI) {
                         holder.setContactStatus(contact)
                     }
+                }
+                // Clicking the whole row will open the DM
+                holder.itemView.setOnClickListener {
+                    presenter.openDirectMessageChatRoom(contact.getUsername().toString())
                 }
             }
 
@@ -97,12 +102,12 @@ class ContactsRecyclerViewAdapter(
                     }
                 }
             }
-
-            dmButton.setOnClickListener { view ->
-                run {
-                    presenter.openDirectMessageChatRoom(contact.getUsername().toString())
-                }
-            }
+              // Clicking only the @username button will open a DM
+//            dmButton.setOnClickListener { view ->
+//                run {
+//                    presenter.openDirectMessageChatRoom(contact.getUsername().toString())
+//                }
+//            }
 
          } else if (holder is ContactsHeaderViewHolder) {
             holder.bind(contactArrayList[position] as ContactsHeaderItemHolder)
