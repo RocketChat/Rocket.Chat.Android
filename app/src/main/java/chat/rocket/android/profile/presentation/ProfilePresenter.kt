@@ -74,7 +74,7 @@ class ProfilePresenter @Inject constructor(
     private val user = userHelper.user()
 
     // WIDECHAT
-    var currentAccessToken: String? = null
+    private var currentAccessToken: String? = null
     private val ssoApiClient = OkHttpClient().newBuilder().protocols(Arrays.asList(Protocol.HTTP_1_1))
 
     fun loadUserProfile() {
