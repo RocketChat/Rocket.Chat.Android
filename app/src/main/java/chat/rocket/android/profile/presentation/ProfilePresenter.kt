@@ -25,7 +25,11 @@ import chat.rocket.common.model.Email
 import chat.rocket.common.model.User
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.rest.*
+import chat.rocket.core.internal.rest.deleteOwnAccount
+import chat.rocket.core.internal.rest.me
+import chat.rocket.core.internal.rest.resetAvatar
+import chat.rocket.core.internal.rest.setAvatar
+import chat.rocket.core.internal.rest.updateProfile
 import kotlinx.coroutines.experimental.DefaultDispatcher
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
