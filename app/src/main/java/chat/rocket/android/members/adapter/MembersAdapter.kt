@@ -73,10 +73,6 @@ class MembersAdapter(private val listener: (MemberUiModel) -> Unit, presenter: M
                             notifyItemChanged(index)
                         }
                     }
-                    R.id.action_member_ignore-> {
-                            TODO("not implemented")
-//                        presenter?.toggleIgnore(this.userId, false){}
-                    }
                     R.id.action_member_mute-> {
                         presenter?.toggleMute(this.username, this.muted) {
                             dataSet[index].muted = !this.muted

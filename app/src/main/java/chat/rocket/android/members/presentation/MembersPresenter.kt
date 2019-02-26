@@ -1,7 +1,6 @@
 package chat.rocket.android.members.presentation
 
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
-import android.util.Log
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.helper.UserHelper
@@ -10,7 +9,6 @@ import chat.rocket.android.members.uimodel.MemberUiModelMapper
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
-import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -132,18 +130,6 @@ class MembersPresenter @Inject constructor(
                     retryIO(description = "removeModerator($roomId, $roomType, $userId)") { client.removeModerator(roomId, roomType, userId) }
                 else
                     retryIO(description = "addModerator($roomId, $roomType, $userId)") { client.addModerator(roomId, roomType, userId) }
-                notifier()
-            } catch (ex: RocketChatException) {
-                view.showMessage(ex.message!!) // TODO Remove.
-                Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
-            }
-        }
-    }
-
-    fun toggleIgnore(userId: String, isIgnored: Boolean = false, notifier: () ->Unit) {
-        launchUI(strategy) {
-            try {
-                    retryIO(description = "ignoreUser($roomId, $userId, ${!isIgnored})") { client.ignoreUser(roomId, userId, !isIgnored) }
                 notifier()
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.

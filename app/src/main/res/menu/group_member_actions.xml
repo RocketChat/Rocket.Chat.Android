@@ -3,30 +3,31 @@
 
     <item
         android:id="@+id/action_member_set_owner"
-        android:icon="@drawable/ic_action_message_info_outline_24dp"
-        android:title="Set as Owner" />
+        android:icon="@drawable/ic_owner"
+        android:title="@string/action_set_owner" />
     <item
         android:id="@+id/action_member_set_leader"
-        android:icon="@drawable/ic_action_message_reply_24dp"
-        android:title="Set as Leader" />
+        android:icon="@drawable/ic_leader"
+        android:title="@string/action_set_leader" />
     <item
         android:id="@+id/action_member_set_moderator"
-        android:icon="@drawable/ic_action_message_edit_24dp"
-        android:title="Set as Moderator" />
+        android:icon="@drawable/ic_moderator"
+        android:title="@string/action_set_moderator" />
 
-    <item
-        android:id="@+id/action_member_ignore"
-        android:icon="@drawable/ic_ignore_24dp"
-        android:title="Ignore" />
+    <!--TODO implement ignoreUser-->
+    <!--<item-->
+        <!--android:id="@+id/action_member_ignore"-->
+        <!--android:icon="@drawable/ic_ignore_24dp"-->
+        <!--android:title="Ignore" />-->
 
     <item
         android:id="@+id/action_member_mute"
         android:icon="@drawable/ic_mic_off_24dp"
-        android:title="Mute user" />
+        android:title="@string/action_mute_user" />
 
     <item
         android:id="@+id/action_member_remove"
-        android:icon="@drawable/ic_logout_black_24dp"
-        android:title="Remove from room" />
+        android:icon="@drawable/ic_remove_red_24dp"
+        android:title="@string/action_remove_user" />
 
 </menu>
