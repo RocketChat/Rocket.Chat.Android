@@ -125,15 +125,6 @@ class ContactsFragment : Fragment(), ContactsView {
         setupToolbar()
     }
 
-    override fun onResume() {
-        super.onResume()
-        try {
-            hideSpinner()
-        } catch (ex: Exception) {
-            Timber.e(ex)
-        }
-    }
-
     private fun getContactList() {
         val serverUrl = serverInteractor.get()!!
         val dbManager = dbFactory.create(serverUrl)
@@ -203,6 +194,9 @@ class ContactsFragment : Fragment(), ContactsView {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_search -> {
+                hideSpinner()
+            }
             R.id.action_refresh -> {
                 with(activity as MainActivity) {
                    ui {
@@ -430,15 +424,23 @@ class ContactsFragment : Fragment(), ContactsView {
         return finalList
     }
 
-    private fun showSpinner() {
-        ui {
-            (activity as MainActivity).toolbar.toolbar_progress_bar.visibility = VISIBLE
+    override fun showSpinner() {
+        try {
+            ui {
+                (activity as MainActivity).toolbar.toolbar_progress_bar.visibility = VISIBLE
+            }
+        } catch (ex: Exception) {
+            Timber.e(ex)
         }
     }
 
-    private fun hideSpinner() {
-        ui {
-            (activity as MainActivity).toolbar.toolbar_progress_bar.visibility = GONE
+    override fun hideSpinner() {
+        try {
+            ui {
+                (activity as MainActivity).toolbar.toolbar_progress_bar.visibility = GONE
+            }
+        } catch (ex: Exception) {
+            Timber.e(ex)
         }
     }
 

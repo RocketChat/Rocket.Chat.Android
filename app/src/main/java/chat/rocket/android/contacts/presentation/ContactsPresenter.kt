@@ -49,6 +49,7 @@ class ContactsPresenter @Inject constructor(
 
     fun openDirectMessageChatRoom(username: String) {
 
+        view.hideSpinner()
         launchUI(strategy) {
             try {
                 val openedChatRooms = chatRoomByName(name = username, dbManager = dbManager)
