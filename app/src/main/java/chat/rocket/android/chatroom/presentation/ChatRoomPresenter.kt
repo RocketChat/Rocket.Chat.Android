@@ -320,12 +320,13 @@ class ChatRoomPresenter @Inject constructor(
                 if (messageId == null) {
                     val id = UUID.randomUUID().toString()
                     val username = userHelper.username()
+                    val user = userHelper.user()
                     val newMessage = Message(
                         id = id,
                         roomId = chatRoomId,
                         message = text,
                         timestamp = Instant.now().toEpochMilli(),
-                        sender = SimpleUser(null, username, username),
+                        sender = SimpleUser(user?.id, user?.username ?: username, user?.name),
                         attachments = null,
                         avatar = currentServer.avatarUrl(username ?: ""),
                         channels = null,
@@ -345,6 +346,7 @@ class ChatRoomPresenter @Inject constructor(
                         unread = true
                     )
                     try {
+                        Timber.d("#### $newMessage")
                         messagesRepository.save(newMessage)
                         view.showNewMessage(
                             mapper.map(
