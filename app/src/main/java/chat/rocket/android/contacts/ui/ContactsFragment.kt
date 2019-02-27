@@ -26,7 +26,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.WorkManager
 import chat.rocket.android.chatrooms.adapter.ItemHolder
 import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.contacts.adapter.ContactsHeaderItemHolder
@@ -48,8 +47,17 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_contact_parent.*
 import kotlinx.coroutines.experimental.launch
-import timber.log.Timber
 import javax.inject.Inject
+
+//test
+import android.text.SpannableStringBuilder
+import android.text.style.ImageSpan
+import android.text.Spanned
+import kotlinx.android.synthetic.main.app_bar.view.*
+
+import android.view.View.VISIBLE
+import android.view.View.GONE
+
 
 /**
  * Load a list of contacts in a recycler view
@@ -165,8 +173,11 @@ class ContactsFragment : Fragment(), ContactsView {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.widechat_contacts, menu)
 
-        val refresh = menu.findItem(R.id.action_refresh)
-
+        // Add icon to the menu item
+        var builder = SpannableStringBuilder("* Refresh")
+        builder.setSpan(ImageSpan(context, R.drawable.ic_baseline_refresh_24px), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val refreshButton = menu.findItem(R.id.action_refresh)
+        refreshButton.setTitle(builder)
 
         val searchItem = menu.findItem(R.id.action_search)
         searchView = searchItem?.actionView as? SearchView
@@ -203,15 +214,15 @@ class ContactsFragment : Fragment(), ContactsView {
                        contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
                             when (state) {
                                 is LoadingState.Loading -> {
-//                                showLoading()
+                                    showSpinner()
                                 }
                                 is LoadingState.Loaded -> {
-//                                hideLoading()
+                                    hideSpinner()
                                     getContactList()
                                     showToast("Contacts synced successfully", 1)
                                 }
                                 is LoadingState.Error -> {
-                                    hideLoading()
+                                    hideSpinner()
                                     showGenericErrorMessage()
                                 }
                             }
@@ -412,6 +423,18 @@ class ContactsFragment : Fragment(), ContactsView {
         finalList.addAll(contactsList)
         finalList.add(InviteItemHolder("invite"))
         return finalList
+    }
+
+    private fun showSpinner() {
+        ui {
+            (activity as MainActivity).toolbar.toolbar_progress_bar.visibility = VISIBLE
+        }
+    }
+
+    private fun hideSpinner() {
+        ui {
+            (activity as MainActivity).toolbar.toolbar_progress_bar.visibility = GONE
+        }
     }
 
     override fun showLoading() {

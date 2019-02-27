@@ -16,6 +16,6 @@
         android:icon="@drawable/ic_baseline_refresh_24px"
         android:title="Refresh"
         android:visible="true"
-        app:showAsAction="ifRoom|collapseActionView" />
+        app:showAsAction="never" />
 
 </menu>
