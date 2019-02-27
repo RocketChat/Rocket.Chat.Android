@@ -378,6 +378,7 @@ class ContactsFragment : Fragment(), ContactsView {
     }
 
     fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>) {
+        (activity as MainActivity).contactsLoadingState.removeObservers(viewLifecycleOwner)
         if (filteredContactArrayList.size == 0) {
             emptyTextView!!.visibility = View.VISIBLE
             recyclerView!!.visibility = View.GONE
