@@ -81,7 +81,6 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     // WIDECHAT
     val contactsLoadingState = SingleLiveData<LoadingState>()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         setTheme(R.style.AppTheme)
