@@ -20,9 +20,6 @@ import kotlin.collections.HashMap
 
 // WIDECHAT
 import chat.rocket.android.helper.Constants
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.ImageSpan
 import android.view.LayoutInflater
 import android.view.View.VISIBLE
 import android.view.View.GONE
@@ -128,10 +125,13 @@ class ContactsFragment : Fragment(), ContactsView {
         setupToolbar()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        searchView?.clearFocus()
-        searchView?.setQuery("", false)
+    override fun onResume() {
+        super.onResume()
+        try {
+            hideSpinner()
+        } catch (ex: Exception) {
+            Timber.e(ex)
+        }
     }
 
     private fun getContactList() {
@@ -360,7 +360,7 @@ class ContactsFragment : Fragment(), ContactsView {
                 (activity as MainActivity).contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
                     when (state) {
                         is LoadingState.Loading -> {
-                                showLoading()
+                            showLoading()
                         }
                         is LoadingState.Loaded -> {
                             hideLoading()
