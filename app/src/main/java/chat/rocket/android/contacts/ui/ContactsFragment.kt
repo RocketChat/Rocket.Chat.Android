@@ -20,7 +20,12 @@ import kotlin.collections.HashMap
 
 // WIDECHAT
 import chat.rocket.android.helper.Constants
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ImageSpan
 import android.view.LayoutInflater
+import android.view.View.VISIBLE
+import android.view.View.GONE
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -45,19 +50,10 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.app_bar.view.*
 import kotlinx.android.synthetic.main.fragment_contact_parent.*
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
-
-//test
-import android.text.SpannableStringBuilder
-import android.text.style.ImageSpan
-import android.text.Spanned
-import kotlinx.android.synthetic.main.app_bar.view.*
-
-import android.view.View.VISIBLE
-import android.view.View.GONE
-
 
 /**
  * Load a list of contacts in a recycler view
@@ -350,7 +346,6 @@ class ContactsFragment : Fragment(), ContactsView {
         // Show loading while sync in progress
         recyclerView!!.visibility = View.GONE
         emptyTextView!!.visibility = View.GONE
-        showLoading()
 
         val serverUrl = serverInteractor.get()!!
         val dbManager = dbFactory.create(serverUrl)
@@ -358,6 +353,7 @@ class ContactsFragment : Fragment(), ContactsView {
 
         if (contactList.isEmpty()) {
             ui {
+                (activity as MainActivity).syncContacts()
                 (activity as MainActivity).contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
                     when (state) {
                         is LoadingState.Loading -> {
