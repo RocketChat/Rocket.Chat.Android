@@ -128,6 +128,11 @@ class ContactsFragment : Fragment(), ContactsView {
         setupToolbar()
     }
 
+    override fun onPause() {
+        super.onPause()
+        hideSpinner()
+    }
+
     private fun getContactList() {
         val serverUrl = serverInteractor.get()!!
         val dbManager = dbFactory.create(serverUrl)
