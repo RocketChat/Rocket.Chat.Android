@@ -55,8 +55,8 @@ import javax.inject.Inject
 import chat.rocket.android.helper.Constants
 import timber.log.Timber
 import androidx.core.net.toUri
-import androidx.lifecycle.MutableLiveData
 import chat.rocket.android.chatrooms.viewmodel.LoadingState
+import com.shopify.livedataktx.SingleLiveData
 
 private const val CURRENT_STATE = "current_state"
 
@@ -79,7 +79,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     private val PERMISSIONS_REQUEST_RW_CONTACTS = 0
 
     // WIDECHAT
-    val contactsLoadingState = MutableLiveData<LoadingState>()
+    val contactsLoadingState = SingleLiveData<LoadingState>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -345,7 +346,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         progressDialog = null
     }
 
-    private fun syncContacts() {
+    fun syncContacts() {
         if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {

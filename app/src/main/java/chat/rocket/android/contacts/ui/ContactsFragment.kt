@@ -26,6 +26,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.WorkManager
 import chat.rocket.android.chatrooms.adapter.ItemHolder
 import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.contacts.adapter.ContactsHeaderItemHolder
@@ -162,10 +163,10 @@ class ContactsFragment : Fragment(), ContactsView {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.chatrooms, menu)
+        inflater.inflate(R.menu.widechat_contacts, menu)
 
-        sortView = menu.findItem(R.id.action_sort)
-        sortView!!.isVisible = false
+        val refresh = menu.findItem(R.id.action_refresh)
+
 
         val searchItem = menu.findItem(R.id.action_search)
         searchView = searchItem?.actionView as? SearchView
@@ -191,6 +192,35 @@ class ContactsFragment : Fragment(), ContactsView {
             }
         }
         searchItem?.setOnActionExpandListener(expandListener)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_refresh -> {
+                with(activity as MainActivity) {
+                   ui {
+                       syncContacts()
+                       contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
+                            when (state) {
+                                is LoadingState.Loading -> {
+//                                showLoading()
+                                }
+                                is LoadingState.Loaded -> {
+//                                hideLoading()
+                                    getContactList()
+                                    showToast("Contacts synced successfully", 1)
+                                }
+                                is LoadingState.Error -> {
+                                    hideLoading()
+                                    showGenericErrorMessage()
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     fun setupToolbar(){
