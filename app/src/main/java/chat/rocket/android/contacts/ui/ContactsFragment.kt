@@ -54,6 +54,7 @@ import kotlinx.android.synthetic.main.app_bar.view.*
 import kotlinx.android.synthetic.main.fragment_contact_parent.*
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
+import timber.log.Timber
 
 /**
  * Load a list of contacts in a recycler view
@@ -80,7 +81,6 @@ class ContactsFragment : Fragment(), ContactsView {
     private val MY_PERMISSIONS_REQUEST_RW_CONTACTS = 0
 
     private var searchView: SearchView? = null
-    private var sortView: MenuItem? = null
     private var searchIcon: ImageView? = null
     private var searchText:  TextView? = null
     private var searchCloseButton: ImageView? = null
@@ -128,9 +128,10 @@ class ContactsFragment : Fragment(), ContactsView {
         setupToolbar()
     }
 
-    override fun onPause() {
-        super.onPause()
-        hideSpinner()
+    override fun onDestroy() {
+        super.onDestroy()
+        searchView?.clearFocus()
+        searchView?.setQuery("", false)
     }
 
     private fun getContactList() {
@@ -237,7 +238,10 @@ class ContactsFragment : Fragment(), ContactsView {
 
     fun setupToolbar(){
         (activity as MainActivity).toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        (activity as MainActivity).toolbar.setNavigationOnClickListener { activity?.onBackPressed()}
+        (activity as MainActivity).toolbar.setNavigationOnClickListener {
+            hideSpinner()
+            activity?.onBackPressed()
+        }
         with((activity as AppCompatActivity?)?.supportActionBar) {
             this?.setDisplayShowTitleEnabled(true)
             this?.title = getString(R.string.title_contacts)
@@ -383,7 +387,12 @@ class ContactsFragment : Fragment(), ContactsView {
     }
 
     fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>) {
-        (activity as MainActivity).contactsLoadingState.removeObservers(viewLifecycleOwner)
+        try {
+            (activity as MainActivity).contactsLoadingState.removeObservers(viewLifecycleOwner)
+        } catch (ex: Exception) {
+            Timber.e(ex)
+        }
+
         if (filteredContactArrayList.size == 0) {
             emptyTextView!!.visibility = View.VISIBLE
             recyclerView!!.visibility = View.GONE
