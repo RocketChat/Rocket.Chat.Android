@@ -125,6 +125,11 @@ class ContactsFragment : Fragment(), ContactsView {
         setupToolbar()
     }
 
+    override fun onDestroyView() {
+        hideSpinner()
+        super.onDestroyView()
+    }
+
     private fun getContactList() {
         val serverUrl = serverInteractor.get()!!
         val dbManager = dbFactory.create(serverUrl)
@@ -194,31 +199,8 @@ class ContactsFragment : Fragment(), ContactsView {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_search -> {
-                hideSpinner()
-            }
             R.id.action_refresh -> {
-                with(activity as MainActivity) {
-                   ui {
-                       syncContacts()
-                       contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
-                            when (state) {
-                                is LoadingState.Loading -> {
-                                    showSpinner()
-                                }
-                                is LoadingState.Loaded -> {
-                                    hideSpinner()
-                                    getContactList()
-                                    showToast("Contacts synced successfully", 1)
-                                }
-                                is LoadingState.Error -> {
-                                    hideSpinner()
-                                    showGenericErrorMessage()
-                                }
-                            }
-                        })
-                    }
-                }
+                (activity as MainActivity).syncContacts()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -348,39 +330,35 @@ class ContactsFragment : Fragment(), ContactsView {
         val dbManager = dbFactory.create(serverUrl)
         val contactList = dbManager.contactsDao().getAllSync()
 
-        if (contactList.isEmpty()) {
-            ui {
-                (activity as MainActivity).syncContacts()
-                (activity as MainActivity).contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
-                    when (state) {
-                        is LoadingState.Loading -> {
+        ui {
+            (activity as MainActivity).contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
+                when (state) {
+                    is LoadingState.Loading -> {
+                        if (contactList.isEmpty()) {
                             showLoading()
-                        }
-                        is LoadingState.Loaded -> {
+                        } else {
                             hideLoading()
-                            getContactList()
-                            showToast("Contacts synced successfully", 1)
-                        }
-                        is LoadingState.Error -> {
-                            hideLoading()
-                            showGenericErrorMessage()
+                            showSpinner()
                         }
                     }
-                })
-            }
-        } else {
-            hideLoading()
-            getContactList()
+                    is LoadingState.Loaded -> {
+                        hideLoading()
+                        hideSpinner()
+                        // TODO: Show updated contacts instantly without refreshing the whole view
+                        showToast("Contacts synced successfully", 1)
+                    }
+                    is LoadingState.Error -> {
+                        hideLoading()
+                        hideSpinner()
+                        showGenericErrorMessage()
+                    }
+                }
+            })
         }
+        getContactList()
     }
 
     fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>) {
-        try {
-            (activity as MainActivity).contactsLoadingState.removeObservers(viewLifecycleOwner)
-        } catch (ex: Exception) {
-            Timber.e(ex)
-        }
-
         if (filteredContactArrayList.size == 0) {
             emptyTextView!!.visibility = View.VISIBLE
             recyclerView!!.visibility = View.GONE
