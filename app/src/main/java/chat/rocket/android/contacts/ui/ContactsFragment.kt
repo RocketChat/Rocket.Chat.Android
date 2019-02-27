@@ -175,12 +175,6 @@ class ContactsFragment : Fragment(), ContactsView {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.widechat_contacts, menu)
 
-        // Add icon to the menu item
-        var builder = SpannableStringBuilder("* Refresh")
-        builder.setSpan(ImageSpan(context, R.drawable.ic_baseline_refresh_24px), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        val refreshButton = menu.findItem(R.id.action_refresh)
-        refreshButton.setTitle(builder)
-
         val searchItem = menu.findItem(R.id.action_search)
         searchView = searchItem?.actionView as? SearchView
         searchView?.onQueryTextListener { queryContacts(it) }

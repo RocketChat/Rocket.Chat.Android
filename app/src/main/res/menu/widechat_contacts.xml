@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="AppCompatResource">
+    tools:context=".main.ui.MainActivity">
 
     <item
         android:id="@+id/action_search"
@@ -12,10 +12,18 @@
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
-        android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_baseline_refresh_24px"
-        android:title="Refresh"
-        android:visible="true"
-        app:showAsAction="never" />
+        android:id="@+id/action_more"
+        android:icon="@drawable/ic_more_vert_white_24dp"
+        android:title="More..."
+        android:orderInCategory="100"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_refresh"
+                android:icon="@drawable/ic_refresh_black_24dp"
+                android:title="Refresh"
+                app:showAsAction="never" />
+        </menu>
+    </item>
 
 </menu>
