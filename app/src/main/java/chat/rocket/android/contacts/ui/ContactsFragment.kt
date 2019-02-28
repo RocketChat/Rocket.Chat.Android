@@ -123,6 +123,11 @@ class ContactsFragment : Fragment(), ContactsView {
         setupToolbar()
     }
 
+    override fun onPause() {
+        activity?.invalidateOptionsMenu()
+        super.onPause()
+    }
+
     private fun getContactList() {
         val serverUrl = serverInteractor.get()!!
         val dbManager = dbFactory.create(serverUrl)
