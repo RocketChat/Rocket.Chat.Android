@@ -40,6 +40,11 @@ class AboutFragment : Fragment() {
         analyticsManager.logScreenView(ScreenViewEvent.About)
     }
 
+    override fun onResume() {
+        super.onResume()
+        setupToolbar()
+    }
+
     private fun setupViews() {
         text_version_name.text = BuildConfig.VERSION_NAME
         text_build_number.text = getString(
