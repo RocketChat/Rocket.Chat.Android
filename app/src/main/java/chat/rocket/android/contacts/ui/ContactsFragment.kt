@@ -361,7 +361,8 @@ class ContactsFragment : Fragment(), ContactsView {
                         // TODO: Show updated contacts without refreshing the whole view
                         if (state.fromRefreshButton) {
                             getContactList()
-                            showToast("Contacts synced successfully", 1)
+                            if (loadedOnce)
+                                showToast("Contacts synced successfully", 1)
                         } else if (!loadedOnce) {
                             getContactList()
                         }

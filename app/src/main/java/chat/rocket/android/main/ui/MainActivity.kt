@@ -17,8 +17,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
@@ -56,6 +54,7 @@ import chat.rocket.android.helper.Constants
 import timber.log.Timber
 import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
+import androidx.work.*
 import chat.rocket.android.contacts.models.ContactsLoadingState
 
 private const val CURRENT_STATE = "current_state"
@@ -355,16 +354,17 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         } else {
             // Permission has already been granted
             val contactsSyncWork = OneTimeWorkRequestBuilder<ContactsSyncWorker>().build()
-            WorkManager.getInstance().enqueue(contactsSyncWork)
+            val workManager = WorkManager.getInstance()
+            workManager.beginUniqueWork("contactsSync", ExistingWorkPolicy.KEEP, contactsSyncWork).enqueue()
             contactsLoadingState.postValue(ContactsLoadingState.Loading(fromRefreshButton))
-            WorkManager.getInstance().getStatusById(contactsSyncWork.getId()).observe(this, Observer { info ->
-                if (info !=null) {
+            workManager.getStatusById(contactsSyncWork.getId()).observe(this, Observer { info ->
+                if (info != null) {
                     if (info.state.name == "RUNNING") {
                         contactsLoadingState.postValue(ContactsLoadingState.Loading(fromRefreshButton))
                         Timber.d("Contact sync running")
                     } else if (info.state.isFinished || info.state.name == "FAILED") {
                         contactsLoadingState.postValue(ContactsLoadingState.Loaded(fromRefreshButton))
-                        Timber.d("Contact sync ended")
+                        Timber.d("Contact sync ${info.state.name}")
                     }
                 }
             })
