@@ -1293,9 +1293,7 @@ class ChatRoomPresenter @Inject constructor(
      * @param unfinishedMessage The unfinished message to save.
      */
     fun saveDraftMessage(unfinishedMessage: String) {
-        if (unfinishedMessage.isNotBlank()) {
-            localRepository.save(draftKey, unfinishedMessage)
-        }
+        localRepository.save(draftKey, unfinishedMessage)
     }
 
     fun clearDraftMessage() {
