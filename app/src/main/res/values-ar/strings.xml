@@ -296,8 +296,8 @@
     <string name="Slash_TableUnflip_Description">عرض ┬─┬ ノ( ゜-゜ノ)</string>
     <string name="Create_A_New_Channel">إنشاء قناة جديدة</string>
     <string name="Show_the_keyboard_shortcut_list">عرض اختصارات الكيبورد</string>
-    <string name="Invite_user_to_join_channel_all_from">دعوة أعضاء  [#قناة] للانضمام لهذه المجموعة</string>
-    <string name="Invite_user_to_join_channel_all_to">دعوة أعضاء هذه المجموعة للانضمام ل [#قناة]</string>
+    <string name="Invite_user_to_join_channel_all_from">دعوة أعضاء  [#channel] للانضمام لهذه المجموعة</string>
+    <string name="Invite_user_to_join_channel_all_to">دعوة أعضاء هذه المجموعة للانضمام ل [#channel]</string>
     <string name="Archive">ارشيف</string>
     <string name="Remove_someone_from_room">إوالة شخص من الغرفة</string>
     <string name="Leave_the_current_channel">مغادرة القناة الحالية</string>
