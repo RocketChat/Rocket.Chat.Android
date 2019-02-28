@@ -1,6 +1,7 @@
 package chat.rocket.android.profile.ui
 
 import DrawableHelper
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.appcompat.app.AlertDialog
 import android.content.Intent
@@ -292,6 +293,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
     }
 
+    @SuppressLint("RestrictedApi")
     fun showDeleteAccountDialog() {
         val passwordEditText = EditText(context)
         passwordEditText.hint = getString(R.string.msg_password)
@@ -299,7 +301,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         context?.let {
             val builder = AlertDialog.Builder(it)
             builder.setTitle(R.string.title_are_you_sure)
-                .setView(passwordEditText)
+                .setView(passwordEditText, 60, 30, 60, 0)
                 .setPositiveButton(R.string.action_delete_account) { _, _ ->
                     presenter.deleteAccount(passwordEditText.text.toString())
                 }
