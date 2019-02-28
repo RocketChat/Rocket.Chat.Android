@@ -29,11 +29,11 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.chatrooms.adapter.ItemHolder
-import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.contacts.adapter.ContactsHeaderItemHolder
 import chat.rocket.android.contacts.adapter.ContactsItemHolder
 import chat.rocket.android.contacts.adapter.ContactsRecyclerViewAdapter
 import chat.rocket.android.contacts.adapter.InviteItemHolder
+import chat.rocket.android.contacts.models.ContactsLoadingState
 import chat.rocket.android.contacts.presentation.ContactsPresenter
 import chat.rocket.android.contacts.presentation.ContactsView
 import chat.rocket.android.db.DatabaseManagerFactory
@@ -79,8 +79,9 @@ class ContactsFragment : Fragment(), ContactsView {
 
     private var searchView: SearchView? = null
     private var searchIcon: ImageView? = null
-    private var searchText:  TextView? = null
+    private var searchText: TextView? = null
     private var searchCloseButton: ImageView? = null
+    private var loadedOnce: Boolean = false
 
     companion object {
         /**
@@ -108,8 +109,19 @@ class ContactsFragment : Fragment(), ContactsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-
+        loadedOnce = false
         setHasOptionsMenu(true)
+    }
+
+    override fun onPause() {
+        hideSpinner()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        hideSpinner()
+        loadedOnce = false
+        super.onResume()
     }
 
     override fun onCreateView(
@@ -123,11 +135,6 @@ class ContactsFragment : Fragment(), ContactsView {
         this.emptyTextView = view.findViewById(R.id.text_no_contacts_to_display)
         getContactsPermissions()
         setupToolbar()
-    }
-
-    override fun onDestroyView() {
-        hideSpinner()
-        super.onDestroyView()
     }
 
     private fun getContactList() {
@@ -199,8 +206,11 @@ class ContactsFragment : Fragment(), ContactsView {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_search -> {
+                hideSpinner()
+            }
             R.id.action_refresh -> {
-                (activity as MainActivity).syncContacts()
+                (activity as MainActivity).syncContacts(true)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -209,7 +219,6 @@ class ContactsFragment : Fragment(), ContactsView {
     fun setupToolbar(){
         (activity as MainActivity).toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         (activity as MainActivity).toolbar.setNavigationOnClickListener {
-            hideSpinner()
             activity?.onBackPressed()
         }
         with((activity as AppCompatActivity?)?.supportActionBar) {
@@ -333,32 +342,43 @@ class ContactsFragment : Fragment(), ContactsView {
         ui {
             (activity as MainActivity).contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
                 when (state) {
-                    is LoadingState.Loading -> {
+                    is ContactsLoadingState.Loading -> {
                         if (contactList.isEmpty()) {
                             showLoading()
                         } else {
                             hideLoading()
-                            showSpinner()
+                            if (state.fromRefreshButton) {
+                                showSpinner()
+                            }
+                            if (!loadedOnce) {
+                                getContactList()
+                            }
                         }
                     }
-                    is LoadingState.Loaded -> {
+                    is ContactsLoadingState.Loaded -> {
                         hideLoading()
                         hideSpinner()
-                        // TODO: Show updated contacts instantly without refreshing the whole view
-                        showToast("Contacts synced successfully", 1)
+                        // TODO: Show updated contacts without refreshing the whole view
+                        if (state.fromRefreshButton) {
+                            getContactList()
+                            showToast("Contacts synced successfully", 1)
+                        } else if (!loadedOnce) {
+                            getContactList()
+                        }
                     }
-                    is LoadingState.Error -> {
+                    is ContactsLoadingState.Error -> {
                         hideLoading()
                         hideSpinner()
                         showGenericErrorMessage()
+                        getContactList()
                     }
                 }
             })
         }
-        getContactList()
     }
 
     fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>) {
+        loadedOnce = true
         if (filteredContactArrayList.size == 0) {
             emptyTextView!!.visibility = View.VISIBLE
             recyclerView!!.visibility = View.GONE
