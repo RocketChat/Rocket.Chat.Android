@@ -377,18 +377,19 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         searchText = searchView?.findViewById(R.id.search_src_text)
         searchText?.setTextColor(Color.GRAY)
         searchText?.setHintTextColor(Color.GRAY)
+
+        searchCloseButton = searchView?.findViewById(R.id.search_close_btn)
         
         searchText?.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus)
+                searchCloseButton?.setImageResource(R.drawable.ic_close_gray_24dp)
                 viewModel.showLastMessage = false
         }
-
-        searchCloseButton = searchView?.findViewById(R.id.search_close_btn)
-        searchCloseButton?.setImageResource(R.drawable.ic_close_gray_24dp)
 
         searchCloseButton?.setOnClickListener { v ->
             searchView?.clearFocus()
             searchView?.setQuery("", false)
+            searchCloseButton?.setImageResource(0)
             viewModel.showLastMessage = true
         }
 
