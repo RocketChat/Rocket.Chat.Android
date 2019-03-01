@@ -463,7 +463,6 @@ class ContactsFragment : Fragment(), ContactsView {
                 }
             }
         }
-        finalList.add(ContactsHeaderItemHolder(getString(R.string.Invite_contacts)))
         finalList.add(InviteItemHolder("invite"))
         return finalList
     }
