@@ -454,10 +454,8 @@ class ContactsFragment : Fragment(), ContactsView {
         finalList.addAll(userList)
         finalList.add(ContactsHeaderItemHolder(getString(R.string.Invite_contacts)))
         finalList.addAll(contactsList)
-        finalList.add(ContactsHeaderItemHolder(getString(R.string.Invite_contacts)))
-
         if(spotlightResult !==null) {
-            finalList.add(ContactsHeaderItemHolder("SPOTLIGHT RESULT"))
+            finalList.add(ContactsHeaderItemHolder(getString(R.string.Spotlight_Result)))
             spotlightResult.forEach { item ->
                 val username = (item.data as Contact).getUsername()
                 if((username == null) || (!usernameSet.contains(username))) {
@@ -465,7 +463,7 @@ class ContactsFragment : Fragment(), ContactsView {
                 }
             }
         }
-
+        finalList.add(ContactsHeaderItemHolder(getString(R.string.Invite_contacts)))
         finalList.add(InviteItemHolder("invite"))
         return finalList
     }
