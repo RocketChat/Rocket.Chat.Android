@@ -868,8 +868,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             button_send.setOnClickListener {
                 var textMessage = citation ?: ""
-                textMessage += text_message.textContent
-                sendMessage(textMessage)
+                if(!text_message.textContent.isBlank()) {
+                    textMessage += text_message.textContent
+                    sendMessage(textMessage)
+                }
             }
 
             button_show_attachment_options.setOnClickListener {
