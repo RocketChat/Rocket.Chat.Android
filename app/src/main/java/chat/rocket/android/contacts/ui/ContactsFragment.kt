@@ -344,7 +344,7 @@ class ContactsFragment : Fragment(), ContactsView {
             (activity as MainActivity).contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
                 when (state) {
                     is ContactsLoadingState.Loading -> {
-                        if (contactList.isEmpty()) {
+                        if (contactArrayList.isEmpty() && contactList.isEmpty()) {
                             showLoading()
                         } else {
                             hideLoading()
