@@ -4,8 +4,4 @@ import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 
 interface ContactsView : LoadingView, MessageView {
-
-    fun hideSpinner()
-
-    fun showSpinner()
 }
