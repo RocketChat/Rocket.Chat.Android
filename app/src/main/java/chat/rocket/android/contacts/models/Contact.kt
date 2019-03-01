@@ -13,6 +13,7 @@ class Contact() : Parcelable {
     private var username: String? = null
     private var avatarUrl: String? = null
     private var status: String? = null
+    private var isSpotlightResult: Boolean = false
 
     fun getUserId(): String? {
         return userId
@@ -48,6 +49,14 @@ class Contact() : Parcelable {
 
     fun setIsPhone(isPhone: Boolean) {
         this.isPhone = isPhone
+    }
+
+    fun getIsSpotlightResult(): Boolean {
+        return this.isSpotlightResult
+    }
+
+    fun setIsSpotlightResult(isSpotlightResult: Boolean) {
+        this.isSpotlightResult = isSpotlightResult
     }
 
     fun getPhoneNumber(): String? {

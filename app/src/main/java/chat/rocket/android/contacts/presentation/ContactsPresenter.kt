@@ -20,11 +20,9 @@ import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.UserPresence
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
-import chat.rocket.core.internal.rest.createDirectMessage
-import chat.rocket.core.internal.rest.inviteViaEmail
-import chat.rocket.core.internal.rest.inviteViaSMS
-import chat.rocket.core.internal.rest.usersGetPresence
+import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.ChatRoom
+import chat.rocket.core.model.SpotlightResult
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
@@ -252,6 +250,10 @@ class ContactsPresenter @Inject constructor(
             Timber.e(ex)
         }
         return null
+    }
+
+    suspend fun spotlight(query: String): SpotlightResult {
+        return client.spotlight(query)
     }
 
 }

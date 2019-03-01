@@ -23,11 +23,14 @@ import chat.rocket.android.helper.Constants
 import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.chatrooms.adapter.ItemHolder
-import chat.rocket.android.chatrooms.viewmodel.LoadingState
+import chat.rocket.android.chatrooms.adapter.RoomUiModelMapper
+import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
+import chat.rocket.android.chatrooms.viewmodel.*
 import chat.rocket.android.contacts.adapter.ContactsHeaderItemHolder
 import chat.rocket.android.contacts.adapter.ContactsItemHolder
 import chat.rocket.android.contacts.adapter.ContactsRecyclerViewAdapter
@@ -46,7 +49,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_contact_parent.*
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.newSingleThreadContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -64,8 +69,12 @@ class ContactsFragment : Fragment(), ContactsView {
     @Inject
     lateinit var serverInteractor: GetCurrentServerInteractor
 
+    @Inject
+    lateinit var mapper: RoomUiModelMapper
+
     private var recyclerView :RecyclerView? = null
     private var emptyTextView:  TextView? = null
+
 
     /**
      * The list of contacts to load in the recycler view
@@ -253,6 +262,23 @@ class ContactsFragment : Fragment(), ContactsView {
         return false
     }
 
+    fun mapSpotlightToContacts(result:List<ItemHolder<*>>): ArrayList<ItemHolder<*>> {
+        val list = ArrayList<ItemHolder<*>>(result.size)
+        result.forEach { item ->
+            val data = item.data as RoomUiModel
+            val contact = Contact()
+            contact.setName(data.name.toString())
+            if(data.username !==null){
+                contact.setUsername(data.username)
+            }
+            contact.setIsSpotlightResult(true)
+            contact.setAvatarUrl(data.avatar)
+            contact.setUserId(data.id)
+            list.add(ContactsItemHolder(contact))
+        }
+        return list
+    }
+
     fun queryContacts(query: String) {
         if (query.isBlank() or query.isEmpty()) {
             setupFrameLayout(contactArrayList)
@@ -263,7 +289,12 @@ class ContactsFragment : Fragment(), ContactsView {
                     filteredContactArrayList.add(contact)
                 }
             }
-            setupFrameLayout(filteredContactArrayList)
+            launch(UI) {
+                val result = presenter.spotlight(query)?.let { mapper.map(it, showLastMessage = false) }.let{ mapSpotlightToContacts(it) }
+                Timber.d("7878")
+                Timber.d(result.toString())
+                setupFrameLayout(filteredContactArrayList, result)
+            }
         }
     }
 
@@ -345,7 +376,7 @@ class ContactsFragment : Fragment(), ContactsView {
         }
     }
 
-    fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>) {
+    fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>, spotlightResult: ArrayList<ItemHolder<*>>? = null) {
         if (filteredContactArrayList.size == 0) {
             emptyTextView!!.visibility = View.VISIBLE
             recyclerView!!.visibility = View.GONE
@@ -355,20 +386,22 @@ class ContactsFragment : Fragment(), ContactsView {
 
             recyclerView!!.setHasFixedSize(true)
             recyclerView!!.layoutManager = LinearLayoutManager(context)
-            recyclerView!!.adapter = ContactsRecyclerViewAdapter(this.activity as MainActivity, presenter, map(filteredContactArrayList))
+            recyclerView!!.adapter = ContactsRecyclerViewAdapter(this.activity as MainActivity, presenter, map(filteredContactArrayList, spotlightResult))
         }
     }
 
-    fun map(contacts: List<Contact>): ArrayList<ItemHolder<*>> {
+    fun map(contacts: List<Contact>, spotlightResult: ArrayList<ItemHolder<*>>?=null): ArrayList<ItemHolder<*>> {
         val finalList = ArrayList<ItemHolder<*>>(contacts.size + 2)
         val userList = ArrayList<ItemHolder<*>>(contacts.size)
         val userContactList: ArrayList<Contact> = ArrayList()
         val unfilteredContactsList: ArrayList<Contact> = ArrayList()
         val contactsList = ArrayList<ItemHolder<*>>(contacts.size)
+        val usernameSet = mutableListOf<String>()
         contacts.forEach { contact ->
             if(contact.getUsername()!= null){
                 // Users in their own list for filtering before adding to an ItemHolder
                 userContactList.add(contact)
+                usernameSet.add(contact.getUsername()!!)
             } else {
                 unfilteredContactsList.add(contact)
             }
@@ -385,6 +418,18 @@ class ContactsFragment : Fragment(), ContactsView {
         finalList.addAll(userList)
         finalList.add(ContactsHeaderItemHolder(getString(R.string.Invite_contacts)))
         finalList.addAll(contactsList)
+        finalList.add(ContactsHeaderItemHolder(getString(R.string.Invite_contacts)))
+
+        if(spotlightResult !==null) {
+            finalList.add(ContactsHeaderItemHolder("SPOTLIGHT RESULT"))
+            spotlightResult.forEach { item ->
+                val username = (item.data as Contact).getUsername()
+                if((username == null) || (!usernameSet.contains(username))) {
+                    finalList.add(item)
+                }
+            }
+        }
+
         finalList.add(InviteItemHolder("invite"))
         return finalList
     }
