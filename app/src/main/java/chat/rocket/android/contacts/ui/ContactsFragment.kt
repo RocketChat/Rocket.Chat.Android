@@ -21,17 +21,19 @@ import kotlin.collections.HashMap
 // WIDECHAT
 import chat.rocket.android.helper.Constants
 import android.view.LayoutInflater
+import android.view.View.VISIBLE
+import android.view.View.GONE
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.chatrooms.adapter.ItemHolder
-import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.contacts.adapter.ContactsHeaderItemHolder
 import chat.rocket.android.contacts.adapter.ContactsItemHolder
 import chat.rocket.android.contacts.adapter.ContactsRecyclerViewAdapter
 import chat.rocket.android.contacts.adapter.InviteItemHolder
+import chat.rocket.android.contacts.models.ContactsLoadingState
 import chat.rocket.android.contacts.presentation.ContactsPresenter
 import chat.rocket.android.contacts.presentation.ContactsView
 import chat.rocket.android.db.DatabaseManagerFactory
@@ -45,10 +47,11 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.app_bar.view.*
 import kotlinx.android.synthetic.main.fragment_contact_parent.*
 import kotlinx.coroutines.experimental.launch
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 /**
  * Load a list of contacts in a recycler view
@@ -75,10 +78,10 @@ class ContactsFragment : Fragment(), ContactsView {
     private val MY_PERMISSIONS_REQUEST_RW_CONTACTS = 0
 
     private var searchView: SearchView? = null
-    private var sortView: MenuItem? = null
     private var searchIcon: ImageView? = null
-    private var searchText:  TextView? = null
+    private var searchText: TextView? = null
     private var searchCloseButton: ImageView? = null
+    private var loadedOnce: Boolean = false
 
     companion object {
         /**
@@ -106,8 +109,20 @@ class ContactsFragment : Fragment(), ContactsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-
+        loadedOnce = false
         setHasOptionsMenu(true)
+    }
+
+    override fun onPause() {
+        activity?.invalidateOptionsMenu()
+        hideSpinner()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        hideSpinner()
+        loadedOnce = false
+        super.onResume()
     }
 
     override fun onCreateView(
@@ -121,11 +136,6 @@ class ContactsFragment : Fragment(), ContactsView {
         this.emptyTextView = view.findViewById(R.id.text_no_contacts_to_display)
         getContactsPermissions()
         setupToolbar()
-    }
-
-    override fun onPause() {
-        activity?.invalidateOptionsMenu()
-        super.onPause()
     }
 
     private fun getContactList() {
@@ -167,10 +177,7 @@ class ContactsFragment : Fragment(), ContactsView {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.chatrooms, menu)
-
-        sortView = menu.findItem(R.id.action_sort)
-        sortView!!.isVisible = false
+        inflater.inflate(R.menu.widechat_contacts, menu)
 
         val searchItem = menu.findItem(R.id.action_search)
         searchView = searchItem?.actionView as? SearchView
@@ -198,9 +205,23 @@ class ContactsFragment : Fragment(), ContactsView {
         searchItem?.setOnActionExpandListener(expandListener)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_search -> {
+                hideSpinner()
+            }
+            R.id.action_refresh -> {
+                (activity as MainActivity).syncContacts(true)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     fun setupToolbar(){
         (activity as MainActivity).toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        (activity as MainActivity).toolbar.setNavigationOnClickListener { activity?.onBackPressed()}
+        (activity as MainActivity).toolbar.setNavigationOnClickListener {
+            activity?.onBackPressed()
+        }
         with((activity as AppCompatActivity?)?.supportActionBar) {
             this?.setDisplayShowTitleEnabled(true)
             this?.title = getString(R.string.title_contacts)
@@ -314,38 +335,52 @@ class ContactsFragment : Fragment(), ContactsView {
         // Show loading while sync in progress
         recyclerView!!.visibility = View.GONE
         emptyTextView!!.visibility = View.GONE
-        showLoading()
 
         val serverUrl = serverInteractor.get()!!
         val dbManager = dbFactory.create(serverUrl)
         val contactList = dbManager.contactsDao().getAllSync()
 
-        if (contactList.isEmpty()) {
-            ui {
-                (activity as MainActivity).contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
-                    when (state) {
-                        is LoadingState.Loading -> {
-                                showLoading()
-                        }
-                        is LoadingState.Loaded -> {
+        ui {
+            (activity as MainActivity).contactsLoadingState.observe(viewLifecycleOwner, Observer { state ->
+                when (state) {
+                    is ContactsLoadingState.Loading -> {
+                        if (contactArrayList.isEmpty() && contactList.isEmpty()) {
+                            showLoading()
+                        } else {
                             hideLoading()
-                            getContactList()
-                            showToast("Contacts synced successfully", 1)
-                        }
-                        is LoadingState.Error -> {
-                            hideLoading()
-                            showGenericErrorMessage()
+                            if (state.fromRefreshButton) {
+                                showSpinner()
+                            }
+                            if (!loadedOnce) {
+                                getContactList()
+                            }
                         }
                     }
-                })
-            }
-        } else {
-            hideLoading()
-            getContactList()
+                    is ContactsLoadingState.Loaded -> {
+                        hideLoading()
+                        hideSpinner()
+                        // TODO: Show updated contacts without refreshing the whole view
+                        if (state.fromRefreshButton) {
+                            getContactList()
+                            if (loadedOnce)
+                                showToast("Contacts synced successfully", 1)
+                        } else if (!loadedOnce) {
+                            getContactList()
+                        }
+                    }
+                    is ContactsLoadingState.Error -> {
+                        hideLoading()
+                        hideSpinner()
+                        showGenericErrorMessage()
+                        getContactList()
+                    }
+                }
+            })
         }
     }
 
     fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>) {
+        loadedOnce = true
         if (filteredContactArrayList.size == 0) {
             emptyTextView!!.visibility = View.VISIBLE
             recyclerView!!.visibility = View.GONE
@@ -387,6 +422,26 @@ class ContactsFragment : Fragment(), ContactsView {
         finalList.addAll(contactsList)
         finalList.add(InviteItemHolder("invite"))
         return finalList
+    }
+
+    private fun showSpinner() {
+        try {
+            ui {
+                (activity as MainActivity).toolbar.toolbar_progress_bar.visibility = VISIBLE
+            }
+        } catch (ex: Exception) {
+            Timber.e(ex)
+        }
+    }
+
+    private fun hideSpinner() {
+        try {
+            ui {
+                (activity as MainActivity).toolbar.toolbar_progress_bar.visibility = GONE
+            }
+        } catch (ex: Exception) {
+            Timber.e(ex)
+        }
     }
 
     override fun showLoading() {
