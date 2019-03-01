@@ -3,7 +3,6 @@ package chat.rocket.android.contacts.models
 import android.os.Parcel
 import android.os.Parcelable
 
-
 class Contact() : Parcelable {
     private var name: String? = null
     private var phoneNumber: String? = null
@@ -119,4 +118,10 @@ class Contact() : Parcelable {
             return arrayOfNulls(size)
         }
     }
+}
+
+sealed class ContactsLoadingState {
+    data class Loading(val fromRefreshButton: Boolean) : ContactsLoadingState()
+    data class Loaded(val fromRefreshButton: Boolean) : ContactsLoadingState()
+    data class Error(val fromRefreshButton: Boolean) : ContactsLoadingState()
 }

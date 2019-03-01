@@ -12,6 +12,18 @@
         android:minHeight="@dimen/widechat_toolbar_height"
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+
+        <ProgressBar
+            android:id="@+id/toolbar_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:indeterminateTint="#ffffff"
+            android:indeterminateTintMode="src_in"
+            android:indeterminate="true"
+            android:layout_gravity="end"
+            android:visibility="gone" />
+
+    </androidx.appcompat.widget.Toolbar>
 
 </com.google.android.material.appbar.AppBarLayout>

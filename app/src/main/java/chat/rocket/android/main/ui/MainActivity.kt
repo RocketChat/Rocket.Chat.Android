@@ -17,8 +17,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
@@ -56,7 +54,8 @@ import chat.rocket.android.helper.Constants
 import timber.log.Timber
 import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
-import chat.rocket.android.chatrooms.viewmodel.LoadingState
+import androidx.work.*
+import chat.rocket.android.contacts.models.ContactsLoadingState
 
 private const val CURRENT_STATE = "current_state"
 
@@ -79,7 +78,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     private val PERMISSIONS_REQUEST_RW_CONTACTS = 0
 
     // WIDECHAT
-    val contactsLoadingState = MutableLiveData<LoadingState>()
+    val contactsLoadingState = MutableLiveData<ContactsLoadingState>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -94,9 +93,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             setContentView(R.layout.activity_main)
         }
         refreshPushToken()
-
-        contactsLoadingState.postValue(LoadingState.Loading(0))
-        syncContacts()
+        syncContacts(false)
 
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
         deepLinkInfo = intent.getParcelableExtra(Constants.DEEP_LINK_INFO)
@@ -345,7 +342,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         progressDialog = null
     }
 
-    private fun syncContacts() {
+    fun syncContacts(fromRefreshButton: Boolean) {
         if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -357,15 +354,17 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         } else {
             // Permission has already been granted
             val contactsSyncWork = OneTimeWorkRequestBuilder<ContactsSyncWorker>().build()
-            WorkManager.getInstance().enqueue(contactsSyncWork)
-            WorkManager.getInstance().getStatusById(contactsSyncWork.getId()).observe(this, Observer { info ->
-                if (info !=null) {
+            val workManager = WorkManager.getInstance()
+            workManager.beginUniqueWork("contactsSync", ExistingWorkPolicy.KEEP, contactsSyncWork).enqueue()
+            contactsLoadingState.postValue(ContactsLoadingState.Loading(fromRefreshButton))
+            workManager.getStatusById(contactsSyncWork.getId()).observe(this, Observer { info ->
+                if (info != null) {
                     if (info.state.name == "RUNNING") {
-                        contactsLoadingState.postValue(LoadingState.Loading(0))
+                        contactsLoadingState.postValue(ContactsLoadingState.Loading(fromRefreshButton))
                         Timber.d("Contact sync running")
                     } else if (info.state.isFinished || info.state.name == "FAILED") {
-                        contactsLoadingState.postValue(LoadingState.Loaded(0))
-                        Timber.d("Contact sync ended")
+                        contactsLoadingState.postValue(ContactsLoadingState.Loaded(fromRefreshButton))
+                        Timber.d("Contact sync ${info.state.name}")
                     }
                 }
             })
@@ -378,7 +377,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             PERMISSIONS_REQUEST_RW_CONTACTS -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    syncContacts()
+                    syncContacts(false)
                 }
                 return
             }
