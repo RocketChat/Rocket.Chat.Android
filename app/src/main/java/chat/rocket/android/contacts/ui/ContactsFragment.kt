@@ -114,6 +114,7 @@ class ContactsFragment : Fragment(), ContactsView {
     }
 
     override fun onPause() {
+        activity?.invalidateOptionsMenu()
         hideSpinner()
         super.onPause()
     }
@@ -135,11 +136,6 @@ class ContactsFragment : Fragment(), ContactsView {
         this.emptyTextView = view.findViewById(R.id.text_no_contacts_to_display)
         getContactsPermissions()
         setupToolbar()
-    }
-
-    override fun onPause() {
-        activity?.invalidateOptionsMenu()
-        super.onPause()
     }
 
     private fun getContactList() {
@@ -428,7 +424,7 @@ class ContactsFragment : Fragment(), ContactsView {
         return finalList
     }
 
-    override fun showSpinner() {
+    private fun showSpinner() {
         try {
             ui {
                 (activity as MainActivity).toolbar.toolbar_progress_bar.visibility = VISIBLE
@@ -438,7 +434,7 @@ class ContactsFragment : Fragment(), ContactsView {
         }
     }
 
-    override fun hideSpinner() {
+    private fun hideSpinner() {
         try {
             ui {
                 (activity as MainActivity).toolbar.toolbar_progress_bar.visibility = GONE
