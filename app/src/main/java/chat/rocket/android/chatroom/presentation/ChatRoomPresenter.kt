@@ -346,7 +346,6 @@ class ChatRoomPresenter @Inject constructor(
                         unread = true
                     )
                     try {
-                        Timber.d("#### $newMessage")
                         messagesRepository.save(newMessage)
                         view.showNewMessage(
                             mapper.map(
