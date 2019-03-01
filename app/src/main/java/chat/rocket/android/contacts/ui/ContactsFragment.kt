@@ -313,8 +313,6 @@ class ContactsFragment : Fragment(), ContactsView {
             }
             launch(UI) {
                 val result = presenter.spotlight(query)?.let { mapper.map(it, showLastMessage = false) }.let{ mapSpotlightToContacts(it) }
-                Timber.d("7878")
-                Timber.d(result.toString())
                 setupFrameLayout(filteredContactArrayList, result)
             }
         }
@@ -413,7 +411,7 @@ class ContactsFragment : Fragment(), ContactsView {
 
     fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>, spotlightResult: ArrayList<ItemHolder<*>>? = null) {
         loadedOnce = true
-        if (filteredContactArrayList.size == 0) {
+        if (filteredContactArrayList.size == 0 && ((spotlightResult == null) or (spotlightResult?.size == 0)) ) {
             emptyTextView!!.visibility = View.VISIBLE
             recyclerView!!.visibility = View.GONE
         } else {
@@ -452,8 +450,10 @@ class ContactsFragment : Fragment(), ContactsView {
         }
 
         finalList.addAll(userList)
-        finalList.add(ContactsHeaderItemHolder(getString(R.string.Invite_contacts)))
-        finalList.addAll(contactsList)
+        if(contactsList.size > 0) {
+            finalList.add(ContactsHeaderItemHolder(getString(R.string.Invite_contacts)))
+            finalList.addAll(contactsList)
+        }
         if(spotlightResult !==null) {
             finalList.add(ContactsHeaderItemHolder(getString(R.string.Spotlight_Result)))
             spotlightResult.forEach { item ->
