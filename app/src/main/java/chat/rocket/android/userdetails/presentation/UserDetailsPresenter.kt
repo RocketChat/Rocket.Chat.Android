@@ -18,6 +18,8 @@ import kotlinx.coroutines.experimental.DefaultDispatcher
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import javax.inject.Inject
+import java.text.SimpleDateFormat
+import java.util.*
 
 class UserDetailsPresenter @Inject constructor(
     private val view: UserDetailsView,
@@ -44,15 +46,34 @@ class UserDetailsPresenter @Inject constructor(
                     val username = userEntity.username
                     val name = userEntity.name
                     val utcOffset =
-                        userEntity.utcOffset // TODO Convert UTC and display like the mockup
-
-                    if (avatarUrl != null && username != null && name != null && utcOffset != null) {
+                        userEntity.utcOffset
+                    val gmtTime = System.currentTimeMillis() // 2.32pm NZDT
+                    var timezoneAlteredTime: Long
+                    if (utcOffset != null) {
+                        val multiplier = utcOffset.times(60 * (60 * 1000))
+                        timezoneAlteredTime = gmtTime.plus(multiplier.toLong())
+                    } else {
+                        timezoneAlteredTime = gmtTime
+                    }
+                    val calendar = GregorianCalendar()
+                    calendar.timeInMillis = timezoneAlteredTime
+                    val formatter = SimpleDateFormat("hh:mm a")
+                    formatter.calendar = calendar
+                    formatter.timeZone = TimeZone.getTimeZone("UTC")
+                    var usertime = formatter.format(calendar.getTime())
+                    val utc = if (utcOffset !=null && utcOffset > 0) {
+                        " (UTC +"
+                    } else {
+                       " (UTC "
+                    }
+                    usertime = usertime.plus("$utc$utcOffset)")
+                    if (avatarUrl != null && username != null && name != null ) {
                         view.showUserDetails(
                             avatarUrl = avatarUrl,
                             name = name,
                             username = username,
                             status = userEntity.status,
-                            utcOffset = utcOffset.toString()
+                            utcOffset = usertime.toString()
                         )
                     } else {
                         throw Exception()
