@@ -56,7 +56,6 @@ import kotlinx.android.synthetic.main.fragment_contact_parent.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.newSingleThreadContext
-import timber.log.Timber
 import javax.inject.Inject
 import timber.log.Timber
 
