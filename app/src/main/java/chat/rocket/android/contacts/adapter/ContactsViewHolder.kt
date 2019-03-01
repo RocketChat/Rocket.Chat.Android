@@ -30,7 +30,6 @@ class ContactsViewHolder(itemView: View) : ViewHolder<ContactsItemHolder>(itemVi
                 chat_username.isGone = true
                 contact_status.isGone = true
 
-                // EAR > maybe we want to show this detail in the view?
                 if (contact.isPhone()) {
                     contact_detail.text = contact.getPhoneNumber()
                 } else {
@@ -38,6 +37,7 @@ class ContactsViewHolder(itemView: View) : ViewHolder<ContactsItemHolder>(itemVi
                 }
 
             } else {
+                contact_detail.isGone = true
                 invite_contact.isGone = true
                 chat_username.isVisible = true
                 chat_username.text = "@${contact.getUsername()}"

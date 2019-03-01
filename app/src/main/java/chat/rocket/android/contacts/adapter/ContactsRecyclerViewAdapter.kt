@@ -82,11 +82,13 @@ class ContactsRecyclerViewAdapter(
                         holder.setContactStatus(contact)
                     }
                 }
+                // Clicking the row will open the DM
+                holder.itemView.setOnClickListener {
+                    presenter.openDirectMessageChatRoom(contact.getUsername().toString())
+                }
             }
 
             val inviteButton: Button = holder.itemView.findViewById(R.id.invite_contact)
-            val dmButton: Button = holder.itemView.findViewById(R.id.chat_username)
-
             inviteButton.setOnClickListener { view ->
                 run {
                     inviteButton.setText(R.string.Invited)
@@ -97,7 +99,8 @@ class ContactsRecyclerViewAdapter(
                     }
                 }
             }
-
+              // Clicking the @username button will open a DM
+            val dmButton: Button = holder.itemView.findViewById(R.id.chat_username)
             dmButton.setOnClickListener { view ->
                 run {
                     presenter.openDirectMessageChatRoom(contact.getUsername().toString())
