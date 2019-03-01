@@ -184,11 +184,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_update_profile -> {
-                presenter.updateUserProfile(
-                    text_email.textContent,
-                    text_name.textContent,
-                    text_username.textContent
-                )
+                updateProfile()
                 mode.finish()
                 true
             }
@@ -200,6 +196,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     override fun onDestroyActionMode(mode: ActionMode) {
         actionMode = null
+        if (text_email.textContent != currentEmail
+                || text_username.textContent != currentUsername
+                || text_name.textContent != currentName) {
+            showSaveDiscardDialog()
+        }
     }
 
     private fun setupToolbar() {
@@ -307,5 +308,35 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                 .create()
                 .show()
         }
+    }
+
+    fun showSaveDiscardDialog() {
+        context?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.setMessage("Your changes have not been saved")
+                    .setPositiveButton("Save") { _, _ ->
+                        updateProfile()
+                    }
+                    .setNegativeButton("Cancel") { _, _ ->
+                        text_email.setText(currentEmail)
+                        text_username.setText(currentUsername)
+                        text_name.setText(currentName)
+                    }
+                    .create()
+                    .show()
+        }
+
+    }
+
+    fun updateProfile() {
+        presenter.updateUserProfile(
+                text_email.textContent,
+                text_name.textContent,
+                text_username.textContent
+        )
+
+        currentEmail = text_email.textContent
+        currentName = text_name.textContent
+        currentUsername = text_username.textContent
     }
 }
