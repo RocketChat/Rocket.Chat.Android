@@ -146,6 +146,12 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         super.onResume()
     }
 
+    override fun onPause() {
+        searchView?.clearFocus()
+        searchView?.setQuery("", false)
+        super.onPause()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
