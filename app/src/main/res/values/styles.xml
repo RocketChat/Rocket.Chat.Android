@@ -247,9 +247,7 @@
     </style>
 
     // REMARK: To be removed.
-    <style name="Profile.EditText" parent="Authentication.EditText.Border">
-        <item name="android:background">@drawable/style_edit_text_profile</item>
-    </style>
+    <style name="Profile.EditText" parent="Authentication.EditText.Border"/>
 
     <style name="ActionModeStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
