@@ -249,6 +249,16 @@
     // REMARK: To be removed.
     <style name="Profile.EditText" parent="Authentication.EditText.Border"/>
 
+    <style name="Profile.TextView" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
     <style name="ActionModeStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
         <item name="actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
