@@ -42,7 +42,7 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
                 android:drawableStart="@drawable/ic_person_black_20dp"
-                android:hint="@string/msg_name"
+                android:hint="@string/msg_profile_name_hint"
                 android:inputType="textCapWords" />
 
             <TextView
@@ -58,7 +58,7 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
                 android:drawableStart="@drawable/ic_at_black_20dp"
-                android:hint="@string/msg_username"
+                android:hint="@string/msg_profile_username_hint"
                 android:inputType="text" />
 
             <TextView
@@ -75,7 +75,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
                 android:drawableStart="@drawable/ic_email_black_20dp"
-                android:hint="@string/msg_email"
+                android:hint="@string/msg_profile_email_hint"
                 android:inputType="textEmailAddress" />
 
         </LinearLayout>
