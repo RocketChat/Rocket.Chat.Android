@@ -1,6 +1,7 @@
 package chat.rocket.android.db
 
 import android.app.Application
+import androidx.core.net.toUri
 import chat.rocket.android.R
 import chat.rocket.android.db.model.BaseMessageEntity
 import chat.rocket.android.db.model.BaseUserEntity
@@ -15,6 +16,7 @@ import chat.rocket.android.db.model.UrlEntity
 import chat.rocket.android.db.model.UserEntity
 import chat.rocket.android.db.model.UserStatus
 import chat.rocket.android.db.model.asEntity
+import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.exhaustive
 import chat.rocket.android.util.extensions.removeTrailingSlash
 import chat.rocket.android.util.extensions.toEntity
@@ -33,6 +35,7 @@ import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
 import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.userId
+import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
@@ -173,6 +176,13 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                 utcOffset = myself.utcOffset ?: user.utcOffset,
                 status = myself.status?.toString() ?: user.status
             ) ?: myself.asUser().toEntity()
+
+            if (myself.avatarOrigin != null && myself.active == null &&
+                    myself.name == null && myself.username == null) {
+                user?.username?.let {
+                    Fresco.getImagePipeline().evictFromCache(serverUrl.avatarUrl(it).toUri())
+                }
+            }
 
             Timber.d("UPDATING SELF: $entity")
             entity?.let { sendOperation(Operation.UpsertUser(it)) }
