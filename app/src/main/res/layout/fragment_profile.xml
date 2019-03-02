@@ -39,8 +39,6 @@
                 android:id="@+id/text_name"
                 style="@style/Profile.EditText"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
                 android:drawableStart="@drawable/ic_person_black_20dp"
                 android:hint="@string/msg_profile_name_hint"
                 android:inputType="textCapWords" />
@@ -55,8 +53,6 @@
                 android:id="@+id/text_username"
                 style="@style/Profile.EditText"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
                 android:drawableStart="@drawable/ic_at_black_20dp"
                 android:hint="@string/msg_profile_username_hint"
                 android:inputType="text" />
@@ -71,8 +67,6 @@
                 android:id="@+id/text_email"
                 style="@style/Profile.EditText"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
                 android:drawableStart="@drawable/ic_email_black_20dp"
                 android:hint="@string/msg_profile_email_hint"

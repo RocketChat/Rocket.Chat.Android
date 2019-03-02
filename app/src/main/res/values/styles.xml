@@ -247,7 +247,10 @@
     </style>
 
     // REMARK: To be removed.
-    <style name="Profile.EditText" parent="Authentication.EditText.Border"/>
+    <style name="Profile.EditText" parent="Authentication.EditText.Border">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
 
     <style name="Profile.TextView" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">16sp</item>
