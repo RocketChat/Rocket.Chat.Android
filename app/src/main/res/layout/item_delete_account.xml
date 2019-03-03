@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/text_reset_password"
         style="@style/Authentication.TextView.Headline"
-        android:text="Are you sure?"
+        android:text="@string/title_are_you_sure"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
