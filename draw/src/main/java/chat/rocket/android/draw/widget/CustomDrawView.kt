@@ -159,9 +159,9 @@ class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attr
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        super.onTouchEvent(event)
         val x = event.x
         val y = event.y
-
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 mStartX = x
@@ -172,8 +172,8 @@ class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attr
             MotionEvent.ACTION_MOVE -> actionMove(x, y)
             MotionEvent.ACTION_UP -> actionUp()
         }
-
         invalidate()
         return true
     }
+
 }
