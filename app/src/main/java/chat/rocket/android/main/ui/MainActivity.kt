@@ -5,6 +5,7 @@ import android.app.Activity
 import androidx.appcompat.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -91,6 +92,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             isFragmentAdded = true
         }
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

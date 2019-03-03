@@ -57,7 +57,7 @@
     <string name="action_reset_avatar">تغيير الشخصية</string>
     <string name="action_connect_server">اتصال بالخادم</string>
     <string name="action_join_community">الانضمام للمجموعة</string>
-    <string name="action_create_server">إنشاؤ خادم جديد</string>
+    <string name="action_create_server">إنشاء خادم جديد</string>
     <string name="action_register">تسجيل</string>
     <string name="action_confirm">تأكيد</string>
     <string name="action_delete_account">حذف حساب</string>
@@ -319,7 +319,7 @@
     <string name="msg_sort">ترتيب</string>
     <string name="dialog_sort_title">ترتيب حسب</string>
     <string name="dialog_sort_by_alphabet">أبجدي</string>
-    <string name="dialog_sort_by_activity">النشاظ</string>
+    <string name="dialog_sort_by_activity">النشاط</string>
     <string name="dialog_group_by_type">تجميع حسب النوع</string>
     <string name="dialog_group_favourites">تجميع المفصلات</string>
     <string name="chatroom_header">العناوين</string>

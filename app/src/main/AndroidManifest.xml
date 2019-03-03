@@ -53,11 +53,9 @@
             android:name=".server.ui.ChangeServerActivity"
             android:theme="@style/AppTheme" />
 
-        <!--solve issue no #2049, main activity orintation-->
         <activity
             android:name=".main.ui.MainActivity"
             android:theme="@style/AppTheme"
-            android:configChanges="orientation"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity

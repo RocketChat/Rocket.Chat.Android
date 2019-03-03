@@ -2,18 +2,13 @@ package chat.rocket.android.profile.ui
 
 import DrawableHelper
 import android.app.Activity
-import androidx.appcompat.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.view.MenuInflater
+import android.view.*
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.net.toUri
@@ -56,6 +51,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private var currentUsername = ""
     private var currentEmail = ""
     private var actionMode: ActionMode? = null
+    private var canShowProfile = true
     private val editTextsDisposable = CompositeDisposable()
 
     companion object {
@@ -66,12 +62,13 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = container?.inflate(R.layout.fragment_profile)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -82,10 +79,22 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             tintEditTextDrawableStart()
         }
+
         presenter.loadUserProfile()
         subscribeEditTexts()
 
+
         analyticsManager.logScreenView(ScreenViewEvent.Profile)
+
+        if (savedInstanceState != null) {
+            currentName = savedInstanceState.getString("text_name")
+            currentUsername = savedInstanceState.getString("text_username")
+            currentEmail = savedInstanceState.getString("text_email")
+            canShowProfile = false
+            activity?.invalidateOptionsMenu()
+            startActionMode()
+        }
+
     }
 
     override fun onDestroyView() {
@@ -122,18 +131,28 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         return true
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("text_name", text_name.textContent)
+        outState.putString("text_username", text_username.textContent)
+        outState.putString("text_email", text_email.textContent)
+    }
+
     override fun showProfile(avatarUrl: String, name: String, username: String, email: String?) {
         ui {
             image_avatar.setImageURI(avatarUrl)
-            text_name.textContent = name
-            text_username.textContent = username
-            text_email.textContent = email ?: ""
+            if (canShowProfile) {
+                text_name.textContent = name
+                text_username.textContent = username
+                text_email.textContent = email ?: ""
 
-            currentName = name
-            currentUsername = username
-            currentEmail = email ?: ""
+                currentName = name
+                currentUsername = username
+                currentEmail = email ?: ""
 
+            }
             profile_container.isVisible = true
+
         }
     }
 
@@ -185,9 +204,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         return when (menuItem.itemId) {
             R.id.action_update_profile -> {
                 presenter.updateUserProfile(
-                    text_email.textContent,
-                    text_name.textContent,
-                    text_username.textContent
+                        text_email.textContent,
+                        text_name.textContent,
+                        text_username.textContent
                 )
                 mode.finish()
                 true
@@ -241,25 +260,25 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private fun tintEditTextDrawableStart() {
         (activity as MainActivity).apply {
             val personDrawable =
-                DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_20dp, this)
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_20dp, this)
             val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_20dp, this)
             val emailDrawable =
-                DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_20dp, this)
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_20dp, this)
 
             val drawables = arrayOf(personDrawable, atDrawable, emailDrawable)
             DrawableHelper.wrapDrawables(drawables)
             DrawableHelper.tintDrawables(drawables, this, R.color.colorDrawableTintGrey)
             DrawableHelper.compoundDrawables(
-                arrayOf(text_name, text_username, text_email), drawables
+                    arrayOf(text_name, text_username, text_email), drawables
             )
         }
     }
 
     private fun subscribeEditTexts() {
         editTextsDisposable.add(Observables.combineLatest(
-            text_name.asObservable(),
-            text_username.asObservable(),
-            text_email.asObservable()
+                text_name.asObservable(),
+                text_username.asObservable(),
+                text_email.asObservable()
         ) { text_name, text_username, text_email ->
             return@combineLatest (text_name.toString() != currentName ||
                     text_username.toString() != currentUsername ||
@@ -299,13 +318,13 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         context?.let {
             val builder = AlertDialog.Builder(it)
             builder.setTitle(R.string.title_are_you_sure)
-                .setView(passwordEditText)
-                .setPositiveButton(R.string.action_delete_account) { _, _ ->
-                    presenter.deleteAccount(passwordEditText.text.toString())
-                }
-                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
-                .create()
-                .show()
+                    .setView(passwordEditText)
+                    .setPositiveButton(R.string.action_delete_account) { _, _ ->
+                        presenter.deleteAccount(passwordEditText.text.toString())
+                    }
+                    .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
+                    .create()
+                    .show()
         }
     }
 }
