@@ -106,7 +106,7 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
         }
     }
 
-    private fun toggleDrawTools(view: View, showView: Boolean = true, all_show: Boolean = true) {
+    private fun toggleDrawTools(view: View, showView: Boolean = true) {
         if (showView) {
             view.animate().translationY((0).toPx)
         } else {
