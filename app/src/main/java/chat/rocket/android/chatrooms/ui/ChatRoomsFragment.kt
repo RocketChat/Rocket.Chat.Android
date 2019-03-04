@@ -138,17 +138,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             widechat_welcome_to_app.isVisible = false
             widechat_text_no_data_to_display.isVisible = false
             (activity as AppCompatActivity?)?.supportActionBar?.setDisplayShowTitleEnabled(false)
-            searchView?.clearFocus()
-            searchView?.setQuery("", false)
-            viewModel.showLastMessage = true
+            clearSearch()
         }
         setCurrentUserStatusIcon()
         super.onResume()
     }
 
     override fun onPause() {
-        searchView?.clearFocus()
-        searchView?.setQuery("", false)
+        clearSearch()
         super.onPause()
     }
 
@@ -329,7 +326,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         if (Constants.WIDECHAT) {
             when (item.itemId) {
                 R.id.action_settings -> {
-                    searchView?.clearFocus()
+                    clearSearch()
                     val newFragment = SettingsFragment()
                     val fragmentManager = fragmentManager
                     val fragmentTransaction = fragmentManager!!.beginTransaction()
@@ -393,13 +390,17 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
 
         searchCloseButton?.setOnClickListener { v ->
-            searchView?.clearFocus()
-            searchView?.setQuery("", false)
-            searchCloseButton?.setImageResource(0)
-            viewModel.showLastMessage = true
+            clearSearch()
         }
 
         searchView?.onQueryTextListener { queryChatRoomsByName(it) }
+    }
+
+    private fun clearSearch() {
+        searchView?.clearFocus()
+        searchView?.setQuery("", false)
+        searchCloseButton?.setImageResource(0)
+        viewModel.showLastMessage = true
     }
 
     private fun showNoChatRoomsToDisplay(show: Boolean) {
@@ -491,6 +492,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
                 searchView = this?.getCustomView()?.findViewById(R.id.action_widechat_search)
                 setupWidechatSearchView()
+                clearSearch()
 
                 val serverUrl = serverInteractor.get()
                 val user = userHelper.user()
