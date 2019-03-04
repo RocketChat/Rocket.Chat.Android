@@ -41,13 +41,13 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
 
     override fun showWrongProcessingMessage() {
         Toast.makeText(this, getText(R.string.msg_wrong_processing_draw_image), Toast.LENGTH_SHORT)
-                .show()
+            .show()
     }
 
     private fun setupListeners() {
-        custom_draw_view.setOnClickListener { toggleCompleteDrawTools(draw_tools, false)}
+        custom_draw_view.setOnClickListener { toggleCompleteDrawTools(draw_tools, false) }
 
-        image_show_drawing_tool.setOnClickListener {toggleCompleteDrawTools(draw_tools)}
+        image_show_drawing_tool.setOnClickListener { toggleCompleteDrawTools(draw_tools) }
 
         image_close_drawing.setOnClickListener { finish() }
 
@@ -107,71 +107,73 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
     }
 
     private fun toggleDrawTools(view: View, showView: Boolean = true, all_show: Boolean = true) {
-        if (showView)
+        if (showView) {
             view.animate().translationY((0).toPx)
-         else
+        } else {
             view.animate().translationY((56).toPx)
+        }
     }
 
-    private fun toggleCompleteDrawTools(view: View,showView: Boolean = true) {
-        if (view.translationY == (112).toPx && showView)
-            toggleDrawTools(draw_tools,false)
-        else
+    private fun toggleCompleteDrawTools(view: View, showView: Boolean = true) {
+        if (view.translationY == (112).toPx && showView) {
+            toggleDrawTools(draw_tools, false)
+        } else {
             view.animate().translationY((112).toPx)
+        }
     }
 
 
     private fun colorSelector() {
         image_color_red.setOnClickListener {
             custom_draw_view.setColor(
-                    ResourcesCompat.getColor(resources, R.color.color_red, null)
+                ResourcesCompat.getColor(resources, R.color.color_red, null)
             )
             scaleColorView(image_color_red)
         }
 
         image_color_yellow.setOnClickListener {
             custom_draw_view.setColor(
-                    ResourcesCompat.getColor(
-                            resources,
-                            R.color.color_yellow, null
-                    )
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.color_yellow, null
+                )
             )
             scaleColorView(image_color_yellow)
         }
 
         image_color_green.setOnClickListener {
             custom_draw_view.setColor(
-                    ResourcesCompat.getColor(
-                            resources,
-                            R.color.color_green, null
-                    )
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.color_green, null
+                )
             )
             scaleColorView(image_color_green)
         }
 
         image_color_blue.setOnClickListener {
             custom_draw_view.setColor(
-                    ResourcesCompat.getColor(resources, R.color.color_blue, null)
+                ResourcesCompat.getColor(resources, R.color.color_blue, null)
             )
             scaleColorView(image_color_blue)
         }
 
         image_color_pink.setOnClickListener {
             custom_draw_view.setColor(
-                    ResourcesCompat.getColor(
-                            resources,
-                            R.color.color_pink, null
-                    )
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.color_pink, null
+                )
             )
             scaleColorView(image_color_pink)
         }
 
         image_color_brown.setOnClickListener {
             custom_draw_view.setColor(
-                    ResourcesCompat.getColor(
-                            resources,
-                            R.color.color_brown, null
-                    )
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.color_brown, null
+                )
             )
             scaleColorView(image_color_brown)
         }
