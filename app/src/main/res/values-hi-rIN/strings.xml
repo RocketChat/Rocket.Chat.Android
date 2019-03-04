@@ -47,6 +47,7 @@
     <string name="action_online">ऑनलाइन</string>
     <string name="action_away">दूर</string>
     <string name="action_busy">व्यस्त</string>
+    <string name="action_view_profile_photo">View Profile photo</string><!-- TODO Add translation -->
     <string name="action_invisible">अदृश्य</string>
     <string name="action_save_to_gallery">गैलरी में सहेजें</string>
     <string name="action_drawing">चित्रकारी</string>

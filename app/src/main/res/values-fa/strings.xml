@@ -49,6 +49,7 @@
     <string name="action_busy">مشغول</string>
     <string name="action_invisible">نامرئی</string>
     <string name="action_drawing">کشیدن</string>
+    <string name="action_view_profile_photo">View Profile photo</string><!-- TODO Add translation -->
     <string name="action_save_to_gallery">ذخیره در آلبوم</string>
     <string name="action_select_photo_from_gallery">انتخاب عکس از آلبوم</string>
     <string name="action_take_a_photo">گرفتن عکس</string>
