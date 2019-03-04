@@ -12,6 +12,7 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
+import chat.rocket.android.profile.ui.ImageDialogFragment
 import chat.rocket.android.userdetails.presentation.UserDetailsPresenter
 import chat.rocket.android.userdetails.presentation.UserDetailsView
 import chat.rocket.android.util.extensions.inflate
@@ -74,6 +75,15 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         presenter.loadUserDetails(userId)
 
         analyticsManager.logScreenView(ScreenViewEvent.UserDetails)
+
+        image_avatar_detail_fragment.setOnClickListener {
+            val avatarUrl = presenter.getImageUri()
+            chat.rocket.android.profile.ui.newInstance(avatarUrl)
+            fragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_container, ImageDialogFragment())
+                ?.addToBackStack(null)
+                ?.commit()
+        }
     }
 
     override fun onDestroyView() {
@@ -95,7 +105,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         ).into(image_blur)
 
         requestBuilder.apply(RequestOptions.bitmapTransform(RoundedCorners(14)))
-            .into(image_avatar)
+            .into(image_avatar_detail_fragment)
 
         text_name.text = name
         text_username.text = username

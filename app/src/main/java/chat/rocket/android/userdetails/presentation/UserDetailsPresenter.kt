@@ -71,6 +71,10 @@ class UserDetailsPresenter @Inject constructor(
         }
     }
 
+    fun getImageUri(): String {
+        return userEntity.username?.let { currentServer.avatarUrl(avatar = it) }!!
+    }
+
     fun createDirectMessage(username: String) {
         launchUI(strategy) {
             try {

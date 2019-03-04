@@ -226,6 +226,16 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             hideUpdateAvatarOptions()
             presenter.resetAvatar()
         }
+
+        button_view_profile_image.setOnClickListener {
+            hideUpdateAvatarOptions()
+            val avatarUrl = presenter.getImageUri()
+            chat.rocket.android.profile.ui.newInstance(avatarUrl)
+            fragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_container, ImageDialogFragment())
+                ?.addToBackStack(null)
+                ?.commit()
+        }
     }
 
     private fun showUpdateAvatarOptions() {

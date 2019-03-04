@@ -176,6 +176,10 @@ class ProfilePresenter @Inject constructor(
         }
     }
 
+    fun getImageUri(): String {
+        return serverUrl.avatarUrl(user?.username ?: "")
+    }
+
     fun deleteAccount(password: String) {
         launchUI(strategy) {
             view.showLoading()
