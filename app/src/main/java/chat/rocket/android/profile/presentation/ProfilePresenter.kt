@@ -34,6 +34,13 @@ import javax.inject.Inject
 
 // WIDECHAT
 import chat.rocket.core.internal.rest.getAccessToken
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.RefreshSettingsInteractor
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.MediaType
+import okhttp3.Protocol
 
 class ProfilePresenter @Inject constructor(
     private val view: ProfileView,
@@ -42,6 +49,8 @@ class ProfilePresenter @Inject constructor(
     val userHelper: UserHelper,
     navigator: MainNavigator,
     serverInteractor: GetCurrentServerInteractor,
+    refreshSettingsInteractor: RefreshSettingsInteractor,
+    settingsInteractor: GetSettingsInteractor,
     factory: RocketChatClientFactory,
     removeAccountInteractor: RemoveAccountInteractor,
     tokenRepository: TokenRepository,
@@ -51,6 +60,8 @@ class ProfilePresenter @Inject constructor(
     strategy = strategy,
     factory = factory,
     serverInteractor = serverInteractor,
+    settingsInteractor = settingsInteractor,
+    refreshSettingsInteractor = refreshSettingsInteractor,
     removeAccountInteractor = removeAccountInteractor,
     tokenRepository = tokenRepository,
     dbManagerFactory = dbManagerFactory,
@@ -63,7 +74,8 @@ class ProfilePresenter @Inject constructor(
     private val user = userHelper.user()
 
     // WIDECHAT
-    var currentAccessToken: String? = null
+    private var currentAccessToken: String? = null
+    private val ssoApiClient = OkHttpClient().newBuilder().protocols(Arrays.asList(Protocol.HTTP_1_1))
 
     fun loadUserProfile() {
         launchUI(strategy) {
@@ -90,10 +102,10 @@ class ProfilePresenter @Inject constructor(
                 withContext(DefaultDispatcher) {
                     setupConnectionInfo(serverUrl)
                     refreshServerAccounts()
-                    checkForCustomOauthAccount(serverUrl)
+                    checkEnabledAccounts(serverUrl)
                 }
-                retryIO { currentAccessToken = client.getAccessToken(customOauthServiceName.toString())}
-                onClickCallback("${widechatCustomOauthHost}${updatePath}${currentAccessToken}")
+                retryIO { currentAccessToken = client.getAccessToken(customOauthServiceName.toString()) }
+                onClickCallback("${customOauthHost}${updatePath}${currentAccessToken}")
             } catch (ex: Exception) {
                 view.showMessage(ex)
             }
@@ -220,5 +232,46 @@ class ProfilePresenter @Inject constructor(
                 view.hideLoading()
             }
         }
+    }
+
+    // WIDECHAT
+    fun deleteAccount(username: String, ssoDeleteCallback: () -> Unit?) {
+        launchUI(strategy) {
+            view.showLoading()
+            try {
+                withContext(DefaultDispatcher) {
+                    retryIO { client.deleteOwnAccount(username) }
+                    ssoDeleteCallback()
+                    setupConnectionInfo(serverUrl)
+                    logout(null)
+                }
+            } catch (exception: Exception) {
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideLoading()
+            }
+        }
+    }
+
+    // TODO: Is it neccessary to move this into the Kotlin SDK?
+    fun widechatDeleteSsoAccount(ssoProfileDeletePath: String?) {
+        val MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8")
+        val json = """{"profilemap":{"username":"userid"}}""".trimIndent()
+
+        var request: Request = Request.Builder()
+                .url("${customOauthHost}${ssoProfileDeletePath}")
+                .delete(RequestBody.create(MEDIA_TYPE_JSON, json))
+                .addHeader("Authorization", "Bearer ${currentAccessToken}")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("cache-control", "no-cache")
+                .build()
+
+        // TODO: Implement validation check? What action upon failure?
+        val response = ssoApiClient.build().newCall(request).execute()
+
     }
 }
