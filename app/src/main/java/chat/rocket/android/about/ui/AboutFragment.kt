@@ -13,6 +13,7 @@ import chat.rocket.android.main.ui.MainActivity
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_about.*
+import kotlinx.android.synthetic.main.layout_toolbar.view.*
 import javax.inject.Inject
 
 internal const val TAG_ABOUT_FRAGMENT = "AboutFragment"
@@ -24,21 +25,35 @@ class AboutFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+
+
+
     }
 
+    override fun onResume() {
+        super.onResume()
+        setupToolbar()
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_about, container, false)
+    ):View? = inflater.inflate(R.layout.fragment_about, container, false)
+
+
+
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupToolbar()
         setupViews()
 
         analyticsManager.logScreenView(ScreenViewEvent.About)
     }
+
 
     private fun setupViews() {
         text_version_name.text = BuildConfig.VERSION_NAME
@@ -50,7 +65,7 @@ class AboutFragment : Fragment() {
 
     private fun setupToolbar() {
         with((activity as MainActivity).toolbar) {
-            title = getString(R.string.title_about)
+            setTitle(R.string.title_about)
             setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
             setNavigationOnClickListener { activity?.onBackPressed() }
         }
@@ -60,3 +75,4 @@ class AboutFragment : Fragment() {
         fun newInstance() = AboutFragment()
     }
 }
+
