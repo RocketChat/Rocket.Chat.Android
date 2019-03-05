@@ -25,6 +25,10 @@ class AboutFragment : Fragment() {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
     }
+    override fun onResume() {
+        super.onResume()
+        setupToolbar()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
