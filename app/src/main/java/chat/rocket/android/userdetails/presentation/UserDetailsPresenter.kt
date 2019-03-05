@@ -47,33 +47,14 @@ class UserDetailsPresenter @Inject constructor(
                     val name = userEntity.name
                     val utcOffset =
                         userEntity.utcOffset
-                    val gmtTime = System.currentTimeMillis() // 2.32pm NZDT
-                    var timezoneAlteredTime: Long
-                    if (utcOffset != null) {
-                        val multiplier = utcOffset.times(60 * (60 * 1000))
-                        timezoneAlteredTime = gmtTime.plus(multiplier.toLong())
-                    } else {
-                        timezoneAlteredTime = gmtTime
-                    }
-                    val calendar = GregorianCalendar()
-                    calendar.timeInMillis = timezoneAlteredTime
-                    val formatter = SimpleDateFormat("hh:mm a")
-                    formatter.calendar = calendar
-                    formatter.timeZone = TimeZone.getTimeZone("UTC")
-                    var usertime = formatter.format(calendar.getTime())
-                    val utc = if (utcOffset !=null && utcOffset > 0) {
-                        " (UTC +"
-                    } else {
-                       " (UTC "
-                    }
-                    usertime = usertime.plus("$utc$utcOffset)")
+                    val usertime = utcToTime(utcOffset = utcOffset);// usertime.plus("$utc$utcOffset)")
                     if (avatarUrl != null && username != null && name != null ) {
                         view.showUserDetails(
                             avatarUrl = avatarUrl,
                             name = name,
                             username = username,
                             status = userEntity.status,
-                            utcOffset = usertime.toString()
+                            utcOffset = usertime
                         )
                     } else {
                         throw Exception()
@@ -138,5 +119,29 @@ class UserDetailsPresenter @Inject constructor(
                 view.hideLoading()
             }
         }
+    }
+
+    fun utcToTime(utcOffset:Float?): String {
+        val gmtTime = System.currentTimeMillis() // 2.32pm NZDT
+        var timezoneAlteredTime: Long
+        if (utcOffset != null) {
+            val multiplier = utcOffset.times(60 * (60 * 1000))
+            timezoneAlteredTime = gmtTime.plus(multiplier.toLong())
+        } else {
+            timezoneAlteredTime = gmtTime
+        }
+        val calendar = GregorianCalendar()
+        calendar.timeInMillis = timezoneAlteredTime
+        val formatter = SimpleDateFormat("hh:mm a")
+        formatter.calendar = calendar
+        formatter.timeZone = TimeZone.getTimeZone("UTC")
+        var usertime = formatter.format(calendar.getTime())
+        val utc = if (utcOffset !=null && utcOffset > 0) {
+            " (UTC +"
+        } else {
+            " (UTC "
+        }
+        usertime = usertime.plus("$utc$utcOffset)")
+        return usertime
     }
 }
