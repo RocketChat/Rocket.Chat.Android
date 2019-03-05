@@ -245,6 +245,9 @@
     <style name="Message.Quote.TextView" parent="Message.TextView">
         <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
+    <!-- Splash Theme-->
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    </style>
 
     // REMARK: To be removed.
     <style name="Profile.EditText" parent="Authentication.EditText.Border">
