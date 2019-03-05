@@ -157,34 +157,33 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        val bundle = arguments
-        if (bundle != null) {
-            serverName = bundle.getString(SERVER_NAME)
-            state = bundle.getString(STATE)
-            facebookOauthUrl = bundle.getString(FACEBOOK_OAUTH_URL)
-            githubOauthUrl = bundle.getString(GITHUB_OAUTH_URL)
-            googleOauthUrl = bundle.getString(GOOGLE_OAUTH_URL)
-            linkedinOauthUrl = bundle.getString(LINKEDIN_OAUTH_URL)
-            gitlabOauthUrl = bundle.getString(GITLAB_OAUTH_URL)
-            wordpressOauthUrl = bundle.getString(WORDPRESS_OAUTH_URL)
-            casLoginUrl = bundle.getString(CAS_LOGIN_URL)
-            casToken = bundle.getString(CAS_TOKEN)
-            casServiceName = bundle.getString(CAS_SERVICE_NAME)
-            casServiceNameTextColor = bundle.getInt(CAS_SERVICE_NAME_TEXT_COLOR)
-            casServiceButtonColor = bundle.getInt(CAS_SERVICE_BUTTON_COLOR)
-            customOauthUrl = bundle.getString(CUSTOM_OAUTH_URL)
-            customOauthServiceName = bundle.getString(CUSTOM_OAUTH_SERVICE_NAME)
-            customOauthServiceTextColor = bundle.getInt(CUSTOM_OAUTH_SERVICE_NAME_TEXT_COLOR)
-            customOauthServiceButtonColor = bundle.getInt(CUSTOM_OAUTH_SERVICE_BUTTON_COLOR)
-            samlUrl = bundle.getString(SAML_URL)
-            samlToken = bundle.getString(SAML_TOKEN)
-            samlServiceName = bundle.getString(SAML_SERVICE_NAME)
-            samlServiceTextColor = bundle.getInt(SAML_SERVICE_NAME_TEXT_COLOR)
-            samlServiceButtonColor = bundle.getInt(SAML_SERVICE_BUTTON_COLOR)
-            totalSocialAccountsEnabled = bundle.getInt(TOTAL_SOCIAL_ACCOUNTS)
-            isLoginFormEnabled = bundle.getBoolean(IS_LOGIN_FORM_ENABLED)
-            isNewAccountCreationEnabled = bundle.getBoolean(IS_NEW_ACCOUNT_CREATION_ENABLED)
-            deepLinkInfo = bundle.getParcelable(DEEP_LINK_INFO)
+        arguments?.run {
+            serverName = getString(SERVER_NAME)
+            state = getString(STATE)
+            facebookOauthUrl = getString(FACEBOOK_OAUTH_URL)
+            githubOauthUrl = getString(GITHUB_OAUTH_URL)
+            googleOauthUrl = getString(GOOGLE_OAUTH_URL)
+            linkedinOauthUrl = getString(LINKEDIN_OAUTH_URL)
+            gitlabOauthUrl = getString(GITLAB_OAUTH_URL)
+            wordpressOauthUrl = getString(WORDPRESS_OAUTH_URL)
+            casLoginUrl = getString(CAS_LOGIN_URL)
+            casToken = getString(CAS_TOKEN)
+            casServiceName = getString(CAS_SERVICE_NAME)
+            casServiceNameTextColor = getInt(CAS_SERVICE_NAME_TEXT_COLOR)
+            casServiceButtonColor = getInt(CAS_SERVICE_BUTTON_COLOR)
+            customOauthUrl = getString(CUSTOM_OAUTH_URL)
+            customOauthServiceName = getString(CUSTOM_OAUTH_SERVICE_NAME)
+            customOauthServiceTextColor = getInt(CUSTOM_OAUTH_SERVICE_NAME_TEXT_COLOR)
+            customOauthServiceButtonColor = getInt(CUSTOM_OAUTH_SERVICE_BUTTON_COLOR)
+            samlUrl = getString(SAML_URL)
+            samlToken = getString(SAML_TOKEN)
+            samlServiceName = getString(SAML_SERVICE_NAME)
+            samlServiceTextColor = getInt(SAML_SERVICE_NAME_TEXT_COLOR)
+            samlServiceButtonColor = getInt(SAML_SERVICE_BUTTON_COLOR)
+            totalSocialAccountsEnabled = getInt(TOTAL_SOCIAL_ACCOUNTS)
+            isLoginFormEnabled = getBoolean(IS_LOGIN_FORM_ENABLED)
+            isNewAccountCreationEnabled = getBoolean(IS_NEW_ACCOUNT_CREATION_ENABLED)
+            deepLinkInfo = getParcelable(DEEP_LINK_INFO)
         }
     }
 
@@ -388,7 +387,7 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     }
 
     override fun setupExpandAccountsView() {
-        ui { _ ->
+        ui {
             expand_more_accounts_container.isVisible = true
             var isAccountsCollapsed = true
             button_expand_collapse_accounts.setOnClickListener {
@@ -406,14 +405,14 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     }
 
     override fun showLoginWithEmailButton() {
-        ui { _ ->
+        ui {
             button_login_with_email.setOnClickListener { presenter.toLoginWithEmail() }
             button_login_with_email.isVisible = true
         }
     }
 
     override fun showCreateNewAccountButton() {
-        ui { _ ->
+        ui {
             button_create_an_account.setOnClickListener { presenter.toCreateAccount() }
             button_create_an_account.isVisible = true
         }

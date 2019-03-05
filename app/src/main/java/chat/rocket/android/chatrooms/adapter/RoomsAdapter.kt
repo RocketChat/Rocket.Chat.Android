@@ -6,8 +6,7 @@ import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.util.extensions.inflate
 
-class RoomsAdapter(private val listener: (RoomUiModel) -> Unit) :
-    RecyclerView.Adapter<ViewHolder<*>>() {
+class RoomsAdapter(private val listener: (RoomUiModel) -> Unit) : RecyclerView.Adapter<ViewHolder<*>>() {
 
     init {
         setHasStableIds(true)

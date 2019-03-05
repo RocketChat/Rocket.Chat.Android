@@ -153,7 +153,7 @@ class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
                     null
                 }
 
-                val attachment = Attachment(
+                list.add(Attachment(
                         title = title,
                         type = type,
                         description = description,
@@ -179,10 +179,10 @@ class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
                         authorLink = authorLink,
                         fields = fields,
                         fallback = fallback,
-                        buttonAlignment = if (actions != null && actions.isNotEmpty()) buttonAlignment ?: "vertical" else null,
+                        buttonAlignment = if (actions != null && actions.isNotEmpty()) buttonAlignment
+                                ?: "vertical" else null,
                         actions = actions
-                )
-                list.add(attachment)
+                ))
             }
         }
         return list

@@ -8,20 +8,23 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
+import chat.rocket.android.util.extensions.setTextViewAppearance
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.UserStatus
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
-class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit) :
-    ViewHolder<RoomItemHolder>(itemView) {
+class RoomViewHolder(
+        itemView: View,
+        private val listener: (RoomUiModel) -> Unit
+) : ViewHolder<RoomItemHolder>(itemView) {
     private val resources: Resources = itemView.resources
-    private val channelIcon: Drawable = resources.getDrawable(R.drawable.ic_hashtag_12dp)
-    private val groupIcon: Drawable = resources.getDrawable(R.drawable.ic_lock_12_dp)
-    private val onlineIcon: Drawable = resources.getDrawable(R.drawable.ic_status_online_12dp)
-    private val awayIcon: Drawable = resources.getDrawable(R.drawable.ic_status_away_12dp)
-    private val busyIcon: Drawable = resources.getDrawable(R.drawable.ic_status_busy_12dp)
-    private val offlineIcon: Drawable = resources.getDrawable(R.drawable.ic_status_invisible_12dp)
+    private val channelIcon: Drawable = resources.getDrawable(R.drawable.ic_hashtag_12dp, null)
+    private val groupIcon: Drawable = resources.getDrawable(R.drawable.ic_lock_12_dp, null)
+    private val onlineIcon: Drawable = resources.getDrawable(R.drawable.ic_status_online_12dp, null)
+    private val awayIcon: Drawable = resources.getDrawable(R.drawable.ic_status_away_12dp, null)
+    private val busyIcon: Drawable = resources.getDrawable(R.drawable.ic_status_busy_12dp, null)
+    private val offlineIcon: Drawable = resources.getDrawable(R.drawable.ic_status_invisible_12dp, null)
 
     override fun bindViews(data: RoomItemHolder) {
         val room = data.data
@@ -53,14 +56,14 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
                 if (room.unread == null) text_total_unread_messages.text = "!"
                 if (room.unread != null) text_total_unread_messages.text = room.unread
                 if (room.mentions) text_total_unread_messages.text = "@${room.unread}"
-                text_chat_name.setTextAppearance(context, R.style.ChatList_ChatName_Unread_TextView)
-                text_timestamp.setTextAppearance(context, R.style.ChatList_Timestamp_Unread_TextView)
-                text_last_message.setTextAppearance(context, R.style.ChatList_LastMessage_Unread_TextView)
+                text_chat_name.setTextViewAppearance(context, R.style.ChatList_ChatName_Unread_TextView)
+                text_timestamp.setTextViewAppearance(context, R.style.ChatList_Timestamp_Unread_TextView)
+                text_last_message.setTextViewAppearance(context, R.style.ChatList_LastMessage_Unread_TextView)
                 text_total_unread_messages.isVisible = true
             } else {
-                text_chat_name.setTextAppearance(context, R.style.ChatList_ChatName_TextView)
-                text_timestamp.setTextAppearance(context, R.style.ChatList_Timestamp_TextView)
-                text_last_message.setTextAppearance(context, R.style.ChatList_LastMessage_TextView)
+                text_chat_name.setTextViewAppearance(context, R.style.ChatList_ChatName_TextView)
+                text_timestamp.setTextViewAppearance(context, R.style.ChatList_Timestamp_TextView)
+                text_last_message.setTextViewAppearance(context, R.style.ChatList_LastMessage_TextView)
                 text_total_unread_messages.isInvisible = true
             }
 

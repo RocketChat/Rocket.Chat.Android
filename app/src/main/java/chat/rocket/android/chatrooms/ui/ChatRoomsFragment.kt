@@ -82,9 +82,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
         setHasOptionsMenu(true)
-        val bundle = arguments
-        if (bundle != null) {
-            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
+        arguments?.run {
+            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID)
             chatRoomId.ifNotNullNotEmpty { roomId ->
                 presenter.loadChatRoom(roomId)
                 chatRoomId = null
@@ -132,10 +131,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             recycler_view.adapter = adapter
 
             viewModel.getChatRooms().observe(viewLifecycleOwner, Observer { rooms ->
-                rooms?.let {
-                    Timber.d("Got items: $it")
-                    adapter.values = it
-                    if (rooms.isNotEmpty()) {
+                rooms?.let { items ->
+                    Timber.d("Got items: $items")
+                    adapter.values = items
+                    if (items.isNotEmpty()) {
                         text_no_data_to_display.isVisible = false
                     }
                 }
