@@ -26,6 +26,13 @@
             android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -39,15 +46,6 @@
                     android:host="go.rocket.chat"
                     android:path="/auth"
                     android:scheme="https" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".splash.ui.SplashScreenActivity"
-            android:theme="@style/SplashTheme"
-            android:noHistory="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
