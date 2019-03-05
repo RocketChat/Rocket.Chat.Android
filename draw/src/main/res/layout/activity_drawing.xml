@@ -29,21 +29,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/image_show_drawing_tool"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@color/color_white"
-        android:foreground="?selectableItemBackgroundBorderless"
-        android:padding="16dp"
-        android:src="@drawable/ic_draw_tools_shwoing_24dp"
-        android:tint="@color/icon_color"
-        app:layout_constraintEnd_toStartOf="@+id/image_send_drawing"
-        app:layout_constraintStart_toEndOf="@+id/image_close_drawing"
-        app:layout_constraintTop_toTopOf="@+id/custom_draw_view" />
-
-    <ImageView
         android:id="@+id/image_send_drawing"
         android:layout_width="56dp"
         android:layout_height="56dp"
