@@ -15,8 +15,6 @@ fun View.openTabbedUrl(url: String?) {
         val tabsbuilder = CustomTabsIntent.Builder()
         tabsbuilder.setToolbarColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, context.theme))
         val customTabsIntent = tabsbuilder.build()
-        // WIDECHAT NOTE: - Use chrome if they have it.
-        customTabsIntent.intent.setPackage("com.android.chrome")
         try {
             customTabsIntent.launchUrl(context, uri)
         } catch (ex: Exception) {
