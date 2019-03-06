@@ -316,6 +316,7 @@ class ChatRoomPresenter @Inject constructor(
     fun sendMessage(chatRoomId: String, text: String, messageId: String?) {
         launchUI(strategy) {
             try {
+                view.disableSendMessageButton()
                 // ignore message for now, will receive it on the stream
                 if (messageId == null) {
                     val id = UUID.randomUUID().toString()
