@@ -312,7 +312,13 @@ class ContactsFragment : Fragment(), ContactsView {
                 }
             }
             launch(UI) {
-                val result = presenter.spotlight(query)?.let { mapper.map(it, showLastMessage = false) }.let{ mapSpotlightToContacts(it) }
+                var result: ArrayList<ItemHolder<*>>? = null
+                try {
+                    result = presenter.spotlight(query)?.let { mapper.map(it, showLastMessage = false) }.let { mapSpotlightToContacts(it) }
+                } catch (ex: Exception) {
+                    Timber.e(ex)
+
+                }
                 setupFrameLayout(filteredContactArrayList, result)
             }
         }
@@ -454,7 +460,7 @@ class ContactsFragment : Fragment(), ContactsView {
             finalList.add(ContactsHeaderItemHolder(getString(R.string.Invite_contacts)))
             finalList.addAll(contactsList)
         }
-        if(spotlightResult !==null) {
+        if(spotlightResult !==null && spotlightResult.size >0) {
             finalList.add(ContactsHeaderItemHolder(getString(R.string.Spotlight_Result)))
             spotlightResult.forEach { item ->
                 val username = (item.data as Contact).getUsername()
