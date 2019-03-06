@@ -16,6 +16,7 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <ImageView
+            android:id="@+id/vsat_logo"
             android:layout_width="wrap_content"
             android:contentDescription="Viasat logo"
             android:layout_height="wrap_content"
