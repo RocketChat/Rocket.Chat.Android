@@ -76,7 +76,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
         analyticsManager.logScreenView(ScreenViewEvent.UserDetails)
 
-        image_avatar_detail_fragment.setOnClickListener {
+        user_image_avatar.setOnClickListener {
             val avatarUrl = presenter.getImageUri()
             chat.rocket.android.profile.ui.newInstance(avatarUrl)
             fragmentManager?.beginTransaction()
@@ -105,7 +105,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         ).into(image_blur)
 
         requestBuilder.apply(RequestOptions.bitmapTransform(RoundedCorners(14)))
-            .into(image_avatar_detail_fragment)
+            .into(user_image_avatar)
 
         text_name.text = name
         text_username.text = username
