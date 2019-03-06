@@ -31,6 +31,8 @@ import kotlinx.android.synthetic.main.fragment_authentication_login_options.*
 import javax.inject.Inject
 
 // WIDECHAT
+import android.widget.ImageView
+import androidx.appcompat.content.res.AppCompatResources
 import chat.rocket.android.helper.Constants
 import kotlinx.android.synthetic.main.fragment_authentication_widechat_login_options.*
 
@@ -216,6 +218,10 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         with(activity as AuthenticationActivity) {
             toolbar.isVisible = true
             if ((Constants.WIDECHAT) && (!Constants.WIDECHAT_DEV)) {
+
+                var logo: ImageView = findViewById(R.id.vsat_logo)
+                logo.setImageDrawable(AppCompatResources.getDrawable(getContext()!!, R.drawable.ic_viasat_logo_tm_white))
+
                 toolbar.title = null
                 toolbar.navigationIcon = null
             } else {
