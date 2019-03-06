@@ -293,14 +293,19 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     fun showDeleteAccountDialog() {
-        context?.let {
-            val passwordEText = EditText(context);
-            val mDialogView = LayoutInflater.from(it).inflate(R.layout.item_delete_account, null)
-            val mBuilder = AlertDialog.Builder(it)
+        val passwordEditText = EditText(context)
+        passwordEditText.hint = getString(R.string.msg_password)
 
-            mBuilder.setView(mDialogView).setPositiveButton(R.string.action_delete_account) { _, _ ->
-                presenter.deleteAccount(passwordEText.text.toString())
-            }.setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }.create().show()
+        context?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.setTitle(R.string.title_are_you_sure)
+                .setView(passwordEditText)
+                .setPositiveButton(R.string.action_delete_account) { _, _ ->
+                    presenter.deleteAccount(passwordEditText.text.toString())
+                }
+                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
+                .create()
+                .show()
         }
     }
 }
