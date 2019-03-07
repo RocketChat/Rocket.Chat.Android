@@ -50,12 +50,15 @@ import kotlinx.android.synthetic.main.nav_header.view.*
 import javax.inject.Inject
 
 // WIDECHAT
-import chat.rocket.android.helper.Constants
-import timber.log.Timber
+import android.view.View
+import android.widget.Button
 import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.work.*
 import chat.rocket.android.contacts.models.ContactsLoadingState
+import chat.rocket.android.helper.Constants
+import chat.rocket.android.helper.SharedPreferenceHelper
+import timber.log.Timber
 
 private const val CURRENT_STATE = "current_state"
 
@@ -348,9 +351,18 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
 
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS),
-                    PERMISSIONS_REQUEST_RW_CONTACTS)
+            var request = {
+                ActivityCompat.requestPermissions(this,
+                        arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS),
+                        PERMISSIONS_REQUEST_RW_CONTACTS)
+            }
+            // Ask at initial installation only
+            if (!SharedPreferenceHelper.getBoolean(
+                            Constants.CONTACTS_ACCESS_PERMISSION_REQUESTED, false)) {
+                SharedPreferenceHelper.putBoolean(Constants.CONTACTS_ACCESS_PERMISSION_REQUESTED, true)
+                contactsPermissionAlertDialog(request)
+            }
+
         } else {
             // Permission has already been granted
             val contactsSyncWork = OneTimeWorkRequestBuilder<ContactsSyncWorker>().build()
@@ -372,7 +384,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
         when (requestCode) {
             PERMISSIONS_REQUEST_RW_CONTACTS -> {
                 // If request is cancelled, the result arrays are empty.
@@ -385,5 +398,26 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                 // Ignore
             }
         }
+    }
+
+    fun contactsPermissionAlertDialog(callback: () -> Unit?) {
+        val view = layoutInflater.inflate(R.layout.widechat_contact_permissions_dialog, null)
+        val positiveButton = view.findViewById(R.id.positive_button) as Button
+        val negativeButton = view.findViewById(R.id.negative_button) as Button
+
+        val dialog = AlertDialog.Builder(this)
+                .setView(view)
+                .setPositiveButton(null,null)
+                .setNegativeButton(null,null)
+                .create()
+
+        positiveButton.setOnClickListener(View.OnClickListener {
+            callback()
+            dialog.dismiss()
+        })
+        negativeButton.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+        })
+        dialog.show()
     }
 }

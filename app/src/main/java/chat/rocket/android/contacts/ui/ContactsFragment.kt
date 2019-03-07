@@ -134,7 +134,10 @@ class ContactsFragment : Fragment(), ContactsView {
         super.onViewCreated(view, savedInstanceState)
         this.recyclerView = view.findViewById(R.id.recycler_view)
         this.emptyTextView = view.findViewById(R.id.text_no_contacts_to_display)
-        getContactsPermissions()
+
+        if (hasContactsPermissions()) {
+            getContactListWhenSynced()
+        }
         setupToolbar()
     }
 
@@ -312,23 +315,27 @@ class ContactsFragment : Fragment(), ContactsView {
         }
     }
 
-    private fun getContactsPermissions() {
-        if (
-                ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED
-        ) {
-            launch {
-                getContactListWhenSynced()
-            }
-        } else {
-            requestPermissions(
-                    arrayOf(
-                            Manifest.permission.READ_CONTACTS,
-                            Manifest.permission.WRITE_CONTACTS
-                    ),
-                    MY_PERMISSIONS_REQUEST_RW_CONTACTS
-            )
-        }
+    private fun hasContactsPermissions() : Boolean {
+        return (ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED)
+
+
+//        if (
+//                ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
+//                && ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED
+//        ) {
+//            launch {
+//                getContactListWhenSynced()
+//            }
+//        } else {
+//            requestPermissions(
+//                    arrayOf(
+//                            Manifest.permission.READ_CONTACTS,
+//                            Manifest.permission.WRITE_CONTACTS
+//                    ),
+//                    MY_PERMISSIONS_REQUEST_RW_CONTACTS
+//            )
+//        }
     }
 
     private fun getContactListWhenSynced() {

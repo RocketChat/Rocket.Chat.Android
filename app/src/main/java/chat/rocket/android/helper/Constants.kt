@@ -18,6 +18,8 @@ object Constants {
 
     const val AVATAR_SHAPE_CIRCLE = true
     const val DEEP_LINK_INFO = "deep_link_info"
+
+    const val CONTACTS_ACCESS_PERMISSION_REQUESTED = "contacts_access_permission_requested"
 }
 
 object ChatRoomsSortOrder {
