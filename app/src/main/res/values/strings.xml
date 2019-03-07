@@ -329,6 +329,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="Invite">Invite</string>
     <string name="Invited">Invited</string>
     <string name="Invite_contacts">INVITE CONTACTS</string>
+    <string name="Spotlight_Result">OTHER USERS</string>
     <string name="Invite_with_other_app">Invite friend via another app</string>
     <string name="Unarchive">Unarchive</string>
     <string name="Join_the_given_channel">Join the given channel</string>
