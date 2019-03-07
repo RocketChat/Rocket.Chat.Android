@@ -22,7 +22,7 @@
         android:paddingTop="12dp"
         android:textColor="@color/colorBlack"
         android:textSize="18sp"
-        android:text="To easily connect with friends and family, allow Viasat Connect access to your contacts." />
+        android:text="@string/permissions_request" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:text="NOT NOW"
+            android:text="@string/negative_buttton"
             android:textColor="@color/widechatGreenGradientLight"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:text="CONTINUE"
+            android:text="@string/positive_button"
             android:textColor="@color/widechatGreenGradientLight"
             android:textSize="16sp"
             android:textStyle="bold"

@@ -82,8 +82,6 @@ class ContactsFragment : Fragment(), ContactsView {
      */
     private var contactArrayList: ArrayList<Contact> = ArrayList()
 
-//    private val MY_PERMISSIONS_REQUEST_RW_CONTACTS = 0
-
     private var searchView: SearchView? = null
     private var searchIcon: ImageView? = null
     private var searchText: TextView? = null
@@ -320,7 +318,6 @@ class ContactsFragment : Fragment(), ContactsView {
                 }
             }
             launch(UI) {
-//                var result: ArrayList<ItemHolder<*>>? = null
                 try {
                     result = presenter.spotlight(query)?.let { mapper.map(it, showLastMessage = false) }.let { mapSpotlightToContacts(it) }
                 } catch (ex: Exception) {
@@ -341,7 +338,7 @@ class ContactsFragment : Fragment(), ContactsView {
                 && ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED)
     }
 
-    private fun getContactListWhenSynced() {
+    fun getContactListWhenSynced() {
         // Show loading while sync in progress
         recyclerView!!.visibility = View.GONE
         emptyTextView!!.visibility = View.GONE
@@ -400,7 +397,9 @@ class ContactsFragment : Fragment(), ContactsView {
 
             recyclerView!!.setHasFixedSize(true)
             recyclerView!!.layoutManager = LinearLayoutManager(context)
-            recyclerView!!.adapter = ContactsRecyclerViewAdapter(this.activity as MainActivity, presenter, map(filteredContactArrayList, spotlightResult))
+            recyclerView!!.adapter = ContactsRecyclerViewAdapter(this.activity as MainActivity,
+                                                                 presenter, map(filteredContactArrayList,
+                                                                 spotlightResult))
         }
     }
 

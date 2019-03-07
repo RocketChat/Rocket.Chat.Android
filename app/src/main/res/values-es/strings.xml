@@ -363,6 +363,12 @@
     <string name="msg_widechat_no_chats_to_display">Busca personas para chatear que ya tienen el app de Viasat Connect o invita tus amigos y familiares a descargarlo..</string>
     <string name="msg_widechat_welcome_to_app">Bienvenido a Viasat Connect.</string>
 
+    <!--Contacts Permissions-->
+    <string name="permissions_request">Para conectarse fácilmente con amigos y familiares, permita que Viasat Connect acceda a sus contactos.</string>
+    <string name="negative_buttton">AHORA NO</string>
+    <string name="positive_button">CONTINUAR</string>
+    <string name="permissions_item">¿Desea permitir que Viasat Connect acceda a sus contactos?</string>
+
     <!-- Report -->
     <string name="submit">Submit</string> <!--TODO - Add proper translation-->
     <string name="required">*required</string> <!--TODO - Add proper translation-->
