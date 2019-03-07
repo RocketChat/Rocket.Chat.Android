@@ -82,7 +82,7 @@ class ProfilePresenter @Inject constructor(
             view.showLoading()
             try {
                 user?.id?.let { id ->
-                    retryIO { client.updateProfile(id, email, name, username) }
+                    retryIO { client.updateProfile(userId = id, email = email, name = name, username = username) }
                     view.showProfileUpdateSuccessfullyMessage()
                     view.showProfile(
                         serverUrl.avatarUrl(user.username ?: ""),
