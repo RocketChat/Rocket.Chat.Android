@@ -43,6 +43,12 @@ class ContactsViewHolder(itemView: View) : ViewHolder<ContactsItemHolder>(itemVi
                 chat_username.text = "@${contact.getUsername()}"
                 contact_status.isVisible = true
             }
+
+            if(contact.getIsSpotlightResult()) {
+                chat_username.isVisible = false
+                chat_username.text = ""
+                invite_contact.isVisible = false
+            }
         }
     }
 
