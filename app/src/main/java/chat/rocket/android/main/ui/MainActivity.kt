@@ -345,7 +345,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         progressDialog = null
     }
 
-    fun syncContacts(fromRefreshButton: Boolean) {
+    fun syncContacts(fromRefreshButton: Boolean, userRequestsPermissions: Boolean = false) {
         if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -356,9 +356,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                         arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS),
                         PERMISSIONS_REQUEST_RW_CONTACTS)
             }
-            // Ask at initial installation only
+            // Ask at initial installation only, or upon user request
             if (!SharedPreferenceHelper.getBoolean(
-                            Constants.CONTACTS_ACCESS_PERMISSION_REQUESTED, false)) {
+                            Constants.CONTACTS_ACCESS_PERMISSION_REQUESTED, false) or userRequestsPermissions) {
                 SharedPreferenceHelper.putBoolean(Constants.CONTACTS_ACCESS_PERMISSION_REQUESTED, true)
                 contactsPermissionAlertDialog(request)
             }

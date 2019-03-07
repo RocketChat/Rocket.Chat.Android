@@ -41,7 +41,11 @@ class ContactsRecyclerViewAdapter(
                 val view = parent.inflate(R.layout.item_invite)
                 InviteViewHolder(view)
             }
-            else -> throw IllegalStateException("View type must be either Room, Header or Invite")
+            VIEW_TYPE_PERMISSIONS -> {
+                val view = parent.inflate(R.layout.item_permissions)
+                PermissionsViewHolder(view)
+            }
+            else -> throw IllegalStateException("View type must be either Room, Header, Invite or Permissions")
         }
     }
 
@@ -53,7 +57,8 @@ class ContactsRecyclerViewAdapter(
             is ContactsItemHolder -> item.data.hashCode().toLong()
             is ContactsHeaderItemHolder -> item.data.hashCode().toLong()
             is InviteItemHolder -> item.data.hashCode().toLong()
-            else -> throw IllegalStateException("View type must be either Room, Header or Invite")
+            is PermissionsItemHolder -> item.data.hashCode().toLong()
+            else -> throw IllegalStateException("View type must be either Room, Header, Invite or Permissions.")
         }
     }
 
@@ -62,7 +67,8 @@ class ContactsRecyclerViewAdapter(
             is ContactsItemHolder -> VIEW_TYPE_CONTACT
             is ContactsHeaderItemHolder -> VIEW_TYPE_HEADER
             is InviteItemHolder -> VIEW_TYPE_INVITE
-            else -> throw IllegalStateException("View type must be either Room, Header or Invite")
+            is PermissionsItemHolder -> VIEW_TYPE_PERMISSIONS
+            else -> throw IllegalStateException("View type must be either Room, Header, Invite or Permissions.")
         }
     }
 
@@ -115,7 +121,12 @@ class ContactsRecyclerViewAdapter(
             holder.itemView.setOnClickListener {
                 shareApp()
             }
-         }
+         } else if (holder is PermissionsViewHolder) {
+            holder.bind(contactArrayList[position] as PermissionsItemHolder)
+            holder.itemView.setOnClickListener {
+                context.syncContacts(false, true)
+            }
+        }
     }
 
     private fun shareApp() {
@@ -126,5 +137,6 @@ class ContactsRecyclerViewAdapter(
         const val VIEW_TYPE_CONTACT = 1
         const val VIEW_TYPE_HEADER = 2
         const val VIEW_TYPE_INVITE = 4
+        const val VIEW_TYPE_PERMISSIONS = 6
     }
 }
