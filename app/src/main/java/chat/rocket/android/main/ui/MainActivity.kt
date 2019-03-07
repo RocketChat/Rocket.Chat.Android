@@ -51,7 +51,9 @@ import javax.inject.Inject
 
 // WIDECHAT
 import android.view.View
+import android.view.View.GONE
 import android.widget.Button
+import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.work.*
@@ -391,6 +393,12 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     syncContacts(false)
+                } else if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)) {
+                    var showRationale: Boolean = shouldShowRequestPermissionRationale(permissions[0])
+                    if (!showRationale) {
+                        // User selected 'Do not show again' when they were previously presented the permissions dialogue
+                        contactsPermissionAlertDialog(willNotShowPermissions = true)
+                    }
                 }
                 return
             }
@@ -400,24 +408,36 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
     }
 
-    fun contactsPermissionAlertDialog(callback: () -> Unit?) {
-        val view = layoutInflater.inflate(R.layout.widechat_contact_permissions_dialog, null)
-        val positiveButton = view.findViewById(R.id.positive_button) as Button
-        val negativeButton = view.findViewById(R.id.negative_button) as Button
+    fun contactsPermissionAlertDialog(callback: () -> Unit? = {}, willNotShowPermissions: Boolean = false) {
 
+        val view = layoutInflater.inflate(R.layout.widechat_contact_permissions_dialog, null)
         val dialog = AlertDialog.Builder(this)
                 .setView(view)
                 .setPositiveButton(null,null)
                 .setNegativeButton(null,null)
                 .create()
 
-        positiveButton.setOnClickListener(View.OnClickListener {
-            callback()
-            dialog.dismiss()
-        })
-        negativeButton.setOnClickListener(View.OnClickListener {
-            dialog.dismiss()
-        })
+        val positiveButton = view?.findViewById(R.id.positive_button) as Button
+        val negativeButton = view?.findViewById(R.id.negative_button) as Button
+
+        if (willNotShowPermissions == false) {
+            positiveButton.setOnClickListener(View.OnClickListener {
+                callback()
+                dialog.dismiss()
+            })
+            negativeButton.setOnClickListener(View.OnClickListener {
+                dialog.dismiss()
+            })
+        } else {
+            // Message the user how to use system settings to undo the 'Do not show again'
+            val messageText = view?.findViewById(R.id.permission_request) as TextView
+            messageText.setText(R.string.set_permissions_through_settings)
+            positiveButton.setText(R.string.dismiss_button)
+            negativeButton.visibility = GONE
+            positiveButton.setOnClickListener(View.OnClickListener {
+                dialog.dismiss()
+            })
+        }
         dialog.show()
     }
 }

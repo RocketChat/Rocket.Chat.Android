@@ -368,6 +368,9 @@
     <string name="negative_buttton">AHORA NO</string>
     <string name="positive_button">CONTINUAR</string>
     <string name="permissions_item">¿Desea permitir que Viasat Connect acceda a sus contactos?</string>
+    <string name="set_permissions_through_settings">Puede permitir que Viasat Connect acceda a sus contactos en la página Sistema / Configuración / Apps / Viasat Connect / Permisos de su dispositivo.</string>
+    <string name="dismiss_button">DESPEDIR</string>
+
 
     <!-- Report -->
     <string name="submit">Submit</string> <!--TODO - Add proper translation-->
