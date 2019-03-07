@@ -45,6 +45,11 @@ class PreferencesFragment : Fragment(), PreferencesView {
         analyticsManager.logScreenView(ScreenViewEvent.Preferences)
     }
 
+    override fun onResume() {
+        setupToolbar()
+        super.onResume()
+    }
+
     override fun setupAnalyticsTrackingView(isAnalyticsTrackingEnabled: Boolean) {
         if (BuildConfig.FLAVOR == "foss") {
             switch_analytics_tracking.isChecked = false
