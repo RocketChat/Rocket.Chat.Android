@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/groupChatRoomSeparator">
 
     <!--<View
         android:layout_width="match_parent"
@@ -14,14 +15,14 @@
         style="@style/ChatRooms.Header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:padding="16dp"
         android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
         android:paddingStart="@dimen/screen_edge_left_and_right_padding"
         android:text="@string/chatroom_header" />
 
-    <View
+    <!--<View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/quoteBar" />
+        android:background="@color/quoteBar" />-->
 
 </LinearLayout>
