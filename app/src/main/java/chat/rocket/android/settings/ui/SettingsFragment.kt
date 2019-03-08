@@ -132,10 +132,9 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
         val uriText = "mailto:${"support@rocket.chat"}" +
                 "?subject=" + Uri.encode(getString(R.string.msg_android_app_support)) +
                 "&body=" + Uri.encode(getDeviceAndAppInformation())
-        val uri = Uri.parse(uriText)
 
         with(Intent(Intent.ACTION_SENDTO)) {
-            data = uri
+            data = uriText.toUri()
             try {
                 startActivity(Intent.createChooser(this, getString(R.string.msg_send_email)))
             } catch (ex: ActivityNotFoundException) {
