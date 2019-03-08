@@ -144,7 +144,6 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     override fun onResume() {
-        supportFragmentManager.popBackStackImmediate("contactsFragment", 1)
         super.onResume()
 
         if (intent?.data == "connect://profile.update".toUri()) {

@@ -36,6 +36,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_update_profile">Update profile</string>
     <string name="title_about">About</string>
     <string name="title_create_channel">Create Channel</string>
+    <string name="title_create_group">Create Group</string>
     <string name="title_licence">Licence</string>
     <string name="title_are_you_sure">Are you sure?</string>
     <string name="title_channel_details">Channel Details</string>
@@ -377,6 +378,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="share_via_another_app">Share via another App</string>
     <string name="msg_widechat_no_chats_to_display">You can get started by searching for people to chat with or by inviting your friends and family to get the app too.</string>
     <string name="msg_widechat_welcome_to_app">Welcome to Viasat Connect.</string>
+    <string name="new_group">New Group</string>
+    <string name="new_contact">New Contact</string>
 
     <!--Contacts Permissions-->
     <string name="permissions_request">To easily connect with friends and family, allow Viasat Connect access to your contacts.</string>

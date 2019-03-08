@@ -6,6 +6,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Switch
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.view.isVisible
@@ -37,12 +39,13 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 // WIDECHAT
-import android.widget.TextView
-import android.widget.Switch
 import androidx.appcompat.widget.SearchView
 import chat.rocket.android.helper.Constants
+import kotlinx.android.synthetic.main.app_bar.*
 
 internal const val TAG_CREATE_CHANNEL_FRAGMENT = "CreateChannelFragment"
+
+private const val BUNDLE_CREATE_CHANNEL_MEMBERS = "BUNDLE_CREATE_CHANNEL_MEMBERS"
 
 class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback {
     @Inject
@@ -64,12 +67,18 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     private var widechatSearchView: SearchView? = null
 
     companion object {
-        fun newInstance() = CreateChannelFragment()
+        fun newInstance(members: ArrayList<String>? = null): CreateChannelFragment {
+            return CreateChannelFragment().apply {
+                arguments = Bundle(1).apply {
+                    putStringArrayList(BUNDLE_CREATE_CHANNEL_MEMBERS, members)
+                }
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
+        AndroidSupportInjection.inject(this)
     }
 
     override fun onCreateView(
@@ -87,6 +96,14 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         // WIDECHAT - remove options for public rooms and read only
         if (Constants.WIDECHAT) {
             setupWidechatView(view)
+        }
+
+        val bundle = arguments
+        if (bundle != null) {
+            val members = bundle.getStringArrayList(BUNDLE_CREATE_CHANNEL_MEMBERS)
+            members.forEach {
+                processSelectedMember(it)
+            }
         }
 
         analyticsManager.logScreenView(ScreenViewEvent.CreateChannel)
@@ -216,10 +233,18 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
                 widechatSearchView = this?.getCustomView()?.findViewById(R.id.action_widechat_search)
                 widechatSearchView?.visibility = View.GONE
                 this?.setDisplayShowTitleEnabled(true)
+                this?.title = getString(R.string.title_create_group)
+            }
+            (activity as MainActivity).toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            (activity as MainActivity).toolbar.setNavigationOnClickListener {
+                activity?.onBackPressed()
+            }
+        } else {
+            with((activity as AppCompatActivity?)?.supportActionBar) {
+                this?.setDisplayShowTitleEnabled(true)
+                this?.title = getString(R.string.title_create_channel)
             }
         }
-        (activity as AppCompatActivity?)?.supportActionBar?.title =
-                getString(R.string.title_create_channel)
     }
 
     private fun setupWidechatView(view: View?) {

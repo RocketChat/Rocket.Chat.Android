@@ -26,19 +26,20 @@ import android.view.View.GONE
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StableIdKeyProvider
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.chatrooms.adapter.ItemHolder
+import chat.rocket.android.contacts.adapter.*
 import chat.rocket.android.chatrooms.adapter.RoomUiModelMapper
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
-import chat.rocket.android.contacts.adapter.ContactsHeaderItemHolder
-import chat.rocket.android.contacts.adapter.ContactsItemHolder
-import chat.rocket.android.contacts.adapter.ContactsRecyclerViewAdapter
-import chat.rocket.android.contacts.adapter.InviteItemHolder
-import chat.rocket.android.contacts.adapter.PermissionsItemHolder
+import chat.rocket.android.chatrooms.viewmodel.*
 import chat.rocket.android.contacts.models.ContactsLoadingState
 import chat.rocket.android.contacts.presentation.ContactsPresenter
 import chat.rocket.android.contacts.presentation.ContactsView
+import chat.rocket.android.createchannel.ui.CreateChannelFragment
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.util.extensions.avatarUrl
@@ -56,11 +57,22 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 import timber.log.Timber
+import java.lang.NullPointerException
 
 /**
  * Load a list of contacts in a recycler view
  */
 class ContactsFragment : Fragment(), ContactsView {
+    //TODO: Implement the multiple option fab button in the main all chats screen
+    //TODO: Add selected contacts' chip so that the selected contacts can be seen separately
+    //FIXME: Fix crash while opening search in new chat/group
+    //FIXME: Pressing back button after opening a dm from new chat should go to the main screen instead of the new chat screen
+    //TODO: In the screen to name the group, remove the action bar at the top that appears after entering the name and replace with fab
+    //FIXME: Fix back button behaviour upon successful group creation
+    //FIXME: Retain the selected contacts on screen rotate
+    //TODO: In the new group screen, show fab button even when no contacts are selected with an error toast asking to select a contact
+    //TODO: Add animations to ticks that appear upon selecting a contact
+    //FIXME: Fix behaviour of contacts selection when contact sync starts and ends
 
     @Inject
     lateinit var presenter: ContactsPresenter
@@ -74,13 +86,17 @@ class ContactsFragment : Fragment(), ContactsView {
     @Inject
     lateinit var mapper: RoomUiModelMapper
 
-    private var recyclerView :RecyclerView? = null
-    private var emptyTextView:  TextView? = null
+    private var adapter: ContactsRecyclerViewAdapter? = null
+    private var recyclerView: RecyclerView? = null
+    private var emptyTextView: TextView? = null
+    private var fab: View? = null
 
     /**
      * The list of contacts to load in the recycler view
      */
     private var contactArrayList: ArrayList<Contact> = ArrayList()
+    private var finalList: ArrayList<ItemHolder<*>> = ArrayList()
+    private var contactsSelectionTracker: SelectionTracker<Long>? = null
 
     private var searchView: SearchView? = null
     private var searchIcon: ImageView? = null
@@ -397,9 +413,11 @@ class ContactsFragment : Fragment(), ContactsView {
 
             recyclerView!!.setHasFixedSize(true)
             recyclerView!!.layoutManager = LinearLayoutManager(context)
-            recyclerView!!.adapter = ContactsRecyclerViewAdapter(this.activity as MainActivity,
-                                                                 presenter, map(filteredContactArrayList,
-                                                                 spotlightResult))
+            finalList = map(filteredContactArrayList, spotlightResult)
+            adapter = ContactsRecyclerViewAdapter(this.activity as MainActivity, presenter, finalList)
+            recyclerView!!.adapter = adapter
+
+            setupTrackerAndFab()
         }
     }
 
@@ -436,12 +454,14 @@ class ContactsFragment : Fragment(), ContactsView {
             contactsList.add(ContactsItemHolder(contact))
         }
 
+//        finalList.add(ContactsActionItemHolder(getString(R.string.new_group)))
+//        finalList.add(ContactsActionItemHolder(getString(R.string.new_contact)))
         finalList.addAll(userList)
         if(contactsList.size > 0) {
             finalList.add(ContactsHeaderItemHolder(getString(R.string.Invite_contacts)))
             finalList.addAll(contactsList)
         }
-        if(spotlightResult !==null && spotlightResult.size >0) {
+        if(spotlightResult !== null && spotlightResult.size >0) {
             finalList.add(ContactsHeaderItemHolder(getString(R.string.Spotlight_Result)))
             spotlightResult.forEach { item ->
                 val username = (item.data as Contact).getUsername()
@@ -469,6 +489,59 @@ class ContactsFragment : Fragment(), ContactsView {
             finalList.add(InviteItemHolder("invite"))
         }
         return finalList
+    }
+
+    private fun setupTrackerAndFab() {
+
+        contactsSelectionTracker = SelectionTracker.Builder<Long>(
+                "contactsSelection",
+                recyclerView!!,
+                StableIdKeyProvider(recyclerView!!),
+                ContactsItemDetailsLookup(recyclerView!!),
+                StorageStrategy.createLongStorage()
+        ).withSelectionPredicate(
+                object : SelectionTracker.SelectionPredicate<Long>() {
+                    override fun canSetStateForKey(key: Long, nextState: Boolean): Boolean {
+                        val position = key.toInt()
+                        if (finalList[position] is ContactsItemHolder &&
+                                (finalList[position] as ContactsItemHolder).data.getUsername() != null)
+                            return true
+                        return false
+                    }
+                    override fun canSetStateAtPosition(position: Int, nextState: Boolean): Boolean {
+                        return true
+                    }
+                    override fun canSelectMultiple(): Boolean {
+                        return true
+                    }
+                }
+        ).build()
+
+        fab = view?.findViewById(R.id.contacts_action_fab)
+        fab?.setOnClickListener { view ->
+            val selection = contactsSelectionTracker?.selection!!
+            val list = selection.map {
+                (finalList[it.toInt()] as ContactsItemHolder).data.getUsername() ?:
+                throw NullPointerException("No username available")
+            }.toList()
+
+            val createChannelFragment = CreateChannelFragment.newInstance(ArrayList(list))
+            val transaction = activity?.supportFragmentManager?.beginTransaction()
+            transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+            transaction?.replace(this.id, createChannelFragment, "createChannelFragment")
+            transaction?.addToBackStack("createChannelFragment")?.commit()
+        }
+
+        contactsSelectionTracker?.addObserver(
+                object : SelectionTracker.SelectionObserver<Long>() {
+                    override fun onSelectionChanged() {
+                        super.onSelectionChanged()
+                        val items = contactsSelectionTracker?.selection!!.size()
+                        fab?.isVisible = (items > 0)
+                    }
+                })
+
+        adapter?.contactsSelectionTracker = contactsSelectionTracker
     }
 
     private fun showSpinner() {

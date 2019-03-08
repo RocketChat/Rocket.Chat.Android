@@ -17,7 +17,7 @@
         android:paddingBottom="@dimen/chat_item_top_and_bottom_padding">
 
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/contact_image_avatar"
+            android:id="@+id/contact_action_avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:padding="1dp"
@@ -25,33 +25,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:roundedCornerRadius='@{shape.AVATAR_SHAPE_CIRCLE ? @dimen/circle_avatar_corner_radius : @dimen/square_avatar_corner_radius}'
-            tools:background="@drawable/widechat_circle_shadow" />
-
-        <ImageView
-            android:id="@+id/contact_status"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:layout_marginBottom="0dp"
-            android:layout_marginEnd="0dp"
-            android:background="@drawable/circle_background_white"
-            android:padding="1dp"
-            android:visibility="gone"
-            tools:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/contact_image_avatar" />
-
-        <ImageView
-            android:id="@+id/contact_checkbox"
-            android:layout_width="21dp"
-            android:layout_height="21dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginEnd="0dp"
-            android:background="@drawable/circle_background_white"
-            android:src="@drawable/ic_check_white_on_green_24dp"
-            android:padding="1dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/contact_image_avatar" />
+            app:backgroundImage="@color/widechatGreenGradientLight" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -61,10 +35,10 @@
             app:layout_constraintWidth_percent=".6"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/contact_image_avatar">
+            app:layout_constraintStart_toEndOf="@+id/contact_action_avatar">
 
             <TextView
-                android:id="@+id/contact_name"
+                android:id="@+id/contact_action_title"
                 style="@style/ChatList.ChatName.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,47 +48,20 @@
                 android:maxLines="1"
                 android:textColor="@color/colorPrimaryText"
                 android:textDirection="locale"
-                tools:text="Alex Johnson with a really long name" />
+                tools:text="Create new chat" />
 
             <TextView
-                android:id="@+id/contact_detail"
+                android:id="@+id/contact_action_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:lines="1"
                 android:maxLines="1"
-                android:textStyle="bold"
                 android:visibility="gone"
-                tools:text="9876543210"
+                tools:text="Click this to create a new chat"
                 tools:visibility="visible" />
 
         </LinearLayout>
-
-        <android.widget.Button
-            android:id="@+id/invite_contact"
-            style="@style/ChatList.ChatName.TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/Invite"
-            android:textColor="@color/color_invite"
-            android:background="@android:color/transparent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-        <android.widget.Button
-            android:id="@+id/chat_username"
-            style="@style/Sender.Name.TextView"
-            android:background="@android:color/transparent"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:textColor="@color/color_invite"
-            android:textAllCaps="false"
-            android:fontFamily="@string/font_fontFamily_widechat"
-            tools:text="alex.johnson" />
 
         <View
             android:id="@+id/divider"

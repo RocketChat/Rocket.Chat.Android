@@ -25,9 +25,9 @@ class MainNavigator(internal val activity: MainActivity) {
         }
     }
 
-    fun toCreateChannel() {
+    fun toCreateChannel(members: ArrayList<String>? = null) {
         activity.addFragment(TAG_CREATE_CHANNEL_FRAGMENT, R.id.fragment_container) {
-            CreateChannelFragment.newInstance()
+            CreateChannelFragment.newInstance(members)
         }
     }
 

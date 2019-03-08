@@ -42,4 +42,16 @@
         app:indicatorColor="@color/colorBlack"
         tools:visibility="visible" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/contacts_action_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/ic_arrow_forward_white_24dp"
+        app:backgroundTint="@color/widechatFab"
+        android:visibility="gone" />
+
 </RelativeLayout>

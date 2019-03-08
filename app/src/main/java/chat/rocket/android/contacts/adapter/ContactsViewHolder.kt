@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.recyclerview.selection.ItemDetailsLookup
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.ViewHolder
 import chat.rocket.android.contacts.models.Contact
@@ -49,6 +50,20 @@ class ContactsViewHolder(itemView: View) : ViewHolder<ContactsItemHolder>(itemVi
                 chat_username.text = ""
                 invite_contact.isVisible = false
             }
+        }
+    }
+
+    fun getItemDetails(): ItemDetailsLookup.ItemDetails<Long> =
+            object : ItemDetailsLookup.ItemDetails<Long>() {
+                override fun getPosition(): Int = adapterPosition
+                override fun getSelectionKey(): Long? = itemId
+            }
+
+    fun bindSelection(isActivated: Boolean = false) {
+        with(itemView) {
+            this.isActivated = isActivated
+            contact_status.isVisible = !isActivated
+            contact_checkbox.isVisible = isActivated
         }
     }
 

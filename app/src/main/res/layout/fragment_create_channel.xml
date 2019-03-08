@@ -131,14 +131,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/view_member_suggestion"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="200dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
         android:background="@color/colorWhite"
         android:elevation="2dp"
         android:orientation="vertical"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/text_invite_members"
+        app:layout_constraintTop_toBottomOf="@+id/text_invite_members"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
