@@ -2,6 +2,7 @@ package chat.rocket.android.settings.ui
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.webview.ui.webViewIntent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -73,20 +75,23 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             resources.getStringArray(R.array.settings_actions)[1] ->
                 activity?.startActivity(Intent(activity, PasswordActivity::class.java))
 
-            resources.getStringArray(R.array.settings_actions)[2] -> shareApp()
+            // TODO (https://github.com/RocketChat/Rocket.Chat.Android/pull/1918)
+            resources.getStringArray(R.array.settings_actions)[2] -> showToast("Coming soon")
 
-            resources.getStringArray(R.array.settings_actions)[3] -> showAppOnStore()
+            resources.getStringArray(R.array.settings_actions)[3] -> shareApp()
 
-            resources.getStringArray(R.array.settings_actions)[4] -> contactSupport()
+            resources.getStringArray(R.array.settings_actions)[4] -> showAppOnStore()
 
-            resources.getStringArray(R.array.settings_actions)[5] -> activity?.startActivity(
+            resources.getStringArray(R.array.settings_actions)[5] -> contactSupport()
+
+            resources.getStringArray(R.array.settings_actions)[6] -> activity?.startActivity(
                 context?.webViewIntent(
                     getString(R.string.license_url),
                     getString(R.string.title_licence)
                 )
             )
 
-            resources.getStringArray(R.array.settings_actions)[6] -> {
+            resources.getStringArray(R.array.settings_actions)[7] -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
                     TAG_ABOUT_FRAGMENT,
                     R.id.fragment_container
@@ -124,11 +129,12 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     }
 
     private fun contactSupport() {
-        with(Intent(Intent.ACTION_SEND)) {
-            type = "message/rfc822"
-            putExtra(Intent.EXTRA_EMAIL, arrayOf("support@rocket.chat"))
-            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_android_app_support))
-            putExtra(Intent.EXTRA_TEXT, getDeviceAndAppInformation())
+        val uriText = "mailto:${"support@rocket.chat"}" +
+                "?subject=" + Uri.encode(getString(R.string.msg_android_app_support)) +
+                "&body=" + Uri.encode(getDeviceAndAppInformation())
+
+        with(Intent(Intent.ACTION_SENDTO)) {
+            data = uriText.toUri()
             try {
                 startActivity(Intent.createChooser(this, getString(R.string.msg_send_email)))
             } catch (ex: ActivityNotFoundException) {

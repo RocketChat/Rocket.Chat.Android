@@ -102,6 +102,18 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         }
     }
 
+    suspend fun insertOrReplaceRoom(chatRoomEntity: ChatRoomEntity) {
+        retryDB("insertOrReplace($chatRoomEntity)") {
+            chatRoomDao().insertOrReplace(chatRoomEntity)
+        }
+    }
+
+    suspend fun getUser(id: String) = withContext(dbManagerContext) {
+        retryDB("getUser($id)") {
+            userDao().getUser(id)
+        }
+    }
+
     fun processUsersBatch(users: List<User>) {
         launch(dbManagerContext) {
             val list = ArrayList<BaseUserEntity>(users.size)

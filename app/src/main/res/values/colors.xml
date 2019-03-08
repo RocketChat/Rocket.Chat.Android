@@ -13,6 +13,8 @@
     <color name="colorTimestampText">#FF9DA2A9</color>
     <color name="colorTimestampTextUnread">#FF5699FF</color>
     <color name="colorLastMessageText">#99000000</color>
+    <color name="colorUserDetailsNameText">#FF0C0D0F</color>
+    <color name="colorUserDetailsUsernameText">#8B000000</color>
 
     <!-- User status colors -->
     <color name="colorUserStatusOnline">#2FE1A8</color>

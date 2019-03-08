@@ -64,6 +64,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferenze</item>
         <item name="item_password">Cambia password</item>
+        <item name="change_language">Cambia lingua</item>
         <item name="item_share_app">Condividi app</item>
         <item name="item_rate_us">Votaci</item>
         <item name="item_contact_us">Contattaci</item>
@@ -122,13 +123,12 @@
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_preview_file">Documento</string>
     <string name="msg_no_messages_yet">Nessun nuovo messaggio</string>
-    <string name="msg_ok">OK</string>
+    <string name="msg_build">Versione %1$d - %2$s - %3$s</string>
     <string name="msg_update_app_version_in_order_to_continue">Versione server non aggiornata. Si prega di contattare l\'amministratore del server per aggiornare la versione del server per continuare.</string>
     <string name="msg_ver_not_recommended">Sembra che la versione del tuo server sia inferiore alla versione consigliata %1$s.\nÈ ancora possibile accedere ma è possibile che si verifichino comportamenti imprevisti.</string>
     <string name="msg_ver_not_minimum">Sembra che la versione del tuo server sia inferiore alla versione minima richiesta %1$s.\nSi prega di aggiornare il server per accedere!</string>
     <string name="msg_no_chat_title">Nessun messaggio chat</string>
     <string name="msg_no_chat_description">Inizia a conversare per vedere i tuoi\nmessagggi qui.</string>
-    <string name="msg_cancel">CANCELLARE</string>
     <string name="msg_http_insecure">Quando si utilizza HTTP, ci si connette a un server non sicuro. Non ti consigliamo di farlo.</string>
     <string name="msg_error_checking_server_version">Si è verificato un errore durante il controllo della versione del server, riprovare</string>
     <string name="msg_invalid_server_protocol">Il protocollo selezionato non è accettato da questo server, prova a utilizzare HTTPS</string>
@@ -146,7 +146,7 @@
     <string name="msg_send">Inviare</string>
     <string name="msg_sent_attachment">Inviato allegato</string>
     <string name="msg_welcome_to_rocket_chat">Benvenuto in Rocket.Chat </string>
-    <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
+    <string name="msg_team_communication">Comunicazione dei Gruppi</string>
     <string name="msg_login_with_email">Accedi con <b>e-mail</b></string>
     <string name="msg_create_account">Crea un utente</string>
     <string name="msg_continue_with_facebook">Continua con <b>Facebook</b></string>
@@ -163,8 +163,8 @@
     <string name="msg_no_description">Nessuna descrizione aggiunta</string>
     <string name="msg_send_email">Invia una email</string>
     <string name="msg_android_app_support">Supporto per le app Android</string>
-    <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
-    <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
+    <string name="msg_unable_to_update_password">Impossibile aggiornare la password. Messaggio di errore: %1$s</string>
+    <string name="msg_password_updated_successfully">Password aggiornata con successo</string>
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s ha reagito con %2$s</item>
         <item quantity="other">%1$s ha reagito con %2$s</item>
@@ -332,10 +332,7 @@
     <string name="message_room_changed_privacy">Il tipo di stanza è cambiato in: %1$s da %2$s</string>
 
     <!-- User Details -->
-    <string name="message">Messaggio</string>
     <string name="timezone">Fuso Orario</string>
-    <string name="error_opening_dm">È successo qualcosa di sbagliato durante la creazione di questa conversazione...</string>
-    <string name="retry">Riprova</string>
 
     <!-- Report -->
     <string name="submit">Invia</string>

@@ -2,7 +2,7 @@ package chat.rocket.android.main.ui
 
 import DrawableHelper
 import android.app.Activity
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.annotation.IdRes
@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
+import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
@@ -37,6 +38,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 import javax.inject.Inject
+import android.app.NotificationManager
+import android.content.Context
+
 
 private const val CURRENT_STATE = "current_state"
 
@@ -89,12 +93,30 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             presenter.toChatList(chatRoomId)
             isFragmentAdded = true
         }
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE)
+                as NotificationManager
+        notificationManager.cancelAll()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         if (isFinishing) {
             presenter.disconnect()
+        }
+    }
+
+    override fun onBackPressed() {
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            closeDrawer()
+        } else {
+            supportFragmentManager.findFragmentById(R.id.fragment_container)?.let {
+                if (it !is ChatRoomsFragment && supportFragmentManager.backStackEntryCount == 0) {
+                    presenter.toChatList(chatRoomId)
+                    setCheckedNavDrawerItem(R.id.menu_action_chats)
+                } else {
+                    super.onBackPressed()
+                }
+            }
         }
     }
 
@@ -180,7 +202,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                     BuildConfig.RECOMMENDED_SERVER_VERSION
                 )
             )
-            .setPositiveButton(R.string.msg_ok, null)
+            .setPositiveButton(android.R.string.ok, null)
             .create()
             .show()
     }
@@ -194,7 +216,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                 )
             )
             .setOnDismissListener { presenter.logout() }
-            .setPositiveButton(R.string.msg_ok, null)
+            .setPositiveButton(android.R.string.ok, null)
             .create()
             .show()
     }

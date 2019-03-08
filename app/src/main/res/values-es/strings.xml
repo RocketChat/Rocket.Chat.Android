@@ -1,4 +1,5 @@
 <resources>
+
     <!-- Titles -->
     <string name="title_sign_in_your_server">Inicia sesión en tu servidor</string>
     <string name="title_log_in">Iniciar sesión</string>
@@ -63,6 +64,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
         <item name="item_password">Change password</item> <!-- TODO Add translation -->
+        <item name="change_language">Change language</item> <!-- TODO Add translation -->
         <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
         <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
         <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
@@ -103,7 +105,7 @@
     <string name="msg_content_description_log_in_using_meteor">Inicia sesión usando Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Inicia sesión usando Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Inicia sesión usando Gitlab</string>
-    <string name="msg_content_description_log_in_using_wordpress">Login using WordPress</string> <!-- TODO Translate-->
+    <string name="msg_content_description_log_in_using_wordpress">Inicia sesión usando WordPress</string>
     <string name="msg_content_description_send_message">Enviar mensaje</string>
     <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Translate-->
     <string name="msg_content_description_show_attachment_options">Mostrar opciones de archivo adjunto</string>
@@ -119,14 +121,13 @@
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_preview_file">Fichero</string>
     <string name="msg_no_messages_yet">Aún no hay mensajes</string>
-    <string name="msg_ok">OK</string>
+    <string name="msg_build">Build %1$d - %2$s - %3$s</string> <!-- TODO Add translation -->
     <string name="msg_update_app_version_in_order_to_continue">Versión del servidor actualizada. Póngase en contacto con el administrador del servidor para actualizar la versión del servidor y continuar.</string>
     <string name="msg_ver_not_recommended">
         Parece que la versión de tu servidor está por debajo de la versión recomendada %1$s.\nAún puede iniciar sesión, pero puede experimentar comportamientos inesperados.</string>
     <string name="msg_ver_not_minimum">
         Parece que la versión del servidor está por debajo de la versión mínima requerida %1$s.\nActualice su servidor para iniciar sesión!
     </string>
-    <string name="msg_cancel">CANCELAR</string>
     <string name="msg_http_insecure">Al usar HTTP, te estás conectando a un servidor inseguro. No te recomendamos que hagas eso.</string>
     <string name="msg_error_checking_server_version">Se ha producido un error al verificar la versión de su servidor, intente de nuevo</string>
     <string name="msg_invalid_server_protocol">El protocolo seleccionado no es aceptado por este servidor, intente usar HTTPS</string>
@@ -336,10 +337,7 @@
     <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string> <!--TODO - Add proper translation-->
 
     <!-- User Details -->
-    <string name="message">Message</string> <!-- TODO - Add proper translation -->
     <string name="timezone">Timezone</string> <!-- TODO - Add proper translation -->
-    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string> <!-- TODO - Add proper translation -->
-    <string name="retry">Retry</string> <!-- TODO - Add proper translation -->
 
     <!-- Report -->
     <string name="submit">Submit</string> <!--TODO - Add proper translation-->

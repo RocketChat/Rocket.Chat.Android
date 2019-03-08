@@ -1,7 +1,7 @@
 package chat.rocket.android.chatroom.ui
 
 import android.app.Activity
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -40,6 +40,7 @@ import chat.rocket.android.chatroom.adapter.EmojiSuggestionsAdapter
 import chat.rocket.android.chatroom.adapter.PEOPLE
 import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter
 import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter
+import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.ui.bottomsheet.MessageActionsBottomSheet
@@ -68,9 +69,9 @@ import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.createImageFile
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
+import chat.rocket.android.util.extensions.clearLightStatusBar
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
-import chat.rocket.android.util.extensions.getBitmpap
 import chat.rocket.android.util.extensions.hideKeyboard
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
@@ -85,6 +86,7 @@ import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.emoji_image_row_item.view.*
 import kotlinx.android.synthetic.main.emoji_row_item.view.*
 import kotlinx.android.synthetic.main.fragment_chat_room.*
@@ -145,13 +147,14 @@ internal const val MENU_ACTION_SHOW_DETAILS = 2
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener,
     ChatRoomAdapter.OnActionSelected, Drawable.Callback {
-
     @Inject
     lateinit var presenter: ChatRoomPresenter
     @Inject
     lateinit var parser: MessageParser
     @Inject
     lateinit var analyticsManager: AnalyticsManager
+    @Inject
+    lateinit var navigator: ChatRoomNavigator
     private lateinit var adapter: ChatRoomAdapter
     internal lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -196,7 +199,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private var verticalScrollOffset = AtomicInteger(0)
 
     private val dialogView by lazy { View.inflate(context, R.layout.file_attachments_dialog, null) }
-    internal val alertDialog by lazy { AlertDialog.Builder(activity).setView(dialogView).create() }
+    internal val alertDialog by lazy { activity?.let { AlertDialog.Builder(it).setView(dialogView).create() } }
     internal val imagePreview by lazy { dialogView.findViewById<ImageView>(R.id.image_preview) }
     internal val sendButton by lazy { dialogView.findViewById<android.widget.Button>(R.id.button_send) }
     internal val cancelButton by lazy { dialogView.findViewById<android.widget.Button>(R.id.button_cancel) }
@@ -256,7 +259,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 button_fab.hide()
                 newMessageCount = 0
             } else {
-                if (dy < 0 && !button_fab.isVisible) {
+                if (dy < 0 && isAdded && !button_fab.isVisible) {
                     button_fab.show()
                     if (newMessageCount != 0) text_count.isVisible = true
                 }
@@ -284,7 +287,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
 
-        adapter = ChatRoomAdapter(chatRoomId, chatRoomType, chatRoomName, this, reactionListener = this)
+        adapter = ChatRoomAdapter(chatRoomId, chatRoomType, chatRoomName, this, reactionListener = this, navigator = navigator)
     }
 
     override fun onCreateView(
@@ -308,6 +311,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             showToolbarChatRoomIcon(chatRoomType)
         }
         getDraftMessage()
+        subscribeComposeTextMessage()
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRoom)
     }
@@ -341,10 +345,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                REQUEST_CODE_FOR_PERFORM_CAMERA -> takenPhotoUri?.let { uri ->
-                    uri.getBitmpap(requireContext())?.let { bitmap ->
-                        presenter.uploadImage(chatRoomId, "image/png", uri, bitmap, "")
-                    }
+                REQUEST_CODE_FOR_PERFORM_CAMERA -> takenPhotoUri?.let {
+                    showFileAttachmentDialog(it)
                 }
                 REQUEST_CODE_FOR_PERFORM_SAF -> resultData?.data?.let {
                     showFileAttachmentDialog(it)
@@ -844,7 +846,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 true
             )
 
-            subscribeComposeTextMessage()
             emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
 
             emojiKeyboardPopup.listener = this
@@ -996,12 +997,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun subscribeComposeTextMessage() {
-        val editTextObservable = text_message.asObservable()
-
-        compositeDisposable.addAll(
-            subscribeComposeButtons(editTextObservable),
-            subscribeComposeTypingStatus(editTextObservable)
-        )
+        text_message.asObservable().let {
+            compositeDisposable.addAll(
+                subscribeComposeButtons(it),
+                subscribeComposeTypingStatus(it)
+            )
+        }
     }
 
     private fun unsubscribeComposeTextMessage() {
@@ -1057,7 +1058,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun setupToolbar(toolbarTitle: String) {
-        (activity as ChatRoomActivity).showToolbarTitle(toolbarTitle)
+        with(activity as ChatRoomActivity) {
+            this.clearLightStatusBar()
+            this.showToolbarTitle(toolbarTitle)
+            toolbar.isVisible = true
+        }
     }
 
     override fun unscheduleDrawable(who: Drawable?, what: Runnable?) {
@@ -1114,13 +1119,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             val builder = AlertDialog.Builder(it)
             builder.setTitle(it.getString(R.string.msg_delete_message))
                 .setMessage(it.getString(R.string.msg_delete_description))
-                .setPositiveButton(it.getString(R.string.msg_ok)) { _, _ ->
+                .setPositiveButton(it.getString(android.R.string.ok)) { _, _ ->
                     presenter.deleteMessage(
                         roomId,
                         id
                     )
                 }
-                .setNegativeButton(it.getString(R.string.msg_cancel)) { _, _ -> }
+                .setNegativeButton(it.getString(android.R.string.cancel)) { _, _ -> }
                 .show()
         }
     }

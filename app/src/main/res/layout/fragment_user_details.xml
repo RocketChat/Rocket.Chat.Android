@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:id="@+id/image_blur"
+            android:layout_width="match_parent"
+            android:layout_height="120dp" />
+
+        <ImageView
+            android:id="@+id/image_arrow_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="@dimen/screen_edge_left_and_right_margins"
+            android:src="@drawable/ic_arrow_back_white_24dp"
+            android:tint="@color/color_black"
+            app:layout_constraintStart_toStartOf="@+id/image_blur"
+            app:layout_constraintTop_toTopOf="@+id/image_blur" />
+
+        <ImageView
+            android:id="@+id/image_avatar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/bg_border_user_details_avatar"
+            app:layout_constraintBottom_toBottomOf="@+id/image_blur"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_blur"
+            tools:srcCompat="@tools:sample/avatars[6]" />
+
+        <TextView
+            android:id="@+id/text_name"
+            style="@style/UserDetails.TextView.Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_avatar"
+            tools:text="Karem Flusser" />
+
+        <TextView
+            android:id="@+id/text_username"
+            style="@style/UserDetails.TextView.Username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_name"
+            tools:text="karem.flusser" />
+
+        <TextView
+            android:id="@+id/text_message"
+            style="@style/UserDetails.TextView.Actions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:drawableTop="@drawable/ic_message_24dp"
+            android:text="@string/msg_message"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_username" />
+
+        <TextView
+            android:id="@+id/text_title_status"
+            style="@style/UserDetails.TextView.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
+            android:layout_marginTop="20dp"
+            android:text="@string/status"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_message" />
+
+        <TextView
+            android:id="@+id/text_description_status"
+            style="@style/UserDetails.TextView.Description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_title_status"
+            tools:text="Online" />
+
+        <TextView
+            android:id="@+id/text_title_timezone"
+            style="@style/UserDetails.TextView.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
+            android:layout_marginTop="16dp"
+            android:text="@string/timezone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_description_status" />
+
+        <TextView
+            android:id="@+id/text_description_timezone"
+            style="@style/UserDetails.TextView.Description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_title_timezone"
+            tools:text="(UTC-2) 11:08 AM" />
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/view_loading"
+            style="@style/Authentication.AVLoadingIndicatorView"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_user_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="image_blur, image_avatar, text_name, text_username, text_message, text_title_status, text_description_status, text_title_timezone, text_description_timezone" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

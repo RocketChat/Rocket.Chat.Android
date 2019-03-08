@@ -9,7 +9,7 @@ Please, follow the rules as shown here (by adding a new string in the correct se
 Coding style:
 https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strings
 -->
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name" translatable="false">Rocket.Chat</string>
 
     <!-- Titles -->
@@ -76,6 +76,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string-array name="settings_actions">
         <item name="item_preferences">Preferences</item>
         <item name="item_password">Change password</item>
+        <item name="change_language">Change language</item>
         <item name="item_share_app">Share app</item>
         <item name="item_rate_us">Rate us</item>
         <item name="item_contact_us">Contact us</item>
@@ -113,7 +114,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_content_description_log_in_using_facebook">Login using Facebook</string>
     <string name="msg_content_description_log_in_using_github">Login using Github</string>
     <string name="msg_content_description_log_in_using_google">Login using Google</string>
-    <string name="msg_content_description_log_in_using_linkedin">Login using Linkedin</string>
+    <string name="msg_content_description_log_in_using_linkedin">Login using LinkedIn</string>
     <string name="msg_content_description_log_in_using_meteor">Login using Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Login using Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Login using Gitlab</string>
@@ -135,8 +136,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_preview_photo">Photo</string>
     <string name="msg_preview_file">File</string>
     <string name="msg_no_messages_yet">No messages yet</string>
-    <string name="msg_build" tools:ignore="MissingTranslation">Build %1$d - %2$s - %3$s</string>
-    <string name="msg_ok">OK</string>
+    <string name="msg_build">Build %1$d - %2$s - %3$s</string>
     <string name="msg_update_app_version_in_order_to_continue">Out to date server version. Please contact the server admin to update the server version in order to continue.</string>
     <string name="msg_ver_not_recommended">
         Looks like your server version is below the recommended version %1$s.\nYou can still login but you may experience unexpected behaviors.</string>
@@ -145,7 +145,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     </string>
     <string name="msg_no_chat_title">No chat messages</string>
     <string name="msg_no_chat_description">Start conversing to see your\nmessages here.</string>
-    <string name="msg_cancel">CANCEL</string>
     <string name="msg_http_insecure">When using HTTP you\'re connecting to an insecure server. We don\'t recommend you doing that.</string>
     <string name="msg_error_checking_server_version">An error has occurred while checking your server version, please try again</string>
     <string name="msg_invalid_server_protocol">The selected protocol is not accepted by this server, try using HTTPS</string>
@@ -351,11 +350,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="foss" translatable="false">(FOSS)</string>
 
     <!-- User Details -->
-    <string name="message">Message</string>
     <string name="timezone">Timezone</string>
     <string name="status" translatable="false">Status</string>
-    <string name="error_opening_dm">Something went wrong while we were creating this conversation…</string>
-    <string name="retry">Retry</string>
 
     <!-- Report -->
     <string name="submit">Submit</string>
