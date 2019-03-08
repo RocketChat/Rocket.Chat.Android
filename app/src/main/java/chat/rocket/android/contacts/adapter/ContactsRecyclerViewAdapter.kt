@@ -45,7 +45,7 @@ class ContactsRecyclerViewAdapter(
                 val view = parent.inflate(R.layout.item_permissions)
                 PermissionsViewHolder(view)
             }
-            else -> throw IllegalStateException("View type must be either Room, Header, Invite or Permissions")
+            else -> throw IllegalStateException("View type must be either Contact, Header, Invite or Permissions")
         }
     }
 
@@ -58,7 +58,7 @@ class ContactsRecyclerViewAdapter(
             is ContactsHeaderItemHolder -> item.data.hashCode().toLong()
             is InviteItemHolder -> item.data.hashCode().toLong()
             is PermissionsItemHolder -> item.data.hashCode().toLong()
-            else -> throw IllegalStateException("View type must be either Room, Header, Invite or Permissions.")
+            else -> throw IllegalStateException("View type must be either Contact, Header, Invite or Permissions.")
         }
     }
 
@@ -68,7 +68,7 @@ class ContactsRecyclerViewAdapter(
             is ContactsHeaderItemHolder -> VIEW_TYPE_HEADER
             is InviteItemHolder -> VIEW_TYPE_INVITE
             is PermissionsItemHolder -> VIEW_TYPE_PERMISSIONS
-            else -> throw IllegalStateException("View type must be either Room, Header, Invite or Permissions.")
+            else -> throw IllegalStateException("View type must be either Contact, Header, Invite or Permissions.")
         }
     }
 

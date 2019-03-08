@@ -338,7 +338,7 @@ class ContactsFragment : Fragment(), ContactsView {
                 && ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED)
     }
 
-    fun getContactListWhenSynced() {
+    private fun getContactListWhenSynced() {
         // Show loading while sync in progress
         recyclerView!!.visibility = View.GONE
         emptyTextView!!.visibility = View.GONE
