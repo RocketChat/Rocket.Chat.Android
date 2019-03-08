@@ -87,7 +87,7 @@ class ProfilePresenter @Inject constructor(
             view.showLoading()
             try {
                 user?.id?.let { id ->
-                    retryIO { client.updateProfile(id, email, name, username) }
+                    retryIO { client.updateProfile(userId = id, email = email, name = name, username = username) }
                     view.showProfileUpdateSuccessfullyMessage()
                     view.showProfile(
                         serverUrl.avatarUrl(user.username ?: ""),
@@ -120,7 +120,7 @@ class ProfilePresenter @Inject constructor(
                         uriInteractor.getInputStream(uri)
                     }
                 }
-                user?.username?.let { view.reloadUserAvatar(it) }
+                user?.username?.let { view.reloadUserAvatar(serverUrl.avatarUrl(it)) }
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
@@ -148,7 +148,7 @@ class ProfilePresenter @Inject constructor(
                     }
                 }
 
-                user?.username?.let { view.reloadUserAvatar(it) }
+                user?.username?.let { view.reloadUserAvatar(serverUrl.avatarUrl(it)) }
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
@@ -168,7 +168,7 @@ class ProfilePresenter @Inject constructor(
                 user?.id?.let { id ->
                     retryIO { client.resetAvatar(id) }
                 }
-                user?.username?.let { view.reloadUserAvatar(it) }
+                user?.username?.let { view.reloadUserAvatar(serverUrl.avatarUrl(it)) }
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
