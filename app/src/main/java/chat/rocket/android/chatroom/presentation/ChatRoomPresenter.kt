@@ -316,16 +316,18 @@ class ChatRoomPresenter @Inject constructor(
     fun sendMessage(chatRoomId: String, text: String, messageId: String?) {
         launchUI(strategy) {
             try {
+                view.disableSendMessageButton()
                 // ignore message for now, will receive it on the stream
                 if (messageId == null) {
                     val id = UUID.randomUUID().toString()
                     val username = userHelper.username()
+                    val user = userHelper.user()
                     val newMessage = Message(
                         id = id,
                         roomId = chatRoomId,
                         message = text,
                         timestamp = Instant.now().toEpochMilli(),
-                        sender = SimpleUser(null, username, username),
+                        sender = SimpleUser(user?.id, user?.username ?: username, user?.name),
                         attachments = null,
                         avatar = currentServer.avatarUrl(username ?: ""),
                         channels = null,

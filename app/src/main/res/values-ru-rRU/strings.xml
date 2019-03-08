@@ -332,7 +332,7 @@
     <string name="message_room_changed_privacy">Тип канала изменен на: %1$s пользователем %2$s</string>
 
     <!-- User Details -->
-    <string name="timezone">Часовой поясe</string>
+    <string name="timezone">Часовой пояс</string>
 
     <!-- Report -->
     <string name="submit">Отправить</string>
