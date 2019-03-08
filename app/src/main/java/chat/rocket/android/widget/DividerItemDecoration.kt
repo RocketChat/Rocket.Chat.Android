@@ -58,8 +58,8 @@ class DividerItemDecoration() : RecyclerView.ItemDecoration() {
 
             val params = child.layoutParams as RecyclerView.LayoutParams
 
-            val top = child.bottom + params.bottomMargin
-            val bottom = top + divider.intrinsicHeight
+            val bottom = child.bottom + params.bottomMargin
+            val top = bottom - divider.intrinsicHeight
 
             divider.setBounds(left, top, right, bottom)
             divider.draw(c)
