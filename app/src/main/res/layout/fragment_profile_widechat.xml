@@ -36,7 +36,7 @@
                 android:id="@+id/widechat_profile_table"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="24dp"
                 android:gravity="center"
                 app:layout_constraintTop_toBottomOf="@id/layout_avatar_profile">
 
@@ -96,7 +96,7 @@
                 android:id="@+id/delete_account_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
                 android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
                 android:background="@drawable/widechat_delete_account_button"
