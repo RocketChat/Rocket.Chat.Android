@@ -4,10 +4,12 @@ import android.content.Context
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.res.ResourcesCompat
 import chat.rocket.android.R
 import chat.rocket.android.util.extension.onQueryTextListener
+import chat.rocket.android.util.extensions.showToast
 
 internal fun ChatRoomFragment.setupMenu(menu: Menu) {
     setupSearchMessageMenuItem(menu, requireContext())
@@ -42,13 +44,19 @@ private fun ChatRoomFragment.setupSearchMessageMenuItem(menu: Menu, context: Con
             MenuItem.SHOW_AS_ACTION_IF_ROOM or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
         )
         .setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+
+
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
                 dismissEmojiKeyboard()
+                removeFavoriteMenuItem(menu)
+                removeDetailMenuItem(menu)
                 return true
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
                 dismissEmojiKeyboard()
+                setupFavoriteMenuItem(menu)
+                setupDetailsMenuItem(menu)
                 return true
             }
         })
@@ -112,3 +120,15 @@ private fun ChatRoomFragment.setupDetailsMenuItem(menu: Menu) {
     ).setIcon(R.drawable.ic_info_outline_white_24dp)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
 }
+
+private fun removeFavoriteMenuItem(menu: Menu){
+    menu.removeItem(MENU_ACTION_FAVORITE_UNFAVOURITE_CHAT)
+}
+
+private fun removeDetailMenuItem(menu: Menu){
+    menu.removeItem(MENU_ACTION_SHOW_DETAILS)
+}
+
+
+
+
