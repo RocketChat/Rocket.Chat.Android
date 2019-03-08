@@ -43,8 +43,8 @@ cd Rocket.Chat.Android/app
 
 ## Bug report & Feature request
 
-Are you having a technical issue trying to compile the app, or setting up Push Notifications? Please use our Community Support channel for that: https://forums.rocket.chat/c/community-support. The issues are only suppose to be used for bugs, improvements and features in the native Android application.
+Are you having a technical issue trying to compile the app, or setting up Push Notifications? Please use our Community Support channel for that: https://forums.rocket.chat/c/community-support. The issues are only supposed to be used for bugs, improvements, and features in the native Android application.
 
 ## Coding Style
 
-Please follow the official [Kotlin coding convections](https://kotlinlang.org/docs/reference/coding-conventions.html) when contributing.
+Please follow the official [Kotlin coding conventions](https://kotlinlang.org/docs/reference/coding-conventions.html) when contributing.
