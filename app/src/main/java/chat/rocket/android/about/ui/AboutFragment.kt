@@ -34,10 +34,14 @@ class AboutFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
         setupViews()
 
         analyticsManager.logScreenView(ScreenViewEvent.About)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupToolbar()
     }
 
     private fun setupViews() {
