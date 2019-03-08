@@ -29,7 +29,6 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_settings.*
 import timber.log.Timber
 import javax.inject.Inject
-import android.net.Uri
 
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
@@ -132,10 +131,9 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
         val uriText = "mailto:${"support@rocket.chat"}" +
                 "?subject=" + Uri.encode(getString(R.string.msg_android_app_support)) +
                 "&body=" + Uri.encode(getDeviceAndAppInformation())
-        val uri = Uri.parse(uriText)
 
         with(Intent(Intent.ACTION_SENDTO)) {
-            data = uri
+            data = uriText.toUri()
             try {
                 startActivity(Intent.createChooser(this, getString(R.string.msg_send_email)))
             } catch (ex: ActivityNotFoundException) {
