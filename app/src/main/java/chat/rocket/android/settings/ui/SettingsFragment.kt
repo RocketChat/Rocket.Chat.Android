@@ -29,7 +29,6 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_settings.*
 import timber.log.Timber
 import javax.inject.Inject
-import android.net.Uri
 
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
