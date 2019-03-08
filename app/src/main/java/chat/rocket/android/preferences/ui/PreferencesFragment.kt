@@ -38,11 +38,15 @@ class PreferencesFragment : Fragment(), PreferencesView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
         setupListeners()
         presenter.loadAnalyticsTrackingInformation()
 
         analyticsManager.logScreenView(ScreenViewEvent.Preferences)
+    }
+
+    override fun onResume() {
+        setupToolbar()
+        super.onResume()
     }
 
     override fun setupAnalyticsTrackingView(isAnalyticsTrackingEnabled: Boolean) {
