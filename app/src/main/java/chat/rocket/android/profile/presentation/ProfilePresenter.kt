@@ -186,13 +186,13 @@ class ProfilePresenter @Inject constructor(
             try {
                 val myself = retryIO { client.me() }
                 val user = User(
-                        id = myself.id,
-                        username = myself.username,
-                        name = myself.name,
-                        status = myself.status,
-                        utcOffset = myself.utcOffset,
-                        emails = myself.emails?.map { Email(it.address ?: "", it.verified) },
-                        roles = myself.roles
+                    id = myself.id,
+                    username = myself.username,
+                    name = myself.name,
+                    status = myself.status,
+                    utcOffset = myself.utcOffset,
+                    emails = myself.emails?.map { Email(it.address ?: "", it.verified) },
+                    roles = myself.roles
                 )
                 userHelper.updateUser(serverUrl, user)
                 view.showProfile(
