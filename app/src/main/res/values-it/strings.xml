@@ -315,6 +315,7 @@
     <string name="chatroom_header">Intestazione</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="header_channel">Canali</string>
     <string name="header_private_groups">Gruppi Privati</string>
     <string name="header_direct_messages">Messaggi Diretti</string>
