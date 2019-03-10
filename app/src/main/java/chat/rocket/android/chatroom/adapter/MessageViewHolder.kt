@@ -1,10 +1,15 @@
 package chat.rocket.android.chatroom.adapter
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.text.Spannable
+import android.text.SpannableString
 import android.text.method.LinkMovementMethod
+import android.text.style.BackgroundColorSpan
+import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
+import android.text.style.StyleSpan
 import android.view.View
 import androidx.core.view.isVisible
 import chat.rocket.android.R
@@ -16,10 +21,10 @@ import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 
 class MessageViewHolder(
-    itemView: View,
-    listener: ActionsListener,
-    reactionListener: EmojiReactionListener? = null,
-    private val avatarListener: (String) -> Unit
+        itemView: View,
+        listener: ActionsListener,
+        reactionListener: EmojiReactionListener? = null,
+        private val avatarListener: (String) -> Unit
 ) : BaseViewHolder<MessageUiModel>(itemView, listener, reactionListener), Drawable.Callback {
 
     init {
@@ -49,7 +54,22 @@ class MessageViewHolder(
                 }
             }
 
-            text_content.text_content.text = data.content
+            if (data.isSearchResult) {
+                fun setHighlightSpaannable(myText: CharSequence): SpannableString {
+                    var spannableContent = SpannableString(myText)
+                    val searchTermStart = data.content.indexOf(data.searchTerm)
+                    val highlightColor = BackgroundColorSpan(Color.rgb(255, 255, 0))
+                    if (searchTermStart > 0) {
+                        spannableContent.setSpan(highlightColor, searchTermStart, searchTermStart + data.searchTerm.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+                    }
+                    return spannableContent
+                }
+
+                val myText = data.content
+                text_content.text_content.text = setHighlightSpaannable(myText)
+            } else {
+                text_content.text_content.text = data.content
+            }
 
             image_avatar.setImageURI(data.avatar)
             text_content.setTextColor(if (data.isTemporary) Color.GRAY else Color.BLACK)
@@ -63,11 +83,11 @@ class MessageViewHolder(
                 read_receipt_view.isVisible = false
             } else {
                 read_receipt_view.setImageResource(
-                    if (data.unread == true) {
-                        R.drawable.ic_check_unread_24dp
-                    } else {
-                        R.drawable.ic_check_read_24dp
-                    }
+                        if (data.unread == true) {
+                            R.drawable.ic_check_unread_24dp
+                        } else {
+                            R.drawable.ic_check_read_24dp
+                        }
                 )
                 read_receipt_view.isVisible = true
             }

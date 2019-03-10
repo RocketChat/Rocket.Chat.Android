@@ -18,6 +18,8 @@ interface BaseUiModel<out T> {
     var showDayMarker: Boolean
     var menuItemsToHide: MutableList<Int>
     var permalink: String
+    var isSearchResult: Boolean
+    var searchTerm: String
 
     enum class ViewType(val viewType: Int) {
         MESSAGE(0),

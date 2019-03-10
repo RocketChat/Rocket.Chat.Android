@@ -23,13 +23,13 @@ import timber.log.Timber
 import java.security.InvalidParameterException
 
 class ChatRoomAdapter(
-    private val roomId: String? = null,
-    private val roomType: String? = null,
-    private val roomName: String? = null,
-    private val actionSelectListener: OnActionSelected? = null,
-    private val enableActions: Boolean = true,
-    private val reactionListener: EmojiReactionListener? = null,
-    private val navigator: ChatRoomNavigator? = null
+        private val roomId: String? = null,
+        private val roomType: String? = null,
+        private val roomName: String? = null,
+        private val actionSelectListener: OnActionSelected? = null,
+        private val enableActions: Boolean = true,
+        private val reactionListener: EmojiReactionListener? = null,
+        private val navigator: ChatRoomNavigator? = null
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
     private val dataSet = ArrayList<BaseUiModel<*>>()
 
@@ -42,9 +42,9 @@ class ChatRoomAdapter(
             BaseUiModel.ViewType.MESSAGE -> {
                 val view = parent.inflate(R.layout.item_message)
                 MessageViewHolder(
-                    view,
-                    actionsListener,
-                    reactionListener
+                        view,
+                        actionsListener,
+                        reactionListener
                 ) { userId -> navigator?.toUserDetails(userId) }
             }
             BaseUiModel.ViewType.URL_PREVIEW -> {
@@ -54,18 +54,18 @@ class ChatRoomAdapter(
             BaseUiModel.ViewType.ATTACHMENT -> {
                 val view = parent.inflate(R.layout.item_message_attachment)
                 AttachmentViewHolder(
-                    view,
-                    actionsListener,
-                    reactionListener,
-                    actionAttachmentOnClickListener
+                        view,
+                        actionsListener,
+                        reactionListener,
+                        actionAttachmentOnClickListener
                 )
             }
             BaseUiModel.ViewType.MESSAGE_REPLY -> {
                 val view = parent.inflate(R.layout.item_message_reply)
                 MessageReplyViewHolder(
-                    view,
-                    actionsListener,
-                    reactionListener
+                        view,
+                        actionsListener,
+                        reactionListener
                 ) { roomName, permalink ->
                     actionSelectListener?.openDirectMessage(roomName, permalink)
                 }
@@ -138,7 +138,7 @@ class ChatRoomAdapter(
         //---At first we will update all already saved elements with received updated ones
         val filteredDataSet = dataSet.filter { newItem ->
             val matchedIndex =
-                this.dataSet.indexOfFirst { it.messageId == newItem.messageId && it.viewType == newItem.viewType }
+                    this.dataSet.indexOfFirst { it.messageId == newItem.messageId && it.viewType == newItem.viewType }
             if (matchedIndex > -1) {
                 this.dataSet[matchedIndex] = newItem
                 notifyItemChanged(matchedIndex)
@@ -288,10 +288,10 @@ class ChatRoomAdapter(
         fun showMessageInfo(id: String)
 
         fun citeMessage(
-            roomName: String,
-            roomType: String,
-            messageId: String,
-            mentionAuthor: Boolean
+                roomName: String,
+                roomType: String,
+                messageId: String,
+                mentionAuthor: Boolean
         )
 
         fun copyMessage(id: String)

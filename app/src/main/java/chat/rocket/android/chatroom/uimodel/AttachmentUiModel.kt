@@ -18,6 +18,8 @@ data class AttachmentUiModel(
         override var showDayMarker: Boolean,
         override var menuItemsToHide: MutableList<Int> = mutableListOf(),
         override var permalink: String,
+        override var isSearchResult: Boolean = false,
+        override var searchTerm: String = "",
         val id: Long,
         val title: CharSequence?,
         val description: CharSequence?,
@@ -37,6 +39,7 @@ data class AttachmentUiModel(
         val fields: CharSequence?,
         val buttonAlignment: String?,
         val actions: List<Action>?
+
 ) : BaseUiModel<Attachment> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.ATTACHMENT.viewType

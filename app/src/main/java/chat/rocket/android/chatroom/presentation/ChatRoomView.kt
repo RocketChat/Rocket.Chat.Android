@@ -33,7 +33,7 @@ interface ChatRoomView : LoadingView, MessageView {
      *
      * @param dataSet The data set to show.
      */
-    fun showSearchedMessages(dataSet: List<BaseUiModel<*>>)
+    fun showSearchedMessages(dataSet: List<BaseUiModel<*>>, searchTerm: String)
 
     /**
      * Send a message to a chat room.
