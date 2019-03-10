@@ -870,6 +870,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 var textMessage = citation ?: ""
                 textMessage += text_message.textContent
                 sendMessage(textMessage)
+                recycler_view.smoothScrollToPosition(0)
             }
 
             button_show_attachment_options.setOnClickListener {
