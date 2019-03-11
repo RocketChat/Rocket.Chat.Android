@@ -315,6 +315,7 @@
     <string name="chatroom_header">头部</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="header_channel">频道</string>
     <string name="header_private_groups">私人组</string>
     <string name="header_direct_messages">直接对话</string>
