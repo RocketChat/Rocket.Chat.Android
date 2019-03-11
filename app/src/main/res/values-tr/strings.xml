@@ -320,6 +320,7 @@
     <string name="chatroom_header">Başlık</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="header_channel">Kanallar</string>
     <string name="header_private_groups">Gizli Gruplar</string>
     <string name="header_direct_messages">Direkt Mesajlar</string>
