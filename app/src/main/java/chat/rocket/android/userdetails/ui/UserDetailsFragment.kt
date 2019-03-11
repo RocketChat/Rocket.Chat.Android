@@ -29,14 +29,16 @@ import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_user_details.*
 import javax.inject.Inject
 
-fun newInstance(userId: String): Fragment {
+fun newInstance(userId: String,chatRoomId: String): Fragment {
     return UserDetailsFragment().apply {
-        arguments = Bundle(1).apply {
+        arguments = Bundle(2).apply {
             putString(BUNDLE_USER_ID, userId)
+            putString(BUNDLE_USER_CHATROOM_ID,chatRoomId)
         }
     }
 }
 
+private const val BUNDLE_USER_CHATROOM_ID = "user_chat_room_id"
 internal const val TAG_USER_DETAILS_FRAGMENT = "UserDetailsFragment"
 private const val BUNDLE_USER_ID = "user_id"
 
@@ -46,6 +48,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     @Inject
     lateinit var analyticsManager: AnalyticsManager
     private lateinit var userId: String
+    private lateinit var chatRoomId: String
     private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +58,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         val bundle = arguments
         if (bundle != null) {
             userId = bundle.getString(BUNDLE_USER_ID)
+            chatRoomId = bundle.getString(BUNDLE_USER_CHATROOM_ID)
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
@@ -72,7 +76,8 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         setupToolbar()
         setupListeners()
         presenter.loadUserDetails(userId)
-
+        presenter.checkDirectMessageRoomType(chatRoomId)
+        button_kick.setOnClickListener { presenter.kickUser(userId,chatRoomId) }
         analyticsManager.logScreenView(ScreenViewEvent.UserDetails)
     }
 
@@ -107,14 +112,22 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     }
 
     override fun showLoading() {
-        group_user_details.isVisible = false
         view_loading.isVisible = true
     }
 
     override fun hideLoading() {
-        group_user_details.isVisible = true
         view_loading.isVisible = false
     }
+
+    override fun enableKickButton() {
+        button_kick.isVisible = true
+    }
+
+    override fun disableKickButton() {
+        button_kick.isVisible = false
+    }
+
+    override fun showKickedUserSuccessfullyMessage() = showMessage(getString(R.string.msg_kick_user_successfully))
 
     override fun showMessage(resId: Int) {
         ui { showToast(resId) }

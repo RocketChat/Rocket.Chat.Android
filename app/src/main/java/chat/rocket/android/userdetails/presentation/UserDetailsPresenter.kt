@@ -12,8 +12,12 @@ import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.of
+import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.createDirectMessage
+import chat.rocket.core.internal.rest.kickUser
+import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.DefaultDispatcher
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
@@ -67,6 +71,46 @@ class UserDetailsPresenter @Inject constructor(
                 }
             } finally {
                 view.hideLoading()
+            }
+        }
+    }
+
+    fun kickUser(userId: String,chatRoomId:String){
+        launchUI(strategy){
+            try {
+                view.showLoading()
+                dbManager.getRoom(chatRoomId)?.let {
+                    val result = retryIO ("kickUser($userId,$chatRoomId,${roomTypeOf(it.chatRoom.type)})"){
+                        client.kickUser(chatRoomId, roomTypeOf(it.chatRoom.type),userId)
+                    }
+                    if(result){
+                        view.showKickedUserSuccessfullyMessage()
+                    }
+                }.ifNull {
+                    Timber.e("Couldn't find a room with id: $chatRoomId at current server.")
+                }
+            }catch (exception: Exception){
+                Timber.e(exception)
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            }finally {
+                view.hideLoading()
+            }
+        }
+    }
+
+    fun checkDirectMessageRoomType(chatRoomId: String) {
+        launchUI(strategy){
+            dbManager.getRoom(chatRoomId)?.let {
+               when(roomTypeOf(it.chatRoom.type)){
+                   is RoomType.DirectMessage -> view.disableKickButton()
+                   else -> view.enableKickButton()
+               }
+            }.ifNull {
+                Timber.e("Couldn't find a room with id: $chatRoomId at current server.")
             }
         }
     }

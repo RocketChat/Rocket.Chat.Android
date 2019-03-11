@@ -59,6 +59,7 @@
     <string name="action_register">रजिस्टर</string>
     <string name="action_confirm">पुष्टि करें</string>
     <string name="action_delete_account">खाता हटा दो</string>
+    <string name="action_kick_user">Kick user</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -73,6 +74,7 @@
     </string-array>
 
     <!-- Regular information messages -->
+    <string name="msg_kick_user_successfully">Kicked user successfully</string> <!-- TODO Add translation -->
     <string name="msg_generic_error">क्षमा करें, एक त्रुटि हुई है, कृपया पुनः प्रयास करें</string>
     <string name="msg_no_data_to_display">डेटा प्रदर्शित करने के लिए उपलब्ध नहीं हैं</string>
     <string name="msg_check_this_out">इसकी जांच करें</string>

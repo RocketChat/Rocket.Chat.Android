@@ -59,6 +59,7 @@
     <string name="action_register">ثبت‌نام</string>
     <string name="action_confirm">تایید</string>
     <string name="action_delete_account">حذف حساب کاربری</string>
+    <string name="action_kick_user">Kick user</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -73,6 +74,7 @@
     </string-array>
 
     <!-- Regular information messages -->
+    <string name="msg_kick_user_successfully">Kicked user successfully</string> <!-- TODO Add translation -->
     <string name="msg_generic_error">متاسفانه مشکلی رخ داد، لطفا دوباره تلاش کنید</string>
     <string name="msg_no_data_to_display">اطلاعاتی برای نمایش وجود نداد</string>
     <string name="msg_check_this_out">اینجا را ببینید</string>

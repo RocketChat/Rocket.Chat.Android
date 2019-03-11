@@ -44,7 +44,7 @@ class MembersFragment : Fragment(), MembersView {
     @Inject
     lateinit var analyticsManager: AnalyticsManager
     private val adapter: MembersAdapter =
-        MembersAdapter { memberUiModel -> presenter.toMemberDetails(memberUiModel) }
+        MembersAdapter { memberUiModel -> presenter.toMemberDetails(memberUiModel,chatRoomId) }
     private val linearLayoutManager = LinearLayoutManager(context)
     private lateinit var chatRoomId: String
 

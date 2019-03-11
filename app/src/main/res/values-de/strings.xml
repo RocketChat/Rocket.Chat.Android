@@ -62,6 +62,7 @@
     <string name="action_register">Registrieren</string>
     <string name="action_confirm">Bestätigen</string>
     <string name="action_delete_account">Konto löschen</string>
+    <string name="action_kick_user">Kick user</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -76,6 +77,7 @@
     </string-array>
 
     <!-- Regular information messages -->
+    <string name="msg_kick_user_successfully">Kicked user successfully</string> <!-- TODO Add translation -->
     <string name="msg_generic_error">Entschuldigung, ein Fehler ist aufgetreten, bitte versuchen Sie es noch einmal.</string>
     <string name="msg_no_data_to_display">Keine Anzeigedaten vorhanden</string>
     <string name="msg_check_this_out">Schau dir das an</string>

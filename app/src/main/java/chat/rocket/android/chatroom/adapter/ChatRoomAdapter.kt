@@ -45,7 +45,11 @@ class ChatRoomAdapter(
                     view,
                     actionsListener,
                     reactionListener
-                ) { userId -> navigator?.toUserDetails(userId) }
+                ) { userId ->
+                    if (roomId != null) {
+                        navigator?.toUserDetails(userId,roomId)
+                    }
+                }
             }
             BaseUiModel.ViewType.URL_PREVIEW -> {
                 val view = parent.inflate(R.layout.message_url_preview)

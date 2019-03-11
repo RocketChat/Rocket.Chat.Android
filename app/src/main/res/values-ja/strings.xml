@@ -59,6 +59,7 @@
     <string name="action_register">登録</string>
     <string name="action_confirm">確認</string>
     <string name="action_delete_account">アカウントを削除する</string>
+    <string name="action_kick_user">Kick user</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -73,6 +74,7 @@
     </string-array>
 
     <!-- Regular information messages -->
+    <string name="msg_kick_user_successfully">Kicked user successfully</string> <!-- TODO Add translation -->
     <string name="msg_generic_error">エラーが発生しました。もう一度お試しください。</string>
     <string name="msg_no_data_to_display">表示するデータがありません</string>
     <string name="msg_check_this_out">これをチェックする</string>
