@@ -22,14 +22,11 @@ import com.shopify.livedataktx.map
 import com.shopify.livedataktx.nonNull
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.isActive
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.newSingleThreadContext
 import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.experimental.yield
 import timber.log.Timber
-import java.lang.IllegalArgumentException
-import kotlin.coroutines.experimental.coroutineContext
-
 
 class ChatRoomsViewModel(
     private val connectionManager: ConnectionManager,
@@ -53,18 +50,11 @@ class ChatRoomsViewModel(
 
                     // debounce, to not query while the user is writing
                     delay(200)
-                    // TODO - find a better way for cancellation checking
-                    if (!coroutineContext.isActive) return@wrap
-
                     val rooms = repository.search(string).let { mapper.map(it, showLastMessage = this.showLastMessage) }
                     data.postValue(rooms.toMutableList() + LoadingItemHolder())
-
-
-                    if (!coroutineContext.isActive) return@wrap
-
+                    yield()
                     val spotlight = spotlight(query.query)?.let { mapper.map(it, showLastMessage = this.showLastMessage) }
-                    if (!coroutineContext.isActive) return@wrap
-
+                    yield()
                     spotlight?.let {
                         data.postValue(rooms.toMutableList() + spotlight)
                     }.ifNull {

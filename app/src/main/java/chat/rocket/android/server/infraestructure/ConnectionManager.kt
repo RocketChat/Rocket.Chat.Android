@@ -295,7 +295,7 @@ class ConnectionManager(
             val batch = ArrayList<T>(maxSize)
             var deadline = 0L // deadline for sending this batch to callback block
 
-            while(true) {
+            while(isActive) {
                 // when deadline is reached or size is exceeded, pass the batch to the callback block
                 val remainingTime = deadline - System.currentTimeMillis()
                 if (batch.isNotEmpty() && remainingTime <= 0 || batch.size >= maxSize) {
@@ -317,8 +317,6 @@ class ConnectionManager(
                     // when timeout is reached just finish select, note: no timeout when batch is empty
                     if (batch.isNotEmpty()) onTimeout(remainingTime.orZero()) {}
                 }
-
-                if (!isActive) break
             }
         }
     }
