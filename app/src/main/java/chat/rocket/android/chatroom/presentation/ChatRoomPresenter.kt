@@ -182,8 +182,8 @@ class ChatRoomPresenter @Inject constructor(
             chatRoomId?.let {
                 manager.addRoomChannel(it, roomChangesChannel)
                 for (room in roomChangesChannel) {
-                    dbManager.getRoom(room.id)?.let {
-                        view.onRoomUpdated(roomMapper.map(chatRoom = it, showLastMessage = true))
+                    dbManager.getRoom(room.id)?.let { chatRoom ->
+                        view.onRoomUpdated(roomMapper.map(chatRoom = chatRoom, showLastMessage = true))
                     }
                 }
             }
@@ -1074,7 +1074,7 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 messagesRepository.getById(messageId)?.let { message ->
-                    getChatRoomAsync(message.roomId)?.let { chatRoom ->
+                    getChatRoomAsync(message.roomId)?.let {
                         val models = mapper.map(message)
                         models.firstOrNull()?.permalink?.let {
                             view.copyToClipboard(it)

@@ -40,7 +40,7 @@ class UserDetailsPresenter @Inject constructor(
                 dbManager.getUser(userId)?.let {
                     userEntity = it
                     val avatarUrl =
-                        userEntity.username?.let { currentServer.avatarUrl(avatar = it) }
+                        userEntity.username?.let { username -> currentServer.avatarUrl(avatar = username) }
                     val username = userEntity.username
                     val name = userEntity.name
                     val utcOffset =
