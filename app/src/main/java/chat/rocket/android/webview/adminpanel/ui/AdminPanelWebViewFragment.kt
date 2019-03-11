@@ -27,11 +27,13 @@ class AdminPanelWebViewFragment : DaggerFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.run {
-            webPageUrl = getString(BUNDLE_WEB_PAGE_URL, "")
-            userToken = getString(BUNDLE_USER_TOKEN, "")
-
-        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
+        val bundle = arguments
+        if (bundle != null) {
+            webPageUrl = bundle.getString(BUNDLE_WEB_PAGE_URL)
+            userToken = bundle.getString(BUNDLE_USER_TOKEN)
+        } else {
+            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
+        }
     }
 
     override fun onCreateView(
@@ -63,7 +65,7 @@ class AdminPanelWebViewFragment : DaggerFragment() {
         web_view.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
-                ui {
+                ui { _ ->
                     view_loading.hide()
                     web_view.evaluateJavascript("Meteor.loginWithToken('$userToken', function() { })") {}
                 }

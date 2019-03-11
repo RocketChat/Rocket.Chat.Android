@@ -81,46 +81,44 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
             return
         }
 
-        with(intent) {
-            val chatRoomId = getStringExtra(INTENT_CHAT_ROOM_ID)
-            requireNotNull(chatRoomId) { "no chat_room_id provided in Intent extras" }
+        val chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
+        requireNotNull(chatRoomId) { "no chat_room_id provided in Intent extras" }
 
-            val chatRoomName = getStringExtra(INTENT_CHAT_ROOM_NAME)
-            requireNotNull(chatRoomName) { "no chat_room_name provided in Intent extras" }
+        val chatRoomName = intent.getStringExtra(INTENT_CHAT_ROOM_NAME)
+        requireNotNull(chatRoomName) { "no chat_room_name provided in Intent extras" }
 
-            val chatRoomType = getStringExtra(INTENT_CHAT_ROOM_TYPE)
-            requireNotNull(chatRoomType) { "no chat_room_type provided in Intent extras" }
+        val chatRoomType = intent.getStringExtra(INTENT_CHAT_ROOM_TYPE)
+        requireNotNull(chatRoomType) { "no chat_room_type provided in Intent extras" }
 
-            val isReadOnly = getBooleanExtra(INTENT_CHAT_ROOM_IS_READ_ONLY, true)
+        val isReadOnly = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_READ_ONLY, true)
 
-            val isCreator = getBooleanExtra(INTENT_CHAT_ROOM_IS_CREATOR, false)
+        val isCreator = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_CREATOR, false)
 
-            val isFavorite = getBooleanExtra(INTENT_CHAT_ROOM_IS_FAVORITE, false)
+        val isFavorite = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_FAVORITE, false)
 
-            val chatRoomLastSeen = getLongExtra(INTENT_CHAT_ROOM_LAST_SEEN, -1)
+        val chatRoomLastSeen = intent.getLongExtra(INTENT_CHAT_ROOM_LAST_SEEN, -1)
 
-            val isSubscribed = getBooleanExtra(INTENT_CHAT_IS_SUBSCRIBED, true)
+        val isSubscribed = intent.getBooleanExtra(INTENT_CHAT_IS_SUBSCRIBED, true)
 
-            val chatRoomMessage = getStringExtra(INTENT_CHAT_ROOM_MESSAGE)
-
-            if (supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOM_FRAGMENT) == null) {
-                addFragment(TAG_CHAT_ROOM_FRAGMENT, R.id.fragment_container) {
-                    newInstance(
-                            chatRoomId,
-                            chatRoomName,
-                            chatRoomType,
-                            isReadOnly,
-                            chatRoomLastSeen,
-                            isSubscribed,
-                            isCreator,
-                            isFavorite,
-                            chatRoomMessage
-                    )
-                }
-            }
-        }
+        val chatRoomMessage = intent.getStringExtra(INTENT_CHAT_ROOM_MESSAGE)
 
         setupToolbar()
+
+        if (supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOM_FRAGMENT) == null) {
+            addFragment(TAG_CHAT_ROOM_FRAGMENT, R.id.fragment_container) {
+                newInstance(
+                    chatRoomId,
+                    chatRoomName,
+                    chatRoomType,
+                    isReadOnly,
+                    chatRoomLastSeen,
+                    isSubscribed,
+                    isCreator,
+                    isFavorite,
+                    chatRoomMessage
+                )
+            }
+        }
     }
 
     override fun onBackPressed() {

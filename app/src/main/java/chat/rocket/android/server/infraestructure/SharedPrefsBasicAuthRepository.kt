@@ -15,7 +15,8 @@ class SharedPrefsBasicAuthRepository(
 ) : BasicAuthRepository {
 
     override fun save(basicAuth: BasicAuth) {
-        val newList = load().filter { item -> item.host != item.host }.toMutableList()
+        val newList = load().filter { basicAuth -> basicAuth.host != basicAuth.host }
+            .toMutableList()
         newList.add(0, basicAuth)
         save(newList)
     }
@@ -25,7 +26,7 @@ class SharedPrefsBasicAuthRepository(
         val type = Types.newParameterizedType(List::class.java, BasicAuth::class.java)
         val adapter = moshi.adapter<List<BasicAuth>>(type)
 
-        return if (json == null) emptyList() else adapter.fromJson(json) ?: emptyList()
+        return adapter.fromJson(json) ?: emptyList()
     }
 
     private fun save(basicAuths: List<BasicAuth>) {

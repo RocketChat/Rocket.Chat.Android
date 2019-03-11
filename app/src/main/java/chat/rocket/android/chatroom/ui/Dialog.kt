@@ -8,7 +8,8 @@ import chat.rocket.android.emoji.internal.GlideApp
 import chat.rocket.android.util.extensions.getFileName
 import chat.rocket.android.util.extensions.getMimeType
 import chat.rocket.common.util.ifNull
-import com.bumptech.glide.request.target.ImageViewTarget
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 
 fun ChatRoomFragment.showFileAttachmentDialog(uri: Uri) {
     imagePreview.isVisible = false
@@ -24,22 +25,27 @@ fun ChatRoomFragment.showFileAttachmentDialog(uri: Uri) {
             when {
                 mimeType.startsWith("image") -> {
                     if (mimeType.contains("gif")) {
-                        GlideApp.with(context)
-                                .asGif()
-                                .load(uri)
-                                .fitCenter()
-                                .into(imagePreview)
+                        GlideApp
+                            .with(context)
+                            .asGif()
+                            .load(uri)
+                            .fitCenter()
+                            .into(imagePreview)
                     } else {
-                        GlideApp.with(context)
-                                .asBitmap()
-                                .load(uri)
-                                .fitCenter()
-                                .into(object : ImageViewTarget<Bitmap>(imagePreview) {
-                                    override fun setResource(resource: Bitmap?) {
-                                        bitmap = resource
-                                        imagePreview.setImageBitmap(resource)
-                                    }
-                                })
+                        GlideApp
+                            .with(context)
+                            .asBitmap()
+                            .load(uri)
+                            .fitCenter()
+                            .into(object : SimpleTarget<Bitmap>() {
+                                override fun onResourceReady(
+                                    resource: Bitmap,
+                                    transition: Transition<in Bitmap>?
+                                ) {
+                                    bitmap = resource
+                                    imagePreview.setImageBitmap(resource)
+                                }
+                            })
                     }
                     imagePreview.isVisible = true
                 }

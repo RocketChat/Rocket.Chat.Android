@@ -52,9 +52,12 @@ class MembersFragment : Fragment(), MembersView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        arguments?.run {
-            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")
-        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
+        val bundle = arguments
+        if (bundle != null) {
+            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
+        } else {
+            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
+        }
     }
 
     override fun onCreateView(
@@ -77,7 +80,7 @@ class MembersFragment : Fragment(), MembersView {
             setupToolbar(total)
             if (adapter.itemCount == 0) {
                 adapter.prependData(dataSet)
-                if (dataSet.size >= 59) { // TODO Check why the API returns the specified count -1
+                if (dataSet.size >= 59) { // TODO Check why the API retorns the specified count -1
                     recycler_view.addOnScrollListener(object :
                         EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(

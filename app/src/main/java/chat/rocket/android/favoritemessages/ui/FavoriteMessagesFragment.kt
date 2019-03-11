@@ -48,9 +48,12 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        arguments?.run {
-            chatRoomId = getString(INTENT_CHAT_ROOM_ID, "")
-        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
+        val bundle = arguments
+        if (bundle != null) {
+            chatRoomId = bundle.getString(INTENT_CHAT_ROOM_ID)
+        } else {
+            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
+        }
     }
 
     override fun onCreateView(

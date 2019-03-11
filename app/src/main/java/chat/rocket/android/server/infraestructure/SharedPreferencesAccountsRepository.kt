@@ -14,12 +14,12 @@ class SharedPreferencesAccountsRepository(
     private val moshi: Moshi
 ) : AccountsRepository {
 
-    override fun save(account: Account) {
+    override fun save(newAccount: Account) {
         val accounts = load()
 
-        val newList = accounts.filter { account -> account.serverUrl != account.serverUrl }
+        val newList = accounts.filter { account -> newAccount.serverUrl != account.serverUrl }
             .toMutableList()
-        newList.add(0, account)
+        newList.add(0, newAccount)
         save(newList)
     }
 
@@ -28,7 +28,7 @@ class SharedPreferencesAccountsRepository(
         val type = Types.newParameterizedType(List::class.java, Account::class.java)
         val adapter = moshi.adapter<List<Account>>(type)
 
-        return if (json == null) emptyList() else adapter.fromJson(json) ?: emptyList()
+        return adapter.fromJson(json) ?: emptyList()
     }
 
     override fun remove(serverUrl: String) {

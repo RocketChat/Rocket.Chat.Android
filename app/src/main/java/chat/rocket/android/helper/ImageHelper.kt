@@ -51,10 +51,10 @@ object ImageHelper {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        val toolbar = Toolbar(context).also { toolbar ->
-            toolbar.inflateMenu(R.menu.image_actions)
-            toolbar.setOnMenuItemClickListener { view ->
-                return@setOnMenuItemClickListener when (view.itemId) {
+        val toolbar = Toolbar(context).also {
+            it.inflateMenu(R.menu.image_actions)
+            it.setOnMenuItemClickListener {
+                return@setOnMenuItemClickListener when (it.itemId) {
                     R.id.action_save_image -> saveImage(context)
                     else -> true
                 }
@@ -62,16 +62,14 @@ object ImageHelper {
 
             val titleSize = context.resources
                 .getDimensionPixelSize(R.dimen.viewer_toolbar_title)
-            val titleTextView = TextView(context).also { tv ->
-                with(tv) {
-                    text = imageName
-                    setTextColor(Color.WHITE)
-                    setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize.toFloat())
-                    ellipsize = TextUtils.TruncateAt.END
-                    setSingleLine()
-                    typeface = Typeface.DEFAULT_BOLD
-                    setPadding(pad)
-                }
+            val titleTextView = TextView(context).also {
+                it.text = imageName
+                it.setTextColor(Color.WHITE)
+                it.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize.toFloat())
+                it.ellipsize = TextUtils.TruncateAt.END
+                it.setSingleLine()
+                it.typeface = Typeface.DEFAULT_BOLD
+                it.setPadding(pad)
             }
 
             val backArrowView = ImageView(context).also {
@@ -85,8 +83,8 @@ object ImageHelper {
                 AppBarLayout.LayoutParams.WRAP_CONTENT
             )
 
-            toolbar.addView(backArrowView, layoutParams)
-            toolbar.addView(titleTextView, layoutParams)
+            it.addView(backArrowView, layoutParams)
+            it.addView(titleTextView, layoutParams)
         }
 
         val appBarLayout = AppBarLayout(context).also {

@@ -52,10 +52,14 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        arguments?.run {
-            userId = getString(BUNDLE_USER_ID, "")
-            authToken = getString(BUNDLE_AUTH_TOKEN, "")
-        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
+
+        val bundle = arguments
+        if (bundle != null) {
+            userId = bundle.getString(BUNDLE_USER_ID)
+            authToken = bundle.getString(BUNDLE_AUTH_TOKEN)
+        } else {
+            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
+        }
     }
 
     override fun onCreateView(

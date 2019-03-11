@@ -58,8 +58,10 @@ class LoginFragment : Fragment(), LoginView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        arguments?.run {
-            serverName = getString(SERVER_NAME)
+
+        val bundle = arguments
+        if (bundle != null) {
+            serverName = bundle.getString(SERVER_NAME)
         }
     }
 
@@ -148,7 +150,7 @@ class LoginFragment : Fragment(), LoginView {
     override fun showGenericErrorMessage() = showMessage(R.string.msg_generic_error)
 
     private fun setupOnClickListener() =
-        ui {
+        ui { _ ->
             button_log_in.setOnClickListener {
                 presenter.authenticateWithUserAndPassword(
                     text_username_or_email.textContent,
@@ -158,7 +160,7 @@ class LoginFragment : Fragment(), LoginView {
         }
 
     override fun showForgotPasswordView() {
-        ui {
+        ui { _ ->
             button_forgot_your_password.isVisible = true
             button_forgot_your_password.setOnClickListener { presenter.forgotPassword() }
 

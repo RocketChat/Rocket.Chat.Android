@@ -1072,7 +1072,7 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 messagesRepository.getById(messageId)?.let { message ->
-                    getChatRoomAsync(message.roomId)?.let {
+                    getChatRoomAsync(message.roomId)?.let { chatRoom ->
                         val models = mapper.map(message)
                         models.firstOrNull()?.permalink?.let {
                             view.copyToClipboard(it)

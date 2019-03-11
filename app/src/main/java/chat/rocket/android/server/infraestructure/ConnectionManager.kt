@@ -97,8 +97,8 @@ class ConnectionManager(
 
                         resubscribeRooms()
 
-                        temporaryStatus?.let { tempStatus ->
-                            client.setTemporaryStatus(tempStatus)
+                        temporaryStatus?.let { status ->
+                            client.setTemporaryStatus(status)
                         }
                     }
                     is State.Waiting -> {
@@ -231,7 +231,7 @@ class ConnectionManager(
     }
 
     private fun resubscribeRooms() {
-        roomMessagesChannels.toList().map { (roomId, _) ->
+        roomMessagesChannels.toList().map { (roomId, channel) ->
             client.subscribeRoomMessages(roomId) { _, id ->
                 Timber.d("Subscribed to $roomId: $id")
                 subscriptionIdMap[roomId] = id
