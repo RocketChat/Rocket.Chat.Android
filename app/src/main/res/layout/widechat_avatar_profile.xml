@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentEnd="true"
-    android:orientation="horizontal"
-    android:paddingEnd="24dp">
+    android:orientation="horizontal">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_avatar"
