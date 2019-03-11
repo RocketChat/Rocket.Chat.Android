@@ -294,8 +294,8 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
 
     private fun addChip(chipText: String) {
         val chip = Chip(context)
-        chip.chipText = chipText
-        chip.isCloseIconEnabled = true
+        chip.text = chipText
+        chip.isCloseIconVisible = true
         chip.setChipBackgroundColorResource(R.color.icon_grey)
         setupChipOnCloseIconClickListener(chip)
         chip_group_member.addView(chip)
@@ -304,7 +304,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     private fun setupChipOnCloseIconClickListener(chip: Chip) {
         chip.setOnCloseIconClickListener {
             removeChip(it)
-            removeMember((it as Chip).chipText.toString())
+            removeMember((it as Chip).text.toString())
             // whenever we remove a chip we should process the chip group visibility.
             processChipGroupVisibility()
         }

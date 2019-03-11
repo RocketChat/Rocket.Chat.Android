@@ -223,8 +223,8 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         val list = mutableListOf<BaseMessageEntity>()
         reactions.keys.forEach { reaction ->
             val users = reactions[reaction]
-            users?.let { users ->
-                list.add(ReactionEntity(reaction, message.id, users.size, users.joinToString()))
+            users?.let {
+                list.add(ReactionEntity(reaction, message.id, it.size, it.joinToString()))
             }
         }
 
@@ -375,15 +375,11 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         }
     }
 
-    private fun mapLastMessageText(message: Message?): String? {
-        return if (message == null) {
-            null
+    private fun mapLastMessageText(message: Message?): String? = message?.run {
+        if (this.message.isEmpty() && attachments?.isNotEmpty() == true) {
+            mapAttachmentText(attachments!![0])
         } else {
-            return if (message.message.isEmpty() && message.attachments?.isNotEmpty() == true) {
-                mapAttachmentText(message.attachments!![0])
-            } else {
-                message.message
-            }
+            this.message
         }
     }
 

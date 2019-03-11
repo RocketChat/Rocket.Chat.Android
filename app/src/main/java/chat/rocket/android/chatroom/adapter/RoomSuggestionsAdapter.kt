@@ -24,8 +24,8 @@ class RoomSuggestionsAdapter : SuggestionsAdapter<RoomSuggestionsViewHolder>("#"
         override fun bind(item: SuggestionModel, itemClickListener: SuggestionsAdapter.ItemClickListener?) {
             item as ChatRoomSuggestionUiModel
             with(itemView) {
-                val fullname = itemView.findViewById<TextView>(R.id.text_fullname)
-                val name = itemView.findViewById<TextView>(R.id.text_name)
+                val fullname = findViewById<TextView>(R.id.text_fullname)
+                val name = findViewById<TextView>(R.id.text_name)
                 name.text = item.name
                 fullname.text = item.fullName
                 setOnClickListener {

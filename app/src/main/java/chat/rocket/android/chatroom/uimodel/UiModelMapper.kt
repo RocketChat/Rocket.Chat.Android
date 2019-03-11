@@ -416,21 +416,18 @@ class UiModelMapper @Inject constructor(
         return fullUrl
     }
 
-    private fun attachmentText(text: String?, attachment: Attachment?, context: Context): String? {
-        return if (attachment != null) {
-            when {
-                attachment.imageUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_photo)
-                attachment.videoUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_video)
-                attachment.audioUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_audio)
-                attachment.titleLink.isNotNullNorEmpty() &&
-                        attachment.type?.contentEquals("file") == true ->
-                    context.getString(R.string.msg_preview_file)
-                else -> text
+    private fun attachmentText(text: String?, attachment: Attachment?, context: Context): String? = attachment?.run {
+            with(context) {
+                when {
+                    imageUrl.isNotNullNorEmpty() -> getString(R.string.msg_preview_photo)
+                    videoUrl.isNotNullNorEmpty() -> getString(R.string.msg_preview_video)
+                    audioUrl.isNotNullNorEmpty() -> getString(R.string.msg_preview_audio)
+                    titleLink.isNotNullNorEmpty() &&
+                            type?.contentEquals("file") == true -> getString(R.string.msg_preview_file)
+                    else -> text
+                }
             }
-        } else {
-            text
-        }
-    }
+        } ?: text
 
     private fun attachmentDescription(attachment: Attachment): String? {
         return attachment.description

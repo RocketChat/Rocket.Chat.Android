@@ -51,6 +51,7 @@ class ChangeServerPresenter @Inject constructor(
                 val settings = settingsRepository.get(serverUrl)
                 if (settings == null) {
                     // TODO - reload settings...
+                    // settingsRepository returns non nullable settings
                 }
 
                 // Call disconnect on the old url if any...

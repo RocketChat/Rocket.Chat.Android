@@ -46,12 +46,9 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
         AndroidSupportInjection.inject(this)
         setHasOptionsMenu(true)
 
-        val bundle = arguments
-        if (bundle != null) {
-            messageId = bundle.getString(BUNDLE_MESSAGE_ID)
-        } else {
-            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
-        }
+        arguments?.run {
+            messageId = getString(BUNDLE_MESSAGE_ID, "")
+        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
 
     override fun onCreateView(
