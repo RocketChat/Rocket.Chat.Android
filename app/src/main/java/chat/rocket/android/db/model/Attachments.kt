@@ -1,7 +1,11 @@
 package chat.rocket.android.db.model
 
 import android.content.Context
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import chat.rocket.android.R
 import chat.rocket.android.util.extension.orFalse
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
@@ -110,7 +114,8 @@ fun Attachment.asEntity(msgId: String, context: Context): List<BaseMessageEntity
     val list = mutableListOf<BaseMessageEntity>()
 
     val text = mapAttachmentText(text, attachments?.firstOrNull(), context)
-    list.add(AttachmentEntity(
+
+    val entity = AttachmentEntity(
             _id = attachmentId,
             messageId = msgId,
             title = title,
@@ -139,14 +144,16 @@ fun Attachment.asEntity(msgId: String, context: Context): List<BaseMessageEntity
             buttonAlignment = buttonAlignment,
             hasActions = actions?.isNotEmpty() == true,
             hasFields = fields?.isNotEmpty() == true
-    ))
+    )
+    list.add(entity)
 
     fields?.forEach { field ->
-        list.add(AttachmentFieldEntity(
+        val entity = AttachmentFieldEntity(
                 attachmentId = attachmentId,
                 title = field.title,
                 value = field.value
-        ))
+        )
+        list.add(entity)
     }
 
     actions?.forEach { action ->
@@ -168,16 +175,18 @@ fun Attachment.asEntity(msgId: String, context: Context): List<BaseMessageEntity
     return list
 }
 
-fun mapAttachmentText(text: String?, attachment: Attachment?, context: Context): String? = attachment?.run {
-    with(context) {
+fun mapAttachmentText(text: String?, attachment: Attachment?, context: Context): String? {
+    return if (attachment != null) {
         when {
-            imageUrl.isNotNullNorEmpty() -> getString(R.string.msg_preview_photo)
-            videoUrl.isNotNullNorEmpty() -> getString(R.string.msg_preview_video)
-            audioUrl.isNotNullNorEmpty() -> getString(R.string.msg_preview_audio)
-            titleLink.isNotNullNorEmpty() &&
-                    type?.contentEquals("file") == true ->
-                getString(R.string.msg_preview_file)
+            attachment.imageUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_photo)
+            attachment.videoUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_video)
+            attachment.audioUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_audio)
+            attachment.titleLink.isNotNullNorEmpty() &&
+                    attachment.type?.contentEquals("file") == true ->
+                context.getString(R.string.msg_preview_file)
             else -> text
         }
-    } ?: text
+    } else {
+        text
+    }
 }

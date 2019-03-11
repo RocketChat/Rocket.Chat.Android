@@ -1,8 +1,5 @@
 package chat.rocket.android.util.extension
 
-import android.content.Context
-import android.os.Build
-import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 
 fun SearchView.onQueryTextListener(queryListener: (String) -> Unit) {
@@ -17,12 +14,4 @@ fun SearchView.onQueryTextListener(queryListener: (String) -> Unit) {
             return true
         }
     })
-}
-
-fun TextView.setTextViewAppearance(context: Context, style: Int) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        setTextAppearance(style)
-    } else {
-        setTextAppearance(context, style)
-    }
 }

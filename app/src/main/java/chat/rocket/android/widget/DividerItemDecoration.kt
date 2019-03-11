@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
  * @see RecyclerView.ItemDecoration
  */
 class DividerItemDecoration() : RecyclerView.ItemDecoration() {
-    private var divider: Drawable? = null
+    private lateinit var divider: Drawable
     private var boundStart = 0
     private var boundEnd = 0
 
@@ -59,10 +59,10 @@ class DividerItemDecoration() : RecyclerView.ItemDecoration() {
             val params = child.layoutParams as RecyclerView.LayoutParams
 
             val top = child.bottom + params.bottomMargin
-            val bottom = top + (divider?.intrinsicHeight ?: 0)
+            val bottom = top + divider.intrinsicHeight
 
-            divider?.setBounds(left, top, right, bottom)
-            divider?.draw(c)
+            divider.setBounds(left, top, right, bottom)
+            divider.draw(c)
         }
     }
 

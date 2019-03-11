@@ -273,18 +273,20 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         AndroidSupportInjection.inject(this)
         setHasOptionsMenu(true)
 
-
-        arguments?.run {
-            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")
-            chatRoomName = getString(BUNDLE_CHAT_ROOM_NAME, "")
-            chatRoomType = getString(BUNDLE_CHAT_ROOM_TYPE, "")
-            isReadOnly = getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
-            isSubscribed = getBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED)
-            chatRoomLastSeen = getLong(BUNDLE_CHAT_ROOM_LAST_SEEN)
-            isCreator = getBoolean(BUNDLE_CHAT_ROOM_IS_CREATOR)
-            isFavorite = getBoolean(BUNDLE_CHAT_ROOM_IS_FAVORITE)
-            chatRoomMessage = getString(BUNDLE_CHAT_ROOM_MESSAGE)
-        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
+        val bundle = arguments
+        if (bundle != null) {
+            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
+            chatRoomName = bundle.getString(BUNDLE_CHAT_ROOM_NAME)
+            chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
+            isReadOnly = bundle.getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
+            isSubscribed = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED)
+            chatRoomLastSeen = bundle.getLong(BUNDLE_CHAT_ROOM_LAST_SEEN)
+            isCreator = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_CREATOR)
+            isFavorite = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_FAVORITE)
+            chatRoomMessage = bundle.getString(BUNDLE_CHAT_ROOM_MESSAGE)
+        } else {
+            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
+        }
 
         adapter = ChatRoomAdapter(chatRoomId, chatRoomType, chatRoomName, this, reactionListener = this, navigator = navigator)
     }

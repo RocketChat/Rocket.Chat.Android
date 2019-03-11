@@ -49,10 +49,14 @@ class TwoFAFragment : Fragment(), TwoFAView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        arguments?.run {
-            username = getString(BUNDLE_USERNAME, "")
-            password = getString(BUNDLE_PASSWORD, "")
-        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
+
+        val bundle = arguments
+        if (bundle != null) {
+            username = bundle.getString(BUNDLE_USERNAME)
+            password = bundle.getString(BUNDLE_PASSWORD)
+        } else {
+            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
+        }
     }
 
     override fun onCreateView(

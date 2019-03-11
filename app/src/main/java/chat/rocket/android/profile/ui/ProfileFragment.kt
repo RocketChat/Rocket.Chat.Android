@@ -96,13 +96,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         if (resultData != null && resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_FOR_PERFORM_SAF) {
-                resultData.data?.let {
-                    presenter.updateAvatar(it)
-                }
+                presenter.updateAvatar(resultData.data)
             } else if (requestCode == REQUEST_CODE_FOR_PERFORM_CAMERA) {
-                resultData.extras?.get("data")?.let {
-                    presenter.preparePhotoAndUpdateAvatar(it as Bitmap)
-                }
+                presenter.preparePhotoAndUpdateAvatar(resultData.extras["data"] as Bitmap)
             }
         }
     }

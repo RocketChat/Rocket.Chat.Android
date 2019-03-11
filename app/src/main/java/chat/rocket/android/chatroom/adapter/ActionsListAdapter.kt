@@ -12,10 +12,7 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.android.synthetic.main.item_action_button.view.*
 import timber.log.Timber
 
-class ActionsListAdapter(
-        actions: List<Action>,
-        var actionAttachmentOnClickListener: ActionAttachmentOnClickListener
-) : RecyclerView.Adapter<ActionsListAdapter.ViewHolder>() {
+class ActionsListAdapter(actions: List<Action>, var actionAttachmentOnClickListener: ActionAttachmentOnClickListener) : RecyclerView.Adapter<ActionsListAdapter.ViewHolder>() {
 
     var actions: List<Action> = actions
 

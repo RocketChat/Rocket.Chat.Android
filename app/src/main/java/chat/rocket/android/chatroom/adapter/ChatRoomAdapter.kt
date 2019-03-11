@@ -174,12 +174,12 @@ class ChatRoomAdapter(
         Timber.d("index: $index")
         if (index > -1) {
             dataSet[index] = message
-            dataSet.forEachIndexed { ind, viewModel ->
+            dataSet.forEachIndexed { index, viewModel ->
                 if (viewModel.messageId == message.messageId) {
                     if (viewModel.nextDownStreamMessage == null) {
                         viewModel.reactions = message.reactions
                     }
-                    notifyItemChanged(ind)
+                    notifyItemChanged(index)
                 }
             }
             // Delete message only if current is a system message update, i.e.: Message Removed

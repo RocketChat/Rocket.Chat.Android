@@ -69,8 +69,11 @@ fun String.userId(userId: String?): String? {
     return userId?.let { this.replace(it, "") }
 }
 
-fun String.lowercaseUrl(): String? = HttpUrl.parse(this)?.run {
-    newBuilder().scheme(scheme().toLowerCase()).build().toString()
+fun String.lowercaseUrl(): String? {
+    val httpUrl = HttpUrl.parse(this)
+    val newScheme = httpUrl?.scheme()?.toLowerCase()
+
+    return httpUrl?.newBuilder()?.scheme(newScheme)?.build()?.toString()
 }
 
 fun String?.isNotNullNorEmpty(): Boolean = this != null && this.isNotEmpty()

@@ -186,7 +186,7 @@ class PushManager @Inject constructor(
                 .setGroupSummary(false)
 
             if (style == null || "inbox" == style) {
-                val pushMessageList = groupedPushes.hostToPushMessageList[host]
+                val pushMessageList = groupedPushes.hostToPushMessageList.get(host)
 
                 if (pushMessageList != null) {
                     val userMessages = pushMessageList.filter {
@@ -230,10 +230,7 @@ class PushManager @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createBaseNotificationBuilder(
-        pushMessage: PushMessage,
-        grouped: Boolean = false
-    ): NotificationCompat.Builder {
+    private fun createBaseNotificationBuilder(pushMessage: PushMessage, grouped: Boolean = false): NotificationCompat.Builder {
         return with(pushMessage) {
             val id = notificationId.toInt()
             val host = info.host
@@ -298,12 +295,7 @@ class PushManager @Inject constructor(
         return PendingIntent.getBroadcast(context, pushMessage.notificationId.toInt(), deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    private fun getContentIntent(
-        context: Context,
-        notificationId: Int,
-        pushMessage: PushMessage,
-        grouped: Boolean = false
-    ): PendingIntent {
+    private fun getContentIntent(context: Context, notificationId: Int, pushMessage: PushMessage, grouped: Boolean = false): PendingIntent {
         val roomId = if (!grouped) pushMessage.info.roomId else null
         val notificationIntent = context.changeServerIntent(pushMessage.info.host, chatRoomId = roomId)
         return PendingIntent.getActivity(context, random.nextInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -311,11 +303,7 @@ class PushManager @Inject constructor(
 
     // CharSequence extensions
     private fun CharSequence.fromHtml(): Spanned {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Html.fromHtml(this as String, Html.FROM_HTML_MODE_LEGACY)
-        } else {
-            Html.fromHtml(this as String)
-        }
+        return Html.fromHtml(this as String)
     }
 
     // NotificationCompat.Builder extensions
@@ -395,12 +383,12 @@ data class PushMessage(
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
-        parcel.readParcelable(PushMessage::class.java.classLoader) ?: PushInfo.EMPTY,
         parcel.readString(),
         parcel.readString(),
-        parcel.readString()?: "",
+        parcel.readParcelable(PushMessage::class.java.classLoader),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
         parcel.readString(),
         parcel.readString())
 
@@ -445,9 +433,9 @@ data class PushInfo @KotshiConstructor constructor(
     }
 
     constructor(parcel: Parcel) : this(
-        parcel.readString()!!,
-        parcel.readString()!!,
-        roomTypeOf(parcel.readString()!!),
+        parcel.readString(),
+        parcel.readString(),
+        roomTypeOf(parcel.readString()),
         parcel.readString(),
         parcel.readParcelable(PushInfo::class.java.classLoader))
 
@@ -493,7 +481,7 @@ data class PushSender @KotshiConstructor constructor(
     val name: String?
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readString()!!,
+        parcel.readString(),
         parcel.readString(),
         parcel.readString())
 
