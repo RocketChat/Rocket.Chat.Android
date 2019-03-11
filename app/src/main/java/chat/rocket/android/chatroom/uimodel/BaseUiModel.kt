@@ -32,5 +32,5 @@ interface BaseUiModel<out T> {
 
 internal fun Int.toViewType(): BaseUiModel.ViewType {
     return BaseUiModel.ViewType.values().firstOrNull { it.viewType == this }
-            ?: throw InvalidParameterException("Invalid viewType: $this for BaseUiModel.ViewType")
+        ?: throw InvalidParameterException("Invalid viewType: $this for BaseUiModel.ViewType")
 }

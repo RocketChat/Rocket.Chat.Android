@@ -18,7 +18,7 @@ data class MessageReplyUiModel(
     override var showDayMarker: Boolean,
     override var permalink: String,
     override var isSearchResult: Boolean = false,
-    override var searchTerm: String =""
+    override var searchTerm: String = ""
 ) : BaseUiModel<MessageReply> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.MESSAGE_REPLY.viewType

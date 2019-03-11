@@ -21,10 +21,10 @@ import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 
 class MessageViewHolder(
-        itemView: View,
-        listener: ActionsListener,
-        reactionListener: EmojiReactionListener? = null,
-        private val avatarListener: (String) -> Unit
+    itemView: View,
+    listener: ActionsListener,
+    reactionListener: EmojiReactionListener? = null,
+    private val avatarListener: (String) -> Unit
 ) : BaseViewHolder<MessageUiModel>(itemView, listener, reactionListener), Drawable.Callback {
 
     init {
@@ -60,7 +60,12 @@ class MessageViewHolder(
                     val searchTermStart = data.content.indexOf(data.searchTerm)
                     val highlightColor = BackgroundColorSpan(Color.rgb(255, 255, 0))
                     if (searchTermStart > 0) {
-                        spannableContent.setSpan(highlightColor, searchTermStart, searchTermStart + data.searchTerm.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+                        spannableContent.setSpan(
+                            highlightColor,
+                            searchTermStart,
+                            searchTermStart + data.searchTerm.length,
+                            Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                        )
                     }
                     return spannableContent
                 }
@@ -83,11 +88,11 @@ class MessageViewHolder(
                 read_receipt_view.isVisible = false
             } else {
                 read_receipt_view.setImageResource(
-                        if (data.unread == true) {
-                            R.drawable.ic_check_unread_24dp
-                        } else {
-                            R.drawable.ic_check_read_24dp
-                        }
+                    if (data.unread == true) {
+                        R.drawable.ic_check_unread_24dp
+                    } else {
+                        R.drawable.ic_check_read_24dp
+                    }
                 )
                 read_receipt_view.isVisible = true
             }
