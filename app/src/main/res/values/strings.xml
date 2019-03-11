@@ -378,6 +378,15 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_widechat_no_chats_to_display">You can get started by searching for people to chat with or by inviting your friends and family to get the app too.</string>
     <string name="msg_widechat_welcome_to_app">Welcome to Viasat Connect.</string>
 
+    <!--Contacts Permissions-->
+    <string name="permissions_request">To easily connect with friends and family, allow Viasat Connect access to your contacts.</string>
+    <string name="negative_buttton">NOT NOW</string>
+    <string name="positive_button">CONTINUE</string>
+    <string name="permissions_item">Would you like to allow Viasat Connect to access your contacts?</string>
+    <string name="set_permissions_through_settings">To allow Viasat Connect to access your contacts enable Contacts at System / Settings / Apps / Viasat Connect / Permissions on your device</string>
+    <string name="dismiss_button">DISMISS</string>
+
+
     <!-- User Details -->
     <string name="timezone">Timezone</string>
     <string name="status" translatable="false">Status</string>

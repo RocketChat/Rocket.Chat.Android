@@ -25,18 +25,17 @@ import android.view.View.VISIBLE
 import android.view.View.GONE
 import android.widget.TextView
 import androidx.core.view.isVisible
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.chatrooms.adapter.ItemHolder
 import chat.rocket.android.chatrooms.adapter.RoomUiModelMapper
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
-import chat.rocket.android.chatrooms.viewmodel.*
 import chat.rocket.android.contacts.adapter.ContactsHeaderItemHolder
 import chat.rocket.android.contacts.adapter.ContactsItemHolder
 import chat.rocket.android.contacts.adapter.ContactsRecyclerViewAdapter
 import chat.rocket.android.contacts.adapter.InviteItemHolder
+import chat.rocket.android.contacts.adapter.PermissionsItemHolder
 import chat.rocket.android.contacts.models.ContactsLoadingState
 import chat.rocket.android.contacts.presentation.ContactsPresenter
 import chat.rocket.android.contacts.presentation.ContactsView
@@ -55,7 +54,6 @@ import kotlinx.android.synthetic.main.app_bar.view.*
 import kotlinx.android.synthetic.main.fragment_contact_parent.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.newSingleThreadContext
 import javax.inject.Inject
 import timber.log.Timber
 
@@ -79,13 +77,10 @@ class ContactsFragment : Fragment(), ContactsView {
     private var recyclerView :RecyclerView? = null
     private var emptyTextView:  TextView? = null
 
-
     /**
      * The list of contacts to load in the recycler view
      */
     private var contactArrayList: ArrayList<Contact> = ArrayList()
-
-    private val MY_PERMISSIONS_REQUEST_RW_CONTACTS = 0
 
     private var searchView: SearchView? = null
     private var searchIcon: ImageView? = null
@@ -144,7 +139,14 @@ class ContactsFragment : Fragment(), ContactsView {
         super.onViewCreated(view, savedInstanceState)
         this.recyclerView = view.findViewById(R.id.recycler_view)
         this.emptyTextView = view.findViewById(R.id.text_no_contacts_to_display)
-        getContactsPermissions()
+
+        if (hasContactsPermissions()) {
+            launch {
+                getContactListWhenSynced()
+            }
+        } else {
+            setupFrameLayout()
+        }
         setupToolbar()
     }
 
@@ -195,7 +197,6 @@ class ContactsFragment : Fragment(), ContactsView {
 
         if (Constants.WIDECHAT) {
             setupWidechatSearchView()
-            return
         }
 
         searchView?.maxWidth = Integer.MAX_VALUE
@@ -203,8 +204,12 @@ class ContactsFragment : Fragment(), ContactsView {
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 // Simply setting sortView to visible won't work, so we invalidate the options
                 // to recreate the entire menu...
+                searchView?.setQuery("", false)
                 activity?.invalidateOptionsMenu()
                 queryContacts("")
+                if (!hasContactsPermissions()) {
+                    setupFrameLayout()
+                }
                 return true
             }
 
@@ -257,11 +262,6 @@ class ContactsFragment : Fragment(), ContactsView {
 
         searchCloseButton = searchView?.findViewById(R.id.search_close_btn)
         searchCloseButton?.setImageResource(R.drawable.ic_close_gray_24dp)
-
-        searchCloseButton?.setOnClickListener { v ->
-            searchView?.clearFocus()
-            searchView?.setQuery("", false)
-        }
     }
 
     fun containsIgnoreCase(src: String, what: String): Boolean {
@@ -301,9 +301,15 @@ class ContactsFragment : Fragment(), ContactsView {
         return list
     }
 
-    fun queryContacts(query: String) {
+    private fun queryContacts(query: String) {
+        var result: ArrayList<ItemHolder<*>>? = null
         if (query.isBlank() or query.isEmpty()) {
-            setupFrameLayout(contactArrayList)
+            if (hasContactsPermissions()) {
+                setupFrameLayout(contactArrayList)
+            } else {
+                result = arrayListOf()
+                setupFrameLayout(result)
+            }
         } else {
             var filteredContactArrayList: ArrayList<Contact> = ArrayList()
             for (contact in contactArrayList) {
@@ -312,59 +318,24 @@ class ContactsFragment : Fragment(), ContactsView {
                 }
             }
             launch(UI) {
-                var result: ArrayList<ItemHolder<*>>? = null
                 try {
                     result = presenter.spotlight(query)?.let { mapper.map(it, showLastMessage = false) }.let { mapSpotlightToContacts(it) }
                 } catch (ex: Exception) {
                     Timber.e(ex)
 
                 }
-                setupFrameLayout(filteredContactArrayList, result)
-            }
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<String>,
-            grantResults: IntArray) {
-        when (requestCode) {
-            MY_PERMISSIONS_REQUEST_RW_CONTACTS -> {
-                if (
-                        grantResults.isNotEmpty()
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[1] == PackageManager.PERMISSION_GRANTED
-                ) {
-                    // Permission granted
-                    launch {
-                        getContactListWhenSynced()
-                    }
+                if (hasContactsPermissions()) {
+                    setupFrameLayout(filteredContactArrayList, result)
+                } else {
+                    setupFrameLayout(result)
                 }
-                return
-            }
-            else -> {
-                // Ignore all other requests.
             }
         }
     }
 
-    private fun getContactsPermissions() {
-        if (
-                ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED
-        ) {
-            launch {
-                getContactListWhenSynced()
-            }
-        } else {
-            requestPermissions(
-                    arrayOf(
-                            Manifest.permission.READ_CONTACTS,
-                            Manifest.permission.WRITE_CONTACTS
-                    ),
-                    MY_PERMISSIONS_REQUEST_RW_CONTACTS
-            )
-        }
+    private fun hasContactsPermissions() : Boolean {
+        return (ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED)
     }
 
     private fun getContactListWhenSynced() {
@@ -415,9 +386,9 @@ class ContactsFragment : Fragment(), ContactsView {
         }
     }
 
-    fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>, spotlightResult: ArrayList<ItemHolder<*>>? = null) {
+    private fun setupFrameLayout(filteredContactArrayList: ArrayList<Contact>, spotlightResult: ArrayList<ItemHolder<*>>? = null) {
         loadedOnce = true
-        if (filteredContactArrayList.size == 0 && ((spotlightResult == null) or (spotlightResult?.size == 0)) ) {
+        if (filteredContactArrayList.size == 0 && ((spotlightResult == null) or (spotlightResult?.size == 0))) {
             emptyTextView!!.visibility = View.VISIBLE
             recyclerView!!.visibility = View.GONE
         } else {
@@ -426,17 +397,27 @@ class ContactsFragment : Fragment(), ContactsView {
 
             recyclerView!!.setHasFixedSize(true)
             recyclerView!!.layoutManager = LinearLayoutManager(context)
-            recyclerView!!.adapter = ContactsRecyclerViewAdapter(this.activity as MainActivity, presenter, map(filteredContactArrayList, spotlightResult))
+            recyclerView!!.adapter = ContactsRecyclerViewAdapter(this.activity as MainActivity,
+                                                                 presenter, map(filteredContactArrayList,
+                                                                 spotlightResult))
         }
     }
 
-    fun map(contacts: List<Contact>, spotlightResult: ArrayList<ItemHolder<*>>?=null): ArrayList<ItemHolder<*>> {
+    private fun setupFrameLayout(spotlightResult: ArrayList<ItemHolder<*>>? = null) {
+        recyclerView!!.visibility = View.VISIBLE
+        recyclerView!!.setHasFixedSize(true)
+        recyclerView!!.layoutManager = LinearLayoutManager(context)
+        recyclerView!!.adapter = ContactsRecyclerViewAdapter(this.activity as MainActivity, presenter, map(spotlightResult))
+    }
+
+    private fun map(contacts: List<Contact>, spotlightResult: ArrayList<ItemHolder<*>>? = null): ArrayList<ItemHolder<*>> {
         val finalList = ArrayList<ItemHolder<*>>(contacts.size + 2)
         val userList = ArrayList<ItemHolder<*>>(contacts.size)
         val userContactList: ArrayList<Contact> = ArrayList()
         val unfilteredContactsList: ArrayList<Contact> = ArrayList()
         val contactsList = ArrayList<ItemHolder<*>>(contacts.size)
         val usernameSet = mutableListOf<String>()
+
         contacts.forEach { contact ->
             if(contact.getUsername()!= null){
                 // Users in their own list for filtering before adding to an ItemHolder
@@ -470,6 +451,23 @@ class ContactsFragment : Fragment(), ContactsView {
             }
         }
         finalList.add(InviteItemHolder("invite"))
+        return finalList
+    }
+
+    // Contacts access permission not granted yet
+    private fun map(spotlightResult: ArrayList<ItemHolder<*>>? = null): ArrayList<ItemHolder<*>> {
+        val finalList = ArrayList<ItemHolder<*>>(3)
+        if(spotlightResult !==null) {
+            finalList.add(ContactsHeaderItemHolder(getString(R.string.Spotlight_Result)))
+            spotlightResult.forEach { item ->
+                finalList.add(item)
+            }
+            finalList.add(InviteItemHolder("invite"))
+        } else {
+            finalList.add(ContactsHeaderItemHolder(getString(R.string.Invite_contacts)))
+            finalList.add(PermissionsItemHolder("request_permissions"))
+            finalList.add(InviteItemHolder("invite"))
+        }
         return finalList
     }
 

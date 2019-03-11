@@ -13,7 +13,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:orientation="horizontal">
 
     <ImageView
@@ -44,6 +44,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="12dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toBottomOf="parent" />
 
