@@ -77,7 +77,6 @@ private fun stylizeSearchView(searchView: SearchView, context: Context) {
 
 private fun ChatRoomFragment.setupSearchViewTextListener(searchView: SearchView) {
     searchView.onQueryTextListener {
-        // TODO: We use isSearchTermQueried to avoid querying when the search view is expanded but the user doesn't start typing. Check for a native solution.
         if (it.isEmpty() && isSearchTermQueried) {
             presenter.loadMessages(chatRoomId, chatRoomType, clearDataSet = true)
         } else if (it.isNotEmpty()) {
