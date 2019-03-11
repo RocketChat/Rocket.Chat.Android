@@ -8,7 +8,7 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
-import chat.rocket.android.util.extensions.setTextViewAppearance
+import chat.rocket.android.util.extension.setTextViewAppearance
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.UserStatus
 import kotlinx.android.synthetic.main.item_chat.view.*

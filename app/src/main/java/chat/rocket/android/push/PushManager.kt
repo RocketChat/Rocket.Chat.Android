@@ -231,8 +231,8 @@ class PushManager @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createBaseNotificationBuilder(
-            pushMessage: PushMessage,
-            grouped: Boolean = false
+        pushMessage: PushMessage,
+        grouped: Boolean = false
     ): NotificationCompat.Builder {
         return with(pushMessage) {
             val id = notificationId.toInt()
@@ -299,10 +299,10 @@ class PushManager @Inject constructor(
     }
 
     private fun getContentIntent(
-            context: Context,
-            notificationId: Int,
-            pushMessage: PushMessage,
-            grouped: Boolean = false
+        context: Context,
+        notificationId: Int,
+        pushMessage: PushMessage,
+        grouped: Boolean = false
     ): PendingIntent {
         val roomId = if (!grouped) pushMessage.info.roomId else null
         val notificationIntent = context.changeServerIntent(pushMessage.info.host, chatRoomId = roomId)
@@ -395,12 +395,12 @@ data class PushMessage(
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readParcelable(PushMessage::class.java.classLoader)!!,
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readParcelable(PushMessage::class.java.classLoader) ?: PushInfo.EMPTY,
         parcel.readString(),
         parcel.readString(),
-        parcel.readString()!!,
+        parcel.readString()?: "",
         parcel.readString(),
         parcel.readString())
 

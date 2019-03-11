@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_member.view.*
 
 class MembersAdapter(
-        private val listener: (MemberUiModel) -> Unit
+    private val listener: (MemberUiModel) -> Unit
 ) : RecyclerView.Adapter<MembersAdapter.ViewHolder>() {
     private var dataSet: List<MemberUiModel> = ArrayList()
 
