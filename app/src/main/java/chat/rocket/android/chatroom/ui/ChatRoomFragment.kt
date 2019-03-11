@@ -258,7 +258,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 button_fab.hide()
                 newMessageCount = 0
             } else {
-                if (dy < 0 && !button_fab.isVisible) {
+                if (dy < 0 && isAdded && !button_fab.isVisible) {
                     button_fab.show()
                     if (newMessageCount != 0) text_count.isVisible = true
                 }
