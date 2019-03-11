@@ -36,14 +36,29 @@ class RoomUiModelMapper(
         grouped: Boolean = false,
         showLastMessage: Boolean = true
     ): List<ItemHolder<*>> {
-        val list = ArrayList<ItemHolder<*>>(rooms.size + 4)
+        val list = ArrayList<ItemHolder<*>>(rooms.size + 5)
         var lastType: String? = null
-        rooms.forEach { room ->
-            if (grouped && lastType != room.chatRoom.type) {
-                list.add(HeaderItemHolder(roomType(room.chatRoom.type)))
+        if (grouped) {
+            val favRooms = rooms.filter { it.chatRoom.favorite == true }
+            val unfavRooms = rooms.filterNot { it.chatRoom.favorite == true }
+
+            if (favRooms.isNotEmpty()) {
+                list.add(HeaderItemHolder(context.resources.getString(R.string.header_favorite)))
             }
-            list.add(RoomItemHolder(map(room, showLastMessage)))
-            lastType = room.chatRoom.type
+            favRooms.forEach { room ->
+                list.add(RoomItemHolder(map(room, showLastMessage)))
+            }
+            unfavRooms.forEach { room ->
+                if (lastType != room.chatRoom.type) {
+                    list.add(HeaderItemHolder(roomType(room.chatRoom.type)))
+                }
+                list.add(RoomItemHolder(map(room, showLastMessage)))
+                lastType = room.chatRoom.type
+            }
+        } else {
+            rooms.forEach { room ->
+                list.add(RoomItemHolder(map(room, showLastMessage)))
+            }
         }
 
         return list
@@ -108,6 +123,7 @@ class RoomUiModelMapper(
             val type = roomTypeOf(type)
             val status = chatRoom.status?.let { userStatusOf(it) }
             val roomName = mapName(name, fullname)
+            val favorite = favorite
             val timestamp = mapDate(lastMessageTimestamp ?: updatedAt)
             val avatar = if (type is RoomType.DirectMessage) {
                 serverUrl.avatarUrl(name)
@@ -140,6 +156,7 @@ class RoomUiModelMapper(
                 date = timestamp,
                 unread = unread,
                 mentions = hasMentions,
+                favorite = favorite,
                 alert = isUnread,
                 lastMessage = lastMessageMarkdown,
                 status = status,
@@ -157,6 +174,7 @@ class RoomUiModelMapper(
 
     private fun roomType(type: String): String {
         val resources = context.resources
+
         return when (type) {
             RoomType.CHANNEL -> resources.getString(R.string.header_channel)
             RoomType.PRIVATE_GROUP -> resources.getString(R.string.header_private_groups)

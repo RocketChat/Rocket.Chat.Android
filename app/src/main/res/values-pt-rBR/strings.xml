@@ -317,6 +317,7 @@
     <string name="chatroom_header">Cabeçalho</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favoritos</string>
     <string name="header_channel">Canais</string>
     <string name="header_private_groups">Grupos Privados</string>
     <string name="header_direct_messages">Mensagens diretas</string>
