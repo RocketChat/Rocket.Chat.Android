@@ -32,14 +32,12 @@ fun newInstance(
     chatRoomType: String,
     isSubscribed: Boolean,
     disableMenu: Boolean
-): ChatDetailsFragment {
-    return ChatDetailsFragment().apply {
-        arguments = Bundle(4).apply {
-            putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-            putString(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
-            putBoolean(BUNDLE_IS_SUBSCRIBED, isSubscribed)
-            putBoolean(BUNDLE_DISABLE_MENU, disableMenu)
-        }
+): ChatDetailsFragment = ChatDetailsFragment().apply {
+    arguments = Bundle(4).apply {
+        putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
+        putString(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
+        putBoolean(BUNDLE_IS_SUBSCRIBED, isSubscribed)
+        putBoolean(BUNDLE_DISABLE_MENU, disableMenu)
     }
 }
 
@@ -66,15 +64,13 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        val bundle = arguments
-        if (bundle != null) {
-            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
-            chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
-            isSubscribed = bundle.getBoolean(BUNDLE_IS_SUBSCRIBED)
-            disableMenu = bundle.getBoolean(BUNDLE_DISABLE_MENU)
-        } else {
-            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
-        }
+
+        arguments?.run {
+            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID)
+            chatRoomType = getString(BUNDLE_CHAT_ROOM_TYPE)
+            isSubscribed = getBoolean(BUNDLE_IS_SUBSCRIBED)
+            disableMenu = getBoolean(BUNDLE_DISABLE_MENU)
+        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
 
     override fun onCreateView(
