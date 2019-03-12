@@ -20,6 +20,7 @@
     <string name="title_admin_panel">Панель админа</string>
     <string name="title_password">Изменить пароль</string>
     <string name="title_update_profile">Обновить профиль</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_about">О программе</string>
     <string name="title_create_channel">Создать новый канал</string>
     <string name="title_channel_details">О канале</string>
@@ -70,6 +71,17 @@
         <item name="item_contact_us">Связаться с нами</item>
         <item name="item_licence">Лицензия</item>
         <item name="item_about">О программе</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>English</item> <!-- TODO Add translation -->
+        <item>Hindi</item> <!-- TODO Add translation -->
+        <item>Japanese</item> <!-- TODO Add translation -->
+        <item>Russian</item> <!-- TODO Add translation -->
+        <item>Italian</item> <!-- TODO Add translation -->
+        <item>Portuguese(BR)</item> <!-- TODO Add translation -->
+        <item>Portuguese(PT)</item> <!-- TODO Add translation -->
+        <item>Chinese</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->

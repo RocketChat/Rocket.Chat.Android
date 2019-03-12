@@ -36,6 +36,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_create_channel">Create Channel</string>
     <string name="title_licence">Licence</string>
     <string name="title_are_you_sure">Are you sure?</string>
+    <string name="title_choose_language">Choose Language</string>
     <string name="title_channel_details">Channel Details</string>
     <string name="title_topic">Topic</string>
     <string name="title_announcement">Announcement</string>
@@ -82,6 +83,17 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
         <item name="item_contact_us">Contact us</item>
         <item name="item_licence">Licence</item>
         <item name="item_about">About</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>English</item>
+        <item>Hindi</item>
+        <item>Japanese</item>
+        <item>Russian</item>
+        <item>Italian</item>
+        <item>Portuguese(BR)</item>
+        <item>Portuguese(PT)</item>
+        <item>Chinese</item>
     </string-array>
 
     <!-- Regular information messages -->

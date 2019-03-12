@@ -19,6 +19,7 @@
     <string name="title_rate_us">به ما امتیاز دهید</string>
     <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
     <string name="title_password">تغییر گذرواژه</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_update_profile">به روزرسانی نمایه</string>
     <string name="title_about">درباره</string>
     <string name="title_create_channel">ایجاد کانال</string>
@@ -70,6 +71,17 @@
         <item name="item_contact_us">تماس با ما</item>
         <item name="item_licence">مجوز</item>
         <item name="item_about">درباره</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>English</item> <!-- TODO Add translation -->
+        <item>Hindi</item> <!-- TODO Add translation -->
+        <item>Japanese</item> <!-- TODO Add translation -->
+        <item>Russian</item> <!-- TODO Add translation -->
+        <item>Italian</item> <!-- TODO Add translation -->
+        <item>Portuguese(BR)</item> <!-- TODO Add translation -->
+        <item>Portuguese(PT)</item> <!-- TODO Add translation -->
+        <item>Chinese</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->

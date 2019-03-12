@@ -15,6 +15,7 @@
     <string name="title_counted_members">Membres (%d)</string>
     <string name="title_settings">Paramètres</string>
     <string name="title_preferences">Préférences</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_change_password">Changer le mot de passe</string>
     <string name="title_rate_us">évaluez nous</string>
     <string name="title_admin_panel">Administration</string>
@@ -70,6 +71,17 @@
         <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
         <item name="item_licence">Licence</item> <!-- TODO Add translation -->
         <item name="item_about">About</item> <!-- TODO Add translation -->
+    </string-array>
+
+    <string-array name="languages">
+        <item>English</item> <!-- TODO Add translation -->
+        <item>Hindi</item> <!-- TODO Add translation -->
+        <item>Japanese</item> <!-- TODO Add translation -->
+        <item>Russian</item> <!-- TODO Add translation -->
+        <item>Italian</item> <!-- TODO Add translation -->
+        <item>Portuguese(BR)</item> <!-- TODO Add translation -->
+        <item>Portuguese(PT)</item> <!-- TODO Add translation -->
+        <item>Chinese</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->

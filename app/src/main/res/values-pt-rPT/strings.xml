@@ -17,6 +17,7 @@
     <string name="title_preferences">Preferências</string>
     <string name="title_change_password">Alterar palavra-passe</string>
     <string name="title_rate_us">Avalie-nos</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_admin_panel">Painel de Administração</string>
     <string name="title_password">Alterar palavra-passe</string>
     <string name="title_update_profile">Actualizar perfil</string>
@@ -70,6 +71,17 @@
         <item name="item_contact_us">Contacte-nos</item>
         <item name="item_licence">Licença</item>
         <item name="item_about">Acerca</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>English</item> <!-- TODO Add translation -->
+        <item>Hindi</item> <!-- TODO Add translation -->
+        <item>Japanese</item> <!-- TODO Add translation -->
+        <item>Russian</item> <!-- TODO Add translation -->
+        <item>Italian</item> <!-- TODO Add translation -->
+        <item>Portuguese(BR)</item> <!-- TODO Add translation -->
+        <item>Portuguese(PT)</item> <!-- TODO Add translation -->
+        <item>Chinese</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->

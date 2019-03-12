@@ -25,6 +25,7 @@
     <string name="title_licence">许可证</string>
     <string name="title_are_you_sure">你确定?</string>
     <string name="title_channel_details">频道信息</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_topic">主题</string>
     <string name="title_announcement">公告</string>
     <string name="title_description">描述</string>
@@ -70,6 +71,17 @@
         <item name="item_contact_us">联系我们</item>
         <item name="item_licence">许可证</item>
         <item name="item_about">关于</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>English</item> <!-- TODO Add translation -->
+        <item>Hindi</item> <!-- TODO Add translation -->
+        <item>Japanese</item> <!-- TODO Add translation -->
+        <item>Russian</item> <!-- TODO Add translation -->
+        <item>Italian</item> <!-- TODO Add translation -->
+        <item>Portuguese(BR)</item> <!-- TODO Add translation -->
+        <item>Portuguese(PT)</item> <!-- TODO Add translation -->
+        <item>Chinese</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->

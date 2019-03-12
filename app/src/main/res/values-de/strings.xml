@@ -10,6 +10,7 @@
     <string name="title_authentication">Login Daten prüfen</string>
     <string name="title_legal_terms">Legal Terms</string>
     <string name="title_chats">Chats</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_profile">Profil</string>
     <string name="title_members">Benutzer</string>
     <string name="title_counted_members">Benutzer (%d)</string>
@@ -73,6 +74,17 @@
         <item name="item_contact_us">Kontaktieren Sie uns</item>
         <item name="item_licence">Lizenz</item>
         <item name="item_about">Über</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>English</item> <!-- TODO Add translation -->
+        <item>Hindi</item> <!-- TODO Add translation -->
+        <item>Japanese</item> <!-- TODO Add translation -->
+        <item>Russian</item> <!-- TODO Add translation -->
+        <item>Italian</item> <!-- TODO Add translation -->
+        <item>Portuguese(BR)</item> <!-- TODO Add translation -->
+        <item>Portuguese(PT)</item> <!-- TODO Add translation -->
+        <item>Chinese</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->

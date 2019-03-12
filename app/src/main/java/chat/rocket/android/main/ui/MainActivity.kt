@@ -42,7 +42,6 @@ import kotlinx.android.synthetic.main.nav_header.view.*
 import java.util.Locale
 import javax.inject.Inject
 import android.app.NotificationManager
-import android.content.Context
 
 
 private const val CURRENT_STATE = "current_state"
@@ -293,10 +292,10 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     fun changeLanguage() {
-        val languages = arrayOf("English", "Hindi", "Japanese", "Russian", "Italian")
+        val languages = resources.getStringArray(R.array.languages)
 
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Choose Language")
+        builder.setTitle(R.string.title_choose_language)
         builder.setSingleChoiceItems(languages, -1) { dialog, which ->
             when(which){
                 0->{
@@ -319,6 +318,18 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                     setLocale("it")
                     recreate()
                 }
+                5->{
+                    setLocaleWithRegion("pt","BR")
+                    recreate()
+                }
+                6->{
+                    setLocaleWithRegion("pt", "PT")
+                    recreate()
+                }
+                7->{
+                    setLocale("zh")
+                    recreate()
+                }
             }
             dialog.dismiss()
         }
@@ -328,6 +339,18 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     private fun setLocale(lang: String) {
         val locale = Locale(lang)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
+
+        val editor = getSharedPreferences(SETTING, Context.MODE_PRIVATE).edit()
+        editor.putString(MY_LANG, lang)
+        editor.apply()
+    }
+
+    private fun setLocaleWithRegion(lang: String, country: String) {
+        val locale = Locale(lang, country)
         Locale.setDefault(locale)
         val config = Configuration()
         config.locale = locale
