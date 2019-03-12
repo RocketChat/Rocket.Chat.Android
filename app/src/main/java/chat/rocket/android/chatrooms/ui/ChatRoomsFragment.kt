@@ -36,7 +36,6 @@ import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
-import chat.rocket.android.util.extensions.ifNotNullNorEmpty
 import chat.rocket.android.util.extensions.ifNotNullNotEmpty
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
@@ -126,12 +125,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 )
             )
             recycler_view.itemAnimator = DefaultItemAnimator()
-            recycler_view.adapter = adapter
 
             viewModel.getChatRooms().observe(viewLifecycleOwner, Observer { rooms ->
                 rooms?.let {
                     Timber.d("Got items: $it")
                     adapter.values = it
+                    if (recycler_view.adapter != adapter) {
+                        recycler_view.adapter = adapter
+                    }
                     if (rooms.isNotEmpty()) {
                         text_no_data_to_display.isVisible = false
                     }
