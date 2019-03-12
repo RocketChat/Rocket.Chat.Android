@@ -31,18 +31,16 @@ fun Context.chatRoomIntent(
     isCreator: Boolean = false,
     isFavorite: Boolean = false,
     chatRoomMessage: String? = null
-): Intent {
-    return Intent(this, ChatRoomActivity::class.java).apply {
-        putExtra(INTENT_CHAT_ROOM_ID, chatRoomId)
-        putExtra(INTENT_CHAT_ROOM_NAME, chatRoomName)
-        putExtra(INTENT_CHAT_ROOM_TYPE, chatRoomType)
-        putExtra(INTENT_CHAT_ROOM_IS_READ_ONLY, isReadOnly)
-        putExtra(INTENT_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
-        putExtra(INTENT_CHAT_IS_SUBSCRIBED, isSubscribed)
-        putExtra(INTENT_CHAT_ROOM_IS_CREATOR, isCreator)
-        putExtra(INTENT_CHAT_ROOM_IS_FAVORITE, isFavorite)
-        putExtra(INTENT_CHAT_ROOM_MESSAGE, chatRoomMessage)
-    }
+): Intent = Intent(this, ChatRoomActivity::class.java).apply {
+    putExtra(INTENT_CHAT_ROOM_ID, chatRoomId)
+    putExtra(INTENT_CHAT_ROOM_NAME, chatRoomName)
+    putExtra(INTENT_CHAT_ROOM_TYPE, chatRoomType)
+    putExtra(INTENT_CHAT_ROOM_IS_READ_ONLY, isReadOnly)
+    putExtra(INTENT_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
+    putExtra(INTENT_CHAT_IS_SUBSCRIBED, isSubscribed)
+    putExtra(INTENT_CHAT_ROOM_IS_CREATOR, isCreator)
+    putExtra(INTENT_CHAT_ROOM_IS_FAVORITE, isFavorite)
+    putExtra(INTENT_CHAT_ROOM_MESSAGE, chatRoomMessage)
 }
 
 private const val INTENT_CHAT_ROOM_ID = "chat_room_id"
@@ -81,42 +79,44 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
             return
         }
 
-        val chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
-        requireNotNull(chatRoomId) { "no chat_room_id provided in Intent extras" }
+        with(intent) {
+            val chatRoomId = getStringExtra(INTENT_CHAT_ROOM_ID)
+            requireNotNull(chatRoomId) { "no chat_room_id provided in Intent extras" }
 
-        val chatRoomName = intent.getStringExtra(INTENT_CHAT_ROOM_NAME)
-        requireNotNull(chatRoomName) { "no chat_room_name provided in Intent extras" }
+            val chatRoomName = getStringExtra(INTENT_CHAT_ROOM_NAME)
+            requireNotNull(chatRoomName) { "no chat_room_name provided in Intent extras" }
 
-        val chatRoomType = intent.getStringExtra(INTENT_CHAT_ROOM_TYPE)
-        requireNotNull(chatRoomType) { "no chat_room_type provided in Intent extras" }
+            val chatRoomType = getStringExtra(INTENT_CHAT_ROOM_TYPE)
+            requireNotNull(chatRoomType) { "no chat_room_type provided in Intent extras" }
 
-        val isReadOnly = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_READ_ONLY, true)
+            val isReadOnly = getBooleanExtra(INTENT_CHAT_ROOM_IS_READ_ONLY, true)
 
-        val isCreator = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_CREATOR, false)
+            val isCreator = getBooleanExtra(INTENT_CHAT_ROOM_IS_CREATOR, false)
 
-        val isFavorite = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_FAVORITE, false)
+            val isFavorite = getBooleanExtra(INTENT_CHAT_ROOM_IS_FAVORITE, false)
 
-        val chatRoomLastSeen = intent.getLongExtra(INTENT_CHAT_ROOM_LAST_SEEN, -1)
+            val chatRoomLastSeen = getLongExtra(INTENT_CHAT_ROOM_LAST_SEEN, -1)
 
-        val isSubscribed = intent.getBooleanExtra(INTENT_CHAT_IS_SUBSCRIBED, true)
+            val isSubscribed = getBooleanExtra(INTENT_CHAT_IS_SUBSCRIBED, true)
 
-        val chatRoomMessage = intent.getStringExtra(INTENT_CHAT_ROOM_MESSAGE)
+            val chatRoomMessage = getStringExtra(INTENT_CHAT_ROOM_MESSAGE)
 
-        setupToolbar()
+            setupToolbar()
 
-        if (supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOM_FRAGMENT) == null) {
-            addFragment(TAG_CHAT_ROOM_FRAGMENT, R.id.fragment_container) {
-                newInstance(
-                    chatRoomId,
-                    chatRoomName,
-                    chatRoomType,
-                    isReadOnly,
-                    chatRoomLastSeen,
-                    isSubscribed,
-                    isCreator,
-                    isFavorite,
-                    chatRoomMessage
-                )
+            if (supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOM_FRAGMENT) == null) {
+                addFragment(TAG_CHAT_ROOM_FRAGMENT, R.id.fragment_container) {
+                    newInstance(
+                            chatRoomId,
+                            chatRoomName,
+                            chatRoomType,
+                            isReadOnly,
+                            chatRoomLastSeen,
+                            isSubscribed,
+                            isCreator,
+                            isFavorite,
+                            chatRoomMessage
+                    )
+                }
             }
         }
     }
