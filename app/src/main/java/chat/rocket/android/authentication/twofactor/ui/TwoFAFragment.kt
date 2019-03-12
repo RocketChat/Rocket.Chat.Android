@@ -25,12 +25,10 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_authentication_two_fa.*
 import javax.inject.Inject
 
-fun newInstance(username: String, password: String): Fragment {
-    return TwoFAFragment().apply {
-        arguments = Bundle(2).apply {
-            putString(BUNDLE_USERNAME, username)
-            putString(BUNDLE_PASSWORD, password)
-        }
+fun newInstance(username: String, password: String): Fragment = TwoFAFragment().apply {
+    arguments = Bundle(2).apply {
+        putString(BUNDLE_USERNAME, username)
+        putString(BUNDLE_PASSWORD, password)
     }
 }
 
@@ -50,13 +48,10 @@ class TwoFAFragment : Fragment(), TwoFAView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        val bundle = arguments
-        if (bundle != null) {
-            username = bundle.getString(BUNDLE_USERNAME)
-            password = bundle.getString(BUNDLE_PASSWORD)
-        } else {
-            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
-        }
+        arguments?.run {
+            username = getString(BUNDLE_USERNAME, "")
+            password = getString(BUNDLE_PASSWORD, "")
+        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
 
     override fun onCreateView(
