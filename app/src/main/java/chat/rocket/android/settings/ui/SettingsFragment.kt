@@ -101,7 +101,6 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
         }
     }
 
-
     private fun showAppOnStore() {
         try {
             startActivity(Intent(Intent.ACTION_VIEW, getString(R.string.market_link).toUri()))

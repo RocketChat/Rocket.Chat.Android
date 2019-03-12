@@ -277,13 +277,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     fun setCheckedNavDrawerItem(@IdRes item: Int) = view_navigation.setCheckedItem(item)
 
     override fun showProgress() {
-        progressDialog = ProgressDialog.show(
-            this,
-            getString(R.string.app_name),
-            getString(R.string.msg_log_out),
-            true,
-            false
-        )
+        progressDialog = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.msg_log_out), true, false)
     }
 
     override fun hideProgress() {
@@ -333,8 +327,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             }
             dialog.dismiss()
         }
-        val mdialog = builder.create()
-        mdialog.show()
+        builder.create().show()
     }
 
     private fun setLocale(lang: String) {
