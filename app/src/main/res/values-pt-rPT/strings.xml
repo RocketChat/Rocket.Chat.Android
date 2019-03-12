@@ -141,8 +141,8 @@
     <string name="msg_edited">(editada)</string>
     <string name="msg_and">\u0020e\u0020</string>
     <string name="msg_is_typing">\u0020está a escrever…</string>
-    <string name="msg_are_typing">\u0020estão escrevendo…</string>
-    <string name="msg_several_users_are_typing">Varios utilizadores estão escrevendo…</string>
+    <string name="msg_are_typing">\u0020estão a escrever…</string>
+    <string name="msg_several_users_are_typing">Varios utilizadores estão a escrever…</string>
     <string name="msg_no_search_found">Não foram encontrados resultados</string>
     <string name="msg_log_out">Terminando sessão…</string>
     <string name="msg_upload_file">Upload file</string>
