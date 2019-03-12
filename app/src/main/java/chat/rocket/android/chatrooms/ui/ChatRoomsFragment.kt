@@ -68,11 +68,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var progressDialog: ProgressDialog? = null
 
     companion object {
-        fun newInstance(chatRoomId: String? = null): ChatRoomsFragment {
-            return ChatRoomsFragment().apply {
-                arguments = Bundle(1).apply {
-                    putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-                }
+        fun newInstance(chatRoomId: String? = null): ChatRoomsFragment = ChatRoomsFragment().apply {
+            arguments = Bundle(1).apply {
+                putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
             }
         }
     }
@@ -81,9 +79,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
         setHasOptionsMenu(true)
-        val bundle = arguments
-        if (bundle != null) {
-            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
+        arguments?.run {
+            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID)
             chatRoomId.ifNotNullNotEmpty { roomId ->
                 presenter.loadChatRoom(roomId)
                 chatRoomId = null
@@ -321,21 +318,20 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         ui {
             text_connection_status.fadeIn()
             handler.removeCallbacks(dismissStatus)
-            when (state) {
+            text_connection_status.text = when (state) {
                 is State.Connected -> {
-                    text_connection_status.text = getString(R.string.status_connected)
                     handler.postDelayed(dismissStatus, 2000)
+                    getString(R.string.status_connected)
                 }
-                is State.Disconnected -> text_connection_status.text =
-                        getString(R.string.status_disconnected)
-                is State.Connecting -> text_connection_status.text =
-                        getString(R.string.status_connecting)
-                is State.Authenticating -> text_connection_status.text =
-                        getString(R.string.status_authenticating)
-                is State.Disconnecting -> text_connection_status.text =
-                        getString(R.string.status_disconnecting)
-                is State.Waiting -> text_connection_status.text =
-                        getString(R.string.status_waiting, state.seconds)
+                is State.Disconnected -> getString(R.string.status_disconnected)
+                is State.Connecting -> getString(R.string.status_connecting)
+                is State.Authenticating -> getString(R.string.status_authenticating)
+                is State.Disconnecting -> getString(R.string.status_disconnecting)
+                is State.Waiting -> getString(R.string.status_waiting, state.seconds)
+                else -> {
+                    handler.postDelayed(dismissStatus, 500)
+                    ""
+                }
             }
         }
     }
