@@ -2,6 +2,7 @@ package chat.rocket.android.settings.ui
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -114,8 +115,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     }
 
     private fun setupToolbar() {
-        (activity as AppCompatActivity?)?.supportActionBar?.title =
-                getString(R.string.title_settings)
+        (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_settings)
     }
 
     private fun shareApp() {
@@ -128,11 +128,12 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     }
 
     private fun contactSupport() {
-        with(Intent(Intent.ACTION_SEND)) {
-            type = "message/rfc822"
-            putExtra(Intent.EXTRA_EMAIL, arrayOf("support@rocket.chat"))
-            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_android_app_support))
-            putExtra(Intent.EXTRA_TEXT, getDeviceAndAppInformation())
+        val uriText = "mailto:${"support@rocket.chat"}" +
+                "?subject=" + Uri.encode(getString(R.string.msg_android_app_support)) +
+                "&body=" + Uri.encode(getDeviceAndAppInformation())
+
+        with(Intent(Intent.ACTION_SENDTO)) {
+            data = uriText.toUri()
             try {
                 startActivity(Intent.createChooser(this, getString(R.string.msg_send_email)))
             } catch (ex: ActivityNotFoundException) {

@@ -41,6 +41,9 @@ import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 import java.util.Locale
 import javax.inject.Inject
+import android.app.NotificationManager
+import android.content.Context
+
 
 private const val CURRENT_STATE = "current_state"
 private const val SETTING = "Settings"
@@ -96,6 +99,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             presenter.toChatList(chatRoomId)
             isFragmentAdded = true
         }
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE)
+                as NotificationManager
+        notificationManager.cancelAll()
     }
 
     override fun onDestroy() {

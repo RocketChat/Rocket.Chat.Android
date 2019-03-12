@@ -106,18 +106,16 @@ class PasswordFragment : Fragment(), PasswordView, ActionMode.Callback {
 
     private fun finishActionMode() = actionMode?.finish()
 
-    private fun listenToChanges(): Disposable {
-        return Observables.combineLatest(
-            text_new_password.asObservable(),
-            text_confirm_password.asObservable()
-        ).subscribe {
-            val newPassword = it.first.toString()
-            val newPasswordConfirmation = it.second.toString()
-            if (newPassword.length > 5 && newPassword == newPasswordConfirmation) {
-                startActionMode()
-            } else {
-                finishActionMode()
-            }
+    private fun listenToChanges(): Disposable = Observables.combineLatest(
+        text_new_password.asObservable(),
+        text_confirm_password.asObservable()
+    ).subscribe {
+        val newPassword = it.first.toString()
+        val newPasswordConfirmation = it.second.toString()
+        if (newPassword.length > 5 && newPassword == newPasswordConfirmation) {
+            startActionMode()
+        } else {
+            finishActionMode()
         }
     }
 
