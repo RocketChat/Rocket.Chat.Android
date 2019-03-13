@@ -54,10 +54,7 @@ class DividerItemDecoration() : RecyclerView.ItemDecoration() {
         for (i in 0 until childCount) {
             val child = parent.getChildAt(i)
 
-            if (isLastView(child, parent))
-                continue
-
-            if (isViewTypeHeader(child, parent))
+            if (isLastView(child, parent) || isViewTypeHeader(child, parent))
                 continue
 
             val params = child.layoutParams as RecyclerView.LayoutParams
