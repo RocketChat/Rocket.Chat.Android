@@ -68,4 +68,6 @@
     <color name="default_background">#FAFAFA</color>
 
     <color name="reaction_text">#868585</color>
+
+    <color name="highlight_text_background">#C2D8E9</color>
 </resources>

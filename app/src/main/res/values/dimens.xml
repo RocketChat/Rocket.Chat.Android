@@ -48,4 +48,7 @@
 
     <dimen name="quote_collapsed_height">32dp</dimen>
 
+    <!--General-->
+    <dimen name="padding_normal">8dp</dimen>
+    <dimen name="margin_normal">8dp</dimen>
 </resources>

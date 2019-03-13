@@ -17,6 +17,8 @@ import chat.rocket.android.about.ui.TAG_ABOUT_FRAGMENT
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.helper.TextHelper.getDeviceAndAppInformation
+import chat.rocket.android.licence.ui.LicenceFragment
+import chat.rocket.android.licence.ui.TAG_LICENCE_FRAGMENT
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.preferences.ui.PreferencesFragment
 import chat.rocket.android.preferences.ui.TAG_PREFERENCES_FRAGMENT
@@ -25,9 +27,8 @@ import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.webview.ui.webViewIntent
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_settings.*
+import kotlinx.android.synthetic.main.fragment_settings.settings_list
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -43,9 +44,9 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = container?.inflate(R.layout.fragment_settings)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,8 +66,8 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
         when (parent?.getItemAtPosition(position).toString()) {
             resources.getStringArray(R.array.settings_actions)[0] -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
-                    TAG_PREFERENCES_FRAGMENT,
-                    R.id.fragment_container
+                        TAG_PREFERENCES_FRAGMENT,
+                        R.id.fragment_container
                 ) {
                     PreferencesFragment.newInstance()
                 }
@@ -84,17 +85,19 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
 
             resources.getStringArray(R.array.settings_actions)[5] -> contactSupport()
 
-            resources.getStringArray(R.array.settings_actions)[6] -> activity?.startActivity(
-                context?.webViewIntent(
-                    getString(R.string.license_url),
-                    getString(R.string.title_licence)
-                )
-            )
+            resources.getStringArray(R.array.settings_actions)[6] -> {
+                (activity as AppCompatActivity).addFragmentBackStack(
+                        TAG_LICENCE_FRAGMENT,
+                        R.id.fragment_container
+                ) {
+                    LicenceFragment.newInstance()
+                }
+            }
 
             resources.getStringArray(R.array.settings_actions)[7] -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
-                    TAG_ABOUT_FRAGMENT,
-                    R.id.fragment_container
+                        TAG_ABOUT_FRAGMENT,
+                        R.id.fragment_container
                 ) {
                     AboutFragment.newInstance()
                 }
