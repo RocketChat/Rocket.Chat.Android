@@ -32,5 +32,10 @@ class VideoConferencingActivity : JitsiMeetActivity(), VideoConferencingView {
         presenter.setupVideoConferencing()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.invalidateTimer()
+    }
+
     override fun startVideoConferencing(url: URL) = loadURL(url)
 }

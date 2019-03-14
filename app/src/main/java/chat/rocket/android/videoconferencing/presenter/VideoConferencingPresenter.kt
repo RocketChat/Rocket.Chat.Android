@@ -11,7 +11,9 @@ import chat.rocket.core.internal.realtime.updateJitsiTimeout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
+import kotlin.concurrent.timer
 
 class VideoConferencingPresenter @Inject constructor(
     private val view: VideoConferencingView,
@@ -25,6 +27,7 @@ class VideoConferencingPresenter @Inject constructor(
     private lateinit var client: RocketChatClient
     private lateinit var publicSettings: PublicSettings
     private lateinit var chatRoomId: String
+    private lateinit var timer: Timer
 
     fun setup(chatRoomId: String) {
         currentServerRepository.get()?.let {
@@ -48,14 +51,19 @@ class VideoConferencingPresenter @Inject constructor(
                         chatRoomId
                     )
                 )
+                updateJitsiTimeout()
             }
-            client.updateJitsiTimeout(chatRoomId)
         }
     }
 
+    // Jitsi update call needs to be called every 10 seconds to make sure call is not ended and is available to web users.
     private fun updateJitsiTimeout() {
-        GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
-            client.updateJitsiTimeout(chatRoomId)
+        timer = timer(daemon = false, initialDelay = 0L, period = 10000) {
+            GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
+                client.updateJitsiTimeout(chatRoomId)
+            }
         }
     }
+
+    fun invalidateTimer() = timer.cancel()
 }
