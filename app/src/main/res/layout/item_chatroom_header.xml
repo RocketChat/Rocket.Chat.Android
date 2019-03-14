@@ -4,24 +4,14 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!--<View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/darkGray" />-->
-
     <TextView
         android:id="@+id/text_chatroom_header"
         style="@style/ChatRooms.Header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:padding="16dp"
         android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
         android:paddingStart="@dimen/screen_edge_left_and_right_padding"
         android:text="@string/chatroom_header" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/quoteBar" />
-
-</LinearLayout>
+ </LinearLayout>
