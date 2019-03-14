@@ -20,16 +20,10 @@ import chat.rocket.core.model.SpotlightResult
 import com.shopify.livedataktx.distinct
 import com.shopify.livedataktx.map
 import com.shopify.livedataktx.nonNull
+import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.isActive
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.newSingleThreadContext
-import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
-import java.lang.IllegalArgumentException
 import kotlin.coroutines.experimental.coroutineContext
-
 
 class ChatRoomsViewModel(
     private val connectionManager: ConnectionManager,
@@ -56,13 +50,19 @@ class ChatRoomsViewModel(
                     // TODO - find a better way for cancellation checking
                     if (!coroutineContext.isActive) return@wrap
 
-                    val rooms = repository.search(string).let { mapper.map(it, showLastMessage = this.showLastMessage) }
+                    val rooms = repository.search(string)
+                        .let { mapper.map(it, showLastMessage = this.showLastMessage) }
                     data.postValue(rooms.toMutableList() + LoadingItemHolder())
 
 
                     if (!coroutineContext.isActive) return@wrap
 
-                    val spotlight = spotlight(query.query)?.let { mapper.map(it, showLastMessage = this.showLastMessage) }
+                    val spotlight = spotlight(query.query)?.let {
+                        mapper.map(
+                            it,
+                            showLastMessage = this.showLastMessage
+                        )
+                    }
                     if (!coroutineContext.isActive) return@wrap
 
                     spotlight?.let {
@@ -73,17 +73,17 @@ class ChatRoomsViewModel(
                 }
             } else {
                 repository.getChatRooms(query.asSortingOrder())
-                        .nonNull()
-                        .distinct()
-                        .transform(runContext) { rooms ->
-                            val mappedRooms = rooms?.let {
-                                mapper.map(rooms, query.isGrouped(), this.showLastMessage)
-                            }
-                            if (loaded && mappedRooms?.isEmpty() == true) {
-                                loadingState.postValue(LoadingState.Loaded(0))
-                            }
-                            mappedRooms
+                    .nonNull()
+                    .distinct()
+                    .transform(runContext) { rooms ->
+                        val mappedRooms = rooms?.let {
+                            mapper.map(rooms, query.isGrouped(), this.showLastMessage)
                         }
+                        if (loaded && mappedRooms?.isEmpty() == true) {
+                            loadingState.postValue(LoadingState.Loaded(0))
+                        }
+                        mappedRooms
+                    }
             }
         }
     }
@@ -148,7 +148,7 @@ sealed class Query {
 fun Query.isSearch(): Boolean = this is Query.Search
 
 fun Query.isGrouped(): Boolean {
-    return when(this) {
+    return when (this) {
         is Query.Search -> false
         is Query.ByName -> grouped
         is Query.ByActivity -> grouped
@@ -156,7 +156,7 @@ fun Query.isGrouped(): Boolean {
 }
 
 fun Query.asSortingOrder(): ChatRoomsRepository.Order {
-    return when(this) {
+    return when (this) {
         is Query.ByName -> {
             if (!unreadFirst) {
                 if (grouped) {

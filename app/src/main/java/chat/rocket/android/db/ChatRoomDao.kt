@@ -1,29 +1,28 @@
 package chat.rocket.android.db
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Transaction
-import androidx.room.Update
+import androidx.room.*
 import chat.rocket.android.db.model.ChatRoom
 import chat.rocket.android.db.model.ChatRoomEntity
 
 @Dao
 abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
     @Transaction
-    @Query("""
+    @Query(
+        """
         $BASE_QUERY
         WHERE chatrooms.id = :id
-        """)
+        """
+    )
     abstract fun get(id: String): LiveData<ChatRoom>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         $BASE_QUERY
         WHERE chatrooms.id = :id
-        """)
+        """
+    )
     abstract fun getSync(id: String): ChatRoom?
 
     @Transaction
@@ -31,17 +30,20 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
     abstract fun getAllSync(): List<ChatRoom>
 
     @Transaction
-    @Query("""$BASE_QUERY
+    @Query(
+        """$BASE_QUERY
             WHERE chatrooms.name LIKE '%' || :query || '%'
             OR  users.name LIKE '%' || :query || '%'
-            """)
+            """
+    )
     abstract fun searchSync(query: String): List<ChatRoom>
 
     @Query("SELECT COUNT(id) FROM chatrooms WHERE open = 1")
     abstract fun count(): Long
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         $BASE_QUERY
         $FILTER_NOT_OPENED
         ORDER BY
@@ -49,11 +51,13 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
 		        WHEN lastMessageTimeStamp IS NOT NULL THEN lastMessageTimeStamp
 		        ELSE updatedAt
 	        END DESC
-        """)
+        """
+    )
     abstract fun getAll(): LiveData<List<ChatRoom>>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         $BASE_QUERY
         $FILTER_NOT_OPENED
         ORDER BY
@@ -62,29 +66,35 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
 		        WHEN lastMessageTimeStamp IS NOT NULL THEN lastMessageTimeStamp
 		        ELSE updatedAt
 	        END DESC
-        """)
+        """
+    )
     abstract fun getAllGrouped(): LiveData<List<ChatRoom>>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         $BASE_QUERY
         $FILTER_NOT_OPENED
         ORDER BY name
-        """)
+        """
+    )
     abstract fun getAllAlphabetically(): LiveData<List<ChatRoom>>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         $BASE_QUERY
         $FILTER_NOT_OPENED
         ORDER BY
             $TYPE_ORDER,
             name
-        """)
+        """
+    )
     abstract fun getAllAlphabeticallyGrouped(): LiveData<List<ChatRoom>>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         $BASE_QUERY
         $FILTER_NOT_OPENED
         ORDER BY
@@ -93,11 +103,13 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
 		        WHEN lastMessageTimeStamp IS NOT NULL THEN lastMessageTimeStamp
 		        ELSE updatedAt
 	        END DESC
-        """)
+        """
+    )
     abstract fun getAllUnread(): LiveData<List<ChatRoom>>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         $BASE_QUERY
         $FILTER_NOT_OPENED
         ORDER BY
@@ -107,28 +119,33 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
 		        WHEN lastMessageTimeStamp IS NOT NULL THEN lastMessageTimeStamp
 		        ELSE updatedAt
 	        END DESC
-        """)
+        """
+    )
     abstract fun getAllUnreadGrouped(): LiveData<List<ChatRoom>>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         $BASE_QUERY
         $FILTER_NOT_OPENED
         ORDER BY
             $UNREAD_ORDER,
             name
-        """)
+        """
+    )
     abstract fun getAllUnreadAlphabetically(): LiveData<List<ChatRoom>>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         $BASE_QUERY
         $FILTER_NOT_OPENED
         ORDER BY
             $TYPE_ORDER,
             $UNREAD_ORDER,
             name
-        """)
+        """
+    )
     abstract fun getAllUnreadAlphabeticallyGrouped(): LiveData<List<ChatRoom>>
 
     @Query("DELETE FROM chatrooms WHERE ID = :id")
@@ -153,7 +170,11 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
     abstract fun update(list: List<ChatRoomEntity>)
 
     @Transaction
-    open fun update(toInsert: List<ChatRoomEntity>, toUpdate: List<ChatRoomEntity>, toRemove: List<String>) {
+    open fun update(
+        toInsert: List<ChatRoomEntity>,
+        toUpdate: List<ChatRoomEntity>,
+        toRemove: List<String>
+    ) {
         insertOrReplace(toInsert)
         update(toUpdate)
         toRemove.forEach { id ->

@@ -1,17 +1,12 @@
 package chat.rocket.android.chatrooms.ui
 
-import androidx.appcompat.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.CheckBox
 import android.widget.RadioGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -34,12 +29,7 @@ import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.util.extension.onQueryTextListener
-import chat.rocket.android.util.extensions.fadeIn
-import chat.rocket.android.util.extensions.fadeOut
-import chat.rocket.android.util.extensions.ifNotNullNotEmpty
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
@@ -240,10 +230,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
                 unreadFirstCheckBox.isChecked = unreadFirst
                 unreadFirstCheckBox.setOnCheckedChangeListener { _, isChecked ->
-                    SharedPreferenceHelper.putBoolean(
-                            Constants.CHATROOM_UNREAD_ON_TOP,
-                            isChecked
-                    )
+                    SharedPreferenceHelper.putBoolean(Constants.CHATROOM_UNREAD_ON_TOP, isChecked)
                 }
 
                 context?.let {
@@ -271,10 +258,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         val query = when (sortType) {
             ChatRoomsSortOrder.ALPHABETICAL -> {
-                Query.ByName(grouped,unreadFirst)
+                Query.ByName(grouped, unreadFirst)
             }
             ChatRoomsSortOrder.ACTIVITY -> {
-                Query.ByActivity(grouped,unreadFirst)
+                Query.ByActivity(grouped, unreadFirst)
             }
             else -> Query.ByActivity()
         }
