@@ -1197,6 +1197,7 @@ class ChatRoomPresenter @Inject constructor(
                 // command is not valid, post it
                 sendMessage(roomId, text, null)
             } finally {
+                view.clearMessageComposition(true)
                 view.enableSendMessageButton()
             }
         }
