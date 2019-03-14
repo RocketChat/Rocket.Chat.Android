@@ -53,8 +53,15 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
     }
 
     private fun setupDrawTools() {
-        image_draw_eraser.setOnClickListener {
+        image_draw_eraser.setOnLongClickListener{
             custom_draw_view.clearCanvas()
+            return@setOnLongClickListener true
+        }
+
+        image_draw_eraser.setOnClickListener {
+            custom_draw_view.setColor(
+                ResourcesCompat.getColor(resources, R.color.color_white, null)
+            )
             toggleDrawTools(draw_tools, false)
         }
 
@@ -111,6 +118,13 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
     }
 
     private fun colorSelector() {
+        image_color_black.setOnClickListener {
+            custom_draw_view.setColor(
+                    ResourcesCompat.getColor(resources, R.color.color_black, null)
+            )
+            scaleColorView(image_color_black)
+        }
+
         image_color_red.setOnClickListener {
             custom_draw_view.setColor(
                 ResourcesCompat.getColor(resources, R.color.color_red, null)

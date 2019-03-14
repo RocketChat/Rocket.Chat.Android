@@ -41,6 +41,12 @@ import kotlinx.coroutines.experimental.newSingleThreadContext
 import kotlinx.coroutines.experimental.withContext
 import timber.log.Timber
 import java.util.HashSet
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.collections.LinkedHashMap
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.set
 import kotlin.system.measureTimeMillis
 
 class DatabaseManager(val context: Application, val serverUrl: String) {
@@ -106,6 +112,18 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         }
     }
 
+    suspend fun insertOrReplaceRoom(chatRoomEntity: ChatRoomEntity) {
+        retryDB("insertOrReplace($chatRoomEntity)") {
+            chatRoomDao().insertOrReplace(chatRoomEntity)
+        }
+    }
+
+    suspend fun getUser(id: String) = withContext(dbManagerContext) {
+        retryDB("getUser($id)") {
+            userDao().getUser(id)
+        }
+    }
+
     fun processUsersBatch(users: List<User>) {
         launch(dbManagerContext) {
             val list = ArrayList<BaseUserEntity>(users.size)
@@ -132,7 +150,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
             batch.forEach {
                 when (it.type) {
                     is Type.Removed -> toRemove.add(removeChatRoom(it.data))
-                    is Type.Inserted -> insertChatRoom(it.data)?.let { toInsert.add(it) }
+                    is Type.Inserted -> insertChatRoom(it.data)?.let { room -> toInsert.add(room) }
                     is Type.Updated -> {
                         when (it.data) {
                             is Subscription -> updateSubs[(it.data as Subscription).roomId] = it.data as Subscription
@@ -178,16 +196,14 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         }
     }
 
-    fun processMessagesBatch(messages: List<Message>): Job {
-        return launch(dbManagerContext) {
-            val list = mutableListOf<Pair<MessageEntity, List<BaseMessageEntity>>>()
-            messages.forEach { message ->
-                val pair = createMessageEntities(message)
-                list.add(pair)
-            }
-
-            sendOperation(Operation.InsertMessages(list))
+    fun processMessagesBatch(messages: List<Message>): Job = launch(dbManagerContext) {
+        val list = mutableListOf<Pair<MessageEntity, List<BaseMessageEntity>>>()
+        messages.forEach { message ->
+            val pair = createMessageEntities(message)
+            list.add(pair)
         }
+
+        sendOperation(Operation.InsertMessages(list))
     }
 
     private suspend fun createMessageEntities(message: Message): Pair<MessageEntity, List<BaseMessageEntity>> {
@@ -205,91 +221,70 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         return Pair(messageEntity, list)
     }
 
-    private fun createReactions(message: Message): List<BaseMessageEntity>? {
-        if (message.reactions == null || message.reactions!!.isEmpty()) {
-            return null
-        }
-
-        val reactions = message.reactions!!
-
-        val list = mutableListOf<BaseMessageEntity>()
-        reactions.keys.forEach { reaction ->
-            val users = reactions[reaction]
-            users?.let { users ->
-                list.add(ReactionEntity(reaction, message.id, users.size, users.joinToString()))
+    private fun createReactions(message: Message): List<BaseMessageEntity>? = message.reactions?.run {
+        if (isNotEmpty()) {
+            val list = mutableListOf<BaseMessageEntity>()
+            keys.forEach { reaction ->
+                get(reaction)?.let { reactionValue ->
+                    list.add(ReactionEntity(reaction, message.id, size, reactionValue.joinToString()))
+                }
             }
-        }
-
-        return list
+            list
+        } else null
     }
 
-    private fun createUrlEntities(message: Message): List<BaseMessageEntity>? {
-        if (message.urls == null || message.urls!!.isEmpty()) {
-            return null
-        }
-
-        val list = mutableListOf<UrlEntity>()
-        message.urls!!.forEach { url ->
-            list.add(UrlEntity(message.id, url.url, url.parsedUrl?.host, url.meta?.title,
-                url.meta?.description, url.meta?.imageUrl))
-        }
-
-        return list
+    private fun createUrlEntities(message: Message): List<BaseMessageEntity>? = message.urls?.run {
+        if (isNotEmpty()) {
+            val list = mutableListOf<UrlEntity>()
+            forEach { url ->
+                list.add(UrlEntity(message.id, url.url, url.parsedUrl?.host, url.meta?.title,
+                        url.meta?.description, url.meta?.imageUrl))
+            }
+            list
+        } else null
     }
 
-    private fun createChannelRelations(message: Message): List<BaseMessageEntity>? {
-        if (message.channels == null || message.channels!!.isEmpty()) {
-            return null
-        }
-
-        val list = mutableListOf<MessageChannels>()
-        message.channels!!.forEach { channel ->
-            list.add(MessageChannels(message.id, channel.id, channel.name))
-        }
-
-        return list
+    private fun createChannelRelations(message: Message): List<BaseMessageEntity>? = message.channels?.run {
+        if (isNotEmpty()) {
+            val list = mutableListOf<MessageChannels>()
+            forEach { channel ->
+                list.add(MessageChannels(message.id, channel.id, channel.name))
+            }
+            list
+        } else null
     }
 
-    private suspend fun createMentionRelations(message: Message): List<BaseMessageEntity>? {
-        if (message.mentions == null || message.mentions!!.isEmpty()) {
-            return null
-        }
-
-        val list = mutableListOf<MessageMentionsRelation>()
-        message.mentions!!.filterNot { user -> user.id.isNullOrEmpty() }.forEach { mention ->
-            insertUserIfMissing(mention)
-            list.add(MessageMentionsRelation(message.id, mention.id!!))
-        }
-
-        return list
+    private suspend fun createMentionRelations(message: Message): List<BaseMessageEntity>? = message.mentions?.run {
+        if (isNotEmpty()) {
+            val list = mutableListOf<MessageMentionsRelation>()
+            filterNot { user -> user.id.isNullOrEmpty() }.forEach { mention ->
+                insertUserIfMissing(mention)
+                list.add(MessageMentionsRelation(message.id, mention.id!!))
+            }
+            list
+        } else null
     }
 
-    private suspend fun createFavoriteRelations(message: Message): List<BaseMessageEntity>? {
-        if (message.starred == null || message.starred!!.isEmpty()) {
-            return null
-        }
-
-        val list = mutableListOf<MessageFavoritesRelation>()
-        message.starred!!.filterNot { user -> user.id.isNullOrEmpty() }.forEach { userId ->
-            insertUserIfMissing(userId)
-            list.add(MessageFavoritesRelation(message.id, userId.id!!))
-        }
-
-        return list
+    private suspend fun createFavoriteRelations(message: Message): List<BaseMessageEntity>? = message.starred?.run {
+        if (isNotEmpty()) {
+            val list = mutableListOf<MessageFavoritesRelation>()
+            filterNot { user -> user.id.isNullOrEmpty() }.forEach { userId ->
+                insertUserIfMissing(userId)
+                list.add(MessageFavoritesRelation(message.id, userId.id!!))
+            }
+            list
+        } else null
     }
 
-    private fun createAttachments(message: Message): List<BaseMessageEntity>? {
-        if (message.attachments == null || message.attachments!!.isEmpty()) {
-            return null
-        }
 
-        val list = ArrayList<BaseMessageEntity>(message.attachments!!.size)
-
-        message.attachments!!.forEach { attachment ->
-            list.addAll(attachment.asEntity(message.id, context))
-        }
-
-        return list
+    private fun createAttachments(message: Message): List<BaseMessageEntity>? = message.attachments?.run {
+        if (isNotEmpty()) {
+            val list = ArrayList<BaseMessageEntity>(size)
+            forEach { attachment ->
+                list.addAll(attachment.asEntity(message.id, context))
+            }
+            list
+        } else null
     }
 
     private suspend fun createUpdates(): List<ChatRoomEntity> {
@@ -367,20 +362,15 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         }
     }
 
-    private fun mapLastMessageText(message: Message?): String? {
-        return if (message == null) {
-            null
+    private fun mapLastMessageText(message: Message?): String? = message?.run {
+        if (this.message.isEmpty() && attachments?.isNotEmpty() == true) {
+            message.attachments?.let { mapAttachmentText(it[0]) }
         } else {
-            return if (message.message.isEmpty() && message.attachments?.isNotEmpty() == true) {
-                mapAttachmentText(message.attachments!![0])
-            } else {
-                message.message
-            }
+            this.message
         }
     }
 
-    private fun mapAttachmentText(attachment: Attachment): String =
-        context.getString(R.string.msg_sent_attachment)
+    private fun mapAttachmentText(attachment: Attachment): String = context.getString(R.string.msg_sent_attachment)
 
     private suspend fun updateSubscription(data: Subscription): ChatRoomEntity? {
         return retryDB("getRoom(${data.roomId}") { chatRoomDao().getSync(data.roomId) }?.let { current ->
@@ -423,12 +413,10 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         }
     }
 
-    private suspend fun insertChatRoom(data: BaseRoom): ChatRoomEntity? {
-        return when (data) {
-            is Room -> insertRoom(data)
-            is Subscription -> insertSubscription(data)
-            else -> null
-        }
+    private suspend fun insertChatRoom(data: BaseRoom): ChatRoomEntity? = when (data) {
+        is Room -> insertRoom(data)
+        is Subscription -> insertSubscription(data)
+        else -> null
     }
 
     private suspend fun insertRoom(data: Room): ChatRoomEntity? {

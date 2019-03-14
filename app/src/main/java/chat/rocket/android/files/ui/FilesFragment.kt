@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.chatdetails.ui.ChatDetailsActivity
+import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.files.adapter.FilesAdapter
 import chat.rocket.android.files.presentation.FilesPresenter
 import chat.rocket.android.files.presentation.FilesView
@@ -30,11 +30,9 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_files.*
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String): Fragment {
-    return FilesFragment().apply {
-        arguments = Bundle(1).apply {
-            putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-        }
+fun newInstance(chatRoomId: String): Fragment = FilesFragment().apply {
+    arguments = Bundle(1).apply {
+        putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
     }
 }
 
@@ -55,12 +53,9 @@ class FilesFragment : Fragment(), FilesView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        val bundle = arguments
-        if (bundle != null) {
-            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
-        } else {
-            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
-        }
+        arguments?.run {
+            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")
+        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
 
     override fun onCreateView(
@@ -152,9 +147,11 @@ class FilesFragment : Fragment(), FilesView {
     }
 
     private fun setupToolbar(totalFiles: Long) {
-        (activity as ChatDetailsActivity).let {
-            it.setToolbarTitle(getString(R.string.title_files_total, totalFiles))
-            it.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        }
+        (activity as ChatRoomActivity).showToolbarTitle(
+            (getString(
+                R.string.title_files_total,
+                totalFiles
+            ))
+        )
     }
 }

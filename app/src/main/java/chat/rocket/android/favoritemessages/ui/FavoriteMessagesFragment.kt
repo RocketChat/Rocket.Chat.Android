@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.chatdetails.ui.ChatDetailsActivity
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
@@ -26,11 +25,9 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_favorite_messages.*
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String): Fragment {
-    return FavoriteMessagesFragment().apply {
-        arguments = Bundle(1).apply {
-            putString(INTENT_CHAT_ROOM_ID, chatRoomId)
-        }
+fun newInstance(chatRoomId: String): Fragment = FavoriteMessagesFragment().apply {
+    arguments = Bundle(1).apply {
+        putString(INTENT_CHAT_ROOM_ID, chatRoomId)
     }
 }
 
@@ -49,12 +46,9 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        val bundle = arguments
-        if (bundle != null) {
-            chatRoomId = bundle.getString(INTENT_CHAT_ROOM_ID)
-        } else {
-            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
-        }
+        arguments?.run {
+            chatRoomId = getString(INTENT_CHAT_ROOM_ID, "")
+        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
 
     override fun onCreateView(
@@ -116,9 +110,6 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
     }
 
     private fun setupToolbar() {
-        (activity as ChatDetailsActivity).let {
-            it.setToolbarTitle(getString(R.string.title_favorite_messages))
-            it.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        }
+        (activity as ChatRoomActivity).showToolbarTitle(getString(R.string.title_favorite_messages))
     }
 }

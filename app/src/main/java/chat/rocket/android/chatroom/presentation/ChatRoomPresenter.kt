@@ -182,8 +182,8 @@ class ChatRoomPresenter @Inject constructor(
             chatRoomId?.let {
                 manager.addRoomChannel(it, roomChangesChannel)
                 for (room in roomChangesChannel) {
-                    dbManager.getRoom(room.id)?.let {
-                        view.onRoomUpdated(roomMapper.map(chatRoom = it, showLastMessage = true))
+                    dbManager.getRoom(room.id)?.let { chatRoom ->
+                        view.onRoomUpdated(roomMapper.map(chatRoom = chatRoom, showLastMessage = true))
                     }
                 }
             }
@@ -316,16 +316,18 @@ class ChatRoomPresenter @Inject constructor(
     fun sendMessage(chatRoomId: String, text: String, messageId: String?) {
         launchUI(strategy) {
             try {
+                view.disableSendMessageButton()
                 // ignore message for now, will receive it on the stream
-                val id = UUID.randomUUID().toString()
                 if (messageId == null) {
+                    val id = UUID.randomUUID().toString()
                     val username = userHelper.username()
+                    val user = userHelper.user()
                     val newMessage = Message(
                         id = id,
                         roomId = chatRoomId,
                         message = text,
                         timestamp = Instant.now().toEpochMilli(),
-                        sender = SimpleUser(null, username, username),
+                        sender = SimpleUser(user?.id, user?.username ?: username, user?.name),
                         attachments = null,
                         avatar = currentServer.avatarUrl(username ?: ""),
                         channels = null,
@@ -371,13 +373,12 @@ class ChatRoomPresenter @Inject constructor(
                 } else {
                     client.updateMessage(chatRoomId, messageId, text)
                 }
-
-                clearUnfinishedMessage()
-                view.enableSendMessageButton()
+                clearDraftMessage()
             } catch (ex: Exception) {
-                Timber.d(ex, "Error sending message...")
+                Timber.e(ex, "Error sending message...")
                 jobSchedulerInteractor.scheduleSendingMessages()
             } finally {
+                view.clearMessageComposition(true)
                 view.enableSendMessageButton()
             }
         }
@@ -1073,7 +1074,7 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 messagesRepository.getById(messageId)?.let { message ->
-                    getChatRoomAsync(message.roomId)?.let { chatRoom ->
+                    getChatRoomAsync(message.roomId)?.let {
                         val models = mapper.map(message)
                         models.firstOrNull()?.permalink?.let {
                             view.copyToClipboard(it)
@@ -1275,10 +1276,9 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             val viewModelStreamedMessage = mapper.map(
                 streamedMessage, RoomUiModel(
-                roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
+                    roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
+                )
             )
-            )
-
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
             if (index > -1) {
@@ -1304,13 +1304,11 @@ class ChatRoomPresenter @Inject constructor(
      *
      * @param unfinishedMessage The unfinished message to save.
      */
-    fun saveUnfinishedMessage(unfinishedMessage: String) {
-        if (unfinishedMessage.isNotBlank()) {
-            localRepository.save(draftKey, unfinishedMessage)
-        }
+    fun saveDraftMessage(unfinishedMessage: String) {
+        localRepository.save(draftKey, unfinishedMessage)
     }
 
-    fun clearUnfinishedMessage() {
+    fun clearDraftMessage() {
         localRepository.clear(draftKey)
     }
     /**
@@ -1319,7 +1317,7 @@ class ChatRoomPresenter @Inject constructor(
      *
      * @return Returns the unfinished message, null otherwise.
      */
-    fun getUnfinishedMessage(): String? {
+    fun getDraftUnfinishedMessage(): String? {
         return localRepository.get(draftKey)
     }
 }

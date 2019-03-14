@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.chatdetails.ui.ChatDetailsActivity
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
+import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.mentions.presentention.MentionsPresenter
@@ -25,11 +25,9 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_mentions.*
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String): Fragment {
-    return MentionsFragment().apply {
-        arguments = Bundle(1).apply {
-            putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-        }
+fun newInstance(chatRoomId: String): Fragment = MentionsFragment().apply {
+    arguments = Bundle(1).apply {
+        putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
     }
 }
 
@@ -37,24 +35,20 @@ internal const val TAG_MENTIONS_FRAGMENT = "MentionsFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class MentionsFragment : Fragment(), MentionsView {
-
-    private lateinit var chatRoomId: String
-    private val adapter = ChatRoomAdapter(enableActions = false)
     @Inject
     lateinit var presenter: MentionsPresenter
     @Inject
     lateinit var analyticsManager: AnalyticsManager
+    private lateinit var chatRoomId: String
+    private val adapter = ChatRoomAdapter(enableActions = false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        val bundle = arguments
-        if (bundle != null) {
-            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
-        } else {
-            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
-        }
+        arguments?.run {
+            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")
+        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
 
     override fun onCreateView(
@@ -122,9 +116,6 @@ class MentionsFragment : Fragment(), MentionsView {
     }
 
     private fun setupToolbar() {
-        (activity as ChatDetailsActivity).let {
-            it.setToolbarTitle(getString(R.string.msg_mentions))
-            it.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        }
+        (activity as ChatRoomActivity).showToolbarTitle((getString(R.string.msg_mentions)))
     }
 }

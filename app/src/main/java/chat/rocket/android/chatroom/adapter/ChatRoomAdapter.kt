@@ -1,17 +1,23 @@
 package chat.rocket.android.chatroom.adapter
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.uimodel.*
-import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
+import chat.rocket.android.chatroom.uimodel.AttachmentUiModel
+import chat.rocket.android.chatroom.uimodel.BaseUiModel
+import chat.rocket.android.chatroom.uimodel.MessageReplyUiModel
+import chat.rocket.android.chatroom.uimodel.MessageUiModel
+import chat.rocket.android.chatroom.uimodel.UrlPreviewUiModel
+import chat.rocket.android.chatroom.uimodel.toViewType
 import chat.rocket.android.emoji.EmojiReactionListener
+import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.openTabbedUrl
+import chat.rocket.core.model.Message
 import chat.rocket.core.model.attachment.actions.Action
 import chat.rocket.core.model.attachment.actions.ButtonAction
-import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
 import timber.log.Timber
 import java.security.InvalidParameterException
@@ -22,7 +28,8 @@ class ChatRoomAdapter(
     private val roomName: String? = null,
     private val actionSelectListener: OnActionSelected? = null,
     private val enableActions: Boolean = true,
-    private val reactionListener: EmojiReactionListener? = null
+    private val reactionListener: EmojiReactionListener? = null,
+    private val navigator: ChatRoomNavigator? = null
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
     private val dataSet = ArrayList<BaseUiModel<*>>()
 
@@ -34,7 +41,11 @@ class ChatRoomAdapter(
         return when (viewType.toViewType()) {
             BaseUiModel.ViewType.MESSAGE -> {
                 val view = parent.inflate(R.layout.item_message)
-                MessageViewHolder(view, actionsListener, reactionListener)
+                MessageViewHolder(
+                    view,
+                    actionsListener,
+                    reactionListener
+                ) { userId -> navigator?.toUserDetails(userId) }
             }
             BaseUiModel.ViewType.URL_PREVIEW -> {
                 val view = parent.inflate(R.layout.message_url_preview)
@@ -42,11 +53,20 @@ class ChatRoomAdapter(
             }
             BaseUiModel.ViewType.ATTACHMENT -> {
                 val view = parent.inflate(R.layout.item_message_attachment)
-                AttachmentViewHolder(view, actionsListener, reactionListener, actionAttachmentOnClickListener)
+                AttachmentViewHolder(
+                    view,
+                    actionsListener,
+                    reactionListener,
+                    actionAttachmentOnClickListener
+                )
             }
             BaseUiModel.ViewType.MESSAGE_REPLY -> {
                 val view = parent.inflate(R.layout.item_message_reply)
-                MessageReplyViewHolder(view, actionsListener, reactionListener) { roomName, permalink ->
+                MessageReplyViewHolder(
+                    view,
+                    actionsListener,
+                    reactionListener
+                ) { roomName, permalink ->
                     actionSelectListener?.openDirectMessage(roomName, permalink)
                 }
             }
@@ -56,13 +76,9 @@ class ChatRoomAdapter(
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return dataSet[position].viewType
-    }
+    override fun getItemViewType(position: Int): Int = dataSet[position].viewType
 
-    override fun getItemCount(): Int {
-        return dataSet.size
-    }
+    override fun getItemCount(): Int = dataSet.size
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         if (holder !is MessageViewHolder) {
@@ -117,7 +133,8 @@ class ChatRoomAdapter(
     fun prependData(dataSet: List<BaseUiModel<*>>) {
         //---At first we will update all already saved elements with received updated ones
         val filteredDataSet = dataSet.filter { newItem ->
-            val matchedIndex = this.dataSet.indexOfFirst { it.messageId == newItem.messageId && it.viewType == newItem.viewType }
+            val matchedIndex =
+                this.dataSet.indexOfFirst { it.messageId == newItem.messageId && it.viewType == newItem.viewType }
             if (matchedIndex > -1) {
                 this.dataSet[matchedIndex] = newItem
                 notifyItemChanged(matchedIndex)
@@ -153,12 +170,12 @@ class ChatRoomAdapter(
         Timber.d("index: $index")
         if (index > -1) {
             dataSet[index] = message
-            dataSet.forEachIndexed { index, viewModel ->
+            dataSet.forEachIndexed { ind, viewModel ->
                 if (viewModel.messageId == message.messageId) {
                     if (viewModel.nextDownStreamMessage == null) {
                         viewModel.reactions = message.reactions
                     }
-                    notifyItemChanged(index)
+                    notifyItemChanged(ind)
                 }
             }
             // Delete message only if current is a system message update, i.e.: Message Removed
@@ -237,10 +254,10 @@ class ChatRoomAdapter(
                         actionSelectListener?.editMessage(roomId, id, message.message)
                     }
                     R.id.action_message_star -> {
-                        actionSelectListener?.toogleStar(id, !item.isChecked)
+                        actionSelectListener?.toggleStar(id, !item.isChecked)
                     }
                     R.id.action_message_unpin -> {
-                        actionSelectListener?.tooglePin(id, !item.isChecked)
+                        actionSelectListener?.togglePin(id, !item.isChecked)
                     }
                     R.id.action_message_delete -> {
                         actionSelectListener?.deleteMessage(roomId, id)
@@ -266,15 +283,20 @@ class ChatRoomAdapter(
 
         fun showMessageInfo(id: String)
 
-        fun citeMessage(roomName: String, roomType: String, messageId: String, mentionAuthor: Boolean)
+        fun citeMessage(
+            roomName: String,
+            roomType: String,
+            messageId: String,
+            mentionAuthor: Boolean
+        )
 
         fun copyMessage(id: String)
 
         fun editMessage(roomId: String, messageId: String, text: String)
 
-        fun toogleStar(id: String, star: Boolean)
+        fun toggleStar(id: String, star: Boolean)
 
-        fun tooglePin(id: String, pin: Boolean)
+        fun togglePin(id: String, pin: Boolean)
 
         fun deleteMessage(roomId: String, id: String)
 

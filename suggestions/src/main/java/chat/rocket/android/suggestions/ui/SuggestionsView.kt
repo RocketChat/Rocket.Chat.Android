@@ -74,7 +74,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
         // If we don't have any adapter bound to any token bail out.
         if (adaptersByToken.isEmpty()) return
 
-        if (editor?.get() != null && editor?.get()?.selectionStart ?: 0 <= completionOffset.get()) {
+        if (editor?.get() != null && editor?.get()?.selectionStart ?: 0 < completionOffset.get()) {
             completionOffset.set(NO_STATE_INDEX)
             collapse()
         }

@@ -64,6 +64,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">पसंद</item>
         <item name="item_password">पासवर्ड बदलें</item>
+        <item name="change_language">भाषा बदलें</item>
         <item name="item_share_app">ऐप शेयर करें</item>
         <item name="item_rate_us">हमें रेटिंग दें</item>
         <item name="item_contact_us">हमसे संपर्क करें</item>
@@ -120,15 +121,14 @@
     <string name="msg_preview_file">फ़ाइल</string>
     <string name="msg_unread_messages">अपठित संदेश</string>
     <string name="msg_no_messages_yet">अभी तक कोई पोस्ट नहीं</string>
+    <string name="msg_build">निर्माण %1$d - %2$s - %3$s</string>
     <string name="msg_update_app_version_in_order_to_continue">पुराना सर्वर वर्शन। जारी रखने के लिए सर्वर वर्शन को अद्यतन करने के लिए कृपया सर्वर व्यवस्थापक से संपर्क करें।</string>
-    <string name="msg_ok">ठीक है</string>
     <string name="msg_ver_not_recommended">
         ऐसा लगता है कि आपका सर्वर संस्करण अनुशंसित संस्करण %1$s के नीचे है।\nआप अभी भी लॉगिन कर सकते हैं लेकिन आप अप्रत्याशित व्यवहार का अनुभव कर सकते हैं
     </string>
     <string name="msg_ver_not_minimum">
         ऐसा लगता है कि आपका सर्वर संस्करण न्यूनतम आवश्यक संस्करण %1$s से कम है।\nकृपया लॉगिन करने के लिए अपने सर्वर को अपग्रेड करें!
     </string>
-    <string name="msg_cancel">रद्द करना</string>
     <string name="msg_http_insecure">HTTP का उपयोग करते समय, आप एक असुरक्षित सर्वर से कनेक्ट हो रहे हैं। हम आपको ऐसा करने की सलाह नहीं देते हैं।</string>
     <string name="msg_error_checking_server_version">आपके सर्वर संस्करण की जांच करते समय एक त्रुटि आई है, कृपया पुनः प्रयास करें</string>
     <string name="msg_invalid_server_protocol">चयनित प्रोटोकॉल इस सर्वर द्वारा स्वीकार नहीं किया गया है, HTTPS का उपयोग करने का प्रयास करें</string>
@@ -152,7 +152,7 @@
     <string name="msg_delete_message">संदेश को हटाएं</string>
     <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
     <string name="msg_welcome_to_rocket_chat">Rocket.Chat में आपका स्वागत है</string>
-    <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
+    <string name="msg_team_communication">टीम संचार</string>
     <string name="msg_login_with_email">ई-मेल के साथ लॉगिन करें</string>
     <string name="msg_create_account">खाता बनाएं</string>
     <string name="msg_continue_with_facebook"><b>Facebook</b> के साथ जारी रखें</string>
@@ -319,6 +319,7 @@
     <string name="chatroom_header">हैडर</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">पसंदीदा</string>
     <string name="header_channel">चैनलों</string>
     <string name="header_private_groups">निजी समूहों</string>
     <string name="header_direct_messages">प्रत्यक्ष संदेश</string>
@@ -336,10 +337,7 @@
     <string name="message_room_changed_privacy">%2$s ने रूम का प्रकार बदलकर %1$s किया </string>
 
     <!-- User Details -->
-    <string name="message">संदेश</string>
     <string name="timezone">समय क्षेत्र</string>
-    <string name="error_opening_dm">जब हम इस बातचीत को बना रहे थे तो कुछ गड़बड़ हुई …</string>
-    <string name="retry">पुन: प्रयास करें</string>
 
     <!-- Report -->
     <string name="submit">जमा करें</string>

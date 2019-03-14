@@ -21,7 +21,6 @@ package chat.rocket.android.emoji
 import android.content.Context
 import android.graphics.Point
 import android.graphics.Rect
-import android.os.Build
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View

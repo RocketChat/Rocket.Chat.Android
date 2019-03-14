@@ -2,7 +2,7 @@ package chat.rocket.android.profile.ui
 
 import DrawableHelper
 import android.app.Activity
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
@@ -94,11 +94,13 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
-        if (resultData != null && resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_CODE_FOR_PERFORM_SAF) {
-                presenter.updateAvatar(resultData.data)
-            } else if (requestCode == REQUEST_CODE_FOR_PERFORM_CAMERA) {
-                presenter.preparePhotoAndUpdateAvatar(resultData.extras["data"] as Bitmap)
+        resultData?.run {
+            if (resultCode == Activity.RESULT_OK) {
+                if (requestCode == REQUEST_CODE_FOR_PERFORM_SAF) {
+                    data?.let { presenter.updateAvatar(it) }
+                } else if (requestCode == REQUEST_CODE_FOR_PERFORM_CAMERA) {
+                    extras?.get("data")?.let { presenter.preparePhotoAndUpdateAvatar(it as Bitmap) }
+                }
             }
         }
     }
@@ -203,8 +205,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun setupToolbar() {
-        (activity as AppCompatActivity?)?.supportActionBar?.title =
-                getString(R.string.title_profile)
+        (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_profile)
     }
 
     private fun setupListeners() {
@@ -293,17 +294,14 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     fun showDeleteAccountDialog() {
-        val passwordEditText = EditText(context)
-        passwordEditText.hint = getString(R.string.msg_password)
+        context?.let {
+            val passwordEText = EditText(context);
+            val mDialogView = LayoutInflater.from(it).inflate(R.layout.item_account_delete, null)
+            val mBuilder = AlertDialog.Builder(it)
 
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle(R.string.title_are_you_sure)
-            .setView(passwordEditText)
-            .setPositiveButton(R.string.action_delete_account) { _, _ ->
-                presenter.deleteAccount(passwordEditText.text.toString())
-            }
-            .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
-            .create()
-            .show()
+            mBuilder.setView(mDialogView).setPositiveButton(R.string.action_delete_account) { _, _ ->
+                presenter.deleteAccount(passwordEText.text.toString())
+            }.setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }.create().show()
+        }
     }
 }

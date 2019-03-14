@@ -7,8 +7,6 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.internal.http.HttpHeaders
-import okhttp3.internal.platform.Platform
-import okhttp3.internal.platform.Platform.INFO
 import okio.Buffer
 import okio.GzipSource
 import java.io.EOFException
@@ -193,7 +191,7 @@ class HttpLoggingInterceptor constructor(private val logger: Logger) : Intercept
 
         val responseBody = response.body()
         val contentLength = responseBody!!.contentLength()
-        val bodySize = if (contentLength != -1L) contentLength.toString() + "-byte" else "unknown-length"
+        val bodySize = if (contentLength != -1L) "$contentLength-byte" else "unknown-length"
         val responseStr = if (response.message().isEmpty()) "" else " ${response.message()}"
         logger.log("<-- ${response.code()}$responseStr ${response.request().url()}"
                 + " (" + tookMs + "ms" + (if (!logHeaders) ", $bodySize body" else "") + ')'.toString())
