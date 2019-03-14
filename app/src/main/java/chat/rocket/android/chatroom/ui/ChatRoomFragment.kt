@@ -28,6 +28,8 @@ import androidx.core.text.bold
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -94,6 +96,8 @@ import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
 import kotlinx.android.synthetic.main.reaction_praises_list_item.view.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.runBlocking
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
@@ -314,6 +318,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         text_message.addTextChangedListener(EmojiKeyboardPopup.EmojiTextWatcher(text_message))
+        presenter.updateUnreadRoomsBadge()
     }
 
     override fun onDestroyView() {
@@ -1049,6 +1054,25 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         layout_message_attachment_options.circularRevealOrUnreveal(centerX, centerY, max, 0F)
 
         view_dim.isVisible = false
+    }
+
+    override fun updateUnreadRoomsBadge(totalUnreadRooms: MutableLiveData<Long>) {
+        ui {
+            val updateTotalUnreadRooms = Observer<Long> { newTotalUnreadRooms ->
+                var alert: Boolean? = null
+                runBlocking(CommonPool) {
+                    alert = presenter.getRoomAlert(chatRoomId)
+                }
+                Timber.d("newTotalUnreadRooms: ${newTotalUnreadRooms}, alert: ${alert}")
+                (activity as ChatRoomActivity).let {
+                    if (alert == true)
+                        it.bindUnreadRooms(newTotalUnreadRooms - 1)
+                    else
+                        it.bindUnreadRooms(newTotalUnreadRooms)
+                }
+            }
+            totalUnreadRooms.observe(this, updateTotalUnreadRooms)
+        }
     }
 
     private fun setupToolbar(toolbarTitle: String) {

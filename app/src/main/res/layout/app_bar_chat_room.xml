@@ -7,6 +7,10 @@
     android:background="@color/colorPrimary"
     android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -14,7 +18,10 @@
         app:layout_scrollFlags="scroll|enterAlways"
         app:navigationIcon="?android:attr/homeAsUpIndicator"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
 
         <TextView
             android:id="@+id/text_room_name"
@@ -28,5 +35,19 @@
             android:textStyle="bold"
             tools:text="general" />
     </androidx.appcompat.widget.Toolbar>
+
+    <include
+        android:id="@+id/chatroom_unread_messages_badge"
+        layout="@layout/unread_messages_badge"
+        android:layout_width="21dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.appbar.AppBarLayout>

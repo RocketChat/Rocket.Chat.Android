@@ -1168,6 +1168,16 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
+    fun updateUnreadRoomsBadge() {
+        Timber.w("reached updateUnreadRoomsBadge")
+        view.updateUnreadRoomsBadge(dbManager.totalUnreadRooms)
+    }
+
+    suspend fun getRoomAlert(roomId: String): Boolean? {
+        val room = dbManager.getRoom(roomId)
+        return room?.chatRoom?.alert
+    }
+
     fun runCommand(text: String, roomId: String) {
         launchUI(strategy) {
             try {

@@ -1,6 +1,7 @@
 package chat.rocket.android.db
 
 import android.app.Application
+import androidx.lifecycle.MutableLiveData
 import chat.rocket.android.R
 import chat.rocket.android.db.model.BaseMessageEntity
 import chat.rocket.android.db.model.BaseUserEntity
@@ -64,6 +65,9 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     private val insertRooms = HashMap<String, Room>()
     private val updateSubs = LinkedHashMap<String, Subscription>()
     private val updateRooms = LinkedHashMap<String, Room>()
+    val totalUnreadRooms: MutableLiveData<Long> by lazy {
+        MutableLiveData<Long>()
+    }
 
     fun chatRoomDao(): ChatRoomDao = database.chatRoomDao()
     fun userDao(): UserDao = database.userDao()
@@ -553,12 +557,15 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                     Timber.d("Running ChatRooms transaction: remove: ${operation.toRemove} - insert: ${operation.toInsert} - update: ${operation.toUpdate}")
 
                     chatRoomDao().update(operation.toInsert, operation.toUpdate, operation.toRemove)
+                    updateUnreadRoomsCount()
                 }
                 is Operation.InsertRooms -> {
                     chatRoomDao().insertOrReplace(operation.chatRooms)
+                    updateUnreadRoomsCount()
                 }
                 is Operation.CleanInsertRooms -> {
                     chatRoomDao().cleanInsert(operation.chatRooms)
+                    updateUnreadRoomsCount()
                 }
                 is Operation.InsertUsers -> {
                     val time = measureTimeMillis { userDao().upsert(operation.users) }
@@ -572,12 +579,26 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                 }
                 is Operation.InsertMessages -> {
                     messageDao().insert(operation.list)
+                    updateUnreadRoomsCount()
                 }
                 is Operation.SaveLastSync -> {
                     messageDao().saveLastSync(operation.sync)
                 }
             }.exhaustive
         }
+    }
+
+    private fun updateUnreadRoomsCount() {
+        val rooms: List<chat.rocket.android.db.model.ChatRoom> = chatRoomDao().getAllSync()
+        var count: Long = 0
+        Timber.d("chatroomdao: ${rooms}")
+        rooms.forEach { room ->
+            if (room.chatRoom.alert || room.chatRoom.unread > 0) {
+                count++
+            }
+        }
+        Timber.d("Total unread rooms: ${count}")
+        totalUnreadRooms.postValue(count)
     }
 }
 
