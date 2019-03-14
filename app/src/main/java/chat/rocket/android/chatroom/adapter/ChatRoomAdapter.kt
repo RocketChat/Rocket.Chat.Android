@@ -76,13 +76,9 @@ class ChatRoomAdapter(
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return dataSet[position].viewType
-    }
+    override fun getItemViewType(position: Int): Int = dataSet[position].viewType
 
-    override fun getItemCount(): Int {
-        return dataSet.size
-    }
+    override fun getItemCount(): Int = dataSet.size
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         if (holder !is MessageViewHolder) {
@@ -174,12 +170,12 @@ class ChatRoomAdapter(
         Timber.d("index: $index")
         if (index > -1) {
             dataSet[index] = message
-            dataSet.forEachIndexed { index, viewModel ->
+            dataSet.forEachIndexed { ind, viewModel ->
                 if (viewModel.messageId == message.messageId) {
                     if (viewModel.nextDownStreamMessage == null) {
                         viewModel.reactions = message.reactions
                     }
-                    notifyItemChanged(index)
+                    notifyItemChanged(ind)
                 }
             }
             // Delete message only if current is a system message update, i.e.: Message Removed
@@ -258,10 +254,10 @@ class ChatRoomAdapter(
                         actionSelectListener?.editMessage(roomId, id, message.message)
                     }
                     R.id.action_message_star -> {
-                        actionSelectListener?.toogleStar(id, !item.isChecked)
+                        actionSelectListener?.toggleStar(id, !item.isChecked)
                     }
                     R.id.action_message_unpin -> {
-                        actionSelectListener?.tooglePin(id, !item.isChecked)
+                        actionSelectListener?.togglePin(id, !item.isChecked)
                     }
                     R.id.action_message_delete -> {
                         actionSelectListener?.deleteMessage(roomId, id)
@@ -298,9 +294,9 @@ class ChatRoomAdapter(
 
         fun editMessage(roomId: String, messageId: String, text: String)
 
-        fun toogleStar(id: String, star: Boolean)
+        fun toggleStar(id: String, star: Boolean)
 
-        fun tooglePin(id: String, pin: Boolean)
+        fun togglePin(id: String, pin: Boolean)
 
         fun deleteMessage(roomId: String, id: String)
 

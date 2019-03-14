@@ -42,7 +42,6 @@ class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attr
     fun undo() {
         if (mPaths.isEmpty() && mLastPaths.isNotEmpty()) {
             mPaths = mLastPaths.clone() as LinkedHashMap<MyPath, PaintOptions>
-            mLastPaths.clear()
             invalidate()
             return
         }
