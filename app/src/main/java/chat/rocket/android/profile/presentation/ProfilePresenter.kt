@@ -27,8 +27,8 @@ import chat.rocket.core.internal.rest.deleteOwnAccount
 import chat.rocket.core.internal.rest.resetAvatar
 import chat.rocket.core.internal.rest.setAvatar
 import chat.rocket.core.internal.rest.updateProfile
-import kotlinx.coroutines.experimental.DefaultDispatcher
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 
@@ -180,7 +180,7 @@ class ProfilePresenter @Inject constructor(
         launchUI(strategy) {
             view.showLoading()
             try {
-                withContext(DefaultDispatcher) {
+                withContext(Dispatchers.Default) {
                     // REMARK: Backend API is only working with a lowercase hash.
                     // https://github.com/RocketChat/Rocket.Chat/issues/12573
                     retryIO { client.deleteOwnAccount(password.gethash().toHex().toLowerCase()) }

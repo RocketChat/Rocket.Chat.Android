@@ -21,7 +21,6 @@ import chat.rocket.android.chatdetails.viewmodel.ChatDetailsViewModelFactory
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.GetSettingsInteractor
-import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui

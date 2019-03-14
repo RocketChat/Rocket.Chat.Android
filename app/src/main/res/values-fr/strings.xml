@@ -97,6 +97,7 @@
     <string name="msg_today">Aujourd\'hui</string>
     <string name="msg_message">Message</string>
     <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
+    <string name="msg_join_video_call">Join video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">Ce salon est en lecture seule</string>
     <string name="msg_invalid_2fa_code">Code 2FA non valide</string>
     <string name="msg_invalid_file">Fichier non valide</string>

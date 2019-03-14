@@ -110,6 +110,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_today">Today</string>
     <string name="msg_message">Message</string>
     <string name="msg_video_call">Video call</string>
+    <string name="msg_join_video_call">Join video call</string>
     <string name="msg_this_room_is_read_only">This room is read only</string>
     <string name="msg_invalid_2fa_code">Invalid 2FA Code</string>
     <string name="msg_invalid_file">Invalid file</string>

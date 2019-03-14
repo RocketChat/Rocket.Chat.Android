@@ -13,6 +13,7 @@ import chat.rocket.android.pinnedmessages.ui.TAG_PINNED_MESSAGES_FRAGMENT
 import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.userdetails.ui.TAG_USER_DETAILS_FRAGMENT
 import chat.rocket.android.util.extensions.addFragmentBackStack
+import chat.rocket.android.videoconferencing.ui.videoConferencingIntent
 
 class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
 
@@ -20,6 +21,10 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         activity.addFragmentBackStack(TAG_USER_DETAILS_FRAGMENT, R.id.fragment_container) {
             chat.rocket.android.userdetails.ui.newInstance(userId)
         }
+    }
+
+    fun toVideoConferencing(chatRoomId: String) {
+        activity.startActivity(activity.videoConferencingIntent(chatRoomId))
     }
 
     fun toChatRoom(

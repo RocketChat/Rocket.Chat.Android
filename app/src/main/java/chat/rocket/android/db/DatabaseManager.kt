@@ -33,11 +33,12 @@ import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
 import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.userId
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.channels.Channel
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.newSingleThreadContext
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.HashSet
 import kotlin.system.measureTimeMillis
@@ -69,7 +70,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
 
     fun start() {
         dbJob?.cancel()
-        dbJob = launch(dbContext) {
+        dbJob = GlobalScope.launch(dbContext) {
             for (operation in writeChannel) {
                 doOperation(operation)
             }
@@ -115,7 +116,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     }
 
     fun processUsersBatch(users: List<User>) {
-        launch(dbManagerContext) {
+        GlobalScope.launch(dbManagerContext) {
             val list = ArrayList<BaseUserEntity>(users.size)
             val time = measureTimeMillis {
                 users.forEach { user ->
@@ -133,7 +134,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
      * Creates a list of data base operations
      */
     fun processChatRoomsBatch(batch: List<StreamMessage<BaseRoom>>) {
-        launch(dbManagerContext) {
+        GlobalScope.launch(dbManagerContext) {
             val toRemove = HashSet<String>()
             val toInsert = ArrayList<ChatRoomEntity>(batch.size / 2)
             val toUpdate = ArrayList<ChatRoomEntity>(batch.size)
@@ -165,7 +166,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     }
 
     fun updateSelfUser(myself: Myself) {
-        launch(dbManagerContext) {
+        GlobalScope.launch(dbManagerContext) {
             val user = retryDB("getUser(${myself.id})") { userDao().getUser(myself.id) }
             val entity = user?.copy(
                 name = myself.name ?: user.name,
@@ -180,14 +181,14 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     }
 
     fun processRooms(rooms: List<ChatRoom>) {
-        launch(dbManagerContext) {
+        GlobalScope.launch(dbManagerContext) {
             val entities = rooms.map { mapChatRoom(it) }
             sendOperation(Operation.CleanInsertRooms(entities))
         }
     }
 
     fun processMessagesBatch(messages: List<Message>): Job {
-        return launch(dbManagerContext) {
+        return GlobalScope.launch(dbManagerContext) {
             val list = mutableListOf<Pair<MessageEntity, List<BaseMessageEntity>>>()
             messages.forEach { message ->
                 val pair = createMessageEntities(message)

@@ -3,9 +3,10 @@ package chat.rocket.android.server.domain
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.retryIO
 import chat.rocket.core.internal.rest.settings
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -18,6 +19,8 @@ class RefreshSettingsInteractor @Inject constructor(
 ) {
 
     private var settingsFilter = arrayOf(
+        UNIQUE_IDENTIFIER,
+
         LDAP_ENABLE,
         CAS_ENABLE,
         CAS_LOGIN_URL,
@@ -70,7 +73,7 @@ class RefreshSettingsInteractor @Inject constructor(
     )
 
     suspend fun refresh(server: String) {
-        withContext(CommonPool) {
+        withContext(Dispatchers.IO) {
             factory.create(server).let { client ->
                 val settings = retryIO(
                     description = "settings",
@@ -86,7 +89,7 @@ class RefreshSettingsInteractor @Inject constructor(
     }
 
     fun refreshAsync(server: String) {
-        launch(CommonPool) {
+        GlobalScope.launch(Dispatchers.IO) {
             try {
                 refresh(server)
             } catch (ex: Exception) {

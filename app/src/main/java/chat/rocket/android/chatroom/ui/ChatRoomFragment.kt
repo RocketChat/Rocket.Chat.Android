@@ -15,7 +15,6 @@ import android.text.SpannableStringBuilder
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
@@ -60,7 +59,6 @@ import chat.rocket.android.emoji.EmojiKeyboardPopup
 import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiPickerPopup
 import chat.rocket.android.emoji.EmojiReactionListener
-import chat.rocket.android.emoji.internal.GlideApp
 import chat.rocket.android.emoji.internal.isCustom
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.ImageHelper
@@ -82,6 +80,7 @@ import chat.rocket.android.util.extensions.ui
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
+import com.bumptech.glide.Glide
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -679,9 +678,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             view_flipper.displayedChild = if (isCustom) 1 else 0
             if (isCustom && url != null) {
                 val glideRequest = if (url.endsWith("gif", true)) {
-                    GlideApp.with(requireContext()).asGif()
+                    Glide.with(requireContext()).asGif()
                 } else {
-                    GlideApp.with(requireContext()).asBitmap()
+                    Glide.with(requireContext()).asBitmap()
                 }
 
                 glideRequest.load(url).into(view_flipper.emoji_image_view)

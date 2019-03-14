@@ -97,6 +97,7 @@
     <string name="msg_today">Hoje</string>
     <string name="msg_message">Mensagem</string>
     <string name="msg_video_call">Videochamada</string>
+    <string name="msg_join_video_call">Entrar na videochamada</string>
     <string name="msg_this_room_is_read_only">Este chat é apenas de leitura</string>
     <string name="msg_invalid_2fa_code">Código 2FA inválido</string>
     <string name="msg_invalid_file">Arquivo inválido</string>

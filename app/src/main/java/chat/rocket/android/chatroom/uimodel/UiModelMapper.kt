@@ -44,8 +44,8 @@ import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.attachment.Field
 import chat.rocket.core.model.isSystemMessage
 import chat.rocket.core.model.url.Url
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
 import java.security.InvalidParameterException
 import java.util.*
@@ -79,7 +79,7 @@ class UiModelMapper @Inject constructor(
         message: Message,
         roomUiModel: RoomUiModel = RoomUiModel(roles = emptyList(), isBroadcast = true)
     ): List<BaseUiModel<*>> =
-        withContext(CommonPool) {
+        withContext(Dispatchers.IO) {
             return@withContext translate(message, roomUiModel)
         }
 
@@ -88,7 +88,7 @@ class UiModelMapper @Inject constructor(
         roomUiModel: RoomUiModel = RoomUiModel(roles = emptyList(), isBroadcast = true),
         asNotReversed: Boolean = false
     ): List<BaseUiModel<*>> =
-        withContext(CommonPool) {
+        withContext(Dispatchers.IO) {
             val list = ArrayList<BaseUiModel<*>>(messages.size)
 
             messages.forEach {
@@ -102,7 +102,7 @@ class UiModelMapper @Inject constructor(
 
     suspend fun map(
         readReceipts: List<ReadReceipt>
-    ): List<ReadReceiptViewModel> = withContext(CommonPool) {
+    ): List<ReadReceiptViewModel> = withContext(Dispatchers.IO) {
         val list = arrayListOf<ReadReceiptViewModel>()
 
         readReceipts.forEach {
@@ -121,7 +121,7 @@ class UiModelMapper @Inject constructor(
         message: Message,
         roomUiModel: RoomUiModel
     ): List<BaseUiModel<*>> =
-        withContext(CommonPool) {
+        withContext(Dispatchers.IO) {
             val list = ArrayList<BaseUiModel<*>>()
 
             getChatRoomAsync(message.roomId)?.let { chatRoom ->
@@ -167,7 +167,7 @@ class UiModelMapper @Inject constructor(
         }
 
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
-    private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(CommonPool) {
+    private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(Dispatchers.IO) {
         return@withContext dbManager.getRoom(id = roomId)?.let {
             with(it.chatRoom) {
                 ChatRoom(
@@ -212,7 +212,7 @@ class UiModelMapper @Inject constructor(
         message: Message,
         roomUiModel: RoomUiModel
     ): List<BaseUiModel<*>> =
-        withContext(CommonPool) {
+        withContext(Dispatchers.IO) {
             val list = ArrayList<BaseUiModel<*>>()
 
             getChatRoomAsync(message.roomId)?.let { chatRoom ->
@@ -439,7 +439,7 @@ class UiModelMapper @Inject constructor(
     private suspend fun mapMessage(
         message: Message,
         chatRoom: ChatRoom
-    ): MessageUiModel = withContext(CommonPool) {
+    ): MessageUiModel = withContext(Dispatchers.IO) {
         val sender = getSenderName(message)
         val time = getTime(message.timestamp)
         val avatar = getUserAvatar(message)

@@ -16,8 +16,8 @@ import chat.rocket.android.util.retryIO
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.createDirectMessage
-import kotlinx.coroutines.experimental.DefaultDispatcher
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -81,7 +81,7 @@ class UserDetailsPresenter @Inject constructor(
             try {
                 view.showLoading()
 
-                withContext(DefaultDispatcher) {
+                withContext(Dispatchers.Default) {
                     val directMessage = retryIO("createDirectMessage($username") {
                         client.createDirectMessage(username)
                     }

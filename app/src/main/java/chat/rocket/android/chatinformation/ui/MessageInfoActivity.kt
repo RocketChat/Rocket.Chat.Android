@@ -24,7 +24,6 @@ fun Context.messageInformationIntent(messageId: String): Intent {
 private const val INTENT_MESSAGE_ID = "message_id"
 
 class MessageInfoActivity : AppCompatActivity(), HasSupportFragmentInjector {
-
     @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 

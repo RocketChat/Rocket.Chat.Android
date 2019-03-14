@@ -5,6 +5,8 @@ import chat.rocket.core.model.Value
 
 typealias PublicSettings = Map<String, Value<Any>>
 
+const val UNIQUE_IDENTIFIER = "uniqueID"
+
 // Authentication methods
 const val LDAP_ENABLE = "LDAP_Enable"
 const val CAS_ENABLE = "CAS_enabled"
@@ -63,6 +65,8 @@ const val MESSAGE_READ_RECEIPT_STORE_USERS = "Message_Read_Receipt_Store_Users"
  * If you need to access a Setting, add a const val key above, add it to the filter on
  * RefreshSettingsInteractor.kt and a extension function to access it.
  */
+
+fun PublicSettings.uniqueIdentifier(): String? = this[UNIQUE_IDENTIFIER]?.value as String?
 
 // Authentication
 fun PublicSettings.isLdapAuthenticationEnabled(): Boolean = this[LDAP_ENABLE]?.value == true

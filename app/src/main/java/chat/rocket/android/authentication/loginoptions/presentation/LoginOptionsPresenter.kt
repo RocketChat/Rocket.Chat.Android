@@ -31,7 +31,7 @@ import chat.rocket.core.internal.rest.loginWithCas
 import chat.rocket.core.internal.rest.loginWithOauth
 import chat.rocket.core.internal.rest.loginWithSaml
 import chat.rocket.core.internal.rest.me
-import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.delay
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -109,11 +109,11 @@ class LoginOptionsPresenter @Inject constructor(
                     when (loginType) {
                         TYPE_LOGIN_OAUTH -> client.loginWithOauth(credentialToken, credentialSecret)
                         TYPE_LOGIN_CAS -> {
-                            delay(3, TimeUnit.SECONDS)
+                            delay(3000)
                             client.loginWithCas(credentialToken)
                         }
                         TYPE_LOGIN_SAML -> {
-                            delay(3, TimeUnit.SECONDS)
+                            delay(3000)
                             client.loginWithSaml(credentialToken)
                         }
                         TYPE_LOGIN_DEEP_LINK -> {

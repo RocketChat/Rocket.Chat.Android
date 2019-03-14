@@ -1,21 +1,22 @@
-package chat.rocket.android.authentication.di
+package chat.rocket.android.videoconferencing.di
 
 import androidx.lifecycle.LifecycleOwner
-import chat.rocket.android.authentication.presentation.AuthenticationNavigator
-import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerActivity
+import chat.rocket.android.videoconferencing.presenter.VideoConferencingView
+import chat.rocket.android.videoconferencing.ui.VideoConferencingActivity
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.Job
 
 @Module
-class AuthenticationModule {
+class VideoConferencingModule {
 
     @Provides
     @PerActivity
-    fun provideAuthenticationNavigator(activity: AuthenticationActivity) =
-        AuthenticationNavigator(activity)
+    fun provideVideoConferencingView(activity: VideoConferencingActivity): VideoConferencingView {
+        return activity
+    }
 
     @Provides
     @PerActivity
@@ -23,7 +24,7 @@ class AuthenticationModule {
 
     @Provides
     @PerActivity
-    fun provideLifecycleOwner(activity: AuthenticationActivity): LifecycleOwner = activity
+    fun provideLifecycleOwner(activity: VideoConferencingActivity): LifecycleOwner = activity
 
     @Provides
     @PerActivity
