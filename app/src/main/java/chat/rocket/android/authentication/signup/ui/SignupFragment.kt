@@ -75,7 +75,7 @@ class SignupFragment : Fragment(), SignupView {
     }
 
     private fun setupOnClickListener() =
-        ui { _ ->
+        ui {
             button_register.setOnClickListener {
                 presenter.signup(
                     text_username.textContent,

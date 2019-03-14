@@ -29,11 +29,9 @@ import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_user_details.*
 import javax.inject.Inject
 
-fun newInstance(userId: String): Fragment {
-    return UserDetailsFragment().apply {
-        arguments = Bundle(1).apply {
-            putString(BUNDLE_USER_ID, userId)
-        }
+fun newInstance(userId: String): Fragment = UserDetailsFragment().apply {
+    arguments = Bundle(1).apply {
+        putString(BUNDLE_USER_ID, userId)
     }
 }
 
@@ -52,12 +50,9 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        val bundle = arguments
-        if (bundle != null) {
-            userId = bundle.getString(BUNDLE_USER_ID)
-        } else {
-            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
-        }
+        arguments?.run {
+            userId = getString(BUNDLE_USER_ID, "")
+        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
 
     override fun onCreateView(

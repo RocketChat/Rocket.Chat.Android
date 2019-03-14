@@ -64,7 +64,7 @@
     <string-array name="settings_actions">
         <item name="item_preferences">Preferenze</item>
         <item name="item_password">Cambia password</item>
-        <item name="change_language">Change Language</item><!-- TODO Add translation -->
+        <item name="change_language">Cambia lingua</item>
         <item name="item_share_app">Condividi app</item>
         <item name="item_rate_us">Votaci</item>
         <item name="item_contact_us">Contattaci</item>
@@ -123,13 +123,12 @@
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_preview_file">Documento</string>
     <string name="msg_no_messages_yet">Nessun nuovo messaggio</string>
-    <string name="msg_ok">OK</string>
+    <string name="msg_build">Versione %1$d - %2$s - %3$s</string>
     <string name="msg_update_app_version_in_order_to_continue">Versione server non aggiornata. Si prega di contattare l\'amministratore del server per aggiornare la versione del server per continuare.</string>
     <string name="msg_ver_not_recommended">Sembra che la versione del tuo server sia inferiore alla versione consigliata %1$s.\nÈ ancora possibile accedere ma è possibile che si verifichino comportamenti imprevisti.</string>
     <string name="msg_ver_not_minimum">Sembra che la versione del tuo server sia inferiore alla versione minima richiesta %1$s.\nSi prega di aggiornare il server per accedere!</string>
     <string name="msg_no_chat_title">Nessun messaggio chat</string>
     <string name="msg_no_chat_description">Inizia a conversare per vedere i tuoi\nmessagggi qui.</string>
-    <string name="msg_cancel">CANCELLARE</string>
     <string name="msg_http_insecure">Quando si utilizza HTTP, ci si connette a un server non sicuro. Non ti consigliamo di farlo.</string>
     <string name="msg_error_checking_server_version">Si è verificato un errore durante il controllo della versione del server, riprovare</string>
     <string name="msg_invalid_server_protocol">Il protocollo selezionato non è accettato da questo server, prova a utilizzare HTTPS</string>
@@ -317,6 +316,7 @@
     <string name="chatroom_header">Intestazione</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="header_channel">Canali</string>
     <string name="header_private_groups">Gruppi Privati</string>
     <string name="header_direct_messages">Messaggi Diretti</string>

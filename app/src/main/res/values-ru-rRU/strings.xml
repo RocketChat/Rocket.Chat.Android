@@ -122,13 +122,11 @@
     <string name="msg_preview_file">Файл</string>
     <string name="msg_no_messages_yet">Нет сообщений</string>
     <string name="msg_build">Сборка %1$d - %2$s - %3$s</string>
-    <string name="msg_ok">OK</string>
     <string name="msg_update_app_version_in_order_to_continue">Версия сервера устарела. Пожалуйста, свяжитесь с администратором, чтобы обновить сервер.</string>
     <string name="msg_ver_not_recommended">Похоже, версия сервера меньше рекомендуемой %1$s.\nМожно войти, но могут возникнуть те или иные проблемы при работе.\n</string>
     <string name="msg_ver_not_minimum">Похоже, версия сервера меньше минимально необходимой %1$s.\nДля работы потребуется обновить сервер!</string>
     <string name="msg_no_chat_title">Нет сообщений</string>
     <string name="msg_no_chat_description">Начните общаться, чтобы увидеть\nтут сообщения.</string>
-    <string name="msg_cancel">ОТМЕНА</string>
     <string name="msg_http_insecure">При использовании HTTP вы подключаетесь к небезопасному серверу. Мы не рекомендуем вам это делать.</string>
     <string name="msg_error_checking_server_version">При проверке версии вашего сервера произошла ошибка, повторите попытку.</string>
     <string name="msg_invalid_server_protocol">Выбранный протокол не разрешен на этом сервере, попробуйте использовать HTTPS</string>
@@ -318,6 +316,7 @@
     <string name="chatroom_header">Заголовок</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="header_channel">Каналы</string>
     <string name="header_private_groups">Приватные каналы</string>
     <string name="header_direct_messages">Личная переписка</string>
@@ -335,7 +334,7 @@
     <string name="message_room_changed_privacy">Тип канала изменен на: %1$s пользователем %2$s</string>
 
     <!-- User Details -->
-    <string name="timezone">Часовой поясe</string>
+    <string name="timezone">Часовой пояс</string>
 
     <!-- Report -->
     <string name="submit">Отправить</string>
