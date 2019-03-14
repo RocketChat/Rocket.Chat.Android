@@ -63,7 +63,7 @@ import java.lang.NullPointerException
  * Load a list of contacts in a recycler view
  */
 class ContactsFragment : Fragment(), ContactsView {
-    //TODO: Implement the multiple option fab button in the main all chats screen
+    //TODO: When the group is being selected via long press from the new chat screen, change the title to create group from new chat
     //TODO: Add selected contacts' chip so that the selected contacts can be seen separately
     //FIXME: Fix crash while opening search in new chat/group
     //FIXME: Pressing back button after opening a dm from new chat should go to the main screen instead of the new chat screen
@@ -103,6 +103,7 @@ class ContactsFragment : Fragment(), ContactsView {
     private var searchText: TextView? = null
     private var searchCloseButton: ImageView? = null
     private var loadedOnce: Boolean = false
+    private var enableGroups: Boolean = false
 
     companion object {
         /**
@@ -113,14 +114,16 @@ class ContactsFragment : Fragment(), ContactsView {
          * @return the newly created ContactList fragment
          */
         fun newInstance(
-                contactArrayList: ArrayList<Contact>,
-                contactHashMap: HashMap<String, String>
+                contactArrayList: ArrayList<Contact>? = null,
+                contactHashMap: HashMap<String, String>? = null,
+                enableGroups: Boolean = false
         ): ContactsFragment {
             val contactsFragment = ContactsFragment()
 
             val arguments = Bundle()
-            arguments.putParcelableArrayList("CONTACT_ARRAY_LIST", contactArrayList)
-            arguments.putSerializable("CONTACT_HASH_MAP", contactHashMap)
+            arguments.putParcelableArrayList("CONTACTS_ARRAY_LIST", contactArrayList)
+            arguments.putSerializable("CONTACTS_HASH_MAP", contactHashMap)
+            arguments.putBoolean("CONTACTS_ENABLE_GROUPS", enableGroups)
 
             contactsFragment.arguments = arguments
             return contactsFragment
@@ -132,6 +135,8 @@ class ContactsFragment : Fragment(), ContactsView {
         AndroidSupportInjection.inject(this)
         loadedOnce = false
         setHasOptionsMenu(true)
+        val bundle = arguments
+        enableGroups = bundle?.getBoolean("CONTACTS_ENABLE_GROUPS") ?: false
     }
 
     override fun onPause() {
@@ -261,6 +266,8 @@ class ContactsFragment : Fragment(), ContactsView {
         if (Constants.WIDECHAT) {
             with((activity as AppCompatActivity?)?.supportActionBar) {
                 this?.setDisplayShowCustomEnabled(false)
+                if(enableGroups)
+                    this?.title = getString(R.string.title_create_group)
             }
         }
     }
@@ -503,6 +510,7 @@ class ContactsFragment : Fragment(), ContactsView {
                 object : SelectionTracker.SelectionPredicate<Long>() {
                     override fun canSetStateForKey(key: Long, nextState: Boolean): Boolean {
                         val position = key.toInt()
+                        if (position == -1) return true
                         if (finalList[position] is ContactsItemHolder &&
                                 (finalList[position] as ContactsItemHolder).data.getUsername() != null)
                             return true
@@ -517,8 +525,12 @@ class ContactsFragment : Fragment(), ContactsView {
                 }
         ).build()
 
+        if(enableGroups)
+            contactsSelectionTracker?.select(-1)
+
         fab = view?.findViewById(R.id.contacts_action_fab)
         fab?.setOnClickListener { view ->
+            contactsSelectionTracker?.deselect(-1)
             val selection = contactsSelectionTracker?.selection!!
             val list = selection.map {
                 (finalList[it.toInt()] as ContactsItemHolder).data.getUsername() ?:
@@ -536,7 +548,9 @@ class ContactsFragment : Fragment(), ContactsView {
                 object : SelectionTracker.SelectionObserver<Long>() {
                     override fun onSelectionChanged() {
                         super.onSelectionChanged()
-                        val items = contactsSelectionTracker?.selection!!.size()
+                        var items = contactsSelectionTracker?.selection!!.size()
+                        if (contactsSelectionTracker?.isSelected(-1) ?: false)
+                            items = items -1
                         fab?.isVisible = (items > 0)
                     }
                 })

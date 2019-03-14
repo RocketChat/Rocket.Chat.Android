@@ -572,7 +572,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
         new_group_fab.setOnClickListener {
             hideFABMenu()
-            openFragment(ContactsFragment(), "contactsFragment")
+            openFragment(ContactsFragment.newInstance(enableGroups = true), "contactsFragment")
         }
         bg_fab_menu.setOnClickListener {
             hideFABMenu()
