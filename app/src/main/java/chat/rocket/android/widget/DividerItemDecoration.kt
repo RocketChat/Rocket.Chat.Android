@@ -8,6 +8,7 @@ import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import chat.rocket.android.chatrooms.adapter.RoomsAdapter
 
 /**
  * Adds a default or custom divider to specific item views from the adapter's data set.
@@ -50,13 +51,13 @@ class DividerItemDecoration() : RecyclerView.ItemDecoration() {
         for (i in 0 until childCount) {
             val child = parent.getChildAt(i)
 
-            if (isLastView(child, parent))
+            if (isLastView(child, parent) || isViewTypeHeader(child, parent))
                 continue
 
             val params = child.layoutParams as RecyclerView.LayoutParams
 
-            val top = child.bottom + params.bottomMargin
-            val bottom = top + (divider?.intrinsicHeight ?: 0)
+            val bottom = child.bottom + params.bottomMargin
+            val top = bottom - (divider?.intrinsicHeight ?: 0)
 
             divider?.setBounds(left, top, right, bottom)
             divider?.draw(c)
@@ -66,5 +67,10 @@ class DividerItemDecoration() : RecyclerView.ItemDecoration() {
     private fun isLastView(view: View, parent: RecyclerView): Boolean {
         val position = parent.getChildAdapterPosition(view)
         return position == parent.adapter?.itemCount?.minus(1) ?: false
+    }
+
+    private fun isViewTypeHeader(view: View, parent: RecyclerView): Boolean {
+        val position = parent.getChildViewHolder(view).itemViewType
+        return position == RoomsAdapter.VIEW_TYPE_HEADER
     }
 }
