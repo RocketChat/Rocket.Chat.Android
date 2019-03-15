@@ -3,11 +3,13 @@ package chat.rocket.android.chatroom.ui
 import DrawableHelper
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
+import chat.rocket.android.helper.AndroidPermissionsHelper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extensions.addFragment
@@ -166,5 +168,17 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
     private fun finishActivity() {
         super.onBackPressed()
         overridePendingTransition(R.anim.close_enter, R.anim.close_exit)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOM_FRAGMENT)?.onRequestPermissionsResult(requestCode,permissions,grantResults)
+                }
+                return
+            }
+        }
     }
 }

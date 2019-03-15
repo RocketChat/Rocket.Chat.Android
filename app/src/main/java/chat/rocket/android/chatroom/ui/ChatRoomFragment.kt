@@ -6,6 +6,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -27,6 +28,7 @@ import androidx.core.content.FileProvider
 import androidx.core.text.bold
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -66,6 +68,7 @@ import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
+import chat.rocket.android.helper.AndroidPermissionsHelper
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.createImageFile
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
@@ -903,14 +906,29 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                     if (!ImageHelper.canWriteToExternalStorage(fragmentActivity)) {
                         ImageHelper.checkWritingPermission(fragmentActivity)
                     } else {
-                        val intent = Intent(fragmentActivity, DrawingActivity::class.java)
-                        startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
+                        startDrawingActivity(fragmentActivity)
                     }
                 }
 
                 handler.postDelayed({
                     hideAttachmentOptions()
                 }, 400)
+            }
+        }
+    }
+
+    private fun startDrawingActivity(fragmentActivity : FragmentActivity) {
+        val intent = Intent(fragmentActivity, DrawingActivity::class.java)
+        startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    activity?.let { fragmentactivity -> startDrawingActivity(fragmentactivity) }
+                }
+                return
             }
         }
     }
