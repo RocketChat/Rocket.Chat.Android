@@ -11,9 +11,9 @@ interface JitsiVideoConferenceView {
     fun startJitsiVideoConference(url: String, name: String?)
 
     /**
-     * Closes the Jitsi video conference.
+     * Finishes the Jitsi video conference.
      */
-    fun closeJitsiVideoConference()
+    fun finishJitsiVideoConference()
 
     /**
      * Logs the state of the Jitsi Meet conference displayed in a JitsiMeetView.

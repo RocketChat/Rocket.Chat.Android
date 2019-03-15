@@ -56,7 +56,7 @@ class VideoConferencePresenter @Inject constructor(
                 }
             } catch (ex: Exception) {
                 Timber.e(ex)
-                view.closeJitsiVideoConference()
+                view.finishJitsiVideoConference()
             }
         }
     }

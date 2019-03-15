@@ -40,13 +40,6 @@ class VideoConferenceActivity : JitsiMeetActivity(), JitsiVideoConferenceView,
         presenter.initVideoConference()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.invalidateTimer()
-        view?.dispose()
-        view = null
-    }
-
     override fun onConferenceWillJoin(map: MutableMap<String, Any>?) =
         logJitsiMeetViewState("Joining video conferencing", map)
 
@@ -58,7 +51,7 @@ class VideoConferenceActivity : JitsiMeetActivity(), JitsiVideoConferenceView,
 
     override fun onConferenceLeft(map: MutableMap<String, Any>?) {
         logJitsiMeetViewState("Left video conferencing", map)
-        closeJitsiVideoConference()
+        finishJitsiVideoConference()
     }
 
     override fun onLoadConfigError(map: MutableMap<String, Any>?) =
@@ -83,7 +76,12 @@ class VideoConferenceActivity : JitsiMeetActivity(), JitsiVideoConferenceView,
         )
     }
 
-    override fun closeJitsiVideoConference() = finish()
+    override fun finishJitsiVideoConference() {
+        presenter.invalidateTimer()
+        view?.dispose()
+        view = null
+        finish()
+    }
 
     override fun logJitsiMeetViewState(message: String, map: MutableMap<String, Any>?) =
         Timber.i("$message:  $map")
