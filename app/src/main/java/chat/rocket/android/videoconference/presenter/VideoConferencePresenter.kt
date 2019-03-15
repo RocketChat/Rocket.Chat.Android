@@ -1,25 +1,28 @@
-package chat.rocket.android.videoconferencing.presenter
+package chat.rocket.android.videoconference.presenter
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.JitsiHelper
+import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.realtime.updateJitsiTimeout
+import chat.rocket.core.internal.rest.updateJitsiTimeout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.timer
 
-class VideoConferencingPresenter @Inject constructor(
-    private val view: VideoConferencingView,
+class VideoConferencePresenter @Inject constructor(
+    private val view: JitsiVideoConferenceView,
     private val strategy: CancelStrategy,
     private val currentServerRepository: CurrentServerRepository,
     private val connectionManagerFactory: ConnectionManagerFactory,
-    private val settings: GetSettingsInteractor
+    private val settings: GetSettingsInteractor,
+    private val userHelp: UserHelper
 ) {
     private lateinit var client: RocketChatClient
     private lateinit var publicSettings: PublicSettings
@@ -34,22 +37,31 @@ class VideoConferencingPresenter @Inject constructor(
         this.chatRoomId = chatRoomId
     }
 
-    fun setupVideoConferencing() {
+    fun initVideoConference() {
         launchUI(strategy) {
-            with(publicSettings) {
-                view.startVideoConferencing(
-                    JitsiHelper.getJitsiUrl(
-                        isJitsiSSL(),
-                        jitsiDomain(),
-                        jitsiPrefix(),
-                        uniqueIdentifier(),
-                        chatRoomId
+            try {
+                with(publicSettings) {
+                    view.startJitsiVideoConference(
+                        JitsiHelper.getJitsiUrl(
+                            isJitsiSSL(),
+                            jitsiDomain(),
+                            jitsiPrefix(),
+                            uniqueIdentifier(),
+                            chatRoomId
+                        ),
+                        userHelp.user()?.username
                     )
-                )
-                updateJitsiTimeout()
+
+                    updateJitsiTimeout()
+                }
+            } catch (ex: Exception) {
+                Timber.e(ex)
+                view.closeJitsiVideoConference()
             }
         }
     }
+
+    fun invalidateTimer() = timer.cancel()
 
     // Jitsi update call needs to be called every 10 seconds to make sure call is not ended and is available to web users.
     private fun updateJitsiTimeout() {
@@ -59,6 +71,5 @@ class VideoConferencingPresenter @Inject constructor(
             }
         }
     }
-
-    fun invalidateTimer() = timer.cancel()
 }
+

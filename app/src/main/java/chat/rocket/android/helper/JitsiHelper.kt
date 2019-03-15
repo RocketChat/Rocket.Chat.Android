@@ -1,11 +1,9 @@
 package chat.rocket.android.helper
 
-import java.net.URL
-
 object JitsiHelper {
 
     /**
-     * Returns the [URL] for the Jitsi video conferencing.
+     * Returns the for the Jitsi video conferencing URL.
      *
      * @param isSecureProtocol True if using SSL, false otherwise - from the public settings.
      * @param domain The Jitsi domain - from public settings.
@@ -19,15 +17,13 @@ object JitsiHelper {
         prefix: String?,
         uniqueIdentifier: String?,
         chatRoomId: String?
-    ): URL =
-        URL(
-            getJitsiProtocol(isSecureProtocol) +
-                    domain +
-                    "/" +
-                    prefix +
-                    uniqueIdentifier +
-                    chatRoomId
-        )
+    ): String =
+        getJitsiProtocol(isSecureProtocol) +
+                domain +
+                "/" +
+                prefix +
+                uniqueIdentifier +
+                chatRoomId
 
     private fun getJitsiProtocol(isSecureProtocol: Boolean) =
         if (isSecureProtocol) "https://" else "http://"

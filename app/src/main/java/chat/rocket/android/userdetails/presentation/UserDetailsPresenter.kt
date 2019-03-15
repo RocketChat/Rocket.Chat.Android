@@ -124,14 +124,14 @@ class UserDetailsPresenter @Inject constructor(
         }
     }
 
-    fun toVideoConferencing(username: String) {
+    fun toVideoConference(username: String) {
         launchUI(strategy) {
             try {
                 withContext(Dispatchers.Default) {
                     val directMessage = retryIO("createDirectMessage($username") {
                         client.createDirectMessage(username)
                     }
-                    navigator.toVideoConferencing(directMessage.id)
+                    navigator.toVideoConference(directMessage.id)
                 }
             } catch (ex: Exception) {
                 Timber.e(ex)

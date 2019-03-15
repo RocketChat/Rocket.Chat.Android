@@ -41,7 +41,7 @@ class ChatRoomAdapter(
                     actionsListener,
                     reactionListener,
                     { userId -> navigator?.toUserDetails(userId) },
-                    { roomId?.let { navigator?.toVideoConferencing(it) } }
+                    { roomId?.let { navigator?.toVideoConference(it) } }
                 )
             }
             BaseUiModel.ViewType.URL_PREVIEW -> {

@@ -1,20 +1,20 @@
-package chat.rocket.android.videoconferencing.di
+package chat.rocket.android.videoconference.di
 
 import androidx.lifecycle.LifecycleOwner
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerActivity
-import chat.rocket.android.videoconferencing.presenter.VideoConferencingView
-import chat.rocket.android.videoconferencing.ui.VideoConferencingActivity
+import chat.rocket.android.videoconference.presenter.JitsiVideoConferenceView
+import chat.rocket.android.videoconference.ui.VideoConferenceActivity
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.Job
 
 @Module
-class VideoConferencingModule {
+class VideoConferenceModule {
 
     @Provides
     @PerActivity
-    fun provideVideoConferencingView(activity: VideoConferencingActivity): VideoConferencingView {
+    fun provideVideoConferenceView(activity: VideoConferenceActivity): JitsiVideoConferenceView {
         return activity
     }
 
@@ -24,7 +24,7 @@ class VideoConferencingModule {
 
     @Provides
     @PerActivity
-    fun provideLifecycleOwner(activity: VideoConferencingActivity): LifecycleOwner = activity
+    fun provideLifecycleOwner(activity: VideoConferenceActivity): LifecycleOwner = activity
 
     @Provides
     @PerActivity

@@ -104,7 +104,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
         if (isVideoCallAllowed) {
             text_video_call.isVisible = true
-            text_video_call.setOnClickListener { presenter.toVideoConferencing(username) }
+            text_video_call.setOnClickListener { presenter.toVideoConference(username) }
         } else {
             text_video_call.isVisible = false
         }

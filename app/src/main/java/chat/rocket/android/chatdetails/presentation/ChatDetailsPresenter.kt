@@ -46,8 +46,7 @@ class ChatDetailsPresenter @Inject constructor(
         }
     }
 
-    // TODO
-    fun startVideoCall() {}
+    fun toVideoConference(roomId: String) = navigator.toVideoConference(roomId)
 
     fun getDetails(chatRoomId: String, chatRoomType: String) {
         launchUI(strategy) {

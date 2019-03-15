@@ -5,7 +5,6 @@ import android.view.MenuItem
 import chat.rocket.android.R
 import chat.rocket.android.server.domain.isJitsiEnabled
 import chat.rocket.android.server.domain.isJitsiEnabledForChannels
-import chat.rocket.android.videoconferencing.ui.videoConferencingIntent
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 
@@ -48,6 +47,6 @@ internal fun ChatDetailsFragment.setOnMenuItemClickListener(item: MenuItem) {
     if (item.itemId == MENU_ACTION_FAVORITE_REMOVE_FAVORITE) {
         presenter.toggleFavoriteChatRoom(chatRoomId, isFavorite)
     } else if (item.itemId == MENU_ACTION_VIDEO_CALL) {
-        startActivity(activity?.videoConferencingIntent(chatRoomId))
+        presenter.toVideoConference(chatRoomId)
     }
 }
