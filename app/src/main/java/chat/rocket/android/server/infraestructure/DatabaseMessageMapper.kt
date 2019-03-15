@@ -1,12 +1,7 @@
 package chat.rocket.android.server.infraestructure
 
 import chat.rocket.android.db.DatabaseManager
-import chat.rocket.android.db.model.AttachmentActionEntity
-import chat.rocket.android.db.model.AttachmentEntity
-import chat.rocket.android.db.model.FullMessage
-import chat.rocket.android.db.model.ReactionEntity
-import chat.rocket.android.db.model.UrlEntity
-import chat.rocket.android.db.model.UserEntity
+import chat.rocket.android.db.model.*
 import chat.rocket.android.util.retryDB
 import chat.rocket.common.model.SimpleRoom
 import chat.rocket.common.model.SimpleUser
@@ -159,38 +154,38 @@ class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
                 } else {
                     null
                 }
-
-                val attachment = Attachment(
-                    title = title,
-                    type = type,
-                    description = description,
-                    authorName = authorName,
-                    text = text,
-                    thumbUrl = thumbUrl,
-                    color = color?.let { Color.Custom(color) },
-                    titleLink = titleLink,
-                    titleLinkDownload = titleLinkDownload,
-                    imageUrl = imageUrl,
-                    imageType = imageType,
-                    imageSize = imageSize,
-                    videoUrl = videoUrl,
-                    videoType = videoType,
-                    videoSize = videoSize,
-                    audioUrl = audioUrl,
-                    audioType = audioType,
-                    audioSize = audioSize,
-                    messageLink = messageLink,
-                    attachments = null, // HOW TO MAP THIS
-                    timestamp = timestamp,
-                    authorIcon = authorIcon,
-                    authorLink = authorLink,
-                    fields = fields,
-                    fallback = fallback,
-                    buttonAlignment = if (actions != null && actions.isNotEmpty()) buttonAlignment
-                        ?: "vertical" else null,
-                    actions = actions
+                list.add(
+                    Attachment(
+                        title = title,
+                        type = type,
+                        description = description,
+                        authorName = authorName,
+                        text = text,
+                        thumbUrl = thumbUrl,
+                        color = color?.let { Color.Custom(color) },
+                        titleLink = titleLink,
+                        titleLinkDownload = titleLinkDownload,
+                        imageUrl = imageUrl,
+                        imageType = imageType,
+                        imageSize = imageSize,
+                        videoUrl = videoUrl,
+                        videoType = videoType,
+                        videoSize = videoSize,
+                        audioUrl = audioUrl,
+                        audioType = audioType,
+                        audioSize = audioSize,
+                        messageLink = messageLink,
+                        attachments = null, // HOW TO MAP THIS
+                        timestamp = timestamp,
+                        authorIcon = authorIcon,
+                        authorLink = authorLink,
+                        fields = fields,
+                        fallback = fallback,
+                        buttonAlignment = if (actions != null && actions.isNotEmpty()) buttonAlignment
+                            ?: "vertical" else null,
+                        actions = actions
+                    )
                 )
-                list.add(attachment)
             }
         }
         return list

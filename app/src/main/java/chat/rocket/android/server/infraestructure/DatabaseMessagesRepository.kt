@@ -47,8 +47,8 @@ class DatabaseMessagesRepository(
         dbManager.processMessagesBatch(listOf(message)).join()
     }
 
-    override suspend fun saveAll(messages: List<Message>) {
-        dbManager.processMessagesBatch(messages).join()
+    override suspend fun saveAll(newMessages: List<Message>) {
+        dbManager.processMessagesBatch(newMessages).join()
     }
 
     override suspend fun removeById(id: String) {
@@ -79,7 +79,7 @@ class DatabaseMessagesRepository(
 
     override suspend fun getLastSyncDate(roomId: String): Long? = withContext(Dispatchers.IO) {
         retryDB("getLastSync($roomId)") {
-            dbManager.messageDao().getLastSync(roomId)?.let { it.timestamp }
+            dbManager.messageDao().getLastSync(roomId)?.timestamp
         }
     }
 }

@@ -44,7 +44,7 @@ class UserDetailsPresenter @Inject constructor(
                 dbManager.getUser(userId)?.let {
                     userEntity = it
                     val avatarUrl =
-                        userEntity.username?.let { currentServer.avatarUrl(avatar = it) }
+                        userEntity.username?.let { username -> currentServer.avatarUrl(avatar = username) }
                     val username = userEntity.username
                     val name = userEntity.name
                     val utcOffset =
@@ -124,6 +124,24 @@ class UserDetailsPresenter @Inject constructor(
         }
     }
 
-    // TODO
-    fun startVideoCall() {}
+    fun toVideoConferencing(username: String) {
+        launchUI(strategy) {
+            try {
+                withContext(Dispatchers.Default) {
+                    val directMessage = retryIO("createDirectMessage($username") {
+                        client.createDirectMessage(username)
+                    }
+                    navigator.toVideoConferencing(directMessage.id)
+                }
+            } catch (ex: Exception) {
+                Timber.e(ex)
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            }
+        }
+    }
 }
+

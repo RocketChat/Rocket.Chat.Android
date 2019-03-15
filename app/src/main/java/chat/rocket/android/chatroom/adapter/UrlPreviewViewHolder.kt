@@ -15,9 +15,7 @@ class UrlPreviewViewHolder(
 ) : BaseViewHolder<UrlPreviewUiModel>(itemView, listener, reactionListener) {
 
     init {
-        with(itemView) {
-            setupActionMenu(url_preview_layout)
-        }
+        setupActionMenu(itemView.url_preview_layout)
     }
 
     override fun bindViews(data: UrlPreviewUiModel) {

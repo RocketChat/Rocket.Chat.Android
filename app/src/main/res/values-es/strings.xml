@@ -316,6 +316,7 @@
     <string name="chatroom_header">Cabezazo</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="header_channel">Canales</string>
     <string name="header_private_groups">Grupos privados</string>
     <string name="header_direct_messages">Mensajes directos</string>

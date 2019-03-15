@@ -8,19 +8,16 @@ import chat.rocket.android.server.domain.MultiServerTokenRepository
 import com.squareup.moshi.Moshi
 
 @PerActivity
-class SharedPreferencesMultiServerTokenRepository(private val repository: LocalRepository,
-                                                  private val moshi: Moshi
+class SharedPreferencesMultiServerTokenRepository(
+    private val repository: LocalRepository,
+    private val moshi: Moshi
 ) : MultiServerTokenRepository {
 
     override fun get(server: String): TokenModel? {
         val token = repository.get("$TOKEN_KEY$server")
         val adapter = moshi.adapter<TokenModel>(TokenModel::class.java)
 
-        token?.let {
-            return adapter.fromJson(token)
-        }
-
-        return null
+        return token?.let { adapter.fromJson(it) }
     }
 
     override fun save(server: String, token: TokenModel) {

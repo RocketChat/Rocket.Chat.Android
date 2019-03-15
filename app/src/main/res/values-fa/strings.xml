@@ -319,6 +319,7 @@
     <string name="chatroom_header">سرپیام</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="header_channel">کانال‌ها</string>
     <string name="header_private_groups">گروه‌های خصوصی</string>
     <string name="header_direct_messages">پیام‌های خصوصی</string>

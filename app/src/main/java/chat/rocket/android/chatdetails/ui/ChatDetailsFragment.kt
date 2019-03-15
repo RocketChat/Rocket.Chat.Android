@@ -46,7 +46,7 @@ fun newInstance(
             putBoolean(BUNDLE_IS_FAVORITE, isFavorite)
             putBoolean(BUNDLE_DISABLE_MENU, disableMenu)
         }
-    }
+   }
 }
 
 internal const val TAG_CHAT_DETAILS_FRAGMENT = "ChatDetailsFragment"
@@ -81,16 +81,13 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        val bundle = arguments
-        if (bundle != null) {
-            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
-            chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
-            isSubscribed = bundle.getBoolean(BUNDLE_IS_SUBSCRIBED)
-            isFavorite = bundle.getBoolean(BUNDLE_IS_FAVORITE)
-            disableMenu = bundle.getBoolean(BUNDLE_DISABLE_MENU)
-        } else {
-            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
-        }
+        arguments?.run {
+            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID)
+            chatRoomType = getString(BUNDLE_CHAT_ROOM_TYPE)
+            isSubscribed = getBoolean(BUNDLE_IS_SUBSCRIBED)
+            isFavorite = getBoolean(BUNDLE_IS_FAVORITE)
+            disableMenu = getBoolean(BUNDLE_DISABLE_MENU)
+        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
 
         setHasOptionsMenu(true)
     }

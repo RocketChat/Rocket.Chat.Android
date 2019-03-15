@@ -416,21 +416,19 @@ class UiModelMapper @Inject constructor(
         return fullUrl
     }
 
-    private fun attachmentText(text: String?, attachment: Attachment?, context: Context): String? {
-        return if (attachment != null) {
+    private fun attachmentText(text: String?, attachment: Attachment?, context: Context): String? = attachment?.run {
+        with(context) {
             when {
-                attachment.imageUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_photo)
-                attachment.videoUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_video)
-                attachment.audioUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_audio)
-                attachment.titleLink.isNotNullNorEmpty() &&
-                        attachment.type?.contentEquals("file") == true ->
-                    context.getString(R.string.msg_preview_file)
+                imageUrl.isNotNullNorEmpty() -> getString(R.string.msg_preview_photo)
+                videoUrl.isNotNullNorEmpty() -> getString(R.string.msg_preview_video)
+                audioUrl.isNotNullNorEmpty() -> getString(R.string.msg_preview_audio)
+                titleLink.isNotNullNorEmpty() &&
+                        type?.contentEquals("file") == true ->
+                    getString(R.string.msg_preview_file)
                 else -> text
             }
-        } else {
-            text
         }
-    }
+    } ?: text
 
     private fun attachmentDescription(attachment: Attachment): String? {
         return attachment.description
@@ -464,11 +462,9 @@ class UiModelMapper @Inject constructor(
             subscriptionId = chatRoom.subscriptionId)
     }
 
-    private fun mapMessagePreview(message: Message): Message {
-        return when (message.isSystemMessage()) {
-            false -> stripMessageQuotes(message)
-            true -> message.copy(message = getSystemMessage(message).toString())
-        }
+    private fun mapMessagePreview(message: Message): Message = when (message.isSystemMessage()) {
+        false -> stripMessageQuotes(message)
+        true -> message.copy(message = getSystemMessage(message).toString())
     }
 
     private fun getReactions(message: Message): List<ReactionUiModel> {
@@ -535,75 +531,36 @@ class UiModelMapper @Inject constructor(
 
     private fun getTime(timestamp: Long) = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(timestamp))
 
-    private fun getContent(message: Message): CharSequence {
-        return when (message.isSystemMessage()) {
-            true -> getSystemMessage(message)
-            false -> parser.render(message, currentUsername)
-        }
+    private fun getContent(message: Message): CharSequence = when (message.isSystemMessage()) {
+        true -> getSystemMessage(message)
+        false -> parser.render(message, currentUsername)
     }
 
     private fun getSystemMessage(message: Message): CharSequence {
-        val content = when (message.type) {
-            //TODO: Add implementation for Welcome type.
-            is MessageType.MessageRemoved -> context.getString(R.string.message_removed)
-            is MessageType.UserJoined -> context.getString(R.string.message_user_joined_channel)
-            is MessageType.UserLeft -> context.getString(R.string.message_user_left)
-            is MessageType.UserAdded -> context.getString(
-                R.string.message_user_added_by,
-                message.message,
-                message.sender?.username
-            )
-            is MessageType.RoomNameChanged -> context.getString(
-                R.string.message_room_name_changed, message.message, message.sender?.username
-            )
-            is MessageType.UserRemoved -> context.getString(
-                R.string.message_user_removed_by,
-                message.message,
-                message.sender?.username
-            )
-            is MessageType.MessagePinned -> context.getString(R.string.message_pinned)
-            is MessageType.UserMuted -> context.getString(
-                R.string.message_muted,
-                message.message,
-                message.sender?.username
-            )
-            is MessageType.UserUnMuted -> context.getString(
-                R.string.message_unmuted,
-                message.message,
-                message.sender?.username
-            )
-            is MessageType.SubscriptionRoleAdded -> context.getString(
-                R.string.message_role_add,
-                message.message,
-                message.role,
-                message.sender?.username
-            )
-            is MessageType.SubscriptionRoleRemoved -> context.getString(
-                R.string.message_role_removed,
-                message.message,
-                message.role,
-                message.sender?.username
-            )
-            is MessageType.RoomChangedPrivacy -> context.getString(
-                R.string.message_room_changed_privacy,
-                message.message,
-                message.sender?.username
-            )
-            is MessageType.JitsiCallStarted -> context.getString(
-                R.string.message_video_call_started, message.sender?.username
-            )
-            else -> {
-                throw InvalidParameterException("Invalid message type: ${message.type}")
+        val content = with(context) {
+            when (message.type) {
+                //TODO: Add implementation for Welcome type.
+                is MessageType.MessageRemoved -> getString(R.string.message_removed)
+                is MessageType.UserJoined -> getString(R.string.message_user_joined_channel)
+                is MessageType.UserLeft -> getString(R.string.message_user_left)
+                is MessageType.UserAdded -> getString(R.string.message_user_added_by, message.message, message.sender?.username)
+                is MessageType.RoomNameChanged -> getString(R.string.message_room_name_changed, message.message, message.sender?.username)
+                is MessageType.UserRemoved -> getString(R.string.message_user_removed_by, message.message, message.sender?.username)
+                is MessageType.MessagePinned -> getString(R.string.message_pinned)
+                is MessageType.UserMuted -> getString(R.string.message_muted, message.message, message.sender?.username)
+                is MessageType.UserUnMuted -> getString(R.string.message_unmuted, message.message, message.sender?.username)
+                is MessageType.SubscriptionRoleAdded -> getString(R.string.message_role_add, message.message, message.role, message.sender?.username)
+                is MessageType.SubscriptionRoleRemoved -> getString(R.string.message_role_removed, message.message, message.role, message.sender?.username)
+                is MessageType.RoomChangedPrivacy -> getString(R.string.message_room_changed_privacy, message.message, message.sender?.username)
+                is MessageType.JitsiCallStarted -> context.getString(
+                    R.string.message_video_call_started, message.sender?.username
+                )
+                else -> throw InvalidParameterException("Invalid message type: ${message.type}")
             }
         }
         val spannableMsg = SpannableStringBuilder(content)
-        spannableMsg.setSpan(
-            StyleSpan(Typeface.ITALIC), 0, spannableMsg.length, 0
-        )
-        spannableMsg.setSpan(
-            ForegroundColorSpan(Color.GRAY), 0, spannableMsg.length, 0
-        )
-
+        spannableMsg.setSpan(StyleSpan(Typeface.ITALIC), 0, spannableMsg.length, 0)
+        spannableMsg.setSpan(ForegroundColorSpan(Color.GRAY), 0, spannableMsg.length, 0)
         return spannableMsg
     }
 }

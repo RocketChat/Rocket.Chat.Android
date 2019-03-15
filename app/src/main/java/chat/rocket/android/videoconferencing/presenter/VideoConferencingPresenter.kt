@@ -3,7 +3,6 @@ package chat.rocket.android.videoconferencing.presenter
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.JitsiHelper
 import chat.rocket.android.server.domain.*
-import chat.rocket.android.server.infraestructure.ConnectionManager
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.core.RocketChatClient
@@ -22,8 +21,6 @@ class VideoConferencingPresenter @Inject constructor(
     private val connectionManagerFactory: ConnectionManagerFactory,
     private val settings: GetSettingsInteractor
 ) {
-    private lateinit var currentServerUrl: String
-    private lateinit var connectionManager: ConnectionManager
     private lateinit var client: RocketChatClient
     private lateinit var publicSettings: PublicSettings
     private lateinit var chatRoomId: String
@@ -31,9 +28,7 @@ class VideoConferencingPresenter @Inject constructor(
 
     fun setup(chatRoomId: String) {
         currentServerRepository.get()?.let {
-            currentServerUrl = it
-            connectionManager = connectionManagerFactory.create(it)
-            client = connectionManager.client
+            client = connectionManagerFactory.create(it).client
             publicSettings = settings.get(it)
         }
         this.chatRoomId = chatRoomId

@@ -325,6 +325,7 @@
     <string name="chatroom_header">Kopf</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="header_channel">Räume</string>
     <string name="header_private_groups">Private Räume</string>
     <string name="header_direct_messages">Direkt Nachrichten</string>
