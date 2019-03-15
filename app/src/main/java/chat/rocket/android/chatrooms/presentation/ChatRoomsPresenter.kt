@@ -155,7 +155,10 @@ class ChatRoomsPresenter @Inject constructor(
 
             // Cast the email object to the correct data class
             var emailObj = myself.emails?.getOrNull(0)
-            val emails = listOf(Email(emailObj?.address.toString(), emailObj?.verified as Boolean))
+            var emails: List<Email> = listOf()
+            if (emailObj != null) {
+                emails = listOf(Email(emailObj.address.toString(), emailObj.verified))
+            }
 
             val user = User(
                 id = myself.id,
