@@ -211,7 +211,8 @@
     <string name="message_unmuted">Utilizador %2$s removeu o silêncio de %1$s</string>
     <string name="message_role_add">%3$s deu estatuto de %2$s a %1$s</string>
     <string name="message_role_removed">%3$s retirou o estatuto de %2$s a %1$s</string>
-    <string name="message_credentials_saved_successfully">Credenciais guardadas com sucesso</string>
+    <string name="action_favorite">Marcar chat como favorito</string>
+    <string name="action_remove_favorite">Desmarcar chat como favorito</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Responder</string>
@@ -238,10 +239,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">Pesquisar mensagem</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Marcar chat como favorito</string>
-    <string name="title_unfavorite_chat">Desmarcar chat como favorito</string>
 
     <!-- Members List -->
     <string name="title_members_list">Membros</string>
