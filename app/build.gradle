@@ -165,7 +165,10 @@ dependencies {
     implementation libraries.glide
     implementation libraries.glideTransformations
 
-    implementation(libraries.jitsi) { transitive = true }
+    implementation(libraries.jitsi) {
+        transitive = true
+        exclude group: 'javax.servlet', module: 'http'
+    }
 
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
