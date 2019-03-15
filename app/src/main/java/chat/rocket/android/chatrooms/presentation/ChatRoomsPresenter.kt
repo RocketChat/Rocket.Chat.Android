@@ -17,6 +17,7 @@ import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.model.Email
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.User
 import chat.rocket.common.model.roomTypeOf
@@ -151,13 +152,18 @@ class ChatRoomsPresenter @Inject constructor(
         }
         try {
             val myself = retryIO { client.me() }
+
+            // Cast the email object to the correct data class
+            var emailObj = myself.emails?.getOrNull(0)
+            val emails = listOf(Email(emailObj?.address.toString(), emailObj?.verified as Boolean))
+
             val user = User(
                 id = myself.id,
                 username = myself.username,
                 name = myself.name,
                 status = myself.status,
                 utcOffset = myself.utcOffset,
-                emails = null,
+                emails = emails,
                 roles = myself.roles
             )
             localRepository.saveCurrentUser(url = currentServer, user = user)
