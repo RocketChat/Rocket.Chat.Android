@@ -18,14 +18,16 @@ import chat.rocket.android.util.extensions.toList
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
 import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 
 abstract class BaseViewHolder<T : BaseUiModel<*>>(
-    itemView: View,
-    private val listener: ActionsListener,
-    var reactionListener: EmojiReactionListener? = null
+        itemView: View,
+        private val listener: ActionsListener,
+        private val multiTouchEventsListener: MultiTouchEventsListener,
+        var reactionListener: EmojiReactionListener? = null
 ) : RecyclerView.ViewHolder(itemView),
     MenuItem.OnMenuItemClickListener {
     var data: T? = null
@@ -62,8 +64,9 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
                         }
                     }
 
-                    override fun onReactionLongClicked(shortname: String, isCustom: Boolean, url: String?, usernames: List<String>) {
-                        reactionListener?.onReactionLongClicked(shortname, isCustom,url, usernames)
+                    override fun onReactionLongClicked(shortname: String, isCustom: Boolean,
+                                                       url: String?, usernames: List<String>) {
+                        reactionListener?.onReactionLongClicked(shortname, isCustom, url, usernames)
                     }
                 }
 
@@ -87,33 +90,45 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
         fun onActionSelected(item: MenuItem, message: Message)
     }
 
+    interface MultiTouchEventsListener {
+        fun handleMultiTouchEvents(status: Boolean)
+    }
+
     private val onClickListener = { view: View ->
         if (data?.message?.isSystemMessage() == false) {
-            data?.let { vm ->
-                vm.message.let {
-                    val menuItems = view.context.inflate(R.menu.message_actions).toList()
-                    menuItems.find { it.itemId == R.id.action_message_unpin }?.apply {
-                        setTitle(if (it.pinned) R.string.action_msg_unpin else R.string.action_msg_pin)
-                        isChecked = it.pinned
-                    }
+            launch {
+                multiTouchEventsListener.handleMultiTouchEvents(false)
+                data?.let { vm ->
+                    vm.message.let {
+                        val menuItems = view.context.inflate(R.menu.message_actions).toList()
+                        menuItems.find { it.itemId == R.id.action_message_unpin }?.apply {
+                            setTitle(
+                                    if (it.pinned) R.string.action_msg_unpin else R.string.action_msg_pin)
+                            isChecked = it.pinned
+                        }
 
-                    menuItems.find { it.itemId == R.id.action_message_star }?.apply {
-                        val isStarred = it.starred?.isNotEmpty() ?: false
-                        setTitle(if (isStarred) R.string.action_msg_unstar else R.string.action_msg_star)
-                        isChecked = isStarred
-                    }
-                    view.context?.let {
-                        if (it is ContextThemeWrapper && it.baseContext is AppCompatActivity) {
-                            with(it.baseContext as AppCompatActivity) {
-                                if (this.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-                                    val actionsBottomSheet = MessageActionsBottomSheet()
-                                    actionsBottomSheet.addItems(menuItems, this@BaseViewHolder)
-                                    actionsBottomSheet.show(supportFragmentManager, null)
+                        menuItems.find { it.itemId == R.id.action_message_star }?.apply {
+                            val isStarred = it.starred?.isNotEmpty() ?: false
+                            setTitle(
+                                    if (isStarred) R.string.action_msg_unstar else R.string.action_msg_star)
+                            isChecked = isStarred
+                        }
+                        view.context?.let {
+                            if (it is ContextThemeWrapper && it.baseContext is AppCompatActivity) {
+                                with(it.baseContext as AppCompatActivity) {
+                                    if (this.lifecycle.currentState.isAtLeast(
+                                                    Lifecycle.State.RESUMED)) {
+                                        val actionsBottomSheet = MessageActionsBottomSheet()
+                                        actionsBottomSheet.addItems(menuItems, this@BaseViewHolder)
+                                        actionsBottomSheet.show(supportFragmentManager, null)
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                delay(500)
+                multiTouchEventsListener.handleMultiTouchEvents(true)
             }
         }
     }

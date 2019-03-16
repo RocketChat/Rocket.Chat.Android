@@ -13,6 +13,7 @@ import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.chatroom.uimodel.UrlPreviewUiModel
 import chat.rocket.android.chatroom.uimodel.toViewType
 import chat.rocket.android.emoji.EmojiReactionListener
+import chat.rocket.android.util.RCRecyclerView
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.openTabbedUrl
 import chat.rocket.core.model.Message
@@ -23,15 +24,16 @@ import timber.log.Timber
 import java.security.InvalidParameterException
 
 class ChatRoomAdapter(
-    private val roomId: String? = null,
-    private val roomType: String? = null,
-    private val roomName: String? = null,
-    private val actionSelectListener: OnActionSelected? = null,
-    private val enableActions: Boolean = true,
-    private val reactionListener: EmojiReactionListener? = null,
-    private val navigator: ChatRoomNavigator? = null
+        private val roomId: String? = null,
+        private val roomType: String? = null,
+        private val roomName: String? = null,
+        private val actionSelectListener: OnActionSelected? = null,
+        private val enableActions: Boolean = true,
+        private val reactionListener: EmojiReactionListener? = null,
+        private val navigator: ChatRoomNavigator? = null
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
     private val dataSet = ArrayList<BaseUiModel<*>>()
+    private lateinit var ownRecyclerView: RCRecyclerView
 
     init {
         setHasStableIds(true)
@@ -42,30 +44,38 @@ class ChatRoomAdapter(
             BaseUiModel.ViewType.MESSAGE -> {
                 val view = parent.inflate(R.layout.item_message)
                 MessageViewHolder(
-                    view,
-                    actionsListener,
-                    reactionListener
+                        view,
+                        actionsListener,
+                        multiTouchEventListener,
+                        reactionListener
                 ) { userId -> navigator?.toUserDetails(userId) }
             }
             BaseUiModel.ViewType.URL_PREVIEW -> {
                 val view = parent.inflate(R.layout.message_url_preview)
-                UrlPreviewViewHolder(view, actionsListener, reactionListener)
+                UrlPreviewViewHolder(
+                        view,
+                        actionsListener,
+                        multiTouchEventListener,
+                        reactionListener
+                )
             }
             BaseUiModel.ViewType.ATTACHMENT -> {
                 val view = parent.inflate(R.layout.item_message_attachment)
                 AttachmentViewHolder(
-                    view,
-                    actionsListener,
-                    reactionListener,
-                    actionAttachmentOnClickListener
+                        view,
+                        actionsListener,
+                        multiTouchEventListener,
+                        reactionListener,
+                        actionAttachmentOnClickListener
                 )
             }
             BaseUiModel.ViewType.MESSAGE_REPLY -> {
                 val view = parent.inflate(R.layout.item_message_reply)
                 MessageReplyViewHolder(
-                    view,
-                    actionsListener,
-                    reactionListener
+                        view,
+                        actionsListener,
+                        multiTouchEventListener,
+                        reactionListener
                 ) { roomName, permalink ->
                     actionSelectListener?.openDirectMessage(roomName, permalink)
                 }
@@ -119,6 +129,11 @@ class ChatRoomAdapter(
         }
     }
 
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        ownRecyclerView = recyclerView as RCRecyclerView
+    }
+
     fun clearData() {
         dataSet.clear()
         notifyDataSetChanged()
@@ -134,7 +149,7 @@ class ChatRoomAdapter(
         //---At first we will update all already saved elements with received updated ones
         val filteredDataSet = dataSet.filter { newItem ->
             val matchedIndex =
-                this.dataSet.indexOfFirst { it.messageId == newItem.messageId && it.viewType == newItem.viewType }
+                    this.dataSet.indexOfFirst { it.messageId == newItem.messageId && it.viewType == newItem.viewType }
             if (matchedIndex > -1) {
                 this.dataSet[matchedIndex] = newItem
                 notifyItemChanged(matchedIndex)
@@ -227,6 +242,12 @@ class ChatRoomAdapter(
         }
     }
 
+    private val multiTouchEventListener = object : BaseViewHolder.MultiTouchEventsListener {
+        override fun handleMultiTouchEvents(status: Boolean) {
+            ownRecyclerView.setDispatchTouchStatus(status)
+        }
+    }
+
     private val actionsListener = object : BaseViewHolder.ActionsListener {
 
         override fun isActionsEnabled(): Boolean = enableActions
@@ -284,10 +305,10 @@ class ChatRoomAdapter(
         fun showMessageInfo(id: String)
 
         fun citeMessage(
-            roomName: String,
-            roomType: String,
-            messageId: String,
-            mentionAuthor: Boolean
+                roomName: String,
+                roomType: String,
+                messageId: String,
+                mentionAuthor: Boolean
         )
 
         fun copyMessage(id: String)

@@ -25,11 +25,12 @@ import kotlinx.android.synthetic.main.item_message_attachment.view.*
 import timber.log.Timber
 
 class AttachmentViewHolder(
-    itemView: View,
-    listener: ActionsListener,
-    reactionListener: EmojiReactionListener? = null,
-    var actionAttachmentOnClickListener: ActionAttachmentOnClickListener
-) : BaseViewHolder<AttachmentUiModel>(itemView, listener, reactionListener) {
+        itemView: View,
+        listener: ActionsListener,
+        multiTouchEventsListener: MultiTouchEventsListener,
+        reactionListener: EmojiReactionListener? = null,
+        var actionAttachmentOnClickListener: ActionAttachmentOnClickListener
+) : BaseViewHolder<AttachmentUiModel>(itemView, listener,multiTouchEventsListener ,reactionListener) {
 
     private val messageViews = listOf<View>(
         itemView.text_sender,

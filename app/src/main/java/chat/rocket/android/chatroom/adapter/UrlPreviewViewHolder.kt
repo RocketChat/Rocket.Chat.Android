@@ -9,10 +9,11 @@ import chat.rocket.android.util.extensions.openTabbedUrl
 import kotlinx.android.synthetic.main.message_url_preview.view.*
 
 class UrlPreviewViewHolder(
-    itemView: View,
-    listener: ActionsListener,
-    reactionListener: EmojiReactionListener? = null
-) : BaseViewHolder<UrlPreviewUiModel>(itemView, listener, reactionListener) {
+        itemView: View,
+        listener: ActionsListener,
+        multiTouchEventsListener: MultiTouchEventsListener,
+        reactionListener: EmojiReactionListener? = null
+) : BaseViewHolder<UrlPreviewUiModel>(itemView, listener,multiTouchEventsListener, reactionListener) {
 
     init {
         setupActionMenu(itemView.url_preview_layout)
