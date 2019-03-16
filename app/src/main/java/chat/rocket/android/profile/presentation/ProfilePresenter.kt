@@ -21,14 +21,18 @@ import chat.rocket.android.util.extension.toHex
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.model.Email
+import chat.rocket.common.model.User
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.deleteOwnAccount
+import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.resetAvatar
 import chat.rocket.core.internal.rest.setAvatar
 import chat.rocket.core.internal.rest.updateProfile
 import kotlinx.coroutines.experimental.DefaultDispatcher
 import kotlinx.coroutines.experimental.withContext
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -73,6 +77,7 @@ class ProfilePresenter @Inject constructor(
                 view.showMessage(exception)
             } finally {
                 view.hideLoading()
+                updateLocal()
             }
         }
     }
@@ -172,6 +177,32 @@ class ProfilePresenter @Inject constructor(
                 }
             } finally {
                 view.hideLoading()
+            }
+        }
+    }
+
+    fun updateLocal() {
+        launchUI(strategy) {
+            try {
+                val myself = retryIO { client.me() }
+                val user = User(
+                    id = myself.id,
+                    username = myself.username,
+                    name = myself.name,
+                    status = myself.status,
+                    utcOffset = myself.utcOffset,
+                    emails = myself.emails?.map { Email(it.address ?: "", it.verified) },
+                    roles = myself.roles
+                )
+                userHelper.updateUser(serverUrl, user)
+                view.showProfile(
+                        serverUrl.avatarUrl(user.username ?: ""),
+                        user.name ?: "",
+                        user.username ?: "",
+                        user.emails?.getOrNull(0)?.address ?: ""
+                )
+            } catch (exception: Exception) {
+                Timber.e(exception)
             }
         }
     }

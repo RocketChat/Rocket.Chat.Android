@@ -20,6 +20,11 @@ class UserHelper @Inject constructor(
     fun user(): User? = getCurrentServerInteractor.get()?.let { localRepository.getCurrentUser(it) }
 
     /**
+     * Saves current User data.
+     */
+    fun updateUser(url: String, user: User) = localRepository.saveCurrentUser(url, user)
+
+    /**
      * Return the username for the current logged [User].
      */
     fun username(): String? = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY, null)
