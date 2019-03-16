@@ -1,11 +1,15 @@
 package chat.rocket.android.videoconference.presenter
 
+import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.SubscriptionTypeEvent
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.JitsiHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.updateJitsiTimeout
 import kotlinx.coroutines.Dispatchers
@@ -22,19 +26,22 @@ class VideoConferencePresenter @Inject constructor(
     private val currentServerRepository: CurrentServerRepository,
     private val connectionManagerFactory: ConnectionManagerFactory,
     private val settings: GetSettingsInteractor,
-    private val userHelp: UserHelper
+    private val userHelp: UserHelper,
+    private val analyticsManager: AnalyticsManager
 ) {
     private lateinit var client: RocketChatClient
     private lateinit var publicSettings: PublicSettings
     private lateinit var chatRoomId: String
+    private lateinit var chatRoomType: String
     private lateinit var timer: Timer
 
-    fun setup(chatRoomId: String) {
+    fun setup(chatRoomId: String, chatRoomType: String) {
         currentServerRepository.get()?.let {
             client = connectionManagerFactory.create(it).client
             publicSettings = settings.get(it)
         }
         this.chatRoomId = chatRoomId
+        this.chatRoomType = chatRoomType
     }
 
     fun initVideoConference() {
@@ -53,6 +60,7 @@ class VideoConferencePresenter @Inject constructor(
                     )
 
                     updateJitsiTimeout()
+                    logVideoConferenceEvent()
                 }
             } catch (ex: Exception) {
                 Timber.e(ex)
@@ -70,6 +78,14 @@ class VideoConferencePresenter @Inject constructor(
                 client.updateJitsiTimeout(chatRoomId)
             }
         }
+    }
+
+    private fun logVideoConferenceEvent() = when {
+        roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
+            analyticsManager.logVideoConference(SubscriptionTypeEvent.DirectMessage)
+        roomTypeOf(chatRoomType) is RoomType.Channel ->
+            analyticsManager.logVideoConference(SubscriptionTypeEvent.Channel)
+        else -> analyticsManager.logVideoConference(SubscriptionTypeEvent.Group)
     }
 }
 

@@ -13,16 +13,20 @@ import org.jitsi.meet.sdk.JitsiMeetViewListener
 import timber.log.Timber
 import javax.inject.Inject
 
-fun Context.videoConferenceIntent(chatRoomId: String): Intent =
-    Intent(this, VideoConferenceActivity::class.java).putExtra(INTENT_CHAT_ROOM_ID, chatRoomId)
+fun Context.videoConferenceIntent(chatRoomId: String, chatRoomType: String): Intent =
+    Intent(this, VideoConferenceActivity::class.java)
+        .putExtra(INTENT_CHAT_ROOM_ID, chatRoomId)
+        .putExtra(INTENT_CHAT_ROOM_TYPE, chatRoomType)
 
 private const val INTENT_CHAT_ROOM_ID = "chat_room_id"
+private const val INTENT_CHAT_ROOM_TYPE = "chat_room_type"
 
 class VideoConferenceActivity : JitsiMeetActivity(), JitsiVideoConferenceView,
     JitsiMeetViewListener {
     @Inject
     lateinit var presenter: VideoConferencePresenter
     private lateinit var chatRoomId: String
+    private lateinit var chatRoomType: String
     private var view: JitsiMeetView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,12 +35,14 @@ class VideoConferenceActivity : JitsiMeetActivity(), JitsiVideoConferenceView,
 
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
         requireNotNull(chatRoomId) { "no chat_room_id provided in Intent extras" }
+        chatRoomType = intent.getStringExtra(INTENT_CHAT_ROOM_TYPE)
+        requireNotNull(chatRoomType) { "no chat_room_type provided in Intent extras" }
 
         view = JitsiMeetView(this)
         view?.listener = this
         setContentView(view)
 
-        presenter.setup(chatRoomId)
+        presenter.setup(chatRoomId, chatRoomType)
         presenter.initVideoConference()
     }
 

@@ -23,8 +23,8 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         }
     }
 
-    fun toVideoConference(chatRoomId: String) {
-        activity.startActivity(activity.videoConferenceIntent(chatRoomId))
+    fun toVideoConference(chatRoomId: String, chatRoomType: String) {
+        activity.startActivity(activity.videoConferenceIntent(chatRoomId, chatRoomType))
     }
 
     fun toChatRoom(

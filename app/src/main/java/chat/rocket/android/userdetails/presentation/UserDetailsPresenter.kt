@@ -131,7 +131,7 @@ class UserDetailsPresenter @Inject constructor(
                     val directMessage = retryIO("createDirectMessage($username") {
                         client.createDirectMessage(username)
                     }
-                    navigator.toVideoConference(directMessage.id)
+                    navigator.toVideoConference(directMessage.id, RoomType.DIRECT_MESSAGE)
                 }
             } catch (ex: Exception) {
                 Timber.e(ex)
