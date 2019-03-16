@@ -75,7 +75,7 @@ class AnswersAnalytics : Analytics {
                     .putCustomAttribute("resetPasswordSucceeded", resetPasswordSucceeded.toString())
             )
 
-    override fun logMessageSent(event: SubscriptionTypeEvent, serverUrl: String) =
+    override fun logVideoConference(event: SubscriptionTypeEvent, serverUrl: String) =
         Answers.getInstance()
             .logCustom(
                 CustomEvent("video_conference")
