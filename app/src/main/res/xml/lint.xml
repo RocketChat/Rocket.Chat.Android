@@ -1,5 +1,5 @@
 <lint>
     <issue id="InvalidPackage">
-        <ignore path="**/dropbox*.jar"/>
+        <ignore path="**/dropbox*.jar"/> <!--For Jitsi -->
     </issue>
 </lint>
