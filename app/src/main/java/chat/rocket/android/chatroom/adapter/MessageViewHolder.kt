@@ -16,11 +16,12 @@ import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 
 class MessageViewHolder(
-    itemView: View,
-    listener: ActionsListener,
-    reactionListener: EmojiReactionListener? = null,
-    private val avatarListener: (String) -> Unit
-) : BaseViewHolder<MessageUiModel>(itemView, listener, reactionListener), Drawable.Callback {
+        itemView: View,
+        listener: ActionsListener,
+        multiTouchEventsListener: MultiTouchEventsListener,
+        reactionListener: EmojiReactionListener? = null,
+        private val avatarListener: (String) -> Unit
+) : BaseViewHolder<MessageUiModel>(itemView, listener,multiTouchEventsListener, reactionListener), Drawable.Callback {
 
     init {
         with(itemView) {

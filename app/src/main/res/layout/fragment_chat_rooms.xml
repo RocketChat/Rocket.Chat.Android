@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".chatrooms.ui.ChatRoomsFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <chat.rocket.android.util.RCRecyclerView
         android:id="@+id/recycler_view"
-        android:layout_below="@+id/text_connection_status"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/text_connection_status" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"

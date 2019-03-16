@@ -4,36 +4,40 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
+import chat.rocket.android.util.RCRecyclerView
 import chat.rocket.android.util.extensions.inflate
 
 class RoomsAdapter(private val listener: (RoomUiModel) -> Unit) :
-    RecyclerView.Adapter<ViewHolder<*>>() {
+        RecyclerView.Adapter<ViewHolder<*>>() {
 
     init {
         setHasStableIds(true)
     }
 
+    private lateinit var ownRecyclerView: RCRecyclerView
     var values: List<ItemHolder<*>> = ArrayList(0)
         set(items) {
             field = items
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> = when (viewType) {
-        VIEW_TYPE_ROOM -> {
-            val view = parent.inflate(R.layout.item_chat)
-            RoomViewHolder(view, listener)
-        }
-        VIEW_TYPE_HEADER -> {
-            val view = parent.inflate(R.layout.item_chatroom_header)
-            HeaderViewHolder(view)
-        }
-        VIEW_TYPE_LOADING -> {
-            val view = parent.inflate(R.layout.item_loading)
-            LoadingViewHolder(view)
-        }
-        else -> throw IllegalStateException("View type must be either Room, Header or Loading")
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> =
+            when (viewType) {
+                VIEW_TYPE_ROOM -> {
+                    val view = parent.inflate(R.layout.item_chat)
+                    RoomViewHolder(view, listener,multiTouchEventsListener )
+                }
+                VIEW_TYPE_HEADER -> {
+                    val view = parent.inflate(R.layout.item_chatroom_header)
+                    HeaderViewHolder(view)
+                }
+                VIEW_TYPE_LOADING -> {
+                    val view = parent.inflate(R.layout.item_loading)
+                    LoadingViewHolder(view)
+                }
+                else -> throw IllegalStateException(
+                        "View type must be either Room, Header or Loading")
+            }
 
     override fun getItemCount() = values.size
 
@@ -60,6 +64,18 @@ class RoomsAdapter(private val listener: (RoomUiModel) -> Unit) :
         } else if (holder is HeaderViewHolder) {
             holder.bind(values[position] as HeaderItemHolder)
         }
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        ownRecyclerView = recyclerView as RCRecyclerView
+    }
+
+    private val multiTouchEventsListener = object : RoomViewHolder.MultiTouchEventsListener {
+        override fun handleMultiTouchEvents(status: Boolean) {
+            ownRecyclerView.setDispatchTouchStatus(status)
+        }
+
     }
 
     companion object {

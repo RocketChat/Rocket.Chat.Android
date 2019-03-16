@@ -6,11 +6,12 @@ import chat.rocket.android.emoji.EmojiReactionListener
 import kotlinx.android.synthetic.main.item_message_reply.view.*
 
 class MessageReplyViewHolder(
-    itemView: View,
-    listener: ActionsListener,
-    reactionListener: EmojiReactionListener? = null,
-    private val replyCallback: (roomName: String, permalink: String) -> Unit
-) : BaseViewHolder<MessageReplyUiModel>(itemView, listener, reactionListener) {
+        itemView: View,
+        listener: ActionsListener,
+        multiTouchEventsListener: MultiTouchEventsListener,
+        reactionListener: EmojiReactionListener? = null,
+        private val replyCallback: (roomName: String, permalink: String) -> Unit
+) : BaseViewHolder<MessageReplyUiModel>(itemView, listener,multiTouchEventsListener ,reactionListener) {
 
     init {
         setupActionMenu(itemView)
