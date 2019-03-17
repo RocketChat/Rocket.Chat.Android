@@ -97,8 +97,8 @@ class ConnectionManager(
 
                         resubscribeRooms()
 
-                        temporaryStatus?.let { status ->
-                            client.setTemporaryStatus(status)
+                        temporaryStatus?.let { tempStatus ->
+                            client.setTemporaryStatus(tempStatus)
                         }
                     }
                     is State.Waiting -> {
@@ -135,9 +135,7 @@ class ConnectionManager(
                 if (it.type == Type.Updated) {
                     if (it.data is Room) {
                         val room = it.data as Room
-                        roomsChannels[it.data.id]?.let { channel ->
-                            channel.offer(room)
-                        }
+                        roomsChannels[it.data.id]?.offer(room)
                     }
                 }
             }
@@ -231,7 +229,7 @@ class ConnectionManager(
     }
 
     private fun resubscribeRooms() {
-        roomMessagesChannels.toList().map { (roomId, channel) ->
+        roomMessagesChannels.toList().map { (roomId, _) ->
             client.subscribeRoomMessages(roomId) { _, id ->
                 Timber.d("Subscribed to $roomId: $id")
                 subscriptionIdMap[roomId] = id

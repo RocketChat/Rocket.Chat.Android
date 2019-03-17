@@ -1,6 +1,6 @@
 package chat.rocket.android.chatdetails.adapter
 
-import android.content.Context
+import DrawableHelper
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView

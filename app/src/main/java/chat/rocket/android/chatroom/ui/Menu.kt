@@ -44,11 +44,15 @@ private fun ChatRoomFragment.setupSearchMessageMenuItem(menu: Menu, context: Con
         .setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
                 dismissEmojiKeyboard()
+                removeFavoriteMenuItem(menu)
+                removeDetailMenuItem(menu)
                 return true
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
                 dismissEmojiKeyboard()
+                setupFavoriteMenuItem(menu)
+                setupDetailsMenuItem(menu)
                 return true
             }
         })
@@ -73,7 +77,6 @@ private fun stylizeSearchView(searchView: SearchView, context: Context) {
 
 private fun ChatRoomFragment.setupSearchViewTextListener(searchView: SearchView) {
     searchView.onQueryTextListener {
-        // TODO: We use isSearchTermQueried to avoid querying when the search view is expanded but the user doesn't start typing. Check for a native solution.
         if (it.isEmpty() && isSearchTermQueried) {
             presenter.loadMessages(chatRoomId, chatRoomType, clearDataSet = true)
         } else if (it.isNotEmpty()) {
@@ -105,10 +108,18 @@ private fun ChatRoomFragment.setupFavoriteMenuItem(menu: Menu) {
 
 private fun ChatRoomFragment.setupDetailsMenuItem(menu: Menu) {
     menu.add(
-            Menu.NONE,
-            MENU_ACTION_SHOW_DETAILS,
-            Menu.NONE,
-            R.string.title_channel_details
+        Menu.NONE,
+        MENU_ACTION_SHOW_DETAILS,
+        Menu.NONE,
+        R.string.title_channel_details
     ).setIcon(R.drawable.ic_info_outline_white_24dp)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+}
+
+private fun removeFavoriteMenuItem(menu: Menu) {
+    menu.removeItem(MENU_ACTION_FAVORITE_UNFAVOURITE_CHAT)
+}
+
+private fun removeDetailMenuItem(menu: Menu) {
+    menu.removeItem(MENU_ACTION_SHOW_DETAILS)
 }

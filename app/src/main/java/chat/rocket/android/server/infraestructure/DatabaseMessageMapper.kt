@@ -14,7 +14,6 @@ import chat.rocket.core.model.Message
 import chat.rocket.core.model.Reactions
 import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.attachment.Color
-import chat.rocket.core.model.attachment.DEFAULT_COLOR_STR
 import chat.rocket.core.model.attachment.Field
 import chat.rocket.core.model.attachment.actions.Action
 import chat.rocket.core.model.attachment.actions.ButtonAction
@@ -153,7 +152,7 @@ class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
                     null
                 }
 
-                val attachment = Attachment(
+                list.add(Attachment(
                         title = title,
                         type = type,
                         description = description,
@@ -179,10 +178,10 @@ class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
                         authorLink = authorLink,
                         fields = fields,
                         fallback = fallback,
-                        buttonAlignment = if (actions != null && actions.isNotEmpty()) buttonAlignment ?: "vertical" else null,
+                        buttonAlignment = if (actions != null && actions.isNotEmpty()) buttonAlignment
+                                ?: "vertical" else null,
                         actions = actions
-                )
-                list.add(attachment)
+                ))
             }
         }
         return list
