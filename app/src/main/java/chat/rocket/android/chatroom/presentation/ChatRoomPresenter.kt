@@ -354,6 +354,7 @@ class ChatRoomPresenter @Inject constructor(
                                 RoomUiModel(roles = chatRoles, isBroadcast = chatIsBroadcast)
                             ), false
                         )
+                        view.clearMessageComposition(true)
                         client.sendMessage(id, chatRoomId, text)
                         messagesRepository.save(newMessage.copy(synced = true))
                         logMessageSent()
@@ -378,7 +379,6 @@ class ChatRoomPresenter @Inject constructor(
                 Timber.e(ex, "Error sending message...")
                 jobSchedulerInteractor.scheduleSendingMessages()
             } finally {
-                view.clearMessageComposition(true)
                 view.enableSendMessageButton()
             }
         }
