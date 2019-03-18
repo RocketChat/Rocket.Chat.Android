@@ -8,12 +8,14 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ImageSpan
 import android.util.Log
-import chat.rocket.android.emoji.internal.GlideApp
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.gif.GifDrawable
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.async
+import com.bumptech.glide.request.RequestOptions
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 class EmojiParser {
 
@@ -85,14 +87,14 @@ class EmojiParser {
                         emoji.url?.let { url ->
                             try {
                                 val glideRequest = if (url.endsWith("gif", true)) {
-                                    GlideApp.with(context).asGif()
+                                    Glide.with(context).asGif()
                                 } else {
-                                    GlideApp.with(context).asBitmap()
+                                    Glide.with(context).asBitmap()
                                 }
 
                                 val futureTarget = glideRequest
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .load(url)
+                                    .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
                                     .submit(px, px)
 
                                 val range = match.range
@@ -120,7 +122,7 @@ class EmojiParser {
             text: CharSequence,
             factory: Spannable.Factory? = null
         ): Deferred<CharSequence> {
-            return async(CommonPool) { parse(context, text, factory) }
+            return GlobalScope.async(Dispatchers.IO) { parse(context, text, factory) }
         }
     }
 }

@@ -13,8 +13,8 @@ import chat.rocket.android.emoji.Emoji
 import chat.rocket.android.emoji.EmojiKeyboardListener
 import chat.rocket.android.emoji.EmojiPickerPopup
 import chat.rocket.android.emoji.EmojiReactionListener
-import chat.rocket.android.emoji.internal.GlideApp
 import chat.rocket.android.infrastructure.LocalRepository
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_reaction.view.*
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
@@ -103,9 +103,9 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
                     // The view at index 1 corresponds to the one to display custom emojis which are images.
                     view_flipper_reaction.displayedChild = 1
                     val glideRequest = if (reaction.url!!.endsWith("gif", true)) {
-                        GlideApp.with(context).asGif()
+                        Glide.with(context).asGif()
                     } else {
-                        GlideApp.with(context).asBitmap()
+                        Glide.with(context).asBitmap()
                     }
 
                     glideRequest.load(reaction.url).into(image_emoji)

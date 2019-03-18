@@ -4,10 +4,11 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.core.view.isVisible
-import chat.rocket.android.emoji.internal.GlideApp
 import chat.rocket.android.util.extensions.getFileName
 import chat.rocket.android.util.extensions.getMimeType
 import chat.rocket.common.util.ifNull
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 
@@ -25,18 +26,18 @@ fun ChatRoomFragment.showFileAttachmentDialog(uri: Uri) {
             when {
                 mimeType.startsWith("image") -> {
                     if (mimeType.contains("gif")) {
-                        GlideApp
+                        Glide
                             .with(context)
                             .asGif()
                             .load(uri)
-                            .fitCenter()
+                            .apply(RequestOptions().fitCenter())
                             .into(imagePreview)
                     } else {
-                        GlideApp
+                        Glide
                             .with(context)
                             .asBitmap()
                             .load(uri)
-                            .fitCenter()
+                            .apply(RequestOptions().fitCenter())
                             .into(object : SimpleTarget<Bitmap>() {
                                 override fun onResourceReady(
                                     resource: Bitmap,

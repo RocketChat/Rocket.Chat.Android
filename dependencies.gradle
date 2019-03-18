@@ -2,17 +2,17 @@ ext {
     versions = [
             // For project configuration
             java                  : JavaVersion.VERSION_1_8,
+            minSdk                : 21,
             compileSdk            : 28,
             targetSdk             : 28,
-            minSdk                : 21,
             buildTools            : '28.0.3',
             dokka                 : '0.9.16',
 
             // For app
-            kotlin                : '1.2.71',
-            coroutine             : '0.25.0',
+            kotlin                : '1.3.21',
+            coroutine             : '1.1.1',
 
-            appCompat             : '1.0.0',
+            appCompat             : '1.0.2',
             recyclerview          : '1.0.0',
             constraintLayout      : '2.0.0-alpha2',
             cardview              : '1.0.0',
@@ -21,9 +21,9 @@ ext {
             workmanager           : '1.0.0-alpha09',
 
             dagger                : '2.16',
-            firebaseCloudMessage  : '17.3.0',
-            firebaseAnalytics     : '16.0.3',
-            playServices          : '16.0.0',
+            firebaseCloudMessage  : '17.3.4',
+            firebaseAnalytics     : '16.0.6',
+            playServicesAuth      : '16.0.1',
             exoPlayer             : '2.8.2',
             flexbox               : '1.1.0',
             material              : '1.0.0',
@@ -36,8 +36,8 @@ ext {
             rxKotlin              : '2.3.0',
             rxAndroid             : '2.1.0',
 
-            moshi                 : '1.6.0',
-            okhttp                : '3.11.0',
+            moshi                 : '1.8.0',
+            okhttp                : '3.12.1',
 
             timber                : '4.7.1',
             threeTenABP           : '1.1.0',
@@ -45,18 +45,18 @@ ext {
 
             fresco                : '1.10.0',
 
-            kotshi                : '1.0.4',
+            kotshi                : '1.0.6',
 
             frescoImageViewer     : '0.5.1',
+
             markwon               : '2.0.0',
+
             aVLoadingIndicatorView: '2.1.3',
+
             glide                 : '4.8.0',
             glideTransformations  : '4.0.0',
 
-            // For wearable
-            wear                  : '2.3.0',
-            playServicesWearable  : '15.0.1',
-            supportWearable       : '27.1.1',
+            jitsi                 : '+', // TODO Avoid using + (https://github.com/jitsi/jitsi-meet/issues/3987)
 
             // For testing
             junit                 : '4.12',
@@ -66,7 +66,7 @@ ext {
     ]
     libraries = [
             kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
-            coroutines            : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutine}",
+            coroutinesCore        : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutine}",
             coroutinesAndroid     : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutine}",
 
             appCompat             : "androidx.appcompat:appcompat:${versions.appCompat}",
@@ -117,26 +117,20 @@ ext {
             kotshiCompiler        : "se.ansman.kotshi:compiler:${versions.kotshi}",
 
             frescoImageViewer     : "com.github.luciofm:FrescoImageViewer:${versions.frescoImageViewer}",
-            glide                 : "com.github.bumptech.glide:glide:${versions.glide}",
-            glideProcessor        : "com.github.bumptech.glide:compiler:${versions.glide}",
-            glideTransformations  : "jp.wasabeef:glide-transformations:${versions.glideTransformations}",
 
             markwon               : "ru.noties:markwon:${versions.markwon}",
 
             aVLoadingIndicatorView: "com.wang.avi:library:${versions.aVLoadingIndicatorView}",
 
+            glide                 : "com.github.bumptech.glide:glide:${versions.glide}",
+            glideTransformations  : "jp.wasabeef:glide-transformations:${versions.glideTransformations}",
+
+            jitsi                 : "org.jitsi.react:jitsi-meet-sdk:${versions.jitsi}",
+
             // Proprietary libraries
             fcm                   : "com.google.firebase:firebase-messaging:${versions.firebaseCloudMessage}",
             firebaseAnalytics     : "com.google.firebase:firebase-core:${versions.firebaseAnalytics}",
-            playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServices}",
-
-            // For wearable
-            wearable              : "com.google.android.support:wearable:${versions.wear}",
-            playServicesWearable  : "com.google.android.gms:play-services-wearable:${versions.playServicesWearable}",
-            percentLayout         : "com.android.support:percent:${versions.supportWearable}",
-            supportWearable       : "com.android.support:support-v4:${versions.supportWearable}",
-            wearableRecyclerView  : "com.android.support:recyclerview-v7:${versions.supportWearable}",
-            wearSupport           : "com.android.support:wear:${versions.supportWearable}",
+            playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServicesAuth}",
 
             // For testing
             junit                 : "junit:junit:${versions.junit}",

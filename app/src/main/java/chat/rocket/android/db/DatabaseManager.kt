@@ -33,11 +33,12 @@ import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
 import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.userId
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.channels.Channel
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.newSingleThreadContext
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.HashSet
 import kotlin.collections.ArrayList
@@ -50,8 +51,10 @@ import kotlin.system.measureTimeMillis
 
 class DatabaseManager(val context: Application, val serverUrl: String) {
 
-    private val database: RCDatabase = androidx.room.Room.databaseBuilder(context,
-        RCDatabase::class.java, serverUrl.databaseName())
+    private val database: RCDatabase = androidx.room.Room.databaseBuilder(
+        context,
+        RCDatabase::class.java, serverUrl.databaseName()
+    )
         .fallbackToDestructiveMigration()
         .build()
     private val dbContext = newSingleThreadContext("$serverUrl-db-context")
@@ -75,7 +78,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
 
     fun start() {
         dbJob?.cancel()
-        dbJob = launch(dbContext) {
+        dbJob = GlobalScope.launch(dbContext) {
             for (operation in writeChannel) {
                 doOperation(operation)
             }
@@ -121,7 +124,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     }
 
     fun processUsersBatch(users: List<User>) {
-        launch(dbManagerContext) {
+        GlobalScope.launch(dbManagerContext) {
             val list = ArrayList<BaseUserEntity>(users.size)
             val time = measureTimeMillis {
                 users.forEach { user ->
@@ -139,7 +142,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
      * Creates a list of data base operations
      */
     fun processChatRoomsBatch(batch: List<StreamMessage<BaseRoom>>) {
-        launch(dbManagerContext) {
+        GlobalScope.launch(dbManagerContext) {
             val toRemove = HashSet<String>()
             val toInsert = ArrayList<ChatRoomEntity>(batch.size / 2)
             val toUpdate = ArrayList<ChatRoomEntity>(batch.size)
@@ -149,7 +152,8 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                     is Type.Inserted -> insertChatRoom(it.data)?.let { room -> toInsert.add(room) }
                     is Type.Updated -> {
                         when (it.data) {
-                            is Subscription -> updateSubs[(it.data as Subscription).roomId] = it.data as Subscription
+                            is Subscription -> updateSubs[(it.data as Subscription).roomId] =
+                                it.data as Subscription
                             is Room -> updateRooms[(it.data as Room).id] = it.data as Room
                         }
                     }
@@ -163,7 +167,13 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                 val filteredUpdate = toUpdate.filterNot { toRemove.contains(it.id) }
                 val filteredInsert = toInsert.filterNot { toRemove.contains(it.id) }
 
-                sendOperation(Operation.UpdateRooms(filteredInsert, filteredUpdate, toRemove.toList()))
+                sendOperation(
+                    Operation.UpdateRooms(
+                        filteredInsert,
+                        filteredUpdate,
+                        toRemove.toList()
+                    )
+                )
             } catch (ex: Exception) {
                 Timber.d(ex, "Error updating chatrooms")
             }
@@ -171,7 +181,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     }
 
     fun updateSelfUser(myself: Myself) {
-        launch(dbManagerContext) {
+        GlobalScope.launch(dbManagerContext) {
             val user = retryDB("getUser(${myself.id})") { userDao().getUser(myself.id) }
             val entity = user?.copy(
                 name = myself.name ?: user.name,
@@ -186,19 +196,18 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     }
 
     fun processRooms(rooms: List<ChatRoom>) {
-        launch(dbManagerContext) {
+        GlobalScope.launch(dbManagerContext) {
             val entities = rooms.map { mapChatRoom(it) }
             sendOperation(Operation.CleanInsertRooms(entities))
         }
     }
 
-    fun processMessagesBatch(messages: List<Message>): Job = launch(dbManagerContext) {
+    fun processMessagesBatch(messages: List<Message>): Job = GlobalScope.launch(dbManagerContext) {
         val list = mutableListOf<Pair<MessageEntity, List<BaseMessageEntity>>>()
         messages.forEach { message ->
             val pair = createMessageEntities(message)
             list.add(pair)
         }
-
         sendOperation(Operation.InsertMessages(list))
     }
 
@@ -217,71 +226,87 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         return Pair(messageEntity, list)
     }
 
-    private fun createReactions(message: Message): List<BaseMessageEntity>? = message.reactions?.run {
-        if (isNotEmpty()) {
-            val list = mutableListOf<BaseMessageEntity>()
-            keys.forEach { reaction ->
-                get(reaction)?.let { reactionValue ->
-                    list.add(ReactionEntity(reaction, message.id, size, reactionValue.joinToString()))
+    private fun createReactions(message: Message): List<BaseMessageEntity>? =
+        message.reactions?.run {
+            if (isNotEmpty()) {
+                val list = mutableListOf<BaseMessageEntity>()
+                keys.forEach { reaction ->
+                    get(reaction)?.let { reactionValue ->
+                        list.add(
+                            ReactionEntity(
+                                reaction,
+                                message.id,
+                                size,
+                                reactionValue.joinToString()
+                            )
+                        )
+                    }
                 }
-            }
-            list
-        } else null
-    }
+                list
+            } else null
+        }
 
     private fun createUrlEntities(message: Message): List<BaseMessageEntity>? = message.urls?.run {
         if (isNotEmpty()) {
             val list = mutableListOf<UrlEntity>()
             forEach { url ->
-                list.add(UrlEntity(message.id, url.url, url.parsedUrl?.host, url.meta?.title,
-                        url.meta?.description, url.meta?.imageUrl))
+                list.add(
+                    UrlEntity(
+                        message.id, url.url, url.parsedUrl?.host, url.meta?.title,
+                        url.meta?.description, url.meta?.imageUrl
+                    )
+                )
             }
             list
         } else null
     }
 
-    private fun createChannelRelations(message: Message): List<BaseMessageEntity>? = message.channels?.run {
-        if (isNotEmpty()) {
-            val list = mutableListOf<MessageChannels>()
-            forEach { channel ->
-                list.add(MessageChannels(message.id, channel.id, channel.name))
-            }
-            list
-        } else null
-    }
+    private fun createChannelRelations(message: Message): List<BaseMessageEntity>? =
+        message.channels?.run {
+            if (isNotEmpty()) {
+                val list = mutableListOf<MessageChannels>()
+                forEach { channel ->
+                    list.add(MessageChannels(message.id, channel.id, channel.name))
+                }
+                list
+            } else null
+        }
 
-    private suspend fun createMentionRelations(message: Message): List<BaseMessageEntity>? = message.mentions?.run {
-        if (isNotEmpty()) {
-            val list = mutableListOf<MessageMentionsRelation>()
-            filterNot { user -> user.id.isNullOrEmpty() }.forEach { mention ->
-                insertUserIfMissing(mention)
-                list.add(MessageMentionsRelation(message.id, mention.id!!))
-            }
-            list
-        } else null
-    }
+    private suspend fun createMentionRelations(message: Message): List<BaseMessageEntity>? =
+        message.mentions?.run {
+            if (isNotEmpty()) {
+                val list = mutableListOf<MessageMentionsRelation>()
+                filterNot { user -> user.id.isNullOrEmpty() }.forEach { mention ->
+                    insertUserIfMissing(mention)
+                    list.add(MessageMentionsRelation(message.id, mention.id!!))
+                }
+                list
+            } else null
+        }
 
-    private suspend fun createFavoriteRelations(message: Message): List<BaseMessageEntity>? = message.starred?.run {
-        if (isNotEmpty()) {
-            val list = mutableListOf<MessageFavoritesRelation>()
-            filterNot { user -> user.id.isNullOrEmpty() }.forEach { userId ->
-                insertUserIfMissing(userId)
-                list.add(MessageFavoritesRelation(message.id, userId.id!!))
-            }
-            list
-        } else null
-    }
+    private suspend fun createFavoriteRelations(message: Message): List<BaseMessageEntity>? =
+        message.starred?.run {
+            if (isNotEmpty()) {
+                val list = mutableListOf<MessageFavoritesRelation>()
+                filterNot { user -> user.id.isNullOrEmpty() }.forEach { userId ->
+                    insertUserIfMissing(userId)
+                    list.add(MessageFavoritesRelation(message.id, userId.id!!))
+                }
+                list
+            } else null
+        }
 
 
-    private fun createAttachments(message: Message): List<BaseMessageEntity>? = message.attachments?.run {
-        if (isNotEmpty()) {
-            val list = ArrayList<BaseMessageEntity>(size)
-            forEach { attachment ->
-                list.addAll(attachment.asEntity(message.id, context))
-            }
-            list
-        } else null
-    }
+    private fun createAttachments(message: Message): List<BaseMessageEntity>? =
+        message.attachments?.run {
+            if (isNotEmpty()) {
+                val list = ArrayList<BaseMessageEntity>(size)
+                forEach { attachment ->
+                    list.addAll(attachment.asEntity(message.id, context))
+                }
+                list
+            } else null
+        }
 
     private suspend fun createUpdates(): List<ChatRoomEntity> {
         val list = ArrayList<ChatRoomEntity>()
@@ -366,7 +391,8 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         }
     }
 
-    private fun mapAttachmentText(attachment: Attachment): String = context.getString(R.string.msg_sent_attachment)
+    private fun mapAttachmentText(attachment: Attachment): String =
+        context.getString(R.string.msg_sent_attachment)
 
     private suspend fun updateSubscription(data: Subscription): ChatRoomEntity? {
         return retryDB("getRoom(${data.roomId}") { chatRoomDao().getSync(data.roomId) }?.let { current ->
@@ -551,31 +577,18 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                 is Operation.ClearStatus -> userDao().clearStatus()
                 is Operation.UpdateRooms -> {
                     Timber.d("Running ChatRooms transaction: remove: ${operation.toRemove} - insert: ${operation.toInsert} - update: ${operation.toUpdate}")
-
                     chatRoomDao().update(operation.toInsert, operation.toUpdate, operation.toRemove)
                 }
-                is Operation.InsertRooms -> {
-                    chatRoomDao().insertOrReplace(operation.chatRooms)
-                }
-                is Operation.CleanInsertRooms -> {
-                    chatRoomDao().cleanInsert(operation.chatRooms)
-                }
+                is Operation.InsertRooms -> chatRoomDao().insertOrReplace(operation.chatRooms)
+                is Operation.CleanInsertRooms -> chatRoomDao().cleanInsert(operation.chatRooms)
                 is Operation.InsertUsers -> {
                     val time = measureTimeMillis { userDao().upsert(operation.users) }
                     Timber.d("Upserted users batch(${operation.users.size}) in $time MS")
                 }
-                is Operation.InsertUser -> {
-                    userDao().insert(operation.user)
-                }
-                is Operation.UpsertUser -> {
-                    userDao().upsert(operation.user)
-                }
-                is Operation.InsertMessages -> {
-                    messageDao().insert(operation.list)
-                }
-                is Operation.SaveLastSync -> {
-                    messageDao().saveLastSync(operation.sync)
-                }
+                is Operation.InsertUser -> userDao().insert(operation.user)
+                is Operation.UpsertUser -> userDao().upsert(operation.user)
+                is Operation.InsertMessages -> messageDao().insert(operation.list)
+                is Operation.SaveLastSync -> messageDao().saveLastSync(operation.sync)
             }.exhaustive
         }
     }
@@ -597,7 +610,8 @@ sealed class Operation {
     data class UpsertUser(val user: BaseUserEntity) : Operation()
     data class InsertUser(val user: UserEntity) : Operation()
 
-    data class InsertMessages(val list: List<Pair<MessageEntity, List<BaseMessageEntity>>>) : Operation()
+    data class InsertMessages(val list: List<Pair<MessageEntity, List<BaseMessageEntity>>>) :
+        Operation()
 
     data class SaveLastSync(val sync: MessagesSync) : Operation()
 }
