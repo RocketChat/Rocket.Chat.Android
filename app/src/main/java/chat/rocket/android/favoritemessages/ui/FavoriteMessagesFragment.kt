@@ -110,6 +110,6 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
     }
 
     private fun setupToolbar() {
-        (activity as ChatRoomActivity).showToolbarTitle(getString(R.string.title_favorite_messages))
+        (activity as ChatRoomActivity).setupToolbarTitle(getString(R.string.title_favorite_messages))
     }
 }

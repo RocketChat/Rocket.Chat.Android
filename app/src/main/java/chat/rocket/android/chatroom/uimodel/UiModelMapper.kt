@@ -44,8 +44,8 @@ import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.attachment.Field
 import chat.rocket.core.model.isSystemMessage
 import chat.rocket.core.model.url.Url
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
 import java.security.InvalidParameterException
 import java.util.*
@@ -79,7 +79,7 @@ class UiModelMapper @Inject constructor(
         message: Message,
         roomUiModel: RoomUiModel = RoomUiModel(roles = emptyList(), isBroadcast = true)
     ): List<BaseUiModel<*>> =
-        withContext(CommonPool) {
+        withContext(Dispatchers.IO) {
             return@withContext translate(message, roomUiModel)
         }
 
@@ -88,7 +88,7 @@ class UiModelMapper @Inject constructor(
         roomUiModel: RoomUiModel = RoomUiModel(roles = emptyList(), isBroadcast = true),
         asNotReversed: Boolean = false
     ): List<BaseUiModel<*>> =
-        withContext(CommonPool) {
+        withContext(Dispatchers.IO) {
             val list = ArrayList<BaseUiModel<*>>(messages.size)
 
             messages.forEach {
@@ -102,7 +102,7 @@ class UiModelMapper @Inject constructor(
 
     suspend fun map(
         readReceipts: List<ReadReceipt>
-    ): List<ReadReceiptViewModel> = withContext(CommonPool) {
+    ): List<ReadReceiptViewModel> = withContext(Dispatchers.IO) {
         val list = arrayListOf<ReadReceiptViewModel>()
 
         readReceipts.forEach {
@@ -121,7 +121,7 @@ class UiModelMapper @Inject constructor(
         message: Message,
         roomUiModel: RoomUiModel
     ): List<BaseUiModel<*>> =
-        withContext(CommonPool) {
+        withContext(Dispatchers.IO) {
             val list = ArrayList<BaseUiModel<*>>()
 
             getChatRoomAsync(message.roomId)?.let { chatRoom ->
@@ -167,7 +167,7 @@ class UiModelMapper @Inject constructor(
         }
 
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
-    private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(CommonPool) {
+    private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(Dispatchers.IO) {
         return@withContext dbManager.getRoom(id = roomId)?.let {
             with(it.chatRoom) {
                 ChatRoom(
@@ -212,7 +212,7 @@ class UiModelMapper @Inject constructor(
         message: Message,
         roomUiModel: RoomUiModel
     ): List<BaseUiModel<*>> =
-        withContext(CommonPool) {
+        withContext(Dispatchers.IO) {
             val list = ArrayList<BaseUiModel<*>>()
 
             getChatRoomAsync(message.roomId)?.let { chatRoom ->
@@ -437,7 +437,7 @@ class UiModelMapper @Inject constructor(
     private suspend fun mapMessage(
         message: Message,
         chatRoom: ChatRoom
-    ): MessageUiModel = withContext(CommonPool) {
+    ): MessageUiModel = withContext(Dispatchers.IO) {
         val sender = getSenderName(message)
         val time = getTime(message.timestamp)
         val avatar = getUserAvatar(message)
@@ -552,13 +552,15 @@ class UiModelMapper @Inject constructor(
                 is MessageType.SubscriptionRoleAdded -> getString(R.string.message_role_add, message.message, message.role, message.sender?.username)
                 is MessageType.SubscriptionRoleRemoved -> getString(R.string.message_role_removed, message.message, message.role, message.sender?.username)
                 is MessageType.RoomChangedPrivacy -> getString(R.string.message_room_changed_privacy, message.message, message.sender?.username)
+                is MessageType.JitsiCallStarted -> context.getString(
+                    R.string.message_video_call_started, message.sender?.username
+                )
                 else -> throw InvalidParameterException("Invalid message type: ${message.type}")
             }
         }
         val spannableMsg = SpannableStringBuilder(content)
         spannableMsg.setSpan(StyleSpan(Typeface.ITALIC), 0, spannableMsg.length, 0)
         spannableMsg.setSpan(ForegroundColorSpan(Color.GRAY), 0, spannableMsg.length, 0)
-
         return spannableMsg
     }
 }

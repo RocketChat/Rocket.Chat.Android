@@ -45,7 +45,7 @@ object SmartLockHelper {
             .addOnCompleteListener {
                 when {
                     it.isSuccessful -> {
-                        credential = it.result.credential
+                        credential = it.result?.credential
                     }
                     it.exception is ResolvableApiException -> {
                         val resolvableApiException = (it.exception as ResolvableApiException)

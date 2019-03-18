@@ -5,7 +5,9 @@ import chat.rocket.core.model.Value
 
 typealias PublicSettings = Map<String, Value<Any>>
 
-// Authentication methods.
+const val UNIQUE_IDENTIFIER = "uniqueID"
+
+// Authentication methods
 const val LDAP_ENABLE = "LDAP_Enable"
 const val CAS_ENABLE = "CAS_enabled"
 const val CAS_LOGIN_URL = "CAS_login_url"
@@ -23,6 +25,13 @@ const val ACCOUNT_GITLAB = "Accounts_OAuth_Gitlab"
 const val ACCOUNT_GITLAB_URL = "API_Gitlab_URL"
 const val ACCOUNT_WORDPRESS = "Accounts_OAuth_Wordpress"
 const val ACCOUNT_WORDPRESS_URL = "API_Wordpress_URL"
+
+// Video call
+const val JITSI_ENABLED = "Jitsi_Enabled"
+const val JISTI_ENABLE_CHANNELS = "Jisti_Enable_Channels"
+const val JITSI_SSL = "Jitsi_SSL"
+const val JITSI_DOMAIN = "Jitsi_Domain"
+const val JITSI_URL_ROOM_PREFIX = "Jitsi_URL_Room_Prefix"
 
 const val SITE_URL = "Site_Url"
 const val SITE_NAME = "Site_Name"
@@ -54,10 +63,13 @@ const val MESSAGE_READ_RECEIPT_STORE_USERS = "Message_Read_Receipt_Store_Users"
  * Extension functions for Public Settings.
  *
  * If you need to access a Setting, add a const val key above, add it to the filter on
- * ServerPresenter.kt and a extension function to access it
+ * RefreshSettingsInteractor.kt and a extension function to access it.
  */
-fun PublicSettings.isLdapAuthenticationEnabled(): Boolean = this[LDAP_ENABLE]?.value == true
 
+fun PublicSettings.uniqueIdentifier(): String? = this[UNIQUE_IDENTIFIER]?.value as String?
+
+// Authentication
+fun PublicSettings.isLdapAuthenticationEnabled(): Boolean = this[LDAP_ENABLE]?.value == true
 fun PublicSettings.isCasAuthenticationEnabled(): Boolean = this[CAS_ENABLE]?.value == true
 fun PublicSettings.casLoginUrl(): String = this[CAS_LOGIN_URL]?.value.toString()
 fun PublicSettings.isRegistrationEnabledForNewUsers(): Boolean = this[ACCOUNT_REGISTRATION]?.value == "Public"
@@ -73,6 +85,13 @@ fun PublicSettings.isGitlabAuthenticationEnabled(): Boolean = this[ACCOUNT_GITLA
 fun PublicSettings.gitlabUrl(): String? = this[ACCOUNT_GITLAB_URL]?.value as String?
 fun PublicSettings.isWordpressAuthenticationEnabled(): Boolean = this[ACCOUNT_WORDPRESS]?.value == true
 fun PublicSettings.wordpressUrl(): String? = this[ACCOUNT_WORDPRESS_URL]?.value as String?
+
+// Video call
+fun PublicSettings.isJitsiEnabled(): Boolean = this[JITSI_ENABLED]?.value == true
+fun PublicSettings.isJitsiEnabledForChannels(): Boolean = this[JISTI_ENABLE_CHANNELS]?.value == true
+fun PublicSettings.isJitsiSSL(): Boolean = this[JITSI_SSL]?.value == true
+fun PublicSettings.jitsiDomain(): String? = this[JITSI_DOMAIN]?.value as String?
+fun PublicSettings.jitsiPrefix(): String? = this[JITSI_URL_ROOM_PREFIX]?.value as String?
 
 fun PublicSettings.useRealName(): Boolean = this[USE_REALNAME]?.value == true
 fun PublicSettings.useSpecialCharsOnRoom(): Boolean = this[ALLOW_ROOM_NAME_SPECIAL_CHARS]?.value == true
