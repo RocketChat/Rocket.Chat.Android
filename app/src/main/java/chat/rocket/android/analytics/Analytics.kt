@@ -71,4 +71,13 @@ interface Analytics {
      * @param resetPasswordSucceeded True if successful reset password, false otherwise.
      */
     fun logResetPassword(resetPasswordSucceeded: Boolean) {}
+
+    /**
+     * Logs the video conference event.
+     *
+     * @param event The [SubscriptionTypeEvent] to log.
+     * @param serverUrl The server URL to log.
+     */
+    fun logVideoConference(event: SubscriptionTypeEvent, serverUrl: String) {}
+
 }

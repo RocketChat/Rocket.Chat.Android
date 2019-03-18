@@ -115,8 +115,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     }
 
     private fun setupToolbar() {
-        (activity as AppCompatActivity?)?.supportActionBar?.title =
-                getString(R.string.title_settings)
+        (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_settings)
     }
 
     private fun shareApp() {
