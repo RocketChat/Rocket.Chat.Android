@@ -6,6 +6,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.db.model.UserEntity
+import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.server.domain.GetConnectingServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
@@ -24,6 +25,7 @@ class UserDetailsPresenter @Inject constructor(
     private val dbManager: DatabaseManager,
     private val strategy: CancelStrategy,
     private val navigator: ChatRoomNavigator,
+    private val userHelper: UserHelper,
     serverInteractor: GetConnectingServerInteractor,
     factory: ConnectionManagerFactory
 ) {
@@ -32,11 +34,13 @@ class UserDetailsPresenter @Inject constructor(
     private val client = manager.client
     private val interactor = FetchChatRoomsInteractor(client, dbManager)
     private lateinit var userEntity: UserEntity
+    private val currentLoggedUser = userHelper.username()
 
     fun loadUserDetails(userId: String) {
         launchUI(strategy) {
             try {
                 view.showLoading()
+
                 dbManager.getUser(userId)?.let {
                     userEntity = it
                     val avatarUrl =
@@ -45,14 +49,14 @@ class UserDetailsPresenter @Inject constructor(
                     val name = userEntity.name
                     val utcOffset =
                         userEntity.utcOffset // TODO Convert UTC and display like the mockup
-
                     if (avatarUrl != null && username != null && name != null && utcOffset != null) {
                         view.showUserDetails(
                             avatarUrl = avatarUrl,
                             name = name,
                             username = username,
                             status = userEntity.status,
-                            utcOffset = utcOffset.toString()
+                            utcOffset = utcOffset.toString(),
+                            currentUser = currentLoggedUser
                         )
                     } else {
                         throw Exception()

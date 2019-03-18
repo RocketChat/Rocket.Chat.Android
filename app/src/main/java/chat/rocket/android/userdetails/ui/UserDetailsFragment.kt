@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -12,6 +13,7 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
+import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.userdetails.presentation.UserDetailsPresenter
 import chat.rocket.android.userdetails.presentation.UserDetailsView
 import chat.rocket.android.util.extensions.inflate
@@ -40,6 +42,7 @@ fun newInstance(userId: String): Fragment {
 internal const val TAG_USER_DETAILS_FRAGMENT = "UserDetailsFragment"
 private const val BUNDLE_USER_ID = "user_id"
 
+
 class UserDetailsFragment : Fragment(), UserDetailsView {
     @Inject
     lateinit var presenter: UserDetailsPresenter
@@ -47,6 +50,8 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     lateinit var analyticsManager: AnalyticsManager
     private lateinit var userId: String
     private val handler = Handler()
+    val userHelp: UserHelper? = null
+//    val user = userHelp!!.username()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +91,8 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         name: String,
         username: String,
         status: String,
-        utcOffset: String
+        utcOffset: String,
+        currentLoggedUser: String?
     ) {
         val requestBuilder = Glide.with(this).load(avatarUrl)
 
@@ -96,14 +102,19 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
         requestBuilder.apply(RequestOptions.bitmapTransform(RoundedCorners(14)))
             .into(image_avatar)
-
         text_name.text = name
         text_username.text = username
         text_description_status.text = status.substring(0, 1).toUpperCase() + status.substring(1)
         text_description_timezone.text = utcOffset
 
         // We should also setup the user details listeners.
-        text_message.setOnClickListener { presenter.createDirectMessage(username) }
+        if (currentLoggedUser.toString() == username) {
+            text_message.isVisible = false
+            text_message.setOnClickListener { showMessage("Can't send a message to yourself!") }
+        } else {
+            text_message.isVisible = true
+            text_message.setOnClickListener { presenter.createDirectMessage(username) }
+        }
     }
 
     override fun showLoading() {

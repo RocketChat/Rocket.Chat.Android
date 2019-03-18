@@ -19,6 +19,7 @@ interface UserDetailsView : LoadingView, MessageView {
         name: String,
         username: String,
         status: String,
-        utcOffset: String
+        utcOffset: String,
+        currentUser: String?
     )
 }
