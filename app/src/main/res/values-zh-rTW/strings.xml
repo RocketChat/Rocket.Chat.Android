@@ -21,7 +21,7 @@
     <string name="title_password">修改密碼</string>
     <string name="title_update_profile">更新資料</string>
     <string name="title_about">關於</string>
-    <string name="title_create_channel">新建頻道</string>
+    <string name="title_create_channel">建立新頻道</string>
     <string name="title_licence">許可</string>
     <string name="title_are_you_sure">確定嗎?</string>
     <string name="title_channel_details">頻道訊息</string>
@@ -44,7 +44,7 @@
     <string name="action_confirm_password">確認修改密碼</string>
     <string name="action_join_chat">加入聊天</string>
     <string name="action_add_account">新增帳戶</string>
-    <string name="action_online">上線中</string>
+    <string name="action_online">線上</string>
     <string name="action_away">離線</string>
     <string name="action_busy">忙碌</string>
     <string name="action_invisible">隱藏</string>
@@ -137,7 +137,7 @@
     <string name="msg_edited">(已編輯)</string>
     <string name="msg_and">\u0020和\u0020</string>
     <string name="msg_is_typing">\u0020正在輸入…</string>
-    <string name="msg_are_typing">\u0020正在輸入…</string>
+    <string name="msg_are_typing">" 正在輸入…"</string>
     <string name="msg_several_users_are_typing">多個成員正在輸入…</string>
     <string name="msg_no_search_found">沒有搜尋到結果</string>
     <string name="msg_log_out">登出中…</string>
@@ -298,7 +298,7 @@
     <string name="Invite_user_to_join_channel">邀請成員進入頻道</string>
     <string name="Unarchive">取消歸檔</string>
     <string name="Join_the_given_channel">加入頻道</string>
-    <string name="Guggy_Command_Description">根據本文生成GIF</string>
+    <string name="Guggy_Command_Description">根據輸入訊息產生GIF</string>
     <string name="Slash_Topic_Description">設定主題</string>
 
     <!-- Emoji message-->
