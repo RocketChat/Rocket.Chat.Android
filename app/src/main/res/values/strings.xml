@@ -51,7 +51,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_mark_read">Mark As Read</string>
     <string name="action_hide_room">Hide Room</string>
     <string name="action_leave_room">Leave Room</string>
-    <string name="action_favorite">Favorite</string>
     <string name="action_unfavorite">Unfavorite</string>
     <string name="action_update">Update</string>
     <string name="action_settings">Settings</string>

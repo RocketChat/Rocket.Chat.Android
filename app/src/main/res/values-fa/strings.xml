@@ -35,6 +35,11 @@
     <string name="action_terms_of_service">شرایط خدمات رسانی</string>
     <string name="action_privacy_policy">سیاست حفظ جریم خصوصی</string>
     <string name="action_search">جست‌وجو</string>
+    <string name="action_mark_unread">Mark As Unread</string><!-- TODO Add translation -->
+    <string name="action_mark_read">Mark As Read</string><!-- TODO Add translation -->
+    <string name="action_hide_room">Hide Room</string><!-- TODO Add translation -->
+    <string name="action_leave_room">Leave Room</string><!-- TODO Add translation -->
+    <string name="action_unfavorite">Unfavorite</string><!-- TODO Add translation -->
     <string name="action_update">به روزرسانی</string>
     <string name="action_settings">تنظیمات</string>
     <string name="action_create_channel">ایجاد کانال</string>
