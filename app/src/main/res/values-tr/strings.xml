@@ -59,6 +59,8 @@
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
     <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -94,6 +96,8 @@
     <string name="msg_yesterday">Dün</string>
     <string name="msg_today">Bugün</string>
     <string name="msg_message">Mesaj</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
+    <string name="msg_join_video_call">Join video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">Bu oda sadece okunabilir modundadır</string>
     <string name="msg_invalid_2fa_code">Geçersiz 2FA Kodu</string>
     <string name="msg_invalid_file">Geçersiz dosya</string>
@@ -181,15 +185,16 @@
     <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
     <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string> <!-- TODO - Add proper translation -->
-    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
-    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
-    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
     <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
     <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
         <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
+    <string name="msg_credentials_saved_successfully">Kimlik bilgileri başarıyla kaydedildi</string>
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">İstatistik takibi</string>
@@ -210,7 +215,7 @@
     <string name="message_unmuted">%1$s kullanıcısı %2$s tarafından sessizden çıkarıldı</string>
     <string name="message_role_add">%1$s, %3$s tarafından %2$s olacak şekilde değiştirildi</string>
     <string name="message_role_removed">%1$s, artık %2$s olmayacak şekilde %3$s tarafından değiştirildi</string>
-    <string name="message_credentials_saved_successfully">Kimlik bilgileri başarıyla kaydedildi</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">Kaydet</string>
@@ -239,10 +244,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">Mesajlarda arayın</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Sohbeti favorilerime ekle</string>
-    <string name="title_unfavorite_chat">Sohbeti favorilerimden kaldır</string>
 
     <!-- Members List -->
     <string name="title_members_list">Üyeler</string>
