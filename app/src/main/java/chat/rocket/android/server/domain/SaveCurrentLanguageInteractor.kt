@@ -1,0 +1,10 @@
+package chat.rocket.android.server.domain
+
+import chat.rocket.android.server.infraestructure.CurrentLanguageRepository
+import javax.inject.Inject
+
+class SaveCurrentLanguageInteractor @Inject constructor(
+    private val repository: CurrentLanguageRepository
+) {
+    fun save(language: String) = repository.save(language)
+}

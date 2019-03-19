@@ -43,6 +43,8 @@ import chat.rocket.android.server.domain.UsersRepository
 import chat.rocket.android.server.domain.BasicAuthRepository
 import chat.rocket.android.server.domain.GetBasicAuthInteractor
 import chat.rocket.android.server.domain.SaveBasicAuthInteractor
+import chat.rocket.android.server.infraestructure.CurrentLanguageRepository
+import chat.rocket.android.server.infraestructure.SharedPrefsCurrentLanguageRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsBasicAuthRepository
 import chat.rocket.android.server.infraestructure.DatabaseMessageMapper
 import chat.rocket.android.server.infraestructure.DatabaseMessagesRepository
@@ -199,6 +201,12 @@ class AppModule {
     @ForAuthentication
     fun provideConnectingServerRepository(prefs: SharedPreferences): CurrentServerRepository {
         return SharedPrefsConnectingServerRepository(prefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCurrentLanguageRepository(prefs: SharedPreferences): CurrentLanguageRepository {
+        return SharedPrefsCurrentLanguageRepository(prefs)
     }
 
     @Provides

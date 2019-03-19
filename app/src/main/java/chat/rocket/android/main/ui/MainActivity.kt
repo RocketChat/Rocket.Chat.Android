@@ -39,14 +39,17 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.nav_header.view.*
-import java.util.Locale
 import javax.inject.Inject
 import android.app.NotificationManager
+import chat.rocket.android.server.domain.GetCurrentLanguageInteractor
+import chat.rocket.android.server.domain.SaveCurrentLanguageInteractor
+import java.util.Locale
 
 
 private const val CURRENT_STATE = "current_state"
-private const val SETTING = "Settings"
-private const val MY_LANG = "My_Lang"
+private const val SETTING = "settings"
+private const val MY_LANG = "my_lang"
+
 
 class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     HasSupportFragmentInjector {
@@ -58,6 +61,10 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     lateinit var presenter: MainPresenter
     @Inject
     lateinit var permissions: PermissionsInteractor
+    @Inject
+    lateinit var getLanguageInteractor: GetCurrentLanguageInteractor
+    @Inject
+    lateinit var saveLanguageInteractor: SaveCurrentLanguageInteractor
     private var isFragmentAdded: Boolean = false
     private var expanded = false
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
@@ -285,78 +292,26 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         progressDialog = null
     }
 
-    fun changeLanguage() {
-        val languages = resources.getStringArray(R.array.languages)
-
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.title_choose_language)
-        builder.setSingleChoiceItems(languages, -1) { dialog, which ->
-            when(which){
-                0->{
-                    setLocale("en")
-                    recreate()
-                }
-                1->{
-                    setLocale("hi")
-                    recreate()
-                }
-                2->{
-                    setLocale("ja")
-                    recreate()
-                }
-                3->{
-                    setLocale("ru")
-                    recreate()
-                }
-                4->{
-                    setLocale("it")
-                    recreate()
-                }
-                5->{
-                    setLocaleWithRegion("pt","BR")
-                    recreate()
-                }
-                6->{
-                    setLocaleWithRegion("pt", "PT")
-                    recreate()
-                }
-                7->{
-                    setLocale("zh")
-                    recreate()
-                }
-            }
-            dialog.dismiss()
-        }
-        builder.create().show()
+    private fun loadLocale() {
+        val currentLanguage = getLanguageInteractor.get()!!
+        setLocale(currentLanguage)
     }
 
-    private fun setLocale(lang: String) {
+    fun setLocale(lang: String) {
         val locale = Locale(lang)
         Locale.setDefault(locale)
         val config = Configuration()
         config.locale = locale
         baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
-
-        val editor = getSharedPreferences(SETTING, Context.MODE_PRIVATE).edit()
-        editor.putString(MY_LANG, lang)
-        editor.apply()
+        saveLanguageInteractor.save(lang)
     }
 
-    private fun setLocaleWithRegion(lang: String, country: String) {
+    fun setLocaleWithRegion(lang: String, country: String) {
         val locale = Locale(lang, country)
         Locale.setDefault(locale)
         val config = Configuration()
         config.locale = locale
         baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
-
-        val editor = getSharedPreferences(SETTING, Context.MODE_PRIVATE).edit()
-        editor.putString(MY_LANG, lang)
-        editor.apply()
-    }
-
-    private fun loadLocale() {
-        val sharedPreferences = getSharedPreferences(SETTING, Activity.MODE_PRIVATE)
-        val language = sharedPreferences.getString(MY_LANG, "")
-        setLocale(language)
+        saveLanguageInteractor.save(lang)
     }
 }

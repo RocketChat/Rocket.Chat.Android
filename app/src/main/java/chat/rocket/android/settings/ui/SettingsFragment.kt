@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
@@ -24,7 +25,6 @@ import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.webview.ui.webViewIntent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -75,7 +75,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             resources.getStringArray(R.array.settings_actions)[1] ->
                 activity?.startActivity(Intent(activity, PasswordActivity::class.java))
 
-            resources.getStringArray(R.array.settings_actions)[2] -> (activity as? MainActivity)?.changeLanguage()
+            resources.getStringArray(R.array.settings_actions)[2] -> changeLanguage()
 
             resources.getStringArray(R.array.settings_actions)[3] -> shareApp()
 
@@ -138,6 +138,54 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             } catch (ex: ActivityNotFoundException) {
                 Timber.e(ex)
             }
+        }
+    }
+
+    fun changeLanguage() {
+        val languages = resources.getStringArray(R.array.languages)
+        val mainActivity =(activity as? MainActivity)
+
+        context?.let {
+            AlertDialog.Builder(it)
+                .setTitle(R.string.title_choose_language)
+                .setSingleChoiceItems(languages, -1) { dialog, which ->
+                    when (which) {
+                        0 -> {
+                            mainActivity?.setLocale("en")
+                            activity?.recreate()
+                        }
+                        1 -> {
+                            mainActivity?.setLocale("hi")
+                            activity?.recreate()
+                        }
+                        2 -> {
+                            mainActivity?.setLocale("ja")
+                            activity?.recreate()
+                        }
+                        3 -> {
+                            mainActivity?.setLocale("ru")
+                            activity?.recreate()
+                        }
+                        4 -> {
+                            mainActivity?.setLocale("it")
+                            activity?.recreate()
+                        }
+                        5->{
+                            mainActivity?.setLocaleWithRegion("pt","BR")
+                            activity?.recreate()
+                        }
+                        6->{
+                            mainActivity?.setLocaleWithRegion("pt", "PT")
+                            activity?.recreate()
+                        }
+                        7->{
+                            mainActivity?.setLocale("zh")
+                            activity?.recreate()
+                        }
+                    }
+                    dialog.dismiss()
+                }
+                .create().show()
         }
     }
 
