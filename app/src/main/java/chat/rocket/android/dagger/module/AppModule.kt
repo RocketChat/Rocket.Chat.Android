@@ -173,7 +173,6 @@ class AppModule {
     fun provideSharedPreferences(context: Application) =
         context.getSharedPreferences("rocket.chat", Context.MODE_PRIVATE)
 
-
     @Provides
     @ForMessages
     fun provideMessagesSharedPreferences(context: Application) =
