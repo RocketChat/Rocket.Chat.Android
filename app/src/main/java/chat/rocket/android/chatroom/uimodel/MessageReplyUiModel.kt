@@ -16,7 +16,9 @@ data class MessageReplyUiModel(
     override var menuItemsToHide: MutableList<Int> = mutableListOf(),
     override var currentDayMarkerText: String,
     override var showDayMarker: Boolean,
-    override var permalink: String
+    override var permalink: String,
+    override var isSearchResult: Boolean = false,
+    override var searchTerm: String = ""
 ) : BaseUiModel<MessageReply> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.MESSAGE_REPLY.viewType

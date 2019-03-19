@@ -1,10 +1,15 @@
 package chat.rocket.android.chatroom.adapter
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.text.Spannable
+import android.text.SpannableString
 import android.text.method.LinkMovementMethod
+import android.text.style.BackgroundColorSpan
+import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
+import android.text.style.StyleSpan
 import android.view.View
 import androidx.core.view.isVisible
 import chat.rocket.android.R
@@ -51,7 +56,27 @@ class MessageViewHolder(
                 }
             }
 
-            text_content.text_content.text = data.content
+            if (data.isSearchResult) {
+                fun setHighlightSpaannable(myText: CharSequence): SpannableString {
+                    var spannableContent = SpannableString(myText)
+                    val searchTermStart = data.content.indexOf(data.searchTerm)
+                    val highlightColor = BackgroundColorSpan(Color.rgb(255, 255, 0))
+                    if (searchTermStart > 0) {
+                        spannableContent.setSpan(
+                            highlightColor,
+                            searchTermStart,
+                            searchTermStart + data.searchTerm.length,
+                            Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                        )
+                    }
+                    return spannableContent
+                }
+
+                val myText = data.content
+                text_content.text_content.text = setHighlightSpaannable(myText)
+            } else {
+                text_content.text_content.text = data.content
+            }
 
             button_join_video_call.isVisible = data.message.type is MessageType.JitsiCallStarted
             button_join_video_call.setOnClickListener { joinVideoCallListener(it) }

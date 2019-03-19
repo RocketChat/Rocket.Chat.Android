@@ -151,11 +151,13 @@ class ChatRoomPresenter @Inject constructor(
                     chatIsBroadcast = it.chatRoom.broadcast ?: false
                     val roomUiModel = roomMapper.map(it, true)
                     launchUI(strategy) {
-                        view.onRoomUpdated(roomUiModel = roomUiModel.copy(
-                            broadcast = chatIsBroadcast,
-                            canModerate = canModerate,
-                            writable = roomUiModel.writable || canModerate
-                        ))
+                        view.onRoomUpdated(
+                            roomUiModel = roomUiModel.copy(
+                                broadcast = chatIsBroadcast,
+                                canModerate = canModerate,
+                                writable = roomUiModel.writable || canModerate
+                            )
+                        )
                     }
                 }
 
@@ -215,10 +217,10 @@ class ChatRoomPresenter @Inject constructor(
                     val localMessages = messagesRepository.getRecentMessages(chatRoomId, 50)
                     val oldMessages = mapper.map(
                         localMessages, RoomUiModel(
-                        roles = chatRoles,
-                        // FIXME: Why are we fixing isRoom attribute to true here?
-                        isBroadcast = chatIsBroadcast, isRoom = true
-                    )
+                            roles = chatRoles,
+                            // FIXME: Why are we fixing isRoom attribute to true here?
+                            isBroadcast = chatIsBroadcast, isRoom = true
+                        )
                     )
                     val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
                     if (oldMessages.isNotEmpty() && lastSyncDate != null) {
@@ -296,7 +298,7 @@ class ChatRoomPresenter @Inject constructor(
                     mapper.map(
                         messages,
                         RoomUiModel(chatRoles, chatIsBroadcast, true)
-                    )
+                    ), searchText
                 )
             } catch (ex: Exception) {
                 Timber.e(ex)
@@ -599,12 +601,14 @@ class ChatRoomPresenter @Inject constructor(
                     Timber.d("History: $messages")
 
                     if (messages.result.isNotEmpty()) {
-                        val models = mapper.map(messages.result, RoomUiModel(
-                            roles = chatRoles,
-                            isBroadcast = chatIsBroadcast,
-                            // FIXME: Why are we fixing isRoom attribute to true here?
-                            isRoom = true
-                        ))
+                        val models = mapper.map(
+                            messages.result, RoomUiModel(
+                                roles = chatRoles,
+                                isBroadcast = chatIsBroadcast,
+                                // FIXME: Why are we fixing isRoom attribute to true here?
+                                isRoom = true
+                            )
+                        )
                         messagesRepository.saveAll(messages.result)
                         //if success - saving last synced time
                         //assume that BE returns ordered messages, the first message is the latest one
@@ -685,9 +689,9 @@ class ChatRoomPresenter @Inject constructor(
                     replyMarkdown = "[ ]($currentServer/$chatRoomType/$room?msg=$id) $mention ",
                     quotedMessage = mapper.map(
                         message, RoomUiModel(
-                        roles = chatRoles,
-                        isBroadcast = chatIsBroadcast
-                    )
+                            roles = chatRoles,
+                            isBroadcast = chatIsBroadcast
+                        )
                     ).last().preview?.message ?: ""
                 )
             }
@@ -1011,7 +1015,8 @@ class ChatRoomPresenter @Inject constructor(
                 val canPost = permissions.canPostToReadOnlyChannels()
                 dbManager.getRoom(chatRoomId)?.let {
                     val roomUiModel = roomMapper.map(it, true).copy(
-                        writable = canPost)
+                        writable = canPost
+                    )
                     view.onJoined(roomUiModel = roomUiModel)
                     view.onRoomUpdated(roomUiModel = roomUiModel)
                 }
@@ -1281,6 +1286,7 @@ class ChatRoomPresenter @Inject constructor(
     fun clearDraftMessage() {
         localRepository.clear(draftKey)
     }
+
     /**
      * Get unfinished message from local repository, when user left chat room without
      * sending a message and now the user is back.

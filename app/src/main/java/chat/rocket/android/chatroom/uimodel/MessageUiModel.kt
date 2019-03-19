@@ -22,7 +22,10 @@ data class MessageUiModel(
     override var isTemporary: Boolean = false,
     override var menuItemsToHide: MutableList<Int> = mutableListOf(),
     override var permalink: String,
-    val subscriptionId: String
+    val subscriptionId: String,
+    override var isSearchResult: Boolean = false,
+    override var searchTerm: String = ""
+
 ) : BaseMessageUiModel<Message> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.MESSAGE.viewType
