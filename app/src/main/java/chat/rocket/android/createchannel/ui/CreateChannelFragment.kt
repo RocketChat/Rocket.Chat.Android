@@ -6,8 +6,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Switch
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.view.isVisible
@@ -42,6 +40,7 @@ import javax.inject.Inject
 import androidx.appcompat.widget.SearchView
 import chat.rocket.android.helper.Constants
 import kotlinx.android.synthetic.main.app_bar.*
+import kotlinx.android.synthetic.main.fragment_create_group.*
 
 internal const val TAG_CREATE_CHANNEL_FRAGMENT = "CreateChannelFragment"
 
@@ -85,27 +84,31 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = container?.inflate(R.layout.fragment_create_channel)
+    ): View? = container?.inflate(
+            if (Constants.WIDECHAT)
+                R.layout.fragment_create_group
+            else
+                R.layout.fragment_create_channel
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolBar()
-        setupViewListeners()
-        setupRecyclerView()
-        subscribeEditTexts()
-        // WIDECHAT - remove options for public rooms and read only
-        if (Constants.WIDECHAT) {
-            setupWidechatView(view)
+        if (!Constants.WIDECHAT) {
+            setupViewListeners()
+            setupRecyclerView()
+            subscribeEditTexts()
+        } else {
+            // WIDECHAT - remove options for public rooms, read only, invite members and member chips
+            setupWidechatView()
         }
-
         val bundle = arguments
         if (bundle != null) {
             val members = bundle.getStringArrayList(BUNDLE_CREATE_CHANNEL_MEMBERS)
-            members.forEach {
+            members?.forEach {
                 processSelectedMember(it)
             }
         }
-
         analyticsManager.logScreenView(ScreenViewEvent.CreateChannel)
     }
 
@@ -146,13 +149,19 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
 
     override fun showLoading() {
         ui {
-            view_loading.isVisible = true
+            if (Constants.WIDECHAT)
+                widechat_view_loading.isVisible = true
+            else
+                view_loading.isVisible = true
         }
     }
 
     override fun hideLoading() {
         ui {
-            view_loading.isVisible = false
+            if (Constants.WIDECHAT)
+                widechat_view_loading.isVisible = false
+            else
+                view_loading.isVisible = false
         }
     }
 
@@ -218,13 +227,21 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     }
 
     override fun enableUserInput() {
-        text_channel_name.isEnabled = true
-        text_invite_members.isEnabled = true
+        if (Constants.WIDECHAT) {
+            text_group_name.isEnabled = true
+        } else {
+            text_channel_name.isEnabled = true
+            text_invite_members.isEnabled = true
+        }
     }
 
     override fun disableUserInput() {
-        text_channel_name.isEnabled = false
-        text_invite_members.isEnabled = false
+        if (Constants.WIDECHAT) {
+            text_group_name.isEnabled = false
+        } else {
+            text_channel_name.isEnabled = false
+            text_invite_members.isEnabled = false
+        }
     }
 
     private fun setupToolBar() {
@@ -247,22 +264,21 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         }
     }
 
-    private fun setupWidechatView(view: View?) {
-        var chType: TextView? = view?.findViewById(R.id.text_channel_type)
-        chType?.isVisible = false
-        var chDesc: TextView? = view?.findViewById(R.id.text_channel_type_description)
-        chDesc?.isVisible = false
-        var chTypeSwitch: Switch? = view?.findViewById(R.id.switch_channel_type)
-        chTypeSwitch?.isVisible = false
-
-        var readOnly: TextView? = view?.findViewById(R.id.text_read_only)
-        readOnly?.isVisible = false
-        var readOnlyDesc: TextView? = view?.findViewById(R.id.text_read_only_description)
-        readOnlyDesc?.isVisible = false
-        var readOnlySwitch: Switch? = view?.findViewById(R.id.switch_read_only)
-        readOnlySwitch?.isVisible = false
-
+    private fun setupWidechatView() {
         channelType = RoomType.PRIVATE_GROUP
+        val channelNameDisposable = text_group_name.asObservable()
+                .subscribe {
+                    button_create_group.isEnabled = it.isNotBlank()
+                }
+        compositeDisposable.add(channelNameDisposable)
+        button_create_group.setOnClickListener {
+            createChannelPresenter.createChannel(
+                    roomTypeOf(channelType),
+                    text_group_name.text.toString(),
+                    memberList,
+                    isChannelReadOnly
+            )
+        }
     }
 
     private fun setupViewListeners() {
@@ -344,11 +360,13 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         if (memberList.contains(username)) {
             showMessage(getString(R.string.msg_member_already_added))
         } else {
-            view_member_suggestion.isVisible = false
-            text_invite_members.setText("")
+            if (!Constants.WIDECHAT) {
+                view_member_suggestion.isVisible = false
+                text_invite_members.setText("")
+                addChip(username)
+                chip_group_member.isVisible = true
+            }
             addMember(username)
-            addChip(username)
-            chip_group_member.isVisible = true
         }
     }
 

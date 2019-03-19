@@ -141,6 +141,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
     <string name="msg_channel_name">Channel name</string>
+    <string name="msg_group_name">Group name</string>
     <string name="msg_search">Search</string>
     <string name="msg_unread_messages">Unread messages</string>
     <string name="msg_preview_video">Video</string>
