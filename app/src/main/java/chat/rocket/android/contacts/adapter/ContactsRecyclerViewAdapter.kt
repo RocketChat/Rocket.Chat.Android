@@ -11,6 +11,7 @@ import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.*
 import chat.rocket.android.contacts.models.Contact
 import chat.rocket.android.contacts.presentation.ContactsPresenter
+import chat.rocket.android.contacts.ui.ContactsFragment
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.common.model.UserPresence
@@ -18,7 +19,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 
 class ContactsRecyclerViewAdapter(
-        private val context: MainActivity,
+        private val frag: ContactsFragment,
         private val presenter: ContactsPresenter,
         private val contactArrayList: List<ItemHolder<*>>
 ) : RecyclerView.Adapter<ViewHolder<*>>() {
@@ -89,7 +90,7 @@ class ContactsRecyclerViewAdapter(
             val userId = contact.getUserId()
             if (userId != null) {
                 launch {
-                    var userPresence: UserPresence? = presenter.getUserPresence(userId)
+                    val userPresence: UserPresence? = presenter.getUserPresence(userId)
                     if (userPresence != null) {
                         contact.setStatus(userPresence.presence!!)
                     }
@@ -101,8 +102,10 @@ class ContactsRecyclerViewAdapter(
                     holder.bindSelection(it.isSelected(getItemId(position)))
                 }
                 // Clicking the row will open the DM
-                holder.itemView.setOnClickListener {
-                    presenter.openDirectMessageChatRoom(contact.getUsername().toString())
+                if (!frag.enableGroups) {
+                    holder.itemView.setOnClickListener {
+                        presenter.openDirectMessageChatRoom(contact.getUsername().toString())
+                    }
                 }
             }
 
@@ -130,13 +133,13 @@ class ContactsRecyclerViewAdapter(
         } else if (holder is PermissionsViewHolder) {
             holder.bind(contactArrayList[position] as PermissionsItemHolder)
             holder.itemView.setOnClickListener {
-                context.syncContacts(false, true)
+                (frag.activity as MainActivity).syncContacts(false, true)
             }
         }
     }
 
     private fun shareApp() {
-        presenter.shareViaApp(context)
+        presenter.shareViaApp(frag.context!!)
     }
 
     companion object {
