@@ -62,6 +62,8 @@
     <string name="action_register">Registrieren</string>
     <string name="action_confirm">Bestätigen</string>
     <string name="action_delete_account">Konto löschen</string>
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -97,6 +99,8 @@
     <string name="msg_yesterday">Gestern</string>
     <string name="msg_today">Heute</string>
     <string name="msg_message">Nachricht</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
+    <string name="msg_join_video_call">Join video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">Dieser Raum ist nur lesen</string>
     <string name="msg_invalid_2fa_code">Falscher 2FA Code</string>
     <string name="msg_invalid_file">Falsche Datei</string>
@@ -164,15 +168,16 @@
     <string name="msg_two_factor_authentication">Zwei-Faktor-Authentifizierung</string>
     <string name="msg__your_2fa_code">Wie lautet Ihr F2A Code?</string>
     <string name="msg_muted_on_this_channel">Sie sind auf diesem Kanal stummgeschaltet</string>
-    <string name="msg_no_topic">Kein Thema hinzugefügt</string>
-    <string name="msg_no_announcement">Keine Ankündigung hinzugefügt</string>
-    <string name="msg_no_description">Keine Beschreibung hinzugefügt</string>
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
     <string name="msg_unable_to_update_password">Änderung des Passworts nicht möglich. Fehlermeldung: %1$s</string>
     <string name="msg_password_updated_successfully">Passwort erfolgreich geändert</string>
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$ s reagierte mit %2$s</item>
         <item quantity="other">%1$s reagierte mit %2$s</item>
     </plurals>
+    <string name="msg_credentials_saved_successfully">Login-Daten erfolgreich gespeichert</string>
 
 
     <!-- Create channel messages -->
@@ -216,7 +221,7 @@
     <string name="message_unmuted">Benutzer %1$s nicht mehr stumm geschaltet von %2$s</string>
     <string name="message_role_add">%1$s wurde gesetzt %2$s von %3$s</string>
     <string name="message_role_removed">%1$s ist nicht länger %2$s von %3$s</string>
-    <string name="message_credentials_saved_successfully">Login-Daten erfolgreich gespeichert</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">Antworten</string>
@@ -243,10 +248,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">Suche Nachricht</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Chat favorisieren</string>
-    <string name="title_unfavorite_chat">Chat nicht favorisieren</string>
 
     <!-- Members List -->
     <string name="title_members_list">Benutzer</string>

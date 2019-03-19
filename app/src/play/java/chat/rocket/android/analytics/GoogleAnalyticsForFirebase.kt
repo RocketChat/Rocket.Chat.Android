@@ -13,14 +13,14 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
     private val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
 
     override fun logLogin(event: AuthenticationEvent, loginSucceeded: Boolean) {
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, Bundle(1).apply {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, Bundle(2).apply {
             putString(FirebaseAnalytics.Param.METHOD, event.methodName)
             putLong(FirebaseAnalytics.Param.SUCCESS, if (loginSucceeded) 1 else 0)
         })
     }
 
     override fun logSignUp(event: AuthenticationEvent, signUpSucceeded: Boolean) {
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, Bundle(1).apply {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, Bundle(2).apply {
             putString(FirebaseAnalytics.Param.METHOD, event.methodName)
             putLong(FirebaseAnalytics.Param.SUCCESS, if (signUpSucceeded) 1 else 0)
         })
@@ -33,27 +33,27 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
     }
 
     override fun logMessageSent(event: SubscriptionTypeEvent, serverUrl: String) {
-        firebaseAnalytics.logEvent("message_sent", Bundle(1).apply {
+        firebaseAnalytics.logEvent("message_sent", Bundle(2).apply {
             putString("subscription_type", event.subscriptionTypeName)
             putString("server", serverUrl)
         })
     }
 
     override fun logMediaUploaded(event: SubscriptionTypeEvent, mimeType: String) {
-        firebaseAnalytics.logEvent("media_upload", Bundle(1).apply {
+        firebaseAnalytics.logEvent("media_upload", Bundle(2).apply {
             putString("subscription_type", event.subscriptionTypeName)
             putString("media_type", mimeType)
         })
     }
 
     override fun logReaction(event: SubscriptionTypeEvent) {
-        firebaseAnalytics.logEvent("reaction", Bundle(1).apply {
+        firebaseAnalytics.logEvent("reaction", Bundle(2).apply {
             putString("subscription_type", event.subscriptionTypeName)
         })
     }
 
     override fun logServerSwitch(serverUrl: String, serverCount: Int) {
-        firebaseAnalytics.logEvent("server_switch", Bundle(1).apply {
+        firebaseAnalytics.logEvent("server_switch", Bundle(2).apply {
             putString("server_url", serverUrl)
             putInt("server_count", serverCount)
         })
@@ -62,7 +62,14 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
     override fun logOpenAdmin() = firebaseAnalytics.logEvent("open_admin", null)
 
     override fun logResetPassword(resetPasswordSucceeded: Boolean) =
-        firebaseAnalytics.logEvent("reset_password", Bundle(1).apply {
+        firebaseAnalytics.logEvent("reset_password", Bundle(2).apply {
             putBoolean("resetPasswordSucceeded", resetPasswordSucceeded)
         })
+
+    override fun logVideoConference(event: SubscriptionTypeEvent, serverUrl: String) {
+        firebaseAnalytics.logEvent("video_conference", Bundle(2).apply {
+            putString("subscription_type", event.subscriptionTypeName)
+            putString("server", serverUrl)
+        })
+    }
 }

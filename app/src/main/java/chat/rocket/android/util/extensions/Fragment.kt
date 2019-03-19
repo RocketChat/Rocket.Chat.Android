@@ -3,9 +3,10 @@ package chat.rocket.android.util.extensions
 import android.os.Looper
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 inline fun Fragment.ui(crossinline block: (activity: FragmentActivity) -> Unit): Job? {
     // Checking first for activity and view saves us from some synchronyzed and thread local checks
@@ -16,7 +17,7 @@ inline fun Fragment.ui(crossinline block: (activity: FragmentActivity) -> Unit):
             null
         } else {
             // Launch a Job on the UI context and check again if the activity and view are still valid
-            launch(UI) {
+            GlobalScope.launch(Dispatchers.Main) {
                 if (activity != null && view != null && context != null) {
                     block(activity!!)
                 }
