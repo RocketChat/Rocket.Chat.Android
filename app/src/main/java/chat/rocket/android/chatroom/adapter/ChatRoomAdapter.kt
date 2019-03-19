@@ -44,8 +44,14 @@ class ChatRoomAdapter(
                 MessageViewHolder(
                     view,
                     actionsListener,
-                    reactionListener
-                ) { userId -> navigator?.toUserDetails(userId) }
+                    reactionListener,
+                    { userId -> navigator?.toUserDetails(userId) },
+                    {
+                        if (roomId != null && roomType != null) {
+                            navigator?.toVideoConference(roomId, roomType)
+                        }
+                    }
+                )
             }
             BaseUiModel.ViewType.URL_PREVIEW -> {
                 val view = parent.inflate(R.layout.message_url_preview)
@@ -101,8 +107,9 @@ class ChatRoomAdapter(
         when (holder) {
             is MessageViewHolder ->
                 holder.bind(dataSet[position] as MessageUiModel)
-            is UrlPreviewViewHolder ->
+            is UrlPreviewViewHolder -> {
                 holder.bind(dataSet[position] as UrlPreviewUiModel)
+            }
             is MessageReplyViewHolder ->
                 holder.bind(dataSet[position] as MessageReplyUiModel)
             is AttachmentViewHolder ->

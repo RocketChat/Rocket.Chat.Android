@@ -22,8 +22,9 @@ import chat.rocket.android.emoji.internal.EmojiPagerAdapter
 import chat.rocket.android.emoji.internal.PREF_EMOJI_SKIN_TONE
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.dialog_skin_tone_chooser.view.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow(context, view) {
     private lateinit var viewPager: ViewPager
@@ -49,7 +50,7 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
     }
 
     override fun onViewCreated(view: View) {
-        launch(UI) {
+        GlobalScope.launch(Dispatchers.Main) {
             setupViewPager()
             setupBottomBar()
         }

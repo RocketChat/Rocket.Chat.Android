@@ -7,7 +7,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerActivity
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.Job
 
 @Module
 class AuthenticationModule {

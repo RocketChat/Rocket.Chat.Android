@@ -30,7 +30,7 @@ import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import com.squareup.moshi.Json
 import com.squareup.moshi.Moshi
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import se.ansman.kotshi.JsonSerializable
 import se.ansman.kotshi.KotshiConstructor
 import timber.log.Timber

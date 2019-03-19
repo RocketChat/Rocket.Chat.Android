@@ -116,6 +116,6 @@ class MentionsFragment : Fragment(), MentionsView {
     }
 
     private fun setupToolbar() {
-        (activity as ChatRoomActivity).showToolbarTitle((getString(R.string.msg_mentions)))
+        (activity as ChatRoomActivity).setupToolbarTitle((getString(R.string.msg_mentions)))
     }
 }

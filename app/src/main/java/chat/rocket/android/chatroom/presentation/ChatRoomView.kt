@@ -14,13 +14,6 @@ import chat.rocket.core.model.ChatRoom
 interface ChatRoomView : LoadingView, MessageView {
 
     /**
-     * Shows the Favorite/Unfavorite chat room icon.
-     *
-     * @param isFavorite Shows the favorite icon if true, otherwise shows the unfavorite icon.
-     */
-    fun showFavoriteIcon(isFavorite: Boolean)
-
-    /**
      * Shows the chat room messages.
      *
      * @param dataSet The data set to show.

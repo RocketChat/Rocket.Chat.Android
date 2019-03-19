@@ -60,6 +60,8 @@
     <string name="action_register">Registrar</string>
     <string name="action_confirm">Confirmar</string>
     <string name="action_delete_account">Deletar conta</string>
+    <string name="action_favorite">Favoritar</string>
+    <string name="action_remove_favorite">Remover favorito</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -106,6 +108,8 @@
     <string name="msg_yesterday">Ontem</string>
     <string name="msg_today">Hoje</string>
     <string name="msg_message">Mensagem</string>
+    <string name="msg_video_call">Videochamada</string>
+    <string name="msg_join_video_call">Entrar na videochamada</string>
     <string name="msg_this_room_is_read_only">Este chat é apenas de leitura</string>
     <string name="msg_invalid_2fa_code">Código 2FA inválido</string>
     <string name="msg_invalid_file">Arquivo inválido</string>
@@ -180,9 +184,9 @@
     <string name="msg_send_email">Enviar e-mail</string>
     <string name="msg_android_app_support">Suporte ao aplicativo Android</string>
     <string name="msg_muted_on_this_channel">Você está silenciado neste canal</string>
-    <string name="msg_no_topic">Nenhum tópico adicionado</string>
-    <string name="msg_no_announcement">Nenhum anúncio adicionado</string>
-    <string name="msg_no_description">Nenhuma descrição adicionada</string>
+    <string name="msg_no_topic">Nenhum tópico</string>
+    <string name="msg_no_announcement">Nenhum anúncio</string>
+    <string name="msg_no_description">Nenhuma descrição</string>
     <string name="msg_unable_to_update_password">Não foi possível atualizar a senha. Mensagem de erro: %1$s</string>
     <string name="msg_password_updated_successfully">Senha alterada com sucesso</string>
     <string name="msg_sort">Ordenar</string>
@@ -190,6 +194,7 @@
         <item quantity="one">%1$s reagiu com %2$s</item>
         <item quantity="other">%1$s reagiram com %2$s</item>
     </plurals>
+    <string name="msg_credentials_saved_successfully">Credenciais salvas com sucesso</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
@@ -222,7 +227,7 @@
     <string name="message_unmuted">Usuário %1$s saiu do modo silenciado por %2$s</string>
     <string name="message_role_add">%1$s foi definido %2$s por %3$s</string>
     <string name="message_role_removed">%1$s não é mais %2$s por %3$s</string>
-    <string name="message_credentials_saved_successfully">Credenciais salvas com sucesso</string>
+    <string name="message_video_call_started">Videochamada iniciada por %1$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Responder</string>
@@ -249,10 +254,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">Procurar mensagem</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Marcar canal como favorito</string>
-    <string name="title_unfavorite_chat">Desmarcar canal como favorito</string>
 
     <!-- Members List -->
     <string name="title_members_list">Membros</string>
