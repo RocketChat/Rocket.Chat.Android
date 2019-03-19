@@ -158,6 +158,16 @@
         app:layout_constraintTop_toBottomOf="@+id/message_header"
         tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
 
+    <Button
+        android:id="@+id/button_join_video_call"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:text="@string/msg_join_video_call"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/text_content"
+        app:layout_constraintTop_toBottomOf="@+id/text_content" />
+
     <include
         layout="@layout/layout_reactions"
         android:layout_width="0dp"
