@@ -79,7 +79,7 @@
     <string name="msg_share_using">分享使用</string>
     <string name="msg_profile_update_successfully">資料更新成功</string>
     <string name="msg_username">使用者名稱</string>
-    <string name="msg_username_or_email">使用者名稱或是Email</string>
+    <string name="msg_username_or_email">使用者名稱或是電子信箱</string>
     <string name="msg_password">密碼</string>
     <string name="msg_name">名字</string>
     <string name="msg_email">電子郵件</string>
@@ -207,7 +207,7 @@
     <string name="message_unmuted">用户 %1$s被%2$s取消禁言</string>
     <string name="message_role_add">%1$s被設定為%2$s 由%3$s操作</string>
     <string name="message_role_removed">%1$s不在是%2$s 由%3$s操作</string>
-    <string name="message_credentials_saved_successfully">憑證保存成功</string>
+    <string name="message_video_call_started">由%1$s發起視訊</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">回覆</string>
@@ -234,10 +234,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">搜尋訊息</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">蒐藏</string>
-    <string name="title_unfavorite_chat">取消蒐藏</string>
 
     <!-- Members List -->
     <string name="title_members_list">成員</string>
