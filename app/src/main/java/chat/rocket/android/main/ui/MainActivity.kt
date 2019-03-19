@@ -297,13 +297,13 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         setLocale(currentLanguage)
     }
 
-    fun setLocale(lang: String) {
-        val locale = Locale(lang)
+    fun setLocale(language: String) {
+        val locale = Locale(language)
         Locale.setDefault(locale)
         val config = Configuration()
         config.locale = locale
         baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
-        saveLanguageInteractor.save(lang)
+        saveLanguageInteractor.save(language)
     }
 
     fun setLocaleWithRegion(lang: String, country: String) {
