@@ -21,6 +21,20 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/contact_image_avatar"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:padding="1dp"
+        android:layout_marginStart="8dp"
+        app:placeholderImage="@drawable/ic_group_add_white_24dp"
+        app:placeholderImageScaleType="centerInside"
+        android:background="@drawable/circle_green"
+        app:layout_constraintBottom_toBottomOf="@id/text_group_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/text_group_name"
+        app:roundedCornerRadius="@dimen/circle_avatar_corner_radius" />
+
     <EditText
         android:id="@+id/text_group_name"
         android:layout_width="match_parent"
@@ -32,23 +46,22 @@
         android:paddingEnd="10dp"
         android:textSize="16sp"
         android:layout_marginTop="24dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_create_group"
-        android:layout_width="match_parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/create_group_fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/ic_check_white_24dp"
+        android:visibility="gone"
+        app:backgroundTint="@color/widechatFab"
         app:layout_constraintBottom_toBottomOf="parent"
-        style="?android:attr/borderlessButtonStyle"
-        android:text="@string/title_create_group" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -88,7 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0"
-        android:background="#80FFFFFF"
+        android:background="#AAFFFFFF"
         android:visibility="gone" />
 
     <LinearLayout
@@ -107,6 +107,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="8dp"
             android:foreground="?attr/selectableItemBackground"
+            app:cardElevation="4dp"
             app:cardCornerRadius="4dp"
             app:cardUseCompatPadding="true"
             app:contentPadding="4dp">
@@ -114,6 +115,8 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:text="New Chat"
                 android:textStyle="bold" />
         </androidx.cardview.widget.CardView>
@@ -148,6 +151,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="8dp"
             android:foreground="?attr/selectableItemBackground"
+            app:cardElevation="4dp"
             app:cardCornerRadius="4dp"
             app:cardUseCompatPadding="true"
             app:contentPadding="4dp">
@@ -155,6 +159,8 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:text="New Group"
                 android:textStyle="bold" />
         </androidx.cardview.widget.CardView>

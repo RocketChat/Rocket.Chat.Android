@@ -268,10 +268,10 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         channelType = RoomType.PRIVATE_GROUP
         val channelNameDisposable = text_group_name.asObservable()
                 .subscribe {
-                    button_create_group.isEnabled = it.isNotBlank()
+                    create_group_fab.isVisible = it.isNotBlank()
                 }
         compositeDisposable.add(channelNameDisposable)
-        button_create_group.setOnClickListener {
+        create_group_fab.setOnClickListener {
             createChannelPresenter.createChannel(
                     roomTypeOf(channelType),
                     text_group_name.text.toString(),
