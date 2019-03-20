@@ -72,7 +72,6 @@ class MainNavigator(internal val activity: MainActivity) {
             )
         )
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
-
     }
 
     /**
