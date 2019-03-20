@@ -330,6 +330,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     val newFragment = SettingsFragment()
                     val fragmentManager = fragmentManager
                     val fragmentTransaction = fragmentManager!!.beginTransaction()
+                    fragmentTransaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
                     fragmentTransaction.replace(R.id.fragment_container, newFragment)
                     fragmentTransaction.addToBackStack(null)
                     fragmentTransaction.commit()
@@ -506,6 +507,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     val newFragment = ProfileFragment()
                     val fragmentManager = fragmentManager
                     val fragmentTransaction = fragmentManager!!.beginTransaction()
+                    fragmentTransaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
                     fragmentTransaction.replace(R.id.fragment_container, newFragment)
                     fragmentTransaction.addToBackStack(null)
                     fragmentTransaction.commit()
@@ -544,10 +546,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         create_new_channel_fab.setOnClickListener { view ->
             currentUserStatusIcon?.isGone = true
             val contactsFragment = ContactsFragment()
-            val transaction = activity?.supportFragmentManager?.beginTransaction();
-            transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
-            transaction?.replace(this.id, contactsFragment, "contactsFragment");
-            transaction?.addToBackStack("contactsFragment")?.commit();
+            val transaction = activity?.supportFragmentManager?.beginTransaction()
+            transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+            transaction?.replace(this.id, contactsFragment, "contactsFragment")
+            transaction?.addToBackStack("contactsFragment")?.commit()
         }
     }
 
