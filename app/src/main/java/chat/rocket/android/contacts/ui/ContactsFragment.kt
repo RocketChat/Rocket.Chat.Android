@@ -49,11 +49,11 @@ import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.app_bar.view.*
 import kotlinx.android.synthetic.main.fragment_contact_parent.*
-import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 import timber.log.Timber
@@ -66,12 +66,10 @@ class ContactsFragment : Fragment(), ContactsView {
 
     //FIXME: Fix and enable search in new group screen
     //FIXME: Retain the selected contacts on screen rotate
-    //TODO: In the new group screen, show fab button even when no contacts are selected with an error toast asking to select a contact
     //TODO: Add animations to ticks that appear upon selecting a contact
     //TODO: Add animation to contacts list translating down when contacts are selected
     //FIXME: Remove the blink when a contact is selected again after all the contacts are deselected
     //TODO: When the group is being selected via long press from the new chat screen, change the title to create group from new chat
-    //FIXME: Fix behaviour of contacts selection when contact sync starts and ends
     //TODO: Add support for square avatars during group creation flow
 
     @Inject
@@ -86,7 +84,7 @@ class ContactsFragment : Fragment(), ContactsView {
     @Inject
     lateinit var mapper: RoomUiModelMapper
 
-    private lateinit var adapter: ContactsRecyclerViewAdapter
+    private lateinit var contactsAdapter: ContactsRecyclerViewAdapter
     private lateinit var recyclerView: RecyclerView
     private var emptyTextView: TextView? = null
     private var fab: View? = null
@@ -177,6 +175,13 @@ class ContactsFragment : Fragment(), ContactsView {
         emptyTextView = view.findViewById(R.id.text_no_contacts_to_display)
         recyclerView = view.findViewById(R.id.contacts_recycler_view)
 
+        contactsAdapter = ContactsRecyclerViewAdapter(this, presenter, finalList)
+        recyclerView = contacts_recycler_view.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+            adapter = contactsAdapter
+        }
+
         selectedContactsAdapter = SelectedContactsAdapter(selectedContacts) { contact: Contact ->
             removeFromSelectedContact(contact)
             removeFromSelectionTracker(contact)
@@ -190,6 +195,9 @@ class ContactsFragment : Fragment(), ContactsView {
         if (hasContactsPermissions()) {
             launch {
                 getContactListWhenSynced()
+                ui {
+                    setupTrackerAndFab()
+                }
             }
         } else {
             setupFrameLayout()
@@ -200,8 +208,9 @@ class ContactsFragment : Fragment(), ContactsView {
     private fun getContactList() {
         val serverUrl = serverInteractor.get()!!
         val dbManager = dbFactory.create(serverUrl)
+        val compositeDisposable = CompositeDisposable()
 
-        Single.fromCallable {
+        val disposable = Single.fromCallable {
             // need to return a non-null object, since Rx 2 doesn't allow nulls
             dbManager.contactsDao().getAllSync()
         }
@@ -223,7 +232,7 @@ class ContactsFragment : Fragment(), ContactsView {
                                         contact.setUsername(contactEntity.username)
                                         contact.setUserId(contactEntity.userId)
                                     }
-                                    contact.setAvatarUrl(serverUrl.avatarUrl(contact?.getUsername() ?: contact?.getName() ?: ""))
+                                    contact.setAvatarUrl(serverUrl.avatarUrl(contact.getUsername() ?: contact.getName() ?: ""))
                                     contact
                                 }
                             })
@@ -232,6 +241,7 @@ class ContactsFragment : Fragment(), ContactsView {
                         onError = { error ->
                         }
                 )
+        compositeDisposable.add(disposable)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -369,17 +379,18 @@ class ContactsFragment : Fragment(), ContactsView {
                     filteredContactArrayList.add(contact)
                 }
             }
-            launch(UI) {
+            launch {
                 try {
                     result = presenter.spotlight(query).let { mapper.map(it, showLastMessage = false) }.let { mapSpotlightToContacts(it) }
-                } catch (ex: Exception) {
-                    Timber.e(ex)
-
+                } catch (e: Exception) {
+                    Timber.e(e)
                 }
-                if (hasContactsPermissions()) {
-                    setupFrameLayout(filteredContactArrayList, result)
-                } else {
-                    setupFrameLayout(result)
+                ui {
+                    if (hasContactsPermissions()) {
+                        setupFrameLayout(filteredContactArrayList, result)
+                    } else {
+                        setupFrameLayout(result)
+                    }
                 }
             }
         }
@@ -445,21 +456,28 @@ class ContactsFragment : Fragment(), ContactsView {
             recyclerView.visibility = View.GONE
         } else {
             emptyTextView!!.visibility = View.GONE
-            recyclerView.setHasFixedSize(true)
-            recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.visibility = View.VISIBLE
-            finalList = map(filteredContactArrayList, spotlightResult)
-            adapter = ContactsRecyclerViewAdapter(this, presenter, finalList)
-            recyclerView.adapter = adapter
-            setupTrackerAndFab()
+            selectedContacts.clear()
+            selectedContactsAdapter.notifyDataSetChanged()
+            contactsSelectionTracker?.clearSelection()
+            if (enableGroups)
+                contactsSelectionTracker?.select(-1)
+            finalList.clear()
+            finalList.addAll(map(filteredContactArrayList, spotlightResult))
+            contactsAdapter.notifyDataSetChanged()
         }
     }
 
     private fun setupFrameLayout(spotlightResult: ArrayList<ItemHolder<*>>? = null) {
         recyclerView.visibility = View.VISIBLE
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ContactsRecyclerViewAdapter(this, presenter, map(spotlightResult))
+        selectedContacts.clear()
+        selectedContactsAdapter.notifyDataSetChanged()
+        contactsSelectionTracker?.clearSelection()
+        if (enableGroups)
+            contactsSelectionTracker?.select(-1)
+        finalList.clear()
+        finalList.addAll(map(spotlightResult))
+        contactsAdapter.notifyDataSetChanged()
     }
 
     private fun map(contacts: List<Contact>, spotlightResult: ArrayList<ItemHolder<*>>? = null): ArrayList<ItemHolder<*>> {
@@ -558,6 +576,8 @@ class ContactsFragment : Fragment(), ContactsView {
 
         selectedContacts.clear()
         selectedContactsAdapter.notifyDataSetChanged()
+        contactsSelectionTracker?.clearSelection()
+
         if (enableGroups)
             contactsSelectionTracker?.select(-1)
 
@@ -565,16 +585,22 @@ class ContactsFragment : Fragment(), ContactsView {
         fab?.setOnClickListener { view ->
             contactsSelectionTracker?.deselect(-1)
             val selection = contactsSelectionTracker?.selection!!
-            val list = selection.map {
-                (finalList[it.toInt()] as ContactsItemHolder).data.getUsername() ?:
-                throw NullPointerException("No username available")
-            }.toList()
+            if (selection.size() < 1) {
+                showToast("Select at least one contact")
+                if (enableGroups)
+                    contactsSelectionTracker?.select(-1)
+            } else {
+                val list = selection.map {
+                    (finalList[it.toInt()] as ContactsItemHolder).data.getUsername()
+                            ?: throw NullPointerException("No username available")
+                }.toList()
 
-            val createChannelFragment = CreateChannelFragment.newInstance(ArrayList(list))
-            val transaction = activity?.supportFragmentManager?.beginTransaction()
-            transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-            transaction?.replace(this.id, createChannelFragment, "createChannelFragment")
-            transaction?.addToBackStack("createChannelFragment")?.commit()
+                val createChannelFragment = CreateChannelFragment.newInstance(ArrayList(list))
+                val transaction = activity?.supportFragmentManager?.beginTransaction()
+                transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                transaction?.replace(this.id, createChannelFragment, "createChannelFragment")
+                transaction?.addToBackStack("createChannelFragment")?.commit()
+            }
         }
 
         contactsSelectionTracker?.addObserver(
@@ -586,12 +612,11 @@ class ContactsFragment : Fragment(), ContactsView {
                             items--
                         val showSelection = (items > 0)
                         selectedContactsRecyclerView.isVisible = showSelection
-                        selected_contacts_divider.isVisible = showSelection
-                        fab?.isVisible = showSelection
+                        selected_contacts_divider?.isVisible = showSelection
                     }
                 })
 
-        adapter.contactsSelectionTracker = contactsSelectionTracker
+        contactsAdapter.contactsSelectionTracker = contactsSelectionTracker
     }
 
     private fun addToSelectedContact(contact: Contact) {
@@ -623,7 +648,7 @@ class ContactsFragment : Fragment(), ContactsView {
     private fun showSpinner() {
         try {
             ui {
-                (activity as MainActivity).toolbar.toolbar_progress_bar.visibility = VISIBLE
+                (activity as MainActivity).toolbar.toolbar_progress_bar?.visibility = VISIBLE
             }
         } catch (ex: Exception) {
             Timber.e(ex)
@@ -633,7 +658,7 @@ class ContactsFragment : Fragment(), ContactsView {
     private fun hideSpinner() {
         try {
             ui {
-                (activity as MainActivity).toolbar.toolbar_progress_bar.visibility = GONE
+                (activity as MainActivity).toolbar.toolbar_progress_bar?.visibility = GONE
             }
         } catch (ex: Exception) {
             Timber.e(ex)
