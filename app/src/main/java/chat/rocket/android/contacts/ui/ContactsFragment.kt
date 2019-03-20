@@ -26,6 +26,7 @@ import android.view.View.GONE
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.recyclerview.selection.ItemKeyProvider
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StableIdKeyProvider
 import androidx.recyclerview.selection.StorageStrategy
@@ -62,17 +63,16 @@ import java.lang.NullPointerException
  * Load a list of contacts in a recycler view
  */
 class ContactsFragment : Fragment(), ContactsView {
-    //TODO: When the group is being selected via long press from the new chat screen, change the title to create group from new chat
-    //TODO: Remove the selected contacts chip from the group naming screen
-    //FIXME: Fix crash while opening search in new chat/group
+
+    //FIXME: Add search in new group screen
     //FIXME: Pressing back button after opening a dm from new chat should go to the main screen instead of the new chat screen
-    //TODO: In the screen to name the group, remove the action bar at the top that appears after entering the name and replace with fab
     //FIXME: Fix back button behaviour upon successful group creation
     //FIXME: Retain the selected contacts on screen rotate
     //TODO: In the new group screen, show fab button even when no contacts are selected with an error toast asking to select a contact
     //TODO: Add animations to ticks that appear upon selecting a contact
     //TODO: Add animation to contacts list translating down when contacts are selected
     //TODO: Remove the blink when a contact is selected again after all the contacts are deselected
+    //TODO: When the group is being selected via long press from the new chat screen, change the title to create group from new chat
     //FIXME: Fix behaviour of contacts selection when contact sync starts and ends
 
     @Inject
@@ -242,6 +242,9 @@ class ContactsFragment : Fragment(), ContactsView {
         val searchItem = menu.findItem(R.id.action_search)
         searchView = searchItem?.actionView as? SearchView
         searchView?.onQueryTextListener { queryContacts(it) }
+
+        if (enableGroups)
+            searchItem.isVisible = false
 
         if (Constants.WIDECHAT) {
             setupWidechatSearchView()
@@ -526,7 +529,7 @@ class ContactsFragment : Fragment(), ContactsView {
         contactsSelectionTracker = SelectionTracker.Builder<Long>(
                 "contactsSelection",
                 recyclerView,
-                StableIdKeyProvider(recyclerView),
+                ContactsItemKeyProvider(recyclerView),
                 ContactsItemDetailsLookup(recyclerView),
                 StorageStrategy.createLongStorage()
         ).withSelectionPredicate(
@@ -666,4 +669,17 @@ class ContactsFragment : Fragment(), ContactsView {
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
+}
+
+class ContactsItemKeyProvider(private val recyclerView: RecyclerView) :
+        ItemKeyProvider<Long>(ItemKeyProvider.SCOPE_MAPPED) {
+
+    override fun getKey(position: Int): Long? {
+        return recyclerView.adapter?.getItemId(position)
+    }
+
+    override fun getPosition(key: Long): Int {
+        val viewHolder = recyclerView.findViewHolderForItemId(key)
+        return viewHolder?.layoutPosition ?: RecyclerView.NO_POSITION
+    }
 }

@@ -526,11 +526,15 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             currentUserStatusIcon = this?.getCustomView()?.findViewById(R.id.self_status)
         }
         launch {
-            val currentUser = presenter.getCurrentUser(false)
-            val drawable = DrawableHelper.getUserStatusDrawable(currentUser?.status, context!!)
-            ui {
-                currentUserStatusIcon?.isVisible = true
-                currentUserStatusIcon?.setImageDrawable(drawable)
+            try {
+                val currentUser = presenter.getCurrentUser(false)
+                val drawable = DrawableHelper.getUserStatusDrawable(currentUser?.status, context!!)
+                ui {
+                    currentUserStatusIcon?.isVisible = true
+                    currentUserStatusIcon?.setImageDrawable(drawable)
+                }
+            } catch (e: Exception) {
+                throw e
             }
         }
     }

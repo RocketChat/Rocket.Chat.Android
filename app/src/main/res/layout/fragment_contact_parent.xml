@@ -34,7 +34,9 @@
         android:layout_height="0dp"
         android:scrollbars="vertical"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/selected_contacts_recycler_view"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/item_contact" />
 
     <TextView
