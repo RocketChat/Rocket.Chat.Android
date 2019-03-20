@@ -1,5 +1,6 @@
 package chat.rocket.android.main.presentation
 
+import androidx.fragment.app.FragmentManager
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.ui.newServerIntent
@@ -72,6 +73,7 @@ class MainNavigator(internal val activity: MainActivity) {
             )
         )
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
+        activity.supportFragmentManager?.popBackStack("contactsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     /**

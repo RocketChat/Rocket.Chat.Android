@@ -38,6 +38,7 @@ import javax.inject.Inject
 
 // WIDECHAT
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.FragmentManager
 import chat.rocket.android.helper.Constants
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_create_group.*
@@ -210,6 +211,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         with(activity as MainActivity) {
             // WIDECHAT - no nav drawer in widechat client
             if (Constants.WIDECHAT) {
+                supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 createChannelPresenter.toChatList()
             } else {
                 setCheckedNavDrawerItem(R.id.menu_action_chats)

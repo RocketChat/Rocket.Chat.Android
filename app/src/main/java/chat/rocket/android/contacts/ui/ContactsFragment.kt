@@ -64,16 +64,15 @@ import java.lang.NullPointerException
  */
 class ContactsFragment : Fragment(), ContactsView {
 
-    //FIXME: Add search in new group screen
-    //FIXME: Pressing back button after opening a dm from new chat should go to the main screen instead of the new chat screen
-    //FIXME: Fix back button behaviour upon successful group creation
+    //FIXME: Fix and enable search in new group screen
     //FIXME: Retain the selected contacts on screen rotate
     //TODO: In the new group screen, show fab button even when no contacts are selected with an error toast asking to select a contact
     //TODO: Add animations to ticks that appear upon selecting a contact
     //TODO: Add animation to contacts list translating down when contacts are selected
-    //TODO: Remove the blink when a contact is selected again after all the contacts are deselected
+    //FIXME: Remove the blink when a contact is selected again after all the contacts are deselected
     //TODO: When the group is being selected via long press from the new chat screen, change the title to create group from new chat
     //FIXME: Fix behaviour of contacts selection when contact sync starts and ends
+    //TODO: Add support for square avatars during group creation flow
 
     @Inject
     lateinit var presenter: ContactsPresenter
