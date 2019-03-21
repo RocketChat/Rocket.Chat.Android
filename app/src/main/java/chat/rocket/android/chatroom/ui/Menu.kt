@@ -17,7 +17,6 @@ internal fun ChatRoomFragment.setupMenu(menu: Menu) {
     setupDetailsMenuItem(menu)
     if (!Constants.WIDECHAT) {
         setupFavoriteMenuItem(menu)
-        setupDetailsMenuItem(menu)
     }
 }
 
