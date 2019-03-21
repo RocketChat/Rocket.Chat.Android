@@ -582,6 +582,7 @@ class ContactsFragment : Fragment(), ContactsView {
             contactsSelectionTracker?.select(-1)
 
         fab = view?.findViewById(R.id.contacts_action_fab)
+        fab?.isVisible = enableGroups
         fab?.setOnClickListener { view ->
             contactsSelectionTracker?.deselect(-1)
             val selection = contactsSelectionTracker?.selection!!
@@ -611,6 +612,7 @@ class ContactsFragment : Fragment(), ContactsView {
                         if (contactsSelectionTracker?.isSelected(-1) == true)
                             items--
                         val showSelection = (items > 0)
+                        fab?.isVisible = showSelection
                         selectedContactsRecyclerView.isVisible = showSelection
                         selected_contacts_divider?.isVisible = showSelection
                     }

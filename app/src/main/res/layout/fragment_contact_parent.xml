@@ -83,6 +83,7 @@
         android:layout_marginBottom="24dp"
         android:src="@drawable/ic_arrow_forward_white_24dp"
         app:backgroundTint="@color/widechatFab"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

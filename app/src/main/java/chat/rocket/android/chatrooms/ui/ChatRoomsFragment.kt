@@ -62,6 +62,7 @@ import chat.rocket.android.settings.ui.SettingsFragment
 import chat.rocket.android.util.extensions.avatarUrl
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.app_bar.*
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
 
 internal const val TAG_CHAT_ROOMS_FRAGMENT = "ChatRoomsFragment"
@@ -98,6 +99,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var searchCloseButton: ImageView? = null
     private var profileButton: SimpleDraweeView? = null
     private var currentUserStatusIcon: ImageView? = null
+    private var currentUserStatusJob: Job? = null
     private var deepLinkInfo: DeepLinkInfo? = null
     // handles that recurring connection status bug in widechat
     private var currentlyConnected: Boolean? = false
@@ -148,6 +150,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override fun onPause() {
         clearSearch()
+        currentUserStatusIcon?.isGone = true
+        currentUserStatusJob?.cancel()
         super.onPause()
     }
 
@@ -525,7 +529,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         with((activity as AppCompatActivity?)?.supportActionBar) {
             currentUserStatusIcon = this?.getCustomView()?.findViewById(R.id.self_status)
         }
-        launch {
+        currentUserStatusJob = launch {
             try {
                 val currentUser = presenter.getCurrentUser(false)
                 val drawable = DrawableHelper.getUserStatusDrawable(currentUser?.status, context!!)
@@ -562,17 +566,15 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
         new_chat_fab_item.setOnClickListener {
             hideFABMenu()
-            currentUserStatusIcon?.isGone = true
             openFragment(ContactsFragment(), "contactsFragment")
         }
         new_chat_fab.setOnClickListener {
             hideFABMenu()
-            currentUserStatusIcon?.isGone = true
             openFragment(ContactsFragment(), "contactsFragment")
         }
         new_group_fab_item.setOnClickListener {
             hideFABMenu()
-            openFragment(ContactsFragment(), "contactsFragment")
+            openFragment(ContactsFragment.newInstance(enableGroups = true), "contactsFragment")
         }
         new_group_fab.setOnClickListener {
             hideFABMenu()
