@@ -362,6 +362,8 @@
     <string name="widechat_new_channel">Nuevo chat de grupo</string>
     <string name="msg_widechat_no_chats_to_display">Busca personas para chatear que ya tienen el app de Viasat Connect o invita tus amigos y familiares a descargarlo..</string>
     <string name="msg_widechat_welcome_to_app">Bienvenido a Viasat Connect.</string>
+    <string name="title_chat_details">Detalles del chat</string>
+
 
     <!--Contacts Permissions-->
     <string name="permissions_request">Para conectarse fácilmente con amigos y familiares, permita que Viasat Connect acceda a sus contactos.</string>

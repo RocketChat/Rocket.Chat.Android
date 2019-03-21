@@ -27,6 +27,10 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_details.*
 import javax.inject.Inject
 
+// WIDECHAT
+import android.view.View.GONE
+import chat.rocket.android.helper.Constants
+
 fun newInstance(
     chatRoomId: String,
     chatRoomType: String,
@@ -96,12 +100,21 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
             val text = room.name
             name.text = text
             bindImage(chatRoomType!!)
-            content_topic.text =
-                    if (room.topic.isNullOrEmpty()) getString(R.string.msg_no_topic) else room.topic
-            content_announcement.text =
-                    if (room.announcement.isNullOrEmpty()) getString(R.string.msg_no_announcement) else room.announcement
-            content_description.text =
-                    if (room.description.isNullOrEmpty()) getString(R.string.msg_no_description) else room.description
+            if (Constants.WIDECHAT) {
+                title_topic.visibility = GONE
+                title_announcement.visibility = GONE
+                title_description.visibility = GONE
+                content_topic.visibility = GONE
+                content_announcement.visibility = GONE
+                content_description.visibility = GONE
+            } else {
+                content_topic.text =
+                        if (room.topic.isNullOrEmpty()) getString(R.string.msg_no_topic) else room.topic
+                content_announcement.text =
+                        if (room.announcement.isNullOrEmpty()) getString(R.string.msg_no_announcement) else room.announcement
+                content_description.text =
+                        if (room.description.isNullOrEmpty()) getString(R.string.msg_no_description) else room.description
+            }
         }
     }
 
@@ -121,35 +134,46 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
 
     private fun addOptions(adapter: ChatDetailsAdapter?) {
         adapter?.let {
-            if (!disableMenu) {
-                it.addOption(getString(R.string.title_files), R.drawable.ic_files_24dp) {
-                    presenter.toFiles(chatRoomId!!)
+            if (!Constants.WIDECHAT) {
+                if (!disableMenu) {
+                    it.addOption(getString(R.string.title_files), R.drawable.ic_files_24dp) {
+                        presenter.toFiles(chatRoomId!!)
+                    }
                 }
-            }
 
-            if (chatRoomType != RoomType.DIRECT_MESSAGE && !disableMenu) {
-                it.addOption(getString(R.string.msg_mentions), R.drawable.ic_at_black_20dp) {
-                    presenter.toMentions(chatRoomId!!)
+                if (chatRoomType != RoomType.DIRECT_MESSAGE && !disableMenu) {
+                    it.addOption(getString(R.string.msg_mentions), R.drawable.ic_at_black_20dp) {
+                        presenter.toMentions(chatRoomId!!)
+                    }
+                    it.addOption(
+                            getString(R.string.title_members),
+                            R.drawable.ic_people_outline_black_24dp
+                    ) {
+                        presenter.toMembers(chatRoomId!!)
+                    }
+                }
+
+                it.addOption(
+                        getString(R.string.title_favorite_messages),
+                        R.drawable.ic_star_border_white_24dp
+                ) {
+                    presenter.toFavorites(chatRoomId!!)
                 }
                 it.addOption(
-                    getString(R.string.title_members),
-                    R.drawable.ic_people_outline_black_24dp
+                        getString(R.string.title_pinned_messages),
+                        R.drawable.ic_action_message_pin_24dp
                 ) {
-                    presenter.toMembers(chatRoomId!!)
+                    presenter.toPinned(chatRoomId!!)
                 }
-            }
-
-            it.addOption(
-                getString(R.string.title_favorite_messages),
-                R.drawable.ic_star_border_white_24dp
-            ) {
-                presenter.toFavorites(chatRoomId!!)
-            }
-            it.addOption(
-                getString(R.string.title_pinned_messages),
-                R.drawable.ic_action_message_pin_24dp
-            ) {
-                presenter.toPinned(chatRoomId!!)
+            } else {
+                if (chatRoomType != RoomType.DIRECT_MESSAGE && !disableMenu) {
+                    it.addOption(
+                            getString(R.string.title_members),
+                            R.drawable.ic_people_outline_black_24dp
+                    ) {
+                        presenter.toMembers(chatRoomId!!)
+                    }
+                }
             }
         }
     }
@@ -208,7 +232,7 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
     private fun setupToolbar() {
         with((activity as ChatRoomActivity)) {
             hideToolbarChatRoomIcon()
-            showToolbarTitle(getString(R.string.title_channel_details))
+            showToolbarTitle(getString(R.string.title_chat_details))
         }
     }
 }
