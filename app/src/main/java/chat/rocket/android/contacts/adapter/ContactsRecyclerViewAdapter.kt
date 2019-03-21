@@ -14,6 +14,7 @@ import chat.rocket.android.contacts.presentation.ContactsPresenter
 import chat.rocket.android.contacts.ui.ContactsFragment
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.showToast
 import chat.rocket.common.model.UserPresence
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -54,7 +55,7 @@ class ContactsRecyclerViewAdapter(
                 val view = parent.inflate(R.layout.item_permissions)
                 PermissionsViewHolder(view)
             }
-            else -> throw IllegalStateException("View type must be either Room, Header or Invite")
+            else -> throw IllegalStateException("View type must be either Contact, Header, Invite, Action or Permissions")
         }
     }
 
@@ -68,7 +69,7 @@ class ContactsRecyclerViewAdapter(
             is InviteItemHolder -> position.toLong()
             is ContactsActionItemHolder -> position.toLong()
             is PermissionsItemHolder -> position.toLong()
-            else -> throw IllegalStateException("View type must be either Room, Header or Invite")
+            else -> throw IllegalStateException("View type must be either Contact, Header, Invite, Action or Permissions")
         }
     }
 
@@ -79,7 +80,7 @@ class ContactsRecyclerViewAdapter(
             is InviteItemHolder -> VIEW_TYPE_INVITE
             is ContactsActionItemHolder -> VIEW_TYPE_ACTION
             is PermissionsItemHolder -> VIEW_TYPE_PERMISSIONS
-            else -> throw IllegalStateException("View type must be either Room, Header or Invite")
+            else -> throw IllegalStateException("View type must be either Contact, Header, Invite, Action or Permissions")
         }
     }
 
@@ -101,26 +102,32 @@ class ContactsRecyclerViewAdapter(
                 contactsSelectionTracker?.let {
                     holder.bindSelection(it.isSelected(getItemId(position)))
                 }
-                // Clicking the row will open the DM
                 if (!frag.enableGroups) {
+                    // Clicking the row will open the DM
                     holder.itemView.setOnClickListener {
                         presenter.openDirectMessageChatRoom(contact.getUsername().toString())
                     }
+                    // Clicking the @username button will open a DM
+                    val dmButton: Button = holder.itemView.findViewById(R.id.chat_username)
+                    dmButton.setOnClickListener { view ->
+                        run {
+                            presenter.openDirectMessageChatRoom(contact.getUsername().toString())
+                        }
+                    }
                 }
-            }
-
-            val inviteButton: Button = holder.itemView.findViewById(R.id.invite_contact)
-            inviteButton.setOnClickListener { view ->
-                run {
-                    inviteButton.setText(R.string.Invited)
-                    if (contact.isPhone()) {
-                        presenter.inviteViaSMS(contact.getPhoneNumber()!!)
-                    } else {
-                        presenter.inviteViaEmail(contact.getEmailAddress()!!)
+            } else {
+                val inviteButton: Button = holder.itemView.findViewById(R.id.invite_contact)
+                inviteButton.setOnClickListener { view ->
+                    run {
+                        inviteButton.setText(R.string.Invited)
+                        if (contact.isPhone()) {
+                            presenter.inviteViaSMS(contact.getPhoneNumber()!!)
+                        } else {
+                            presenter.inviteViaEmail(contact.getEmailAddress()!!)
+                        }
                     }
                 }
             }
-
         } else if (holder is ContactsHeaderViewHolder) {
             holder.bind(contactArrayList[position] as ContactsHeaderItemHolder)
         } else if (holder is InviteViewHolder) {

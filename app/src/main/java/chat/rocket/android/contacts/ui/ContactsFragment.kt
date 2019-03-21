@@ -28,7 +28,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.selection.ItemKeyProvider
 import androidx.recyclerview.selection.SelectionTracker
-import androidx.recyclerview.selection.StableIdKeyProvider
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -57,7 +56,6 @@ import kotlinx.android.synthetic.main.fragment_contact_parent.*
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 import timber.log.Timber
-import java.lang.NullPointerException
 
 /**
  * Load a list of contacts in a recycler view
@@ -71,6 +69,7 @@ class ContactsFragment : Fragment(), ContactsView {
     //FIXME: Remove the blink when a contact is selected again after all the contacts are deselected
     //TODO: When the group is being selected via long press from the new chat screen, change the title to create group from new chat
     //TODO: Add support for square avatars during group creation flow
+    //FIXME: Invite button not working during group creation
 
     @Inject
     lateinit var presenter: ContactsPresenter
@@ -182,7 +181,7 @@ class ContactsFragment : Fragment(), ContactsView {
             adapter = contactsAdapter
         }
 
-        selectedContactsAdapter = SelectedContactsAdapter(selectedContacts) { contact: Contact ->
+        selectedContactsAdapter = SelectedContactsAdapter(selectedContacts, true) { contact: Contact ->
             removeFromSelectedContact(contact)
             removeFromSelectionTracker(contact)
         }
@@ -592,10 +591,8 @@ class ContactsFragment : Fragment(), ContactsView {
                     contactsSelectionTracker?.select(-1)
             } else {
                 val list = selection.map {
-                    (finalList[it.toInt()] as ContactsItemHolder).data.getUsername()
-                            ?: throw NullPointerException("No username available")
+                    (finalList[it.toInt()] as ContactsItemHolder).data
                 }.toList()
-
                 val createChannelFragment = CreateChannelFragment.newInstance(ArrayList(list))
                 val transaction = activity?.supportFragmentManager?.beginTransaction()
                 transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)

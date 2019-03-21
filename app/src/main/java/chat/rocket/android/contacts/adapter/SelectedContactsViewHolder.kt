@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.contacts.models.Contact
@@ -21,11 +22,14 @@ class SelectedContactsViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
         removeButton = itemView.findViewById(R.id.remove_selected_contact)
     }
 
-    fun bind(contact: Contact, removeClickListener: (Contact) -> Unit) {
+    fun bind(contact: Contact, showRemoveButton: Boolean, removeClickListener: (Contact) -> Unit) {
         name?.text = contact.getName()?.substringBefore(" ")
         avatar?.setImageURI(contact.getAvatarUrl())
-        removeButton?.setOnClickListener {
-            removeClickListener(contact)
+        if (showRemoveButton) {
+            removeButton?.isVisible = true
+            removeButton?.setOnClickListener {
+                removeClickListener(contact)
+            }
         }
     }
 

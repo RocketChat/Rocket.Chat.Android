@@ -39,6 +39,9 @@ import javax.inject.Inject
 // WIDECHAT
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.GridLayoutManager
+import chat.rocket.android.contacts.adapter.SelectedContactsAdapter
+import chat.rocket.android.contacts.models.Contact
 import chat.rocket.android.helper.Constants
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_create_group.*
@@ -55,22 +58,27 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     private var actionMode: ActionMode? = null
     private val adapter: MembersAdapter = MembersAdapter {
         if (it.username != null) {
-            processSelectedMember(it.username)
+            val member: Contact? = memberList.find { member ->
+                member.getUsername() == it.username
+            }
+            processSelectedMember(member!!)
         }
     }
     private val compositeDisposable = CompositeDisposable()
     private var channelType: String = RoomType.CHANNEL
     private var isChannelReadOnly: Boolean = false
-    private var memberList = arrayListOf<String>()
+    private var memberList = arrayListOf<Contact>()
 
     // WIDECHAT
     private var widechatSearchView: SearchView? = null
+    private lateinit var selectedContactsRecyclerView: RecyclerView
+    private lateinit var selectedContactsAdapter: RecyclerView.Adapter<*>
 
     companion object {
-        fun newInstance(members: ArrayList<String>? = null): CreateChannelFragment {
+        fun newInstance(members: ArrayList<Contact>? = null): CreateChannelFragment {
             return CreateChannelFragment().apply {
                 arguments = Bundle(1).apply {
-                    putStringArrayList(BUNDLE_CREATE_CHANNEL_MEMBERS, members)
+                    putParcelableArrayList(BUNDLE_CREATE_CHANNEL_MEMBERS, members)
                 }
             }
         }
@@ -102,13 +110,23 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         } else {
             // WIDECHAT - remove options for public rooms, read only, invite members and member chips
             setupWidechatView()
+            selectedContactsAdapter = SelectedContactsAdapter(memberList, false) {}
+            selectedContactsRecyclerView = selected_contacts_recycler_view.apply {
+                setHasFixedSize(true)
+                val displayMetrics = context.resources.displayMetrics
+                val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+                val nCols = ((dpWidth - 40) / 60).toInt()
+                layoutManager = GridLayoutManager(context, nCols)
+                adapter = selectedContactsAdapter
+            }
         }
         val bundle = arguments
         if (bundle != null) {
-            val members = bundle.getStringArrayList(BUNDLE_CREATE_CHANNEL_MEMBERS)
+            val members = bundle.getParcelableArrayList<Contact>(BUNDLE_CREATE_CHANNEL_MEMBERS)
             members?.forEach {
                 processSelectedMember(it)
             }
+            selectedContactsAdapter.notifyDataSetChanged()
         }
         analyticsManager.logScreenView(ScreenViewEvent.CreateChannel)
     }
@@ -132,7 +150,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
                 createChannelPresenter.createChannel(
                     roomTypeOf(channelType),
                     text_channel_name.text.toString(),
-                    memberList,
+                    memberList.map { it.getUsername()!! },
                     isChannelReadOnly
                 )
                 mode.finish()
@@ -277,7 +295,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
             createChannelPresenter.createChannel(
                     roomTypeOf(channelType),
                     text_group_name.text.toString(),
-                    memberList,
+                    memberList.map { it.getUsername()!! },
                     isChannelReadOnly
             )
         }
@@ -358,8 +376,9 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         actionMode?.finish()
     }
 
-    private fun processSelectedMember(username: String) {
-        if (memberList.contains(username)) {
+    private fun processSelectedMember(member: Contact) {
+        val username = member.getUsername()!!
+        if (memberList.map { it.getUsername() }.contains(username)) {
             showMessage(getString(R.string.msg_member_already_added))
         } else {
             if (!Constants.WIDECHAT) {
@@ -368,16 +387,16 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
                 addChip(username)
                 chip_group_member.isVisible = true
             }
-            addMember(username)
+            addMember(member)
         }
     }
 
-    private fun addMember(username: String) {
-        memberList.add(username)
+    private fun addMember(member: Contact) {
+        memberList.add(member)
     }
 
-    private fun removeMember(username: String) {
-        memberList.remove(username)
+    private fun removeMember(member: Contact) {
+        memberList.remove(member)
     }
 
     private fun addChip(chipText: String) {
@@ -392,7 +411,9 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     private fun setupChipOnCloseIconClickListener(chip: Chip) {
         chip.setOnCloseIconClickListener {
             removeChip(it)
-            removeMember((it as Chip).chipText.toString())
+            val username = (it as Chip).chipText.toString()
+            val member: Contact? = memberList.find { it.getUsername() == username }
+            removeMember(member!!)
             // whenever we remove a chip we should process the chip group visibility.
             processChipGroupVisibility()
         }

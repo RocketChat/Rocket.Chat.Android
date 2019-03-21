@@ -7,6 +7,7 @@ import chat.rocket.android.authentication.ui.newServerIntent
 import chat.rocket.android.chatroom.ui.chatRoomIntent
 import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
+import chat.rocket.android.contacts.models.Contact
 import chat.rocket.android.createchannel.ui.CreateChannelFragment
 import chat.rocket.android.createchannel.ui.TAG_CREATE_CHANNEL_FRAGMENT
 import chat.rocket.android.main.ui.MainActivity
@@ -26,7 +27,7 @@ class MainNavigator(internal val activity: MainActivity) {
         }
     }
 
-    fun toCreateChannel(members: ArrayList<String>? = null) {
+    fun toCreateChannel(members: ArrayList<Contact>? = null) {
         activity.addFragment(TAG_CREATE_CHANNEL_FRAGMENT, R.id.fragment_container) {
             CreateChannelFragment.newInstance(members)
         }

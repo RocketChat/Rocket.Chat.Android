@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.contacts.models.Contact
 
-class SelectedContactsAdapter(private val list: ArrayList<Contact>, private val removeClickListener: (Contact) -> Unit)
+class SelectedContactsAdapter(private val list: ArrayList<Contact>, private val showRemoveButton: Boolean, private val removeClickListener: (Contact) -> Unit)
     : RecyclerView.Adapter<SelectedContactsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectedContactsViewHolder {
@@ -15,7 +15,7 @@ class SelectedContactsAdapter(private val list: ArrayList<Contact>, private val 
 
     override fun onBindViewHolder(holder: SelectedContactsViewHolder, position: Int) {
         val contact: Contact = list[position]
-        holder.bind(contact, removeClickListener)
+        holder.bind(contact, showRemoveButton, removeClickListener)
     }
 
     override fun getItemCount(): Int = list.size
