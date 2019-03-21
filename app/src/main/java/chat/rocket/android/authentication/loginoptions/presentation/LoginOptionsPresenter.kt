@@ -173,7 +173,7 @@ class LoginOptionsPresenter @Inject constructor(
         settings = settingsInteractor.get(currentServer)
     }
 
-    private suspend fun saveAccount(username: String) {
+    private fun saveAccount(username: String) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }
