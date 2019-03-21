@@ -7,7 +7,7 @@ import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.settings.ui.SettingsFragment
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.Job
 
 @Module
 class SettingsFragmentModule {

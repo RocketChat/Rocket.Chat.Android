@@ -76,4 +76,12 @@ class AnalyticsManager @Inject constructor(
             analytics.forEach { it.logResetPassword(resetPasswordSucceeded) }
         }
     }
+
+    fun logVideoConference(event: SubscriptionTypeEvent) {
+        if (analyticsTrackingInteractor.get() && serverUrl != null) {
+            analytics.forEach { it.logVideoConference(event, serverUrl) }
+        }
+    }
+
+
 }

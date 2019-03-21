@@ -1,7 +1,9 @@
 package chat.rocket.android.extensions
 
 import com.google.android.gms.tasks.Task
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 @JvmName("awaitVoid")
 suspend fun Task<Void>.await() = suspendCoroutine<Unit> { continuation ->
