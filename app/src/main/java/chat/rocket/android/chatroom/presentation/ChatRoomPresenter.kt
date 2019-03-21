@@ -1310,4 +1310,8 @@ class ChatRoomPresenter @Inject constructor(
     fun getDraftUnfinishedMessage(): String? {
         return localRepository.get(draftKey)
     }
+
+    fun openCompactWebView(roomId: String, url: String) {
+        navigator.toCompactWebView(roomId, url)
+    }
 }

@@ -1124,6 +1124,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
+    override fun openCompactWebview(roomId: String, url: String) {
+        presenter.openCompactWebView(roomId, url)
+    }
+
     override fun copyPermalink(id: String) {
         presenter.copyPermalink(id)
     }

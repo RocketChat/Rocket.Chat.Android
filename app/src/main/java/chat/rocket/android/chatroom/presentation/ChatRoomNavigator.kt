@@ -4,6 +4,7 @@ import chat.rocket.android.R
 import chat.rocket.android.chatdetails.ui.TAG_CHAT_DETAILS_FRAGMENT
 import chat.rocket.android.chatinformation.ui.messageInformationIntent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
+import chat.rocket.android.chatroom.ui.bottomsheet.WebUrlBottomSheet
 import chat.rocket.android.chatroom.ui.chatRoomIntent
 import chat.rocket.android.favoritemessages.ui.TAG_FAVORITE_MESSAGES_FRAGMENT
 import chat.rocket.android.files.ui.TAG_FILES_FRAGMENT
@@ -134,5 +135,10 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
     fun toMessageInformation(messageId: String) {
         activity.startActivity(activity.messageInformationIntent(messageId = messageId))
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
+    }
+
+    fun toCompactWebView(roomId: String, url: String) {
+        val weburlbottomsheet = WebUrlBottomSheet.newInstance(url, roomId)
+        weburlbottomsheet.show(activity.supportFragmentManager,null)
     }
 }

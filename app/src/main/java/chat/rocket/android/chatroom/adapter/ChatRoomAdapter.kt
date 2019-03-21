@@ -205,7 +205,12 @@ class ChatRoomAdapter(
             val temp = action as ButtonAction
             if (temp.url != null && temp.isWebView != null) {
                 if (temp.isWebView == true) {
-                    //TODO: Open in a configurable sizable webview
+                    //Open in a configurable sizable webview
+                    temp.url?.let {
+                        if(roomId != null){
+                            actionSelectListener?.openCompactWebview(roomId, it)
+                        }
+                    }
                     Timber.d("Open in a configurable sizable webview")
                 } else {
                     //Open in chrome custom tab
@@ -309,5 +314,7 @@ class ChatRoomAdapter(
         fun copyPermalink(id: String)
 
         fun reportMessage(id: String)
+        
+        fun openCompactWebview(roomId: String, it: String)
     }
 }
