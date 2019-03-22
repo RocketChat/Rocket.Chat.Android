@@ -16,6 +16,7 @@ import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.userdetails.ui.TAG_USER_DETAILS_FRAGMENT
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.videoconference.ui.videoConferenceIntent
+import chat.rocket.android.webview.ui.webViewIntent
 
 class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
 
@@ -151,6 +152,11 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
 
     fun toMessageInformation(messageId: String) {
         activity.startActivity(activity.messageInformationIntent(messageId = messageId))
+        activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
+    }
+
+    fun openWebPage(roomId: String, weburl: String) {
+        activity.startActivity(activity.webViewIntent(weburl,null))
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
     }
 }

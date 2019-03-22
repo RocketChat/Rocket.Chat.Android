@@ -375,6 +375,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         super.onPrepareOptionsMenu(menu)
     }
 
+    override fun openWebPage(roomId: String, weburl: String) {
+        presenter.openWebPage(roomId, weburl)
+    }
 
     override fun showMessages(dataSet: List<BaseUiModel<*>>, clearDataSet: Boolean) {
         ui {
