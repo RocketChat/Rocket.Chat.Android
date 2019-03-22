@@ -216,19 +216,19 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Ответить</string>
-    <string name="action_msg_info">Информация о прочтении</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">Редактировать</string>
     <string name="action_msg_copy">Копировать</string>
     <string name="action_msg_quote">Цитировать</string>
     <string name="action_msg_delete">Удалить</string>
-    <string name="action_msg_pin">Закрепить сообщение</string>
-    <string name="action_msg_unpin">Открепить сообщение</string>
-    <string name="action_msg_star">В избранное</string>
-    <string name="action_msg_unstar">Из избранного</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">Поделиться</string>
     <string name="action_title_editing">Редактирование сообщения</string>
     <string name="action_msg_add_reaction">Отреагировать</string>
-    <string name="action_msg_copy_permalink">Копировать ссылку</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO - Add proper translation -->
     <string name="action_msg_report">Пожаловаться</string>
 
     <!-- Permission messages -->
