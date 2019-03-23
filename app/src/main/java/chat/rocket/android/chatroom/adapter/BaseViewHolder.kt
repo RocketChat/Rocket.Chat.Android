@@ -92,7 +92,7 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
             data?.let { vm ->
                 vm.message.let {
                     val menuItems = view.context.inflate(R.menu.message_actions).toList()
-                    menuItems.find { it.itemId == R.id.action_unpin }?.apply {
+                    menuItems.find { it.itemId == R.id.action_pin }?.apply {
                         setTitle(if (it.pinned) R.string.action_unpin else R.string.action_pin)
                         isChecked = it.pinned
                     }
