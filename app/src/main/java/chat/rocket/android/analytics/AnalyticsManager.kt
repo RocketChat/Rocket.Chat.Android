@@ -83,5 +83,69 @@ class AnalyticsManager @Inject constructor(
         }
     }
 
+    fun logMessageActionAddReaction() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionAddReaction() }
+        }
+    }
 
+    fun logMessageActionReply() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionReply() }
+        }
+    }
+
+    fun logMessageActionQuote() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionQuote() }
+        }
+    }
+
+    fun logMessageActionPermalink() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionPermalink() }
+        }
+    }
+
+    fun logMessageActionCopy() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionCopy() }
+        }
+    }
+
+    fun logMessageActionEdit() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionEdit() }
+        }
+    }
+
+    fun logMessageActionInfo() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionInfo() }
+        }
+    }
+
+    fun logMessageActionStar() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionStar() }
+        }
+    }
+
+    fun logMessageActionPin() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionPin() }
+        }
+    }
+
+    fun logMessageActionReport() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionReport() }
+        }
+    }
+
+    fun logMessageActionDelete() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionDelete() }
+        }
+    }
 }

@@ -219,19 +219,19 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Responder</string>
-    <string name="action_msg_info">Informações da mensagem</string>
+    <string name="action_info">Informação</string>
     <string name="action_msg_edit">Editar</string>
     <string name="action_msg_copy">Copiar</string>
     <string name="action_msg_quote">Citar</string>
     <string name="action_msg_delete">Remover</string>
-    <string name="action_msg_pin">Fixar mensagem</string>
-    <string name="action_msg_unpin">Desfixar mensagem</string>
-    <string name="action_msg_star">Marcar como favorita</string>
-    <string name="action_msg_unstar">Desmarcar como favorita</string>
+    <string name="action_pin">Fixar</string>
+    <string name="action_unpin">Desfixar</string>
+    <string name="action_star">Favoritar</string>
+    <string name="action_unstar">Desfavoritar</string>
     <string name="action_msg_share">Compartilhar</string>
     <string name="action_title_editing">Editando mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
-    <string name="action_msg_copy_permalink">Copiar permalink</string>
+    <string name="action_msg_permalink">Link permanente</string>
     <string name="action_msg_report">Reportar</string>
 
     <!-- Permission messages -->

@@ -217,19 +217,19 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Répondre</string>
-    <string name="action_msg_info">Informations sur le message</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">Modifier</string>
     <string name="action_msg_copy">Copier</string>
     <string name="action_msg_quote">Citation</string>
     <string name="action_msg_delete">Effacer</string>
-    <string name="action_msg_pin">Épingler message</string>
-    <string name="action_msg_unpin">Ne plus épingler message</string>
-    <string name="action_msg_star">Ajouter aux Favoris</string>
-    <string name="action_msg_unstar">Retirer des favoris</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">Partager</string>
     <string name="action_title_editing">Modification du message</string>
     <string name="action_msg_add_reaction">Ajouter une réaction</string>
-    <string name="action_msg_copy_permalink">copie permalien</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO Add translation -->
     <string name="action_msg_report">rapport</string>
 
     <!-- Permission messages -->

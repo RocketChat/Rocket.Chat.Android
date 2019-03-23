@@ -220,19 +220,19 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">जवाब दें</string>
-    <string name="action_msg_info">संदेश जानकारी</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">संपादन करें</string>
     <string name="action_msg_copy">कॉपी</string>
     <string name="action_msg_quote">उद्धरण</string>
     <string name="action_msg_delete">मिटायें</string>
-    <string name="action_msg_pin">संदेश को पिन करें</string>
-    <string name="action_msg_unpin">संदेश को पिन से हटाएँ</string>
-    <string name="action_msg_star">संदेश को स्टार करें</string>
-    <string name="action_msg_unstar">सन्देश अतारांकित करें</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">शेयर करें</string>
     <string name="action_title_editing">संपादन संदेश</string>
     <string name="action_msg_add_reaction">प्रतिक्रिया जोड़ें</string>
-    <string name="action_msg_copy_permalink">परमालिंक कॉपी करें</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO - Add proper translation -->
     <string name="action_msg_report">रिपोर्ट</string>
 
     <!-- Permission messages -->

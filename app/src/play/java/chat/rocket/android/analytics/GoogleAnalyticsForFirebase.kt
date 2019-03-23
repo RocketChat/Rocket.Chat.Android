@@ -72,4 +72,26 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
             putString("server", serverUrl)
         })
     }
+
+    override fun logMessageActionAddReaction() = firebaseAnalytics.logEvent("message_action_add_reaction", null)
+
+    override fun logMessageActionReply() = firebaseAnalytics.logEvent("message_action_reply", null)
+
+    override fun logMessageActionQuote() = firebaseAnalytics.logEvent("message_action_quote", null)
+
+    override fun logMessageActionPermalink() = firebaseAnalytics.logEvent("message_action_permalink", null)
+
+    override fun logMessageActionCopy() = firebaseAnalytics.logEvent("message_action_copy", null)
+
+    override fun logMessageActionEdit() = firebaseAnalytics.logEvent("message_action_edit", null)
+
+    override fun logMessageActionInfo() = firebaseAnalytics.logEvent("message_action_info", null)
+
+    override fun logMessageActionStar() = firebaseAnalytics.logEvent("message_action_star", null)
+
+    override fun logMessageActionPin() = firebaseAnalytics.logEvent("message_action_pin", null)
+
+    override fun logMessageActionReport() = firebaseAnalytics.logEvent("message_action_report", null)
+
+    override fun logMessageActionDelete() = firebaseAnalytics.logEvent("message_action_delete", null)
 }
