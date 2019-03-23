@@ -94,7 +94,7 @@ class TwoFAPresenter @Inject constructor(
         }
     }
 
-    private suspend fun saveAccount(me: Myself) {
+    private fun saveAccount(me: Myself) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }
