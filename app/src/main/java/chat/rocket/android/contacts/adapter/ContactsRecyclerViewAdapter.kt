@@ -14,7 +14,6 @@ import chat.rocket.android.contacts.presentation.ContactsPresenter
 import chat.rocket.android.contacts.ui.ContactsFragment
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.showToast
 import chat.rocket.common.model.UserPresence
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
