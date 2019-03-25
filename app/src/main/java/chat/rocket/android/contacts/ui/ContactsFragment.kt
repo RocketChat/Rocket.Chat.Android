@@ -173,7 +173,6 @@ class ContactsFragment : Fragment(), ContactsView {
         selectedContactsAdapter = SelectedContactsAdapter(selectedContacts, true) { contact: Contact ->
             removeFromSelectedContact(contact)
             removeFromSelectionTracker(contact)
-            onSelectionChanged(selectedContacts.size > 0)
         }
 
         selectedContactsRecyclerView = selected_contacts_recycler_view.apply {
@@ -191,13 +190,11 @@ class ContactsFragment : Fragment(), ContactsView {
         if (hasContactsPermissions()) {
             launch {
                 getContactListWhenSynced()
-                ui {
-                    setupTrackerAndFab()
-                }
             }
         } else {
             setupFrameLayout()
         }
+        setupTrackerAndFab()
         setupToolbar()
     }
 
@@ -422,7 +419,6 @@ class ContactsFragment : Fragment(), ContactsView {
                     is ContactsLoadingState.Loaded -> {
                         hideLoading()
                         hideSpinner()
-                        // TODO: Show updated contacts without refreshing the whole view
                         if (state.fromRefreshButton) {
                             getContactList()
                             if (loadedOnce)
@@ -579,18 +575,6 @@ class ContactsFragment : Fragment(), ContactsView {
             }
         }
 
-        contactsSelectionTracker?.addObserver(
-                object : SelectionTracker.SelectionObserver<Long>() {
-                    override fun onSelectionChanged() {
-                        super.onSelectionChanged()
-                        var items = contactsSelectionTracker?.selection!!.size()
-                        if (contactsSelectionTracker?.isSelected(-1) == true)
-                            items--
-                        val showSelection = (items > 0) or (selectedContacts.size > 0)
-                        onSelectionChanged(showSelection)
-                    }
-                })
-
         contactsAdapter.contactsSelectionTracker = contactsSelectionTracker
     }
 
@@ -614,6 +598,7 @@ class ContactsFragment : Fragment(), ContactsView {
             selectedContacts.add(index, contact)
             selectedContactsAdapter.notifyItemInserted(index)
         }
+        onSelectionChanged(selectedContacts.size > 0)
     }
 
     private fun removeFromSelectedContact(contact: Contact) {
@@ -622,6 +607,7 @@ class ContactsFragment : Fragment(), ContactsView {
             selectedContacts.removeAt(index)
             selectedContactsAdapter.notifyItemRemoved(index)
         }
+        onSelectionChanged(selectedContacts.size > 0)
     }
 
     private fun addToSelectionTracker(contact: Contact) {

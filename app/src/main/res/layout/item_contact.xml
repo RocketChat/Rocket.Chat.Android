@@ -99,7 +99,9 @@
             android:text="@string/Invite"
             android:textColor="@color/color_invite"
             android:background="@android:color/transparent"
+            android:layout_marginStart="16dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <android.widget.Button
