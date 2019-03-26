@@ -183,8 +183,10 @@ class ContactsFragment : Fragment(), ContactsView {
 
         val bundle = arguments
         bundle?.getParcelableArrayList<Contact>("SELECTED_CONTACTS")?.let {
-            if (it.isNotEmpty())
+            if (it.isNotEmpty()) {
                 selectedContacts = it
+                onSelectionChanged(selectedContacts.size > 0)
+            }
         }
 
         if (hasContactsPermissions()) {

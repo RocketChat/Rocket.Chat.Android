@@ -30,6 +30,9 @@ class SelectedContactsViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
             removeButton?.setOnClickListener {
                 removeClickListener(contact)
             }
+            avatar?.setOnClickListener {
+                removeClickListener(contact)
+            }
         }
     }
 
