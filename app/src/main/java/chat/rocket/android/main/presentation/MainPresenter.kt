@@ -1,6 +1,7 @@
 package chat.rocket.android.main.presentation
 
 import android.content.Context
+import android.content.res.Configuration
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.emoji.Emoji
@@ -11,6 +12,7 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.uimodel.NavHeaderUiModel
 import chat.rocket.android.main.uimodel.NavHeaderUiModelMapper
 import chat.rocket.android.push.GroupedPush
+import chat.rocket.android.server.domain.SaveCurrentLanguageInteractor
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
@@ -39,6 +41,7 @@ import chat.rocket.core.internal.rest.me
 import chat.rocket.core.model.Myself
 import kotlinx.coroutines.channels.Channel
 import timber.log.Timber
+import java.util.Locale
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
@@ -50,6 +53,7 @@ class MainPresenter @Inject constructor(
     private val refreshPermissionsInteractor: RefreshPermissionsInteractor,
     private val navHeaderMapper: NavHeaderUiModelMapper,
     private val saveAccountInteractor: SaveAccountInteractor,
+    private val saveLanguageInteractor: SaveCurrentLanguageInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
     private val groupedPush: GroupedPush,
     serverInteractor: GetCurrentServerInteractor,
@@ -240,5 +244,23 @@ class MainPresenter @Inject constructor(
         groupedPush.hostToPushMessageList[currentServer]?.let { list ->
             list.removeAll { it.info.roomId == chatRoomId }
         }
+    }
+
+    fun setLocale(language: String, baseContext: Context) {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
+        saveLanguageInteractor.save(language)
+    }
+
+    fun setLocaleWithRegion(lang: String, country: String, baseContext: Context) {
+        val locale = Locale(lang, country)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
+        saveLanguageInteractor.save(lang)
     }
 }

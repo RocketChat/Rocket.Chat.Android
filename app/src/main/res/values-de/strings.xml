@@ -87,6 +87,13 @@
         <item>Portuguese(BR)</item> <!-- TODO Add translation -->
         <item>Portuguese(PT)</item> <!-- TODO Add translation -->
         <item>Chinese</item> <!-- TODO Add translation -->
+        <item>German</item> <!-- TODO Add translation -->
+        <item>Spanish</item> <!-- TODO Add translation -->
+        <item>Urdu</item> <!-- TODO Add translation -->
+        <item>Chinese</item> <!-- TODO Add translation -->
+        <item>French</item> <!-- TODO Add translation -->
+        <item>Turkish</item> <!-- TODO Add translation -->
+        <item>Ukrainian</item> <!-- TODO Add translation -->
     </string-array>
 
     <!-- Regular information messages -->

@@ -96,6 +96,13 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
         <item>Portuguese(BR)</item>
         <item>Portuguese(PT)</item>
         <item>Chinese</item>
+        <item>German</item>
+        <item>Spanish</item>
+        <item>Urdu</item>
+        <item>Chinese</item>
+        <item>French</item>
+        <item>Turkish</item>
+        <item>Ukrainian</item>
     </string-array>
 
     <!-- Regular information messages -->

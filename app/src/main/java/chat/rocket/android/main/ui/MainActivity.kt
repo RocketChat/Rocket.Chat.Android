@@ -5,7 +5,6 @@ import android.app.Activity
 import androidx.appcompat.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
@@ -42,14 +41,10 @@ import kotlinx.android.synthetic.main.nav_header.view.*
 import javax.inject.Inject
 import android.app.NotificationManager
 import chat.rocket.android.server.domain.GetCurrentLanguageInteractor
-import chat.rocket.android.server.domain.SaveCurrentLanguageInteractor
-import java.util.Locale
+
 
 
 private const val CURRENT_STATE = "current_state"
-private const val SETTING = "settings"
-private const val MY_LANG = "my_lang"
-
 
 class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     HasSupportFragmentInjector {
@@ -63,8 +58,6 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     lateinit var permissions: PermissionsInteractor
     @Inject
     lateinit var getLanguageInteractor: GetCurrentLanguageInteractor
-    @Inject
-    lateinit var saveLanguageInteractor: SaveCurrentLanguageInteractor
     private var isFragmentAdded: Boolean = false
     private var expanded = false
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
@@ -293,25 +286,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     private fun loadLocale() {
-        val currentLanguage = getLanguageInteractor.get()!!
-        setLocale(currentLanguage)
-    }
-
-    fun setLocale(language: String) {
-        val locale = Locale(language)
-        Locale.setDefault(locale)
-        val config = Configuration()
-        config.locale = locale
-        baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
-        saveLanguageInteractor.save(language)
-    }
-
-    fun setLocaleWithRegion(lang: String, country: String) {
-        val locale = Locale(lang, country)
-        Locale.setDefault(locale)
-        val config = Configuration()
-        config.locale = locale
-        baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
-        saveLanguageInteractor.save(lang)
+        val currentLanguage = getLanguageInteractor.get()
+        if (currentLanguage != null) {
+            presenter.setLocale(currentLanguage, baseContext)
+        }
     }
 }
