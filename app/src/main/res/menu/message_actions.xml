@@ -2,60 +2,57 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/action_message_info"
-        android:icon="@drawable/ic_action_message_info_outline_24dp"
-        android:title="@string/action_msg_info" />
-    <item
-        android:id="@+id/action_message_reply"
-        android:icon="@drawable/ic_action_message_reply_24dp"
-        android:title="@string/action_msg_reply" />
-    <item
-        android:id="@+id/action_message_edit"
-        android:icon="@drawable/ic_action_message_edit_24dp"
-        android:title="@string/action_msg_edit" />
-
-    <item
-        android:id="@+id/action_menu_msg_react"
+        android:id="@+id/action_add_reaction"
         android:icon="@drawable/ic_add_reaction"
         android:title="@string/action_msg_add_reaction" />
 
     <item
-        android:id="@+id/action_message_permalink"
-        android:icon="@drawable/ic_action_message_link_24dp"
-        android:title="@string/action_msg_copy_permalink" />
+        android:id="@+id/action_reply"
+        android:icon="@drawable/ic_action_message_reply_24dp"
+        android:title="@string/action_msg_reply" />
 
     <item
-        android:id="@+id/action_message_quote"
+        android:id="@+id/action_quote"
         android:icon="@drawable/ic_action_message_quote_24dp"
         android:title="@string/action_msg_quote" />
 
     <item
-        android:id="@+id/action_message_copy"
+        android:id="@+id/action_permalink"
+        android:icon="@drawable/ic_action_message_link_24dp"
+        android:title="@string/action_msg_permalink" />
+
+    <item
+        android:id="@+id/action_copy"
         android:icon="@drawable/ic_action_message_copy_24dp"
         android:title="@string/action_msg_copy" />
 
-    <!--<item-->
-    <!--android:id="@+id/action_menu_msg_share"-->
-    <!--andrtextIconicon="@drawable/ic_share_black_24px"-->
-    <!--android:title="@string/action_msg_share" />-->
+    <item
+        android:id="@+id/action_edit"
+        android:icon="@drawable/ic_action_message_edit_24dp"
+        android:title="@string/action_msg_edit" />
 
     <item
-        android:id="@+id/action_message_star"
+        android:id="@+id/action_info"
+        android:icon="@drawable/ic_action_message_info_outline_24dp"
+        android:title="@string/action_info" />
+
+    <item
+        android:id="@+id/action_star"
         android:icon="@drawable/ic_action_message_star_24dp"
-        android:title="@string/action_msg_star" />
+        android:title="@string/action_star" />
 
     <item
-        android:id="@+id/action_message_unpin"
+        android:id="@+id/action_pin"
         android:icon="@drawable/ic_action_message_pin_24dp"
-        android:title="@string/action_msg_pin" />
+        android:title="@string/action_pin" />
 
     <item
-        android:id="@+id/action_message_report"
+        android:id="@+id/action_report"
         android:icon="@drawable/ic_action_message_report_24dp"
         android:title="@string/action_msg_report" />
 
     <item
-        android:id="@+id/action_message_delete"
+        android:id="@+id/action_delete"
         android:icon="@drawable/ic_action_message_delete_24dp"
         android:title="@string/action_msg_delete" />
 </menu>

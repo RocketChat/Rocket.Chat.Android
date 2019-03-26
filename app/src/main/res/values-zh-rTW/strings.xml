@@ -216,19 +216,19 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">回覆</string>
-    <string name="action_msg_info">訊息通知</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">編輯</string>
     <string name="action_msg_copy">複製</string>
     <string name="action_msg_quote">引用</string>
     <string name="action_msg_delete">刪除</string>
-    <string name="action_msg_pin">釘選訊息</string>
-    <string name="action_msg_unpin">取消釘選訊息</string>
-    <string name="action_msg_star">標註訊息</string>
-    <string name="action_msg_unstar">取消標註訊息</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">分享訊息</string>
     <string name="action_title_editing">編輯訊息</string>
     <string name="action_msg_add_reaction">增加操作</string>
-    <string name="action_msg_copy_permalink">複製永久連結</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO - Add proper translation -->
     <string name="action_msg_report">回報</string>
 
     <!-- Permission messages -->

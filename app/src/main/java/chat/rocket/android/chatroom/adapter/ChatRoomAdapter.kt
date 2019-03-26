@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.chatroom.uimodel.AttachmentUiModel
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
@@ -29,7 +30,8 @@ class ChatRoomAdapter(
     private val actionSelectListener: OnActionSelected? = null,
     private val enableActions: Boolean = true,
     private val reactionListener: EmojiReactionListener? = null,
-    private val navigator: ChatRoomNavigator? = null
+    private val navigator: ChatRoomNavigator? = null,
+    private val analyticsManager: AnalyticsManager? = null
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
     private val dataSet = ArrayList<BaseUiModel<*>>()
 
@@ -239,47 +241,63 @@ class ChatRoomAdapter(
         override fun isActionsEnabled(): Boolean = enableActions
 
         override fun onActionSelected(item: MenuItem, message: Message) {
-            message.apply {
-                when (item.itemId) {
-                    R.id.action_message_info -> {
-                        actionSelectListener?.showMessageInfo(id)
-                    }
-                    R.id.action_message_reply -> {
-                        if (roomName != null && roomType != null) {
-                            actionSelectListener?.citeMessage(roomName, roomType, id, true)
+            if (analyticsManager != null && roomName != null && roomType != null && actionSelectListener != null) {
+                with(message) {
+                    when (item.itemId) {
+                        R.id.action_info -> {
+                            actionSelectListener.showMessageInfo(id)
+                            analyticsManager.logMessageActionInfo()
                         }
-                    }
-                    R.id.action_message_quote -> {
-                        if (roomName != null && roomType != null) {
-                            actionSelectListener?.citeMessage(roomName, roomType, id, false)
+
+                        R.id.action_reply -> {
+                            actionSelectListener.citeMessage(roomName, roomType, id, true)
+                            analyticsManager.logMessageActionReply()
                         }
-                    }
-                    R.id.action_message_copy -> {
-                        actionSelectListener?.copyMessage(id)
-                    }
-                    R.id.action_message_edit -> {
-                        actionSelectListener?.editMessage(roomId, id, message.message)
-                    }
-                    R.id.action_message_star -> {
-                        actionSelectListener?.toggleStar(id, !item.isChecked)
-                    }
-                    R.id.action_message_unpin -> {
-                        actionSelectListener?.togglePin(id, !item.isChecked)
-                    }
-                    R.id.action_message_delete -> {
-                        actionSelectListener?.deleteMessage(roomId, id)
-                    }
-                    R.id.action_menu_msg_react -> {
-                        actionSelectListener?.showReactions(id)
-                    }
-                    R.id.action_message_permalink -> {
-                        actionSelectListener?.copyPermalink(id)
-                    }
-                    R.id.action_message_report -> {
-                        actionSelectListener?.reportMessage(id)
-                    }
-                    else -> {
-                        TODO("Not implemented")
+
+                        R.id.action_quote -> {
+                            actionSelectListener.citeMessage(roomName, roomType, id, false)
+                            analyticsManager.logMessageActionQuote()
+                        }
+
+                        R.id.action_copy -> {
+                            actionSelectListener.copyMessage(id)
+                            analyticsManager.logMessageActionCopy()
+                        }
+
+                        R.id.action_edit -> {
+                            actionSelectListener.editMessage(roomId, id, this.message)
+                            analyticsManager.logMessageActionEdit()
+                        }
+
+                        R.id.action_star -> {
+                            actionSelectListener.toggleStar(id, !item.isChecked)
+                            analyticsManager.logMessageActionStar()
+                        }
+
+                        R.id.action_pin -> {
+                            actionSelectListener.togglePin(id, !item.isChecked)
+                            analyticsManager.logMessageActionPin()
+                        }
+
+                        R.id.action_delete -> {
+                            actionSelectListener.deleteMessage(roomId, id)
+                            analyticsManager.logMessageActionDelete()
+                        }
+
+                        R.id.action_add_reaction -> {
+                            actionSelectListener.showReactions(id)
+                            analyticsManager.logMessageActionAddReaction()
+                        }
+
+                        R.id.action_permalink -> {
+                            actionSelectListener.copyPermalink(id)
+                            analyticsManager.logMessageActionPermalink()
+                        }
+
+                        R.id.action_report -> {
+                            actionSelectListener.reportMessage(id)
+                            analyticsManager.logMessageActionReport()
+                        }
                     }
                 }
             }
