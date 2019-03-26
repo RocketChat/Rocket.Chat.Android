@@ -56,8 +56,6 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     lateinit var presenter: MainPresenter
     @Inject
     lateinit var permissions: PermissionsInteractor
-    @Inject
-    lateinit var getLanguageInteractor: GetCurrentLanguageInteractor
     private var isFragmentAdded: Boolean = false
     private var expanded = false
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
@@ -77,9 +75,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         presenter.loadServerAccounts()
         presenter.loadCurrentInfo()
         presenter.loadEmojis()
+        presenter.loadLocale(baseContext)
         setupToolbar()
         setupNavigationView()
-        loadLocale()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -283,12 +281,5 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     override fun hideProgress() {
         progressDialog?.dismiss()
         progressDialog = null
-    }
-
-    private fun loadLocale() {
-        val currentLanguage = getLanguageInteractor.get()
-        if (currentLanguage != null) {
-            presenter.setLocale(currentLanguage, baseContext)
-        }
     }
 }

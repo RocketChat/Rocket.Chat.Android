@@ -146,7 +146,6 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
 
     fun changeLanguage() {
         val languages = resources.getStringArray(R.array.languages)
-        val mainActivity =(activity as? MainActivity)
 
         context?.let {
             AlertDialog.Builder(it)
@@ -154,67 +153,59 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                 .setSingleChoiceItems(languages, -1) { dialog, which ->
                     when (which) {
                         0 -> {
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("en", it1) }
+                            presenter.setLocale("en", activity!!.baseContext)
                             activity?.recreate()
                         }
                         1 -> {
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("hi", it1) }
+                            presenter.setLocale("hi", activity!!.baseContext)
                             activity?.recreate()
                         }
                         2 -> {
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("ja", it1) }
+                            presenter.setLocale("ja", activity!!.baseContext)
                             activity?.recreate()
                         }
                         3 -> {
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("ru", it1) }
+                            presenter.setLocale("ru", activity!!.baseContext)
                             activity?.recreate()
                         }
                         4 -> {
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("it", it1) }
+                            presenter.setLocale("it", activity!!.baseContext)
                             activity?.recreate()
                         }
                         5->{
-                            activity?.baseContext?.let { it1 ->
-                                presenter.setLocaleWithRegion("pt","BR",
-                                    it1
-                                )
-                            }
+                            presenter.setLocaleWithRegion("pt", "BR", activity!!.baseContext)
                             activity?.recreate()
                         }
                         6->{
-                            activity?.baseContext?.let { it1 ->
-                                presenter.setLocaleWithRegion("pt","PT",
-                                    it1
-                                )
-                            }
+                            presenter.setLocaleWithRegion("pt", "PT", activity!!.baseContext)
                             activity?.recreate()
                         }
                         7->{
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("zh", it1) }
+                            presenter.setLocale("zh", activity!!.baseContext)
                             activity?.recreate()
                         }
                         8->{
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("de", it1) }
+                            presenter.setLocale("de", activity!!.baseContext)
                             activity?.recreate()
                         }
                         9->{
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("es", it1) }
+                            presenter.setLocale("es", activity!!.baseContext)
                             activity?.recreate()
                         }
                         10->{
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("fa", it1) }
+                            presenter.setLocale("fa", activity!!.baseContext)
                             activity?.recreate()
                         }
                         11->{
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("fr", it1) }
+                            presenter.setLocale("fr", activity!!.baseContext)
                             activity?.recreate()
                         }
                         12->{
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("tr", it1) }
+                            presenter.setLocale("tr", activity!!.baseContext)
                             activity?.recreate()
                         }
                         13->{
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("uk", it1) }
+                            presenter.setLocale("uk", activity!!.baseContext)
                             activity?.recreate()
                         }
                     }

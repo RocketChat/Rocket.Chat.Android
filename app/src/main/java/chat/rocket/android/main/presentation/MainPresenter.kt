@@ -12,6 +12,7 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.uimodel.NavHeaderUiModel
 import chat.rocket.android.main.uimodel.NavHeaderUiModelMapper
 import chat.rocket.android.push.GroupedPush
+import chat.rocket.android.server.domain.GetCurrentLanguageInteractor
 import chat.rocket.android.server.domain.SaveCurrentLanguageInteractor
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -54,6 +55,7 @@ class MainPresenter @Inject constructor(
     private val navHeaderMapper: NavHeaderUiModelMapper,
     private val saveAccountInteractor: SaveAccountInteractor,
     private val saveLanguageInteractor: SaveCurrentLanguageInteractor,
+    private var getLanguageInteractor: GetCurrentLanguageInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
     private val groupedPush: GroupedPush,
     serverInteractor: GetCurrentServerInteractor,
@@ -262,5 +264,12 @@ class MainPresenter @Inject constructor(
         config.locale = locale
         baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
         saveLanguageInteractor.save(lang)
+    }
+
+     fun loadLocale(baseContext: Context) {
+        val currentLanguage = getLanguageInteractor.get()
+        if (currentLanguage != null) {
+            setLocale(currentLanguage, baseContext)
+        }
     }
 }
