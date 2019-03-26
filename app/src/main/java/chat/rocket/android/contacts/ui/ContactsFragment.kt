@@ -62,13 +62,13 @@ import timber.log.Timber
  */
 class ContactsFragment : Fragment(), ContactsView {
 
+    //FIXME: Invite button not working during group creation
     //FIXME: Fix the blank selected contacts recycler view upon screen rotate
     //TODO: Add animations to ticks that appear upon selecting a contact
     //TODO: Add animation to contacts list translating down when contacts are selected
     //FIXME: Remove the blink when a contact is selected again after all the contacts are deselected
     //TODO: When the group is being selected via long press from the new chat screen, change the title to create group from new chat
     //TODO: Add support for square avatars during group creation flow
-    //FIXME: Invite button not working during group creation
 
     @Inject
     lateinit var presenter: ContactsPresenter
@@ -496,11 +496,11 @@ class ContactsFragment : Fragment(), ContactsView {
         }
 
         finalList.addAll(userList)
-        if(contactsList.size > 0) {
+        if(contactsList.size > 0 && !enableGroups) {
             finalList.add(ContactsHeaderItemHolder(getString(R.string.Invite_contacts)))
             finalList.addAll(contactsList)
         }
-        if(spotlightResult !== null && spotlightResult.size >0) {
+        if(spotlightResult !== null && spotlightResult.size > 0) {
             finalList.add(ContactsHeaderItemHolder(getString(R.string.Spotlight_Result)))
             spotlightResult.forEach { item ->
                 val username = (item.data as Contact).getUsername()
