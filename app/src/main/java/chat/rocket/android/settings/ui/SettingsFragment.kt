@@ -174,17 +174,13 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                         }
                         5->{
                             activity?.baseContext?.let { it1 ->
-                                presenter.setLocaleWithRegion("pt", "BR",
-                                    it1
-                                )
+                                presenter.setLocaleWithRegion("pt", "BR", it1)
                             }
                             activity?.recreate()
                         }
                         6->{
                             activity?.baseContext?.let { it1 ->
-                                presenter.setLocaleWithRegion("pt", "PT",
-                                    it1
-                                )
+                                presenter.setLocaleWithRegion("pt", "PT", it1)
                             }
                             activity?.recreate()
                         }
