@@ -153,63 +153,59 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                 .setSingleChoiceItems(languages, -1) { dialog, which ->
                     when (which) {
                         0 -> {
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("en", it1) }
+                            presenter.setLocale("en", it)
                             activity?.recreate()
                         }
                         1 -> {
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("hi", it1) }
+                            presenter.setLocale("hi", it)
                             activity?.recreate()
                         }
                         2 -> {
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("ja", it1) }
+                            presenter.setLocale("ja", it)
                             activity?.recreate()
                         }
                         3 -> {
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("ru", it1) }
+                            presenter.setLocale("ru", it)
                             activity?.recreate()
                         }
                         4 -> {
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("it", it1) }
+                            presenter.setLocale("it", it)
                             activity?.recreate()
                         }
                         5->{
-                            activity?.baseContext?.let { it1 ->
-                                presenter.setLocaleWithRegion("pt", "BR", it1)
-                            }
+                            presenter.setLocaleWithRegion("pt", "BR", it)
                             activity?.recreate()
                         }
                         6->{
-                            activity?.baseContext?.let { it1 ->
-                                presenter.setLocaleWithRegion("pt", "PT", it1)
-                            }
+                            presenter.setLocaleWithRegion("pt", "PT", it)
                             activity?.recreate()
                         }
                         7->{
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("zh", it1) }
+                            presenter.setLocale("zh", it)
                             activity?.recreate()
                         }
                         8->{
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("de", it1) }
+                            presenter.setLocale("de", it)
                             activity?.recreate()
                         }
                         9->{
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("es", it1) }
+                            presenter.setLocale("es", it)
                             activity?.recreate()
                         }
                         10->{
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("fa", it1) }
+                            presenter.setLocale("fa", it)
                             activity?.recreate()
                         }
                         11->{
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("fr", it1) }
+                            presenter.setLocale("fr", it)
                             activity?.recreate()
                         }
                         12->{
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("tr", it1) }
+                            presenter.setLocale("tr", it)
                             activity?.recreate()
                         }
                         13->{
-                            activity?.baseContext?.let { it1 -> presenter.setLocale("uk", it1) }
+                            presenter.setLocale("uk", it)
                             activity?.recreate()
                         }
                     }
