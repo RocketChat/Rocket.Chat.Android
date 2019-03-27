@@ -73,6 +73,7 @@ ext {
 
             appCompat             : "androidx.appcompat:appcompat:${versions.appCompat}",
             recyclerview          : "androidx.recyclerview:recyclerview:${versions.recyclerview}",
+            recyclerviewSelection : "androidx.recyclerview:recyclerview-selection:${versions.recyclerview}",
             constraintlayout      : "androidx.constraintlayout:constraintlayout:${versions.constraintLayout}",
             cardview              : "androidx.cardview:cardview:${versions.cardview}",
             browser               : "androidx.browser:browser:${versions.browser}",

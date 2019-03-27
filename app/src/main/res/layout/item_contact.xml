@@ -34,9 +34,23 @@
             android:layout_marginBottom="0dp"
             android:layout_marginEnd="0dp"
             android:background="@drawable/circle_background_white"
+            android:src="@drawable/ic_status_invisible_12dp"
             android:padding="1dp"
             android:visibility="gone"
             tools:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/contact_image_avatar" />
+
+        <ImageView
+            android:id="@+id/contact_checkbox"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="0dp"
+            android:background="@drawable/circle_background_white"
+            android:src="@drawable/ic_check_white_on_green_24dp"
+            android:padding="1dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/contact_image_avatar" />
 
@@ -85,7 +99,9 @@
             android:text="@string/Invite"
             android:textColor="@color/color_invite"
             android:background="@android:color/transparent"
+            android:layout_marginStart="16dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <android.widget.Button

@@ -144,7 +144,6 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     override fun onResume() {
-        supportFragmentManager.popBackStackImmediate("contactsFragment", 1)
         super.onResume()
 
         if (intent?.data == "connect://profile.update".toUri()) {
@@ -353,7 +352,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
 
-            var request = {
+            val request = {
                 ActivityCompat.requestPermissions(this,
                         arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS),
                         PERMISSIONS_REQUEST_RW_CONTACTS)
@@ -362,7 +361,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             if (!SharedPreferenceHelper.getBoolean(
                             Constants.CONTACTS_ACCESS_PERMISSION_REQUESTED, false) or userRequestsPermissions) {
                 SharedPreferenceHelper.putBoolean(Constants.CONTACTS_ACCESS_PERMISSION_REQUESTED, true)
-                contactsPermissionAlertDialog(request)
+                contactsPermissionAlertDialog(request, false, userRequestsPermissions)
             }
 
         } else {
@@ -394,7 +393,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     syncContacts(false)
                 } else if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)) {
-                    var showRationale: Boolean = shouldShowRequestPermissionRationale(permissions[0])
+                    val showRationale: Boolean = shouldShowRequestPermissionRationale(permissions[0])
                     if (!showRationale) {
                         // User selected 'Do not show again' when they were previously presented the permissions dialogue
                         contactsPermissionAlertDialog(willNotShowPermissions = true)
@@ -408,7 +407,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
     }
 
-    fun contactsPermissionAlertDialog(callback: () -> Unit? = {}, willNotShowPermissions: Boolean = false) {
+    private fun contactsPermissionAlertDialog(callback: () -> Unit? = {}, willNotShowPermissions: Boolean = false, userRequestsPermissions: Boolean = false) {
 
         val view = layoutInflater.inflate(R.layout.widechat_contact_permissions_dialog, null)
         val dialog = AlertDialog.Builder(this)
@@ -424,6 +423,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             positiveButton.setOnClickListener(View.OnClickListener {
                 callback()
                 dialog.dismiss()
+                if (userRequestsPermissions)
+                    this.supportFragmentManager.popBackStack()
             })
             negativeButton.setOnClickListener(View.OnClickListener {
                 dialog.dismiss()
