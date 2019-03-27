@@ -42,6 +42,11 @@ import okhttp3.RequestBody
 import okhttp3.MediaType
 import okhttp3.Protocol
 
+// EAR Developing
+import chat.rocket.android.util.extensions.encodeToBase64
+import timber.log.Timber
+
+
 class ProfilePresenter @Inject constructor(
     private val view: ProfileView,
     private val strategy: CancelStrategy,
@@ -97,6 +102,7 @@ class ProfilePresenter @Inject constructor(
 
     // WIDECHAT - profile update with SSO
     fun setUpdateUrl(updatePath: String?, onClickCallback: (String?) -> Unit?) {
+        var telephoneNumber: String? = ""
         launchUI(strategy) {
             try {
                 withContext(DefaultDispatcher) {
@@ -105,7 +111,10 @@ class ProfilePresenter @Inject constructor(
                     checkEnabledAccounts(serverUrl)
                 }
                 retryIO { currentAccessToken = client.getAccessToken(customOauthServiceName.toString()) }
-                onClickCallback("${customOauthHost}${updatePath}${currentAccessToken}")
+//                retryIO { telephoneNumber = client.getTelephoneNumber(customOauthServiceName.toString()) }
+
+                val tokenInfo = "{\"userid\":\"${user?.username}\",\"telephoneNumber\":\"${telephoneNumber}\",\"email\":\"${user?.emails?.getOrNull(0)?.address ?: ""}\"}"
+                onClickCallback("${customOauthHost}${updatePath}access_token=${currentAccessToken}&token_info=${tokenInfo.encodeToBase64()}")
             } catch (ex: Exception) {
                 view.showMessage(ex)
             }
