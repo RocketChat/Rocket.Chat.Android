@@ -104,6 +104,7 @@ dependencies {
 
     implementation libraries.appCompat
     implementation libraries.recyclerview
+    implementation libraries.recyclerviewSelection
     implementation libraries.constraintlayout
     implementation libraries.cardview
     implementation libraries.browser

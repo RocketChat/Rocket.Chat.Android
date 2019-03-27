@@ -1,5 +1,6 @@
 package chat.rocket.android.chatrooms.ui
 
+import android.animation.Animator
 import androidx.appcompat.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
@@ -61,6 +62,7 @@ import chat.rocket.android.settings.ui.SettingsFragment
 import chat.rocket.android.util.extensions.avatarUrl
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.app_bar.*
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
 
 internal const val TAG_CHAT_ROOMS_FRAGMENT = "ChatRoomsFragment"
@@ -97,11 +99,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var searchCloseButton: ImageView? = null
     private var profileButton: SimpleDraweeView? = null
     private var currentUserStatusIcon: ImageView? = null
+    private var currentUserStatusJob: Job? = null
     private var deepLinkInfo: DeepLinkInfo? = null
     // handles that recurring connection status bug in widechat
     private var currentlyConnected: Boolean? = false
 
     companion object {
+        private var isFABOpen: Boolean = false
         fun newInstance(chatRoomId: String? = null, deepLinkInfo: DeepLinkInfo? = null): ChatRoomsFragment {
             return ChatRoomsFragment().apply {
                 arguments = Bundle(1).apply {
@@ -146,6 +150,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override fun onPause() {
         clearSearch()
+        currentUserStatusIcon?.isGone = true
+        currentUserStatusJob?.cancel()
         super.onPause()
     }
 
@@ -253,7 +259,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 // to recreate the entire menu...
                 viewModel.showLastMessage = true
                 activity?.invalidateOptionsMenu()
-                create_new_channel_fab.isVisible = true
+                menu_fab.isVisible = true
                 queryChatRoomsByName(null)
                 return true
             }
@@ -261,7 +267,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 viewModel.showLastMessage = false
                 sortView?.isVisible = false
-                create_new_channel_fab.isVisible = false
+                menu_fab.isVisible = false
                 return true
             }
         }
@@ -523,12 +529,16 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         with((activity as AppCompatActivity?)?.supportActionBar) {
             currentUserStatusIcon = this?.getCustomView()?.findViewById(R.id.self_status)
         }
-        launch {
-            val currentUser = presenter.getCurrentUser(false)
-            val drawable = DrawableHelper.getUserStatusDrawable(currentUser?.status, context!!)
-            ui {
-                currentUserStatusIcon?.isVisible = true
-                currentUserStatusIcon?.setImageDrawable(drawable)
+        currentUserStatusJob = launch {
+            try {
+                val currentUser = presenter.getCurrentUser(false)
+                val drawable = DrawableHelper.getUserStatusDrawable(currentUser?.status, context!!)
+                ui {
+                    currentUserStatusIcon?.isVisible = true
+                    currentUserStatusIcon?.setImageDrawable(drawable)
+                }
+            } catch (e: Exception) {
+                throw e
             }
         }
     }
@@ -543,14 +553,81 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     private fun setupFab() {
-        create_new_channel_fab.setOnClickListener { view ->
-            currentUserStatusIcon?.isGone = true
-            val contactsFragment = ContactsFragment()
-            val transaction = activity?.supportFragmentManager?.beginTransaction()
-            transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-            transaction?.replace(this.id, contactsFragment, "contactsFragment")
-            transaction?.addToBackStack("contactsFragment")?.commit()
+        new_chat_fab_item.translationY = -resources.getDimension(R.dimen.new_chat_translate)
+        new_group_fab_item.translationY = -resources.getDimension(R.dimen.new_group_translate)
+        new_chat_fab_item.animateFABMenuItem(0F, 0F, 0F)
+        new_group_fab_item.animateFABMenuItem(0F, 0F, 0F)
+
+        menu_fab.setOnClickListener { view ->
+            when (isFABOpen) {
+                true -> hideFABMenu()
+                false -> showFABMenu()
+            }
         }
+        new_chat_fab_item.setOnClickListener {
+            hideFABMenu()
+            openFragment(ContactsFragment(), "contactsFragment")
+        }
+        new_chat_fab.setOnClickListener {
+            hideFABMenu()
+            openFragment(ContactsFragment(), "contactsFragment")
+        }
+        new_group_fab_item.setOnClickListener {
+            hideFABMenu()
+            openFragment(ContactsFragment.newInstance(enableGroups = true), "contactsFragment")
+        }
+        new_group_fab.setOnClickListener {
+            hideFABMenu()
+            openFragment(ContactsFragment.newInstance(enableGroups = true), "contactsFragment")
+        }
+        bg_fab_menu.setOnClickListener {
+            hideFABMenu()
+        }
+    }
+
+    private fun openFragment(fragment: Fragment, name: String) {
+        val transaction = activity?.supportFragmentManager?.beginTransaction()
+        transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+        transaction?.replace(this.id, fragment, name)
+        transaction?.addToBackStack(name)?.commit()
+    }
+
+    private fun showFABMenu() {
+        isFABOpen = true
+
+        bg_fab_menu.visibility = View.VISIBLE
+        new_chat_fab_item.visibility = View.VISIBLE
+        new_group_fab_item.visibility = View.VISIBLE
+        bg_fab_menu.animate().alpha(1F)
+        menu_fab.animate().rotation(135F)
+        new_chat_fab_item.animateFABMenuItem(-resources.getDimension(R.dimen.new_chat_translate), 1F, 1F)
+        new_group_fab_item.animateFABMenuItem(-resources.getDimension(R.dimen.new_group_translate), 1F, 1F)
+    }
+
+    private fun hideFABMenu() {
+        isFABOpen = false
+        bg_fab_menu.animate().alpha(0F)
+        bg_fab_menu.visibility = View.GONE
+        menu_fab.animate().rotation(0F)
+        new_group_fab_item.animateFABMenuItem(0F, 0F, 0F)
+        new_chat_fab_item.animateFABMenuItem(0F, 0F, 0F,
+                FABAnimatorListener(listOf(new_chat_fab_item, new_group_fab_item)))
+    }
+
+    class FABAnimatorListener(val views: List<View>) : Animator.AnimatorListener {
+        override fun onAnimationRepeat(animator: Animator?) {}
+
+        override fun onAnimationEnd(animator: Animator?) {
+            if(!ChatRoomsFragment.isFABOpen){
+                views.forEach {
+                    it.visibility = View.GONE
+                }
+            }
+        }
+
+        override fun onAnimationStart(animator: Animator?) {}
+
+        override fun onAnimationCancel(animator: Animator?) {}
     }
 
     fun processDeepLink(deepLinkInfo: DeepLinkInfo) {

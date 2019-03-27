@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="shape"
+            type="chat.rocket.android.helper.Constants" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/selected_contact_image_avatar"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:padding="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:roundedCornerRadius="@dimen/circle_avatar_corner_radius" />
+
+        <ImageView
+            android:id="@+id/remove_selected_contact"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/circle_background_white"
+            android:padding="1dp"
+            android:src="@drawable/ic_cancel_gray_24dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/selected_contact_image_avatar"
+            app:layout_constraintEnd_toEndOf="@id/selected_contact_image_avatar" />
+
+        <TextView
+            android:id="@+id/selected_contact_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:singleLine="true"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selected_contact_image_avatar"
+            tools:text="John Doe" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
