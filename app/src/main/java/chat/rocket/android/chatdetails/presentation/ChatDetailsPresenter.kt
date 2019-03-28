@@ -7,8 +7,10 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryIO
+import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
+import chat.rocket.core.internal.rest.favorite
 import chat.rocket.core.internal.rest.getInfo
 import chat.rocket.core.model.Room
 import timber.log.Timber
@@ -25,6 +27,31 @@ class ChatDetailsPresenter @Inject constructor(
     private val manager = factory.create(currentServer)
     private val client = manager.client
 
+    fun toggleFavoriteChatRoom(roomId: String, isFavorite: Boolean) {
+        launchUI(strategy) {
+            try {
+                // Note: If it is favorite then the user wants to remove the favorite - and vice versa.
+                retryIO("favorite($roomId, ${!isFavorite})") {
+                    client.favorite(roomId, !isFavorite)
+                }
+                view.showFavoriteIcon(!isFavorite)
+            } catch (e: RocketChatException) {
+                Timber.e(
+                    e,
+                    "Error while trying to favorite or removing the favorite of a chat room."
+                )
+                e.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            }
+        }
+    }
+
+    fun toVideoConference(roomId: String, chatRoomType: String) =
+        navigator.toVideoConference(roomId, chatRoomType)
+
     fun getDetails(chatRoomId: String, chatRoomType: String) {
         launchUI(strategy) {
             try {
@@ -32,7 +59,7 @@ class ChatDetailsPresenter @Inject constructor(
                     client.getInfo(chatRoomId, null, roomTypeOf(chatRoomType))
                 }
                 view.displayDetails(roomToChatDetails(room))
-            } catch(exception: Exception) {
+            } catch (exception: Exception) {
                 Timber.e(exception)
                 exception.message?.let {
                     view.showMessage(it)

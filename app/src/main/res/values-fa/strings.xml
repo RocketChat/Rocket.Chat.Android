@@ -1,0 +1,345 @@
+<resources>
+
+    <!-- Titles -->
+    <string name="title_sign_in_your_server">به سرور خود متصل شوید</string>
+    <string name="title_log_in">ورود</string>
+    <string name="title_share_the_app">به اشتراک‌گذاری اپلیکیشن</string>
+    <string name="title_register_username">ثبت شناسه‌ی کاربری</string>
+    <string name="title_reset_password">تعویض گذرواژه</string>
+    <string name="title_sign_up">ثبت‌‌نام کنید</string>
+    <string name="title_authentication">تایید هویت</string>
+    <string name="title_legal_terms">شروط حقوقی</string>
+    <string name="title_chats">گفت‌وگوها</string>
+    <string name="title_profile">نمایه</string>
+    <string name="title_members">اعضاء</string>
+    <string name="title_counted_members">(%d) اعضاء</string>
+    <string name="title_settings">تنظیمات</string>
+    <string name="title_preferences">ترجیحات</string>
+    <string name="title_change_password">تغییر گذرواژه</string>
+    <string name="title_rate_us">به ما امتیاز دهید</string>
+    <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
+    <string name="title_password">تغییر گذرواژه</string>
+    <string name="title_update_profile">به روزرسانی نمایه</string>
+    <string name="title_about">درباره</string>
+    <string name="title_create_channel">ایجاد کانال</string>
+    <string name="title_licence">مجوز</string>
+    <string name="title_are_you_sure">آیا مطمئن هستید؟</string>
+    <string name="title_channel_details">جزئیات کانال</string>
+    <string name="title_topic">موضوع</string>
+    <string name="title_announcement">اعلان</string>
+    <string name="title_description">توضیح</string>
+
+    <!-- Actions -->
+    <string name="action_connect">متصل</string>
+    <string name="action_use_this_username">از این شناسه‌ی کاربری استفاده کنید</string>
+    <string name="action_terms_of_service">شرایط خدمات رسانی</string>
+    <string name="action_privacy_policy">سیاست حفظ جریم خصوصی</string>
+    <string name="action_search">جست‌وجو</string>
+    <string name="action_update">به روزرسانی</string>
+    <string name="action_settings">تنظیمات</string>
+    <string name="action_create_channel">ایجاد کانال</string>
+    <string name="action_create">ایجاد</string>
+    <string name="action_logout">خروج</string>
+    <string name="action_attach_a_files">ضمیمه کردن پرونده</string>
+    <string name="action_confirm_password">موافقت با تغییر گذرواژه</string>
+    <string name="action_join_chat">به گفت‌وگو بپیوندید</string>
+    <string name="action_add_account">اضافه کردن حساب کاربری</string>
+    <string name="action_online">آنلاین</string>
+    <string name="action_away">Away</string> <!-- TODO Add translation -->
+    <string name="action_busy">مشغول</string>
+    <string name="action_invisible">نامرئی</string>
+    <string name="action_drawing">کشیدن</string>
+    <string name="action_save_to_gallery">ذخیره در آلبوم</string>
+    <string name="action_select_photo_from_gallery">انتخاب عکس از آلبوم</string>
+    <string name="action_take_a_photo">گرفتن عکس</string>
+    <string name="action_reset_avatar">تعویض تصویر نمایه</string>
+    <string name="action_connect_server">اتصال به سرور</string>
+    <string name="action_join_community">به انجمن بپیوندید</string>
+    <string name="action_create_server">ایجاد سرور جدید</string>
+    <string name="action_register">ثبت‌نام</string>
+    <string name="action_confirm">تایید</string>
+    <string name="action_delete_account">حذف حساب کاربری</string>
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
+
+    <!-- Settings List -->
+    <string-array name="settings_actions">
+        <item name="item_preferences">ترجیحات</item>
+        <item name="item_password">تغییر گذرواژه</item>
+        <item name="item_share_app">به اشتراک‌گذاری اپلیکیشن</item>
+        <item name="change_language">Change language</item> <!-- TODO Add translation -->
+        <item name="item_rate_us">به ما امتیاز دهید</item>
+        <item name="item_contact_us">تماس با ما</item>
+        <item name="item_licence">مجوز</item>
+        <item name="item_about">درباره</item>
+    </string-array>
+
+    <!-- Regular information messages -->
+    <string name="msg_generic_error">متاسفانه مشکلی رخ داد، لطفا دوباره تلاش کنید</string>
+    <string name="msg_no_data_to_display">اطلاعاتی برای نمایش وجود نداد</string>
+    <string name="msg_check_this_out">اینجا را ببینید</string>
+    <string name="msg_share_using">تغییر کاربری</string>
+    <string name="msg_profile_update_successfully">نمایه با موفقیت به روزرسانی شد</string>
+    <string name="msg_username">شناسه‌ی کاربری</string>
+    <string name="msg_username_or_email">حساب‌کاربری یا ایمیل</string>
+    <string name="msg_password">گذرواژه</string>
+    <string name="msg_name">نام</string>
+    <string name="msg_email">ایمیل</string>
+    <string name="msg_avatar_url">URL تصویر نمایه</string>
+    <string name="msg_or_continue_using_social_accounts">یا به استفاده از سرورهای اجتماعی ادامه دهید</string>
+    <string name="msg_new_user">%1$s کاربر جدید?</string>
+    <string name="msg_forgot__your_password">گذرواژه‌تان را فراموش کردید؟</string>
+    <string name="msg_reset">راه اندازی مجدد</string>
+    <string name="msg_check_your_email_to_reset_your_password">ایمیل فرستاده شد. صندوق ورودی خود را برای تعویض گذرواژه چک کنید</string>
+    <string name="msg_invalid_email">لطفا یک ایمیل معتبر را بنویسید</string>
+    <string name="msg_new_user_agreement">By proceeding you are agreeing to our\n%1$s and %2$s</string> <!-- TODO Add translation -->
+    <string name="msg_yesterday">دیروز</string>
+    <string name="msg_today">امروز</string>
+    <string name="msg_message">پیام</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
+    <string name="msg_join_video_call">Join video call</string> <!-- TODO Add translation -->
+    <string name="msg_this_room_is_read_only">این اتاق فقط خواندنی است</string>
+    <string name="msg_invalid_2fa_code">Invalid 2FA Code</string> <!-- TODO Add translation -->
+    <string name="msg_invalid_file">پرونده‌ی نامعتبر</string>
+    <string name="msg_invalid_server_url">سرور  نامعتبر URL</string>
+    <string name="msg_content_description_log_in_using_facebook">با فیس‌بوک وارد شوید</string>
+    <string name="msg_content_description_log_in_using_github">با گیت‌هاب وارد شوید</string>
+    <string name="msg_content_description_log_in_using_google">با گوگل وارد شوید</string>
+    <string name="msg_content_description_log_in_using_linkedin">با لینکدین وارد شوید</string>
+    <string name="msg_content_description_log_in_using_meteor">با میتور وارد شوید</string>
+    <string name="msg_content_description_log_in_using_twitter">با توییتر وارد شوید</string>
+    <string name="msg_content_description_log_in_using_gitlab">با گیت‌لب وارد شوید</string>
+    <string name="msg_content_description_log_in_using_wordpress">با وردپرس وارد شوید</string>
+    <string name="msg_content_description_send_message">ارسال پیام</string>
+    <string name="msg_content_description_show_more_login_options">نمایش گزینه‌های ورود بیشتر</string>
+    <string name="msg_content_description_show_attachment_options">نمایش گزینه‌های ضمیمه</string>
+    <string name="msg_you">شما</string>
+    <string name="msg_unknown">ناشناس</string>
+    <string name="msg_email_address">آدرس ایمیل</string>
+    <string name="msg_utc_offset">UTC offset</string> <!-- TODO Add translation -->
+    <string name="msg_new_password">گذرواژه‌ی جدید را وارد کنید</string>
+    <string name="msg_confirm_password">گذرواژه‌ی جدید را تصدیق کنید</string>
+    <string name="msg_channel_name">نام کانال</string>
+    <string name="msg_search">جست‌وجو</string>
+    <string name="msg_unread_messages">پیام خوانده‌نشده</string>
+    <string name="msg_preview_video">ویدیو</string>
+    <string name="msg_preview_audio">صدا</string>
+    <string name="msg_preview_photo">تصویر</string>
+    <string name="msg_preview_file">پرونده</string>
+    <string name="msg_no_messages_yet">هنوز پیامی ندارید</string>
+    <string name="msg_build">Build %1$d - %2$s - %3$s</string> <!-- TODO Add translation -->
+    <string name="msg_update_app_version_in_order_to_continue">نسخه‌ی سرور منسوخ شده است. لطفا برای ادامه دادن با مدیر سرور خود تماس بگیرید تا سرور را به روز کند.</string>
+    <string name="msg_ver_not_recommended">
+        Looks like your server version is below the recommended version %1$s.\nYou can still login but you may experience unexpected behaviors.</string>
+    <string name="msg_ver_not_minimum"> <!-- TODO Add translation -->
+        Looks like your server version is below the minimum required version %1$s.\nPlease upgrade your server to login!
+    </string> <!-- TODO Add translation -->
+    <string name="msg_no_chat_title">هیچ پیام گفت‌وگویی نیست</string>
+    <string name="msg_no_chat_description">لطفا گفت‌و گو را شروع کنید تا پیام‌ها را اینجا\messages ببینید.</string> <!-- TODO Add translation -->
+    <string name="msg_http_insecure">زمانی که از HTTP استفاده می‌کنید در حال وصل شدن به یک سرور ناامن هستید. ما این کار را پیشنهاد نمی‌کنیم.</string>
+    <string name="msg_error_checking_server_version">موقع چک کردن نسخه‌ی سرور شما اشکالی رخ داد. لطفا دوباره تلاش کنید</string>
+    <string name="msg_invalid_server_protocol">پروتکل انتخاب شده برای این سرور قابل‌قبول نیست. لطفا از HTTPS استفاده کنید</string>
+    <string name="msg_image_saved_successfully">تصویر در آلبوم ذخیره شد</string>
+    <string name="msg_image_saved_failed">ذخیره‌ی تصویر انجام نشد</string>
+    <string name="msg_edited">(ویرایش‌شده)</string>
+    <string name="msg_and">\u0020و\u0020</string>
+    <string name="msg_is_typing">\u0020is در حال تایپ…</string> <!-- TODO Add translation -->
+    <string name="msg_are_typing">\u0020are درحال تایپ…</string> <!-- TODO Add translation -->
+    <string name="msg_several_users_are_typing">چند کاربر در حال تایپ کردن…</string>
+    <string name="msg_no_search_found">نتیجه‌ای یافت نشد</string>
+    <string name="msg_log_out">در حال خروج…</string>
+    <string name="msg_upload_file">بارگذاری پرونده</string>
+    <string name="msg_file_description">توضیحات پرونده</string>
+    <string name="msg_send">ارسال</string>
+    <string name="msg_sent_attachment">ارسال ضمیمه</string>
+    <string name="msg_welcome_to_rocket_chat">به پیام‌رسان راکت خوش آمدید!</string>
+    <string name="msg_team_communication">ارتباط تیمی</string>
+    <string name="msg_login_with_email">ورود با  <b>ایمیل</b></string>
+    <string name="msg_create_account">ایجاد حساب کاربری</string>
+    <string name="msg_continue_with_facebook">ادامه دادن با <b>فیس‌بوک</b></string>
+    <string name="msg_continue_with_github">ادامه دادن با  <b>گیت‌هاب</b></string>
+    <string name="msg_continue_with_google">ادامه دادن با <b>گوگل</b></string>
+    <string name="msg_continue_with_linkedin">ادامه دادن با <b>لینکدین</b></string>
+    <string name="msg_continue_with_gitlab">ادامه دادن با <b>گیت‌لب</b></string>
+    <string name="msg_continue_with_wordpress">ادامه دادن با <b>وردپرس</b></string>
+    <string name="msg_two_factor_authentication">تایید هویت دو فاکتوره</string>
+	<string name="msg__your_2fa_code">کد 2FA تان چیست؟</string>
+	<string name="msg_permalink_copied">پیوند کپی شد</string>
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
+    <string name="msg_send_email">ارسال ایمیل</string>
+    <string name="msg_android_app_support">حمایت از اپ اندروید</string>
+    <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO Add translation -->
+    <string name="msg_password_updated_successfully">گذرواژه با موفقیت به روزرسانی شد</string>
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reacted with %2$s</item>
+        <item quantity="other">%1$s reacted with %2$s</item>
+    </plurals> <!-- TODO Add translation -->
+    <string name="msg_credentials_saved_successfully">اختیارها با موفقیت ذخیره شد</string>
+
+    <!-- Create channel messages -->
+    <string name="msg_private_channel">خصوصی</string>
+    <string name="msg_public_channel">عمومی</string>
+    <string name="msg_private_channel_description">فقط شما و اعضای دعوت‌شده می‌توانند به این کاال دسترسی داشته باشند</string>
+    <string name="msg_public_channel_description">همه می‌توانند به این کانال دسترسی داشته باشند</string>
+    <string name="msg_ready_only_channel">کانال فقط خواندنی</string>
+    <string name="msg_ready_only_channel_description">تنها مدیر می‌تواند پیام جدیدی بنویسد</string>
+    <string name="msg_invite_members">دعوت اعضا به کانال</string>
+    <string name="msg_member_already_added">شما قبلا این کاربر را انتخاب کرده بودید</string>
+    <string name="msg_member_not_found">عضو پیدا نشد</string>
+    <string name="msg_channel_created_successfully">کانال با موفقیت ایجاد شد</string>
+    <string name="msg_message_copied">پیام کپی شد</string>
+    <string name="msg_delete_message">پاک کردن پیام</string>
+    <string name="msg_delete_description">آیا مطمئنید که می‌خواهید این پیام را پاک کنید؟</string>
+    <string name="msg_view_more">مشاهده‌ی بیشتر</string>
+    <string name="msg_view_less">مشاهده‌ی کمتر</string>
+    <string name="msg_muted_on_this_channel">آیا این کانال را بی‌صدا کردید؟</string>
+
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">ردگیری تحلیلی</string>
+    <string name="msg_send_analytics_tracking">برای بهبود این کاره آمار ناشناس بفرستید</string>
+    <string name="msg_do_not_send_analytics_tracking">برای بهبود این کاره آمار ناشناس نفرستید</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">قابل اجرا نیست زیرا نسخه‌ی FOSS است</string>
+
+    <!-- System messages -->
+    <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string> <!-- TODO Add translation -->
+    <string name="message_user_added_by">User %1$s added by %2$s</string> <!-- TODO Add translation -->
+    <string name="message_user_removed_by">User %1$s removed by %2$s</string> <!-- TODO Add translation -->
+    <string name="message_user_left">کانال را ترک کرد</string>
+    <string name="message_user_joined_channel">به کانال پیوست</string>
+    <string name="message_welcome">%s خوش‌آمدی</string>
+    <string name="message_removed">پیام پاک شد</string>
+    <string name="message_pinned">پیام سوزن شده:</string>
+    <string name="message_muted">User %1$s muted by %2$s</string> <!-- TODO Add translation -->
+    <string name="message_unmuted">User %1$s unmuted by %2$s</string> <!-- TODO Add translation -->
+    <string name="message_role_add">%1$s was set %2$s by %3$s</string> <!-- TODO Add translation -->
+    <string name="message_role_removed">%1$s is no longer %2$s by %3$s</string> <!-- TODO Add translation -->
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
+
+    <!-- Message actions -->
+    <string name="action_msg_reply">جواب</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
+    <string name="action_msg_edit">ویرایش</string>
+    <string name="action_msg_copy">کپی</string>
+    <string name="action_msg_quote">نقل قول</string>
+    <string name="action_msg_delete">حذف</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
+    <string name="action_msg_share">اشتراک</string>
+    <string name="action_title_editing">ویرایش پیام</string>
+    <string name="action_msg_add_reaction">اضافه کردن واکنش</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO Add translation -->
+    <string name="action_msg_report">گزارش</string>
+
+    <!-- Permission messages -->
+    <string name="permission_editing_not_allowed">اجازه‌ی ویرایش نیست</string>
+    <string name="permission_deleting_not_allowed">اجازه‌ی حذف نیست</string>
+    <string name="permission_pinning_not_allowed">اجازه‌ی سوزن کردن نیست</string>
+    <string name="permission_starring_not_allowed">اجازه‌ی ستاره‌دار شدن نیست</string>
+
+    <!-- Search message -->
+    <string name="title_search_message">جست‌وجوی پیام</string>
+
+    <!-- Members List -->
+    <string name="title_members_list">اعضاء</string>
+
+    <!-- Mentions -->
+    <string name="msg_mentions">صدا زدن</string>
+    <string name="msg_no_mention">صدا زدنی موجود نیست</string>
+    <string name="msg_all_the_mentions_appear_here">All the mentions\nappear here</string> <!-- TODO Add translation -->
+
+    <!-- Pinned Messages -->
+    <string name="title_pinned_messages">پیام سوزن شده</string>
+    <string name="no_pinned_messages">پیام سوزن‌شده‌ای موجود نیست</string>
+    <string name="no_pinned_description">All the pinned messages\nappear here</string> <!-- TODO Add translation -->
+
+    <!-- Favorite Messages -->
+    <string name="title_favorite_messages">پیام‌های مورد علاقه</string>
+    <string name="no_favorite_messages">هیچ پیام موردعلاقه‌ای موجود نیست</string>
+    <string name="no_favorite_description">All the favorite messages\nappear here</string> <!-- TODO Add translation -->
+
+    <!-- Files -->
+    <string name="title_files">پروندها</string>
+    <string name="title_files_total">(%d) پرونده‌ها</string>
+    <string name="msg_no_files">هیچ پرونده‌ای موجود نیست</string>
+    <string name="msg_all_files_appear_here">تمام پرونده‌ها اینجا نمایش داده شده‌اند</string>
+
+    <!-- Upload Messages -->
+    <string name="max_file_size_exceeded">File size %1$d bytes exceeded max upload size of %2$d bytes</string> <!-- TODO Add translation -->
+
+    <!-- Socket status -->
+    <string name="status_connected">متصل</string>
+    <string name="status_disconnected">قطع شده</string>
+    <string name="status_connecting">درحال اتصال</string>
+    <string name="status_authenticating">تصدیق کردن</string>
+    <string name="status_disconnecting">درحال قطع شده</string>
+    <string name="status_waiting">Connecting in %d seconds</string> <!-- TODO Add translation -->
+
+    <!--Suggestions-->
+    <string name="suggest_all_description">به همه در این اتاق خبر بده</string>
+    <string name="suggest_here_description">به کاربران فعال در این اتاق خبر بده</string>
+
+    <!-- Slash Commands -->
+    <string name="Slash_Gimme_Description"> ༼ つ ◕_◕ ༽つ را قبل از پیامتان نمایش می‌دهد</string>
+    <string name="Slash_LennyFace_Description"> ( ͡° ͜ʖ ͡°) را بعد از پیامتان نمایش می‌دهد</string>
+    <string name="Slash_Shrug_Description">¯\_(ツ)_/¯ را بعد از پیامتان نمایش می‌دهد</string>
+    <string name="Slash_Tableflip_Description"> (╯°□°）╯︵ ┻━┻ را نمایش می‌دهد</string>
+    <string name="Slash_TableUnflip_Description"> ┬─┬ ノ( ゜-゜ノ) را نمایش می‌دهد</string>
+    <string name="Create_A_New_Channel">ایجاد کانال جدید</string>
+    <string name="Show_the_keyboard_shortcut_list">نمایش لیست میانبر کیبورد</string>
+    <string name="Invite_user_to_join_channel_all_from">دعوت کردن تمام اعضاء از کانال [#channel] تا به این کانال بپیوندند</string> <!-- TODO Add translation -->
+    <string name="Invite_user_to_join_channel_all_to">دعوت از تمامی اعضای این کانال برای پیوستن به کانال [#channel]</string> <!-- TODO Add translation -->
+    <string name="Archive">بایگانی</string>
+    <string name="Remove_someone_from_room">حذف کردن کسی از این کانال</string>
+    <string name="Leave_the_current_channel">کانال کنونی را ترک نمایید</string>
+    <string name="Displays_action_text">نمایش فعالیت متن</string>
+    <string name="Direct_message_someone">ارسال پیام مستقیم به کسی</string>
+    <string name="Mute_someone_in_room">صامت کردن کسی در اتاق</string>
+    <string name="Unmute_someone_in_room">صدا دار کردن کسی در این اتاق</string>
+    <string name="Invite_user_to_join_channel">دعوت از یک کاربر برای پیوستن به این کانال</string>
+    <string name="Unarchive">Unarchive</string> <!-- TODO Add translation -->
+    <string name="Join_the_given_channel">پیوستن به کانال داده شده</string>
+    <string name="Guggy_Command_Description">ساخت یک gif بر اساس متن آماده‌شده</string>
+    <string name="Slash_Topic_Description">تعیین موضوع</string>
+
+    <!-- Emoji message-->
+    <string name="msg_no_recent_emoji">هیچ ایموجی اخیری موجود نیست</string>
+    <string name="alert_title_default_skin_tone">مدل پوسته‌ی پیش‌فرض</string>
+
+    <!-- Sorting and grouping-->
+    <string name="msg_sort">دسته بندی</string>
+    <string name="dialog_sort_title">دسته بندی بر اساس</string>
+    <string name="dialog_sort_by_alphabet">الفبا</string>
+    <string name="dialog_sort_by_activity">فعالیت</string>
+    <string name="dialog_group_by_type">گروه کردن بر اساس نوع</string>
+    <string name="dialog_group_favourites">گروه کردن موردعلاقه‌ها</string>
+    <string name="chatroom_header">سرپیام</string>
+
+    <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
+    <string name="header_channel">کانال‌ها</string>
+    <string name="header_private_groups">گروه‌های خصوصی</string>
+    <string name="header_direct_messages">پیام‌های خصوصی</string>
+    <string name="header_live_chats">گفت‌وگوهای زنده</string>
+    <string name="header_unknown">ناشناس</string>
+
+    <!--Notifications-->
+    <string name="share_label">ویراش پیام به اشتراک گذاشته شده</string>
+    <string name="notif_action_reply_hint">جواب دادن</string>
+    <string name="notif_error_sending">جواب با شکست مواجه شد. لطفا دوباره تلاش کنید.</string>
+    <string name="notif_success_sending">Message sent to %1$s!</string> <!-- TODO Add translation -->
+    <string name="read_by">خوانده شده توسط</string>
+    <string name="message_information_title">اطلاعات پیام</string>
+    <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string> <!-- TODO Add translation -->
+
+    <!-- User Details -->
+    <string name="timezone">منطقه‌ی زمانی</string>
+
+    <!-- Report -->
+    <string name="submit">واگذاری</string>
+    <string name="required">*required</string> <!-- TODO Add translation -->
+    <string name="report_sent">گزارش شما فرستاده شد</string>
+</resources>

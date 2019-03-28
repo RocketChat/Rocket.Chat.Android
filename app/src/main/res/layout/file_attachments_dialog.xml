@@ -98,7 +98,7 @@
             app:layout_constraintEnd_toStartOf="@id/button_send"
             android:layout_margin="16dp"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:text="@string/msg_cancel" />
+            android:text="@android:string/cancel" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

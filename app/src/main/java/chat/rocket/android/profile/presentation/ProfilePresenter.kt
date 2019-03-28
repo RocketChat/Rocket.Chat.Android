@@ -27,8 +27,8 @@ import chat.rocket.core.internal.rest.deleteOwnAccount
 import chat.rocket.core.internal.rest.resetAvatar
 import chat.rocket.core.internal.rest.setAvatar
 import chat.rocket.core.internal.rest.updateProfile
-import kotlinx.coroutines.experimental.DefaultDispatcher
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 
@@ -82,7 +82,7 @@ class ProfilePresenter @Inject constructor(
             view.showLoading()
             try {
                 user?.id?.let { id ->
-                    retryIO { client.updateProfile(id, email, name, username) }
+                    retryIO { client.updateProfile(userId = id, email = email, name = name, username = username) }
                     view.showProfileUpdateSuccessfullyMessage()
                     view.showProfile(
                         serverUrl.avatarUrl(user.username ?: ""),
@@ -115,7 +115,7 @@ class ProfilePresenter @Inject constructor(
                         uriInteractor.getInputStream(uri)
                     }
                 }
-                user?.username?.let { view.reloadUserAvatar(it) }
+                user?.username?.let { view.reloadUserAvatar(serverUrl.avatarUrl(it)) }
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
@@ -143,7 +143,7 @@ class ProfilePresenter @Inject constructor(
                     }
                 }
 
-                user?.username?.let { view.reloadUserAvatar(it) }
+                user?.username?.let { view.reloadUserAvatar(serverUrl.avatarUrl(it)) }
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
@@ -163,7 +163,7 @@ class ProfilePresenter @Inject constructor(
                 user?.id?.let { id ->
                     retryIO { client.resetAvatar(id) }
                 }
-                user?.username?.let { view.reloadUserAvatar(it) }
+                user?.username?.let { view.reloadUserAvatar(serverUrl.avatarUrl(it)) }
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
@@ -180,7 +180,7 @@ class ProfilePresenter @Inject constructor(
         launchUI(strategy) {
             view.showLoading()
             try {
-                withContext(DefaultDispatcher) {
+                withContext(Dispatchers.Default) {
                     // REMARK: Backend API is only working with a lowercase hash.
                     // https://github.com/RocketChat/Rocket.Chat/issues/12573
                     retryIO { client.deleteOwnAccount(password.gethash().toHex().toLowerCase()) }

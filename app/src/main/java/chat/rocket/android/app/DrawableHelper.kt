@@ -91,7 +91,7 @@ object DrawableHelper {
     }
 
     /**
-     * Compounds a Drawable (to appear to the left of the text) into a TextView.
+     * Compounds a Drawable (to appear on the left side of a text) into a TextView.
      *
      * @param textView The TextView.
      * @param drawable The Drawable.
@@ -99,6 +99,16 @@ object DrawableHelper {
      */
     fun compoundDrawable(textView: TextView, drawable: Drawable) =
         textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+
+    /**
+     * Compounds a Drawable (to appear on the right side of a text) into a TextView.
+     *
+     * @param textView The TextView.
+     * @param drawable The Drawable.
+     * @see compoundDrawable
+     */
+    fun compoundRightDrawable(textView: TextView, drawable: Drawable) =
+        textView.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
 
     /**
      * Returns the user status drawable.

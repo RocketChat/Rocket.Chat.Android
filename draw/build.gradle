@@ -51,7 +51,7 @@ dependencies {
     implementation project(':util')
 
     implementation libraries.kotlin
-    implementation libraries.coroutines
+    implementation libraries.coroutinesCore
 
     implementation libraries.appCompat
     implementation libraries.constraintlayout

@@ -7,15 +7,15 @@ import chat.rocket.android.util.retryIO
 import chat.rocket.core.internal.rest.registerPushToken
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.asString
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 suspend fun RocketChatClientFactory.registerPushToken(
     token: String,
     accounts: List<Account>
 ) {
-    withContext(CommonPool) {
+    withContext(Dispatchers.IO) {
         accounts.forEach { account ->
             try {
                 retryIO(description = "register push token: ${account.serverUrl}") {

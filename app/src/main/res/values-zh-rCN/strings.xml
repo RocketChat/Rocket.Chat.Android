@@ -1,0 +1,345 @@
+<resources>
+
+    <!-- Titles -->
+    <string name="title_sign_in_your_server">登录您的服务器</string>
+    <string name="title_log_in">登录</string>
+    <string name="title_share_the_app">分享App</string>
+    <string name="title_register_username">注册用户</string>
+    <string name="title_reset_password">重置密码</string>
+    <string name="title_sign_up">登录</string>
+    <string name="title_authentication">认证</string>
+    <string name="title_legal_terms">法律条款</string>
+    <string name="title_chats">聊天</string>
+    <string name="title_profile">资料</string>
+    <string name="title_members">成员</string>
+    <string name="title_counted_members">成员(%d)</string>
+    <string name="title_settings">设置</string>
+    <string name="title_preferences">首选项</string>
+    <string name="title_change_password">修改密码</string>
+    <string name="title_rate_us">给我们打分</string>
+    <string name="title_admin_panel">管理面板</string>
+    <string name="title_password">修改密码</string>
+    <string name="title_update_profile">更新资料</string>
+    <string name="title_about">关于</string>
+    <string name="title_create_channel">新建频道</string>
+    <string name="title_licence">许可证</string>
+    <string name="title_are_you_sure">你确定?</string>
+    <string name="title_channel_details">频道信息</string>
+    <string name="title_topic">主题</string>
+    <string name="title_announcement">公告</string>
+    <string name="title_description">描述</string>
+
+    <!-- Actions -->
+    <string name="action_connect">连接</string>
+    <string name="action_use_this_username">使用这个用户名</string>
+    <string name="action_terms_of_service">服务条款</string>
+    <string name="action_privacy_policy">隐私政策</string>
+    <string name="action_search">搜索</string>
+    <string name="action_update">更新</string>
+    <string name="action_settings">设置</string>
+    <string name="action_create_channel">新建频道</string>
+    <string name="action_create">新建</string>
+    <string name="action_logout">登出</string>
+    <string name="action_attach_a_files">添加附件</string>
+    <string name="action_confirm_password">确认修改密码</string>
+    <string name="action_join_chat">加入聊天</string>
+    <string name="action_add_account">添加账户</string>
+    <string name="action_online">在线</string>
+    <string name="action_away">离开</string>
+    <string name="action_busy">忙碌</string>
+    <string name="action_invisible">隐身</string>
+    <string name="action_drawing">绘画</string>
+    <string name="action_save_to_gallery">保存到图库</string>
+    <string name="action_select_photo_from_gallery">从图库选照片</string>
+    <string name="action_take_a_photo">拍照</string>
+    <string name="action_reset_avatar">重置头像</string>
+    <string name="action_connect_server">连接到服务器</string>
+    <string name="action_join_community">加入社区</string>
+    <string name="action_create_server">新建一个新服务器</string>
+    <string name="action_register">注册</string>
+    <string name="action_confirm">确定</string>
+    <string name="action_delete_account">删除账户</string>
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
+
+    <!-- Settings List -->
+    <string-array name="settings_actions">
+        <item name="item_preferences">首选项</item>
+        <item name="item_password">修改密码</item>
+        <item name="change_language">更改语言</item>
+        <item name="item_share_app">分享app</item>
+        <item name="item_rate_us">给我们打分</item>
+        <item name="item_contact_us">联系我们</item>
+        <item name="item_licence">许可证</item>
+        <item name="item_about">关于</item>
+    </string-array>
+
+    <!-- Regular information messages -->
+    <string name="msg_generic_error">对不起发生了错误，请重试</string>
+    <string name="msg_no_data_to_display">没有数据显示</string>
+    <string name="msg_check_this_out">检查这里</string>
+    <string name="msg_share_using">分享使用</string>
+    <string name="msg_profile_update_successfully">资料更新成功</string>
+    <string name="msg_username">用户名</string>
+    <string name="msg_username_or_email">用户名或邮箱</string>
+    <string name="msg_password">密码</string>
+    <string name="msg_name">名字</string>
+    <string name="msg_email">邮箱</string>
+    <string name="msg_avatar_url">头像网址</string>
+    <string name="msg_or_continue_using_social_accounts">或继续使用社交账号</string>
+    <string name="msg_new_user">新用户? %1$s</string>
+    <string name="msg_forgot__your_password">忘记密码?</string>
+    <string name="msg_reset">重置</string>
+    <string name="msg_check_your_email_to_reset_your_password">邮件已发送!请根据邮件提示重置密码.</string>
+    <string name="msg_invalid_email">请输入有效邮箱地址</string>
+    <string name="msg_new_user_agreement">如果继续表示您同意我们的\n%1$s 和 %2$s</string>
+    <string name="msg_yesterday">昨天</string>
+    <string name="msg_today">今天</string>
+    <string name="msg_message">消息</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
+    <string name="msg_join_video_call">Join video call</string> <!-- TODO Add translation -->
+    <string name="msg_this_room_is_read_only">这个频道只读</string>
+    <string name="msg_invalid_2fa_code">无效的2FA码</string>
+    <string name="msg_invalid_file">无效文件</string>
+    <string name="msg_invalid_server_url">无效的服务器地址</string>
+    <string name="msg_content_description_log_in_using_facebook">使用Facebook账户登录</string>
+    <string name="msg_content_description_log_in_using_github">使用Github账户登录</string>
+    <string name="msg_content_description_log_in_using_google">使用Google账户登录</string>
+    <string name="msg_content_description_log_in_using_linkedin">使用Linkedin账户登录</string>
+    <string name="msg_content_description_log_in_using_meteor">使用Meteor账户登录</string>
+    <string name="msg_content_description_log_in_using_twitter">使用Twitter账户登录</string>
+    <string name="msg_content_description_log_in_using_gitlab">使用Gitlab账户登录</string>
+    <string name="msg_content_description_log_in_using_wordpress">使用WordPress账户登录</string>
+    <string name="msg_content_description_send_message">发送消息</string>
+    <string name="msg_content_description_show_more_login_options">显示更多登录选项</string>
+    <string name="msg_content_description_show_attachment_options">显示附件选项</string>
+    <string name="msg_you">你</string>
+    <string name="msg_unknown">未知</string>
+    <string name="msg_email_address">邮箱地址</string>
+    <string name="msg_utc_offset">时区</string>
+    <string name="msg_new_password">输入新密码</string>
+    <string name="msg_confirm_password">确认新密码</string>
+    <string name="msg_channel_name">频道名称</string>
+    <string name="msg_search">搜索</string>
+    <string name="msg_unread_messages">未读消息</string>
+    <string name="msg_preview_video">视频</string>
+    <string name="msg_preview_audio">音频</string>
+    <string name="msg_preview_photo">照片</string>
+    <string name="msg_preview_file">文件</string>
+    <string name="msg_no_messages_yet">尚无消息</string>
+    <string name="msg_build">Build %1$d - %2$s - %3$s</string>
+    <string name="msg_update_app_version_in_order_to_continue">服务器版本过老。请联系服务器管理员更新服务器版本。</string>
+    <string name="msg_ver_not_recommended">您的服务器版本低于建议的版本%1$s.\n仍然可以登录，但是可能存在部分功能不正常的情况.</string>
+    <string name="msg_ver_not_minimum">您的服务器版本低于建议的版本%1$s.\n必须更新服务器才能登录!</string>
+    <string name="msg_no_chat_title">没有聊天信息</string>
+    <string name="msg_no_chat_description">开始您的对话\n消息在此.</string>
+    <string name="msg_http_insecure">您正在使用HTTP方式不加密连接到服务器. 我们不建议您这么做.</string>
+    <string name="msg_error_checking_server_version">检查服务器版本时发生错误，请重试</string>
+    <string name="msg_invalid_server_protocol">您选择的协议被服务器拒绝，请使用HTTPS</string>
+    <string name="msg_image_saved_successfully">图片已保存到图库</string>
+    <string name="msg_image_saved_failed">保存图片失败</string>
+    <string name="msg_edited">(已编辑)</string>
+    <string name="msg_and">\u0020和\u0020</string>
+    <string name="msg_is_typing">\u0020正在输入…</string>
+    <string name="msg_are_typing">\u0020正在输入…</string>
+    <string name="msg_several_users_are_typing">好几个用户正在输入…</string>
+    <string name="msg_no_search_found">没有搜索到结果</string>
+    <string name="msg_log_out">登出…</string>
+    <string name="msg_upload_file">上传文件</string>
+    <string name="msg_file_description">文件描述</string>
+    <string name="msg_send">发送</string>
+    <string name="msg_sent_attachment">发送一个附件</string>
+    <string name="msg_welcome_to_rocket_chat">欢迎来到Rocket.Chat</string>
+    <string name="msg_team_communication">团队连线</string>
+    <string name="msg_login_with_email">使用<b>邮箱</b>登录</string>
+    <string name="msg_create_account">新建账户</string>
+    <string name="msg_continue_with_facebook">使用<b>Facebook</b>账号继续</string>
+    <string name="msg_continue_with_github">使用<b>Github</b>账号继续</string>
+    <string name="msg_continue_with_google">使用<b>Google</b>账号继续</string>
+    <string name="msg_continue_with_linkedin">使用<b>Linkedin</b>账号继续</string>
+    <string name="msg_continue_with_gitlab">使用<b>GitLab</b>账号继续</string>
+    <string name="msg_continue_with_wordpress">使用<b>WordPress</b>账号继续</string>
+    <string name="msg_two_factor_authentication">两步认证</string>
+    <string name="msg__your_2fa_code">什么是2FA 码?</string>
+    <string name="msg_permalink_copied">永久链接已拷贝</string>
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
+    <string name="msg_send_email">发送邮件</string>
+    <string name="msg_android_app_support">安卓app支持</string>
+    <string name="msg_unable_to_update_password">无法更新密码，错误信息: %1$s</string>
+    <string name="msg_password_updated_successfully">密码更新成功</string>
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s 使用了 %2$s</item>
+        <item quantity="other">%1$s 使用了 %2$s</item>
+    </plurals>
+    <string name="msg_credentials_saved_successfully">凭证成功保存</string>
+
+    <!-- Create channel messages -->
+    <string name="msg_private_channel">隐私</string>
+    <string name="msg_public_channel">公共</string>
+    <string name="msg_private_channel_description">只有你和被邀请的用户可以进入频道</string>
+    <string name="msg_public_channel_description">所有人都可以进入频道</string>
+    <string name="msg_ready_only_channel">只读频道</string>
+    <string name="msg_ready_only_channel_description">只有管理员可以发信息</string>
+    <string name="msg_invite_members">邀请用户</string>
+    <string name="msg_member_already_added">您已经选择了这个用户</string>
+    <string name="msg_member_not_found">找不到用户</string>
+    <string name="msg_channel_created_successfully">成功建立频道</string>
+    <string name="msg_message_copied">消息已拷贝</string>
+    <string name="msg_delete_message">删除消息</string>
+    <string name="msg_delete_description">您确定要删除这条消息吗</string>
+    <string name="msg_view_more">显示更多</string>
+    <string name="msg_view_less">显示更少</string>
+    <string name="msg_muted_on_this_channel">您被禁言了</string>
+
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">跟踪分析</string>
+    <string name="msg_send_analytics_tracking">发送匿名统计信息来帮助改善App</string>
+    <string name="msg_do_not_send_analytics_tracking">不要发送匿名统计信息，我不想帮组改善App</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">不适用，因为这事开源软件</string>
+
+    <!-- System messages -->
+    <string name="message_room_name_changed">频道名改为: %1$s by %2$s</string>
+    <string name="message_user_added_by">%2$s增加了用户%1$s </string>
+    <string name="message_user_removed_by">%2$s移除了用户%1$s </string>
+    <string name="message_user_left">离开了频道.</string>
+    <string name="message_user_joined_channel">加入了频道.</string>
+    <string name="message_welcome">欢迎 %s</string>
+    <string name="message_removed">消息被删除</string>
+    <string name="message_pinned">固定的消息:</string>
+    <string name="message_muted">用户%1$s被%2$s禁言</string>
+    <string name="message_unmuted">用户 %1$s被%2$s取消禁言</string>
+    <string name="message_role_add">%1$s被设置为%2$s 由%3$s操作</string>
+    <string name="message_role_removed">%1$s不在是%2$s 由%3$s操作</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
+
+    <!-- Message actions -->
+    <string name="action_msg_reply">回复</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
+    <string name="action_msg_edit">编辑</string>
+    <string name="action_msg_copy">拷贝</string>
+    <string name="action_msg_quote">引用</string>
+    <string name="action_msg_delete">删除</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
+    <string name="action_msg_share">分享消息</string>
+    <string name="action_title_editing">编辑消息</string>
+    <string name="action_msg_add_reaction">增加操作</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">报告</string>
+
+    <!-- Permission messages -->
+    <string name="permission_editing_not_allowed">没有编辑权限</string>
+    <string name="permission_deleting_not_allowed">没有删除权限</string>
+    <string name="permission_pinning_not_allowed">没有固定权限</string>
+    <string name="permission_starring_not_allowed">没有标记权限</string>
+
+    <!-- Search message -->
+    <string name="title_search_message">搜索消息</string>
+
+    <!-- Members List -->
+    <string name="title_members_list">成员</string>
+
+    <!-- Mentions -->
+    <string name="msg_mentions">提及的消息</string>
+    <string name="msg_no_mention">没有提及的消息</string>
+    <string name="msg_all_the_mentions_appear_here">所有提及\n在此显示</string>
+
+    <!-- Pinned Messages -->
+    <string name="title_pinned_messages">已固定消息</string>
+    <string name="no_pinned_messages">没有固定消息</string>
+    <string name="no_pinned_description">所有提及的\n在此显示</string>
+
+    <!-- Favorite Messages -->
+    <string name="title_favorite_messages">收藏的消息</string>
+    <string name="no_favorite_messages">没有收藏的消息</string>
+    <string name="no_favorite_description">所有收藏的消失\n在此显示</string>
+
+    <!-- Files -->
+    <string name="title_files">文件</string>
+    <string name="title_files_total">文件 (%d)</string>
+    <string name="msg_no_files">没有文件</string>
+    <string name="msg_all_files_appear_here">所有文件在此显示</string>
+
+    <!-- Upload Messages -->
+    <string name="max_file_size_exceeded">文件大小 %1$d bytes 超过最大允许大小 %2$d bytes</string>
+
+    <!-- Socket status -->
+    <string name="status_connected">已连接</string>
+    <string name="status_disconnected">已断线</string>
+    <string name="status_connecting">连接中</string>
+    <string name="status_authenticating">认证</string>
+    <string name="status_disconnecting">断线中</string>
+    <string name="status_waiting">连接持续了 %d 秒</string>
+
+    <!--Suggestions-->
+    <string name="suggest_all_description">提醒频道内所有人</string>
+    <string name="suggest_here_description">提醒频道内在线的人</string>
+
+    <!-- Slash Commands -->
+    <string name="Slash_Gimme_Description">在您的消息前显示 ༼ つ ◕_◕ ༽つ </string>
+    <string name="Slash_LennyFace_Description">在您的消息后显示 ( ͡° ͜ʖ ͡°) </string>
+    <string name="Slash_Shrug_Description">在您的消息后显示 ¯\_(ツ)_/¯ </string>
+    <string name="Slash_Tableflip_Description">显示 (╯°□°）╯︵ ┻━┻</string>
+    <string name="Slash_TableUnflip_Description">显示 ┬─┬ ノ( ゜-゜ノ)</string>
+    <string name="Create_A_New_Channel">新建频道</string>
+    <string name="Show_the_keyboard_shortcut_list">显示键盘快捷列表</string>
+    <string name="Invite_user_to_join_channel_all_from">邀请 [#channel] 内所有成员加入这个频道</string>
+    <string name="Invite_user_to_join_channel_all_to">邀请这个频道内所有成员加入 [#channel]</string>
+    <string name="Archive">归档</string>
+    <string name="Remove_someone_from_room">从频道内移除用户</string>
+    <string name="Leave_the_current_channel">离开频道</string>
+    <string name="Displays_action_text">显示操作</string>
+    <string name="Direct_message_someone">与某人直接对话</string>
+    <string name="Mute_someone_in_room">禁言某人</string>
+    <string name="Unmute_someone_in_room">取消禁言某人</string>
+    <string name="Invite_user_to_join_channel">邀请一个用户进入频道</string>
+    <string name="Unarchive">取消归档</string>
+    <string name="Join_the_given_channel">加入频道</string>
+    <string name="Guggy_Command_Description">根据文本生成GIF</string>
+    <string name="Slash_Topic_Description">设定主题</string>
+
+    <!-- Emoji message-->
+    <string name="msg_no_recent_emoji">没有最近的emojis</string>
+    <string name="alert_title_default_skin_tone">默认皮肤颜色</string>
+
+    <!-- Sorting and grouping-->
+    <string name="msg_sort">排序</string>
+    <string name="dialog_sort_title">排序按</string>
+    <string name="dialog_sort_by_alphabet">字母</string>
+    <string name="dialog_sort_by_activity">活跃</string>
+    <string name="dialog_group_by_type">按类型分组</string>
+    <string name="dialog_group_favourites">收藏分组</string>
+    <string name="chatroom_header">头部</string>
+
+    <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
+    <string name="header_channel">频道</string>
+    <string name="header_private_groups">私人组</string>
+    <string name="header_direct_messages">直接对话</string>
+    <string name="header_live_chats">Live 对话</string>
+    <string name="header_unknown">未知</string>
+
+    <!--Notifications-->
+    <string name="share_label">编辑分享的消息</string>
+    <string name="notif_action_reply_hint">回复</string>
+    <string name="notif_error_sending">回复失败，请重试.</string>
+    <string name="notif_success_sending">消息发送给 %1$s!</string>
+    <string name="read_by">阅读</string>
+    <string name="message_information_title">消息信息</string>
+    <string name="message_room_changed_privacy">频道类型更改为: %1$s by %2$s</string>
+
+    <string name="foss" translatable="false">(开源)</string>
+
+    <!-- User Details -->
+    <string name="timezone">时区</string>
+    <string name="status" translatable="false">状态</string>
+
+    <!-- Report -->
+    <string name="submit">提交</string>
+    <string name="required">*必须</string>
+    <string name="report_sent">您的报告已提交!</string>
+</resources>

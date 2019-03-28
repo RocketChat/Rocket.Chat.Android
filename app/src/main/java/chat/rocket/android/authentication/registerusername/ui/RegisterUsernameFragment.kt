@@ -31,12 +31,10 @@ import javax.inject.Inject
 private const val BUNDLE_USER_ID = "user_id"
 private const val BUNDLE_AUTH_TOKEN = "auth_token"
 
-fun newInstance(userId: String, authToken: String): Fragment {
-    return RegisterUsernameFragment().apply {
-        arguments = Bundle(2).apply {
-            putString(BUNDLE_USER_ID, userId)
-            putString(BUNDLE_AUTH_TOKEN, authToken)
-        }
+fun newInstance(userId: String, authToken: String): Fragment = RegisterUsernameFragment().apply {
+    arguments = Bundle(2).apply {
+        putString(BUNDLE_USER_ID, userId)
+        putString(BUNDLE_AUTH_TOKEN, authToken)
     }
 }
 
@@ -53,13 +51,10 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        val bundle = arguments
-        if (bundle != null) {
-            userId = bundle.getString(BUNDLE_USER_ID)
-            authToken = bundle.getString(BUNDLE_AUTH_TOKEN)
-        } else {
-            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
-        }
+        arguments?.run {
+            userId = getString(BUNDLE_USER_ID, "")
+            authToken = getString(BUNDLE_AUTH_TOKEN, "")
+        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
 
     override fun onCreateView(

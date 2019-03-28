@@ -3,21 +3,22 @@ package chat.rocket.android.util.livedata
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 class WrappedLiveData<Source, Output>(
-    private val runContext: CoroutineContext = CommonPool,
+    private val runContext: CoroutineContext = Dispatchers.IO,
     private val source: LiveData<Source>,
-    private val transformation: suspend (Source?, MutableLiveData<Output>) -> Unit)
-    : MutableLiveData<Output>() {
+    private val transformation: suspend (Source?, MutableLiveData<Output>) -> Unit
+) : MutableLiveData<Output>() {
     private var job: Job? = null
 
     private val observer = Observer<Source> { source ->
         job?.cancel()
-        job = launch(runContext) {
+        job = GlobalScope.launch(runContext) {
             transformation(source, this@WrappedLiveData)
         }
     }
@@ -33,6 +34,7 @@ class WrappedLiveData<Source, Output>(
 }
 
 fun <Source, Output> LiveData<Source>.wrap(
-    runContext: CoroutineContext = CommonPool,
-    transformation: suspend (Source?, MutableLiveData<Output>) -> Unit) =
-        WrappedLiveData(runContext, this, transformation)
+    runContext: CoroutineContext = Dispatchers.IO,
+    transformation: suspend (Source?, MutableLiveData<Output>) -> Unit
+) =
+    WrappedLiveData(runContext, this, transformation)
