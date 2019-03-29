@@ -185,7 +185,7 @@
     <string name="msg_public_channel">Öffentlich</string>
     <string name="msg_private_channel_description">Nur Sie und eingeladene Benutzer haben Zugriff auf den Raum</string>
     <string name="msg_public_channel_description">Jeder hat Zugriff auf diesen Raum</string>
-    <string name="msg_ready_only_channel">Nur lesen Raum</string>
+    <string name="msg_ready_only_channel">Nur lesend</string>
     <string name="msg_ready_only_channel_description">Nur der Admin kann neue Nachrichten schreiben</string>
     <string name="msg_invite_members">Lade Benutzer in diesen Raum ein</string>
     <string name="msg_member_already_added">Sie haben diesen Benutzer bereits selektiert</string>
@@ -225,19 +225,19 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Antworten</string>
-    <string name="action_info">Info</string> <!-- TODO Add translation -->
+    <string name="action_info">Info</string> 
     <string name="action_msg_edit">Bearbeiten</string>
     <string name="action_msg_copy">Kopieren</string>
     <string name="action_msg_quote">Zitieren</string>
     <string name="action_msg_delete">Löschen</string>
-    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
-    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
-    <string name="action_star">Star</string> <!-- TODO Add translation -->
-    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
+    <string name="action_pin">Anheften</string>
+    <string name="action_unpin">Nicht anheften</string>
+    <string name="action_star">Favorisieren</string>
+    <string name="action_unstar">Nicht favorisieren</string>
     <string name="action_msg_share">Teilen</string>
     <string name="action_title_editing">Nachricht bearbeiten</string>
     <string name="action_msg_add_reaction">Reaktion hinzufügen</string>
-    <string name="action_msg_permalink">Permalink</string> <!-- TODO Add translation -->
+    <string name="action_msg_permalink">Permalink</string>
     <string name="action_msg_report">Bericht</string>
 
     <!-- Permission messages -->
