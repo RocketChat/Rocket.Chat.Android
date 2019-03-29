@@ -232,19 +232,19 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
 
     <!-- Message actions -->
     <string name="action_msg_reply">Reply</string>
-    <string name="action_msg_info">Message info</string>
+    <string name="action_info">Info</string>
     <string name="action_msg_edit">Edit</string>
     <string name="action_msg_copy">Copy</string>
     <string name="action_msg_quote">Quote</string>
     <string name="action_msg_delete">Delete</string>
-    <string name="action_msg_pin">Pin Message</string>
-    <string name="action_msg_unpin">Unpin Message</string>
-    <string name="action_msg_star">Star Message</string>
-    <string name="action_msg_unstar">Unstar Message</string>
+    <string name="action_pin">Pin</string>
+    <string name="action_unpin">Unpin</string>
+    <string name="action_star">Star</string>
+    <string name="action_unstar">Unstar</string>
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">Editing Message</string>
     <string name="action_msg_add_reaction">Add reaction</string>
-    <string name="action_msg_copy_permalink">Copy permalink</string>
+    <string name="action_msg_permalink">Permalink</string>
     <string name="action_msg_report">Report</string>
 
     <!-- Permission messages -->

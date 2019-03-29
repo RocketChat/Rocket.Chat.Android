@@ -20,7 +20,7 @@ internal fun ChatDetailsFragment.setupMenu(menu: Menu) {
                     MENU_ACTION_VIDEO_CALL,
                     Menu.NONE,
                     R.string.msg_video_call
-                ).setIcon(R.drawable.ic_video_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+                ).setIcon(R.drawable.ic_video_white_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
             }
         }
     }
