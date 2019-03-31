@@ -31,6 +31,7 @@ import chat.rocket.android.members.di.MembersFragmentProvider
 import chat.rocket.android.mentions.di.MentionsFragmentProvider
 import chat.rocket.android.pinnedmessages.di.PinnedMessagesFragmentProvider
 import chat.rocket.android.preferences.di.PreferencesFragmentProvider
+import chat.rocket.android.privacy.di.PrivacyFragmentProvider
 import chat.rocket.android.profile.di.ProfileFragmentProvider
 import chat.rocket.android.server.di.ChangeServerModule
 import chat.rocket.android.server.ui.ChangeServerActivity
@@ -69,6 +70,7 @@ abstract class ActivityBuilder {
             SettingsFragmentProvider::class,
             AboutFragmentProvider::class,
             PreferencesFragmentProvider::class,
+            PrivacyFragmentProvider::class,
             AdminPanelWebViewFragmentProvider::class,
             ContactsFragmentProvider::class
         ]

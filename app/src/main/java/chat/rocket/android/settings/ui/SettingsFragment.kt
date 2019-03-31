@@ -33,6 +33,8 @@ import javax.inject.Inject
 
 // WIDECHAT
 import chat.rocket.android.helper.Constants
+import chat.rocket.android.privacy.ui.PrivacyFragment
+import chat.rocket.android.privacy.ui.TAG_PRIVACY_FRAGMENT
 import kotlinx.android.synthetic.main.app_bar.* // need this for back button in setupToolbar
 import kotlinx.android.synthetic.main.fragment_settings_widechat.*
 
@@ -95,26 +97,35 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                 }
             }
 
-            resources.getStringArray(R.array.settings_actions)[1] ->
+            resources.getStringArray(R.array.settings_actions)[1] -> {
+                (activity as AppCompatActivity).addFragmentBackStack(
+                        TAG_PRIVACY_FRAGMENT,
+                        R.id.fragment_container
+                ) {
+                    PrivacyFragment.newInstance()
+                }
+            }
+
+            resources.getStringArray(R.array.settings_actions)[2] ->
                 activity?.startActivity(Intent(activity, PasswordActivity::class.java))
 
             // TODO (https://github.com/RocketChat/Rocket.Chat.Android/pull/1918)
-            resources.getStringArray(R.array.settings_actions)[2] -> showToast("Coming soon")
+            resources.getStringArray(R.array.settings_actions)[3] -> showToast("Coming soon")
 
-            resources.getStringArray(R.array.settings_actions)[3] -> shareApp()
+            resources.getStringArray(R.array.settings_actions)[4] -> shareApp()
 
-            resources.getStringArray(R.array.settings_actions)[4] -> showAppOnStore()
+            resources.getStringArray(R.array.settings_actions)[5] -> showAppOnStore()
 
-            resources.getStringArray(R.array.settings_actions)[5] -> contactSupport()
+            resources.getStringArray(R.array.settings_actions)[6] -> contactSupport()
 
-            resources.getStringArray(R.array.settings_actions)[6] -> activity?.startActivity(
+            resources.getStringArray(R.array.settings_actions)[7] -> activity?.startActivity(
                 context?.webViewIntent(
                     getString(R.string.license_url),
                     getString(R.string.title_licence)
                 )
             )
 
-            resources.getStringArray(R.array.settings_actions)[7] -> {
+            resources.getStringArray(R.array.settings_actions)[8] -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
                     TAG_ABOUT_FRAGMENT,
                     R.id.fragment_container
