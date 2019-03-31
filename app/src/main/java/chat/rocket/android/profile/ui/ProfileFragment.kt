@@ -142,7 +142,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun reloadUserAvatar(avatarUrl: String) {
         Fresco.getImagePipeline().evictFromCache(avatarUrl.toUri())
         image_avatar.setImageURI(avatarUrl)
-        (activity as MainActivity).setAvatar(avatarUrl)
+//        (activity as MainActivity).setAvatar(avatarUrl)
     }
 
     override fun showProfileUpdateSuccessfullyMessage() {

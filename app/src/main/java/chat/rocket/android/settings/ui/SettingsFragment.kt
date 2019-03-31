@@ -55,12 +55,6 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
         analyticsManager.logScreenView(ScreenViewEvent.Settings)
     }
 
-    override fun onResume() {
-        // FIXME - gambiarra ahead. will fix when moving to new androidx Navigation
-        (activity as? MainActivity)?.setupNavigationView()
-        super.onResume()
-    }
-
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         when (parent?.getItemAtPosition(position).toString()) {
             resources.getStringArray(R.array.settings_actions)[0] -> {

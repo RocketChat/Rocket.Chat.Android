@@ -1,6 +1,5 @@
 package chat.rocket.android.chatrooms.ui
 
-import androidx.appcompat.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
@@ -10,8 +9,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -34,8 +31,6 @@ import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.util.extension.onQueryTextListener
-import chat.rocket.android.util.extensions.fadeIn
-import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.ifNotNullNotEmpty
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
@@ -58,11 +53,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     lateinit var factory: ChatRoomsViewModelFactory
     @Inject
     lateinit var analyticsManager: AnalyticsManager
-
     private lateinit var viewModel: ChatRoomsViewModel
-
-    private var searchView: SearchView? = null
-    private var sortView: MenuItem? = null
     private val handler = Handler()
     private var chatRoomId: String? = null
     private var progressDialog: ProgressDialog? = null
@@ -106,6 +97,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         subscribeUi()
 
         setupToolbar()
+        setupListeners()
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
     }
@@ -116,15 +108,17 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 presenter.loadChatRoom(room)
             }
 
-            recycler_view.layoutManager = LinearLayoutManager(it)
-            recycler_view.addItemDecoration(
-                DividerItemDecoration(
-                    it,
-                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
-                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)
+            with(recycler_view) {
+                layoutManager = LinearLayoutManager(it)
+                addItemDecoration(
+                    DividerItemDecoration(
+                        it,
+                        resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
+                        resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)
+                    )
                 )
-            )
-            recycler_view.itemAnimator = DefaultItemAnimator()
+                itemAnimator = DefaultItemAnimator()
+            }
 
             viewModel.getChatRooms().observe(viewLifecycleOwner, Observer { rooms ->
                 rooms?.let {
@@ -134,7 +128,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                         recycler_view.adapter = adapter
                     }
                     if (rooms.isNotEmpty()) {
-                        text_no_data_to_display.isVisible = false
+//                        text_no_data_to_display.isVisible = false
                     }
                 }
             })
@@ -165,88 +159,29 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.chatrooms, menu)
 
-        sortView = menu.findItem(R.id.action_sort)
+        val searchMenuItem = menu.findItem(R.id.action_search)
+        val searchView = searchMenuItem?.actionView as SearchView
 
-        val searchItem = menu.findItem(R.id.action_search)
-        searchView = searchItem?.actionView as? SearchView
-        searchView?.setIconifiedByDefault(false)
-        searchView?.maxWidth = Integer.MAX_VALUE
-        searchView?.onQueryTextListener { queryChatRoomsByName(it) }
+        with(searchView) {
+            setIconifiedByDefault(false)
+            maxWidth = Integer.MAX_VALUE
+            onQueryTextListener { queryChatRoomsByName(it) }
+        }
 
-        val expandListener = object : MenuItem.OnActionExpandListener {
+        searchMenuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                // Simply setting sortView to visible won't work, so we invalidate the options
-                // to recreate the entire menu...
-                viewModel.showLastMessage = true
+                // We need to show all the menu items here by invalidating the options to recreate the entire menu.
                 activity?.invalidateOptionsMenu()
                 queryChatRoomsByName(null)
                 return true
             }
 
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                viewModel.showLastMessage = false
-                sortView?.isVisible = false
+                // We need to hide the all the menu items here.
+                menu.findItem(R.id.action_new_channel).isVisible = false
                 return true
             }
-        }
-        searchItem?.setOnActionExpandListener(expandListener)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            // TODO - simplify this
-            R.id.action_sort -> {
-                val dialogLayout = layoutInflater.inflate(R.layout.chatroom_sort_dialog, null)
-                val sortType = SharedPreferenceHelper.getInt(
-                    Constants.CHATROOM_SORT_TYPE_KEY,
-                    ChatRoomsSortOrder.ACTIVITY
-                )
-                val groupByType =
-                    SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
-
-                val radioGroup = dialogLayout.findViewById<RadioGroup>(R.id.radio_group_sort)
-                val groupByTypeCheckBox =
-                    dialogLayout.findViewById<CheckBox>(R.id.checkbox_group_by_type)
-
-                radioGroup.check(
-                    when (sortType) {
-                        0 -> R.id.radio_sort_alphabetical
-                        else -> R.id.radio_sort_activity
-                    }
-                )
-                radioGroup.setOnCheckedChangeListener { _, checkedId ->
-                    run {
-                        SharedPreferenceHelper.putInt(
-                            Constants.CHATROOM_SORT_TYPE_KEY, when (checkedId) {
-                                R.id.radio_sort_alphabetical -> 0
-                                R.id.radio_sort_activity -> 1
-                                else -> 1
-                            }
-                        )
-                    }
-                }
-
-                groupByTypeCheckBox.isChecked = groupByType
-                groupByTypeCheckBox.setOnCheckedChangeListener { _, isChecked ->
-                    SharedPreferenceHelper.putBoolean(
-                        Constants.CHATROOM_GROUP_BY_TYPE_KEY,
-                        isChecked
-                    )
-                }
-
-                context?.let {
-                    AlertDialog.Builder(it)
-                        .setTitle(R.string.dialog_sort_title)
-                        .setView(dialogLayout)
-                        .setPositiveButton(R.string.msg_sort) { dialog, _ ->
-                            invalidateQueryOnSearch()
-                            updateSort()
-                            dialog.dismiss()
-                        }.show()
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
+        })
     }
 
     private fun updateSort() {
@@ -269,16 +204,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         viewModel.setQuery(query)
     }
 
-    private fun invalidateQueryOnSearch() {
-        searchView?.let {
-            if (!searchView!!.isIconified) {
-                queryChatRoomsByName(searchView!!.query.toString())
-            }
-        }
-    }
-
     private fun showNoChatRoomsToDisplay() {
-        ui { text_no_data_to_display.isVisible = true }
+//        ui { text_no_data_to_display.isVisible = true }
     }
 
     override fun showLoading() {
@@ -315,42 +242,68 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun showConnectionState(state: State) {
         Timber.d("Got new state: $state")
-        ui {
-            text_connection_status.fadeIn()
-            handler.removeCallbacks(dismissStatus)
-            text_connection_status.text = when (state) {
-                is State.Connected -> {
-                    handler.postDelayed(dismissStatus, 2000)
-                    getString(R.string.status_connected)
-                }
-                is State.Disconnected -> getString(R.string.status_disconnected)
-                is State.Connecting -> getString(R.string.status_connecting)
-                is State.Authenticating -> getString(R.string.status_authenticating)
-                is State.Disconnecting -> getString(R.string.status_disconnecting)
-                is State.Waiting -> getString(R.string.status_waiting, state.seconds)
-                else -> {
-                    handler.postDelayed(dismissStatus, 500)
-                    ""
-                }
-            }
-        }
+//        ui {
+//            text_connection_status.fadeIn()
+//            handler.removeCallbacks(dismissStatus)
+//            text_connection_status.text = when (state) {
+//                is State.Connected -> {
+//                    handler.postDelayed(dismissStatus, 2000)
+//                    getString(R.string.status_connected)
+//                }
+//                is State.Disconnected -> getString(R.string.status_disconnected)
+//                is State.Connecting -> getString(R.string.status_connecting)
+//                is State.Authenticating -> getString(R.string.status_authenticating)
+//                is State.Disconnecting -> getString(R.string.status_disconnecting)
+//                is State.Waiting -> getString(R.string.status_waiting, state.seconds)
+//                else -> {
+//                    handler.postDelayed(dismissStatus, 500)
+//                    ""
+//                }
+//            }
+//        }
     }
 
     private val dismissStatus = {
-        if (text_connection_status != null) {
-            text_connection_status.fadeOut()
-        }
+        //        if (text_connection_status != null) {
+//            text_connection_status.fadeOut()
+//        }
     }
 
     private fun setupToolbar() {
         (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_chats)
     }
 
+    private fun setupListeners() {
+        text_sort_by.setOnClickListener {
+            SortByBottomSheetFragment()
+                .show(activity?.supportFragmentManager, TAG)
+        }
+    }
+
+    fun sortChatRoomsList(
+        isSortByName: Boolean,
+        isUnreadOnTop: Boolean,
+        isGroupByType: Boolean,
+        isGroupByFavorites: Boolean
+    ) {
+        if (isSortByName) {
+            viewModel.setQuery(Query.ByName(isGroupByType))
+            changeSortByTitle(getString(R.string.msg_sort_by_name))
+        } else {
+            viewModel.setQuery(Query.ByActivity(isGroupByType))
+            changeSortByTitle(getString(R.string.msg_sort_by_activity))
+        }
+    }
+
+    private fun changeSortByTitle(text: String) {
+        text_sort_by.text = getString(R.string.msg_sort_by, text.toLowerCase())
+    }
+
     private fun queryChatRoomsByName(name: String?): Boolean {
         if (name.isNullOrEmpty()) {
             updateSort()
         } else {
-            viewModel.setQuery(Query.Search(name!!))
+            viewModel.setQuery(Query.Search(name))
         }
         return true
     }

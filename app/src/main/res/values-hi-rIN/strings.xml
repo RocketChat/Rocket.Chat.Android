@@ -34,6 +34,7 @@
     <string name="action_use_this_username">इस उपयोगकर्ता नाम का उपयोग करें</string>
     <string name="action_terms_of_service">सेवा की शर्तें</string>
     <string name="action_privacy_policy">गोपनीयता नीति</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">खोजें</string>
     <string name="action_update">अद्यतन करें</string>
     <string name="action_settings">सेटिंग्स</string>
@@ -310,14 +311,13 @@
     <string name="msg_no_recent_emoji"> कोई नया इमोजी नहीं</string>
     <string name="alert_title_default_skin_tone">डिफ़ॉल्ट त्वचा टोन</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">क्रम</string>
-    <string name="dialog_sort_title">द्वारा सॉर्ट करें</string>
-    <string name="dialog_sort_by_alphabet">वर्णानुक्रम</string>
-    <string name="dialog_sort_by_activity">गतिविधि</string>
-    <string name="dialog_group_by_type">प्रकार के आधार पर समूह</string>
-    <string name="dialog_group_favourites">पसंदीदा समूह</string>
-    <string name="chatroom_header">हैडर</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">पसंदीदा</string>

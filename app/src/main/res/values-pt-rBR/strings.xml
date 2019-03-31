@@ -34,6 +34,7 @@
     <string name="action_use_this_username">Usar este nome de usuário</string>
     <string name="action_terms_of_service">Termos de Serviço</string>
     <string name="action_privacy_policy">Política de Privacidade</string>
+    <string name="action_new_channel">Novo canal</string>
     <string name="action_search">Pesquisar</string>
     <string name="action_update">Atualizar</string>
     <string name="action_settings">Configurações</string>
@@ -309,13 +310,13 @@
     <string name="msg_no_recent_emoji">Nenhum emoji recente</string>
     <string name="alert_title_default_skin_tone">Tom de pele padrão</string>
 
-    <!-- Sorting and grouping-->
-    <string name="dialog_sort_title">Ordenar por</string>
-    <string name="dialog_sort_by_alphabet">Alfabeticamente</string>
-    <string name="dialog_sort_by_activity">Atividade</string>
-    <string name="dialog_group_by_type">Agrupar por tipo</string>
-    <string name="dialog_group_favourites">Grupos favoritos</string>
-    <string name="chatroom_header">Cabeçalho</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by">Ordenar por %1$s</string>
+    <string name="msg_sort_by_activity">Atividade</string>
+    <string name="msg_sort_by_name">Nome</string>
+    <string name="msg_group_by_unread_on_top">Não lidas no topo</string>
+    <string name="msg_group_by_type">Agrupar por tipo</string>
+    <string name="msg_group_by_favorites">Agrupar por favoritos</string>
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Favoritos</string>

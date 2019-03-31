@@ -37,6 +37,7 @@
     <string name="action_use_this_username">Benutze den Benutzernamen</string>
     <string name="action_terms_of_service">Nutzungsbedingungen</string>
     <string name="action_privacy_policy">Datenschutz</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">Suche</string>
     <string name="action_update">Updaten</string>
     <string name="action_settings">Einstellungen</string>
@@ -315,14 +316,13 @@
     <string name="msg_no_recent_emoji">Keine letzten Emojis</string>
     <string name="alert_title_default_skin_tone">Standard Hautton</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">Sortiere</string>
-    <string name="dialog_sort_title">Sortieren nach</string>
-    <string name="dialog_sort_by_alphabet">Alphabetisch</string>
-    <string name="dialog_sort_by_activity">Aktivität</string>
-    <string name="dialog_group_by_type">Räume nach Typ</string>
-    <string name="dialog_group_favourites">Räume nach Favoriten</string>
-    <string name="chatroom_header">Kopf</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Favoriten</string>

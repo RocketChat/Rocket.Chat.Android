@@ -35,6 +35,7 @@
     <string name="action_use_this_username">استخدم هذا الاسم</string>
     <string name="action_terms_of_service">شروط الخدمة</string>
     <string name="action_privacy_policy">شروط الخدمة</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">بحث</string>
     <string name="action_update">تحديث</string>
     <string name="action_settings">الإعدادات</string>
@@ -314,14 +315,13 @@
     <string name="msg_no_recent_emoji">لا يوجد ايموجيز </string>
     <string name="alert_title_default_skin_tone">نغمة الجلد الافتراضية</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">ترتيب</string>
-    <string name="dialog_sort_title">ترتيب حسب</string>
-    <string name="dialog_sort_by_alphabet">أبجدي</string>
-    <string name="dialog_sort_by_activity">النشاط</string>
-    <string name="dialog_group_by_type">تجميع حسب النوع</string>
-    <string name="dialog_group_favourites">تجميع المفصلات</string>
-    <string name="chatroom_header">العناوين</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Favorites</string> <!-- TODO Translate -->

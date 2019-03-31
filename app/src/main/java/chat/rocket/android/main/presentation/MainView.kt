@@ -1,38 +1,22 @@
 package chat.rocket.android.main.presentation
 
-import chat.rocket.android.authentication.server.presentation.VersionCheckView
 import chat.rocket.android.core.behaviours.MessageView
-import chat.rocket.android.main.uimodel.NavHeaderUiModel
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.presentation.TokenView
-import chat.rocket.common.model.UserStatus
 
-interface MainView : MessageView, VersionCheckView, TokenView {
-
-    /**
-     * Shows the current user status.
-     *
-     * @see [UserStatus]
-     */
-    fun showUserStatus(userStatus: UserStatus)
+interface MainView : TokenView, MessageView {
 
     /**
-     * Setups the user account info (displayed in the nav. header)
+     * Setups the toolbar with the current logged in server name.
      *
-     * @param uiModel The [NavHeaderUiModel].
+     * @param serverName The current logged in server name to show on Toolbar.
      */
-    fun setupUserAccountInfo(uiModel: NavHeaderUiModel)
+    fun setupToolbar(serverName: String)
 
     /**
-     * Setups the server account list.
+     * Setups the server list view with all server list.
      *
-     * @param serverAccountList The list of server accounts.
+     * @param serverList The server list to show on server list.
      */
-    fun setupServerAccountList(serverAccountList: List<Account>)
-
-    fun closeServerSelection()
-
-    fun showProgress()
-
-    fun hideProgress()
+    fun setupServerListView(serverList: List<Account>)
 }

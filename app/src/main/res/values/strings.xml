@@ -46,6 +46,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_use_this_username">Use this username</string>
     <string name="action_terms_of_service">Terms of Service</string>
     <string name="action_privacy_policy">Privacy Policy</string>
+    <string name="action_new_channel">New channel</string>
     <string name="action_search">Search</string>
     <string name="action_update">Update</string>
     <string name="action_settings">Settings</string>
@@ -322,14 +323,13 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_no_recent_emoji">No recent emojis</string>
     <string name="alert_title_default_skin_tone">Default skin tone</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">Sort</string>
-    <string name="dialog_sort_title">Sort by</string>
-    <string name="dialog_sort_by_alphabet">Alphabetical</string>
-    <string name="dialog_sort_by_activity">Activity</string>
-    <string name="dialog_group_by_type">Group by type</string>
-    <string name="dialog_group_favourites">Group favourites</string>
-    <string name="chatroom_header">Header</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by">Sort by %1$s</string>
+    <string name="msg_sort_by_activity">Activity</string>
+    <string name="msg_sort_by_name">Name</string>
+    <string name="msg_group_by_unread_on_top">Unread on top</string>
+    <string name="msg_group_by_type">Group by type</string>
+    <string name="msg_group_by_favorites">Group by favorites</string>
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Favorites</string>

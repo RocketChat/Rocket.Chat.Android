@@ -34,6 +34,7 @@
     <string name="action_use_this_username">Використати це ім\'я</string>
     <string name="action_terms_of_service">Умови використання</string>
     <string name="action_privacy_policy">Політика конфіденційності</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">Пошук</string>
     <string name="action_update">Оновити</string>
     <string name="action_settings">Налаштування</string>
@@ -305,14 +306,13 @@
     <string name="msg_no_recent_emoji">Пусто</string>
     <string name="alert_title_default_skin_tone">Тон шкіри за замовчуванням</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">Сортувати</string>
-    <string name="dialog_sort_title">Сортувати за</string>
-    <string name="dialog_sort_by_alphabet">За алфавітом</string>
-    <string name="dialog_sort_by_activity">За активністю</string>
-    <string name="dialog_group_by_type">Групувати за типом</string>
-    <string name="dialog_group_favourites">Групувати обране</string>
-    <string name="chatroom_header">Заголовок</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->

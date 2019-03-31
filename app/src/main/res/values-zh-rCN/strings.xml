@@ -34,6 +34,7 @@
     <string name="action_use_this_username">使用这个用户名</string>
     <string name="action_terms_of_service">服务条款</string>
     <string name="action_privacy_policy">隐私政策</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">搜索</string>
     <string name="action_update">更新</string>
     <string name="action_settings">设置</string>
@@ -306,14 +307,13 @@
     <string name="msg_no_recent_emoji">没有最近的emojis</string>
     <string name="alert_title_default_skin_tone">默认皮肤颜色</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">排序</string>
-    <string name="dialog_sort_title">排序按</string>
-    <string name="dialog_sort_by_alphabet">字母</string>
-    <string name="dialog_sort_by_activity">活跃</string>
-    <string name="dialog_group_by_type">按类型分组</string>
-    <string name="dialog_group_favourites">收藏分组</string>
-    <string name="chatroom_header">头部</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->

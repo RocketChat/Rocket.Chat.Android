@@ -34,6 +34,7 @@
     <string name="action_use_this_username">このユーザー名を使用する</string>
     <string name="action_terms_of_service">サービス利用規約</string>
     <string name="action_privacy_policy">プライバシーポリシー</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">検索</string>
     <string name="action_update">更新</string>
     <string name="action_settings">設定</string>
@@ -309,15 +310,13 @@
     <string name="msg_no_recent_emoji">最近の絵文字はありません</string>
     <string name="alert_title_default_skin_tone">デフォルトスキントークン</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">ソート</string>
-    <string name="dialog_sort_title">ソート</string>
-    <string name="dialog_sort_by_alphabet">アルファベット順</string>
-    <string name="dialog_sort_by_activity">アクティビティ順</string>
-    <string name="dialog_group_by_type">グループ別</string>
-    <string name="dialog_group_favourites">お気に入りのグループ</string>
-    <string name="chatroom_header">ヘッダ</string>
-
+    <!-- Sort and group -->
+    <string name="msg_sort_by">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
