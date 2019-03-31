@@ -16,7 +16,8 @@ import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_privacy.*
 import javax.inject.Inject
 import android.widget.ArrayAdapter
-
+import android.widget.AdapterView
+import chat.rocket.android.util.extensions.showToast
 
 
 internal const val TAG_PRIVACY_FRAGMENT = "PrivacyFragment"
@@ -24,8 +25,8 @@ internal const val TAG_PRIVACY_FRAGMENT = "PrivacyFragment"
 class PrivacyFragment : Fragment(), PrivacyView {
     @Inject
     lateinit var presenter: PrivacyPresenter
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
+
+    private val values = arrayListOf("all", "contacts", "none")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,13 +42,25 @@ class PrivacyFragment : Fragment(), PrivacyView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
-        setupListeners()
+        presenter.showDiscoverability()
+    }
 
-        val spinner = view.findViewById(R.id.spinner_privacy) as Spinner
-        val values = arrayListOf("Everyone", "Contacts", "None")
+    override fun showDiscoverability(discoverability: String) {
+        val spinner = view?.findViewById(R.id.spinner_privacy) as Spinner
         val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, values)
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinner.setAdapter(adapter);
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                val selection = spinner.selectedItem.toString()
+                presenter.setDiscoverability(selection);
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+        spinner.setSelection(adapter.getPosition(discoverability))
     }
 
     private fun setupToolbar() {
@@ -56,9 +69,6 @@ class PrivacyFragment : Fragment(), PrivacyView {
             setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
             setNavigationOnClickListener { activity?.onBackPressed() }
         }
-    }
-
-    private fun setupListeners() {
     }
 
     companion object {
