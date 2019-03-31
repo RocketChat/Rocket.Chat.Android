@@ -27,6 +27,7 @@ class PrivacyFragment : Fragment(), PrivacyView {
     lateinit var presenter: PrivacyPresenter
 
     private val values = arrayListOf("all", "contacts", "none")
+    private val choices = arrayListOf("Everyone", "My contacts", "None")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,20 +48,20 @@ class PrivacyFragment : Fragment(), PrivacyView {
 
     override fun showDiscoverability(discoverability: String) {
         val spinner = view?.findViewById(R.id.spinner_privacy) as Spinner
-        val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, values)
+        val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, choices)
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinner.setAdapter(adapter);
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selection = spinner.selectedItem.toString()
-                presenter.setDiscoverability(selection);
+                presenter.setDiscoverability(values.get(choices.indexOf(selection)));
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
-        spinner.setSelection(adapter.getPosition(discoverability))
+        spinner.setSelection(values.indexOf(discoverability))
     }
 
     private fun setupToolbar() {
