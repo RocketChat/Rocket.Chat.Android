@@ -90,7 +90,8 @@ class ProfilePresenter @Inject constructor(
                     serverUrl.avatarUrl(user?.username ?: ""),
                     user?.name ?: "",
                     user?.username ?: "",
-                    user?.emails?.getOrNull(0)?.address ?: ""
+                    user?.emails?.getOrNull(0)?.address ?: "",
+                    user?.telephoneNumber ?: ""
                 )
             } catch (exception: RocketChatException) {
                 view.showMessage(exception)
@@ -102,7 +103,6 @@ class ProfilePresenter @Inject constructor(
 
     // WIDECHAT - profile update with SSO
     fun setUpdateUrl(updatePath: String?, onClickCallback: (String?) -> Unit?) {
-        var telephoneNumber: String? = ""
         launchUI(strategy) {
             try {
                 withContext(DefaultDispatcher) {
@@ -111,9 +111,7 @@ class ProfilePresenter @Inject constructor(
                     checkEnabledAccounts(serverUrl)
                 }
                 retryIO { currentAccessToken = client.getAccessToken(customOauthServiceName.toString()) }
-//                retryIO { telephoneNumber = client.getTelephoneNumber(customOauthServiceName.toString()) }
-
-                val tokenInfo = "{\"userid\":\"${user?.username}\",\"telephoneNumber\":\"${telephoneNumber}\",\"email\":\"${user?.emails?.getOrNull(0)?.address ?: ""}\"}"
+                val tokenInfo = "{\"userid\":\"${user?.username}\",\"telephoneNumber\":\"${user?.telephoneNumber}\",\"email\":\"${user?.emails?.getOrNull(0)?.address ?: ""}\"}"
                 onClickCallback("${customOauthHost}${updatePath}access_token=${currentAccessToken}&token_info=${tokenInfo.encodeToBase64()}")
             } catch (ex: Exception) {
                 view.showMessage(ex)
