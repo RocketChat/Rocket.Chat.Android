@@ -18,14 +18,16 @@
     <string name="title_preferences">Preferencias</string>
     <string name="title_change_password">Cambia la contraseña</string>
     <string name="title_rate_us">Nos califica</string>
-    <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
+    <string name="title_admin_panel">Panel de Administrador</string>
     <string name="title_password">Cambia la contraseña</string>
     <string name="title_update_profile">Actualización del perfil</string>
     <string name="title_about">Acerca de</string>
     <string name="title_create_channel">Crear canal</string>
-    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
-    <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
-    <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
+    <string name="title_create_group">Crear grupos</string>
+    <string name="title_group_members">Miembros del Grupo</string>
+    <string name="title_licence">Licencia</string>
+    <string name="title_are_you_sure">Estás seguro?</string>
+    <string name="title_channel_details">detalles del canal</string>
     <string name="title_topic">Tema</string>
     <string name="title_announcement">Anuncio</string>
     <string name="title_description">Descripción</string>
@@ -151,6 +153,7 @@
     <string name="msg_are_typing">\u0020están escribiendo…</string>
     <string name="msg_several_users_are_typing">Varios usuarios están escribiendo…</string>
     <string name="msg_channel_name">Nombre del Canal</string>
+    <string name="msg_group_name">Nombre del Grupo</string>
     <string name="msg_search">Buscar</string>
     <string name="msg_message_copied">Mensaje copiado</string>
     <string name="msg_delete_message">Borrar mensaje</string>
@@ -201,6 +204,8 @@
     <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
     <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
     <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string> <!-- TODO Add translation -->
+    <string name="msg_public_account">Cuenta Publica</string>
+    <string name="msg_public_account_description">Envía estadísticas anónimas para ayudar a mejorar esta aplicación</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nombre de la sala cambiado para: %1$s por %2$s</string>
@@ -301,6 +306,7 @@
     <string name="Invite">Invitación</string>
     <string name="Invited">Invitado</string>
     <string name="Invite_contacts">INVITAR A CONTACTOS</string>
+    <string name="Spotlight_Result">OTROS USUARIOS</string>
     <string name="Invite_with_other_app">Invita a un amigo a través de otra aplicación.</string>
     <string name="Archive">Archivo</string>
     <string name="Remove_someone_from_room">Quita a alguien de la sala</string>
@@ -362,6 +368,10 @@
     <string name="widechat_new_channel">Nuevo chat de grupo</string>
     <string name="msg_widechat_no_chats_to_display">Busca personas para chatear que ya tienen el app de Viasat Connect o invita tus amigos y familiares a descargarlo..</string>
     <string name="msg_widechat_welcome_to_app">Bienvenido a Viasat Connect.</string>
+    <string name="title_chat_details">Detalles del chat</string>
+    <string name="share_via_another_app">Compartir a través de otra aplicación</string>
+    <string name="new_group">Nuevo Grupo</string>
+    <string name="new_contact">Nuevo Contacto</string>
 
     <!--Contacts Permissions-->
     <string name="permissions_request">Para conectarse fácilmente con amigos y familiares, permita que Viasat Connect acceda a sus contactos.</string>

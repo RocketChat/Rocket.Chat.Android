@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.recyclerview.selection.ItemDetailsLookup
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.ViewHolder
 import chat.rocket.android.contacts.models.Contact
@@ -24,11 +25,14 @@ class ContactsViewHolder(itemView: View) : ViewHolder<ContactsItemHolder>(itemVi
             contact_image_avatar.setImageURI(contact.getAvatarUrl())
             contact_name.text = contact.getName()
 
+            isActivated = false
+            contact_status.isGone = true
+            contact_checkbox.isGone = true
+
             if (contact.getUsername() == null) {
                 contact_detail.isVisible = true
                 invite_contact.isVisible = true
                 chat_username.isGone = true
-                contact_status.isGone = true
 
                 if (contact.isPhone()) {
                     contact_detail.text = contact.getPhoneNumber()
@@ -41,7 +45,6 @@ class ContactsViewHolder(itemView: View) : ViewHolder<ContactsItemHolder>(itemVi
                 invite_contact.isGone = true
                 chat_username.isVisible = true
                 chat_username.text = "@${contact.getUsername()}"
-                contact_status.isVisible = true
             }
 
             if(contact.getIsSpotlightResult()) {
@@ -52,8 +55,25 @@ class ContactsViewHolder(itemView: View) : ViewHolder<ContactsItemHolder>(itemVi
         }
     }
 
+    fun getItemDetails(): ItemDetailsLookup.ItemDetails<Long> =
+            object : ItemDetailsLookup.ItemDetails<Long>() {
+                override fun getPosition(): Int = adapterPosition
+                override fun getSelectionKey(): Long? = itemId
+            }
+
+    fun bindSelection(isActivated: Boolean = false) {
+        with(itemView) {
+            this.isActivated = isActivated
+            contact_status.isVisible = !isActivated
+            contact_checkbox.isVisible = isActivated
+        }
+    }
+
     fun setContactStatus(contact: Contact?) {
-        itemView.contact_status.setImageDrawable(getStatusDrawable(contact?.getStatus()))
+        contact?.getStatus()?.let {
+            itemView.contact_status.isVisible = true
+            itemView.contact_status.setImageDrawable(getStatusDrawable(it))
+        }
     }
 
     private fun getStatusDrawable(status: String?): Drawable {

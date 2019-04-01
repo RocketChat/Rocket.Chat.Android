@@ -36,6 +36,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_update_profile">Update profile</string>
     <string name="title_about">About</string>
     <string name="title_create_channel">Create Channel</string>
+    <string name="title_create_group">Create Group</string>
+    <string name="title_group_members">Group Members</string>
     <string name="title_licence">Licence</string>
     <string name="title_are_you_sure">Are you sure?</string>
     <string name="title_channel_details">Channel Details</string>
@@ -140,6 +142,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
     <string name="msg_channel_name">Channel name</string>
+    <string name="msg_group_name">Group name</string>
     <string name="msg_search">Search</string>
     <string name="msg_unread_messages">Unread messages</string>
     <string name="msg_preview_video">Video</string>
@@ -221,7 +224,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string>
     <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string>
     <string name="msg_public_account">Public Account</string>
-    <string name="msg_public_account_description">Send anonymous statics to help improving this app</string>
+    <string name="msg_public_account_description">Send anonymous statistics to help improve this app</string>
 
 
     <!-- System messages -->
@@ -377,6 +380,9 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="share_via_another_app">Share via another App</string>
     <string name="msg_widechat_no_chats_to_display">You can get started by searching for people to chat with or by inviting your friends and family to get the app too.</string>
     <string name="msg_widechat_welcome_to_app">Welcome to Viasat Connect.</string>
+    <string name="title_chat_details">Chat Details</string>
+    <string name="new_group">New Group</string>
+    <string name="new_contact">New Contact</string>
 
     <!--Contacts Permissions-->
     <string name="permissions_request">To easily connect with friends and family, allow Viasat Connect access to your contacts.</string>

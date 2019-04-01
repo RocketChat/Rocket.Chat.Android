@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:focusableInTouchMode="true"
+    tools:context="createchannel.ui.CreateChannelFragment">
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/widechat_view_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:indicatorColor="@color/colorBlack"
+        app:indicatorName="BallPulseIndicator"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/contact_image_avatar"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:padding="1dp"
+        android:layout_marginStart="8dp"
+        app:placeholderImage="@drawable/ic_group_add_white_24dp"
+        app:placeholderImageScaleType="centerInside"
+        android:background="@drawable/circle_green"
+        app:layout_constraintBottom_toBottomOf="@id/text_group_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/text_group_name"
+        app:roundedCornerRadius="@dimen/circle_avatar_corner_radius" />
+
+    <EditText
+        android:id="@+id/text_group_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/msg_group_name"
+        android:inputType="text"
+        android:maxLines="1"
+        android:paddingStart="4dp"
+        android:paddingEnd="10dp"
+        android:textSize="16sp"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/group_members_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="48dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:fontFamily="@string/font_fontFamily_widechat"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/title_group_members"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_group_name" />
+
+    <View
+        android:id="@+id/divider5"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/group_members_header"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/selected_contacts_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/group_members_header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/item_selected_contact" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/create_group_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/ic_check_white_24dp"
+        android:visibility="gone"
+        app:backgroundTint="@color/widechatFab"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

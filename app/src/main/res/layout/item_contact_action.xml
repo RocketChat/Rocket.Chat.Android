@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="shape"
+            type="chat.rocket.android.helper.Constants"/>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingStart="@dimen/screen_edge_left_and_right_padding"
+        android:paddingTop="@dimen/chat_item_top_and_bottom_padding"
+        android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+        android:paddingBottom="@dimen/chat_item_top_and_bottom_padding">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/contact_action_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:roundedCornerRadius='@{shape.AVATAR_SHAPE_CIRCLE ? @dimen/circle_avatar_corner_radius : @dimen/square_avatar_corner_radius}'
+            app:backgroundImage="@color/widechatGreenGradientLight" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical"
+            app:layout_constraintWidth_percent=".6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/contact_action_avatar">
+
+            <TextView
+                android:id="@+id/contact_action_title"
+                style="@style/ChatList.ChatName.TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@string/font_fontFamily_widechat"
+                android:lines="1"
+                android:maxLines="1"
+                android:textColor="@color/colorPrimaryText"
+                android:textDirection="locale"
+                tools:text="Create new chat" />
+
+            <TextView
+                android:id="@+id/contact_action_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:visibility="gone"
+                tools:text="Click this to create a new chat"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

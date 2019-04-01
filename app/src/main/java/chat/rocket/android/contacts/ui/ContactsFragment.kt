@@ -26,19 +26,19 @@ import android.view.View.GONE
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.recyclerview.selection.ItemKeyProvider
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.chatrooms.adapter.ItemHolder
+import chat.rocket.android.contacts.adapter.*
 import chat.rocket.android.chatrooms.adapter.RoomUiModelMapper
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
-import chat.rocket.android.contacts.adapter.ContactsHeaderItemHolder
-import chat.rocket.android.contacts.adapter.ContactsItemHolder
-import chat.rocket.android.contacts.adapter.ContactsRecyclerViewAdapter
-import chat.rocket.android.contacts.adapter.InviteItemHolder
-import chat.rocket.android.contacts.adapter.PermissionsItemHolder
 import chat.rocket.android.contacts.models.ContactsLoadingState
 import chat.rocket.android.contacts.presentation.ContactsPresenter
 import chat.rocket.android.contacts.presentation.ContactsView
+import chat.rocket.android.createchannel.ui.CreateChannelFragment
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.util.extensions.avatarUrl
@@ -48,11 +48,11 @@ import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.app_bar.view.*
 import kotlinx.android.synthetic.main.fragment_contact_parent.*
-import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 import timber.log.Timber
@@ -61,6 +61,14 @@ import timber.log.Timber
  * Load a list of contacts in a recycler view
  */
 class ContactsFragment : Fragment(), ContactsView {
+
+    //FIXME: Invite button not working during group creation
+    //FIXME: Fix the blank selected contacts recycler view upon screen rotate
+    //TODO: Add animations to ticks that appear upon selecting a contact
+    //TODO: Add animation to contacts list translating down when contacts are selected
+    //FIXME: Remove the blink when a contact is selected again after all the contacts are deselected
+    //TODO: When the group is being selected via long press from the new chat screen, change the title to create group from new chat
+    //TODO: Add support for square avatars during group creation flow
 
     @Inject
     lateinit var presenter: ContactsPresenter
@@ -74,19 +82,28 @@ class ContactsFragment : Fragment(), ContactsView {
     @Inject
     lateinit var mapper: RoomUiModelMapper
 
-    private var recyclerView :RecyclerView? = null
-    private var emptyTextView:  TextView? = null
+    private lateinit var contactsAdapter: ContactsRecyclerViewAdapter
+    private lateinit var recyclerView: RecyclerView
+    private var emptyTextView: TextView? = null
+    private var fab: View? = null
+
+    private lateinit var selectedContactsRecyclerView: RecyclerView
+    private lateinit var selectedContactsAdapter: RecyclerView.Adapter<*>
 
     /**
      * The list of contacts to load in the recycler view
      */
     private var contactArrayList: ArrayList<Contact> = ArrayList()
+    private var finalList: ArrayList<ItemHolder<*>> = ArrayList()
+    private var contactsSelectionTracker: SelectionTracker<Long>? = null
+    private var selectedContacts: ArrayList<Contact> = ArrayList()
 
     private var searchView: SearchView? = null
     private var searchIcon: ImageView? = null
     private var searchText: TextView? = null
     private var searchCloseButton: ImageView? = null
     private var loadedOnce: Boolean = false
+    var enableGroups: Boolean = false
 
     companion object {
         /**
@@ -97,14 +114,16 @@ class ContactsFragment : Fragment(), ContactsView {
          * @return the newly created ContactList fragment
          */
         fun newInstance(
-                contactArrayList: ArrayList<Contact>,
-                contactHashMap: HashMap<String, String>
+                contactArrayList: ArrayList<Contact>? = null,
+                contactHashMap: HashMap<String, String>? = null,
+                enableGroups: Boolean = false
         ): ContactsFragment {
             val contactsFragment = ContactsFragment()
 
             val arguments = Bundle()
-            arguments.putParcelableArrayList("CONTACT_ARRAY_LIST", contactArrayList)
-            arguments.putSerializable("CONTACT_HASH_MAP", contactHashMap)
+            arguments.putParcelableArrayList("CONTACTS_ARRAY_LIST", contactArrayList)
+            arguments.putSerializable("CONTACTS_HASH_MAP", contactHashMap)
+            arguments.putBoolean("CONTACTS_ENABLE_GROUPS", enableGroups)
 
             contactsFragment.arguments = arguments
             return contactsFragment
@@ -116,11 +135,14 @@ class ContactsFragment : Fragment(), ContactsView {
         AndroidSupportInjection.inject(this)
         loadedOnce = false
         setHasOptionsMenu(true)
+        val bundle = arguments
+        enableGroups = bundle?.getBoolean("CONTACTS_ENABLE_GROUPS") ?: false
     }
 
     override fun onPause() {
         activity?.invalidateOptionsMenu()
         hideSpinner()
+        this.arguments?.putParcelableArrayList("SELECTED_CONTACTS", selectedContacts)
         super.onPause()
     }
 
@@ -137,8 +159,35 @@ class ContactsFragment : Fragment(), ContactsView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        this.recyclerView = view.findViewById(R.id.recycler_view)
-        this.emptyTextView = view.findViewById(R.id.text_no_contacts_to_display)
+
+        emptyTextView = view.findViewById(R.id.text_no_contacts_to_display)
+        recyclerView = view.findViewById(R.id.contacts_recycler_view)
+
+        contactsAdapter = ContactsRecyclerViewAdapter(this, presenter, finalList)
+        recyclerView = contacts_recycler_view.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+            adapter = contactsAdapter
+        }
+
+        selectedContactsAdapter = SelectedContactsAdapter(selectedContacts, true) { contact: Contact ->
+            removeFromSelectedContact(contact)
+            removeFromSelectionTracker(contact)
+        }
+
+        selectedContactsRecyclerView = selected_contacts_recycler_view.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = selectedContactsAdapter
+        }
+
+        val bundle = arguments
+        bundle?.getParcelableArrayList<Contact>("SELECTED_CONTACTS")?.let {
+            if (it.isNotEmpty()) {
+                selectedContacts = it
+                onSelectionChanged(selectedContacts.size > 0)
+            }
+        }
 
         if (hasContactsPermissions()) {
             launch {
@@ -147,14 +196,16 @@ class ContactsFragment : Fragment(), ContactsView {
         } else {
             setupFrameLayout()
         }
+        setupTrackerAndFab()
         setupToolbar()
     }
 
     private fun getContactList() {
         val serverUrl = serverInteractor.get()!!
         val dbManager = dbFactory.create(serverUrl)
+        val compositeDisposable = CompositeDisposable()
 
-        Single.fromCallable {
+        val disposable = Single.fromCallable {
             // need to return a non-null object, since Rx 2 doesn't allow nulls
             dbManager.contactsDao().getAllSync()
         }
@@ -172,11 +223,11 @@ class ContactsFragment : Fragment(), ContactsView {
                                     } else {
                                         contact.setEmailAddress(contactEntity.emailAddress!!)
                                     }
-                                    if(contactEntity.username != null) {
+                                    if (contactEntity.username != null) {
                                         contact.setUsername(contactEntity.username)
                                         contact.setUserId(contactEntity.userId)
                                     }
-                                    contact.setAvatarUrl(serverUrl.avatarUrl(contact?.getUsername() ?: contact?.getName() ?: ""))
+                                    contact.setAvatarUrl(serverUrl.avatarUrl(contact.getUsername() ?: contact.getName() ?: ""))
                                     contact
                                 }
                             })
@@ -185,6 +236,7 @@ class ContactsFragment : Fragment(), ContactsView {
                         onError = { error ->
                         }
                 )
+        compositeDisposable.add(disposable)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -245,6 +297,8 @@ class ContactsFragment : Fragment(), ContactsView {
         if (Constants.WIDECHAT) {
             with((activity as AppCompatActivity?)?.supportActionBar) {
                 this?.setDisplayShowCustomEnabled(false)
+                if(enableGroups)
+                    this?.title = getString(R.string.title_create_group)
             }
         }
     }
@@ -311,23 +365,24 @@ class ContactsFragment : Fragment(), ContactsView {
                 setupFrameLayout(result)
             }
         } else {
-            var filteredContactArrayList: ArrayList<Contact> = ArrayList()
+            val filteredContactArrayList: ArrayList<Contact> = ArrayList()
             for (contact in contactArrayList) {
                 if (containsIgnoreCase(contact.getName()!!, query)) {
                     filteredContactArrayList.add(contact)
                 }
             }
-            launch(UI) {
+            launch {
                 try {
-                    result = presenter.spotlight(query)?.let { mapper.map(it, showLastMessage = false) }.let { mapSpotlightToContacts(it) }
-                } catch (ex: Exception) {
-                    Timber.e(ex)
-
+                    result = presenter.spotlight(query).let { mapper.map(it, showLastMessage = false) }.let { mapSpotlightToContacts(it) }
+                } catch (e: Exception) {
+                    Timber.e(e)
                 }
-                if (hasContactsPermissions()) {
-                    setupFrameLayout(filteredContactArrayList, result)
-                } else {
-                    setupFrameLayout(result)
+                ui {
+                    if (hasContactsPermissions()) {
+                        setupFrameLayout(filteredContactArrayList, result)
+                    } else {
+                        setupFrameLayout(result)
+                    }
                 }
             }
         }
@@ -340,7 +395,7 @@ class ContactsFragment : Fragment(), ContactsView {
 
     private fun getContactListWhenSynced() {
         // Show loading while sync in progress
-        recyclerView!!.visibility = View.GONE
+        recyclerView.visibility = View.GONE
         emptyTextView!!.visibility = View.GONE
 
         val serverUrl = serverInteractor.get()!!
@@ -366,7 +421,6 @@ class ContactsFragment : Fragment(), ContactsView {
                     is ContactsLoadingState.Loaded -> {
                         hideLoading()
                         hideSpinner()
-                        // TODO: Show updated contacts without refreshing the whole view
                         if (state.fromRefreshButton) {
                             getContactList()
                             if (loadedOnce)
@@ -390,24 +444,29 @@ class ContactsFragment : Fragment(), ContactsView {
         loadedOnce = true
         if (filteredContactArrayList.size == 0 && ((spotlightResult == null) or (spotlightResult?.size == 0))) {
             emptyTextView!!.visibility = View.VISIBLE
-            recyclerView!!.visibility = View.GONE
+            recyclerView.visibility = View.GONE
         } else {
             emptyTextView!!.visibility = View.GONE
-            recyclerView!!.visibility = View.VISIBLE
-
-            recyclerView!!.setHasFixedSize(true)
-            recyclerView!!.layoutManager = LinearLayoutManager(context)
-            recyclerView!!.adapter = ContactsRecyclerViewAdapter(this.activity as MainActivity,
-                                                                 presenter, map(filteredContactArrayList,
-                                                                 spotlightResult))
+            setUpNewList(map(filteredContactArrayList, spotlightResult))
         }
     }
 
     private fun setupFrameLayout(spotlightResult: ArrayList<ItemHolder<*>>? = null) {
-        recyclerView!!.visibility = View.VISIBLE
-        recyclerView!!.setHasFixedSize(true)
-        recyclerView!!.layoutManager = LinearLayoutManager(context)
-        recyclerView!!.adapter = ContactsRecyclerViewAdapter(this.activity as MainActivity, presenter, map(spotlightResult))
+        setUpNewList(map(spotlightResult))
+    }
+
+    private fun setUpNewList(list: ArrayList<ItemHolder<*>> = finalList) {
+        recyclerView.visibility = View.VISIBLE
+        finalList.clear()
+        finalList.addAll(list)
+        contactsSelectionTracker?.clearSelection()
+        if (enableGroups)
+            contactsSelectionTracker?.select(-1)
+        contactsAdapter.notifyDataSetChanged()
+        selectedContactsAdapter.notifyDataSetChanged()
+        selectedContacts.forEach {
+            addToSelectionTracker(it)
+        }
     }
 
     private fun map(contacts: List<Contact>, spotlightResult: ArrayList<ItemHolder<*>>? = null): ArrayList<ItemHolder<*>> {
@@ -437,11 +496,11 @@ class ContactsFragment : Fragment(), ContactsView {
         }
 
         finalList.addAll(userList)
-        if(contactsList.size > 0) {
+        if(contactsList.size > 0 && !enableGroups) {
             finalList.add(ContactsHeaderItemHolder(getString(R.string.Invite_contacts)))
             finalList.addAll(contactsList)
         }
-        if(spotlightResult !==null && spotlightResult.size >0) {
+        if(spotlightResult !== null && spotlightResult.size > 0) {
             finalList.add(ContactsHeaderItemHolder(getString(R.string.Spotlight_Result)))
             spotlightResult.forEach { item ->
                 val username = (item.data as Contact).getUsername()
@@ -457,7 +516,7 @@ class ContactsFragment : Fragment(), ContactsView {
     // Contacts access permission not granted yet
     private fun map(spotlightResult: ArrayList<ItemHolder<*>>? = null): ArrayList<ItemHolder<*>> {
         val finalList = ArrayList<ItemHolder<*>>(3)
-        if(spotlightResult !==null) {
+        if (spotlightResult !== null) {
             finalList.add(ContactsHeaderItemHolder(getString(R.string.Spotlight_Result)))
             spotlightResult.forEach { item ->
                 finalList.add(item)
@@ -471,10 +530,112 @@ class ContactsFragment : Fragment(), ContactsView {
         return finalList
     }
 
+    private fun setupTrackerAndFab() {
+
+        contactsSelectionTracker = SelectionTracker.Builder<Long>(
+                "contactsSelection",
+                recyclerView,
+                ContactsItemKeyProvider(recyclerView),
+                ContactsItemDetailsLookup(recyclerView),
+                StorageStrategy.createLongStorage()
+        ).withSelectionPredicate(
+                object : SelectionTracker.SelectionPredicate<Long>() {
+                    override fun canSetStateForKey(key: Long, nextState: Boolean): Boolean {
+                        val position = key.toInt()
+                        if (position == -1) return true
+                        if (finalList[position] is ContactsItemHolder &&
+                                (finalList[position] as ContactsItemHolder).data.getUsername() != null) {
+                            val contact = (finalList[position] as ContactsItemHolder).data
+                            if (nextState)
+                                addToSelectedContact(contact)
+                            else
+                                removeFromSelectedContact(contact)
+                            return true
+                        }
+                        return false
+                    }
+                    override fun canSetStateAtPosition(position: Int, nextState: Boolean): Boolean {
+                        return true
+                    }
+                    override fun canSelectMultiple(): Boolean {
+                        return true
+                    }
+                }
+        ).build()
+
+        fab = view?.findViewById(R.id.contacts_action_fab)
+        fab?.isVisible = enableGroups
+        fab?.setOnClickListener { view ->
+            if (selectedContacts.size < 1) {
+                showToast("Select at least one contact")
+            } else {
+                val createChannelFragment = CreateChannelFragment.newInstance(selectedContacts)
+                val transaction = activity?.supportFragmentManager?.beginTransaction()
+                transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                transaction?.replace(this.id, createChannelFragment, "createChannelFragment")
+                transaction?.addToBackStack("createChannelFragment")?.commit()
+            }
+        }
+
+        contactsAdapter.contactsSelectionTracker = contactsSelectionTracker
+    }
+
+    private fun onSelectionChanged(showSelection: Boolean) {
+        fab?.isVisible = showSelection
+        selectedContactsRecyclerView.isVisible = showSelection
+        selected_contacts_divider?.isVisible = showSelection
+    }
+
+    private fun indexOfSelectedContact(username: String) : Int {
+        selectedContacts.forEachIndexed { index, contact ->
+            if (contact.getUsername() == username)
+                return index
+        }
+        return -1
+    }
+
+    private fun addToSelectedContact(contact: Contact) {
+        if (indexOfSelectedContact(contact.getUsername()!!) == -1) {
+            val index = selectedContacts.size
+            selectedContacts.add(index, contact)
+            selectedContactsAdapter.notifyItemInserted(index)
+        }
+        onSelectionChanged(selectedContacts.size > 0)
+    }
+
+    private fun removeFromSelectedContact(contact: Contact) {
+        val index = indexOfSelectedContact(contact.getUsername()!!)
+        if (index != -1) {
+            selectedContacts.removeAt(index)
+            selectedContactsAdapter.notifyItemRemoved(index)
+        }
+        onSelectionChanged(selectedContacts.size > 0)
+    }
+
+    private fun addToSelectionTracker(contact: Contact) {
+        val username = contact.getUsername()
+        finalList.forEachIndexed { index, item ->
+            if (item is ContactsItemHolder && item.data.getUsername() == username) {
+                contactsSelectionTracker?.select(index.toLong())
+                return
+            }
+        }
+    }
+
+    private fun removeFromSelectionTracker(contact: Contact) {
+        val username = contact.getUsername()
+        finalList.forEachIndexed { index, item ->
+            if (item is ContactsItemHolder && item.data.getUsername() == username) {
+                contactsSelectionTracker?.deselect(index.toLong())
+                return
+            }
+        }
+    }
+
     private fun showSpinner() {
         try {
             ui {
-                (activity as MainActivity).toolbar.toolbar_progress_bar.visibility = VISIBLE
+                (activity as MainActivity).toolbar.toolbar_progress_bar?.visibility = VISIBLE
             }
         } catch (ex: Exception) {
             Timber.e(ex)
@@ -484,7 +645,7 @@ class ContactsFragment : Fragment(), ContactsView {
     private fun hideSpinner() {
         try {
             ui {
-                (activity as MainActivity).toolbar.toolbar_progress_bar.visibility = GONE
+                (activity as MainActivity).toolbar.toolbar_progress_bar?.visibility = GONE
             }
         } catch (ex: Exception) {
             Timber.e(ex)
@@ -519,4 +680,17 @@ class ContactsFragment : Fragment(), ContactsView {
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
+}
+
+class ContactsItemKeyProvider(private val recyclerView: RecyclerView) :
+        ItemKeyProvider<Long>(ItemKeyProvider.SCOPE_MAPPED) {
+
+    override fun getKey(position: Int): Long? {
+        return recyclerView.adapter?.getItemId(position)
+    }
+
+    override fun getPosition(key: Long): Int {
+        val viewHolder = recyclerView.findViewHolderForItemId(key)
+        return viewHolder?.layoutPosition ?: RecyclerView.NO_POSITION
+    }
 }

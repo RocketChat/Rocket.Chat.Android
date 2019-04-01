@@ -16,8 +16,8 @@ android {
         applicationId "chat.veranda.android"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 5030
-        versionName "0.5.3"
+        versionCode 5040
+        versionName "0.5.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -104,6 +104,7 @@ dependencies {
 
     implementation libraries.appCompat
     implementation libraries.recyclerview
+    implementation libraries.recyclerviewSelection
     implementation libraries.constraintlayout
     implementation libraries.cardview
     implementation libraries.browser
