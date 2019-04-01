@@ -36,16 +36,12 @@ import javax.inject.Inject
 import chat.rocket.core.internal.rest.getAccessToken
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
+import chat.rocket.android.util.extensions.encodeToBase64
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.MediaType
 import okhttp3.Protocol
-
-// EAR Developing
-import chat.rocket.android.util.extensions.encodeToBase64
-import timber.log.Timber
-
 
 class ProfilePresenter @Inject constructor(
     private val view: ProfileView,
