@@ -114,11 +114,12 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
     }
 
-    fun showWidechatProfile(avatarUrl: String, name: String, username: String, email: String?) {
+    fun showWidechatProfile(avatarUrl: String, name: String, username: String, email: String?, telephoneNumber: String?) {
         ui {
             image_avatar.setImageURI(avatarUrl)
             widechat_text_username.textContent = username
             widechat_text_email.textContent = email ?: ""
+            widechat_text_phone.textContent = telephoneNumber ?: ""
             widechat_profile_container.isVisible = true
         }
     }
@@ -145,9 +146,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         return true
     }
 
-    override fun showProfile(avatarUrl: String, name: String, username: String, email: String?) {
+    override fun showProfile(avatarUrl: String, name: String, username: String, email: String?, telephoneNumber: String?) {
         if (Constants.WIDECHAT) {
-            showWidechatProfile(avatarUrl, name, username, email)
+            showWidechatProfile(avatarUrl, name, username, email, telephoneNumber)
             return
         }
 

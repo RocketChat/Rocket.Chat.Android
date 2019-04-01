@@ -36,6 +36,7 @@ import javax.inject.Inject
 import chat.rocket.core.internal.rest.getAccessToken
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
+import chat.rocket.android.util.extensions.encodeToBase64
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -85,7 +86,8 @@ class ProfilePresenter @Inject constructor(
                     serverUrl.avatarUrl(user?.username ?: ""),
                     user?.name ?: "",
                     user?.username ?: "",
-                    user?.emails?.getOrNull(0)?.address ?: ""
+                    user?.emails?.getOrNull(0)?.address ?: "",
+                    user?.telephoneNumber ?: ""
                 )
             } catch (exception: RocketChatException) {
                 view.showMessage(exception)
@@ -105,7 +107,8 @@ class ProfilePresenter @Inject constructor(
                     checkEnabledAccounts(serverUrl)
                 }
                 retryIO { currentAccessToken = client.getAccessToken(customOauthServiceName.toString()) }
-                onClickCallback("${customOauthHost}${updatePath}${currentAccessToken}")
+                val tokenInfo = "{\"userid\":\"${user?.username}\",\"telephoneNumber\":\"${user?.telephoneNumber}\",\"email\":\"${user?.emails?.getOrNull(0)?.address ?: ""}\"}"
+                onClickCallback("${customOauthHost}${updatePath}access_token=${currentAccessToken}&token_info=${tokenInfo.encodeToBase64()}")
             } catch (ex: Exception) {
                 view.showMessage(ex)
             }

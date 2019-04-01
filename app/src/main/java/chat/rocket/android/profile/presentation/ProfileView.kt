@@ -14,7 +14,7 @@ interface ProfileView : TokenView, LoadingView, MessageView {
      * @param username The user username.
      * @param email The user email.
      */
-    fun showProfile(avatarUrl: String, name: String, username: String, email: String?)
+    fun showProfile(avatarUrl: String, name: String, username: String, email: String?, telephoneNumber: String? = null)
 
     /**
      * Reloads the user avatar (after successfully updating it).
