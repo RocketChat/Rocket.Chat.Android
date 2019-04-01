@@ -167,8 +167,10 @@ class ChatRoomsPresenter @Inject constructor(
                 status = myself.status,
                 utcOffset = myself.utcOffset,
                 emails = emails,
-                roles = myself.roles
+                roles = myself.roles,
+                telephoneNumber = myself.telephoneNumber
             )
+
             localRepository.saveCurrentUser(url = currentServer, user = user)
             return user
         } catch (ex: RocketChatException) {
