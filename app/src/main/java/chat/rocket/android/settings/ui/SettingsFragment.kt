@@ -31,6 +31,9 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 import timber.log.Timber
 import javax.inject.Inject
 
+// EAR DEV
+import kotlinx.coroutines.launch
+
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
 class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListener {
@@ -126,6 +129,41 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             startActivity(Intent.createChooser(this, getString(R.string.msg_share_using)))
         }
     }
+
+
+    // EAR DEV CODE
+
+    fun shareViaApp(){
+        launch {
+            //get serverUrl and username
+            val server = serverInteractor.get()!!
+            val account = getAccountInteractor.get(server)!!
+            val userName = account.userName
+
+            var deepLinkCallback = { returnedString: String? ->
+                with(Intent(Intent.ACTION_SEND)) {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_check_this_out))
+                    putExtra(Intent.EXTRA_TEXT, "Default Invitation Text : $returnedString")
+                    startActivity(Intent.createChooser(this, getString(R.string.msg_share_using)))
+                }
+            }
+            dynamicLinksManager.createDynamicLink(userName, server, deepLinkCallback)
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private fun contactSupport() {
         val uriText = "mailto:${"support@rocket.chat"}" +
