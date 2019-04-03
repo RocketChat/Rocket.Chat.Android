@@ -35,7 +35,6 @@ class CreateChannelPresenter @Inject constructor(
             view.disableUserInput()
             try {
                 client.createChannel(roomType, channelName, usersList, readOnly)
-                view.prepareToShowChatList()
                 view.showChannelCreatedSuccessfullyMessage()
                 toChatList()
             } catch (exception: RocketChatException) {

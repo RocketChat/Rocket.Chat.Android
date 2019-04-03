@@ -9,6 +9,7 @@ import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.presentation.MainNavigator
+import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
@@ -16,10 +17,12 @@ import chat.rocket.android.server.infraestructure.ConnectionManager
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
+import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.User
 import chat.rocket.common.model.roomTypeOf
+import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.createDirectMessage
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.show
@@ -35,6 +38,7 @@ class ChatRoomsPresenter @Inject constructor(
     private val strategy: CancelStrategy,
     private val navigator: MainNavigator,
     @Named("currentServer") private val currentServer: String,
+    private val getAccountsInteractor: GetAccountsInteractor,
     private val dbManager: DatabaseManager,
     manager: ConnectionManager,
     private val localRepository: LocalRepository,
@@ -43,6 +47,33 @@ class ChatRoomsPresenter @Inject constructor(
 ) {
     private val client = manager.client
     private val settings = settingsRepository.get(currentServer)
+
+    fun toCreateChannel() = navigator.toCreateChannel()
+
+    fun getCurrentServerName() {
+        view.setupToolbar(currentServer)
+    }
+
+    fun getAllServers() {
+        launchUI(strategy) {
+            try {
+                view.setupServerListView(getAccountsInteractor.get())
+            } catch (exception: Exception) {
+                Timber.e(exception, "Error while getting all servers")
+                when (exception) {
+//                    is RocketChatAuthException -> logout()
+                    else -> {
+                        exception.message?.let {
+                            view.showMessage(it)
+                        }.ifNull {
+                            view.showGenericErrorMessage()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     fun loadChatRoom(roomId: String) {
         launchUI(strategy) {
@@ -97,11 +128,12 @@ class ChatRoomsPresenter @Inject constructor(
     suspend fun loadChatRoom(chatRoom: ChatRoomEntity, local: Boolean = false) {
         with(chatRoom) {
             val isDirectMessage = roomTypeOf(type) is RoomType.DirectMessage
-            val roomName = if (settings.useSpecialCharsOnRoom() || (isDirectMessage && settings.useRealName())) {
-                fullname ?: name
-            } else {
-                name
-            }
+            val roomName =
+                if (settings.useSpecialCharsOnRoom() || (isDirectMessage && settings.useRealName())) {
+                    fullname ?: name
+                } else {
+                    name
+                }
 
             val myself = getCurrentUser()
             if (myself?.username == null) {
@@ -131,14 +163,14 @@ class ChatRoomsPresenter @Inject constructor(
                 }
 
                 navigator.toChatRoom(
-                        chatRoomId = id,
-                        chatRoomName = roomName,
-                        chatRoomType = type,
-                        isReadOnly = readonly ?: false,
-                        chatRoomLastSeen = lastSeen ?: -1,
-                        isSubscribed = open,
-                        isCreator = ownerId == myself.id || isDirectMessage,
-                        isFavorite = favorite ?: false
+                    chatRoomId = id,
+                    chatRoomName = roomName,
+                    chatRoomType = type,
+                    isReadOnly = readonly ?: false,
+                    chatRoomLastSeen = lastSeen ?: -1,
+                    isSubscribed = open,
+                    isCreator = ownerId == myself.id || isDirectMessage,
+                    isFavorite = favorite ?: false
                 )
             }
         }

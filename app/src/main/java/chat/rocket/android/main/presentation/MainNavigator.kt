@@ -14,6 +14,7 @@ import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.settings.ui.SettingsFragment
 import chat.rocket.android.settings.ui.TAG_SETTINGS_FRAGMENT
 import chat.rocket.android.util.extensions.addFragment
+import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.webview.adminpanel.ui.AdminPanelWebViewFragment
 
 class MainNavigator(internal val activity: MainActivity) {
@@ -24,8 +25,14 @@ class MainNavigator(internal val activity: MainActivity) {
         }
     }
 
+    fun toSettings() {
+        activity.addFragmentBackStack(TAG_SETTINGS_FRAGMENT, R.id.fragment_container) {
+            SettingsFragment.newInstance()
+        }
+    }
+
     fun toCreateChannel() {
-        activity.addFragment(TAG_CREATE_CHANNEL_FRAGMENT, R.id.fragment_container) {
+        activity.addFragmentBackStack(TAG_CREATE_CHANNEL_FRAGMENT, R.id.fragment_container) {
             CreateChannelFragment.newInstance()
         }
     }
@@ -33,12 +40,6 @@ class MainNavigator(internal val activity: MainActivity) {
     fun toUserProfile() {
         activity.addFragment(TAG_PROFILE_FRAGMENT, R.id.fragment_container) {
             ProfileFragment.newInstance()
-        }
-    }
-
-    fun toSettings() {
-        activity.addFragment(TAG_SETTINGS_FRAGMENT, R.id.fragment_container) {
-            SettingsFragment.newInstance()
         }
     }
 

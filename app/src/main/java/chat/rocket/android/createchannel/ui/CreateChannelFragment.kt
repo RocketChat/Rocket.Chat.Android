@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.view.isVisible
-import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,6 +31,7 @@ import com.google.android.material.chip.Chip
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_create_channel.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -165,20 +165,6 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         view_member_suggestion_loading.isVisible = false
     }
 
-    override fun prepareToShowChatList() {
-        with(activity as MainActivity) {
-
-//            setCheckedNavDrawerItem(R.id.menu_action_chats)
-//            openDrawer()
-//            getDrawerLayout().postDelayed(1000) {
-//                closeDrawer()
-//                createChannelPresenter.toChatList()
-//            }
-
-        }
-
-    }
-
     override fun showChannelCreatedSuccessfullyMessage() {
         showMessage(getString(R.string.msg_channel_created_successfully))
     }
@@ -194,8 +180,14 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     }
 
     private fun setupToolBar() {
-        (activity as AppCompatActivity?)?.supportActionBar?.title =
-            getString(R.string.title_create_channel)
+        with((activity as AppCompatActivity)) {
+            with(toolbar) {
+                setSupportActionBar(toolbar)
+                title = getString(R.string.title_create_channel)
+                setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+                setNavigationOnClickListener { activity?.onBackPressed() }
+            }
+        }
     }
 
     private fun setupViewListeners() {

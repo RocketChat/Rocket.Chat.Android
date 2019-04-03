@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".chatrooms.ui.ChatRoomsFragment">
 
+    <include
+        android:id="@+id/layout_app_bar_chat_room"
+        layout="@layout/app_bar_chat_rooms"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/text_sort_by"
         android:layout_width="match_parent"
@@ -22,7 +27,7 @@
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_app_bar_chat_room" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
@@ -41,6 +46,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_sort_by"
         tools:visibility="visible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

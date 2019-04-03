@@ -30,6 +30,7 @@ import chat.rocket.android.chatrooms.viewmodel.Query
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
+import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.ifNotNullNotEmpty
 import chat.rocket.android.util.extensions.inflate
@@ -38,6 +39,7 @@ import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.app_bar_chat_rooms.*
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -93,14 +95,19 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        presenter.getCurrentServerName()
+        setupListeners()
+
         viewModel = ViewModelProviders.of(this, factory).get(ChatRoomsViewModel::class.java)
         subscribeUi()
 
-        setupToolbar()
-        setupListeners()
-
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
     }
+
+    override fun setupServerListView(serverList: List<Account>) {
+        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 
     private fun subscribeUi() {
         ui {
@@ -182,6 +189,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 return true
             }
         })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_new_channel -> presenter.toCreateChannel()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun updateSort() {
@@ -269,11 +283,16 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 //        }
     }
 
-    private fun setupToolbar() {
-        (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_chats)
+    override fun setupToolbar(serverName: String) {
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+        text_server_name.text = serverName
     }
 
     private fun setupListeners() {
+        text_server_name.setOnClickListener {
+            // TO DO
+        }
+
         text_sort_by.setOnClickListener {
             SortByBottomSheetFragment()
                 .show(activity?.supportFragmentManager, TAG)
