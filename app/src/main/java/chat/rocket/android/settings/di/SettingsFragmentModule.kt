@@ -18,15 +18,15 @@ class SettingsFragmentModule {
         return frag
     }
 
-    @Provides
-    @PerFragment
-    fun settingsLifecycleOwner(frag: SettingsFragment): LifecycleOwner {
-        return frag
-    }
+//    @Provides
+//    @PerFragment
+//    fun settingsLifecycleOwner(frag: SettingsFragment): LifecycleOwner {
+//        return frag
+//    }
 
-    @Provides
-    @PerFragment
-    fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy {
-        return CancelStrategy(owner, jobs)
-    }
+//    @Provides
+//    @PerFragment
+//    fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy {
+//        return CancelStrategy(owner, jobs)
+//    }
 }

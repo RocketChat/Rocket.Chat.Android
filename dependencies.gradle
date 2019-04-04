@@ -23,6 +23,7 @@ ext {
             dagger                : '2.16',
             firebaseCloudMessage  : '17.3.4',
             firebaseAnalytics     : '16.0.6',
+            dynamiclinks          : '16.1.5',
             playServicesAuth      : '16.0.1',
             exoPlayer             : '2.8.2',
             flexbox               : '1.1.0',
@@ -56,7 +57,7 @@ ext {
             glide                 : '4.8.0',
             glideTransformations  : '4.0.0',
 
-            jitsi                 : '+', // TODO Avoid using + (https://github.com/jitsi/jitsi-meet/issues/3987)
+            jitsi                  : '1.21.0',
 
             // For testing
             junit                 : '4.12',
@@ -131,6 +132,8 @@ ext {
             fcm                   : "com.google.firebase:firebase-messaging:${versions.firebaseCloudMessage}",
             firebaseAnalytics     : "com.google.firebase:firebase-core:${versions.firebaseAnalytics}",
             playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServicesAuth}",
+            dynamiclinks          : "com.google.firebase:firebase-dynamic-links:${versions.dynamiclinks}",
+
 
             // For testing
             junit                 : "junit:junit:${versions.junit}",

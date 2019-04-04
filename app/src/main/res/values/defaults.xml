@@ -7,4 +7,6 @@
     <string name="play_store_link" translatable="false">https://play.google.com/store/apps/details?id=chat.rocket.android</string>
     <string name="market_link" translatable="false">market://details?id=chat.rocket.android</string>
     <string name="license_url" translatable="false">https://github.com/RocketChat/Rocket.Chat.Android/blob/develop/LICENSE</string>
+    <string name="dynamiclink_host" translatable="false">viasatconnect.page.link</string>
+    <string name="app_package_name" translatable="false">chat.veranda.android</string>
 </resources>

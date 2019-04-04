@@ -21,6 +21,7 @@ import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.preferences.ui.PreferencesFragment
 import chat.rocket.android.preferences.ui.TAG_PREFERENCES_FRAGMENT
 import chat.rocket.android.settings.password.ui.PasswordActivity
+import chat.rocket.android.settings.presentation.SettingsPresenter
 import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.extensions.inflate
@@ -31,12 +32,11 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 import timber.log.Timber
 import javax.inject.Inject
 
-// EAR DEV
-import kotlinx.coroutines.launch
-
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
 class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListener {
+    @Inject
+    lateinit var presenter: SettingsPresenter
     @Inject
     lateinit var analyticsManager: AnalyticsManager
 
@@ -122,48 +122,17 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     }
 
     private fun shareApp() {
-        with(Intent(Intent.ACTION_SEND)) {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_check_this_out))
-            putExtra(Intent.EXTRA_TEXT, getString(R.string.play_store_link))
-            startActivity(Intent.createChooser(this, getString(R.string.msg_share_using)))
-        }
+        presenter.shareViaApp(context!!)
     }
 
-
-    // EAR DEV CODE
-
-    fun shareViaApp(){
-        launch {
-            //get serverUrl and username
-            val server = serverInteractor.get()!!
-            val account = getAccountInteractor.get(server)!!
-            val userName = account.userName
-
-            var deepLinkCallback = { returnedString: String? ->
-                with(Intent(Intent.ACTION_SEND)) {
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_check_this_out))
-                    putExtra(Intent.EXTRA_TEXT, "Default Invitation Text : $returnedString")
-                    startActivity(Intent.createChooser(this, getString(R.string.msg_share_using)))
-                }
-            }
-            dynamicLinksManager.createDynamicLink(userName, server, deepLinkCallback)
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
+//    private fun shareApp() {
+//        with(Intent(Intent.ACTION_SEND)) {
+//            type = "text/plain"
+//            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_check_this_out))
+//            putExtra(Intent.EXTRA_TEXT, getString(R.string.play_store_link))
+//            startActivity(Intent.createChooser(this, getString(R.string.msg_share_using)))
+//        }
+//    }
 
     private fun contactSupport() {
         val uriText = "mailto:${"support@rocket.chat"}" +
