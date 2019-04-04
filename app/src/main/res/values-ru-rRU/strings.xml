@@ -180,6 +180,7 @@
         <item quantity="many">%1$s реагируют с %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Учетные данные успешно сохранены</string>
+    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>

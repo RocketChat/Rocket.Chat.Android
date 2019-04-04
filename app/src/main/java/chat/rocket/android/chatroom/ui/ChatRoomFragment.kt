@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -60,10 +61,8 @@ import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiPickerPopup
 import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.emoji.internal.isCustom
-import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
-import chat.rocket.android.helper.ImageHelper
-import chat.rocket.android.helper.KeyboardHelper
-import chat.rocket.android.helper.MessageParser
+import chat.rocket.android.helper.*
+import chat.rocket.android.helper.AndroidPermissionsHelper.CAMERA_CODE
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.createImageFile
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
@@ -81,6 +80,7 @@ import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -903,8 +903,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_add_reaction_or_show_keyboard.setOnClickListener { toggleKeyboard() }
 
             button_take_a_photo.setOnClickListener {
-                dispatchTakePictureIntent()
-
+                // Check for camera permission
+                context?.let {
+                    if(hasCameraPermission(it)) {
+                        dispatchTakePictureIntent()
+                    } else {
+                        getCameraPermission()
+                    }
+                }
                 handler.postDelayed({
                     hideAttachmentOptions()
                 }, 400)
@@ -953,6 +959,33 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 )
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, takenPhotoUri)
                 startActivityForResult(takePictureIntent, REQUEST_CODE_FOR_PERFORM_CAMERA)
+            }
+        }
+    }
+
+    private fun hasCameraPermission(context: Context): Boolean {
+        return AndroidPermissionsHelper.checkPermission(context, android.Manifest.permission.CAMERA)
+    }
+
+    private fun getCameraPermission() {
+        requestPermissions(
+            arrayOf(android.Manifest.permission.CAMERA),
+            AndroidPermissionsHelper.CAMERA_CODE
+        )
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            CAMERA_CODE -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // permission was granted
+                    dispatchTakePictureIntent()
+                } else {
+                    // permission denied
+                    Snackbar.make(root_layout, R.string.msg_camera_permission_denied, Snackbar.LENGTH_SHORT).show()
+                }
+                return
             }
         }
     }

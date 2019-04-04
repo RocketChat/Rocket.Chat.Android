@@ -173,6 +173,7 @@
         <item quantity="one">%1$s reagiu com %2$s</item>
         <item quantity="other">%1$s reagiram com %2$s</item>
     </plurals>
+    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>

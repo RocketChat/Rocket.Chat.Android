@@ -182,6 +182,8 @@
         <item quantity="two">%1$s reacted with %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Credentials saved successfully</string> <!-- TODO Translate -->
+    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
+
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">خاص</string>

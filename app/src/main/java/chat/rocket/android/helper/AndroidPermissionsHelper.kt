@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 object AndroidPermissionsHelper {
 
     const val WRITE_EXTERNAL_STORAGE_CODE = 1
+    const val CAMERA_CODE = 2
 
     fun checkPermission(context: Context, permission: String): Boolean {
         return ContextCompat.checkSelfPermission(
