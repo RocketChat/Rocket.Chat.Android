@@ -10,8 +10,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.RadioGroup
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -23,6 +22,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
+import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.chatrooms.adapter.RoomsAdapter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
@@ -34,12 +35,7 @@ import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.util.extension.onQueryTextListener
-import chat.rocket.android.util.extensions.fadeIn
-import chat.rocket.android.util.extensions.fadeOut
-import chat.rocket.android.util.extensions.ifNotNullNotEmpty
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
@@ -66,11 +62,15 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private val handler = Handler()
     private var chatRoomId: String? = null
     private var progressDialog: ProgressDialog? = null
+    private var deepLinkInfo: DeepLinkInfo? = null
 
     companion object {
-        fun newInstance(chatRoomId: String? = null): ChatRoomsFragment = ChatRoomsFragment().apply {
-            arguments = Bundle(1).apply {
-                putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
+        fun newInstance(chatRoomId: String? = null, deepLinkInfo: DeepLinkInfo? = null): ChatRoomsFragment {
+            return ChatRoomsFragment().apply {
+                arguments = Bundle(1).apply {
+                    putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
+                    putParcelable(Constants.DEEP_LINK_INFO, deepLinkInfo)
+                }
             }
         }
     }
@@ -85,6 +85,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 presenter.loadChatRoom(roomId)
                 chatRoomId = null
             }
+            deepLinkInfo = getParcelable<DeepLinkInfo>(Constants.DEEP_LINK_INFO)
         }
     }
 
@@ -104,8 +105,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         viewModel = ViewModelProviders.of(this, factory).get(ChatRoomsViewModel::class.java)
         subscribeUi()
-
         setupToolbar()
+        deepLinkInfo?.let {
+            processDeepLink(it)
+        }
+        deepLinkInfo = null
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
     }
@@ -353,5 +357,39 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             viewModel.setQuery(Query.Search(name!!))
         }
         return true
+    }
+
+    fun processDeepLink(deepLinkInfo: DeepLinkInfo) {
+
+        val username = deepLinkInfo.roomName
+        username.ifNotNullNorEmpty {
+            val localRooms = viewModel.getChatRoomOfUsernameDB(username!!)
+            val filteredLocalRooms = localRooms.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+
+            if (filteredLocalRooms.isNotEmpty()) {
+                presenter.loadChatRoom(filteredLocalRooms.first().data as RoomUiModel)
+            } else {
+                //check from spotlight when connected
+                val statusLiveData = viewModel.getStatus()
+                statusLiveData.observe(viewLifecycleOwner, object: Observer<State>{
+                    override fun onChanged(status: State?) {
+                        if (status is State.Connected) {
+                            val rooms = viewModel.getChatRoomOfUsernameSpotlight(username)
+                            val filteredRooms = rooms?.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+
+                            filteredRooms?.let {
+                                if (filteredRooms.isNotEmpty()) {
+                                    presenter.loadChatRoom(filteredRooms.first().data as RoomUiModel)
+                                } else {
+                                    Toast.makeText(context, "User not found or No internet connection", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
+                            statusLiveData.removeObserver(this)
+                        }
+                    }
+                })
+            }
+        }
     }
 }

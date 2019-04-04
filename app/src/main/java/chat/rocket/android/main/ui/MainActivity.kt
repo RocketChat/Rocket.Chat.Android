@@ -2,6 +2,7 @@ package chat.rocket.android.main.ui
 
 import DrawableHelper
 import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
@@ -13,7 +14,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
+import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
+import chat.rocket.android.helper.Constants
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
@@ -29,6 +33,7 @@ import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.invalidateFirebaseToken
 import chat.rocket.common.model.UserStatus
+import chat.rocket.common.util.ifNull
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -58,6 +63,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     private var expanded = false
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
     private var chatRoomId: String? = null
+    private var deepLinkInfo: DeepLinkInfo? = null
     private var progressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +73,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
         refreshPushToken()
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
+        deepLinkInfo = intent.getParcelableExtra(Constants.DEEP_LINK_INFO)
         presenter.clearNotificationsForChatroom(chatRoomId)
 
         presenter.connect()
@@ -75,6 +82,21 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         presenter.loadEmojis()
         setupToolbar()
         setupNavigationView()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            var deepLinkInfo = it.getParcelableExtra<DeepLinkInfo>(Constants.DEEP_LINK_INFO)
+            if (deepLinkInfo != null) {
+                val chatRoomsFragment = supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOMS_FRAGMENT) as ChatRoomsFragment
+                chatRoomsFragment?.let {
+                    it.processDeepLink(deepLinkInfo)
+                } .ifNull {
+                    isFragmentAdded = false
+                }
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -90,7 +112,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     override fun onResume() {
         super.onResume()
         if (!isFragmentAdded) {
-            presenter.toChatList(chatRoomId)
+            presenter.toChatList(chatRoomId, deepLinkInfo)
+            deepLinkInfo = null
             isFragmentAdded = true
         }
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE)

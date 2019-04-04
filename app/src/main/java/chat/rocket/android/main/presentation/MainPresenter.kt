@@ -1,6 +1,7 @@
 package chat.rocket.android.main.presentation
 
 import android.content.Context
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.emoji.Emoji
@@ -38,6 +39,7 @@ import chat.rocket.core.internal.rest.getCustomEmojis
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.model.Myself
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -70,6 +72,7 @@ class MainPresenter @Inject constructor(
     dbManagerFactory = dbManagerFactory,
     tokenView = view,
     navigator = navigator
+
 ) {
     private val currentServer = serverInteractor.get()!!
     private val manager = managerFactory.create(currentServer)
@@ -77,7 +80,7 @@ class MainPresenter @Inject constructor(
     private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
     private val userDataChannel = Channel<Myself>()
 
-    fun toChatList(chatRoomId: String? = null) = navigator.toChatList(chatRoomId)
+    fun toChatList(chatRoomId: String? = null, deepLinkInfo: DeepLinkInfo? = null) = navigator.toChatList(chatRoomId, deepLinkInfo)
 
     fun toUserProfile() = navigator.toUserProfile()
 
