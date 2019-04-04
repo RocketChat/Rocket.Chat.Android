@@ -57,7 +57,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data
-                    android:host="viasatconnect.page.link"
+                    android:host="your_deeplink_hostname.page.link"
                     android:scheme="https" />
 
             </intent-filter>
