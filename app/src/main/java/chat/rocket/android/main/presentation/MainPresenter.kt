@@ -39,7 +39,6 @@ import chat.rocket.core.internal.rest.getCustomEmojis
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.model.Myself
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
