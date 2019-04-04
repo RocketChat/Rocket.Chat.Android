@@ -215,22 +215,20 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Відповісти</string>
-    <string name="action_msg_info">Інформація про прочитання</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">Відредагувати</string>
     <string name="action_msg_copy">Скопіювати</string>
     <string name="action_msg_quote">Цитувати</string>
     <string name="action_msg_delete">Видалити</string>
-    <string name="action_msg_pin">Зафіксувати повідомлення</string>
-    <string name="action_msg_unpin">Відмінити фіксацію повідомлення</string>
-    <string name="action_msg_star">До обраного</string>
-    <string name="action_msg_unstar">Видалити з обраного</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">Поділитися</string>
     <string name="action_title_editing">Редагування повідомлення</string>
     <string name="action_msg_add_reaction">Відреагувати</string>
-    <!-- TODO - Add proper translation -->
-    <string name="action_msg_copy_permalink">Copy permalink</string>
-    <!-- TODO - Add proper translation -->
-    <string name="action_msg_report">Report</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">Report</string> <!-- TODO - Add proper translation -->
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редагування заборонено</string>

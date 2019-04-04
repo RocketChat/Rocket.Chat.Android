@@ -38,6 +38,7 @@ private fun ChatRoomFragment.setupSearchMessageMenuItem(menu: Menu, context: Con
 
     (searchItem.actionView as? SearchView)?.let {
         // TODO: Check why we need to stylize the search text programmatically instead of by defining it in the styles.xml (ChatRoom.SearchView)
+        it.maxWidth = Integer.MAX_VALUE
         stylizeSearchView(it, context)
         setupSearchViewTextListener(it)
         if (it.isIconified) {
