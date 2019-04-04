@@ -15,7 +15,7 @@ android {
     buildToolsVersion versions.buildTools
 
     defaultConfig {
-        applicationId "chat.veranda.android"
+        applicationId "chat.rocket.android"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode 2060
