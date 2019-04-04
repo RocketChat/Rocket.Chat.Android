@@ -13,13 +13,6 @@ interface ChatRoomsView : LoadingView, MessageView {
      */
     fun setupToolbar(serverName: String)
 
-    /**
-     * Setups the server list view with all server list.
-     *
-     * @param serverList The server list to show on server list.
-     */
-    fun setupServerListView(serverList: List<Account>)
-
     fun showLoadingRoom(name: CharSequence)
 
     fun hideLoadingRoom()

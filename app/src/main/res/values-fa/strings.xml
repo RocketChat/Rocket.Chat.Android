@@ -44,7 +44,6 @@
     <string name="action_attach_a_files">ضمیمه کردن پرونده</string>
     <string name="action_confirm_password">موافقت با تغییر گذرواژه</string>
     <string name="action_join_chat">به گفت‌وگو بپیوندید</string>
-    <string name="action_add_account">اضافه کردن حساب کاربری</string>
     <string name="action_online">آنلاین</string>
     <string name="action_away">Away</string> <!-- TODO Add translation -->
     <string name="action_busy">مشغول</string>
@@ -178,6 +177,8 @@
         <item quantity="other">%1$s reacted with %2$s</item>
     </plurals> <!-- TODO Add translation -->
     <string name="msg_credentials_saved_successfully">اختیارها با موفقیت ذخیره شد</string>
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">خصوصی</string>

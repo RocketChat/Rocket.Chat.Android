@@ -44,7 +44,6 @@
     <string name="action_attach_a_files">Enviar um ficheiro</string>
     <string name="action_confirm_password">Confirme a alteração da palavra-passe</string>
     <string name="action_join_chat">Entre no chat</string>
-    <string name="action_add_account">Adicionar conta</string>
     <string name="action_online">Online</string>
     <string name="action_away">Ausente</string>
     <string name="action_busy">Ocupado</string>
@@ -174,6 +173,8 @@
         <item quantity="one">%1$s reagiu com %2$s</item>
         <item quantity="other">%1$s reagiram com %2$s</item>
     </plurals>
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>

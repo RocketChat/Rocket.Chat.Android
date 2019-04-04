@@ -33,6 +33,7 @@ import chat.rocket.android.preferences.di.PreferencesFragmentProvider
 import chat.rocket.android.profile.di.ProfileFragmentProvider
 import chat.rocket.android.server.di.ChangeServerModule
 import chat.rocket.android.server.ui.ChangeServerActivity
+import chat.rocket.android.servers.di.ServersBottomSheetFragmentProvider
 import chat.rocket.android.settings.di.SettingsFragmentProvider
 import chat.rocket.android.settings.password.di.PasswordFragmentProvider
 import chat.rocket.android.settings.password.ui.PasswordActivity
@@ -65,6 +66,7 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(
         modules = [MainModule::class,
             ChatRoomsFragmentProvider::class,
+            ServersBottomSheetFragmentProvider::class,
             CreateChannelProvider::class,
             ProfileFragmentProvider::class,
             SettingsFragmentProvider::class,

@@ -44,7 +44,6 @@
     <string name="action_attach_a_files">Anexar um arquivo</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
     <string name="action_join_chat">Entrar no Chat</string>
-    <string name="action_add_account">Adicionar conta</string>
     <string name="action_online">Online</string>
     <string name="action_away">Ausente</string>
     <string name="action_busy">Ocupado</string>
@@ -178,12 +177,13 @@
     <string name="msg_no_description">Nenhuma descrição</string>
     <string name="msg_unable_to_update_password">Não foi possível atualizar a senha. Mensagem de erro: %1$s</string>
     <string name="msg_password_updated_successfully">Senha alterada com sucesso</string>
-    <string name="msg_sort">Ordenar</string>
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s reagiu com %2$s</item>
         <item quantity="other">%1$s reagiram com %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Credenciais salvas com sucesso</string>
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>

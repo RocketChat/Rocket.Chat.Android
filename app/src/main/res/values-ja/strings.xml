@@ -44,7 +44,6 @@
     <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">変更したパスワードの確認</string>
     <string name="action_join_chat">チャットに参加</string>
-    <string name="action_add_account">サーバーの追加</string>
     <string name="action_online">オンライン</string>
     <string name="action_away">離席中</string>
     <string name="action_busy">取り込み中</string>
@@ -178,6 +177,8 @@
         <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
     <string name="msg_credentials_saved_successfully">資格情報を正常に保存しました</string>
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">プライベート</string>

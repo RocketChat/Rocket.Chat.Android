@@ -45,7 +45,6 @@
     <string name="action_attach_a_files">إضافة ملف</string>
     <string name="action_confirm_password">تأكيد تغيير كلمة السر</string>
     <string name="action_join_chat">إنضم للمحادثة</string>
-    <string name="action_add_account">إضافة حساب</string>
     <string name="action_online">متصل</string>
     <string name="action_away">بعيد</string>
     <string name="action_busy">مشغول</string>
@@ -183,6 +182,8 @@
         <item quantity="two">%1$s reacted with %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Credentials saved successfully</string> <!-- TODO Translate -->
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">خاص</string>

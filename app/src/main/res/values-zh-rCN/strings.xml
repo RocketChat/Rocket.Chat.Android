@@ -44,7 +44,6 @@
     <string name="action_attach_a_files">添加附件</string>
     <string name="action_confirm_password">确认修改密码</string>
     <string name="action_join_chat">加入聊天</string>
-    <string name="action_add_account">添加账户</string>
     <string name="action_online">在线</string>
     <string name="action_away">离开</string>
     <string name="action_busy">忙碌</string>
@@ -175,6 +174,8 @@
         <item quantity="other">%1$s 使用了 %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">凭证成功保存</string>
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">隐私</string>

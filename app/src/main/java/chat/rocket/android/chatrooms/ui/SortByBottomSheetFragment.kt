@@ -11,7 +11,7 @@ import chat.rocket.android.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottom_sheet_fragment_sort_by.*
 
-internal const val TAG = "SortByBottomSheetFragment"
+const val TAG = "SortByBottomSheetFragment"
 
 class SortByBottomSheetFragment : BottomSheetDialogFragment() {
     private var isSortByName = false

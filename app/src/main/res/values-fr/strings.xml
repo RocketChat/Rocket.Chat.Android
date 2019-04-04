@@ -44,7 +44,6 @@
     <string name="action_attach_a_files">Joindre un fichier</string>
     <string name="action_confirm_password">Confirmer le mot de passe</string>
     <string name="action_join_chat">Rejoignez le chat</string>
-    <string name="action_add_account">Ajouter un compte</string>
     <string name="action_online">En ligne</string>
     <string name="action_away">Loin</string>
     <string name="action_busy">Occupé</string>
@@ -182,6 +181,8 @@
         <item quantity="other">%1$s a réagi avec %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Certificats sauvegardés</string>
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privé</string>

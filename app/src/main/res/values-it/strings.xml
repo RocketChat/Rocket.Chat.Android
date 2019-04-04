@@ -44,7 +44,6 @@
     <string name="action_attach_a_files">Ceangail comhad</string>
     <string name="action_confirm_password">Conferma Cambio Password</string>
     <string name="action_join_chat">Iscriviti alla stanza</string>
-    <string name="action_add_account">Aggiungi utente</string>
     <string name="action_online">In linea</string>
     <string name="action_away">Lontano</string>
     <string name="action_busy">Occupato</string>
@@ -175,6 +174,8 @@
         <item quantity="other">%1$s ha reagito con %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Credenziali salvate con successo</string>
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privato</string>

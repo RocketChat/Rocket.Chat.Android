@@ -50,30 +50,11 @@ class ChatRoomsPresenter @Inject constructor(
 
     fun toCreateChannel() = navigator.toCreateChannel()
 
+    fun toSettings() = navigator.toSettings()
+
     fun getCurrentServerName() {
         view.setupToolbar(currentServer)
     }
-
-    fun getAllServers() {
-        launchUI(strategy) {
-            try {
-                view.setupServerListView(getAccountsInteractor.get())
-            } catch (exception: Exception) {
-                Timber.e(exception, "Error while getting all servers")
-                when (exception) {
-//                    is RocketChatAuthException -> logout()
-                    else -> {
-                        exception.message?.let {
-                            view.showMessage(it)
-                        }.ifNull {
-                            view.showGenericErrorMessage()
-                        }
-                    }
-                }
-            }
-        }
-    }
-
 
     fun loadChatRoom(roomId: String) {
         launchUI(strategy) {

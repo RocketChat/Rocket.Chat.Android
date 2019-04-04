@@ -182,7 +182,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     private fun setupToolBar() {
         with((activity as AppCompatActivity)) {
             with(toolbar) {
-                setSupportActionBar(toolbar)
+                setSupportActionBar(this)
                 title = getString(R.string.title_create_channel)
                 setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
                 setNavigationOnClickListener { activity?.onBackPressed() }

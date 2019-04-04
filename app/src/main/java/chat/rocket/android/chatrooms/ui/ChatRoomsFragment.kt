@@ -30,7 +30,7 @@ import chat.rocket.android.chatrooms.viewmodel.Query
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
-import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.servers.ui.ServersBottomSheetFragment
 import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.ifNotNullNotEmpty
 import chat.rocket.android.util.extensions.inflate
@@ -103,11 +103,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
     }
-
-    override fun setupServerListView(serverList: List<Account>) {
-        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 
     private fun subscribeUi() {
         ui {
@@ -284,18 +279,28 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     override fun setupToolbar(serverName: String) {
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+        with((activity as AppCompatActivity)) {
+            with(toolbar) {
+                setSupportActionBar(this)
+                setNavigationOnClickListener { presenter.toSettings() }
+            }
+        }
         text_server_name.text = serverName
     }
 
     private fun setupListeners() {
         text_server_name.setOnClickListener {
-            // TO DO
+            ServersBottomSheetFragment().show(
+                activity?.supportFragmentManager,
+                chat.rocket.android.servers.ui.TAG
+            )
         }
 
         text_sort_by.setOnClickListener {
-            SortByBottomSheetFragment()
-                .show(activity?.supportFragmentManager, TAG)
+            SortByBottomSheetFragment().show(
+                activity?.supportFragmentManager,
+                chat.rocket.android.chatrooms.ui.TAG
+            )
         }
     }
 

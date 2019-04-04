@@ -44,7 +44,6 @@
     <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">Confirmar cambio de contraseña</string>
     <string name="action_join_chat">Unirse al chat</string>
-    <string name="action_add_account">Añadir cuenta</string>
     <string name="action_online">Conectado(s)</string>
     <string name="action_away">Ausente</string>
     <string name="action_busy">Ocupado</string>
@@ -163,6 +162,8 @@
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
     <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
     <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>

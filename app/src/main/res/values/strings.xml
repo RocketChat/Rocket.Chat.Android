@@ -56,7 +56,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_attach_a_files">Attach a file</string>
     <string name="action_confirm_password">Confirm Password Change</string>
     <string name="action_join_chat">Join Chat</string>
-    <string name="action_add_account">Add account</string>
     <string name="action_online">Online</string>
     <string name="action_away">Away</string>
     <string name="action_busy">Busy</string>
@@ -191,6 +190,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
         <item quantity="other">%1$s reacted with %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Credentials saved successfully</string>
+    <string name="msg_server">Server</string>
+    <string name="msg_add_new_server">Add New Server</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Private</string>
