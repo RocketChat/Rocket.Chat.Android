@@ -100,7 +100,6 @@ class ChatRoomsViewModel(
 
     fun getChatRoomOfUsernameSpotlight(string: String): List<ItemHolder<*>>? {
         val rooms = GlobalScope.async(Dispatchers.IO) {
-        //        val rooms = async(CommonPool) {
             return@async spotlight(string)?.let { mapper.map(it, showLastMessage = showLastMessage) }
         }
         return runBlocking { rooms.await() }

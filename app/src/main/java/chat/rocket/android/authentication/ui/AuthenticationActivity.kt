@@ -108,19 +108,6 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun routeDeepLink(deepLinkInfo: DeepLinkInfo) {
-        // EAR this is a problem, as this never did work in the nonWidechat case...
-//        if (Constants.WIDECHAT) {
-//            presenter.loadCredentials(false) { isAuthenticated ->
-//                if (isAuthenticated) {
-//                    presenter.toChatList(deepLinkInfo)
-//                } else {
-//                    presenter.saveDeepLinkInfo(deepLinkInfo)
-//                    presenter.toOnBoarding()
-//                }
-//            }
-//        } else {
-//            presenter.toOnBoarding()
-//        }
         presenter.loadCredentials(false) { isAuthenticated ->
             if (isAuthenticated) {
                 presenter.toChatList(deepLinkInfo)

@@ -125,15 +125,6 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
         presenter.shareViaApp(context!!)
     }
 
-//    private fun shareApp() {
-//        with(Intent(Intent.ACTION_SEND)) {
-//            type = "text/plain"
-//            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_check_this_out))
-//            putExtra(Intent.EXTRA_TEXT, getString(R.string.play_store_link))
-//            startActivity(Intent.createChooser(this, getString(R.string.msg_share_using)))
-//        }
-//    }
-
     private fun contactSupport() {
         val uriText = "mailto:${"support@rocket.chat"}" +
                 "?subject=" + Uri.encode(getString(R.string.msg_android_app_support)) +
