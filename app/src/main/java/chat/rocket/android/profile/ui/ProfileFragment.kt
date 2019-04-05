@@ -63,8 +63,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
+        AndroidSupportInjection.inject(this)
         setHasOptionsMenu(true)
     }
 

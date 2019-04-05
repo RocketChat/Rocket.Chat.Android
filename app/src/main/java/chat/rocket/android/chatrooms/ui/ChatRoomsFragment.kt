@@ -1,8 +1,6 @@
 package chat.rocket.android.chatrooms.ui
 
-import android.app.ProgressDialog
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -27,10 +25,8 @@ import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModel
 import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModelFactory
 import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.chatrooms.viewmodel.Query
-import chat.rocket.android.helper.ChatRoomsSortOrder
-import chat.rocket.android.helper.Constants
-import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.servers.ui.ServersBottomSheetFragment
+import chat.rocket.android.sortingandgrouping.ui.SortingAndGroupingBottomSheetFragment
 import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.ifNotNullNotEmpty
 import chat.rocket.android.util.extensions.inflate
@@ -48,42 +44,38 @@ internal const val TAG_CHAT_ROOMS_FRAGMENT = "ChatRoomsFragment"
 
 private const val BUNDLE_CHAT_ROOM_ID = "BUNDLE_CHAT_ROOM_ID"
 
-class ChatRoomsFragment : Fragment(), ChatRoomsView {
-    @Inject
-    lateinit var presenter: ChatRoomsPresenter
-    @Inject
-    lateinit var factory: ChatRoomsViewModelFactory
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
-    private lateinit var viewModel: ChatRoomsViewModel
-    private val handler = Handler()
-    private var chatRoomId: String? = null
-    private var progressDialog: ProgressDialog? = null
 
-    companion object {
-        fun newInstance(chatRoomId: String? = null): ChatRoomsFragment = ChatRoomsFragment().apply {
-            arguments = Bundle(1).apply {
-                putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-            }
-        }
+fun newInstance(chatRoomId: String?): Fragment = ChatRoomsFragment().apply {
+    arguments = Bundle(1).apply {
+        putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
     }
+}
+
+class ChatRoomsFragment : Fragment(), ChatRoomsView {
+    @Inject lateinit var presenter: ChatRoomsPresenter
+    @Inject lateinit var factory: ChatRoomsViewModelFactory
+    @Inject lateinit var analyticsManager: AnalyticsManager
+    private lateinit var viewModel: ChatRoomsViewModel
+    private var chatRoomId: String? = null
+    private var isSortByName = false
+    private var isUnreadOnTop = false
+    private var isGroupByType = false
+    private var isGroupByFavorites = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        setHasOptionsMenu(true)
+
         arguments?.run {
             chatRoomId = getString(BUNDLE_CHAT_ROOM_ID)
-            chatRoomId.ifNotNullNotEmpty { roomId ->
-                presenter.loadChatRoom(roomId)
+
+            chatRoomId.ifNotNullNotEmpty {
+                presenter.loadChatRoom(it)
                 chatRoomId = null
             }
         }
-    }
 
-    override fun onDestroy() {
-        handler.removeCallbacks(dismissStatus)
-        super.onDestroy()
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -95,65 +87,47 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter.getCurrentServerName()
-        setupListeners()
+        with(presenter) {
+            getCurrentServerName()
+            getSortingAndGroupingPreferences()
+        }
 
         viewModel = ViewModelProviders.of(this, factory).get(ChatRoomsViewModel::class.java)
         subscribeUi()
+        setupListeners()
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
     }
 
-    private fun subscribeUi() {
-        ui {
-            val adapter = RoomsAdapter { room ->
-                presenter.loadChatRoom(room)
+    override fun setupToolbar(serverName: String) {
+        with((activity as AppCompatActivity)) {
+            with(toolbar) {
+                setSupportActionBar(this)
+                setNavigationOnClickListener { presenter.toSettings() }
             }
+        }
+        text_server_name.text = serverName
+    }
 
-            with(recycler_view) {
-                layoutManager = LinearLayoutManager(it)
-                addItemDecoration(
-                    DividerItemDecoration(
-                        it,
-                        resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
-                        resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)
-                    )
-                )
-                itemAnimator = DefaultItemAnimator()
-            }
+    override fun setupSortingAndGrouping(
+        isSortByName: Boolean,
+        isUnreadOnTop: Boolean,
+        isGroupByType: Boolean,
+        isGroupByFavorites: Boolean
+    ) {
+        this.isSortByName = isSortByName
+        this.isUnreadOnTop = isUnreadOnTop
+        this.isGroupByType = isGroupByType
+        this.isGroupByFavorites = isGroupByFavorites
 
-            viewModel.getChatRooms().observe(viewLifecycleOwner, Observer { rooms ->
-                rooms?.let {
-                    Timber.d("Got items: $it")
-                    adapter.values = it
-                    if (recycler_view.adapter != adapter) {
-                        recycler_view.adapter = adapter
-                    }
-                    if (rooms.isNotEmpty()) {
-//                        text_no_data_to_display.isVisible = false
-                    }
-                }
-            })
-
-            viewModel.loadingState.observe(viewLifecycleOwner, Observer { state ->
-                when (state) {
-                    is LoadingState.Loading -> if (state.count == 0L) showLoading()
-                    is LoadingState.Loaded -> {
-                        hideLoading()
-                        if (state.count == 0L) showNoChatRoomsToDisplay()
-                    }
-                    is LoadingState.Error -> {
-                        hideLoading()
-                        showGenericErrorMessage()
-                    }
-                }
-            })
-
-            viewModel.getStatus().observe(viewLifecycleOwner, Observer { status ->
-                status?.let { showConnectionState(status) }
-            })
-
-            updateSort()
+        if (isSortByName) {
+            text_sort_by.text =
+                getString(R.string.msg_sort_by, getString(R.string.msg_sort_by_name).toLowerCase())
+        } else {
+            text_sort_by.text = getString(
+                R.string.msg_sort_by,
+                getString(R.string.msg_sort_by_activity).toLowerCase()
+            )
         }
     }
 
@@ -193,26 +167,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun updateSort() {
-        val sortType = SharedPreferenceHelper.getInt(
-            Constants.CHATROOM_SORT_TYPE_KEY,
-            ChatRoomsSortOrder.ACTIVITY
-        )
-        val grouped = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
-
-        val query = when (sortType) {
-            ChatRoomsSortOrder.ALPHABETICAL -> {
-                Query.ByName(grouped)
-            }
-            ChatRoomsSortOrder.ACTIVITY -> {
-                Query.ByActivity(grouped)
-            }
-            else -> Query.ByActivity()
-        }
-
-        viewModel.setQuery(query)
-    }
-
     private fun showNoChatRoomsToDisplay() {
 //        ui { text_no_data_to_display.isVisible = true }
     }
@@ -239,16 +193,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
-    override fun showLoadingRoom(name: CharSequence) {
-        ui {
-            progressDialog = ProgressDialog.show(activity, "Rocket.Chat", "Loading room $name")
-        }
-    }
-
-    override fun hideLoadingRoom() {
-        progressDialog?.dismiss()
-    }
-
     private fun showConnectionState(state: State) {
         Timber.d("Got new state: $state")
 //        ui {
@@ -272,20 +216,56 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 //        }
     }
 
-    private val dismissStatus = {
-        //        if (text_connection_status != null) {
-//            text_connection_status.fadeOut()
-//        }
-    }
-
-    override fun setupToolbar(serverName: String) {
-        with((activity as AppCompatActivity)) {
-            with(toolbar) {
-                setSupportActionBar(this)
-                setNavigationOnClickListener { presenter.toSettings() }
+    private fun subscribeUi() {
+        ui {
+            val adapter = RoomsAdapter { room ->
+                presenter.loadChatRoom(room)
             }
+
+            with(recycler_view) {
+                layoutManager = LinearLayoutManager(it)
+                addItemDecoration(
+                    DividerItemDecoration(
+                        it,
+                        resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
+                        resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)
+                    )
+                )
+                itemAnimator = DefaultItemAnimator()
+            }
+
+            viewModel.getChatRooms().observe(viewLifecycleOwner, Observer { rooms ->
+                rooms?.let {
+                    adapter.values = it
+                    if (recycler_view.adapter != adapter) {
+                        recycler_view.adapter = adapter
+                    }
+                    if (rooms.isNotEmpty()) {
+//                        text_no_data_to_display.isVisible = false
+                    }
+                }
+            })
+
+            viewModel.loadingState.observe(viewLifecycleOwner, Observer { state ->
+                when (state) {
+                    is LoadingState.Loading -> if (state.count == 0L) showLoading()
+                    is LoadingState.Loaded -> {
+                        hideLoading()
+                        if (state.count == 0L) showNoChatRoomsToDisplay()
+                    }
+                    is LoadingState.Error -> {
+                        hideLoading()
+                        showGenericErrorMessage()
+                    }
+                }
+            })
+
+            viewModel.getStatus().observe(viewLifecycleOwner, Observer { status ->
+                status?.let { showConnectionState(status) }
+            })
+
+            showAllChats()
         }
-        text_server_name.text = serverName
     }
 
     private fun setupListeners() {
@@ -297,9 +277,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
 
         text_sort_by.setOnClickListener {
-            SortByBottomSheetFragment().show(
+            SortingAndGroupingBottomSheetFragment().show(
                 activity?.supportFragmentManager,
-                chat.rocket.android.chatrooms.ui.TAG
+                chat.rocket.android.sortingandgrouping.ui.TAG
             )
         }
     }
@@ -310,6 +290,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         isGroupByType: Boolean,
         isGroupByFavorites: Boolean
     ) {
+        this.isSortByName = isSortByName
+        this.isUnreadOnTop = isUnreadOnTop
+        this.isGroupByType = isGroupByType
+        this.isGroupByFavorites = isGroupByFavorites
+
         if (isSortByName) {
             viewModel.setQuery(Query.ByName(isGroupByType))
             changeSortByTitle(getString(R.string.msg_sort_by_name))
@@ -325,10 +310,18 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun queryChatRoomsByName(name: String?): Boolean {
         if (name.isNullOrEmpty()) {
-            updateSort()
+            showAllChats()
         } else {
             viewModel.setQuery(Query.Search(name))
         }
         return true
+    }
+
+    private fun showAllChats() {
+        if (isSortByName) {
+            viewModel.setQuery(Query.ByName(isGroupByType))
+        } else {
+            viewModel.setQuery(Query.ByActivity(isGroupByType))
+        }
     }
 }

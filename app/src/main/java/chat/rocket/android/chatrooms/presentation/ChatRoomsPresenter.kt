@@ -9,20 +9,18 @@ import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.presentation.MainNavigator
-import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.domain.SortingAndGroupingInteractor
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.server.infraestructure.ConnectionManager
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
-import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.User
 import chat.rocket.common.model.roomTypeOf
-import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.createDirectMessage
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.show
@@ -38,7 +36,7 @@ class ChatRoomsPresenter @Inject constructor(
     private val strategy: CancelStrategy,
     private val navigator: MainNavigator,
     @Named("currentServer") private val currentServer: String,
-    private val getAccountsInteractor: GetAccountsInteractor,
+    private val sortingAndGroupingInteractor: SortingAndGroupingInteractor,
     private val dbManager: DatabaseManager,
     manager: ConnectionManager,
     private val localRepository: LocalRepository,
@@ -52,33 +50,38 @@ class ChatRoomsPresenter @Inject constructor(
 
     fun toSettings() = navigator.toSettings()
 
-    fun getCurrentServerName() {
-        view.setupToolbar(currentServer)
+    fun getCurrentServerName() = view.setupToolbar(currentServer)
+
+    fun getSortingAndGroupingPreferences() {
+        with(sortingAndGroupingInteractor) {
+            view.setupSortingAndGrouping(
+                getSortByName(currentServer),
+                getUnreadOnTop(currentServer),
+                getGroupByType(currentServer),
+                getGroupByFavorites(currentServer)
+            )
+        }
     }
 
     fun loadChatRoom(roomId: String) {
         launchUI(strategy) {
-            view.showLoadingRoom("")
             try {
                 val room = dbManager.getRoom(roomId)
                 if (room != null) {
                     loadChatRoom(room.chatRoom, true)
                 } else {
-                    Timber.d("Error loading channel")
+                    Timber.e("Error loading channel")
                     view.showGenericErrorMessage()
                 }
             } catch (ex: Exception) {
-                Timber.d(ex, "Error loading channel")
+                Timber.e(ex, "Error loading channel")
                 view.showGenericErrorMessage()
-            } finally {
-                view.hideLoadingRoom()
             }
         }
     }
 
     fun loadChatRoom(chatRoom: RoomUiModel) {
         launchUI(strategy) {
-            view.showLoadingRoom(chatRoom.name)
             try {
                 val room = retryDB("getRoom(${chatRoom.id}") { dbManager.getRoom(chatRoom.id) }
                 if (room != null) {
@@ -98,10 +101,8 @@ class ChatRoomsPresenter @Inject constructor(
                     }
                 }
             } catch (ex: Exception) {
-                Timber.d(ex, "Error loading channel")
+                Timber.e(ex, "Error loading channel")
                 view.showGenericErrorMessage()
-            } finally {
-                view.hideLoadingRoom()
             }
         }
     }

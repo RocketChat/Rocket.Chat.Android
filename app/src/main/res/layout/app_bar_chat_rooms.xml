@@ -22,6 +22,7 @@
             android:drawableEnd="@drawable/ic_arrow_expand_20dp"
             android:drawablePadding="10dp"
             android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="normal"

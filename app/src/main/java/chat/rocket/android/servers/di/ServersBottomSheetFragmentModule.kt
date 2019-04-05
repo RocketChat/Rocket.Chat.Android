@@ -11,6 +11,5 @@ class ServersBottomSheetFragmentModule {
 
     @Provides
     @PerFragment
-    fun membersView(frag: ServersBottomSheetFragment): ServersView = frag
-
+    fun serversView(frag: ServersBottomSheetFragment): ServersView = frag
 }

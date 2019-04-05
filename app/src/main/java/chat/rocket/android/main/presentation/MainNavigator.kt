@@ -21,7 +21,7 @@ class MainNavigator(internal val activity: MainActivity) {
 
     fun toChatList(chatRoomId: String? = null) {
         activity.addFragment(TAG_CHAT_ROOMS_FRAGMENT, R.id.fragment_container) {
-            ChatRoomsFragment.newInstance(chatRoomId)
+            chat.rocket.android.chatrooms.ui.newInstance(chatRoomId)
         }
     }
 

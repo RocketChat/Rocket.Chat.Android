@@ -1,6 +1,7 @@
-package chat.rocket.android.chatrooms.ui
+package chat.rocket.android.sortingandgrouping.ui
 
 import DrawableHelper
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,12 +9,20 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import chat.rocket.android.R
+import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
+import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
+import chat.rocket.android.sortingandgrouping.presentation.SortingAndGroupingPresenter
+import chat.rocket.android.sortingandgrouping.presentation.SortingAndGroupingView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.bottom_sheet_fragment_sort_by.*
+import javax.inject.Inject
 
-const val TAG = "SortByBottomSheetFragment"
+const val TAG = "SortingAndGroupingBottomSheetFragment"
 
-class SortByBottomSheetFragment : BottomSheetDialogFragment() {
+class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), SortingAndGroupingView {
+    @Inject
+    lateinit var presenter: SortingAndGroupingPresenter
     private var isSortByName = false
     private var isUnreadOnTop = false
     private var isGroupByType = false
@@ -27,6 +36,11 @@ class SortByBottomSheetFragment : BottomSheetDialogFragment() {
     private val groupByTypeDrawable by lazy { R.drawable.ic_group_by_type_20dp }
     private val groupByFavoritesDrawable by lazy { R.drawable.ic_favorites_20dp }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        AndroidSupportInjection.inject(this)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +50,42 @@ class SortByBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.getSortingAndGroupingPreferences()
         setupListeners()
+    }
+
+    override fun onCancel(dialog: DialogInterface?) {
+        super.onCancel(dialog)
+        presenter.saveSortingAndGroupingPreferences(
+            isSortByName,
+            isUnreadOnTop,
+            isGroupByType,
+            isGroupByFavorites
+        )
+    }
+
+    override fun showSortingAndGroupingPreferences(
+        isSortByName: Boolean,
+        isUnreadOnTop: Boolean,
+        isGroupByType: Boolean,
+        isGroupByFavorites: Boolean
+    ) {
+        this.isSortByName = isSortByName
+        this.isUnreadOnTop = isUnreadOnTop
+        this.isGroupByType = isGroupByType
+        this.isGroupByFavorites = isGroupByFavorites
+
+        if (isSortByName) {
+            changeSortByTitle(getString(R.string.msg_sort_by_name))
+            checkSelection(text_name, filterDrawable)
+        } else {
+            changeSortByTitle(getString(R.string.msg_sort_by_activity))
+            checkSelection(text_activity, activityDrawable)
+        }
+
+        if (isUnreadOnTop) checkSelection(text_unread_on_top, unreadOnTopDrawable)
+        if (isGroupByType) checkSelection(text_group_by_type, groupByTypeDrawable)
+        if (isGroupByFavorites) checkSelection(text_group_by_favorites, groupByFavoritesDrawable)
     }
 
     private fun setupListeners() {
