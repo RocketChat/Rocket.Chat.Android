@@ -204,7 +204,7 @@ class UiModelMapper @Inject constructor(
 
     private fun mapVisibleActions(viewModel: BaseUiModel<*>) {
         if (!settings.messageReadReceiptStoreUsers()) {
-            viewModel.menuItemsToHide.add(R.id.action_message_info)
+            viewModel.menuItemsToHide.add(R.id.action_info)
         }
     }
 

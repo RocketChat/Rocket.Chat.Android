@@ -210,7 +210,7 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    private suspend fun saveAccount(uiModel: NavHeaderUiModel) {
+    private fun saveAccount(uiModel: NavHeaderUiModel) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }
