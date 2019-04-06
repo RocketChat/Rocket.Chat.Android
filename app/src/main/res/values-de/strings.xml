@@ -3,7 +3,6 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Anmelden am Server</string>
     <string name="title_log_in">Anmelden</string>
-    <string name="title_share_the_app">App teilen</string>
     <string name="title_register_username">Registriere Benutzernamen</string>
     <string name="title_reset_password">Passwort zurücksetzen</string>
     <string name="title_sign_up">registrieren</string>
@@ -14,17 +13,13 @@
     <string name="title_members">Benutzer</string>
     <string name="title_counted_members">Benutzer (%d)</string>
     <string name="title_settings">Einstellungen</string>
-
     <string name="title_preferences">Eigenschaften</string>
     <string name="title_change_password">Ändere Passwort</string>
     <string name="title_rate_us">Bewerten Sie uns</string>
     <string name="title_admin_panel">Administrationsmenü</string>
-
     <string name="title_password">Ändere Passwort</string>
     <string name="title_update_profile">Update Profil</string>
-    <string name="title_about">Über</string>
     <string name="title_create_channel">Erstelle Raum</string>
-
     <string name="title_are_you_sure">Sind Sie sicher?</string>
     <string name="title_channel_details">Channel-Details</string>
     <string name="title_topic">Thema</string>
@@ -61,21 +56,21 @@
     <string name="action_create_server">Einen eigenen Server erstellen</string>
     <string name="action_register">Registrieren</string>
     <string name="action_confirm">Bestätigen</string>
-    <string name="action_delete_account">Konto löschen</string>
-    <string name="action_favorite">Favoriten</string> 
-    <string name="action_remove_favorite">Favoriten entfernen</string> 
+    <string name="action_favorite">Favoriten</string>
+    <string name="action_remove_favorite">Favoriten entfernen</string>
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">Eigenschaften</item>
-        <item name="item_password">Passwort ändern</item>
-        <item name="change_language">Sprache ändern</item>
-        <item name="item_share_app">Link zur App teilen</item>
-        <item name="item_rate_us">Bewerten Sie uns</item>
-        <item name="item_contact_us">Kontaktieren Sie uns</item>
-        <item name="item_licence">Lizenz</item>
-        <item name="item_about">Über</item>
-    </string-array>
+    <!-- Settings messages-->
+    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    <string name="msg_language">Language</string> <!-- TODO Translate -->
+    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
+    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
+    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
+    <string name="msg_licence">Licence</string> <!-- TODO Translate -->
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
+    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Entschuldigung, ein Fehler ist aufgetreten, bitte versuchen Sie es noch einmal.</string>
@@ -114,9 +109,7 @@
     <string name="msg_content_description_log_in_using_gitlab">Login mit Gitlab</string>
     <string name="msg_content_description_log_in_using_wordpress">Login mit WordPress</string>
     <string name="msg_content_description_send_message">Sende Nachricht</string>
-
     <string name="msg_content_description_show_more_login_options">Zeige mehr Login-Optionen</string>
-
     <string name="msg_content_description_show_attachment_options">Zeige Anhang Optionen</string>
     <string name="msg_you">Du</string>
     <string name="msg_unknown">Unbekannt</string>

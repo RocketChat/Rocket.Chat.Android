@@ -4,7 +4,6 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">تسجيل الدخول إلى خادمك</string>
     <string name="title_log_in">تسجيل الدخول</string>
-    <string name="title_share_the_app">انشر البرنامج</string>
     <string name="title_register_username">اسم المستخدم</string>
     <string name="title_reset_password">إعادة تعيين كلمة السر</string>
     <string name="title_sign_up">سجل</string>
@@ -21,7 +20,6 @@
     <string name="title_admin_panel">لوحة الإدارة</string>
     <string name="title_password">تغيير كلمة السر</string>
     <string name="title_update_profile">تحديث الملف الشخصي</string>
-    <string name="title_about">عنا</string>
     <string name="title_create_channel">إنشاء قناة</string>
     <string name="title_licence">الترخيص</string>
     <string name="title_are_you_sure">هل أنت متأكد؟</string>
@@ -59,21 +57,21 @@
     <string name="action_create_server">إنشاء خادم جديد</string>
     <string name="action_register">تسجيل</string>
     <string name="action_confirm">تأكيد</string>
-    <string name="action_delete_account">حذف حساب</string>
     <string name="action_favorite">Favorite</string> <!-- TODO Translate -->
     <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Translate -->
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">التفضيلات</item>
-        <item name="item_password">تغيير كلمة السر</item>
-        <item name="change_language">نغيير اللغة</item>
-        <item name="item_share_app">نشر البرنامج</item>
-        <item name="item_rate_us">قيمنا</item>
-        <item name="item_contact_us">اتصل بنا</item>
-        <item name="item_licence">الترخيص</item>
-        <item name="item_about">عنا</item>
-    </string-array>
+    <!-- Settings messages-->
+    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    <string name="msg_language">Language</string> <!-- TODO Translate -->
+    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
+    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
+    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
+    <string name="msg_licence">Licence</string> <!-- TODO Translate -->
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
+    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">نأسف حدث خطأ ما حاول مرة أخرى</string>

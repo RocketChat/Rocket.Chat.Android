@@ -18,7 +18,6 @@ import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.createchannel.presentation.CreateChannelPresenter
 import chat.rocket.android.createchannel.presentation.CreateChannelView
-import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.uimodel.MemberUiModel
 import chat.rocket.android.util.extension.asObservable
@@ -38,11 +37,11 @@ import javax.inject.Inject
 
 internal const val TAG_CREATE_CHANNEL_FRAGMENT = "CreateChannelFragment"
 
+fun newInstance() = CreateChannelFragment()
+
 class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback {
-    @Inject
-    lateinit var createChannelPresenter: CreateChannelPresenter
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
+    @Inject lateinit var presenter: CreateChannelPresenter
+    @Inject lateinit var analyticsManager: AnalyticsManager
     private var actionMode: ActionMode? = null
     private val adapter: MembersAdapter = MembersAdapter {
         it.username?.run { processSelectedMember(this) }
@@ -51,10 +50,6 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     private var channelType: String = RoomType.CHANNEL
     private var isChannelReadOnly: Boolean = false
     private var memberList = arrayListOf<String>()
-
-    companion object {
-        fun newInstance() = CreateChannelFragment()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -93,7 +88,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_create_channel -> {
-                createChannelPresenter.createChannel(
+                presenter.createChannel(
                     roomTypeOf(channelType),
                     text_channel_name.text.toString(),
                     memberList,
@@ -242,7 +237,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
             .filter { t -> t.isNotBlank() }
             .subscribe {
                 if (it.length >= 3) {
-                    createChannelPresenter.searchUser(it.toString())
+                    presenter.searchUser(it.toString())
                 } else {
                     view_member_suggestion.isVisible = false
                 }

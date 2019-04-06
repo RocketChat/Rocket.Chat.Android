@@ -56,7 +56,7 @@ class ProfilePresenter @Inject constructor(
     navigator = navigator
 ) {
     private val serverUrl = serverInteractor.get()!!
-    private val client: RocketChatClient = factory.create(serverUrl)
+    private val client: RocketChatClient = factory.get(serverUrl)
     private val user = userHelper.user()
 
     fun loadUserProfile() {
@@ -165,29 +165,6 @@ class ProfilePresenter @Inject constructor(
                 }
                 user?.username?.let { view.reloadUserAvatar(serverUrl.avatarUrl(it)) }
             } catch (exception: RocketChatException) {
-                exception.message?.let {
-                    view.showMessage(it)
-                }.ifNull {
-                    view.showGenericErrorMessage()
-                }
-            } finally {
-                view.hideLoading()
-            }
-        }
-    }
-
-    fun deleteAccount(password: String) {
-        launchUI(strategy) {
-            view.showLoading()
-            try {
-                withContext(Dispatchers.Default) {
-                    // REMARK: Backend API is only working with a lowercase hash.
-                    // https://github.com/RocketChat/Rocket.Chat/issues/12573
-                    retryIO { client.deleteOwnAccount(password.gethash().toHex().toLowerCase()) }
-                    setupConnectionInfo(serverUrl)
-                    logout(null)
-                }
-            } catch (exception: Exception) {
                 exception.message?.let {
                     view.showMessage(it)
                 }.ifNull {

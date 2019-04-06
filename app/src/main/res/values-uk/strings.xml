@@ -3,7 +3,6 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Ваш сервер</string>
     <string name="title_log_in">Увійти</string>
-    <string name="title_share_the_app">поділитися прикладом</string>
     <string name="title_register_username">Зареєструвати ім\'я</string>
     <string name="title_reset_password">Відновлення паролю</string>
     <string name="title_sign_up">Зареєструватися</string>
@@ -20,7 +19,6 @@
     <string name="title_admin_panel">Панель адміністратора</string>
     <string name="title_password">Змінити пароль</string>
     <string name="title_update_profile">Оновити профіль</string>
-    <string name="title_about">"Про програму"</string>
     <string name="title_create_channel">Створити новий канал</string>
     <string name="title_licence">Licence</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
@@ -58,21 +56,21 @@
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
-    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
     <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
     <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
-        <item name="item_password">Change password</item> <!-- TODO Add translation -->
-        <item name="change_language">Change language</item> <!-- TODO Add translation -->
-        <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
-        <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
-        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
-        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
-        <item name="item_about">About</item> <!-- TODO Add translation -->
-    </string-array>
+    <!-- Settings messages-->
+    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    <string name="msg_language">Language</string> <!-- TODO Translate -->
+    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
+    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
+    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
+    <string name="msg_licence">Licence</string> <!-- TODO Translate -->
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
+    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Сталася помилка, спробуйте ще раз.</string>

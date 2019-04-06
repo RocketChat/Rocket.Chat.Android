@@ -3,7 +3,6 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Connectez-vous sur votre serveur</string>
     <string name="title_log_in">S\'identifier</string>
-    <string name="title_share_the_app">Partager l\'application</string>
     <string name="title_register_username">Enregistrer le nom d\'utilisateur</string>
     <string name="title_reset_password">Réinitialiser mot de passe</string>
     <string name="title_sign_up">S\'inscrire</string>
@@ -20,7 +19,6 @@
     <string name="title_admin_panel">l\' administration</string>
     <string name="title_password">Changer le mot de passe</string>
     <string name="title_update_profile">Mettre à jour le profil</string>
-    <string name="title_about">À propos</string>
     <string name="title_create_channel">Créer salon</string>
     <string name="title_licence">les permis</string>
     <string name="title_are_you_sure">Êtes-vous sûr?</string>
@@ -58,21 +56,21 @@
     <string name="action_create_server">Créer un nouveau serveur</string>
     <string name="action_register">registre</string>
     <string name="action_confirm">Confirmer</string>
-    <string name="action_delete_account">Effacer le compte</string>
     <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
     <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">Préférences</item>
-        <item name="item_password">Changer le mot de passe</item>
-        <item name="change_language">Changer de langue</item>
-        <item name="item_share_app">Partager l\'application</item>
-        <item name="item_rate_us">Évaluez nous</item>
-        <item name="item_contact_us">Contactez nous</item>
-        <item name="item_licence">les permis</item>
-        <item name="item_about">Sur</item>
-    </string-array>
+    <!-- Settings messages-->
+    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    <string name="msg_language">Language</string> <!-- TODO Translate -->
+    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
+    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
+    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
+    <string name="msg_licence">Licence</string> <!-- TODO Translate -->
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
+    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Désolé, une erreur s\'est produite. Veuillez réessayer</string>

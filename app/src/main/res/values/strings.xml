@@ -15,7 +15,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <!-- Titles -->
     <string name="title_sign_in_your_server">Sign in to your server</string>
     <string name="title_log_in">Login</string>
-    <string name="title_share_the_app">Share App</string>
     <string name="title_register_username">Register username</string>
     <string name="title_reset_password">Reset password</string>
     <string name="title_sign_up">Sign up</string>
@@ -32,7 +31,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_admin_panel">Admin panel</string>
     <string name="title_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
-    <string name="title_about">About</string>
     <string name="title_create_channel">Create Channel</string>
     <string name="title_licence">Licence</string>
     <string name="title_are_you_sure">Are you sure?</string>
@@ -70,21 +68,21 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_create_server">Create a new server</string>
     <string name="action_register">Register</string>
     <string name="action_confirm">Confirm</string>
-    <string name="action_delete_account">Delete account</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_remove_favorite">Remove favorite</string>
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">Preferences</item>
-        <item name="item_password">Change password</item>
-        <item name="change_language">Change language</item>
-        <item name="item_share_app">Share app</item>
-        <item name="item_rate_us">Rate us</item>
-        <item name="item_contact_us">Contact us</item>
-        <item name="item_licence">Licence</item>
-        <item name="item_about">About</item>
-    </string-array>
+    <!-- Settings messages-->
+    <string name="msg_contact_us">Contact us</string>
+    <string name="msg_language">Language</string>
+    <string name="msg_review_this_app">Review this app</string>
+    <string name="msg_share_this_app">Share this app</string>
+    <string name="msg_administration">Administration</string>
+    <string name="msg_licence">Licence</string>
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string>
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string>
+    <string name="msg_delete_account">Delete account</string>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>

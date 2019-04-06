@@ -3,19 +3,16 @@ package chat.rocket.android.main.presentation
 import chat.rocket.android.R
 import chat.rocket.android.authentication.ui.newServerIntent
 import chat.rocket.android.chatroom.ui.chatRoomIntent
-import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
-import chat.rocket.android.createchannel.ui.CreateChannelFragment
 import chat.rocket.android.createchannel.ui.TAG_CREATE_CHANNEL_FRAGMENT
 import chat.rocket.android.main.ui.MainActivity
-import chat.rocket.android.profile.ui.ProfileFragment
 import chat.rocket.android.profile.ui.TAG_PROFILE_FRAGMENT
 import chat.rocket.android.server.ui.changeServerIntent
-import chat.rocket.android.settings.ui.SettingsFragment
 import chat.rocket.android.settings.ui.TAG_SETTINGS_FRAGMENT
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.addFragmentBackStack
-import chat.rocket.android.webview.adminpanel.ui.AdminPanelWebViewFragment
+import chat.rocket.android.webview.adminpanel.ui.TAG_ADMIN_PANEL_WEB_VIEW_FRAGMENT
+import chat.rocket.android.webview.ui.webViewIntent
 
 class MainNavigator(internal val activity: MainActivity) {
 
@@ -27,26 +24,30 @@ class MainNavigator(internal val activity: MainActivity) {
 
     fun toSettings() {
         activity.addFragmentBackStack(TAG_SETTINGS_FRAGMENT, R.id.fragment_container) {
-            SettingsFragment.newInstance()
+            chat.rocket.android.settings.ui.newInstance()
         }
     }
 
     fun toCreateChannel() {
         activity.addFragmentBackStack(TAG_CREATE_CHANNEL_FRAGMENT, R.id.fragment_container) {
-            CreateChannelFragment.newInstance()
+            chat.rocket.android.createchannel.ui.newInstance()
         }
     }
 
-    fun toUserProfile() {
-        activity.addFragment(TAG_PROFILE_FRAGMENT, R.id.fragment_container) {
-            ProfileFragment.newInstance()
+    fun toProfile() {
+        activity.addFragmentBackStack(TAG_PROFILE_FRAGMENT, R.id.fragment_container) {
+            chat.rocket.android.profile.ui.newInstance()
         }
     }
 
     fun toAdminPanel(webPageUrl: String, userToken: String) {
-        activity.addFragment("AdminPanelWebViewFragment", R.id.fragment_container) {
-            AdminPanelWebViewFragment.newInstance(webPageUrl, userToken)
+        activity.addFragmentBackStack(TAG_ADMIN_PANEL_WEB_VIEW_FRAGMENT, R.id.fragment_container) {
+            chat.rocket.android.webview.adminpanel.ui.newInstance(webPageUrl, userToken)
         }
+    }
+
+    fun toLicense(licenseUrl: String, licenseTitle: String) {
+        activity.startActivity(activity.webViewIntent(licenseUrl, licenseTitle))
     }
 
     fun toChatRoom(
