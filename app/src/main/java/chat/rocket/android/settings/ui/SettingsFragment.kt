@@ -89,7 +89,7 @@ class SettingsFragment : Fragment(), SettingsView {
 
         text_server_version.text = getString(R.string.msg_server_version, serverVersion)
 
-        text_logout.setOnClickListener { presenter.logout() }
+        text_logout.setOnClickListener { showLogoutDialog()}
 
         with(text_administration) {
             isVisible = isAdministrationEnabled
@@ -170,6 +170,17 @@ class SettingsFragment : Fragment(), SettingsView {
             putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_check_this_out))
             putExtra(Intent.EXTRA_TEXT, getString(R.string.play_store_link))
             startActivity(Intent.createChooser(this, getString(R.string.msg_share_using)))
+        }
+    }
+
+    private fun showLogoutDialog() {
+        context?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.setTitle(R.string.title_are_you_sure)
+                .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout()}
+                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
+                .create()
+                .show()
         }
     }
 
