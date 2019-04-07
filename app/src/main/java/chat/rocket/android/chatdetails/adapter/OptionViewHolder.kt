@@ -4,16 +4,22 @@ import DrawableHelper
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatdetails.domain.Option
-import chat.rocket.android.chatrooms.adapter.ViewHolder
 import kotlinx.android.synthetic.main.item_detail_option.view.*
 
 class OptionViewHolder(
     itemView: View
-): ViewHolder<OptionItemHolder>(itemView) {
+): RecyclerView.ViewHolder(itemView) {
+    var data: OptionItemHolder? = null
 
-    override fun bindViews(data: OptionItemHolder) {
+    fun bind(data: OptionItemHolder) {
+        this.data = data
+        this.bindViews(data)
+    }
+
+    fun bindViews(data: OptionItemHolder) {
         val option = data.data
         bindName(option, itemView.name)
         bindIcon(option, itemView.icon)

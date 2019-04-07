@@ -25,6 +25,11 @@
     <string name="title_licence">les permis</string>
     <string name="title_are_you_sure">Êtes-vous sûr?</string>
     <string name="title_channel_details">Détails de la chaîne</string>
+    <string name="action_mark_unread">Mark As Unread</string><!-- TODO Add translation -->
+    <string name="action_mark_read">Mark As Read</string><!-- TODO Add translation -->
+    <string name="action_hide_room">Hide Room</string><!-- TODO Add translation -->
+    <string name="action_leave_room">Leave Room</string><!-- TODO Add translation -->
+    <string name="action_unfavorite">Unfavorite</string><!-- TODO Add translation -->
     <string name="title_topic">Sujet</string>
     <string name="title_announcement">Annonce</string>
     <string name="title_description">La description</string>

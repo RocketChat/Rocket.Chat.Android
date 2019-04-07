@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <item
+    android:id="@+id/action_hide_room"
+    android:icon="@drawable/ic_visibility_off_24dp"
+    android:title="@string/action_hide_room" />
+
+  <item
+    android:id="@+id/action_read"
+    android:icon="@drawable/ic_flag_24dp"
+    android:title="@string/action_mark_read" />
+
+  <item
+    android:id="@+id/action_favorite_room"
+    android:icon="@drawable/ic_star_border_24dp"
+    android:title="@string/action_favorite" />
+
+  <item
+    android:id="@+id/action_leave_room"
+    android:icon="@drawable/ic_leave_room_24dp"
+    android:title="@string/action_leave_room" />
+
+</menu>

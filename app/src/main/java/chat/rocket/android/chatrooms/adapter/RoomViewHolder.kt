@@ -14,8 +14,9 @@ import chat.rocket.common.model.UserStatus
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
-class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit) :
-    ViewHolder<RoomItemHolder>(itemView) {
+class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit, actionsListener: ActionsListener) :
+    ViewHolder<RoomItemHolder>(itemView, actionsListener) {
+
     private val resources: Resources = itemView.resources
     private val channelIcon: Drawable = resources.getDrawable(R.drawable.ic_hashtag_12dp, null)
     private val groupIcon: Drawable = resources.getDrawable(R.drawable.ic_lock_12_dp, null)
@@ -23,6 +24,12 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
     private val awayIcon: Drawable = resources.getDrawable(R.drawable.ic_status_away_12dp, null)
     private val busyIcon: Drawable = resources.getDrawable(R.drawable.ic_status_busy_12dp, null)
     private val offlineIcon: Drawable = resources.getDrawable(R.drawable.ic_status_invisible_12dp, null)
+
+    init {
+        with(itemView) {
+            setupActionMenu(itemView)
+        }
+    }
 
     override fun bindViews(data: RoomItemHolder) {
         val room = data.data

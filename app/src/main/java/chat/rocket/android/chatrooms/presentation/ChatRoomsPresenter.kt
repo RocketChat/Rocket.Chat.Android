@@ -20,15 +20,16 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.User
 import chat.rocket.common.model.roomTypeOf
+import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.createDirectMessage
-import chat.rocket.core.internal.rest.me
-import chat.rocket.core.internal.rest.show
+import chat.rocket.core.internal.rest.*
 import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+
 
 class ChatRoomsPresenter @Inject constructor(
     private val view: ChatRoomsView,
@@ -140,6 +141,85 @@ class ChatRoomsPresenter @Inject constructor(
                         isCreator = ownerId == myself.id || isDirectMessage,
                         isFavorite = favorite ?: false
                 )
+            }
+        }
+    }
+
+    fun toggleFavoriteChatRoom(roomId: String, isFavorite: Boolean) {
+        launchUI(strategy) {
+            try {
+                // Note that if it is favorite then the user wants to unfavorite - and vice versa.
+                retryIO("favorite($roomId, $isFavorite)") {
+                    client.favorite(roomId, !isFavorite)
+                  val rooms = retryIO("fetch chatRooms", times = 10,
+                      initialDelay = 200, maxDelay = 2000) {
+                    client.chatRooms().update
+                  }
+                  Timber.d("Refreshing rooms: $rooms")
+                  dbManager.processRooms(rooms)
+                }
+            } catch (e: RocketChatException) {
+                Timber.e(e, "Error while trying to favorite/unfavorite chat room.")
+                e.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            }
+        }
+    }
+
+    fun toggleMarkRead(roomId: String, unread: String?) {
+        launchUI(strategy) {
+            try {
+                if(unread.isNullOrEmpty()) {
+                    retryIO(description = "markAsUnread($roomId)") { client.markAsUnread(roomId) }
+                  val rooms = retryIO("fetch chatRooms", times = 10,
+                      initialDelay = 200, maxDelay = 2000) {
+                    client.chatRooms().update
+                  }
+                  Timber.d("Refreshing rooms: $rooms")
+                  dbManager.processRooms(rooms)
+                }
+                else
+                    retryIO(description = "markAsRead($roomId)") { client.markAsRead(roomId) }
+            } catch (ex: RocketChatException) {
+                view.showMessage(ex.message!!) // TODO Remove.
+                Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
+            }
+        }
+    }
+
+    fun leaveChatRoom(roomId: String, roomType: RoomType) {
+        launchUI(strategy) {
+            try {
+                retryIO(description = "leaveChat($roomId, $roomType)") { client.leaveChat(roomId, roomType) }
+                val rooms = retryIO("fetch chatRooms", times = 10,
+                    initialDelay = 200, maxDelay = 2000) {
+                    client.chatRooms().update
+                }
+                Timber.d("Refreshing rooms: $rooms")
+                dbManager.processRooms(rooms)
+            } catch (ex: RocketChatException) {
+                view.showMessage(ex.message!!) // TODO Remove.
+                Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
+            }
+        }
+    }
+
+    fun hideRoom(roomId: String, roomType: RoomType) {
+        launchUI(strategy) {
+            try {
+                retryIO(description = "hide($roomId, $roomType, ${true})") { client.hide(roomId, roomType, hideRoom = true) }
+                val rooms = retryIO("fetch chatRooms", times = 10,
+                    initialDelay = 200, maxDelay = 2000) {
+                    client.chatRooms().update
+                }
+                Timber.d("Refreshing rooms: $rooms")
+                dbManager.processRooms(rooms)
+            } catch (ex: RocketChatException) {
+                view.showMessage(ex.message!!) // TODO Remove.
+                Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
             }
         }
     }
