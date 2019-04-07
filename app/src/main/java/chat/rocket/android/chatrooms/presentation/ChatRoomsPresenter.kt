@@ -13,7 +13,9 @@ import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.server.infraestructure.ConnectionManager
+import chat.rocket.android.sharehandler.ShareHandler
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.extension.orFalse
 import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
@@ -31,15 +33,15 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class ChatRoomsPresenter @Inject constructor(
-    private val view: ChatRoomsView,
-    private val strategy: CancelStrategy,
-    private val navigator: MainNavigator,
-    @Named("currentServer") private val currentServer: String,
-    private val dbManager: DatabaseManager,
-    manager: ConnectionManager,
-    private val localRepository: LocalRepository,
-    private val userHelper: UserHelper,
-    settingsRepository: SettingsRepository
+        private val view: ChatRoomsView,
+        private val strategy: CancelStrategy,
+        private val navigator: MainNavigator,
+        @Named("currentServer") private val currentServer: String,
+        private val dbManager: DatabaseManager,
+        manager: ConnectionManager,
+        private val localRepository: LocalRepository,
+        private val userHelper: UserHelper,
+        settingsRepository: SettingsRepository
 ) {
     private val client = manager.client
     private val settings = settingsRepository.get(currentServer)
@@ -74,13 +76,13 @@ class ChatRoomsPresenter @Inject constructor(
                 } else {
                     with(chatRoom) {
                         val entity = ChatRoomEntity(
-                            id = id,
-                            subscriptionId = "",
-                            type = type.toString(),
-                            name = username ?: name.toString(),
-                            fullname = name.toString(),
-                            open = open,
-                            muted = muted
+                                id = id,
+                                subscriptionId = "",
+                                type = type.toString(),
+                                name = username ?: name.toString(),
+                                fullname = name.toString(),
+                                open = open,
+                                muted = muted
                         )
                         loadChatRoom(entity, false)
                     }
@@ -107,6 +109,14 @@ class ChatRoomsPresenter @Inject constructor(
             if (myself?.username == null) {
                 view.showMessage(R.string.msg_generic_error)
             } else {
+
+                // todo CHECK
+                if (ShareHandler.hasShare() && (readonly != null && readonly!!)) {
+                    view.showMessage("You cannot send message to readonly channel")
+
+                    return@with
+                }
+
                 val id = if (isDirectMessage && !open) {
                     // If from local database, we already have the roomId, no need to concatenate
                     if (local) {
@@ -151,13 +161,13 @@ class ChatRoomsPresenter @Inject constructor(
         try {
             val myself = retryIO { client.me() }
             val user = User(
-                id = myself.id,
-                username = myself.username,
-                name = myself.name,
-                status = myself.status,
-                utcOffset = myself.utcOffset,
-                emails = null,
-                roles = myself.roles
+                    id = myself.id,
+                    username = myself.username,
+                    name = myself.name,
+                    status = myself.status,
+                    utcOffset = myself.utcOffset,
+                    emails = null,
+                    roles = myself.roles
             )
             localRepository.saveCurrentUser(url = currentServer, user = user)
         } catch (ex: RocketChatException) {

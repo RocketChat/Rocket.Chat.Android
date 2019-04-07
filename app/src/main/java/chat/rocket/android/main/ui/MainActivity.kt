@@ -40,12 +40,13 @@ import kotlinx.android.synthetic.main.nav_header.view.*
 import javax.inject.Inject
 import android.app.NotificationManager
 import android.content.Context
+import chat.rocket.android.sharehandler.ShareHandler
 
 
 private const val CURRENT_STATE = "current_state"
 
 class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
-    HasSupportFragmentInjector {
+        HasSupportFragmentInjector {
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
     @Inject
@@ -123,13 +124,13 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> =
-        fragmentDispatchingAndroidInjector
+            fragmentDispatchingAndroidInjector
 
 
     override fun showUserStatus(userStatus: UserStatus) {
         headerLayout.apply {
             image_user_status.setImageDrawable(
-                DrawableHelper.getUserStatusDrawable(userStatus, this.context)
+                    DrawableHelper.getUserStatusDrawable(userStatus, this.context)
             )
         }
     }
@@ -139,7 +140,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             with(uiModel) {
                 if (userStatus != null) {
                     image_user_status.setImageDrawable(
-                        DrawableHelper.getUserStatusDrawable(userStatus, context)
+                            DrawableHelper.getUserStatusDrawable(userStatus, context)
                     )
                 }
                 if (userDisplayName != null) {
@@ -196,29 +197,29 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     override fun alertNotRecommendedVersion() {
         AlertDialog.Builder(this)
-            .setMessage(
-                getString(
-                    R.string.msg_ver_not_recommended,
-                    BuildConfig.RECOMMENDED_SERVER_VERSION
+                .setMessage(
+                        getString(
+                                R.string.msg_ver_not_recommended,
+                                BuildConfig.RECOMMENDED_SERVER_VERSION
+                        )
                 )
-            )
-            .setPositiveButton(android.R.string.ok, null)
-            .create()
-            .show()
+                .setPositiveButton(android.R.string.ok, null)
+                .create()
+                .show()
     }
 
     override fun blockAndAlertNotRequiredVersion() {
         AlertDialog.Builder(this)
-            .setMessage(
-                getString(
-                    R.string.msg_ver_not_minimum,
-                    BuildConfig.REQUIRED_SERVER_VERSION
+                .setMessage(
+                        getString(
+                                R.string.msg_ver_not_minimum,
+                                BuildConfig.REQUIRED_SERVER_VERSION
+                        )
                 )
-            )
-            .setOnDismissListener { presenter.logout() }
-            .setPositiveButton(android.R.string.ok, null)
-            .create()
-            .show()
+                .setOnDismissListener { presenter.logout() }
+                .setPositiveButton(android.R.string.ok, null)
+                .create()
+                .show()
     }
 
     override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
@@ -234,7 +235,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     }
 
     fun setupNavigationView() {
-        with (view_navigation.menu) {
+        with(view_navigation.menu) {
             clear()
             setupMenu(this)
         }
@@ -246,17 +247,25 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             true
         }
 
-        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
-        toolbar.setNavigationOnClickListener { openDrawer() }
+        toolbar.setNavigationIcon(if (ShareHandler.hasShare()) R.drawable.ic_arrow_back_white_24dp else R.drawable.ic_menu_white_24dp)
+
+        toolbar.setNavigationOnClickListener {
+            if (ShareHandler.hasShare()) {
+                ShareHandler.clearShare()
+                toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
+            } else {
+                openDrawer()
+            }
+        }
     }
 
     fun showLogoutDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.title_are_you_sure)
-            .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout()}
-            .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
-            .create()
-            .show()
+                .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout() }
+                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
+                .create()
+                .show()
     }
 
     fun setAvatar(avatarUrl: String) {
