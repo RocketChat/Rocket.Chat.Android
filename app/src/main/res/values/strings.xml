@@ -354,6 +354,22 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="timezone">Timezone</string>
     <string name="status" translatable="false">Status</string>
 
+    <!-- MemberActions -->
+    <string name="action_set_owner">Set as Owner</string>
+    <string name="action_set_leader">Set as Leader</string>
+    <string name="action_set_moderator">Set as Moderator</string>
+    <string name="action_remove_owner">Remove as Owner</string>
+    <string name="action_remove_leader">Remove as Leader</string>
+    <string name="action_remove_moderator">Remove as Moderator</string>
+    <string name="action_mute_user">Mute User</string>
+    <string name="action_unmute_user">Unmute User</string>
+    <string name="action_remove_user">Remove from Room</string>
+
+    <string name="owner">Owner</string>
+    <string name="leader">Leader</string>
+    <string name="moderator">Mod</string>
+
+
     <!-- Report -->
     <string name="submit">Submit</string>
     <string name="required">*required</string>

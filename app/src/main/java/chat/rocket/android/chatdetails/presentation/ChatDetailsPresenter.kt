@@ -74,8 +74,8 @@ class ChatDetailsPresenter @Inject constructor(
         navigator.toFileList(chatRoomId)
     }
 
-    fun toMembers(chatRoomId: String) {
-        navigator.toMembersList(chatRoomId)
+    fun toMembers(chatRoomId: String, isOwner: Boolean, isMod: Boolean) {
+        navigator.toMembersList(chatRoomId, isOwner, isMod)
     }
 
     fun toMentions(chatRoomId: String) {

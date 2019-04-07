@@ -44,9 +44,11 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     @Inject
     lateinit var analyticsManager: AnalyticsManager
     private var actionMode: ActionMode? = null
-    private val adapter: MembersAdapter = MembersAdapter {
-        it.username?.run { processSelectedMember(this) }
-    }
+    private val adapter: MembersAdapter = MembersAdapter ({
+        if (it.username != null) {
+            processSelectedMember(it.username)
+        }
+    }, null, true, false)
     private val compositeDisposable = CompositeDisposable()
     private var channelType: String = RoomType.CHANNEL
     private var isChannelReadOnly: Boolean = false

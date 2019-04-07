@@ -27,32 +27,46 @@ import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_members.*
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String): Fragment = MembersFragment().apply {
-    arguments = Bundle(1).apply {
-        putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
+
+fun newInstance(chatRoomId: String, isOwner: Boolean, isMod: Boolean): Fragment {
+    return MembersFragment().apply {
+        arguments = Bundle(1).apply {
+            putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
+            putBoolean(BUNDLE_CHAT_ROOM_OWNER, isOwner)
+            putBoolean(BUNDLE_CHAT_ROOM_MOD, isMod)
+        }
     }
 }
 
 internal const val TAG_MEMBERS_FRAGMENT = "MembersFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
+private const val BUNDLE_CHAT_ROOM_MOD = "chat_room_mod"
+private const val BUNDLE_CHAT_ROOM_OWNER = "chat_room_owner"
 
 class MembersFragment : Fragment(), MembersView {
     @Inject
     lateinit var presenter: MembersPresenter
     @Inject
     lateinit var analyticsManager: AnalyticsManager
-    private val adapter: MembersAdapter =
-        MembersAdapter { memberUiModel -> presenter.toMemberDetails(memberUiModel) }
+    private lateinit var adapter: MembersAdapter
     private val linearLayoutManager = LinearLayoutManager(context)
     private lateinit var chatRoomId: String
+    private var isOwner: Boolean = false
+    private var isMod: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        arguments?.run {
-            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")
-        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
+        val bundle = arguments
+        if (bundle != null) {
+            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
+            isOwner = bundle.getBoolean(BUNDLE_CHAT_ROOM_OWNER)
+            isMod = bundle.getBoolean(BUNDLE_CHAT_ROOM_MOD)
+
+        } else {
+            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
+        }
     }
 
     override fun onCreateView(
@@ -97,6 +111,10 @@ class MembersFragment : Fragment(), MembersView {
         ui { view_loading.isVisible = true }
     }
 
+    override fun setMemberCount(totalMembers: Long?){
+        setupToolbar(totalMembers)
+    }
+
     override fun hideLoading() {
         ui { view_loading.isVisible = false }
     }
@@ -117,12 +135,13 @@ class MembersFragment : Fragment(), MembersView {
 
     private fun setupRecyclerView() {
         ui {
+            adapter = MembersAdapter ({ memberUiModel -> presenter.toMemberDetails(memberUiModel) }, presenter, isOwner, isMod)
             recycler_view.layoutManager = LinearLayoutManager(context)
             recycler_view.addItemDecoration(
-                DividerItemDecoration(
-                    it,
-                    DividerItemDecoration.HORIZONTAL
-                )
+                    DividerItemDecoration(
+                            it,
+                            DividerItemDecoration.HORIZONTAL
+                    )
             )
             recycler_view.adapter = adapter
         }
