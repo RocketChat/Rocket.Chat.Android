@@ -43,7 +43,7 @@ object DrawableHelper {
     /**
      * Tints an array of Drawable.
      *
-     * REMARK: you MUST always wrap the array of Drawable before tint it.
+     * REMARK: you MUST always wrap the array of Drawable before tinting it.
      *
      * @param drawables The array of Drawable to tint.
      * @param context The context.
