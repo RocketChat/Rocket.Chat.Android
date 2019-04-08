@@ -2,6 +2,7 @@ package chat.rocket.android.chatrooms.presentation
 
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
+import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.model.ChatRoomEntity
@@ -22,11 +23,12 @@ import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.createDirectMessage
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.show
-import kotlinx.coroutines.experimental.withTimeout
+import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class ChatRoomsPresenter @Inject constructor(
     private val view: ChatRoomsView,
@@ -116,6 +118,7 @@ class ChatRoomsPresenter @Inject constructor(
                         retryIO("createDirectMessage($name)") {
                             withTimeout(10000) {
                                 createDirectMessage(name)
+                                FetchChatRoomsInteractor(client, dbManager).refreshChatRooms()
                             }
                         }
                         val fromTo = mutableListOf(myself.id, id).apply {

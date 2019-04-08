@@ -1,0 +1,345 @@
+<resources>
+
+    <!-- Titles -->
+    <string name="title_sign_in_your_server">Entre no seu servidor</string>
+    <string name="title_log_in">Entrar</string>
+    <string name="title_share_the_app">Partilhe a Aplicação</string>
+    <string name="title_register_username">Registe um utilizador</string>
+    <string name="title_reset_password">Reponha a palavra-passe</string>
+    <string name="title_sign_up">Inscreva-se</string>
+    <string name="title_authentication">Autenticação</string>
+    <string name="title_legal_terms">Termos Legais</string>
+    <string name="title_chats">Conversas</string>
+    <string name="title_profile">Pefil</string>
+    <string name="title_members">Membros</string>
+    <string name="title_counted_members">Membros (%d)</string>
+    <string name="title_settings">Definições</string>
+    <string name="title_preferences">Preferências</string>
+    <string name="title_change_password">Alterar palavra-passe</string>
+    <string name="title_rate_us">Avalie-nos</string>
+    <string name="title_admin_panel">Painel de Administração</string>
+    <string name="title_password">Alterar palavra-passe</string>
+    <string name="title_update_profile">Actualizar perfil</string>
+    <string name="title_about">Acerca</string>
+    <string name="title_create_channel">Criar Canal</string>
+    <string name="title_licence">Licença</string>
+    <string name="title_are_you_sure">Tem a certeza?</string>
+    <string name="title_channel_details">Detalhes do Canal</string>
+    <string name="title_topic">Tópico</string>
+    <string name="title_announcement">Anúncio</string>
+    <string name="title_description">Descrição</string>
+
+    <!-- Actions -->
+    <string name="action_connect">Ligar</string>
+    <string name="action_use_this_username">Use este nome de utilizador</string>
+    <string name="action_terms_of_service">Termos do Serviço</string>
+    <string name="action_privacy_policy">Política de Privacidade</string>
+    <string name="action_search">Pesquisar</string>
+    <string name="action_update">Actualizar</string>
+    <string name="action_settings">Definições</string>
+    <string name="action_create_channel">Criar canal</string>
+    <string name="action_create">Criar</string>
+    <string name="action_logout">Terminar sessão</string>
+    <string name="action_attach_a_files">Enviar um ficheiro</string>
+    <string name="action_confirm_password">Confirme a alteração da palavra-passe</string>
+    <string name="action_join_chat">Entre no chat</string>
+    <string name="action_add_account">Adicionar conta</string>
+    <string name="action_online">Online</string>
+    <string name="action_away">Ausente</string>
+    <string name="action_busy">Ocupado</string>
+    <string name="action_invisible">Invisível</string>
+    <string name="action_drawing">A desenhar</string>
+    <string name="action_save_to_gallery">Guardar na galeria</string>
+    <string name="action_select_photo_from_gallery">Selecione a foto da galeria</string>
+    <string name="action_take_a_photo">Tire uma foto</string>
+    <string name="action_reset_avatar">Repor avatar</string>
+    <string name="action_connect_server">Ligue-se a um servidor</string>
+    <string name="action_join_community">Junte-se à comunidade</string>
+    <string name="action_create_server">Crie um novo servidor</string>
+    <string name="action_register">Registar</string>
+    <string name="action_confirm">Confirmar</string>
+    <string name="action_delete_account">Apagar conta</string>
+
+    <!-- Settings List -->
+    <string-array name="settings_actions">
+        <item name="item_preferences">Preferências</item>
+        <item name="item_password">Alterar palavra-passe</item>
+        <item name="change_language">Alterar idioma</item>
+        <item name="item_share_app">Partilhe a aplicação</item>
+        <item name="item_rate_us">Avalie-nos</item>
+        <item name="item_contact_us">Contacte-nos</item>
+        <item name="item_licence">Licença</item>
+        <item name="item_about">Acerca</item>
+    </string-array>
+
+    <!-- Regular information messages -->
+    <string name="msg_generic_error">Lamentamos, ocorreu um erro, tente novamente</string>
+    <string name="msg_no_data_to_display">Sem dados para mostrar</string>
+    <string name="msg_check_this_out">Experimente isto</string>
+    <string name="msg_share_using">Partilhe usando</string>
+    <string name="msg_profile_update_successfully">Perfil actualizado com sucesso</string>
+    <string name="msg_username">utilizador</string>
+    <string name="msg_username_or_email">Utilizador ou e-mail</string>
+    <string name="msg_password">Palavra-passe</string>
+    <string name="msg_name">Nome</string>
+    <string name="msg_email">E-mail</string>
+    <string name="msg_avatar_url">URL do avatar</string>
+    <string name="msg_or_continue_using_social_accounts">Ou continue utilizando uma conta social</string>
+    <string name="msg_new_user">Novo utilizador? %1$s</string>
+    <string name="msg_forgot__your_password">Esqueceu a sua palavra-passe?</string>
+    <string name="msg_reset">Repor</string>
+    <string name="msg_check_your_email_to_reset_your_password">E-mail enviado! Verifique a sua caixa de entrada para repor a sua palavra-passe.</string>
+    <string name="msg_invalid_email">Por favor introduza um endereço de e-mail válido</string>
+    <string name="msg_new_user_agreement">Ao prosseguir, você concorda com os nossos \n%1$s e %2$s</string>
+    <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
+    <string name="msg_yesterday">Ontem</string>
+    <string name="msg_today">Hoje</string>
+    <string name="msg_message">Mensagem</string>
+    <string name="msg_this_room_is_read_only">Esta sala é apenas de leitura</string>
+    <string name="msg_invalid_2fa_code">Código 2FA inválido</string>
+    <string name="msg_invalid_file">Ficheiro inválido</string>
+    <string name="msg_invalid_server_url">URL de servidor inválido</string>
+    <string name="msg_content_description_log_in_using_facebook">Entre utilizando Facebook</string>
+    <string name="msg_content_description_log_in_using_github">Entre utilizando Github</string>
+    <string name="msg_content_description_log_in_using_google">Entre utilizando Google</string>
+    <string name="msg_content_description_log_in_using_linkedin">Entre utilizando LinkedIn</string>
+    <string name="msg_content_description_log_in_using_meteor">Entre utilizando Meteor</string>
+    <string name="msg_content_description_log_in_using_twitter">Entre utilizando Twitter</string>
+    <string name="msg_content_description_log_in_using_gitlab">Entre utilizando Gitlab</string>
+    <string name="msg_content_description_log_in_using_wordpress">Entre utilizando WordPress</string>
+    <string name="msg_content_description_send_message">Enviar mensagem</string>
+    <string name="msg_content_description_show_more_login_options">Mostrar mais opções de entrada</string>
+    <string name="msg_content_description_show_attachment_options">Mostrar opções de ficheiro</string>
+    <string name="msg_you">Você</string>
+    <string name="msg_unknown">Desconhecido</string>
+    <string name="msg_email_address">Endereço de E-mail</string>
+    <string name="msg_utc_offset">Deslocamento UTC</string>
+    <string name="msg_new_password">Introduza a nova palavra-passe</string>
+    <string name="msg_confirm_password">Confirme a nova palavra-passe</string>
+    <string name="msg_channel_name">Nome do canal</string>
+    <string name="msg_search">Pesquisar</string>
+    <string name="msg_unread_messages">Mensagens não lidas</string>
+    <string name="msg_preview_video">Vídeo</string>
+    <string name="msg_preview_audio">Audio</string>
+    <string name="msg_preview_photo">Foto</string>
+    <string name="msg_preview_file">Ficheiro</string>
+    <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
+    <string name="msg_build">Compilação %1$d - %2$s - %3$s</string>
+    <string name="msg_update_app_version_in_order_to_continue">Versão do servidor desactualizada. Entre em contato com o administrador do servidor para atualizar a versão do servidor para continuar.</string>
+    <string name="msg_ver_not_recommended">
+        Parece que a versão do seu servidor está abaixo da versão recomendada, %1$s.\nAinda é possível entrar, mas você pode experimentar comportamentos inesperados.</string>
+    <string name="msg_ver_not_minimum">
+        Parece que a versão do seu servidor está abaixo da versão mínima exigida, %1$s.\nPor favor, actualize o seu servidor para entrar!
+    </string>
+    <string name="msg_no_chat_title">Nenhuma mensagem de chat</string>
+    <string name="msg_no_chat_description">Inicie uma conversa para ver as\nsuas mensagens aqui.</string>
+    <string name="msg_http_insecure">Quando utiliza HTTP você liga-se a um servidor inseguro. Não lhe recomendamos que faça isso.</string>
+    <string name="msg_error_checking_server_version">Ocorreu um erro ao verificar a versão do seu servidor, tente novamente</string>
+    <string name="msg_invalid_server_protocol">O protocolo seleccionado não é aceite por este servidor, tente utilizar HTTPS</string>
+    <string name="msg_image_saved_successfully">Imagem guardada na galeria</string>
+    <string name="msg_image_saved_failed">Falha ao guardar imagem</string>
+    <string name="msg_edited">(editada)</string>
+    <string name="msg_and">\u0020e\u0020</string>
+    <string name="msg_is_typing">\u0020está a escrever…</string>
+    <string name="msg_are_typing">\u0020estão a escrever…</string>
+    <string name="msg_several_users_are_typing">Varios utilizadores estão a escrever…</string>
+    <string name="msg_no_search_found">Não foram encontrados resultados</string>
+    <string name="msg_log_out">A terminar sessão…</string>
+    <string name="msg_upload_file">Enviar ficheiro</string>
+    <string name="msg_file_description">Descrição do ficheiro</string>
+    <string name="msg_send">Enviar</string>
+    <string name="msg_sent_attachment">Enviou um ficheiro</string>
+    <string name="msg_welcome_to_rocket_chat">Bem vindo(a) ao Rocket.Chat</string>
+    <string name="msg_team_communication">Comunicação de Equipa</string>
+    <string name="msg_login_with_email">Entre com <b>e-mail</b></string>
+    <string name="msg_create_account">Crie uma conta</string>
+    <string name="msg_continue_with_facebook">Continue com <b>Facebook</b></string>
+    <string name="msg_continue_with_github">Continue com <b>Github</b></string>
+    <string name="msg_continue_with_google">Continue com <b>Google</b></string>
+    <string name="msg_continue_with_linkedin">Continue com <b>Linkedin</b></string>
+    <string name="msg_continue_with_gitlab">Continue com <b>GitLab</b></string>
+    <string name="msg_continue_with_wordpress">Continue com <b>WordPress</b></string>
+    <string name="msg_two_factor_authentication">Autenticação 2FA</string>
+    <string name="msg__your_2fa_code">Qual é o seu código 2FA?</string>
+    <string name="msg_permalink_copied">Link permanente copiado</string>
+    <string name="msg_no_topic">Nenhum tópico adicionado</string>
+    <string name="msg_no_announcement">Nenhum anúncio adicionado</string>
+    <string name="msg_no_description">Nenhuma descrição adicionada</string>
+    <string name="msg_send_email">Enviar e-mail</string>
+    <string name="msg_android_app_support">Suporte à aplicação Android</string>
+    <string name="msg_unable_to_update_password">Não é possível atualizar a palavra-passe. Erro: %1$s</string>
+    <string name="msg_password_updated_successfully">Palavra-passe actualizada com sucesso</string>
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s reagiu com %2$s</item>
+        <item quantity="other">%1$s reagiram com %2$s</item>
+    </plurals>
+
+    <!-- Create channel messages -->
+    <string name="msg_private_channel">Privado</string>
+    <string name="msg_public_channel">Público</string>
+    <string name="msg_private_channel_description">Apenas você e membros convidados podem entrar neste canal</string>
+    <string name="msg_public_channel_description">Todos podem entrar neste canal</string>
+    <string name="msg_ready_only_channel">Canal apenas de leitura</string>
+    <string name="msg_ready_only_channel_description">Apenas  administradores podem escrever novas mensagens</string>
+    <string name="msg_invite_members">Convidar membros para o canal</string>
+    <string name="msg_member_already_added">Você já seleccionou este utilizador</string>
+    <string name="msg_member_not_found">Membro não encontrado</string>
+    <string name="msg_channel_created_successfully">Canal criado com sucesso</string>
+    <string name="msg_message_copied">Mensagem copiada</string>
+    <string name="msg_delete_message">Apagar mensagem</string>
+    <string name="msg_delete_description">Tem a certeza que deseja apagar esta mensagem?</string>
+    <string name="msg_view_more">mostrar mais</string>
+    <string name="msg_view_less">mostrar menos</string>
+    <string name="msg_muted_on_this_channel">Você está silenciado neste canal</string>
+
+    <!-- Preferences messages -->
+    <string name="msg_analytics_tracking">Acompanhamento de análise</string>
+    <string name="msg_send_analytics_tracking">Enviar estatísticas anónimas para ajudar a melhorar esta aplicação</string>
+    <string name="msg_do_not_send_analytics_tracking">Não enviar estatísticas anónimas para ajudar a melhorar esta aplicação</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Não aplicável, visto ser uma versão FOSS</string>
+
+    <!-- System messages -->
+    <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
+    <string name="message_user_added_by">Utilizador %1$s adicionado por %2$s</string>
+    <string name="message_user_removed_by">Utilizador %1$s removido por %2$s</string>
+    <string name="message_user_left">Saiu do canal.</string>
+    <string name="message_user_joined_channel">Entrou no canal.</string>
+    <string name="message_welcome">Bem vindo(a) %s</string>
+    <string name="message_removed">Mensagem removida</string>
+    <string name="message_pinned">Afixou uma mensagem:</string>
+    <string name="message_muted">Utilizador %1$s silenciado por %2$s</string>
+    <string name="message_unmuted">Utilizador %2$s removeu o silêncio de %1$s</string>
+    <string name="message_role_add">%3$s deu estatuto de %2$s a %1$s</string>
+    <string name="message_role_removed">%3$s retirou o estatuto de %2$s a %1$s</string>
+    <string name="action_favorite">Marcar chat como favorito</string>
+    <string name="action_remove_favorite">Desmarcar chat como favorito</string>
+
+    <!-- Message actions -->
+    <string name="action_msg_reply">Responder</string>
+    <string name="action_info">Informação</string>
+    <string name="action_msg_edit">Editar</string>
+    <string name="action_msg_copy">Copiar</string>
+    <string name="action_msg_quote">Citar</string>
+    <string name="action_msg_delete">Apagar</string>
+    <string name="action_pin">Afixar</string>
+    <string name="action_unpin">Desafixar</string>
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
+    <string name="action_msg_share">Partilhar</string>
+    <string name="action_title_editing">A editar mensagem</string>
+    <string name="action_msg_add_reaction">Adicionar reacção</string>
+    <string name="action_msg_permalink">Link permanente</string>
+    <string name="action_msg_report">Relatar</string>
+
+    <!-- Permission messages -->
+    <string name="permission_editing_not_allowed">Edição não é permitida</string>
+    <string name="permission_deleting_not_allowed">A remoção não é permitida</string>
+    <string name="permission_pinning_not_allowed">Afixação não é permitida</string>
+    <string name="permission_starring_not_allowed">Dar estrelas não é permitido</string>
+
+    <!-- Search message -->
+    <string name="title_search_message">Pesquisar mensagem</string>
+
+    <!-- Members List -->
+    <string name="title_members_list">Membros</string>
+
+    <!-- Mentions -->
+    <string name="msg_mentions">Menções</string>
+    <string name="msg_no_mention">Nenhuma menção</string>
+    <string name="msg_all_the_mentions_appear_here">Todas as menções\naparecem aqui</string>
+
+    <!-- Pinned Messages -->
+    <string name="title_pinned_messages">Mensagens Afixadas</string>
+    <string name="no_pinned_messages">Sem mensagens afixadas</string>
+    <string name="no_pinned_description">Todas as mensagens afixadas\naparecem aqui</string>
+
+    <!-- Favorite Messages -->
+    <string name="title_favorite_messages">Mensagens Favoritas</string>
+    <string name="no_favorite_messages">Nenhuma mensagem favorita</string>
+    <string name="no_favorite_description">Todas as mensagens favoritas\naparecem aqui</string>
+
+    <!-- Files -->
+    <string name="title_files">Ficheiros</string>
+    <string name="title_files_total">Ficheiros (%d)</string>
+    <string name="msg_no_files">Nenhum ficheiro</string>
+    <string name="msg_all_files_appear_here">Todos os ficheiros aparecem aqui</string>
+
+    <!-- Upload Messages -->
+    <string name="max_file_size_exceeded">O tamanho do ficheiro (%1$d bytes) excedeu o máximo permitido de %2$d bytes</string>
+
+    <!-- Socket status -->
+    <string name="status_connected">Ligado</string>
+    <string name="status_disconnected">Desligado</string>
+    <string name="status_connecting">A ligar</string>
+    <string name="status_authenticating">A autenticar</string>
+    <string name="status_disconnecting">A desligar</string>
+    <string name="status_waiting">A ligar dentro de %d segundos</string>
+
+    <!--Suggestions-->
+    <string name="suggest_all_description">Notifica todos os utilizadores nesta sala</string>
+    <string name="suggest_here_description">Notifica os utilizadores activos nesta sala</string>
+
+    <!-- Slash Commands -->
+    <string name="Slash_Gimme_Description">Adiciona ༼ つ ◕_◕ ༽つ antes da sua mensagem</string>
+    <string name="Slash_LennyFace_Description">Adiciona ( ͡° ͜ʖ ͡°) depois da sua mensagem</string>
+    <string name="Slash_Shrug_Description">Adiciona ¯\_(ツ)_/¯ depois da sua mensagem</string>
+    <string name="Slash_Tableflip_Description">Adiciona (╯°□°）╯︵ ┻━┻</string>
+    <string name="Slash_TableUnflip_Description">Adiciona ┬─┬ ノ( ゜-゜ノ)</string>
+    <string name="Create_A_New_Channel">Criar um novo canal</string>
+    <string name="Show_the_keyboard_shortcut_list">Mostra a lista de atalhos do teclado</string>
+    <string name="Invite_user_to_join_channel_all_from">Convida todos os utilizadores do [#canal] para entrar neste canal</string>
+    <string name="Invite_user_to_join_channel_all_to">Convida todos os utilizadores deste canal a entrar no [#canal]</string>
+    <string name="Archive">Arquivar</string>
+    <string name="Remove_someone_from_room">Remove alguém da sala</string>
+    <string name="Leave_the_current_channel">Sai do canal actual</string>
+    <string name="Displays_action_text">Escreve um texto de acção</string>
+    <string name="Direct_message_someone">Envia uma mensagem directa para alguém</string>
+    <string name="Mute_someone_in_room">Silencia alguém na sala</string>
+    <string name="Unmute_someone_in_room">Remove o silêncio de alguém na sala</string>
+    <string name="Invite_user_to_join_channel">Convida um utilizador a entrar neste canal</string>
+    <string name="Unarchive">Desarquivar</string>
+    <string name="Join_the_given_channel">Entra no canal especificado</string>
+    <string name="Guggy_Command_Description">Gera um GIF baseado no texto fornecido</string>
+    <string name="Slash_Topic_Description">Define o tópico</string>
+
+    <!-- Emoji message-->
+    <string name="msg_no_recent_emoji">Nenhum emojis recente</string>
+    <string name="alert_title_default_skin_tone">Tom de pele padrão</string>
+
+    <!-- Sorting and grouping-->
+    <string name="msg_sort">Ordenar</string>
+    <string name="dialog_sort_title">Ordenar por</string>
+    <string name="dialog_sort_by_alphabet">Alfabeticamente</string>
+    <string name="dialog_sort_by_activity">Actividade</string>
+    <string name="dialog_group_by_type">Agrupar por tipo</string>
+    <string name="dialog_group_favourites">Agrupar favoritos</string>
+    <string name="chatroom_header">Cabeçalho</string>
+
+    <!--ChatRooms Headers-->
+    <string name="header_favorite">Favoritos</string>
+    <string name="header_channel">Canais</string>
+    <string name="header_private_groups">Grupos Privados</string>
+    <string name="header_direct_messages">Mensagens Directas</string>
+    <string name="header_live_chats">Chats ao Vivo</string>
+    <string name="header_unknown">Desconhecido</string>
+
+    <!--Notifications-->
+    <string name="share_label">Editar mensagem partilhada</string>
+    <string name="notif_action_reply_hint">RESPONDER</string>
+    <string name="notif_error_sending">A resposta falhou. Tente novamente.</string>
+    <string name="notif_success_sending">Mensagem enviada para %1$s!</string>
+    <string name="read_by">Lida por</string>
+    <string name="message_information_title">Informação da Mensagem</string>
+    <string name="message_room_changed_privacy">Tipo de sala alterado para: %1$s por %2$s</string>
+
+    <string name="foss" translatable="false">(FOSS)</string>
+
+    <!-- User Details -->
+    <string name="timezone">Fuso Horário</string>
+    <string name="status">Estado</string>
+
+    <!-- Report -->
+    <string name="submit">Enviar</string>
+    <string name="required">*requerido</string>
+    <string name="report_sent">O seu relatório foi enviado!</string>
+</resources>

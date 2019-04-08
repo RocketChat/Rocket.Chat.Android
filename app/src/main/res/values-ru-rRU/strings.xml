@@ -59,6 +59,8 @@
     <string name="action_register">Зарегистрировать</string>
     <string name="action_confirm">Подтвердить</string>
     <string name="action_delete_account">Удалить аккаунт</string>
+    <string name="action_favorite">В избранное</string>
+    <string name="action_remove_favorite">Удалить из избранного</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -94,6 +96,8 @@
     <string name="msg_yesterday">Вчера</string>
     <string name="msg_today">Сегодня</string>
     <string name="msg_message">Сообщение</string>
+    <string name="msg_video_call">Видеозвонок</string>
+    <string name="msg_join_video_call">Присоединиться к видеозвонку</string>
     <string name="msg_this_room_is_read_only">Канал только для чтения</string>
     <string name="msg_invalid_2fa_code">Неверный код 2FA</string>
     <string name="msg_invalid_file">Неверный файл</string>
@@ -175,6 +179,7 @@
         <item quantity="few">%1$s реагируют с %2$s</item>
         <item quantity="many">%1$s реагируют с %2$s</item>
     </plurals>
+    <string name="msg_credentials_saved_successfully">Учетные данные успешно сохранены</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>
@@ -207,23 +212,23 @@
     <string name="message_unmuted">Пользователю %1$s вернули дар речи по решению %2$s</string>
     <string name="message_role_add">%1$s был назначен %2$s пользователем %3$s</string>
     <string name="message_role_removed">%1$s больше не %2$s по решению %3$s</string>
-    <string name="message_credentials_saved_successfully">Учетные данные успешно сохранены</string>
+    <string name="message_video_call_started">Видеозвонок, начатый %1$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Ответить</string>
-    <string name="action_msg_info">Информация о прочтении</string>
+    <string name="action_info">Информация о прочтении</string>
     <string name="action_msg_edit">Редактировать</string>
     <string name="action_msg_copy">Копировать</string>
     <string name="action_msg_quote">Цитировать</string>
     <string name="action_msg_delete">Удалить</string>
-    <string name="action_msg_pin">Закрепить сообщение</string>
-    <string name="action_msg_unpin">Открепить сообщение</string>
-    <string name="action_msg_star">В избранное</string>
-    <string name="action_msg_unstar">Из избранного</string>
+    <string name="action_pin">Закрепить сообщение</string>
+    <string name="action_unpin">Открепить сообщение</string>
+    <string name="action_star">В избранное</string>
+    <string name="action_unstar">Из избранного</string>
     <string name="action_msg_share">Поделиться</string>
-    <string name="action_title_editing">Редактирование сообщения</string>
+    <string name="action_title_editing">Редактировать</string>
     <string name="action_msg_add_reaction">Отреагировать</string>
-    <string name="action_msg_copy_permalink">Копировать ссылку</string>
+    <string name="action_msg_permalink">Копировать ссылку</string>
     <string name="action_msg_report">Пожаловаться</string>
 
     <!-- Permission messages -->
@@ -234,10 +239,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">Поиск сообщения</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Добавить в избранное</string>
-    <string name="title_unfavorite_chat">Удалить из избранного</string>
 
     <!-- Members List -->
     <string name="title_members_list">Пользователи</string>
@@ -315,6 +316,7 @@
     <string name="chatroom_header">Заголовок</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Избранные</string>
     <string name="header_channel">Каналы</string>
     <string name="header_private_groups">Приватные каналы</string>
     <string name="header_direct_messages">Личная переписка</string>
@@ -332,7 +334,7 @@
     <string name="message_room_changed_privacy">Тип канала изменен на: %1$s пользователем %2$s</string>
 
     <!-- User Details -->
-    <string name="timezone">Часовой поясe</string>
+    <string name="timezone">Часовой пояс</string>
 
     <!-- Report -->
     <string name="submit">Отправить</string>

@@ -11,8 +11,10 @@ object AndroidPermissionsHelper {
     const val WRITE_EXTERNAL_STORAGE_CODE = 1
 
     fun checkPermission(context: Context, permission: String): Boolean {
-        return ContextCompat.checkSelfPermission(context, permission) ==
-            PackageManager.PERMISSION_GRANTED
+        return ContextCompat.checkSelfPermission(
+            context,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     fun requestPermission(context: Activity, permission: String, requestCode: Int) {

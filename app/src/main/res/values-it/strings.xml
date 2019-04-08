@@ -59,6 +59,8 @@
     <string name="action_register">Registra</string>
     <string name="action_confirm">Conferma</string>
     <string name="action_delete_account">Elimina utente</string>
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -94,6 +96,8 @@
     <string name="msg_yesterday">Ieri</string>
     <string name="msg_today">Oggi</string>
     <string name="msg_message">Messaggio</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
+    <string name="msg_join_video_call">Join video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">Questa stanza è di sola lettura</string>
     <string name="msg_invalid_2fa_code">Invalido Codice 2FA non valido</string>
     <string name="msg_invalid_file">Documento non valido</string>
@@ -158,9 +162,9 @@
     <string name="msg_two_factor_authentication">Autenticazione a 2 fattori (2FA)</string>
     <string name="msg__your_2fa_code">Qual è il tuo codice 2FA ?</string>
     <string name="msg_permalink_copied">Permalink copiato</string>
-    <string name="msg_no_topic">Nessun argomento aggiunto</string>
-    <string name="msg_no_announcement">Nessun annuncio aggiunto</string>
-    <string name="msg_no_description">Nessuna descrizione aggiunta</string>
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
     <string name="msg_send_email">Invia una email</string>
     <string name="msg_android_app_support">Supporto per le app Android</string>
     <string name="msg_unable_to_update_password">Impossibile aggiornare la password. Messaggio di errore: %1$s</string>
@@ -169,6 +173,7 @@
         <item quantity="one">%1$s ha reagito con %2$s</item>
         <item quantity="other">%1$s ha reagito con %2$s</item>
     </plurals>
+    <string name="msg_credentials_saved_successfully">Credenziali salvate con successo</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privato</string>
@@ -207,23 +212,23 @@
     <string name="message_unmuted">Utente %1$s riattivato da %2$s</string>
     <string name="message_role_add">%1$s ha il ruolo %2$s aggiunto da %3$s</string>
     <string name="message_role_removed">%1$s ha il ruolo %2$s rimosso da %3$s</string>
-    <string name="message_credentials_saved_successfully">Credenziali salvate con successo</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">Rispondi</string>
-    <string name="action_msg_info">Informazioni messaggio</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">Modifica</string>
     <string name="action_msg_copy">Copia</string>
     <string name="action_msg_quote">Citazione</string>
     <string name="action_msg_delete">Cancella</string>
-    <string name="action_msg_pin">Messaggio importante</string>
-    <string name="action_msg_unpin">Messaggio normale</string>
-    <string name="action_msg_star">Messaggio preferito</string>
-    <string name="action_msg_unstar">Messaggio normale</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">Condividi</string>
     <string name="action_title_editing">Modifica messaggio</string>
     <string name="action_msg_add_reaction">Aggiungi reazione</string>
-    <string name="action_msg_copy_permalink">Copia permalink</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO Add translation -->
     <string name="action_msg_report">Resoconto</string>
 
     <!-- Permission messages -->
@@ -234,10 +239,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">Cerca messaggio</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Stanza preferita</string>
-    <string name="title_unfavorite_chat">Stanza normale</string>
 
     <!-- Members List -->
     <string name="title_members_list">Partecipanti</string>
@@ -315,6 +316,7 @@
     <string name="chatroom_header">Intestazione</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="header_channel">Canali</string>
     <string name="header_private_groups">Gruppi Privati</string>
     <string name="header_direct_messages">Messaggi Diretti</string>

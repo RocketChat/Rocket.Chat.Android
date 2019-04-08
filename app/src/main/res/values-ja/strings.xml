@@ -59,6 +59,8 @@
     <string name="action_register">登録</string>
     <string name="action_confirm">確認</string>
     <string name="action_delete_account">アカウントを削除する</string>
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -94,6 +96,8 @@
     <string name="msg_today">今日</string>
     <string name="msg_yesterday">昨日</string>
     <string name="msg_message">メッセージ</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
+    <string name="msg_join_video_call">Join video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">この部屋は読み取り専用です</string>
     <string name="msg_invalid_2fa_code">無効な 2FA コード</string>
     <string name="msg_invalid_file">無効なファイル</string>
@@ -163,15 +167,16 @@
     <string name="msg_view_more">更に表示</string>
     <string name="msg_view_less">隠す</string>
     <string name="msg_muted_on_this_channel">あなたはこのチャンネルでミュートされています</string>
-    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
-    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
-    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
     <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
     <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
-        <item quantity="one">%1$s reacted with %2$s</item>     <!-- TODO - Add proper translation -->
-        <item quantity="other">%1$s reacted with %2$s</item>     <!-- TODO - Add proper translation -->
+        <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
+        <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
+    <string name="msg_credentials_saved_successfully">資格情報を正常に保存しました</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">プライベート</string>
@@ -210,23 +215,23 @@
     <string name="message_unmuted">ユーザー %1$s は %2$s によってミュートされていません</string>
     <string name="message_role_add">%1$s は %3$s によって %2$s に設定されました</string>
     <string name="message_role_removed">%1$s は %3$s で、もう %2$s ではありません</string>
-    <string name="message_credentials_saved_successfully">資格情報を正常に保存しました</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">返信</string>
-    <string name="action_msg_info">メッセージ情報</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">編集</string>
     <string name="action_msg_copy">コピー</string>
     <string name="action_msg_quote">引用</string>
     <string name="action_msg_delete">削除</string>
-    <string name="action_msg_pin">ピン留めする</string>
-    <string name="action_msg_unpin">ピン留を外す</string>
-    <string name="action_msg_star">スターをつける</string>
-    <string name="action_msg_unstar">スターを外す</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">メッセージの編集</string>
     <string name="action_msg_add_reaction">リアクションする</string>
-    <string name="action_msg_copy_permalink">パーマリンクのコピー</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO Add translation -->
     <string name="action_msg_report">Report</string> <!-- TODO - Add proper translation -->
 
     <!-- Permission messages -->
@@ -237,10 +242,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">メッセージを検索</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">お気に入り</string>
-    <string name="title_unfavorite_chat">お気に入り解除</string>
 
     <!-- Members List -->
     <string name="title_members_list">メンバー</string>
@@ -319,6 +320,7 @@
 
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="header_channel">チャンネル</string>
     <string name="header_private_groups">プライベートグループ</string>
     <string name="header_direct_messages">ダイレクトメッセージ</string>

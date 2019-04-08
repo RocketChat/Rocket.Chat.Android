@@ -26,7 +26,6 @@ data class MessageUiModel(
 ) : BaseMessageUiModel<Message> {
     override val viewType: Int
         get() = BaseUiModel.ViewType.MESSAGE.viewType
-
     override val layoutId: Int
         get() = R.layout.item_message
 }
