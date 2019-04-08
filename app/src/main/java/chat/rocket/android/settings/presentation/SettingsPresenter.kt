@@ -20,6 +20,7 @@ import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.deleteOwnAccount
+import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.serverInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -59,11 +60,16 @@ class SettingsPresenter @Inject constructor(
                 val serverInfo = retryIO(description = "serverInfo", times = 5) {
                     rocketChatClientFactory.get(currentServer).serverInfo()
                 }
+
+                val me = retryIO(description = "serverInfo", times = 5) {
+                    rocketChatClientFactory.get(currentServer).me()
+                }
+
                 userHelper.user()?.let { user ->
                     view.setupSettingsView(
-                        currentServer.avatarUrl(user.username ?: ""),
-                        userHelper.displayName(user) ?: user.username ?: "",
-                        user.status.toString(),
+                        currentServer.avatarUrl(me.username ?: ""),
+                        userHelper.displayName(user) ?: me.username ?: "",
+                        me.status.toString(),
                         permissions.isAdministrationEnabled(),
                         analyticsTrackingInteractor.get(),
                         true,

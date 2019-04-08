@@ -24,6 +24,7 @@ import chat.rocket.common.model.userStatusOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.realtime.setDefaultStatus
+import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.resetAvatar
 import chat.rocket.core.internal.rest.setAvatar
 import chat.rocket.core.internal.rest.updateProfile
@@ -61,12 +62,16 @@ class ProfilePresenter @Inject constructor(
         launchUI(strategy) {
             view.showLoading()
             try {
+                val me = retryIO(description = "serverInfo", times = 5) {
+                    client.me()
+                }
+
                 view.showProfile(
-                    user?.status.toString(),
-                    serverUrl.avatarUrl(user?.username ?: ""),
-                    user?.name ?: "",
-                    user?.username ?: "",
-                    user?.emails?.getOrNull(0)?.address ?: ""
+                    me.status.toString(),
+                    serverUrl.avatarUrl(me.username ?: ""),
+                    me.name ?: "",
+                    me.username ?: "",
+                    me.emails?.getOrNull(0)?.address ?: ""
                 )
             } catch (exception: RocketChatException) {
                 view.showMessage(exception)
