@@ -11,6 +11,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.net.toUri
@@ -30,6 +32,8 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.util.invalidateFirebaseToken
+import chat.rocket.common.model.UserStatus
+import chat.rocket.common.model.userStatusOf
 import com.facebook.drawee.backends.pipeline.Fresco
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
@@ -50,6 +54,7 @@ fun newInstance() = ProfileFragment()
 class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     @Inject lateinit var presenter: ProfilePresenter
     @Inject lateinit var analyticsManager: AnalyticsManager
+    private var currentStatus = ""
     private var currentName = ""
     private var currentUsername = ""
     private var currentEmail = ""
@@ -72,11 +77,12 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar()
-        setupListeners()
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             tintEditTextDrawableStart()
         }
+
         presenter.loadUserProfile()
+        setupListeners()
         subscribeEditTexts()
 
         analyticsManager.logScreenView(ScreenViewEvent.Profile)
@@ -106,13 +112,21 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         super.onPrepareOptionsMenu(menu)
     }
 
-    override fun showProfile(avatarUrl: String, name: String, username: String, email: String?) {
+    override fun showProfile(
+        status: String,
+        avatarUrl: String,
+        name: String,
+        username: String,
+        email: String?
+    ) {
         ui {
+            text_status.text = getString(R.string.status, status.capitalize())
             image_avatar.setImageURI(avatarUrl)
             text_name.textContent = name
             text_username.textContent = username
             text_email.textContent = email ?: ""
 
+            currentStatus = status
             currentName = name
             currentUsername = username
             currentEmail = email ?: ""
@@ -124,7 +138,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun reloadUserAvatar(avatarUrl: String) {
         Fresco.getImagePipeline().evictFromCache(avatarUrl.toUri())
         image_avatar.setImageURI(avatarUrl)
-//        (activity as MainActivity).setAvatar(avatarUrl)
     }
 
     override fun showProfileUpdateSuccessfullyMessage() {
@@ -198,6 +211,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun setupListeners() {
+        text_status.setOnClickListener { showStatusDialog(currentStatus) }
+
         image_avatar.setOnClickListener { showUpdateAvatarOptions() }
 
         view_dim.setOnClickListener { hideUpdateAvatarOptions() }
@@ -279,6 +294,41 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             text_username.isEnabled = value
             text_username.isEnabled = value
             text_email.isEnabled = value
+        }
+    }
+
+    private fun showStatusDialog(currentStatus: String) {
+        val dialogLayout = layoutInflater.inflate(R.layout.dialog_status, null)
+        val radioGroup = dialogLayout.findViewById<RadioGroup>(R.id.radio_group_status)
+
+        radioGroup.check(
+            when (userStatusOf(currentStatus)) {
+                is UserStatus.Online -> R.id.radio_button_online
+                is UserStatus.Away -> R.id.radio_button_away
+                is UserStatus.Busy -> R.id.radio_button_busy
+                else -> R.id.radio_button_invisible
+            }
+        )
+
+        var newStatus: UserStatus = userStatusOf(currentStatus)
+        radioGroup.setOnCheckedChangeListener { _, checkId ->
+            when (checkId) {
+                R.id.radio_button_online -> newStatus = UserStatus.Online()
+                R.id.radio_button_away -> newStatus = UserStatus.Away()
+                R.id.radio_button_busy -> newStatus = UserStatus.Busy()
+                else -> newStatus = UserStatus.Offline()
+            }
+        }
+
+        context?.let {
+            AlertDialog.Builder(it)
+                .setView(dialogLayout)
+                .setPositiveButton(R.string.msg_change_status) { dialog, _ ->
+                    presenter.updateStatus(newStatus)
+                    text_status.text = getString(R.string.status, newStatus.toString().capitalize())
+                    this.currentStatus = newStatus.toString()
+                    dialog.dismiss()
+                }.show()
         }
     }
 }

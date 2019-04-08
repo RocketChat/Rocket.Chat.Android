@@ -42,10 +42,10 @@
     <string name="action_attach_a_files">添加檔案</string>
     <string name="action_confirm_password">確認修改密碼</string>
     <string name="action_join_chat">加入聊天</string>
-    <string name="action_online">線上</string>
-    <string name="action_away">離線</string>
-    <string name="action_busy">忙碌</string>
-    <string name="action_invisible">隱藏</string>
+    <string name="msg_online">線上</string>
+    <string name="msg_away">離線</string>
+    <string name="msg_busy">忙碌</string>
+    <string name="msg_invisible">隱藏</string>
     <string name="action_drawing">畫畫中...</string>
     <string name="action_save_to_gallery">保存到相簿</string>
     <string name="action_select_photo_from_gallery">從相簿中選取照片</string>
@@ -71,6 +71,8 @@
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">發生了錯誤，請稍後試試</string>
@@ -335,7 +337,7 @@
 
     <!-- User Details -->
     <string name="timezone">時區</string>
-    <string name="status" translatable="false">狀態</string>
+    <string name="status" translatable="false">狀態: %1$s</string>
 
     <!-- Report -->
     <string name="submit">提交</string>

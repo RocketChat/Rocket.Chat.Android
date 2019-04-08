@@ -42,10 +42,10 @@
     <string name="action_attach_a_files">एक फ़ाइल जोडो</string>
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
     <string name="action_join_chat">चैट में शामिल हों</string>
-    <string name="action_online">ऑनलाइन</string>
-    <string name="action_away">दूर</string>
-    <string name="action_busy">व्यस्त</string>
-    <string name="action_invisible">अदृश्य</string>
+    <string name="msg_online">ऑनलाइन</string>
+    <string name="msg_away">दूर</string>
+    <string name="msg_busy">व्यस्त</string>
+    <string name="msg_invisible">अदृश्य</string>
     <string name="action_save_to_gallery">गैलरी में सहेजें</string>
     <string name="action_drawing">चित्रकारी</string>
     <string name="action_select_photo_from_gallery">गैलरी से फोटो का चयन करें</string>
@@ -71,6 +71,8 @@
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">क्षमा करें, एक त्रुटि हुई है, कृपया पुनः प्रयास करें</string>

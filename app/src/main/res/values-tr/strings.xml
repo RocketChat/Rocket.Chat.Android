@@ -42,10 +42,10 @@
     <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">Şifre Değişikliğini Onaylayın</string>
     <string name="action_join_chat">Sohbete Bağlan</string>
-    <string name="action_online">Çevrimiçi</string>
-    <string name="action_away">Uzakta</string>
-    <string name="action_busy">Meşgul</string>
-    <string name="action_invisible">Görünmez</string>
+    <string name="msg_online">Çevrimiçi</string>
+    <string name="msg_away">Uzakta</string>
+    <string name="msg_busy">Meşgul</string>
+    <string name="msg_invisible">Görünmez</string>
     <string name="action_drawing">Çizim</string>
     <string name="action_save_to_gallery">Galeriye kaydet</string>
     <string name="action_select_photo_from_gallery">Galeriden resim seç</string>
@@ -71,6 +71,8 @@
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Üzgünüz! bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.</string>

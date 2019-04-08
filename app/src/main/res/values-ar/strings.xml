@@ -43,10 +43,10 @@
     <string name="action_attach_a_files">إضافة ملف</string>
     <string name="action_confirm_password">تأكيد تغيير كلمة السر</string>
     <string name="action_join_chat">إنضم للمحادثة</string>
-    <string name="action_online">متصل</string>
-    <string name="action_away">بعيد</string>
-    <string name="action_busy">مشغول</string>
-    <string name="action_invisible">مخفي</string>
+    <string name="msg_online">متصل</string>
+    <string name="msg_away">بعيد</string>
+    <string name="msg_busy">مشغول</string>
+    <string name="msg_invisible">مخفي</string>
     <string name="action_drawing">رسم</string>
     <string name="action_save_to_gallery">حفظ في المعرض</string>
     <string name="action_select_photo_from_gallery">اختيار صورة من المعرض</string>
@@ -72,6 +72,8 @@
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">نأسف حدث خطأ ما حاول مرة أخرى</string>
@@ -341,7 +343,6 @@
 
     <!-- User Details -->
     <string name="timezone">المنظقة الزمنية</string>
-    <string name="status" translatable="false">Status</string>
 
     <!-- Report -->
     <string name="submit">تأكيد</string>

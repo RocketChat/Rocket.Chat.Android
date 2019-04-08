@@ -15,20 +15,18 @@ import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extension.compressImageAndGetByteArray
-import chat.rocket.android.util.extension.gethash
 import chat.rocket.android.util.extension.launchUI
-import chat.rocket.android.util.extension.toHex
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.model.UserStatus
+import chat.rocket.common.model.userStatusOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.rest.deleteOwnAccount
+import chat.rocket.core.internal.realtime.setDefaultStatus
 import chat.rocket.core.internal.rest.resetAvatar
 import chat.rocket.core.internal.rest.setAvatar
 import chat.rocket.core.internal.rest.updateProfile
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 
@@ -64,6 +62,7 @@ class ProfilePresenter @Inject constructor(
             view.showLoading()
             try {
                 view.showProfile(
+                    user?.status.toString(),
                     serverUrl.avatarUrl(user?.username ?: ""),
                     user?.name ?: "",
                     user?.username ?: "",
@@ -82,9 +81,17 @@ class ProfilePresenter @Inject constructor(
             view.showLoading()
             try {
                 user?.id?.let { id ->
-                    retryIO { client.updateProfile(userId = id, email = email, name = name, username = username) }
+                    retryIO {
+                        client.updateProfile(
+                            userId = id,
+                            email = email,
+                            name = name,
+                            username = username
+                        )
+                    }
                     view.showProfileUpdateSuccessfullyMessage()
                     view.showProfile(
+                        user.status.toString(),
                         serverUrl.avatarUrl(user.username ?: ""),
                         name,
                         username,
@@ -172,6 +179,20 @@ class ProfilePresenter @Inject constructor(
                 }
             } finally {
                 view.hideLoading()
+            }
+        }
+    }
+
+    fun updateStatus(status: UserStatus) {
+        launchUI(strategy) {
+            try {
+                client.setDefaultStatus(status)
+            } catch (exception: RocketChatException) {
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
             }
         }
     }

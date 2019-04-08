@@ -54,10 +54,10 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_attach_a_files">Attach a file</string>
     <string name="action_confirm_password">Confirm Password Change</string>
     <string name="action_join_chat">Join Chat</string>
-    <string name="action_online">Online</string>
-    <string name="action_away">Away</string>
-    <string name="action_busy">Busy</string>
-    <string name="action_invisible">Invisible</string>
+    <string name="msg_online">Online</string>
+    <string name="msg_away">Away</string>
+    <string name="msg_busy">Busy</string>
+    <string name="msg_invisible">Invisible</string>
     <string name="action_drawing">Drawing</string>
     <string name="action_save_to_gallery">Save to gallery</string>
     <string name="action_select_photo_from_gallery">Select photo from gallery</string>
@@ -83,6 +83,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_send_analytics">Send analytics</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string>
     <string name="msg_delete_account">Delete account</string>
+
+    <string name="msg_change_status">Change status</string>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
@@ -351,7 +353,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
 
     <!-- User Details -->
     <string name="timezone">Timezone</string>
-    <string name="status" translatable="false">Status</string>
+    <string name="status" translatable="false">Status: %1$s</string>
 
     <!-- Report -->
     <string name="submit">Submit</string>

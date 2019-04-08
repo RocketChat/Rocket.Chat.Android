@@ -42,10 +42,10 @@
     <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">Confirmar cambio de contraseña</string>
     <string name="action_join_chat">Unirse al chat</string>
-    <string name="action_online">Conectado(s)</string>
-    <string name="action_away">Ausente</string>
-    <string name="action_busy">Ocupado</string>
-    <string name="action_invisible">Invisible</string>
+    <string name="msg_online">Conectado(s)</string>
+    <string name="msg_away">Ausente</string>
+    <string name="msg_busy">Ocupado</string>
+    <string name="msg_invisible">Invisible</string>
     <string name="action_drawing">Dibujo</string>
     <string name="action_save_to_gallery">Guardar en la galería</string>
     <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
@@ -71,6 +71,8 @@
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Lo sentimos, ha ocurrido un error, por favor intente de nuevo</string>
