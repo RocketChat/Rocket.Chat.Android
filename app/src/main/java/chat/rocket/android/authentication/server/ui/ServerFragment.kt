@@ -139,6 +139,9 @@ class ServerFragment : Fragment(), ServerView {
             button_connect.setOnClickListener {
                 presenter.checkServer("$protocol${text_server_url.textContent.sanitize()}")
             }
+            button_tls_cert.setOnClickListener {
+                presenter.requestClientCert()
+            }
         }
 
     override fun showInvalidServerUrlMessage() =

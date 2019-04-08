@@ -19,6 +19,7 @@ import chat.rocket.android.dagger.qualifier.ForAuthentication
 import chat.rocket.android.dagger.qualifier.ForMessages
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.DatabaseManagerFactory
+import chat.rocket.android.helper.ClientCertHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPreferencesLocalRepository
@@ -28,6 +29,7 @@ import chat.rocket.android.server.domain.AccountsRepository
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.server.domain.AnalyticsTrackingRepository
 import chat.rocket.android.server.domain.ChatRoomsRepository
+import chat.rocket.android.server.domain.ClientCertRepository
 import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.GetAccountInteractor
 import chat.rocket.android.server.domain.GetAccountsInteractor
@@ -54,6 +56,7 @@ import chat.rocket.android.server.infraestructure.SharedPreferencesPermissionsRe
 import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsAnalyticsTrackingRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsConnectingServerRepository
+import chat.rocket.android.server.infraestructure.SharedPrefsClientCertRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
 import chat.rocket.android.util.AppJsonAdapterFactory
 import chat.rocket.android.util.HttpLoggingInterceptor
@@ -78,7 +81,6 @@ import okhttp3.OkHttpClient
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.spans.SpannableTheme
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -123,25 +125,21 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(logger: HttpLoggingInterceptor, basicAuthenticator: BasicAuthenticatorInterceptor): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor(logger)
-            .addInterceptor(basicAuthenticator)
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(20, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .build()
+    fun provideOkHttpClient(
+            clientCertHelper: ClientCertHelper
+    ): OkHttpClient {
+        return clientCertHelper.getClient()
     }
 
     @Provides
     @Singleton
     fun provideImagePipelineConfig(
         context: Context,
-        okHttpClient: OkHttpClient
+        clientCertHelper: ClientCertHelper
     ): ImagePipelineConfig {
         val listeners = setOf(RequestLoggingListener())
 
-        return OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient)
+        return OkHttpImagePipelineConfigFactory.newBuilder(context, clientCertHelper.getClient())
             .setRequestListeners(listeners)
             .setDownsampleEnabled(true)
             .experiment().setPartialImageCachingEnabled(true).build()
@@ -306,6 +304,12 @@ class AppModule {
         moshi: Moshi
     ): AccountsRepository =
         SharedPreferencesAccountsRepository(preferences, moshi)
+
+    @Provides
+    @Singleton
+    fun provideClientCertRepository(prefs: SharedPreferences): ClientCertRepository {
+        return SharedPrefsClientCertRepository(prefs)
+    }
 
     @Provides
     fun provideNotificationManager(context: Application) =

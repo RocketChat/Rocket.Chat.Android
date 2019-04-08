@@ -74,6 +74,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/server_url_container" />
 
+        <android.widget.Button
+            android:id="@+id/button_tls_cert"
+            style="@style/Authentication.Button"
+            android:layout_marginTop="20dp"
+            android:enabled="true"
+            android:text="@string/action_tls_certificate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_connect" />
+
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/view_loading"
             style="@style/Authentication.AVLoadingIndicatorView"
