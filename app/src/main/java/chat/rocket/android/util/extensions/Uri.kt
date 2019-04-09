@@ -51,7 +51,7 @@ fun Uri.getFileSize(context: Context): Int {
 
 fun Uri.getMimeType(context: Context): String {
     return if (scheme == ContentResolver.SCHEME_CONTENT) {
-        context.contentResolver.getType(this)
+        context.contentResolver?.getType(this) ?: ""
     } else {
         val fileExtension = MimeTypeMap.getFileExtensionFromUrl(toString())
         if (fileExtension != null) {

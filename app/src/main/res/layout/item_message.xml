@@ -8,6 +8,7 @@
             name="shape"
             type="chat.rocket.android.helper.Constants"/>
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/message_container"
         android:layout_width="match_parent"
@@ -41,8 +42,8 @@
                 android:id="@+id/day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:textAppearance="@style/Message.DayMarker"
                 tools:text="Wednesday" />
 
@@ -59,8 +60,7 @@
             bind:shape="@{shape}"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/message_header" />
 
         <LinearLayout
@@ -101,25 +101,24 @@
             android:id="@+id/message_header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginStart="16dp"
-            app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
-            app:layout_constraintStart_toEndOf="@+id/layout_avatar"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/layout_avatar"
             app:layout_constraintTop_toBottomOf="@+id/day_marker_layout">
 
             <TextView
                 android:id="@+id/text_sender"
                 style="@style/Sender.Name.TextView"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginEnd="8dp"
+                android:maxLength="22"
                 tools:text="User Name with long name" />
 
             <TextView
                 android:id="@+id/text_message_time"
-                style="@style/ChatList.Timestamp.TextView"
+                style="@style/ChatRoom.Timestamp.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -132,7 +131,7 @@
                 android:layout_marginStart="4dp"
                 android:text="@string/msg_edited"
                 android:textStyle="italic"
-                android:visibility="gone"
+                android:visibility="invisible"
                 tools:visibility="visible" />
 
             <ImageView
@@ -142,7 +141,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="2dp"
-                android:visibility="gone"
+                android:visibility="invisible"
                 app:srcCompat="@drawable/ic_action_message_star_24dp"
                 tools:visibility="visible" />
 
@@ -150,7 +149,7 @@
                 android:id="@+id/read_receipt_view"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:visibility="gone"
+                android:visibility="invisible"
                 app:srcCompat="@drawable/ic_check_unread_24dp"
                 tools:visibility="visible" />
         </LinearLayout>
@@ -167,6 +166,16 @@
             app:layout_constraintStart_toStartOf="@+id/message_header"
             app:layout_constraintTop_toBottomOf="@+id/message_header"
             tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
+
+        <Button
+            android:id="@+id/button_join_video_call"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:text="@string/msg_join_video_call"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/text_content"
+            app:layout_constraintTop_toBottomOf="@+id/text_content" />
 
         <include
             layout="@layout/layout_reactions"

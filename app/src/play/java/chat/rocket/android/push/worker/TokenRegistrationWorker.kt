@@ -9,7 +9,7 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.common.util.ifNull
 import com.google.firebase.iid.FirebaseInstanceId
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
 

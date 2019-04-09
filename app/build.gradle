@@ -2,7 +2,9 @@ def taskRequests = getGradle().getStartParameter().getTaskRequests().toString()
 def isPlay = !(taskRequests.contains("Foss") || taskRequests.contains("foss"))
 
 apply plugin: 'com.android.application'
-if (isPlay) { apply plugin: 'io.fabric' }
+if (isPlay) {
+    apply plugin: 'io.fabric'
+}
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -22,7 +24,6 @@ android {
         multiDexEnabled true
 
         def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
-        def buildTime = new GregorianCalendar().format("MM-dd-yyyy' 'h:mm:ss a z")
         buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
 
         javaCompileOptions {
@@ -32,6 +33,17 @@ android {
         }
         dataBinding {
             enabled = true
+        }
+
+        // For Jitsi
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+
+        // For Jitsi
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
         }
     }
 
@@ -76,7 +88,7 @@ android {
             dimension "type"
         }
 
-        // only foss
+        // only FOSS
         foss {
             dimension "type"
         }
@@ -85,6 +97,10 @@ android {
     packagingOptions {
         exclude 'META-INF/core.kotlin_module'
         exclude 'META-INF/main.kotlin_module'
+    }
+
+    lintOptions {
+        lintConfig file("src/main/res/xml/lint.xml")
     }
 }
 
@@ -99,7 +115,7 @@ dependencies {
     implementation project(':suggestions')
 
     implementation libraries.kotlin
-    implementation libraries.coroutines
+    implementation libraries.coroutinesCore
     implementation libraries.coroutinesAndroid
 
     implementation libraries.appCompat
@@ -127,6 +143,8 @@ dependencies {
     implementation libraries.viewmodelKtx
     implementation libraries.workmanager
 
+    implementation libraries.livedataKtx
+
     implementation libraries.rxKotlin
     implementation libraries.rxAndroid
 
@@ -137,17 +155,14 @@ dependencies {
     implementation libraries.timber
     implementation libraries.threeTenABP
 
+    kapt libraries.kotshiCompiler
+    implementation libraries.kotshiApi
+
     implementation libraries.fresco
     api libraries.frescoOkHttp
     implementation libraries.frescoAnimatedGif
     implementation libraries.frescoWebP
     implementation libraries.frescoAnimatedWebP
-
-    implementation libraries.glide
-    implementation libraries.glideTransformations
-
-    kapt libraries.kotshiCompiler
-    implementation libraries.kotshiApi
 
     implementation libraries.frescoImageViewer
 
@@ -155,7 +170,10 @@ dependencies {
 
     implementation libraries.aVLoadingIndicatorView
 
-    implementation libraries.livedataKtx
+    implementation libraries.glide
+    implementation libraries.glideTransformations
+
+    implementation(libraries.jitsi) { transitive = true }
 
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
@@ -163,20 +181,14 @@ dependencies {
     playImplementation libraries.fcm
     playImplementation libraries.firebaseAnalytics
     playImplementation libraries.playServicesAuth
-    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') { transitive = true }
-    playImplementation('com.crashlytics.sdk.android:answers:1.4.3@aar') { transitive = true }
     playImplementation libraries.dynamiclinks
+    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.8@aar') { transitive = true }
+    playImplementation('com.crashlytics.sdk.android:answers:1.4.6@aar') { transitive = true }
 
     testImplementation libraries.junit
     testImplementation libraries.truth
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoIntents
-}
-
-kotlin {
-    experimental {
-        coroutines "enable"
-    }
 }
 
 androidExtensions {
@@ -186,8 +198,8 @@ androidExtensions {
 // FIXME - build and install the sdk into the app/libs directory
 // We were having some issues with the kapt generated files from the sdk when importing as a module
 
-def sdk_location=project.properties['sdk_location'] ?: ""
-task compileSdk(type:Exec) {
+def sdk_location = project.properties['sdk_location'] ?: ""
+task compileSdk(type: Exec) {
     if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
         commandLine 'cmd', '/c', 'build-sdk.sh', sdk_location
     } else {

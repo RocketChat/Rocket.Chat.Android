@@ -53,13 +53,11 @@ class RoomsAdapter(private val listener: (RoomUiModel) -> Unit) :
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return when (values[position]) {
-            is RoomItemHolder -> VIEW_TYPE_ROOM
-            is HeaderItemHolder -> VIEW_TYPE_HEADER
-            is LoadingItemHolder -> VIEW_TYPE_LOADING
-            else -> throw IllegalStateException("View type must be either Room, Header or Loading")
-        }
+    override fun getItemViewType(position: Int): Int = when (values[position]) {
+        is RoomItemHolder -> VIEW_TYPE_ROOM
+        is HeaderItemHolder -> VIEW_TYPE_HEADER
+        is LoadingItemHolder -> VIEW_TYPE_LOADING
+        else -> throw IllegalStateException("View type must be either Room, Header or Loading")
     }
 
     override fun onBindViewHolder(holder: ViewHolder<*>, position: Int) {

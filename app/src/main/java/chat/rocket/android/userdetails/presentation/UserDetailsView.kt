@@ -13,12 +13,14 @@ interface UserDetailsView : LoadingView, MessageView {
      * @param username The user's username.
      * @param status The user's status.
      * @param utcOffset The user's UTC offset.
+     * @param isVideoCallAllowed True if the video call is allowed, false otherwise.
      */
-    fun showUserDetails(
+    fun showUserDetailsAndActions(
         avatarUrl: String,
         name: String,
         username: String,
         status: String,
-        utcOffset: String
+        utcOffset: String,
+        isVideoCallAllowed: Boolean
     )
 }

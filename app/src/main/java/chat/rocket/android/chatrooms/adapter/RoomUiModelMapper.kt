@@ -36,14 +36,29 @@ class RoomUiModelMapper(
         grouped: Boolean = false,
         showLastMessage: Boolean = true
     ): List<ItemHolder<*>> {
-        val list = ArrayList<ItemHolder<*>>(rooms.size + 4)
+        val list = ArrayList<ItemHolder<*>>(rooms.size + 5)
         var lastType: String? = null
-        rooms.forEach { room ->
-            if (grouped && lastType != room.chatRoom.type) {
-                list.add(HeaderItemHolder(roomType(room.chatRoom.type)))
+        if (grouped) {
+            val favRooms = rooms.filter { it.chatRoom.favorite == true }
+            val unfavRooms = rooms.filterNot { it.chatRoom.favorite == true }
+
+            if (favRooms.isNotEmpty()) {
+                list.add(HeaderItemHolder(context.resources.getString(R.string.header_favorite)))
             }
-            list.add(RoomItemHolder(map(room, showLastMessage)))
-            lastType = room.chatRoom.type
+            favRooms.forEach { room ->
+                list.add(RoomItemHolder(map(room, showLastMessage)))
+            }
+            unfavRooms.forEach { room ->
+                if (lastType != room.chatRoom.type) {
+                    list.add(HeaderItemHolder(roomType(room.chatRoom.type)))
+                }
+                list.add(RoomItemHolder(map(room, showLastMessage)))
+                lastType = room.chatRoom.type
+            }
+        } else {
+            rooms.forEach { room ->
+                list.add(RoomItemHolder(map(room, showLastMessage)))
+            }
         }
 
         return list
@@ -62,76 +77,71 @@ class RoomUiModelMapper(
         return list
     }
 
-    private fun mapUser(user: User): RoomUiModel {
-        return with(user) {
-            val name = mapName(user.username!!, user.name)
-            val status = user.status
-            val avatar = serverUrl.avatarUrl(user.username!!)
-            val username = user.username!!
+    private fun mapUser(user: User): RoomUiModel = with(user) {
+        val name = mapName(user.username!!, user.name)
+        val status = user.status
+        val avatar = serverUrl.avatarUrl(user.username!!)
+        val username = user.username!!
 
-            RoomUiModel(
+        RoomUiModel(
                 id = user.id,
                 name = name,
                 type = roomTypeOf(RoomType.DIRECT_MESSAGE),
                 avatar = avatar,
                 status = status,
                 username = username
-            )
-        }
+        )
     }
 
-    private fun mapRoom(room: Room, showLastMessage: Boolean = true): RoomUiModel {
-        return with(room) {
-            RoomUiModel(
+    private fun mapRoom(room: Room, showLastMessage: Boolean = true): RoomUiModel = with(room) {
+        RoomUiModel(
                 id = id,
                 name = name!!,
                 type = type,
                 avatar = serverUrl.avatarUrl(name!!, isGroupOrChannel = true),
                 lastMessage = if (showLastMessage) {
                     mapLastMessage(
-                        lastMessage?.sender?.id, lastMessage?.sender?.username,
-                        lastMessage?.sender?.name, lastMessage?.message,
-                        isDirectMessage = type is RoomType.DirectMessage
+                            lastMessage?.sender?.id, lastMessage?.sender?.username,
+                            lastMessage?.sender?.name, lastMessage?.message,
+                            isDirectMessage = type is RoomType.DirectMessage
                     )
                 } else {
                     null
                 },
                 muted = muted.orEmpty(),
                 writable = isChannelWritable(muted)
-            )
-        }
+        )
     }
 
-    fun map(chatRoom: ChatRoom, showLastMessage: Boolean = true): RoomUiModel {
-        return with(chatRoom.chatRoom) {
-            val isUnread = alert || unread > 0
-            val type = roomTypeOf(type)
-            val status = chatRoom.status?.let { userStatusOf(it) }
-            val roomName = mapName(name, fullname)
-            val timestamp = mapDate(lastMessageTimestamp ?: updatedAt)
-            val avatar = if (type is RoomType.DirectMessage) {
-                serverUrl.avatarUrl(name)
-            } else {
-                serverUrl.avatarUrl(name, isGroupOrChannel = true)
-            }
-            val unread = mapUnread(unread)
-            val lastMessage = if (showLastMessage) {
-                mapLastMessage(
+    fun map(chatRoom: ChatRoom, showLastMessage: Boolean = true): RoomUiModel = with(chatRoom.chatRoom) {
+        val isUnread = alert || unread > 0
+        val type = roomTypeOf(type)
+        val status = chatRoom.status?.let { userStatusOf(it) }
+        val roomName = mapName(name, fullname)
+        val favorite = favorite
+        val timestamp = mapDate(lastMessageTimestamp ?: updatedAt)
+        val avatar = if (type is RoomType.DirectMessage) {
+            serverUrl.avatarUrl(name)
+        } else {
+            serverUrl.avatarUrl(name, isGroupOrChannel = true)
+        }
+        val unread = mapUnread(unread)
+        val lastMessage = if (showLastMessage) {
+            mapLastMessage(
                     lastMessageUserId,
                     chatRoom.lastMessageUserName,
                     chatRoom.lastMessageUserFullName,
                     lastMessageText,
                     type is RoomType.DirectMessage
-                )
-            } else {
-                null
-            }
-            val hasMentions = mapMentions(userMentions, groupMentions)
-            val open = open
-            val lastMessageMarkdown =
-                lastMessage?.let { Markwon.markdown(context, it.toString()).toString() }
+            )
+        } else {
+            null
+        }
+        val hasMentions = mapMentions(userMentions, groupMentions)
+        val open = open
+        val lastMessageMarkdown = lastMessage?.let { Markwon.markdown(context, it.toString()).toString() }
 
-            RoomUiModel(
+        RoomUiModel(
                 id = id,
                 name = roomName,
                 type = type,
@@ -140,14 +150,14 @@ class RoomUiModelMapper(
                 date = timestamp,
                 unread = unread,
                 mentions = hasMentions,
+                favorite = favorite,
                 alert = isUnread,
                 lastMessage = lastMessageMarkdown,
                 status = status,
                 username = if (type is RoomType.DirectMessage) name else null,
                 muted = muted.orEmpty(),
                 writable = isChannelWritable(muted)
-            )
-        }
+        )
     }
 
     private fun isChannelWritable(muted: List<String>?): Boolean {
@@ -155,14 +165,13 @@ class RoomUiModelMapper(
         return canWriteToReadOnlyChannels || !muted.orEmpty().contains(currentUser?.username)
     }
 
-    private fun roomType(type: String): String {
-        val resources = context.resources
-        return when (type) {
-            RoomType.CHANNEL -> resources.getString(R.string.header_channel)
-            RoomType.PRIVATE_GROUP -> resources.getString(R.string.header_private_groups)
-            RoomType.DIRECT_MESSAGE -> resources.getString(R.string.header_direct_messages)
-            RoomType.LIVECHAT -> resources.getString(R.string.header_live_chats)
-            else -> resources.getString(R.string.header_unknown)
+    private fun roomType(type: String): String = with(context.resources) {
+        when (type) {
+            RoomType.CHANNEL -> getString(R.string.header_channel)
+            RoomType.PRIVATE_GROUP -> getString(R.string.header_private_groups)
+            RoomType.DIRECT_MESSAGE -> getString(R.string.header_direct_messages)
+            RoomType.LIVECHAT -> getString(R.string.header_live_chats)
+            else -> getString(R.string.header_unknown)
         }
     }
 
@@ -195,13 +204,11 @@ class RoomUiModelMapper(
         }
     }
 
-    private fun mapUnread(unread: Long): String? {
-        return when (unread) {
-            0L -> null
-            in 1..99 -> unread.toString()
-            else -> context.getString(R.string.msg_more_than_ninety_nine_unread_messages)
+    private fun mapUnread(unread: Long): String? = when (unread) {
+        0L -> null
+        in 1..99 -> unread.toString()
+        else -> context.getString(R.string.msg_more_than_ninety_nine_unread_messages)
 
-        }
     }
 
     private fun mapMentions(userMentions: Long?, groupMentions: Long?): Boolean {

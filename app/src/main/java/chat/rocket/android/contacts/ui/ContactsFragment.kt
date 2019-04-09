@@ -53,7 +53,9 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.app_bar.view.*
 import kotlinx.android.synthetic.main.fragment_contact_parent.*
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import timber.log.Timber
 
@@ -190,7 +192,7 @@ class ContactsFragment : Fragment(), ContactsView {
         }
 
         if (hasContactsPermissions()) {
-            launch {
+            GlobalScope.launch {
                 getContactListWhenSynced()
             }
         } else {
@@ -371,7 +373,7 @@ class ContactsFragment : Fragment(), ContactsView {
                     filteredContactArrayList.add(contact)
                 }
             }
-            launch {
+            GlobalScope.launch {
                 try {
                     result = presenter.spotlight(query).let { mapper.map(it, showLastMessage = false) }.let { mapSpotlightToContacts(it) }
                 } catch (e: Exception) {

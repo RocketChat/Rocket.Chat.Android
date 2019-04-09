@@ -22,7 +22,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.app_bar.*
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.Job
 import javax.inject.Inject
 
 class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {

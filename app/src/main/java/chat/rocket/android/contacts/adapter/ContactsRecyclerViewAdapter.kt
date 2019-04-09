@@ -15,8 +15,9 @@ import chat.rocket.android.contacts.ui.ContactsFragment
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.common.model.UserPresence
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class ContactsRecyclerViewAdapter(
         private val frag: ContactsFragment,
@@ -89,12 +90,12 @@ class ContactsRecyclerViewAdapter(
             val contact: Contact = holder.data!!.data
             val userId = contact.getUserId()
             if (userId != null) {
-                launch {
+                GlobalScope.launch(Dispatchers.Main) {
                     val userPresence: UserPresence? = presenter.getUserPresence(userId)
                     if (userPresence != null) {
                         contact.setStatus(userPresence.presence!!)
                     }
-                    launch(UI) {
+                    GlobalScope.launch(Dispatchers.Main) {
                         holder.setContactStatus(contact)
                     }
                 }
@@ -126,6 +127,8 @@ class ContactsRecyclerViewAdapter(
                         }
                     }
                 }
+                // Clear any previous onClickListener when scrolling
+                holder.itemView.setClickable(false)
             }
         } else if (holder is ContactsHeaderViewHolder) {
             holder.bind(contactArrayList[position] as ContactsHeaderItemHolder)

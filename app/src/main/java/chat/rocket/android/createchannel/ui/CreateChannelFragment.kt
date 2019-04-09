@@ -56,6 +56,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     @Inject
     lateinit var analyticsManager: AnalyticsManager
     private var actionMode: ActionMode? = null
+    // WIDECHAT NOTE: this breaks non widechat builds; TODO fix for both
     private val adapter: MembersAdapter = MembersAdapter {
         if (it.username != null) {
             val member: Contact? = memberList.find { member ->
@@ -67,9 +68,10 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     private val compositeDisposable = CompositeDisposable()
     private var channelType: String = RoomType.CHANNEL
     private var isChannelReadOnly: Boolean = false
-    private var memberList = arrayListOf<Contact>()
 
     // WIDECHAT
+    // NOTE: this breaks non widechat builds; TODO fix for both
+    private var memberList = arrayListOf<Contact>()
     private var widechatSearchView: SearchView? = null
     private lateinit var selectedContactsRecyclerView: RecyclerView
     private lateinit var selectedContactsAdapter: RecyclerView.Adapter<*>
@@ -94,10 +96,11 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = container?.inflate(
-            if (Constants.WIDECHAT)
+            if (Constants.WIDECHAT) {
                 R.layout.fragment_create_group
-            else
+            } else {
                 R.layout.fragment_create_channel
+            }
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -391,18 +394,27 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         }
     }
 
+    // WIDECHAT
     private fun addMember(member: Contact) {
         memberList.add(member)
     }
+
+//    private fun addMember(member: String) {
+//        memberList.add(member)
+//    }
 
     private fun removeMember(member: Contact) {
         memberList.remove(member)
     }
 
+//    private fun removeMember(username: String) {
+//        memberList.remove(username)
+//    }
+
     private fun addChip(chipText: String) {
         val chip = Chip(context)
-        chip.chipText = chipText
-        chip.isCloseIconEnabled = true
+        chip.text = chipText
+        chip.isCloseIconVisible = true
         chip.setChipBackgroundColorResource(R.color.icon_grey)
         setupChipOnCloseIconClickListener(chip)
         chip_group_member.addView(chip)
@@ -411,9 +423,14 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     private fun setupChipOnCloseIconClickListener(chip: Chip) {
         chip.setOnCloseIconClickListener {
             removeChip(it)
-            val username = (it as Chip).chipText.toString()
-            val member: Contact? = memberList.find { it.getUsername() == username }
-            removeMember(member!!)
+
+            if (Constants.WIDECHAT) {
+                val username = (it as Chip).chipText.toString()
+                val member: Contact? = memberList.find { it.getUsername() == username }
+                removeMember(member!!)
+            } else {
+//                removeMember((it as Chip).text.toString())
+            }
             // whenever we remove a chip we should process the chip group visibility.
             processChipGroupVisibility()
         }

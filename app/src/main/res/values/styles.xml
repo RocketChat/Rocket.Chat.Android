@@ -173,6 +173,19 @@
     </style>
     <!-- End chat list -->
 
+    <!-- Chat room -->
+    <style name="ChatRoom.ChatName.TextView" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:drawableEnd">@drawable/ic_chatroom_toolbar_expand_more_20dp</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <!-- End chat room -->
+
     <!-- User details -->
     <style name="UserDetails.TextView.Name" parent="TextAppearance.AppCompat">
         <item name="android:textSize">18sp</item>

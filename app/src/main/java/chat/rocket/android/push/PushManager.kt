@@ -12,13 +12,14 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
+import android.text.Html
+import android.text.Spanned
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
-import android.text.Html
-import android.text.Spanned
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.server.domain.GetAccountInteractor
@@ -29,7 +30,7 @@ import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import com.squareup.moshi.Json
 import com.squareup.moshi.Moshi
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import se.ansman.kotshi.JsonSerializable
 import se.ansman.kotshi.KotshiConstructor
 import timber.log.Timber
@@ -303,7 +304,11 @@ class PushManager @Inject constructor(
 
     // CharSequence extensions
     private fun CharSequence.fromHtml(): Spanned {
-        return Html.fromHtml(this as String)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(this as String, FROM_HTML_MODE_LEGACY, null, null)
+        } else {
+            Html.fromHtml(this as String)
+        }
     }
 
     // NotificationCompat.Builder extensions
@@ -383,12 +388,12 @@ data class PushMessage(
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
+        parcel.readString().orEmpty(),
+        parcel.readString().orEmpty(),
+        parcel.readParcelable(PushMessage::class.java.classLoader) ?: PushInfo.EMPTY,
         parcel.readString(),
         parcel.readString(),
-        parcel.readParcelable(PushMessage::class.java.classLoader),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
+        parcel.readString().orEmpty(),
         parcel.readString(),
         parcel.readString())
 
@@ -433,9 +438,9 @@ data class PushInfo @KotshiConstructor constructor(
     }
 
     constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.readString(),
-        roomTypeOf(parcel.readString()),
+        parcel.readString().orEmpty(),
+        parcel.readString().orEmpty(),
+        roomTypeOf(parcel.readString().orEmpty()),
         parcel.readString(),
         parcel.readParcelable(PushInfo::class.java.classLoader))
 
@@ -481,7 +486,7 @@ data class PushSender @KotshiConstructor constructor(
     val name: String?
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readString(),
+        parcel.readString().orEmpty(),
         parcel.readString(),
         parcel.readString())
 

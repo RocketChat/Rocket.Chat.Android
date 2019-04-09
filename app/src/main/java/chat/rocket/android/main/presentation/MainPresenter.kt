@@ -37,7 +37,7 @@ import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.model.Myself
 import chat.rocket.core.internal.rest.*
-import kotlinx.coroutines.experimental.channels.Channel
+import kotlinx.coroutines.channels.Channel
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -224,7 +224,7 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    private suspend fun saveAccount(uiModel: NavHeaderUiModel) {
+    private fun saveAccount(uiModel: NavHeaderUiModel) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }
