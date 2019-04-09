@@ -126,6 +126,8 @@ class ContactsRecyclerViewAdapter(
                         }
                     }
                 }
+                // Clear any previous onClickListener when scrolling
+                holder.itemView.setClickable(false)
             }
         } else if (holder is ContactsHeaderViewHolder) {
             holder.bind(contactArrayList[position] as ContactsHeaderItemHolder)
