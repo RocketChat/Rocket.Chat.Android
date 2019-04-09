@@ -28,6 +28,8 @@ import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class ChatRoomsPresenter @Inject constructor(
     private val view: ChatRoomsView,
