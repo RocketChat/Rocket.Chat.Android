@@ -115,7 +115,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         // TODO - remove this
         checkCurrentServer()
 
-        // TODO - FIXME - we need to proper inject the EmojiRepository and initialize it properly
+        // TODO - FIXME - we need to properly inject and initialize the EmojiRepository
         loadEmojis()
     }
 
