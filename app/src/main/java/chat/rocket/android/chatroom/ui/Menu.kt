@@ -9,9 +9,6 @@ import androidx.core.content.res.ResourcesCompat
 import chat.rocket.android.R
 import chat.rocket.android.util.extension.onQueryTextListener
 
-// WIDECHAT
-import chat.rocket.android.helper.Constants
-
 internal fun ChatRoomFragment.setupMenu(menu: Menu) {
     setupSearchMessageMenuItem(menu, requireContext())
 }
@@ -19,11 +16,7 @@ internal fun ChatRoomFragment.setupMenu(menu: Menu) {
 private fun ChatRoomFragment.setupSearchMessageMenuItem(menu: Menu, context: Context) {
 
     var actionFlags: Int? = null
-    if (!Constants.WIDECHAT) {
-        actionFlags = MenuItem.SHOW_AS_ACTION_IF_ROOM or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
-    } else {
-        actionFlags = MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
-    }
+    actionFlags = MenuItem.SHOW_AS_ACTION_IF_ROOM or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
 
     val searchItem = menu.add(
         Menu.NONE,
