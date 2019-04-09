@@ -28,17 +28,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
-import chat.rocket.android.chatroom.adapter.CommandSuggestionsAdapter
-import chat.rocket.android.chatroom.adapter.EmojiSuggestionsAdapter
-import chat.rocket.android.chatroom.adapter.PEOPLE
-import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter
-import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.*
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
@@ -813,6 +809,33 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
         }
         recycler_view.addOnScrollListener(fabScrollListener)
+
+        val touchCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                if (viewHolder is MessageViewHolder) {
+                    citeMessage(chatRoomName, chatRoomType, viewHolder.data?.messageId!!, true)
+                }
+
+                adapter.notifyItemChanged(viewHolder.adapterPosition)
+            }
+
+            override fun getSwipeDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+                // Current enable swipes for messages only
+
+                if (viewHolder is MessageViewHolder) {
+                    return super.getSwipeDirs(recyclerView, viewHolder)
+                }
+
+                return 0
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(touchCallback)
+        itemTouchHelper.attachToRecyclerView(recycler_view)
     }
 
     private fun setupFab() {
