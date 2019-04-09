@@ -25,6 +25,7 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.widget.DividerItemDecoration
+import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import dagger.android.support.AndroidSupportInjection
@@ -105,6 +106,14 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(this, factory).get(ChatDetailsViewModel::class.java)
+        if (Constants.WIDECHAT) {
+            title_topic.visibility = GONE
+            title_announcement.visibility = GONE
+            title_description.visibility = GONE
+            content_topic.visibility = GONE
+            content_announcement.visibility = GONE
+            content_description.visibility = GONE
+        }
         setupOptions()
         setupToolbar()
         getDetails()
@@ -131,14 +140,7 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
             val text = room.name
             name.text = text
             bindImage(chatRoomType!!)
-            if (Constants.WIDECHAT) {
-                title_topic.visibility = GONE
-                title_announcement.visibility = GONE
-                title_description.visibility = GONE
-                content_topic.visibility = GONE
-                content_announcement.visibility = GONE
-                content_description.visibility = GONE
-            } else {
+            if (!Constants.WIDECHAT) {
                 content_topic.text =
                         if (room.topic.isNullOrEmpty()) getString(R.string.msg_no_topic) else room.topic
                 content_announcement.text =
@@ -229,12 +231,12 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
     }
 
     private fun getDetails() {
-        if (isSubscribed)
-            viewModel.getDetails(chatRoomId!!).observe(viewLifecycleOwner, Observer { details ->
-                displayDetails(details)
-            })
-        else
-            presenter.getDetails(chatRoomId!!, chatRoomType!!)
+            if (isSubscribed)
+                viewModel.getDetails(chatRoomId!!).observe(viewLifecycleOwner, Observer { details ->
+                    displayDetails(details)
+                })
+            else
+                presenter.getDetails(chatRoomId!!, chatRoomType!!)
     }
 
     private fun setupOptions() {
