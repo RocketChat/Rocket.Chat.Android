@@ -59,34 +59,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_analytics_tracking_description" />
 
-    <TextView
-        android:id="@+id/text_public_account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/msg_public_account"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="16sp"
-        android:layout_marginTop="@dimen/screen_edge_left_and_right_margins"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_analytics_tracking_description" />
-
-    <TextView
-        android:id="@+id/text_public_account_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/msg_public_account_description"
-        android:textColor="@color/colorSecondaryText"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_public_account" />
-
-    <Switch
-        android:id="@+id/switch_public_account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:checked="true"
-        app:layout_constraintBottom_toBottomOf="@+id/text_public_account_description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_public_account" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
