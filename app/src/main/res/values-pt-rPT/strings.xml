@@ -86,7 +86,7 @@
     <string name="msg_avatar_url">URL do avatar</string>
     <string name="msg_or_continue_using_social_accounts">Ou continue utilizando uma conta social</string>
     <string name="msg_new_user">Novo utilizador? %1$s</string>
-    <string name="msg_forgot__your_password">Esqueceu a sua palavra-passe?</string>
+    <string name="msg_forgot_your_password">Esqueceu a sua palavra-passe?</string>
     <string name="msg_reset">Repor</string>
     <string name="msg_check_your_email_to_reset_your_password">E-mail enviado! Verifique a sua caixa de entrada para repor a sua palavra-passe.</string>
     <string name="msg_invalid_email">Por favor introduza um endereço de e-mail válido</string>

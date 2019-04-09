@@ -88,7 +88,7 @@
     <string name="msg_avatar_url">URL de l\'avatar</string>
     <string name="msg_or_continue_using_social_accounts">Ou continuer en utilisant les comptes sociaux</string>
     <string name="msg_new_user">Nouvel utilisateur? %1$s</string>
-    <string name="msg_forgot__your_password">Mot de passe oublié? %1$s</string>
+    <string name="msg_forgot_your_password">Mot de passe oublié? %1$s</string>
     <string name="msg_reset">Réinitialiser</string>
     <string name="msg_check_your_email_to_reset_your_password">Email envoyé ! Consultez votre boîte mail pour réinitialiser votre mot de passe.</string>
     <string name="msg_invalid_email">Veuillez entrer une adresse valide</string>

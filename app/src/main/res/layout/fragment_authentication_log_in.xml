@@ -54,7 +54,7 @@
         android:id="@+id/button_forgot_your_password"
         style="@style/Authentication.Button.Borderless"
         android:layout_marginTop="10dp"
-        android:text="@string/msg_forgot__your_password"
+        android:text="@string/msg_forgot_your_password"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

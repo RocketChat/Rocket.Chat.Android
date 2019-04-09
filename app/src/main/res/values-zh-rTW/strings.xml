@@ -88,7 +88,7 @@
     <string name="msg_avatar_url">頭貼網址</string>
     <string name="msg_or_continue_using_social_accounts">或繼續使用社交帳號</string>
     <string name="msg_new_user">新的使用者? %1$s</string>
-    <string name="msg_forgot__your_password">忘記密碼?</string>
+    <string name="msg_forgot_your_password">忘記密碼?</string>
     <string name="msg_reset">重置</string>
     <string name="msg_check_your_email_to_reset_your_password">郵件已發送!請根據電子郵件提示重新設定密碼.</string>
     <string name="msg_invalid_email">請輸入有效的電子信箱</string>

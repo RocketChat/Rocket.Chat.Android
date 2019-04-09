@@ -100,7 +100,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_avatar_url">avatar URL</string>
     <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
     <string name="msg_new_user">New user? %1$s</string>
-    <string name="msg_forgot__your_password">Forgot your password?</string>
+    <string name="msg_forgot_your_password">Forgot your password?</string>
     <string name="msg_reset">Reset</string>
     <string name="msg_check_your_email_to_reset_your_password">Email sent! Check your inbox to reset your password.</string>
     <string name="msg_invalid_email">Please type a valid e-mail</string>

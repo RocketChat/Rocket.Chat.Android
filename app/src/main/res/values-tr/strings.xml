@@ -88,7 +88,7 @@
     <string name="msg_avatar_url">avatar URL</string>
     <string name="msg_or_continue_using_social_accounts">Veya sosyal medya hesaplarınızdan birini kullanarak devam edin</string>
     <string name="msg_new_user">Yeni kullanıcı? %1$s</string>
-    <string name="msg_forgot__your_password">Forgot your password?</string> <!-- TODO Add translation -->
+    <string name="msg_forgot_your_password">Forgot your password?</string> <!-- TODO Add translation -->
     <string name="msg_reset">Sıfırla</string>
     <string name="msg_check_your_email_to_reset_your_password">Eposta gönderilmiştir! Şifrenizi sıfırlamak için eposta kutunuzu kontrol ediniz.</string>
     <string name="msg_invalid_email">Lütfen, geçerli bir eposta adresi giriniz</string>

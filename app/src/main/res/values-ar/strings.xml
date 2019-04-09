@@ -89,7 +89,7 @@
     <string name="msg_avatar_url">رابط الشخصية</string>
     <string name="msg_or_continue_using_social_accounts">استمرار باستخدام حساب التواصل الاجتماعي</string>
     <string name="msg_new_user">مستخدم جديد؟ %1$s</string>
-    <string name="msg_forgot__your_password">نسيت كلمة السر؟</string>
+    <string name="msg_forgot_your_password">نسيت كلمة السر؟</string>
     <string name="msg_reset">إعادة تعيين</string>
     <string name="msg_check_your_email_to_reset_your_password">تم إرسال الإيميل راجع إيميلك لتحديث كلمة السر</string>
     <string name="msg_invalid_email">من فضلك أدخل عنوان بريد صحيح</string>

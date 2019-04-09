@@ -88,7 +88,7 @@
     <string name="msg_avatar_url">アバター URL</string>
     <string name="msg_or_continue_using_social_accounts">またはソーシャルアカウントを使用する</string>
     <string name="msg_new_user">新規ユーザー? %1$s</string>
-    <string name="msg_forgot__your_password">パスワードをお忘れですか?</string>
+    <string name="msg_forgot_your_password">パスワードをお忘れですか?</string>
     <string name="msg_reset">リセット</string>
     <string name="msg_check_your_email_to_reset_your_password">メールが送信されました! パスワードを変更するためには、受信ボックスを確認してください。</string>
     <string name="msg_invalid_email">有効なメールアドレスを入力してください</string>

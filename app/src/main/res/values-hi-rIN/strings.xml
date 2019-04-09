@@ -88,7 +88,7 @@
     <string name="msg_avatar_url">अवतार यूआरएल</string>
     <string name="msg_or_continue_using_social_accounts">या सामाजिक खाते का उपयोग करना जारी रखें</string>
     <string name="msg_new_user">नया उपयोगकर्ता? %1$s</string>
-    <string name="msg_forgot__your_password">पासवर्ड भूल गए?</string>
+    <string name="msg_forgot_your_password">पासवर्ड भूल गए?</string>
     <string name="msg_reset">रीसेट करें</string>
     <string name="msg_check_your_email_to_reset_your_password">ईमेल गया गया है! अपना पासवर्ड रीसेट करने के लिए अपने इनबॉक्स की जांच करें।</string>
     <string name="msg_invalid_email">कृपया एक वैध ई-मेल टाइप करें</string>
