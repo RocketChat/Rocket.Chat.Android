@@ -147,7 +147,16 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                 }
             }
 
-            resources.getStringArray(R.array.widechat_settings_actions)[1] -> {
+            resources.getStringArray(R.array.settings_actions)[1] -> {
+                (activity as AppCompatActivity).addFragmentBackStack(
+                        TAG_PRIVACY_FRAGMENT,
+                        R.id.fragment_container
+                ) {
+                    PrivacyFragment.newInstance()
+                }
+            }
+
+            resources.getStringArray(R.array.widechat_settings_actions)[2] -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
                     TAG_ABOUT_FRAGMENT,
                     R.id.fragment_container
@@ -156,7 +165,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                 }
             }
 
-            resources.getStringArray(R.array.widechat_settings_actions)[2] -> {
+            resources.getStringArray(R.array.widechat_settings_actions)[3] -> {
                     showLogoutDialog()
                 }
             }
