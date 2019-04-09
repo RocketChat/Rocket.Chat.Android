@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="16dp"
-    tools:context="preferences.ui.PreferencesFragment">
+    tools:context="privacy.ui.PrivacyFragment">
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"
@@ -21,33 +21,31 @@
         tools:visibility="visible" />
 
     <TextView
-        android:id="@+id/text_analytics_tracking"
+        android:id="@+id/text_privacy_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/msg_analytics_tracking"
+        android:text="@string/msg_privacy_spinner"
         android:textColor="@color/colorPrimaryText"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_analytics_tracking_description"
+        android:id="@+id/text_privacy_spinner_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/msg_send_analytics_tracking"
+        android:text="@string/msg_privacy_spinner_description"
         android:textColor="@color/colorSecondaryText"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_analytics_tracking" />
+        app:layout_constraintTop_toBottomOf="@+id/text_privacy_spinner" />
 
-    <Switch
-        android:id="@+id/switch_analytics_tracking"
+    <Spinner
+        android:id="@+id/spinner_privacy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checked="true"
-        app:layout_constraintBottom_toBottomOf="@+id/text_analytics_tracking_description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_analytics_tracking" />
+        app:layout_constraintTop_toTopOf="@+id/text_privacy_spinner" />
 
     <View
         android:id="@+id/separator_1"
@@ -57,6 +55,6 @@
         android:background="@color/colorDividerMessageComposer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_analytics_tracking_description" />
+        app:layout_constraintTop_toBottomOf="@id/text_privacy_spinner_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
