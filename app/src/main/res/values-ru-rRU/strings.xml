@@ -26,7 +26,7 @@
     <string name="title_topic">Тема</string>
     <string name="title_announcement">Объявление</string>
     <string name="title_description">Описание</string>
-    <string name="title_licence">Лицензия</string>
+    <string name="title_license">Лицензия</string>
     <string name="title_are_you_sure">Вы уверены?</string>
 
     <!-- Actions -->
@@ -70,7 +70,7 @@
         <item name="item_share_app">Поделиться приложением</item>
         <item name="item_rate_us">Оцените нас</item>
         <item name="item_contact_us">Связаться с нами</item>
-        <item name="item_licence">Лицензия</item>
+        <item name="item_license">Лицензия</item>
         <item name="item_about">О программе</item>
     </string-array>
 
@@ -103,12 +103,12 @@
     <string name="msg_invalid_file">Неверный файл</string>
     <string name="msg_invalid_server_url">Неверный URL-адрес сервера.</string>
     <string name="msg_content_description_log_in_using_facebook">Войти с помощью Facebook</string>
-    <string name="msg_content_description_log_in_using_github">Войти с помощью Github</string>
+    <string name="msg_content_description_log_in_using_github">Войти с помощью GitHub</string>
     <string name="msg_content_description_log_in_using_google">Войти с помощью Google</string>
-    <string name="msg_content_description_log_in_using_linkedin">Войти с помощью Linkedin</string>
+    <string name="msg_content_description_log_in_using_linkedin">Войти с помощью LinkedIn</string>
     <string name="msg_content_description_log_in_using_meteor">Войти с помощью Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Войти с помощью Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">Войти с помощью Gitlab</string>
+    <string name="msg_content_description_log_in_using_gitlab">Войти с помощью GitLab</string>
     <string name="msg_content_description_log_in_using_wordpress">Войти с помощью WordPress</string>
     <string name="msg_content_description_send_message">Отправить сообщение</string>
     <string name="msg_content_description_show_more_login_options">Больше параметров входа</string>
@@ -156,9 +156,9 @@
     <string name="msg_login_with_email">Войти с помощью <b>e-mail</b></string>
     <string name="msg_create_account">Создать аккаунт</string>
     <string name="msg_continue_with_facebook">Войти с помощью <b>Facebook</b></string>
-    <string name="msg_continue_with_github">Войти с помощью <b>Github</b></string>
+    <string name="msg_continue_with_github">Войти с помощью <b>GitHub</b></string>
     <string name="msg_continue_with_google">Войти с помощью <b>Google</b></string>
-    <string name="msg_continue_with_linkedin">Войти с помощью <b>Linkedin</b></string>
+    <string name="msg_continue_with_linkedin">Войти с помощью <b>LinkedIn</b></string>
     <string name="msg_continue_with_gitlab">Войти с помощью <b>GitLab</b></string>
     <string name="msg_continue_with_wordpress">Войти с помощью <b>WordPress</b></string>
     <string name="msg_two_factor_authentication">Двухфакторная аутентификация</string>

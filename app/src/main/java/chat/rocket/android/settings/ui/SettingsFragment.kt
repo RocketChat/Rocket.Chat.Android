@@ -87,7 +87,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             resources.getStringArray(R.array.settings_actions)[6] -> activity?.startActivity(
                 context?.webViewIntent(
                     getString(R.string.license_url),
-                    getString(R.string.title_licence)
+                    getString(R.string.title_license)
                 )
             )
 

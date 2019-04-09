@@ -22,7 +22,7 @@
     <string name="title_update_profile">更新資料</string>
     <string name="title_about">關於</string>
     <string name="title_create_channel">建立新頻道</string>
-    <string name="title_licence">許可</string>
+    <string name="title_license">許可</string>
     <string name="title_are_you_sure">確定嗎?</string>
     <string name="title_channel_details">頻道訊息</string>
     <string name="title_topic">主題</string>
@@ -70,7 +70,7 @@
         <item name="item_share_app">分享這個App</item>
         <item name="item_rate_us">給我們一個評價</item>
         <item name="item_contact_us">聯絡我們</item>
-        <item name="item_licence">許可證</item>
+        <item name="item_license">許可證</item>
         <item name="item_about">關於</item>
     </string-array>
 
@@ -103,12 +103,12 @@
     <string name="msg_invalid_file">無效的檔案</string>
     <string name="msg_invalid_server_url">無效的伺服器地址</string>
     <string name="msg_content_description_log_in_using_facebook">使用Facebook帳戶登入</string>
-    <string name="msg_content_description_log_in_using_github">使用Github帳戶登入</string>
+    <string name="msg_content_description_log_in_using_github">使用GitHub帳戶登入</string>
     <string name="msg_content_description_log_in_using_google">使用Google帳戶登入</string>
-    <string name="msg_content_description_log_in_using_linkedin">使用Linkedin帳戶登入</string>
+    <string name="msg_content_description_log_in_using_linkedin">使用LinkedIn帳戶登入</string>
     <string name="msg_content_description_log_in_using_meteor">使用Meteor帳戶登入</string>
     <string name="msg_content_description_log_in_using_twitter">使用Twitter帳戶登入</string>
-    <string name="msg_content_description_log_in_using_gitlab">使用Gitlab帳戶登入</string>
+    <string name="msg_content_description_log_in_using_gitlab">使用GitLab帳戶登入</string>
     <string name="msg_content_description_log_in_using_wordpress">使用WordPress帳戶登入</string>
     <string name="msg_content_description_send_message">發送訊息</string>
     <string name="msg_content_description_show_more_login_options">顯示更多登入選像</string>
@@ -154,9 +154,9 @@
     <string name="msg_login_with_email">使用<b>信箱</b>登入</string>
     <string name="msg_create_account">新增帳戶</string>
     <string name="msg_continue_with_facebook">使用<b>Facebook</b>帳號繼續</string>
-    <string name="msg_continue_with_github">使用<b>Github</b>帳號繼續</string>
+    <string name="msg_continue_with_github">使用<b>GitHub</b>帳號繼續</string>
     <string name="msg_continue_with_google">使用<b>Google</b>帳號繼續</string>
-    <string name="msg_continue_with_linkedin">使用<b>Linkedin</b>帳號繼續</string>
+    <string name="msg_continue_with_linkedin">使用<b>LinkedIn</b>帳號繼續</string>
     <string name="msg_continue_with_gitlab">使用<b>GitLab</b>帳號繼續</string>
     <string name="msg_continue_with_wordpress">使用<b>WordPress</b>帳號繼續</string>
     <string name="msg_two_factor_authentication">兩步驟認證(2FA)</string>

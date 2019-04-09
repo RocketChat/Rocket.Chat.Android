@@ -30,7 +30,7 @@
     <string name="title_topic">Thema</string>
     <string name="title_announcement">Ankündigung</string>
     <string name="title_description">Beschreibung</string>
-    <string name="title_licence">Lizenz</string>
+    <string name="title_license">Lizenz</string>
 
     <!-- Actions -->
     <string name="action_connect">Verbinde</string>
@@ -73,7 +73,7 @@
         <item name="item_share_app">Link zur App teilen</item>
         <item name="item_rate_us">Bewerten Sie uns</item>
         <item name="item_contact_us">Kontaktieren Sie uns</item>
-        <item name="item_licence">Lizenz</item>
+        <item name="item_license">Lizenz</item>
         <item name="item_about">Über</item>
     </string-array>
 
@@ -106,12 +106,12 @@
     <string name="msg_invalid_file">Falsche Datei</string>
     <string name="msg_invalid_server_url">Falsche Server URL</string>
     <string name="msg_content_description_log_in_using_facebook">Login mit Facebook</string>
-    <string name="msg_content_description_log_in_using_github">Login mit Github</string>
+    <string name="msg_content_description_log_in_using_github">Login mit GitHub</string>
     <string name="msg_content_description_log_in_using_google">Login mit Google</string>
-    <string name="msg_content_description_log_in_using_linkedin">Login mit Linkedin</string>
+    <string name="msg_content_description_log_in_using_linkedin">Login mit LinkedIn</string>
     <string name="msg_content_description_log_in_using_meteor">Login mit Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Login mit Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">Login mit Gitlab</string>
+    <string name="msg_content_description_log_in_using_gitlab">Login mit GitLab</string>
     <string name="msg_content_description_log_in_using_wordpress">Login mit WordPress</string>
     <string name="msg_content_description_send_message">Sende Nachricht</string>
 
@@ -160,9 +160,9 @@
     <string name="msg_login_with_email">Mit <b>e-mail</b> einloggen</string>
     <string name="msg_create_account">Einen Account erstellen</string>
     <string name="msg_continue_with_facebook">Mit <b>Facebook</b> einloggen</string>
-    <string name="msg_continue_with_github">Mit <b>Github</b> einloggen</string>
+    <string name="msg_continue_with_github">Mit <b>GitHub</b> einloggen</string>
     <string name="msg_continue_with_google">Mit <b>Google</b> einloggen</string>
-    <string name="msg_continue_with_linkedin">Mit <b>Linkedin</b> einloggen</string>
+    <string name="msg_continue_with_linkedin">Mit <b>LinkedIn</b> einloggen</string>
     <string name="msg_continue_with_gitlab">Mit <b>GitLab</b> einloggen</string>
     <string name="msg_continue_with_wordpress">Mit <b>WordPress</b> einloggen</string>
     <string name="msg_two_factor_authentication">Zwei-Faktor-Authentifizierung</string>

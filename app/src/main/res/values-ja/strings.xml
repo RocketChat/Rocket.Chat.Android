@@ -21,7 +21,7 @@
     <string name="title_password">パスワードの変更</string>
     <string name="title_update_profile">プロフィールの更新</string>
     <string name="title_about">About</string><!-- TODO Add translation -->
-    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
+    <string name="title_license">License</string> <!-- TODO Add translation -->
     <string name="title_create_channel">新しいチャネルを作成</string>
     <string name="title_are_you_sure">本気ですか？</string>
     <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
@@ -70,7 +70,7 @@
         <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
         <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
         <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
-        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_license">License</item> <!-- TODO Add translation -->
         <item name="item_about">About</item> <!-- TODO Add translation -->
     </string-array>
 
@@ -103,12 +103,12 @@
     <string name="msg_invalid_file">無効なファイル</string>
     <string name="msg_invalid_server_url">無効なサーバー URL</string>
     <string name="msg_content_description_log_in_using_facebook">Facebookでログイン</string>
-    <string name="msg_content_description_log_in_using_github">Githubでログイン</string>
+    <string name="msg_content_description_log_in_using_github">GitHubでログイン</string>
     <string name="msg_content_description_log_in_using_google">Googleでログイン</string>
-    <string name="msg_content_description_log_in_using_linkedin">Linkedinでログイン</string>
+    <string name="msg_content_description_log_in_using_linkedin">LinkedInでログイン</string>
     <string name="msg_content_description_log_in_using_meteor">Meteorでログイン</string>
     <string name="msg_content_description_log_in_using_twitter">Twitterでログイン</string>
-    <string name="msg_content_description_log_in_using_gitlab">Gitlabでログイン</string>
+    <string name="msg_content_description_log_in_using_gitlab">GitLabでログイン</string>
     <string name="msg_content_description_log_in_using_wordpress">WordPressでログイン</string>
     <string name="msg_content_description_send_message">メッセージを送信</string>
     <string name="msg_content_description_show_more_login_options">その他ログインオプション</string>
@@ -157,9 +157,9 @@
     <string name="msg_login_with_email"><b>e-mail</b>でログイン</string>
     <string name="msg_create_account">アカウントを作成</string>
     <string name="msg_continue_with_facebook"><b>Facebook</b>でログイン</string>
-    <string name="msg_continue_with_github"><b>Github</b>でログイン</string>
+    <string name="msg_continue_with_github"><b>GitHub</b>でログイン</string>
     <string name="msg_continue_with_google"><b>Google</b>でログイン</string>
-    <string name="msg_continue_with_linkedin"><b>Linkedin</b>でログイン</string>
+    <string name="msg_continue_with_linkedin"><b>LinkedIn</b>でログイン</string>
     <string name="msg_continue_with_gitlab"><b>GitLab</b>でログイン</string>
     <string name="msg_continue_with_wordpress"><b>WordPress</b>でログイン</string>
     <string name="msg_two_factor_authentication">二要素認証</string>

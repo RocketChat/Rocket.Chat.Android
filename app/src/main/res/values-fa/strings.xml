@@ -22,7 +22,7 @@
     <string name="title_update_profile">به روزرسانی نمایه</string>
     <string name="title_about">درباره</string>
     <string name="title_create_channel">ایجاد کانال</string>
-    <string name="title_licence">مجوز</string>
+    <string name="title_license">مجوز</string>
     <string name="title_are_you_sure">آیا مطمئن هستید؟</string>
     <string name="title_channel_details">جزئیات کانال</string>
     <string name="title_topic">موضوع</string>
@@ -70,7 +70,7 @@
         <item name="change_language">Change language</item> <!-- TODO Add translation -->
         <item name="item_rate_us">به ما امتیاز دهید</item>
         <item name="item_contact_us">تماس با ما</item>
-        <item name="item_licence">مجوز</item>
+        <item name="item_license">مجوز</item>
         <item name="item_about">درباره</item>
     </string-array>
 
@@ -87,7 +87,7 @@
     <string name="msg_email">ایمیل</string>
     <string name="msg_avatar_url">URL تصویر نمایه</string>
     <string name="msg_or_continue_using_social_accounts">یا به استفاده از سرورهای اجتماعی ادامه دهید</string>
-    <string name="msg_new_user">%1$s کاربر جدید?</string>
+    <string name="msg_new_user">%1$s کاربر جدید؟</string>
     <string name="msg_forgot__your_password">گذرواژه‌تان را فراموش کردید؟</string>
     <string name="msg_reset">راه اندازی مجدد</string>
     <string name="msg_check_your_email_to_reset_your_password">ایمیل فرستاده شد. صندوق ورودی خود را برای تعویض گذرواژه چک کنید</string>

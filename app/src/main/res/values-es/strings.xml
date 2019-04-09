@@ -22,7 +22,7 @@
     <string name="title_update_profile">Actualización del perfil</string>
     <string name="title_about">Acerca de</string>
     <string name="title_create_channel">Crear canal</string>
-    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
+    <string name="title_license">License</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
     <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
     <string name="title_topic">Tema</string>
@@ -70,7 +70,7 @@
         <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
         <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
         <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
-        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_license">License</item> <!-- TODO Add translation -->
         <item name="item_about">About</item> <!-- TODO Add translation -->
     </string-array>
 
@@ -103,12 +103,12 @@
     <string name="msg_invalid_file">Archivo inválido</string>
     <string name="msg_invalid_server_url">URL del servidor inválido</string>
     <string name="msg_content_description_log_in_using_facebook">Inicia sesión usando Facebook</string>
-    <string name="msg_content_description_log_in_using_github">Inicia sesión usando Github</string>
+    <string name="msg_content_description_log_in_using_github">Inicia sesión usando GitHub</string>
     <string name="msg_content_description_log_in_using_google">Inicia sesión usando Google</string>
-    <string name="msg_content_description_log_in_using_linkedin">Inicia sesión usando Linkedin</string>
+    <string name="msg_content_description_log_in_using_linkedin">Inicia sesión usando LinkedIn</string>
     <string name="msg_content_description_log_in_using_meteor">Inicia sesión usando Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Inicia sesión usando Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">Inicia sesión usando Gitlab</string>
+    <string name="msg_content_description_log_in_using_gitlab">Inicia sesión usando GitLab</string>
     <string name="msg_content_description_log_in_using_wordpress">Inicia sesión usando WordPress</string>
     <string name="msg_content_description_send_message">Enviar mensaje</string>
     <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Translate-->
@@ -148,16 +148,16 @@
     <string name="msg_search">Buscar</string>
     <string name="msg_message_copied">Mensaje copiado</string>
     <string name="msg_delete_message">Borrar mensaje</string>
-    <string name="msg_delete_description">Seguro que quieres borrar este mensaje</string>
+    <string name="msg_delete_description">¿Seguro que quieres borrar este mensaje?</string>
     <string name="msg_no_search_found">No se han encontrado resultados</string>
     <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string> <!-- TODO Add translation -->
     <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
     <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->
     <string name="msg_create_account">Create an account</string> <!-- TODO Add translation -->
     <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_github">Continue with <b>Github</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_github">Continue with <b>GitHub</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_google">Continue with <b>Google</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_linkedin">Continue with <b>LinkedIn</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
     <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
@@ -192,10 +192,10 @@
     <string name="msg_credentials_saved_successfully">Credenciales guardadas con éxito</string>
 
     <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
-    <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
-    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string> <!-- TODO Add translation -->
+    <string name="msg_analytics_tracking">Seguimiento analítico</string>
+    <string name="msg_send_analytics_tracking">Envía estadísticas anónimas para ayudar a mejorar esta aplicación</string>
+    <string name="msg_do_not_send_analytics_tracking">No envíe estadísticas anónimas para ayudar a mejorar esta aplicación</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">No aplica ya que es una versión FOSS</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nombre de la sala cambiado para: %1$s por %2$s</string>

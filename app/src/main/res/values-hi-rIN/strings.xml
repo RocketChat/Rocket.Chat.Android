@@ -22,7 +22,7 @@
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
     <string name="title_create_channel">चैनल बनाएं</string>
-    <string name="title_licence">लाइसेंस</string>
+    <string name="title_license">लाइसेंस</string>
     <string name="title_are_you_sure">क्या आपको यकीन है?</string>
     <string name="title_channel_details">चैनल विवरण</string>
     <string name="title_topic">विषय</string>
@@ -70,7 +70,7 @@
         <item name="item_share_app">ऐप शेयर करें</item>
         <item name="item_rate_us">हमें रेटिंग दें</item>
         <item name="item_contact_us">हमसे संपर्क करें</item>
-        <item name="item_licence">लाइसेंस</item>
+        <item name="item_license">लाइसेंस</item>
         <item name="item_about">के बारे में</item>
     </string-array>
 
@@ -103,12 +103,12 @@
     <string name="msg_invalid_file">अवैध फाइल</string>
     <string name="msg_invalid_server_url">अमान्य सर्वर यूआरL</string>
     <string name="msg_content_description_log_in_using_facebook">Facebook द्वारा लॉगिन करें</string>
-    <string name="msg_content_description_log_in_using_github">Github द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_github">GitHub द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_google">Google द्वारा लॉगिन करें</string>
-    <string name="msg_content_description_log_in_using_linkedin">Linkedin द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_linkedin">LinkedIn द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_meteor">Meteor द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_twitter">Twitter द्वारा लॉगिन करें</string>
-    <string name="msg_content_description_log_in_using_gitlab">Gitlab द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_gitlab">GitLab द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_wordpress">WordPress द्वारा लॉगिन करें</string>
     <string name="msg_content_description_send_message">मेसेज भेजें</string>
     <string name="msg_content_description_show_more_login_options">अधिक लॉगिन विकल्प दिखाएं</string>
@@ -154,15 +154,15 @@
     <string name="msg_send">भेजें</string>
     <string name="msg_sent_attachment">एक अनुलग्नक भेजा</string>
     <string name="msg_delete_message">संदेश को हटाएं</string>
-    <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
+    <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं?</string>
     <string name="msg_welcome_to_rocket_chat">Rocket.Chat में आपका स्वागत है</string>
     <string name="msg_team_communication">टीम संचार</string>
     <string name="msg_login_with_email">ई-मेल के साथ लॉगिन करें</string>
     <string name="msg_create_account">खाता बनाएं</string>
     <string name="msg_continue_with_facebook"><b>Facebook</b> के साथ जारी रखें</string>
-    <string name="msg_continue_with_github"><b>Github</b> के साथ जारी रखें</string>
+    <string name="msg_continue_with_github"><b>GitHub</b> के साथ जारी रखें</string>
     <string name="msg_continue_with_google"><b>Google</b> के साथ जारी रखें</string>
-    <string name="msg_continue_with_linkedin"><b>Linkedin</b> के साथ जारी रखें</string>
+    <string name="msg_continue_with_linkedin"><b>LinkedIn</b> के साथ जारी रखें</string>
     <string name="msg_continue_with_gitlab"><b>GitLab</b> के साथ जारी रखें</string>
     <string name="msg_continue_with_wordpress"><b>WordPress</b> के साथ जारी रखें</string>
     <string name="msg_two_factor_authentication">दो तरीकों से प्रमाणीकरण</string>

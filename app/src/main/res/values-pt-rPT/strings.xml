@@ -22,7 +22,7 @@
     <string name="title_update_profile">Actualizar perfil</string>
     <string name="title_about">Acerca</string>
     <string name="title_create_channel">Criar Canal</string>
-    <string name="title_licence">Licença</string>
+    <string name="title_license">Licença</string>
     <string name="title_are_you_sure">Tem a certeza?</string>
     <string name="title_channel_details">Detalhes do Canal</string>
     <string name="title_topic">Tópico</string>
@@ -68,7 +68,7 @@
         <item name="item_share_app">Partilhe a aplicação</item>
         <item name="item_rate_us">Avalie-nos</item>
         <item name="item_contact_us">Contacte-nos</item>
-        <item name="item_licence">Licença</item>
+        <item name="item_license">Licença</item>
         <item name="item_about">Acerca</item>
     </string-array>
 
@@ -100,12 +100,12 @@
     <string name="msg_invalid_file">Ficheiro inválido</string>
     <string name="msg_invalid_server_url">URL de servidor inválido</string>
     <string name="msg_content_description_log_in_using_facebook">Entre utilizando Facebook</string>
-    <string name="msg_content_description_log_in_using_github">Entre utilizando Github</string>
+    <string name="msg_content_description_log_in_using_github">Entre utilizando GitHub</string>
     <string name="msg_content_description_log_in_using_google">Entre utilizando Google</string>
     <string name="msg_content_description_log_in_using_linkedin">Entre utilizando LinkedIn</string>
     <string name="msg_content_description_log_in_using_meteor">Entre utilizando Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Entre utilizando Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">Entre utilizando Gitlab</string>
+    <string name="msg_content_description_log_in_using_gitlab">Entre utilizando GitLab</string>
     <string name="msg_content_description_log_in_using_wordpress">Entre utilizando WordPress</string>
     <string name="msg_content_description_send_message">Enviar mensagem</string>
     <string name="msg_content_description_show_more_login_options">Mostrar mais opções de entrada</string>
@@ -154,9 +154,9 @@
     <string name="msg_login_with_email">Entre com <b>e-mail</b></string>
     <string name="msg_create_account">Crie uma conta</string>
     <string name="msg_continue_with_facebook">Continue com <b>Facebook</b></string>
-    <string name="msg_continue_with_github">Continue com <b>Github</b></string>
+    <string name="msg_continue_with_github">Continue com <b>GitHub</b></string>
     <string name="msg_continue_with_google">Continue com <b>Google</b></string>
-    <string name="msg_continue_with_linkedin">Continue com <b>Linkedin</b></string>
+    <string name="msg_continue_with_linkedin">Continue com <b>LinkedIn</b></string>
     <string name="msg_continue_with_gitlab">Continue com <b>GitLab</b></string>
     <string name="msg_continue_with_wordpress">Continue com <b>WordPress</b></string>
     <string name="msg_two_factor_authentication">Autenticação 2FA</string>

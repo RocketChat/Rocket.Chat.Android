@@ -34,7 +34,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_update_profile">Update profile</string>
     <string name="title_about">About</string>
     <string name="title_create_channel">Create Channel</string>
-    <string name="title_licence">Licence</string>
+    <string name="title_license">License</string>
     <string name="title_are_you_sure">Are you sure?</string>
     <string name="title_channel_details">Channel Details</string>
     <string name="title_topic">Topic</string>
@@ -82,7 +82,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
         <item name="item_share_app">Share app</item>
         <item name="item_rate_us">Rate us</item>
         <item name="item_contact_us">Contact us</item>
-        <item name="item_licence">Licence</item>
+        <item name="item_license">License</item>
         <item name="item_about">About</item>
     </string-array>
 
@@ -116,12 +116,12 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_invalid_file">Invalid file</string>
     <string name="msg_invalid_server_url">Invalid server URL</string>
     <string name="msg_content_description_log_in_using_facebook">Login using Facebook</string>
-    <string name="msg_content_description_log_in_using_github">Login using Github</string>
+    <string name="msg_content_description_log_in_using_github">Login using GitHub</string>
     <string name="msg_content_description_log_in_using_google">Login using Google</string>
     <string name="msg_content_description_log_in_using_linkedin">Login using LinkedIn</string>
     <string name="msg_content_description_log_in_using_meteor">Login using Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Login using Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">Login using Gitlab</string>
+    <string name="msg_content_description_log_in_using_gitlab">Login using GitLab</string>
     <string name="msg_content_description_log_in_using_wordpress">Login using WordPress</string>
     <string name="msg_content_description_send_message">Send message</string>
     <string name="msg_content_description_show_more_login_options">Show more login options</string>
@@ -170,9 +170,9 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_login_with_email">Login with <b>e-mail</b></string>
     <string name="msg_create_account">Create an account</string>
     <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string>
-    <string name="msg_continue_with_github">Continue with <b>Github</b></string>
+    <string name="msg_continue_with_github">Continue with <b>GitHub</b></string>
     <string name="msg_continue_with_google">Continue with <b>Google</b></string>
-    <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string>
+    <string name="msg_continue_with_linkedin">Continue with <b>LinkedIn</b></string>
     <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string>
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string>
     <string name="msg_two_factor_authentication">Two-factor Authentication</string>
@@ -204,7 +204,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_channel_created_successfully">Channel created successfully</string>
     <string name="msg_message_copied">Message copied</string>
     <string name="msg_delete_message">Delete Message</string>
-    <string name="msg_delete_description">Are you sure you want to delete this message</string>
+    <string name="msg_delete_description">Are you sure you want to delete this message?</string>
     <string name="msg_view_more">view more</string>
     <string name="msg_view_less">view less</string>
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>

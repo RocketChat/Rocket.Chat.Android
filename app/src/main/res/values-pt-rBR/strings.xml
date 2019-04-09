@@ -22,7 +22,7 @@
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
     <string name="title_create_channel">Criar chat</string>
-    <string name="title_licence">Licença</string>
+    <string name="title_license">Licença</string>
     <string name="title_are_you_sure">Você tem certeza?</string>
     <string name="title_channel_details">Detalhes do canal</string>
     <string name="title_topic">Tópico</string>
@@ -70,7 +70,7 @@
         <item name="item_share_app">Compartilhar app</item>
         <item name="item_rate_us">Classifique-nos</item>
         <item name="item_contact_us">Contate-nos</item>
-        <item name="item_licence">Licença</item>
+        <item name="item_license">Licença</item>
         <item name="item_about">Sobre</item>
     </string-array>
 
@@ -103,12 +103,12 @@
     <string name="msg_invalid_file">Arquivo inválido</string>
     <string name="msg_invalid_server_url">URL de servidor inválido</string>
     <string name="msg_content_description_log_in_using_facebook">Fazer login através do Facebook</string>
-    <string name="msg_content_description_log_in_using_github">Fazer login através do Github</string>
+    <string name="msg_content_description_log_in_using_github">Fazer login através do GitHub</string>
     <string name="msg_content_description_log_in_using_google">Fazer login através do Google</string>
-    <string name="msg_content_description_log_in_using_linkedin">Fazer login através do Linkedin</string>
+    <string name="msg_content_description_log_in_using_linkedin">Fazer login através do LinkedIn</string>
     <string name="msg_content_description_log_in_using_meteor">Fazer login através do Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Fazer login através do Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">Fazer login através do Gitlab</string>
+    <string name="msg_content_description_log_in_using_gitlab">Fazer login através do GitLab</string>
     <string name="msg_content_description_log_in_using_wordpress">Fazer login através do WordPress</string>
     <string name="msg_content_description_send_message">Enviar mensagem</string>
     <string name="msg_content_description_show_more_login_options">Mostrar mais opções de login</string>
@@ -159,9 +159,9 @@
     <string name="msg_login_with_email">Fazer login com <b>e-mail</b></string>
     <string name="msg_create_account">Criar conta</string>
     <string name="msg_continue_with_facebook">Continuar com <b>Facebook</b></string>
-    <string name="msg_continue_with_github">Continuar com <b>Github</b></string>
+    <string name="msg_continue_with_github">Continuar com <b>GitHub</b></string>
     <string name="msg_continue_with_google">Continuar com <b>Google</b></string>
-    <string name="msg_continue_with_linkedin">Continuar com <b>Linkedin</b></string>
+    <string name="msg_continue_with_linkedin">Continuar com <b>LinkedIn</b></string>
     <string name="msg_continue_with_gitlab">Continuar com <b>GitLab</b></string>
     <string name="msg_continue_with_wordpress">Continuar com <b>WordPress</b></string>
     <string name="msg_two_factor_authentication">Autenticação de dois fatores</string>

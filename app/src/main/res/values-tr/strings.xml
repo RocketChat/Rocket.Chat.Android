@@ -22,7 +22,7 @@
     <string name="title_update_profile">Profilinizi Düzenleyin</string>
     <string name="title_about">Hakkında</string>
     <string name="title_create_channel">Yeni Kanal Oluştur</string>
-    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
+    <string name="title_license">License</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
     <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
     <string name="title_topic">konu</string>
@@ -70,7 +70,7 @@
         <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
         <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
         <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
-        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_license">License</item> <!-- TODO Add translation -->
         <item name="item_about">About</item> <!-- TODO Add translation -->
     </string-array>
 
@@ -103,13 +103,13 @@
     <string name="msg_invalid_file">Geçersiz dosya</string>
     <string name="msg_invalid_server_url">Geçersiz sunucu adresi</string>
     <string name="msg_content_description_log_in_using_facebook">Facebook Hesabı ile Giriş Yap</string>
-    <string name="msg_content_description_log_in_using_github">Github Hesabı ile Giriş Yap</string>
+    <string name="msg_content_description_log_in_using_github">GitHub Hesabı ile Giriş Yap</string>
     <string name="msg_content_description_log_in_using_google">Google Hesabı ile Giriş Yap</string>
     <string name="msg_content_description_log_in_using_linkedin">LinkedIn Hesabı ile Giriş Yap</string>
     <string name="msg_content_description_log_in_using_meteor">Meteor Hesabı ile Giriş Yap</string>
     <string name="msg_content_description_log_in_using_twitter">Twitter Hesabı ile Giriş Yap</string>
-    <string name="msg_content_description_log_in_using_gitlab">Gitlab Hesabı ile Giriş Yap</string>
-    <string name="msg_content_description_log_in_using_wordpress">Wordpress Hesabı ile Giriş Yap</string>
+    <string name="msg_content_description_log_in_using_gitlab">GitLab Hesabı ile Giriş Yap</string>
+    <string name="msg_content_description_log_in_using_wordpress">WordPress Hesabı ile Giriş Yap</string>
     <string name="msg_content_description_send_message">Mesaj gönder</string>
     <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Add translation -->
     <string name="msg_content_description_show_attachment_options">Dosya eki seçeneklerini göster</string>
@@ -157,9 +157,9 @@
     <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->
     <string name="msg_create_account">Create an account</string> <!-- TODO Add translation -->
     <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_github">Continue with <b>Github</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_github">Continue with <b>GitHub</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_google">Continue with <b>Google</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_linkedin">Continue with <b>LinkedIn</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
     <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
@@ -178,7 +178,7 @@
     <string name="msg_channel_created_successfully">Kanal başarıyla oluşturuldu</string>
     <string name="msg_message_copied">Mesaj kopyalandı</string>
     <string name="msg_delete_message">Mesajı Sil</string>
-    <string name="msg_delete_description">Bu mesajı silmek istediğinizden emin misiniz</string>
+    <string name="msg_delete_description">Bu mesajı silmek istediğinizden emin misiniz?</string>
     <string name="msg_view_more">Daha fazla göster</string>
     <string name="msg_view_less">Daha az göster</string>
     <string name="msg_permalink_copied">Permalink copied</string> <!-- TODO - Add proper translation -->

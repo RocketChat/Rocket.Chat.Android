@@ -22,7 +22,7 @@
     <string name="title_update_profile">Mettre à jour le profil</string>
     <string name="title_about">À propos</string>
     <string name="title_create_channel">Créer salon</string>
-    <string name="title_licence">les permis</string>
+    <string name="title_license">les permis</string>
     <string name="title_are_you_sure">Êtes-vous sûr?</string>
     <string name="title_channel_details">Détails de la chaîne</string>
     <string name="title_topic">Sujet</string>
@@ -70,7 +70,7 @@
         <item name="item_share_app">Partager l\'application</item>
         <item name="item_rate_us">Évaluez nous</item>
         <item name="item_contact_us">Contactez nous</item>
-        <item name="item_licence">les permis</item>
+        <item name="item_license">les permis</item>
         <item name="item_about">Sur</item>
     </string-array>
 
@@ -88,7 +88,7 @@
     <string name="msg_avatar_url">URL de l\'avatar</string>
     <string name="msg_or_continue_using_social_accounts">Ou continuer en utilisant les comptes sociaux</string>
     <string name="msg_new_user">Nouvel utilisateur? %1$s</string>
-    <string name="msg_forgot__your_password">Mot de passe oublié ? %1$s</string>
+    <string name="msg_forgot__your_password">Mot de passe oublié? %1$s</string>
     <string name="msg_reset">Réinitialiser</string>
     <string name="msg_check_your_email_to_reset_your_password">Email envoyé ! Consultez votre boîte mail pour réinitialiser votre mot de passe.</string>
     <string name="msg_invalid_email">Veuillez entrer une adresse valide</string>
@@ -103,12 +103,12 @@
     <string name="msg_invalid_file">Fichier non valide</string>
     <string name="msg_invalid_server_url">URL de serveur non valide</string>
     <string name="msg_content_description_log_in_using_facebook">Connectez-vous en utilisant Facebook</string>
-    <string name="msg_content_description_log_in_using_github">Connectez-vous en utilisant Github</string>
+    <string name="msg_content_description_log_in_using_github">Connectez-vous en utilisant GitHub</string>
     <string name="msg_content_description_log_in_using_google">Connectez-vous en utilisant Google</string>
-    <string name="msg_content_description_log_in_using_linkedin">Connectez-vous en utilisant Linkedin</string>
+    <string name="msg_content_description_log_in_using_linkedin">Connectez-vous en utilisant LinkedIn</string>
     <string name="msg_content_description_log_in_using_meteor">Connectez-vous en utilisant Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Connectez-vous en utilisant Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">Connectez-vous en utilisant Gitlab</string>
+    <string name="msg_content_description_log_in_using_gitlab">Connectez-vous en utilisant GitLab</string>
     <string name="msg_content_description_log_in_using_wordpress">Connectez-vous en utilisant WordPress</string>
     <string name="msg_content_description_send_message">Envoyer message</string>
     <string name="msg_content_description_show_more_login_options">montrer plus d\'options le login</string>
@@ -152,15 +152,15 @@
     <string name="msg_file_description">Description du fichier</string>
     <string name="msg_send">envoyer</string>
     <string name="msg_delete_message">Supprimer Message</string>
-    <string name="msg_delete_description">Êtes-vous sûr de vouloir supprimer ce message</string>
+    <string name="msg_delete_description">Êtes-vous sûr de vouloir supprimer ce message?</string>
     <string name="msg_welcome_to_rocket_chat">Bienvenue à Rocket.Chat</string>
     <string name="msg_team_communication">Communication d\'équipe</string>
     <string name="msg_login_with_email">le login avec <b>e-mail</b></string>
     <string name="msg_create_account">Créer un compte</string>
     <string name="msg_continue_with_facebook">Continuer avec <b>Facebook</b></string>
-    <string name="msg_continue_with_github">Continuer avec <b>Github</b></string>
+    <string name="msg_continue_with_github">Continuer avec <b>GitHub</b></string>
     <string name="msg_continue_with_google">Continuer avec <b>Google</b></string>
-    <string name="msg_continue_with_linkedin">Continuer avec <b>Linkedin</b></string>
+    <string name="msg_continue_with_linkedin">Continuer avec <b>LinkedIn</b></string>
     <string name="msg_continue_with_gitlab">Continuer avec <b>GitLab</b></string>
     <string name="msg_continue_with_wordpress">Continuer avec <b>WordPress</b></string>
     <string name="msg_two_factor_authentication">authentification à deux facteurs</string>
