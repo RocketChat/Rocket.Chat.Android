@@ -43,6 +43,17 @@
         tools:text="Some description"
         tools:visibility="visible" />
 
+    <TextView
+        android:id="@+id/file_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/file_description"
+        tools:text="File info"
+        tools:visibility="visible" />
+
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_attachment"
         android:layout_width="0dp"
@@ -50,7 +61,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/guideline"
-        app:layout_constraintTop_toBottomOf="@id/file_description"
+        app:layout_constraintTop_toBottomOf="@id/file_info"
         fresco:actualImageScaleType="centerCrop"
         fresco:placeholderImage="@drawable/image_dummy"
         tools:background="@drawable/image_dummy"
@@ -91,7 +102,7 @@
     <TextView
         android:id="@+id/text_file_name"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:drawableStart="@drawable/ic_files_24dp"
         android:drawablePadding="6dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"

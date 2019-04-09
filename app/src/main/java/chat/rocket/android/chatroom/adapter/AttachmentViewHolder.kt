@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.uimodel.AttachmentUiModel
 import chat.rocket.android.emoji.EmojiReactionListener
+import chat.rocket.android.helper.DataMeasure
 import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.player.PlayerActivity
 import chat.rocket.android.util.extensions.content
@@ -25,21 +26,21 @@ import kotlinx.android.synthetic.main.item_message_attachment.view.*
 import timber.log.Timber
 
 class AttachmentViewHolder(
-    itemView: View,
-    listener: ActionsListener,
-    reactionListener: EmojiReactionListener? = null,
-    var actionAttachmentOnClickListener: ActionAttachmentOnClickListener
+        itemView: View,
+        listener: ActionsListener,
+        reactionListener: EmojiReactionListener? = null,
+        var actionAttachmentOnClickListener: ActionAttachmentOnClickListener
 ) : BaseViewHolder<AttachmentUiModel>(itemView, listener, reactionListener) {
 
     private val messageViews = listOf<View>(
-        itemView.text_sender,
-        itemView.text_message_time,
-        itemView.text_content,
-        itemView.text_view_more
+            itemView.text_sender,
+            itemView.text_message_time,
+            itemView.text_content,
+            itemView.text_view_more
     )
     private val audioVideoViews = listOf<View>(
-        itemView.audio_video_attachment,
-        itemView.play_button
+            itemView.audio_video_attachment,
+            itemView.play_button
     )
 
     private val quoteBarColor = ContextCompat.getColor(itemView.context, R.color.quoteBar)
@@ -64,6 +65,30 @@ class AttachmentViewHolder(
                 data.hasAudioOrVideo -> bindAudioOrVideo(data)
                 data.hasFile -> bindFile(data)
             }
+
+            file_info.isVisible = data.hasAudioOrVideo || data.hasImage
+
+            when {
+                data.hasVideo -> file_info.text = data.rawData.videoSize?.toDataSize()
+                data.hasAudio -> file_info.text = data.rawData.audioSize?.toDataSize()
+                data.hasImage -> file_info.text = data.rawData.imageSize?.toDataSize()
+            }
+
+            // File description - self describing
+
+            // Message attachment
+
+            // Author
+
+            // If not media or message, show the text with quote bar
+
+            // If it has titleLink and is not "type = file" show the title/titleLink on this field.
+
+            // Fields
+
+            // Actions
+
+            // Quote bar
 
             // File description - self describing
             file_description.isVisible = data.hasDescription
@@ -297,6 +322,18 @@ class AttachmentViewHolder(
             return lp.height == ViewGroup.LayoutParams.WRAP_CONTENT
         }
     }
+}
+
+private fun Long.toDataSize(): String {
+    var size = this.toFloat()
+
+    return when {
+        size > DataMeasure.GIGABYTE -> String.format("%.2f Gb", size / DataMeasure.GIGABYTE)
+        size > DataMeasure.MEGABYTE -> String.format("%.2f Mb", size / DataMeasure.MEGABYTE)
+        size > DataMeasure.KILOBYTE -> String.format("%.2f Kb", size / DataMeasure.KILOBYTE)
+        else -> "$this b"
+    }
+
 }
 
 interface ActionAttachmentOnClickListener {
