@@ -26,7 +26,6 @@ fun Context.changeServerIntent(serverUrl: String? = null, chatRoomId: String? = 
 
 class ChangeServerActivity : AppCompatActivity(), ChangeServerView {
     @Inject lateinit var presenter: ChangeServerPresenter
-
     var progress: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -29,7 +29,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation libraries.kotlin
-    implementation libraries.coroutines
+    implementation libraries.coroutinesCore
 
     implementation libraries.lifecycleExtensions
     kapt libraries.lifecycleCompiler

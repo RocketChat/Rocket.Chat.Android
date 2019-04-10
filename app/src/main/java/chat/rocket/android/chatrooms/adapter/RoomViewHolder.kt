@@ -8,6 +8,7 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
+import chat.rocket.android.util.extension.setTextViewAppearance
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.UserStatus
 import kotlinx.android.synthetic.main.item_chat.view.*
@@ -53,14 +54,14 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
                 if (room.unread == null) text_total_unread_messages.text = "!"
                 if (room.unread != null) text_total_unread_messages.text = room.unread
                 if (room.mentions) text_total_unread_messages.text = "@${room.unread}"
-                text_chat_name.setTextAppearance(context, R.style.ChatList_ChatName_Unread_TextView)
-                text_timestamp.setTextAppearance(context, R.style.ChatList_Timestamp_Unread_TextView)
-                text_last_message.setTextAppearance(context, R.style.ChatList_LastMessage_Unread_TextView)
+                text_chat_name.setTextViewAppearance(context, R.style.ChatList_ChatName_Unread_TextView)
+                text_timestamp.setTextViewAppearance(context, R.style.ChatList_Timestamp_Unread_TextView)
+                text_last_message.setTextViewAppearance(context, R.style.ChatList_LastMessage_Unread_TextView)
                 text_total_unread_messages.isVisible = true
             } else {
-                text_chat_name.setTextAppearance(context, R.style.ChatList_ChatName_TextView)
-                text_timestamp.setTextAppearance(context, R.style.ChatList_Timestamp_TextView)
-                text_last_message.setTextAppearance(context, R.style.ChatList_LastMessage_TextView)
+                text_chat_name.setTextViewAppearance(context, R.style.ChatList_ChatName_TextView)
+                text_timestamp.setTextViewAppearance(context, R.style.ChatList_Timestamp_TextView)
+                text_last_message.setTextViewAppearance(context, R.style.ChatList_LastMessage_TextView)
                 text_total_unread_messages.isInvisible = true
             }
 
@@ -68,20 +69,16 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
         }
     }
 
-    private fun getRoomDrawable(type: RoomType): Drawable? {
-        return when (type) {
-            is RoomType.Channel -> channelIcon
-            is RoomType.PrivateGroup -> groupIcon
-            else -> null
-        }
+    private fun getRoomDrawable(type: RoomType): Drawable? = when (type) {
+        is RoomType.Channel -> channelIcon
+        is RoomType.PrivateGroup -> groupIcon
+        else -> null
     }
 
-    private fun getStatusDrawable(status: UserStatus): Drawable {
-        return when (status) {
-            is UserStatus.Online -> onlineIcon
-            is UserStatus.Away -> awayIcon
-            is UserStatus.Busy -> busyIcon
-            else -> offlineIcon
-        }
+    private fun getStatusDrawable(status: UserStatus): Drawable = when (status) {
+        is UserStatus.Online -> onlineIcon
+        is UserStatus.Away -> awayIcon
+        is UserStatus.Busy -> busyIcon
+        else -> offlineIcon
     }
 }

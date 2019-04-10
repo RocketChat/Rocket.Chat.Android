@@ -20,11 +20,18 @@ import chat.rocket.core.model.SpotlightResult
 import com.shopify.livedataktx.distinct
 import com.shopify.livedataktx.map
 import com.shopify.livedataktx.nonNull
-import kotlinx.coroutines.experimental.*
-import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.async
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import timber.log.Timber
-import kotlin.coroutines.experimental.coroutineContext
-
+import java.lang.IllegalArgumentException
+import kotlin.coroutines.coroutineContext
 
 class ChatRoomsViewModel(
     private val connectionManager: ConnectionManager,
@@ -84,14 +91,14 @@ class ChatRoomsViewModel(
     }
 
     fun getChatRoomByNameDB(string: String): List<ItemHolder<*>> {
-        val rooms = async(CommonPool) {
+        val rooms = GlobalScope.async(Dispatchers.IO) {
             return@async repository.search(string).let { mapper.map(it, showLastMessage = showLastMessage) }
         }
         return runBlocking { rooms.await() }
     }
 
     fun getChatRoomByNameSpotlight(string: String): List<ItemHolder<*>>? {
-        val rooms = async(CommonPool) {
+        val rooms = GlobalScope.async(Dispatchers.IO) {
             return@async spotlight(string)?.let { mapper.map(it, showLastMessage = showLastMessage) }
         }
         return runBlocking { rooms.await() }
@@ -116,7 +123,7 @@ class ChatRoomsViewModel(
     }
 
     private fun fetchRooms() {
-        launch {
+        GlobalScope.launch {
             setLoadingState(LoadingState.Loading(repository.count()))
             try {
                 interactor.refreshChatRooms()
@@ -134,7 +141,7 @@ class ChatRoomsViewModel(
     }
 
     private suspend fun setLoadingState(state: LoadingState) {
-        withContext(UI) {
+        withContext(Dispatchers.Main) {
             loadingState.value = state
         }
     }

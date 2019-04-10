@@ -64,7 +64,6 @@ import chat.rocket.common.internal.FallbackSealedClassJsonAdapter
 import chat.rocket.common.internal.ISO8601Date
 import chat.rocket.common.model.TimestampAdapter
 import chat.rocket.common.util.CalendarISO8601Converter
-import chat.rocket.common.util.Logger
 import chat.rocket.common.util.NoOpLogger
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.internal.AttachmentAdapterFactory

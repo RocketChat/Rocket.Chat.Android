@@ -1,52 +1,62 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="chat.rocket.android.about.ui.AboutFragment">
 
-    <ImageView
-        android:id="@+id/image_app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:src="@drawable/ic_app_name"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <ImageView
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:src="@drawable/ic_launcher_foreground"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/image_app_name"
-        android:adjustViewBounds="true"
-        android:scaleX="1.5"
-        android:scaleY="1.5" />
-
-    <TextView
-        android:id="@+id/text_version_name"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Version alpha2.0.1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_app_name"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/colorSecondaryText"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+        android:paddingTop="50dp"
+        android:layout_gravity="center">
 
-    <TextView
-        android:id="@+id/text_build_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Build # 2000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_version_name"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/colorSecondaryText" />
+        <ImageView
+            android:id="@+id/image_app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_app_name"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:adjustViewBounds="true"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:src="@drawable/ic_launcher_foreground"
+            app:layout_constraintBottom_toTopOf="@id/image_app_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_version_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Version alpha2.0.1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_app_name"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/colorSecondaryText"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+        <TextView
+            android:id="@+id/text_build_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Build # 2000"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_version_name"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/colorSecondaryText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

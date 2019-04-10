@@ -48,6 +48,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 import javax.inject.Inject
+import android.app.NotificationManager
+import android.content.Context
+
 
 // WIDECHAT
 import android.view.View
@@ -156,6 +159,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             deepLinkInfo = null
             isFragmentAdded = true
         }
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE)
+                as NotificationManager
+        notificationManager.cancelAll()
     }
 
     override fun onDestroy() {

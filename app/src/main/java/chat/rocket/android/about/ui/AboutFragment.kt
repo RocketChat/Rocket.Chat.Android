@@ -19,7 +19,6 @@ import javax.inject.Inject
 import androidx.core.view.isVisible
 import chat.rocket.android.helper.Constants
 
-
 internal const val TAG_ABOUT_FRAGMENT = "AboutFragment"
 
 class AboutFragment : Fragment() {
@@ -47,6 +46,11 @@ class AboutFragment : Fragment() {
         setupViews()
 
         analyticsManager.logScreenView(ScreenViewEvent.About)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupToolbar()
     }
 
     private fun setupViews() {

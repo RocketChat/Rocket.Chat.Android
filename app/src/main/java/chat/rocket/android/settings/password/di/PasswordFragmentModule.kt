@@ -7,7 +7,7 @@ import chat.rocket.android.settings.password.presentation.PasswordView
 import chat.rocket.android.settings.password.ui.PasswordFragment
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.Job
 
 @Module
 class PasswordFragmentModule {

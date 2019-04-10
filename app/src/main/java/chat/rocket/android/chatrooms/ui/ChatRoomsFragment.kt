@@ -37,7 +37,6 @@ import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
-import chat.rocket.android.util.extensions.ifNotNullNorEmpty
 import chat.rocket.android.util.extensions.ifNotNullNotEmpty
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
@@ -60,10 +59,13 @@ import chat.rocket.android.profile.ui.ProfileFragment
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.settings.ui.SettingsFragment
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.ifNotNullNorEmpty
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.app_bar.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 internal const val TAG_CHAT_ROOMS_FRAGMENT = "ChatRoomsFragment"
 
@@ -120,14 +122,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
         setHasOptionsMenu(true)
-        val bundle = arguments
-        if (bundle != null) {
-            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
+        arguments?.run {
+            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID)
             chatRoomId.ifNotNullNotEmpty { roomId ->
                 presenter.loadChatRoom(roomId)
                 chatRoomId = null
             }
-            deepLinkInfo = bundle.getParcelable<DeepLinkInfo>(Constants.DEEP_LINK_INFO)
+            deepLinkInfo = getParcelable<DeepLinkInfo>(Constants.DEEP_LINK_INFO)
         }
     }
 
@@ -190,12 +191,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 )
             )
             recycler_view.itemAnimator = DefaultItemAnimator()
-            recycler_view.adapter = adapter
 
             viewModel.getChatRooms().observe(viewLifecycleOwner, Observer { rooms ->
                 rooms?.let {
                     Timber.d("Got items: $it")
                     adapter.values = it
+                    if (recycler_view.adapter != adapter) {
+                        recycler_view.adapter = adapter
+                    }
                     if (rooms.isNotEmpty()) {
                         showNoChatRoomsToDisplay(false)
                     }
@@ -458,22 +461,21 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         ui {
             text_connection_status.fadeIn()
             handler.removeCallbacks(dismissStatus)
-            when (state) {
+            text_connection_status.text = when (state) {
                 is State.Connected -> {
-                    text_connection_status.text = getString(R.string.status_connected)
                     handler.postDelayed(dismissStatus, 2000)
                     setCurrentUserStatusIcon()
+                    getString(R.string.status_connected)
                 }
-                is State.Disconnected -> text_connection_status.text =
-                        getString(R.string.status_disconnected)
-                is State.Connecting -> text_connection_status.text =
-                        getString(R.string.status_connecting)
-                is State.Authenticating -> text_connection_status.text =
-                        getString(R.string.status_authenticating)
-                is State.Disconnecting -> text_connection_status.text =
-                        getString(R.string.status_disconnecting)
-                is State.Waiting -> text_connection_status.text =
-                        getString(R.string.status_waiting, state.seconds)
+                is State.Disconnected -> getString(R.string.status_disconnected)
+                is State.Connecting -> getString(R.string.status_connecting)
+                is State.Authenticating -> getString(R.string.status_authenticating)
+                is State.Disconnecting -> getString(R.string.status_disconnecting)
+                is State.Waiting -> getString(R.string.status_waiting, state.seconds)
+                else -> {
+                    handler.postDelayed(dismissStatus, 500)
+                    ""
+                }
             }
         }
     }
@@ -529,7 +531,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         with((activity as AppCompatActivity?)?.supportActionBar) {
             currentUserStatusIcon = this?.getCustomView()?.findViewById(R.id.self_status)
         }
-        currentUserStatusJob = launch {
+        currentUserStatusJob = GlobalScope.launch(Dispatchers.IO) {
             try {
                 val currentUser = presenter.getCurrentUser(false)
                 val drawable = DrawableHelper.getUserStatusDrawable(currentUser?.status, context!!)

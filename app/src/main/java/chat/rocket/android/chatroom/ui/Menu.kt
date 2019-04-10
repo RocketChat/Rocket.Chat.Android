@@ -9,40 +9,14 @@ import androidx.core.content.res.ResourcesCompat
 import chat.rocket.android.R
 import chat.rocket.android.util.extension.onQueryTextListener
 
-// WIDECHAT
-import chat.rocket.android.helper.Constants
-
 internal fun ChatRoomFragment.setupMenu(menu: Menu) {
     setupSearchMessageMenuItem(menu, requireContext())
-    setupDetailsMenuItem(menu)
-    if (!Constants.WIDECHAT) {
-        setupFavoriteMenuItem(menu)
-    }
-}
-
-internal fun ChatRoomFragment.setOnMenuItemClickListener(item: MenuItem) {
-    when (item.itemId) {
-        MENU_ACTION_FAVORITE_UNFAVOURITE_CHAT -> presenter.toggleFavoriteChatRoom(
-            chatRoomId,
-            isFavorite
-        )
-        MENU_ACTION_SHOW_DETAILS -> presenter.toChatDetails(
-            chatRoomId,
-            chatRoomType,
-            isSubscribed,
-            disableMenu
-        )
-    }
 }
 
 private fun ChatRoomFragment.setupSearchMessageMenuItem(menu: Menu, context: Context) {
 
     var actionFlags: Int? = null
-    if (!Constants.WIDECHAT) {
-        actionFlags = MenuItem.SHOW_AS_ACTION_IF_ROOM or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
-    } else {
-        actionFlags = MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
-    }
+    actionFlags = MenuItem.SHOW_AS_ACTION_IF_ROOM or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
 
     val searchItem = menu.add(
         Menu.NONE,
@@ -50,7 +24,7 @@ private fun ChatRoomFragment.setupSearchMessageMenuItem(menu: Menu, context: Con
         Menu.NONE,
         R.string.title_search_message
     ).setActionView(SearchView(context))
-        .setIcon(R.drawable.ic_search_white_24dp)
+        .setIcon(R.drawable.ic_chatroom_toolbar_magnifier_20dp)
         .setShowAsActionFlags(
                 // WIDECHAT - all items in the overflow menu
             actionFlags
@@ -67,8 +41,9 @@ private fun ChatRoomFragment.setupSearchMessageMenuItem(menu: Menu, context: Con
             }
         })
 
-    (searchItem?.actionView as? SearchView)?.let {
+    (searchItem.actionView as? SearchView)?.let {
         // TODO: Check why we need to stylize the search text programmatically instead of by defining it in the styles.xml (ChatRoom.SearchView)
+        it.maxWidth = Integer.MAX_VALUE
         stylizeSearchView(it, context)
         setupSearchViewTextListener(it)
         if (it.isIconified) {
@@ -95,42 +70,4 @@ private fun ChatRoomFragment.setupSearchViewTextListener(searchView: SearchView)
             isSearchTermQueried = true
         }
     }
-}
-
-private fun ChatRoomFragment.setupFavoriteMenuItem(menu: Menu) {
-
-    var actionFlags: Int? = null
-    if (!Constants.WIDECHAT) {
-        actionFlags = MenuItem.SHOW_AS_ACTION_IF_ROOM or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
-    } else {
-        actionFlags = MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
-    }
-    if (isFavorite) {
-        menu.add(
-            Menu.NONE,
-            MENU_ACTION_FAVORITE_UNFAVOURITE_CHAT,
-            Menu.NONE,
-            R.string.title_unfavorite_chat
-        ).setIcon(R.drawable.ic_star_yellow_24dp)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
-    } else {
-        menu.add(
-            Menu.NONE,
-            MENU_ACTION_FAVORITE_UNFAVOURITE_CHAT,
-            Menu.NONE,
-            R.string.title_favorite_chat
-        ).setIcon(R.drawable.ic_star_border_white_24dp)
-            // WIDECHAT - all items in the overflow menu
-                .setShowAsAction(actionFlags)
-    }
-}
-
-private fun ChatRoomFragment.setupDetailsMenuItem(menu: Menu) {
-    menu.add(
-            Menu.NONE,
-            MENU_ACTION_SHOW_DETAILS,
-            Menu.NONE,
-            R.string.title_channel_details
-    ).setIcon(R.drawable.ic_info_outline_white_24dp)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
 }

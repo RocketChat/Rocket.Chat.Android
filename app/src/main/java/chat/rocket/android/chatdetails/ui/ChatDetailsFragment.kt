@@ -3,6 +3,8 @@ package chat.rocket.android.chatdetails.ui
 import DrawableHelper
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -17,10 +19,13 @@ import chat.rocket.android.chatdetails.presentation.ChatDetailsView
 import chat.rocket.android.chatdetails.viewmodel.ChatDetailsViewModel
 import chat.rocket.android.chatdetails.viewmodel.ChatDetailsViewModelFactory
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
+import chat.rocket.android.server.domain.CurrentServerRepository
+import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.widget.DividerItemDecoration
+import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import dagger.android.support.AndroidSupportInjection
@@ -35,23 +40,28 @@ fun newInstance(
     chatRoomId: String,
     chatRoomType: String,
     isSubscribed: Boolean,
+    isFavorite: Boolean,
     disableMenu: Boolean
 ): ChatDetailsFragment {
     return ChatDetailsFragment().apply {
-        arguments = Bundle(4).apply {
+        arguments = Bundle(5).apply {
             putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
             putString(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
             putBoolean(BUNDLE_IS_SUBSCRIBED, isSubscribed)
+            putBoolean(BUNDLE_IS_FAVORITE, isFavorite)
             putBoolean(BUNDLE_DISABLE_MENU, disableMenu)
         }
-    }
+   }
 }
 
 internal const val TAG_CHAT_DETAILS_FRAGMENT = "ChatDetailsFragment"
+internal const val MENU_ACTION_FAVORITE_REMOVE_FAVORITE = 1
+internal const val MENU_ACTION_VIDEO_CALL = 2
 
 private const val BUNDLE_CHAT_ROOM_ID = "BUNDLE_CHAT_ROOM_ID"
 private const val BUNDLE_CHAT_ROOM_TYPE = "BUNDLE_CHAT_ROOM_TYPE"
 private const val BUNDLE_IS_SUBSCRIBED = "BUNDLE_IS_SUBSCRIBED"
+private const val BUNDLE_IS_FAVORITE = "BUNDLE_IS_FAVORITE"
 private const val BUNDLE_DISABLE_MENU = "BUNDLE_DISABLE_MENU"
 
 class ChatDetailsFragment : Fragment(), ChatDetailsView {
@@ -59,26 +69,32 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
     lateinit var presenter: ChatDetailsPresenter
     @Inject
     lateinit var factory: ChatDetailsViewModelFactory
+    @Inject
+    lateinit var serverUrl: CurrentServerRepository
+    @Inject
+    lateinit var settings: GetSettingsInteractor
     private var adapter: ChatDetailsAdapter? = null
     private lateinit var viewModel: ChatDetailsViewModel
 
-    private var chatRoomId: String? = null
-    private var chatRoomType: String? = null
+    internal lateinit var chatRoomId: String
+    internal lateinit var chatRoomType: String
     private var isSubscribed: Boolean = true
+    internal var isFavorite: Boolean = false
     private var disableMenu: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        val bundle = arguments
-        if (bundle != null) {
-            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
-            chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
-            isSubscribed = bundle.getBoolean(BUNDLE_IS_SUBSCRIBED)
-            disableMenu = bundle.getBoolean(BUNDLE_DISABLE_MENU)
-        } else {
-            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
-        }
+
+        arguments?.run {
+            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID)
+            chatRoomType = getString(BUNDLE_CHAT_ROOM_TYPE)
+            isSubscribed = getBoolean(BUNDLE_IS_SUBSCRIBED)
+            isFavorite = getBoolean(BUNDLE_IS_FAVORITE)
+            disableMenu = getBoolean(BUNDLE_DISABLE_MENU)
+        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
+
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -90,9 +106,33 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(this, factory).get(ChatDetailsViewModel::class.java)
+        if (Constants.WIDECHAT) {
+            title_topic.visibility = GONE
+            title_announcement.visibility = GONE
+            title_description.visibility = GONE
+            content_topic.visibility = GONE
+            content_announcement.visibility = GONE
+            content_description.visibility = GONE
+        }
         setupOptions()
         setupToolbar()
         getDetails()
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.clear()
+        setupMenu(menu)
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        setOnMenuItemClickListener(item)
+        return true
+    }
+
+    override fun showFavoriteIcon(isFavorite: Boolean) {
+        this.isFavorite = isFavorite
+        activity?.invalidateOptionsMenu()
     }
 
     override fun displayDetails(room: ChatDetails) {
@@ -100,14 +140,7 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
             val text = room.name
             name.text = text
             bindImage(chatRoomType!!)
-            if (Constants.WIDECHAT) {
-                title_topic.visibility = GONE
-                title_announcement.visibility = GONE
-                title_description.visibility = GONE
-                content_topic.visibility = GONE
-                content_announcement.visibility = GONE
-                content_description.visibility = GONE
-            } else {
+            if (!Constants.WIDECHAT) {
                 content_topic.text =
                         if (room.topic.isNullOrEmpty()) getString(R.string.msg_no_topic) else room.topic
                 content_announcement.text =
@@ -198,12 +231,12 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
     }
 
     private fun getDetails() {
-        if (isSubscribed)
-            viewModel.getDetails(chatRoomId!!).observe(viewLifecycleOwner, Observer { details ->
-                displayDetails(details)
-            })
-        else
-            presenter.getDetails(chatRoomId!!, chatRoomType!!)
+            if (isSubscribed)
+                viewModel.getDetails(chatRoomId!!).observe(viewLifecycleOwner, Observer { details ->
+                    displayDetails(details)
+                })
+            else
+                presenter.getDetails(chatRoomId!!, chatRoomType!!)
     }
 
     private fun setupOptions() {
@@ -231,8 +264,8 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
 
     private fun setupToolbar() {
         with((activity as ChatRoomActivity)) {
-            hideToolbarChatRoomIcon()
-            showToolbarTitle(getString(R.string.title_chat_details))
+            hideExpandMoreForToolbar()
+            setupToolbarTitle(getString(R.string.title_chat_details))
         }
     }
 }

@@ -23,9 +23,10 @@ import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.SpotlightResult
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -99,7 +100,7 @@ class ContactsPresenter @Inject constructor(
                     user = null
             )
 
-            withContext(CommonPool + strategy.jobs) {
+            withContext(Dispatchers.IO + strategy.jobs) {
                 dbManager.chatRoomDao().insertOrReplace(chatRoom = ChatRoomEntity(
                         id = chatRoom.id,
                         name = chatRoom.name,
@@ -129,7 +130,7 @@ class ContactsPresenter @Inject constructor(
         )
     }
 
-    private suspend fun chatRoomByName(name: String? = null, dbManager: DatabaseManager ): List<ChatRoom> = withContext(CommonPool) {
+    private suspend fun chatRoomByName(name: String? = null, dbManager: DatabaseManager ): List<ChatRoom> = withContext(Dispatchers.IO) {
         return@withContext dbManager.chatRoomDao().getAllSync().filter {
             if (name == null) {
                 return@filter true
@@ -224,7 +225,7 @@ class ContactsPresenter @Inject constructor(
     }
 
     fun shareViaApp(context: Context){
-        launch {
+        GlobalScope.launch {
             //get serverUrl and username
             val server = serverInteractor.get()!!
             val account = getAccountInteractor.get(server)!!

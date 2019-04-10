@@ -1,1 +1,1 @@
-include ':app', ':player', ':emoji', ':draw', ':util', ':core', ':suggestions' //, ':wear'
+include ':app', ':player', ':emoji', ':draw', ':util', ':core', ':suggestions'

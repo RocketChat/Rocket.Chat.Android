@@ -45,10 +45,10 @@ import chat.rocket.core.internal.rest.serverInfo
 import chat.rocket.core.internal.rest.settingsOauth
 import chat.rocket.core.internal.rest.unregisterPushToken
 import chat.rocket.core.model.Myself
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.channels.Channel
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 private const val SERVICE_NAME_FACEBOOK = "facebook"
@@ -223,7 +223,7 @@ abstract class CheckServerPresenter constructor(
                 }
                 removeAccountInteractor?.remove(currentServer)
                 tokenRepository?.remove(currentServer)
-                withContext(CommonPool) { dbManager.logout() }
+                withContext(Dispatchers.IO) { dbManager.logout() }
                 navigator?.switchOrAddNewServer()
             } catch (ex: Exception) {
                 Timber.e(ex, "Error cleaning up the session...")

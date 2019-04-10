@@ -3,8 +3,9 @@ package chat.rocket.android.server.domain
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.retryIO
 import chat.rocket.core.internal.rest.permissions
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -17,7 +18,7 @@ class RefreshPermissionsInteractor @Inject constructor(
 ) {
 
     fun refreshAsync(server: String) {
-        launch(CommonPool) {
+        GlobalScope.launch(Dispatchers.IO) {
             try {
                 factory.create(server).let { client ->
                     val permissions = retryIO(

@@ -53,7 +53,6 @@ import chat.rocket.core.internal.realtime.unsubscribe
 import chat.rocket.core.internal.rest.chatRoomRoles
 import chat.rocket.core.internal.rest.commands
 import chat.rocket.core.internal.rest.deleteMessage
-import chat.rocket.core.internal.rest.favorite
 import chat.rocket.core.internal.rest.getMembers
 import chat.rocket.core.internal.rest.history
 import chat.rocket.core.internal.rest.joinChat
@@ -76,12 +75,11 @@ import chat.rocket.core.model.ChatRoomRole
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Room
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.DefaultDispatcher
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.channels.Channel
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.threeten.bp.Instant
 import timber.log.Timber
 import java.util.*
@@ -134,7 +132,7 @@ class ChatRoomPresenter @Inject constructor(
         draftKey = "${currentServer}_${LocalRepository.DRAFT_KEY}$roomId"
         chatRoomId = roomId
         chatRoomType = roomType
-        launch(CommonPool + strategy.jobs) {
+        GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
             try {
                 chatRoles = if (roomTypeOf(roomType) !is RoomType.DirectMessage) {
                     client.chatRoomRoles(roomType = roomTypeOf(roomType), roomName = roomName)
@@ -178,12 +176,12 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     private suspend fun subscribeRoomChanges() {
-        withContext(CommonPool + strategy.jobs) {
+        withContext(Dispatchers.IO + strategy.jobs) {
             chatRoomId?.let {
                 manager.addRoomChannel(it, roomChangesChannel)
                 for (room in roomChangesChannel) {
-                    dbManager.getRoom(room.id)?.let {
-                        view.onRoomUpdated(roomMapper.map(chatRoom = it, showLastMessage = true))
+                    dbManager.getRoom(room.id)?.let { chatRoom ->
+                        view.onRoomUpdated(roomMapper.map(chatRoom = chatRoom, showLastMessage = true))
                     }
                 }
             }
@@ -316,6 +314,7 @@ class ChatRoomPresenter @Inject constructor(
     fun sendMessage(chatRoomId: String, text: String, messageId: String?) {
         launchUI(strategy) {
             try {
+                view.disableSendMessageButton()
                 // ignore message for now, will receive it on the stream
                 if (messageId == null) {
                     val id = UUID.randomUUID().toString()
@@ -404,7 +403,7 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             view.showLoading()
             try {
-                withContext(DefaultDispatcher) {
+                withContext(Dispatchers.Default) {
                     val fileName = uriInteractor.getFileName(uri) ?: uri.toString()
                     if (fileName.isEmpty()) {
                         view.showInvalidFileMessage()
@@ -442,7 +441,7 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             view.showLoading()
             try {
-                withContext(DefaultDispatcher) {
+                withContext(Dispatchers.Default) {
                     val fileName = uriInteractor.getFileName(uri) ?: uri.toString()
                     val fileSize = uriInteractor.getFileSize(uri)
                     val maxFileSizeAllowed = settings.uploadMaxFileSize()
@@ -483,7 +482,7 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             view.showLoading()
             try {
-                withContext(DefaultDispatcher) {
+                withContext(Dispatchers.Default) {
                     val fileName = UUID.randomUUID().toString() + ".png"
                     val fileSize = byteArray.size
                     val mimeType = "image/png"
@@ -521,7 +520,7 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     fun sendTyping() {
-        launch(CommonPool + strategy.jobs) {
+        GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
             if (chatRoomId != null && currentLoggedUsername != null) {
                 client.setTypingStatus(chatRoomId.toString(), currentLoggedUsername, true)
             }
@@ -529,7 +528,7 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     fun sendNotTyping() {
-        launch(CommonPool + strategy.jobs) {
+        GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
             if (chatRoomId != null && currentLoggedUsername != null) {
                 client.setTypingStatus(chatRoomId.toString(), currentLoggedUsername, false)
             }
@@ -551,11 +550,11 @@ class ChatRoomPresenter @Inject constructor(
         Timber.d("Subscribing to Status changes")
         lastState = manager.state
         manager.addStatusChannel(stateChannel)
-        launch(CommonPool + strategy.jobs) {
+        GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
             for (state in stateChannel) {
                 Timber.d("Got new state: $state - last: $lastState")
                 if (state != lastState) {
-                    launch(UI) {
+                    launch(Dispatchers.Main) {
                         view.showConnectionState(state)
                     }
 
@@ -572,7 +571,7 @@ class ChatRoomPresenter @Inject constructor(
     private fun subscribeMessages(roomId: String) {
         manager.subscribeRoomMessages(roomId, messagesChannel)
 
-        launch(CommonPool + strategy.jobs) {
+        GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
             for (message in messagesChannel) {
                 Timber.d("New message for room ${message.roomId}")
                 updateMessage(message)
@@ -581,7 +580,7 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     private fun loadMissingMessages() {
-        launch(parent = strategy.jobs) {
+        GlobalScope.launch(strategy.jobs) {
             chatRoomId?.let { chatRoomId ->
                 val roomType = roomTypeOf(chatRoomType)
                 val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
@@ -890,32 +889,14 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    fun toggleFavoriteChatRoom(roomId: String, isFavorite: Boolean) {
-        launchUI(strategy) {
-            try {
-                // Note that if it is favorite then the user wants to unfavorite - and vice versa.
-                retryIO("favorite($roomId, $isFavorite)") {
-                    client.favorite(roomId, !isFavorite)
-                }
-                view.showFavoriteIcon(!isFavorite)
-            } catch (e: RocketChatException) {
-                Timber.e(e, "Error while trying to favorite/unfavorite chat room.")
-                e.message?.let {
-                    view.showMessage(it)
-                }.ifNull {
-                    view.showGenericErrorMessage()
-                }
-            }
-        }
-    }
-
     fun toChatDetails(
         chatRoomId: String,
         chatRoomType: String,
         isSubscribed: Boolean,
+        isFavorite: Boolean,
         isMenuDisabled: Boolean
     ) {
-        navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isMenuDisabled)
+        navigator.toChatDetails(chatRoomId, chatRoomType, isSubscribed, isFavorite, isMenuDisabled)
     }
 
     fun loadChatRoomsSuggestions() {
@@ -943,7 +924,7 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
-    private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(CommonPool) {
+    private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(Dispatchers.IO) {
         retryDB("getRoom($roomId)") {
             dbManager.chatRoomDao().getSync(roomId)?.let {
                 with(it.chatRoom) {
@@ -981,7 +962,7 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
-    private suspend fun getChatRoomsAsync(name: String? = null): List<ChatRoom> = withContext(CommonPool) {
+    private suspend fun getChatRoomsAsync(name: String? = null): List<ChatRoom> = withContext(Dispatchers.IO) {
         retryDB("getAllSync()") {
             dbManager.chatRoomDao().getAllSync().filter {
                 if (name == null) {
@@ -1073,7 +1054,7 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 messagesRepository.getById(messageId)?.let { message ->
-                    getChatRoomAsync(message.roomId)?.let { chatRoom ->
+                    getChatRoomAsync(message.roomId)?.let {
                         val models = mapper.map(message)
                         models.firstOrNull()?.permalink?.let {
                             view.copyToClipboard(it)
@@ -1211,7 +1192,7 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     private fun subscribeTypingStatus() {
-        launch(CommonPool + strategy.jobs) {
+        GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
             client.subscribeTypingStatus(chatRoomId.toString()) { _, id ->
                 typingStatusSubscriptionId = id
             }
@@ -1294,9 +1275,7 @@ class ChatRoomPresenter @Inject constructor(
      * @param unfinishedMessage The unfinished message to save.
      */
     fun saveDraftMessage(unfinishedMessage: String) {
-        if (unfinishedMessage.isNotBlank()) {
-            localRepository.save(draftKey, unfinishedMessage)
-        }
+        localRepository.save(draftKey, unfinishedMessage)
     }
 
     fun clearDraftMessage() {

@@ -17,7 +17,7 @@ import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.rest.queryContacts
 import chat.rocket.core.model.ContactHolder
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.security.MessageDigest
 import java.util.ArrayList
