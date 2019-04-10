@@ -8,6 +8,9 @@ import chat.rocket.android.server.domain.isJitsiEnabledForChannels
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 
+// WIDECHAT
+import chat.rocket.android.helper.Constants
+
 internal fun ChatDetailsFragment.setupMenu(menu: Menu) {
     serverUrl.get()?.let {
         with(settings.get(it)) {
@@ -25,21 +28,23 @@ internal fun ChatDetailsFragment.setupMenu(menu: Menu) {
         }
     }
 
-    if (isFavorite) {
-        menu.add(
-            Menu.NONE,
-            MENU_ACTION_FAVORITE_REMOVE_FAVORITE,
-            Menu.NONE,
-            R.string.action_remove_favorite
-        ).setIcon(R.drawable.ic_star_yellow_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
-    } else {
-        menu.add(
-            Menu.NONE,
-            MENU_ACTION_FAVORITE_REMOVE_FAVORITE,
-            Menu.NONE,
-            R.string.action_favorite
-        ).setIcon(R.drawable.ic_star_border_white_24dp)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+    if (!Constants.WIDECHAT) {
+        if (isFavorite) {
+            menu.add(
+                    Menu.NONE,
+                    MENU_ACTION_FAVORITE_REMOVE_FAVORITE,
+                    Menu.NONE,
+                    R.string.action_remove_favorite
+            ).setIcon(R.drawable.ic_star_yellow_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+        } else {
+            menu.add(
+                    Menu.NONE,
+                    MENU_ACTION_FAVORITE_REMOVE_FAVORITE,
+                    Menu.NONE,
+                    R.string.action_favorite
+            ).setIcon(R.drawable.ic_star_border_white_24dp)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+        }
     }
 }
 
