@@ -233,7 +233,7 @@
     <string name="action_unpin">Unpin</string> <!-- TODO Translate -->
     <string name="action_star">Star</string> <!-- TODO Translate -->
     <string name="action_unstar">Unstar</string> <!-- TODO Translate -->
-    <string name="action_msg_share">نشر</string>
+    <string name="action_msg_invite">نشر</string>
     <string name="action_title_editing">تعديل الرسالة</string>
     <string name="action_msg_add_reaction">إضافة تفاعل</string>
     <string name="action_msg_permalink">Permalink</string>  <!-- TODO Translate -->
@@ -332,7 +332,7 @@
     <string name="header_unknown">غير معروف</string>
 
     <!--Notifications-->
-    <string name="share_label">تعديل الرسالة المنشورة</string>
+    <string name="invite_label">تعديل الرسالة المنشورة</string>
     <string name="notif_action_reply_hint">رد</string>
     <string name="notif_error_sending">فشل الرد حاول مرة أخرى</string>
     <string name="notif_success_sending">تم إرسال الرسالة ل %1$s!</string>

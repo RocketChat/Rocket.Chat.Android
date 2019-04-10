@@ -225,7 +225,7 @@
     <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
     <string name="action_star">Star</string> <!-- TODO Add translation -->
     <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
-    <string name="action_msg_share">分享訊息</string>
+    <string name="action_msg_invite">分享訊息</string>
     <string name="action_title_editing">編輯訊息</string>
     <string name="action_msg_add_reaction">增加操作</string>
     <string name="action_msg_permalink">Permalink</string> <!-- TODO - Add proper translation -->
@@ -324,7 +324,7 @@
     <string name="header_unknown">未知</string>
 
     <!--Notifications-->
-    <string name="share_label">編輯分享的訊息</string>
+    <string name="invite_label">編輯分享的訊息</string>
     <string name="notif_action_reply_hint">回覆</string>
     <string name="notif_error_sending">回覆失敗，請重試.</string>
     <string name="notif_success_sending">發送訊息給 %1$s!</string>

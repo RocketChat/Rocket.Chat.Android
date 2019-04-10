@@ -225,7 +225,7 @@
     <string name="action_unpin">Desafixar</string>
     <string name="action_star">Star</string> <!-- TODO Add translation -->
     <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
-    <string name="action_msg_share">Partilhar</string>
+    <string name="action_msg_invite">Partilhar</string>
     <string name="action_title_editing">A editar mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reacção</string>
     <string name="action_msg_permalink">Link permanente</string>
@@ -324,7 +324,7 @@
     <string name="header_unknown">Desconhecido</string>
 
     <!--Notifications-->
-    <string name="share_label">Editar mensagem partilhada</string>
+    <string name="invite_label">Editar mensagem partilhada</string>
     <string name="notif_action_reply_hint">RESPONDER</string>
     <string name="notif_error_sending">A resposta falhou. Tente novamente.</string>
     <string name="notif_success_sending">Mensagem enviada para %1$s!</string>
