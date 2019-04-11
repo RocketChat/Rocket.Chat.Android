@@ -80,4 +80,58 @@ interface Analytics {
      */
     fun logVideoConference(event: SubscriptionTypeEvent, serverUrl: String) {}
 
+    /**
+     * Logs the add reaction message action.
+     */
+    fun logMessageActionAddReaction() {}
+
+    /**
+     * Logs the replay message action.
+     */
+    fun logMessageActionReply() {}
+
+    /**
+     * Logs the quote message action.
+     */
+    fun logMessageActionQuote() {}
+
+    /**
+     * Logs the permalink message action.
+     */
+    fun logMessageActionPermalink() {}
+
+    /**
+     * Logs the copy message action.
+     */
+    fun logMessageActionCopy() {}
+
+    /**
+     * Logs the edit message action.
+     */
+    fun logMessageActionEdit() {}
+
+    /**
+     * Logs the info message action.
+     */
+    fun logMessageActionInfo() {}
+
+    /**
+     * Logs the star message action.
+     */
+    fun logMessageActionStar() {}
+
+    /**
+     * Logs the pin message action.
+     */
+    fun logMessageActionPin() {}
+
+    /**
+     * Logs the report message action.
+     */
+    fun logMessageActionReport() {}
+
+    /**
+     * Logs the delete message action.
+     */
+    fun logMessageActionDelete() {}
 }

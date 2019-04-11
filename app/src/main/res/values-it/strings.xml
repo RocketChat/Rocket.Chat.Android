@@ -235,19 +235,19 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Rispondi</string>
-    <string name="action_msg_info">Informazioni messaggio</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">Modifica</string>
     <string name="action_msg_copy">Copia</string>
     <string name="action_msg_quote">Citazione</string>
     <string name="action_msg_delete">Cancella</string>
-    <string name="action_msg_pin">Messaggio importante</string>
-    <string name="action_msg_unpin">Messaggio normale</string>
-    <string name="action_msg_star">Messaggio preferito</string>
-    <string name="action_msg_unstar">Messaggio normale</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">Condividi</string>
     <string name="action_title_editing">Modifica messaggio</string>
     <string name="action_msg_add_reaction">Aggiungi reazione</string>
-    <string name="action_msg_copy_permalink">Copia permalink</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO Add translation -->
     <string name="action_msg_report">Resoconto</string>
 
     <!-- Permission messages -->

@@ -235,19 +235,19 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Responder</string>
-    <string name="action_msg_info">Informação da mensagem</string>
+    <string name="action_info">Informação</string>
     <string name="action_msg_edit">Editar</string>
     <string name="action_msg_copy">Copiar</string>
     <string name="action_msg_quote">Citar</string>
     <string name="action_msg_delete">Apagar</string>
-    <string name="action_msg_pin">Afixar mensagem</string>
-    <string name="action_msg_unpin">Desafixar mensagem</string>
-    <string name="action_msg_star">Dar um estrela</string>
-    <string name="action_msg_unstar">Remover estrela</string>
+    <string name="action_pin">Afixar</string>
+    <string name="action_unpin">Desafixar</string>
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">Partilhar</string>
     <string name="action_title_editing">A editar mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reacção</string>
-    <string name="action_msg_copy_permalink">Copiar link permanente</string>
+    <string name="action_msg_permalink">Link permanente</string>
     <string name="action_msg_report">Relatar</string>
 
     <!-- Permission messages -->

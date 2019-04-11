@@ -238,19 +238,19 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">返信</string>
-    <string name="action_msg_info">メッセージ情報</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">編集</string>
     <string name="action_msg_copy">コピー</string>
     <string name="action_msg_quote">引用</string>
     <string name="action_msg_delete">削除</string>
-    <string name="action_msg_pin">ピン留めする</string>
-    <string name="action_msg_unpin">ピン留を外す</string>
-    <string name="action_msg_star">スターをつける</string>
-    <string name="action_msg_unstar">スターを外す</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">メッセージの編集</string>
     <string name="action_msg_add_reaction">リアクションする</string>
-    <string name="action_msg_copy_permalink">パーマリンクのコピー</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO Add translation -->
     <string name="action_msg_report">Report</string> <!-- TODO - Add proper translation -->
 
     <!-- Permission messages -->

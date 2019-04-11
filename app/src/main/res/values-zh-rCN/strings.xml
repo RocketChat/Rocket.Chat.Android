@@ -235,19 +235,19 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">回复</string>
-    <string name="action_msg_info">消息通知</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">编辑</string>
     <string name="action_msg_copy">拷贝</string>
     <string name="action_msg_quote">引用</string>
     <string name="action_msg_delete">删除</string>
-    <string name="action_msg_pin">固定消息</string>
-    <string name="action_msg_unpin">取消固定</string>
-    <string name="action_msg_star">标记消息</string>
-    <string name="action_msg_unstar">取消标记</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">分享消息</string>
     <string name="action_title_editing">编辑消息</string>
     <string name="action_msg_add_reaction">增加操作</string>
-    <string name="action_msg_copy_permalink">拷贝永久链接</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO - Add proper translation -->
     <string name="action_msg_report">报告</string>
 
     <!-- Permission messages -->
