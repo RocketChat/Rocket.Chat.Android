@@ -20,6 +20,7 @@ object Constants {
     const val DEEP_LINK_INFO = "deep_link_info"
 
     const val CONTACTS_ACCESS_PERMISSION_REQUESTED = "contacts_access_permission_requested"
+    const val WIDECHAT_REAL_USER_NAME = "real_user_name"
 }
 
 object ChatRoomsSortOrder {
