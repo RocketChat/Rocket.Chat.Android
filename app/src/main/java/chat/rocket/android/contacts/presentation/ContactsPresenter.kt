@@ -209,7 +209,7 @@ class ContactsPresenter @Inject constructor(
 
         positiveButton.setOnClickListener(View.OnClickListener {
             SharedPreferenceHelper.putString(Constants.WIDECHAT_REAL_USER_NAME, realUsername.getText().toString())
-            invite(contact)
+            invite(contact, realUsername.getText().toString())
             dialog.dismiss()
         })
         negativeButton.setOnClickListener(View.OnClickListener {
