@@ -1,7 +1,6 @@
 package chat.rocket.android.push
 
 import android.os.Bundle
-import androidx.core.os.bundleOf
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder

@@ -10,7 +10,7 @@ class ChatRoomsRepository @Inject constructor(private val dao: ChatRoomDao) {
 
     // TODO - check how to use retryDB here - suspend
     fun getChatRooms(order: Order): LiveData<List<ChatRoom>> {
-        return when(order) {
+        return when (order) {
             Order.ACTIVITY -> dao.getAll()
             Order.GROUPED_ACTIVITY -> dao.getAllGrouped()
             Order.NAME -> dao.getAllAlphabetically()
@@ -31,5 +31,5 @@ class ChatRoomsRepository @Inject constructor(private val dao: ChatRoomDao) {
     }
 }
 
-fun ChatRoomsRepository.Order.isGrouped(): Boolean = this == ChatRoomsRepository.Order.GROUPED_ACTIVITY
-        || this == ChatRoomsRepository.Order.GROUPED_NAME
+fun ChatRoomsRepository.Order.isGrouped(): Boolean =
+    this == ChatRoomsRepository.Order.GROUPED_ACTIVITY || this == ChatRoomsRepository.Order.GROUPED_NAME

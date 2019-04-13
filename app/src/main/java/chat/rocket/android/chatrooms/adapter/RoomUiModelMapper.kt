@@ -13,6 +13,7 @@ import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.date
+import chat.rocket.android.util.extensions.isNotNullNorEmpty
 import chat.rocket.android.util.extensions.localDateTime
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.User
@@ -40,14 +41,16 @@ class RoomUiModelMapper(
         var lastType: String? = null
         if (grouped) {
             val favRooms = rooms.filter { it.chatRoom.favorite == true }
-            val unfavRooms = rooms.filterNot { it.chatRoom.favorite == true }
+            val unfavRooms = rooms.filter { it.chatRoom.favorite != true }
 
             if (favRooms.isNotEmpty()) {
                 list.add(HeaderItemHolder(context.resources.getString(R.string.header_favorite)))
             }
+
             favRooms.forEach { room ->
                 list.add(RoomItemHolder(map(room, showLastMessage)))
             }
+
             unfavRooms.forEach { room ->
                 if (lastType != room.chatRoom.type) {
                     list.add(HeaderItemHolder(roomType(room.chatRoom.type)))
@@ -67,9 +70,11 @@ class RoomUiModelMapper(
     fun map(spotlight: SpotlightResult, showLastMessage: Boolean = true): List<ItemHolder<*>> {
 
         val list = ArrayList<ItemHolder<*>>(spotlight.users.size + spotlight.rooms.size)
+
         spotlight.users.filterNot { it.username.isNullOrEmpty() }.forEach { user ->
             list.add(RoomItemHolder(mapUser(user)))
         }
+
         spotlight.rooms.filterNot { it.name.isNullOrEmpty() }.forEach { room ->
             list.add(RoomItemHolder(mapRoom(room, showLastMessage)))
         }
@@ -143,6 +148,7 @@ class RoomUiModelMapper(
 
         RoomUiModel(
                 id = id,
+                isDiscussion = parentId.isNotNullNorEmpty(),
                 name = roomName,
                 type = type,
                 avatar = avatar,

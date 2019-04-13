@@ -409,6 +409,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                 val chatRoom = current.chatRoom
                 chatRoom.copy(
                     id = roomId,
+                    parentId = parentId,
                     subscriptionId = id,
                     type = type.toString(),
                     name = name
@@ -474,6 +475,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
 
         return ChatRoomEntity(
             id = room.id,
+            parentId = subscription.parentId,
             subscriptionId = subscription.id,
             type = room.type.toString(),
             name = room.name ?: subscription.name
@@ -516,6 +518,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
             return ChatRoomEntity(
                 id = id,
                 subscriptionId = subscriptionId,
+                parentId = parentId,
                 type = type.toString(),
                 name = name,
                 fullname = fullName,

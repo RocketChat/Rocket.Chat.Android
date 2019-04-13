@@ -11,7 +11,6 @@ object AndroidWorkerInjection {
         }
 
         val workerInjector = (application as HasWorkerInjector).workerInjector()
-        checkNotNull(workerInjector) { "${application.javaClass}.workerInjector() return null" }
         workerInjector.inject(worker)
     }
 }

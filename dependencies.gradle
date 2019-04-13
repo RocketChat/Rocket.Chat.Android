@@ -9,7 +9,7 @@ ext {
             dokka                 : '0.9.16',
 
             // For app
-            kotlin                : '1.3.21',
+            kotlin                : '1.3.30',
             coroutine             : '1.1.1',
 
             appCompat             : '1.0.2',
@@ -18,9 +18,9 @@ ext {
             cardview              : '1.0.0',
             browser               : '1.0.0',
             androidKtx            : '1.0.0',
-            workmanager           : '1.0.0-alpha09',
+            workmanager           : '2.0.1',
 
-            dagger                : '2.16',
+            dagger                : '2.22.1',
             firebaseCloudMessage  : '17.3.4',
             firebaseAnalytics     : '16.0.6',
             playServicesAuth      : '16.0.1',
@@ -76,8 +76,7 @@ ext {
             browser               : "androidx.browser:browser:${versions.browser}",
             androidKtx            : "androidx.core:core-ktx:${versions.androidKtx}",
             fragmentsKtx          : "androidx.fragment:fragment-ktx:${versions.androidKtx}",
-            workmanager           : "android.arch.work:work-runtime-ktx:${versions.workmanager}",
-            workmanagerFirebase   : "android.arch.work:work-firebase:${versions.workmanager}",
+            workmanager           : "androidx.work:work-runtime-ktx:${versions.workmanager}",
 
             dagger                : "com.google.dagger:dagger:${versions.dagger}",
             daggerSupport         : "com.google.dagger:dagger-android-support:${versions.dagger}",

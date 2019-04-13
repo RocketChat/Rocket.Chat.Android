@@ -17,12 +17,9 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class MessageService : JobService() {
-    @Inject
-    lateinit var factory: ConnectionManagerFactory
-    @Inject
-    lateinit var dbFactory: DatabaseManagerFactory
-    @Inject
-    lateinit var getAccountsInteractor: GetAccountsInteractor
+    @Inject lateinit var factory: ConnectionManagerFactory
+    @Inject lateinit var dbFactory: DatabaseManagerFactory
+    @Inject lateinit var getAccountsInteractor: GetAccountsInteractor
 
     override fun onCreate() {
         super.onCreate()

@@ -19,6 +19,7 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
     private val resources: Resources = itemView.resources
     private val channelIcon: Drawable = resources.getDrawable(R.drawable.ic_hashtag_12dp, null)
     private val groupIcon: Drawable = resources.getDrawable(R.drawable.ic_lock_12_dp, null)
+    private val discussionIcon: Drawable = resources.getDrawable(R.drawable.ic_discussion_20dp, null)
     private val onlineIcon: Drawable = resources.getDrawable(R.drawable.ic_status_online_12dp, null)
     private val awayIcon: Drawable = resources.getDrawable(R.drawable.ic_status_away_12dp, null)
     private val busyIcon: Drawable = resources.getDrawable(R.drawable.ic_status_busy_12dp, null)
@@ -30,7 +31,9 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
             image_avatar.setImageURI(room.avatar)
             text_chat_name.text = room.name
 
-            if (room.status != null && room.type is RoomType.DirectMessage) {
+            if (room.isDiscussion) {
+                image_chat_icon.setImageDrawable(discussionIcon)
+            } else if (room.status != null && room.type is RoomType.DirectMessage) {
                 image_chat_icon.setImageDrawable(getStatusDrawable(room.status))
             } else {
                 image_chat_icon.setImageDrawable(getRoomDrawable(room.type))

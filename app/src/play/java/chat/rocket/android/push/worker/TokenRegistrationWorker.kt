@@ -1,6 +1,8 @@
 package chat.rocket.android.push.worker
 
+import android.content.Context
 import androidx.work.Worker
+import androidx.work.WorkerParameters
 import chat.rocket.android.dagger.injector.AndroidWorkerInjection
 import chat.rocket.android.extensions.await
 import chat.rocket.android.infrastructure.LocalRepository
@@ -13,14 +15,13 @@ import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
 
-class TokenRegistrationWorker : Worker() {
-
-    @Inject
-    lateinit var factory: RocketChatClientFactory
-    @Inject
-    lateinit var getAccountsInteractor: GetAccountsInteractor
-    @Inject
-    lateinit var localRepository: LocalRepository
+class TokenRegistrationWorker @Inject constructor(
+    appContext: Context,
+    workerParams: WorkerParameters
+) : Worker(appContext, workerParams) {
+    @Inject lateinit var factory: RocketChatClientFactory
+    @Inject lateinit var getAccountsInteractor: GetAccountsInteractor
+    @Inject lateinit var localRepository: LocalRepository
 
     override fun doWork(): Result {
         AndroidWorkerInjection.inject(this)
@@ -36,7 +37,7 @@ class TokenRegistrationWorker : Worker() {
             }
         }
 
-        return Result.SUCCESS
+        return Result.success()
     }
 
     private fun refreshToken(): String? {
