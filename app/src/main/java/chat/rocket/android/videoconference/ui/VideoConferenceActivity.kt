@@ -3,14 +3,16 @@ package chat.rocket.android.videoconference.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.os.bundleOf
+import android.util.Log
 import chat.rocket.android.videoconference.presenter.JitsiVideoConferenceView
 import chat.rocket.android.videoconference.presenter.VideoConferencePresenter
 import dagger.android.AndroidInjection
 import org.jitsi.meet.sdk.JitsiMeetActivity
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 import org.jitsi.meet.sdk.JitsiMeetView
 import org.jitsi.meet.sdk.JitsiMeetViewListener
 import timber.log.Timber
+import java.net.URL
 import javax.inject.Inject
 
 fun Context.videoConferenceIntent(chatRoomId: String, chatRoomType: String): Intent =
@@ -52,34 +54,25 @@ class VideoConferenceActivity : JitsiMeetActivity(), JitsiVideoConferenceView,
     override fun onConferenceJoined(map: MutableMap<String, Any>?) =
         logJitsiMeetViewState("Joined video conferencing", map)
 
-    override fun onConferenceWillLeave(map: MutableMap<String, Any>?) =
-        logJitsiMeetViewState("Leaving video conferencing", map)
-
-    override fun onConferenceLeft(map: MutableMap<String, Any>?) {
-        logJitsiMeetViewState("Left video conferencing", map)
-        finishJitsiVideoConference()
+    override fun onConferenceTerminated(map: MutableMap<String, Any>?) {
+        if(map!!.containsKey("error")) {
+            logJitsiMeetViewState("Terminated video conferencing with error", map)
+        }
+        else{
+            logJitsiMeetViewState("Terminated video conferencing", map)
+            finishJitsiVideoConference()
+        }
     }
 
-    override fun onLoadConfigError(map: MutableMap<String, Any>?) =
-        logJitsiMeetViewState("Error loading video conference config", map)
-
-    override fun onConferenceFailed(map: MutableMap<String, Any>?) =
-        logJitsiMeetViewState("Video conference failed", map)
-
     override fun startJitsiVideoConference(url: String, name: String?) {
-        view?.loadURLObject(
-            bundleOf(
-                "config" to bundleOf(
-                    "startWithAudioMuted" to true,
-                    "startWithVideoMuted" to true
-                ),
-                "context" to bundleOf(
-                    "user" to bundleOf("name" to name),
-                    "iss" to "rocketchat-android"
-                ),
-                "url" to url
-            )
-        )
+        var options = JitsiMeetConferenceOptions.Builder()
+                .setAudioMuted(true)
+                .setVideoMuted(true)
+                .setServerURL(URL(url))
+                .setAudioOnly(false)
+                .build()
+
+        view?.join(options)
     }
 
     override fun finishJitsiVideoConference() {
