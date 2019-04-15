@@ -54,12 +54,14 @@ class VideoConferenceActivity : JitsiMeetActivity(), JitsiVideoConferenceView,
         logJitsiMeetViewState("Joined video conferencing", map)
 
     override fun onConferenceTerminated(map: MutableMap<String, Any>?) {
-        if(map!!.containsKey("error")) {
-            logJitsiMeetViewState("Terminated video conferencing with error", map)
-        }
-        else{
-            logJitsiMeetViewState("Terminated video conferencing", map)
-            finishJitsiVideoConference()
+        if(!map.isNullOrEmpty()){
+            if(map.containsKey("error")) {
+                logJitsiMeetViewState("Terminated video conferencing with error", map)
+            }
+            else{
+                logJitsiMeetViewState("Terminated video conferencing", map)
+                finishJitsiVideoConference()
+            }
         }
     }
 
