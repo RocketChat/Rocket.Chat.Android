@@ -44,7 +44,7 @@ class SignupPresenter @Inject constructor(
     private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
 
     fun signup(name: String, username: String, password: String, email: String) {
-        val client = factory.create(currentServer)
+        val client = factory.get(currentServer)
         launchUI(strategy) {
             view.showLoading()
             try {

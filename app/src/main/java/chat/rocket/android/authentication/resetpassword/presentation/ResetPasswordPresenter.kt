@@ -21,7 +21,7 @@ class ResetPasswordPresenter @Inject constructor(
     serverInteractor: GetConnectingServerInteractor
 ) {
     private val currentServer = serverInteractor.get()!!
-    private val client: RocketChatClient = factory.create(currentServer)
+    private val client: RocketChatClient = factory.get(currentServer)
 
     fun resetPassword(email: String) {
         launchUI(strategy) {
