@@ -35,7 +35,7 @@ class AnswersAnalytics : Analytics {
     override fun logMessageSent(event: SubscriptionTypeEvent, serverUrl: String) =
         Answers.getInstance()
             .logCustom(
-                CustomEvent("message_actionsent")
+                CustomEvent("message_sent")
                     .putCustomAttribute("subscription_type", event.subscriptionTypeName)
                     .putCustomAttribute("server", serverUrl)
             )

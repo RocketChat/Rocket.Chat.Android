@@ -74,7 +74,7 @@ class RefreshSettingsInteractor @Inject constructor(
 
     suspend fun refresh(server: String) {
         withContext(Dispatchers.IO) {
-            factory.create(server).let { client ->
+            factory.get(server).let { client ->
                 val settings = retryIO(
                     description = "settings",
                     times = 5,

@@ -29,12 +29,6 @@ interface CreateChannelView : LoadingView, MessageView {
     fun hideSuggestionViewInProgress()
 
     /**
-     * Shows the navigation drawer with the chat item checked before showing the chat list.
-     * This function is invoked after successfully created the channel.
-     */
-    fun prepareToShowChatList()
-
-    /**
      * Shows a message that a channel was successfully created.
      */
     fun showChannelCreatedSuccessfullyMessage()

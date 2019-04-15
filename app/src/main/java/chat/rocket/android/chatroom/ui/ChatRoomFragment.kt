@@ -268,7 +268,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        setHasOptionsMenu(true)
 
         arguments?.run {
             chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")
@@ -292,6 +291,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             navigator = navigator,
             analyticsManager = analyticsManager
         )
+
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
