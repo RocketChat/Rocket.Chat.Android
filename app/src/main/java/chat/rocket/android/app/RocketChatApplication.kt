@@ -176,7 +176,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         val currentServer = getCurrentServerInteractor.get()
         currentServer?.let { server ->
             GlobalScope.launch {
-                val client = factory.create(server)
+                val client = factory.get(server)
                 EmojiRepository.setCurrentServerUrl(server)
                 val customEmojiList = mutableListOf<Emoji>()
                 try {
