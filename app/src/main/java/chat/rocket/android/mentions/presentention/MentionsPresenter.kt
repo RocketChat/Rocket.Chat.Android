@@ -18,7 +18,7 @@ class MentionsPresenter @Inject constructor(
     private val mapper: UiModelMapper,
     val factory: RocketChatClientFactory
 ) {
-    private val client = factory.create(currentServer)
+    private val client = factory.get(currentServer)
     private var offset: Long = 0
 
     /**

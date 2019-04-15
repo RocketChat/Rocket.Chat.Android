@@ -1,7 +1,6 @@
 package chat.rocket.android.server.infraestructure
 
 import chat.rocket.android.db.DatabaseManagerFactory
-import chat.rocket.android.infrastructure.LocalRepository
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,7 +19,7 @@ class ConnectionManagerFactory @Inject constructor(
         }
 
         Timber.d("Returning FRESH Manager for: $url")
-        val manager = ConnectionManager(factory.create(url), dbFactory.create(url))
+        val manager = ConnectionManager(factory.get(url), dbFactory.create(url))
         cache[url] = manager
         return manager
     }

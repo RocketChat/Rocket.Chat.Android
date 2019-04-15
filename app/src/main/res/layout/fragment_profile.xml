@@ -8,9 +8,15 @@
     android:focusableInTouchMode="true"
     tools:context=".profile.ui.ProfileFragment">
 
+    <include
+        android:id="@+id/layout_app_bar"
+        layout="@layout/app_bar"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_app_bar">
 
         <LinearLayout
             android:id="@+id/profile_container"
@@ -29,12 +35,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp" />
 
+            <TextView
+                android:id="@+id/text_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/status"
+                android:textColor="#DE000000"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+
             <EditText
                 android:id="@+id/text_name"
                 style="@style/Profile.EditText"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:drawableStart="@drawable/ic_person_black_20dp"
                 android:hint="@string/msg_name"
                 android:inputType="textCapWords" />
