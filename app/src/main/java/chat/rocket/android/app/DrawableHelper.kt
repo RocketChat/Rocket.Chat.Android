@@ -1,8 +1,8 @@
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.common.model.UserStatus
 
@@ -43,7 +43,7 @@ object DrawableHelper {
     /**
      * Tints an array of Drawable.
      *
-     * REMARK: you MUST always wrap the array of Drawable before tint it.
+     * REMARK: you MUST always wrap the array of Drawable before tinting it.
      *
      * @param drawables The array of Drawable to tint.
      * @param context The context.
@@ -78,7 +78,7 @@ object DrawableHelper {
      *
      * @param textView The array of TextView.
      * @param drawables The array of Drawable.
-     * @see compoundDrawable
+     * @see compoundLeftDrawable
      */
     fun compoundDrawables(textView: Array<TextView>, drawables: Array<Drawable>) {
         if (textView.size != drawables.size) {
@@ -97,7 +97,7 @@ object DrawableHelper {
      * @param drawable The Drawable.
      * @see compoundDrawables
      */
-    fun compoundDrawable(textView: TextView, drawable: Drawable) =
+    fun compoundLeftDrawable(textView: TextView, drawable: Drawable) =
         textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
 
     /**
@@ -105,10 +105,25 @@ object DrawableHelper {
      *
      * @param textView The TextView.
      * @param drawable The Drawable.
-     * @see compoundDrawable
+     * @see compoundLeftDrawable
      */
     fun compoundRightDrawable(textView: TextView, drawable: Drawable) =
         textView.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+
+    /**
+     * Compounds a Drawable (to appear on the left and right side of a text) into a TextView.
+     *
+     * @param textView The TextView.
+     * @param leftDrawable The left Drawable.
+     * @param rightDrawable The right Drawable.
+     * @see compoundLeftDrawable
+     */
+    fun compoundLeftAndRightDrawable(
+        textView: TextView,
+        leftDrawable: Drawable,
+        rightDrawable: Drawable
+    ) =
+        textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, null, rightDrawable, null)
 
     /**
      * Returns the user status drawable.

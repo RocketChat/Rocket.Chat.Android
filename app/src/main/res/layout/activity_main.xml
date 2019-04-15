@@ -1,48 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.ui.MainActivity">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/layout_app_bar"
-            layout="@layout/app_bar" />
-
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/navigation_container"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start">
-
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/view_navigation"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:headerLayout="@layout/nav_header" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/accounts_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/nav_header_height"
-            android:alpha="0"
-            android:background="@color/colorWhite"
-            android:elevation="20dp"
-            android:visibility="gone" />
-    </FrameLayout>
-
-</androidx.drawerlayout.widget.DrawerLayout>
+    tools:context=".main.ui.MainActivity" />

@@ -21,7 +21,7 @@ interface ResetPasswordView : LoadingView, MessageView {
     fun enableButtonConnect()
 
     /**
-     * Disables the button to reset the password when the user entered an invalid email address
+     * Disables the button to reset the password when the user has entered an invalid email address
      */
     fun disableButtonConnect()
 }
