@@ -838,9 +838,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
 
             override fun getSwipeDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-                // Current enable swipes for messages only
+                // Currently enable swipes for text and attachment messages only
 
-                if (viewHolder is MessageViewHolder) {
+                if (viewHolder is MessageViewHolder || viewHolder is AttachmentViewHolder) {
                     return super.getSwipeDirs(recyclerView, viewHolder)
                 }
 
