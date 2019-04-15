@@ -34,7 +34,14 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.chatroom.adapter.*
+import chat.rocket.android.chatroom.adapter.AttachmentViewHolder
+import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
+import chat.rocket.android.chatroom.adapter.CommandSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.EmojiSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.MessageViewHolder
+import chat.rocket.android.chatroom.adapter.PEOPLE
+import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
@@ -816,8 +823,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                if (viewHolder is MessageViewHolder) {
-                    citeMessage(chatRoomName, chatRoomType, viewHolder.data?.messageId!!, true)
+                var replyId: String? = null
+
+                when (viewHolder) {
+                    is MessageViewHolder -> replyId = viewHolder.data?.messageId
+                    is AttachmentViewHolder -> replyId = viewHolder.data?.messageId
+                }
+
+                replyId?.let {
+                    citeMessage(chatRoomName, chatRoomType, it, true)
                 }
 
                 adapter.notifyItemChanged(viewHolder.adapterPosition)
