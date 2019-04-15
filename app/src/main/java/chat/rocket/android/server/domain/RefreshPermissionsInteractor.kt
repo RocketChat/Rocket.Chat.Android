@@ -20,7 +20,7 @@ class RefreshPermissionsInteractor @Inject constructor(
     fun refreshAsync(server: String) {
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                factory.create(server).let { client ->
+                factory.get(server).let { client ->
                     val permissions = retryIO(
                         description = "permissions",
                         times = 5,
