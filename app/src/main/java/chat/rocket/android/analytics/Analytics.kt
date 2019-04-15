@@ -10,7 +10,7 @@ interface Analytics {
      * Logs the login event.
      *
      * @param event The [AuthenticationEvent] used to log in.
-     * @param loginSucceeded True if successful logged in, false otherwise.
+     * @param loginSucceeded True if logged in successfully, false otherwise.
      */
     fun logLogin(event: AuthenticationEvent, loginSucceeded: Boolean) {}
 
@@ -18,7 +18,7 @@ interface Analytics {
      * Logs the sign up event.
      *
      * @param event The [AuthenticationEvent] used to sign up.
-     * @param signUpSucceeded True if successful signed up, false otherwise.
+     * @param signUpSucceeded True if signed up successfully, false otherwise.
      */
     fun logSignUp(event: AuthenticationEvent, signUpSucceeded: Boolean) {}
 

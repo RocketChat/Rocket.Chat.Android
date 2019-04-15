@@ -10,8 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
         android:paddingStart="@dimen/screen_edge_left_and_right_padding"
-        android:text="@string/chatroom_header" />
+        android:paddingEnd="@dimen/screen_edge_left_and_right_padding" />
 
- </LinearLayout>
+</LinearLayout>
