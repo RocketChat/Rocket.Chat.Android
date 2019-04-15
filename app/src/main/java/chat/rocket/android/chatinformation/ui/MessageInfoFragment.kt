@@ -44,7 +44,6 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        setHasOptionsMenu(true)
 
         val bundle = arguments
         if (bundle != null) {
@@ -52,6 +51,8 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
+
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(

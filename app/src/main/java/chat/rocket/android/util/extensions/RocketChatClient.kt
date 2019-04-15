@@ -19,7 +19,7 @@ suspend fun RocketChatClientFactory.registerPushToken(
         accounts.forEach { account ->
             try {
                 retryIO(description = "register push token: ${account.serverUrl}") {
-                    create(account.serverUrl).registerPushToken(token)
+                    get(account.serverUrl).registerPushToken(token)
                 }
             } catch (ex: Exception) {
                 Timber.d(ex, "Error registering Push token for ${account.serverUrl}")
