@@ -818,6 +818,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
         recycler_view.addOnScrollListener(fabScrollListener)
 
+        // TODO disable swipe if user can't send message.
+        // if(!isReadOnly || roomUiModel.writable)
         val touchCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 return true
