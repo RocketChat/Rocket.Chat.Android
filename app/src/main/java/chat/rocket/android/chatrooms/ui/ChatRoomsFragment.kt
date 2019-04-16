@@ -103,6 +103,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         with((activity as AppCompatActivity)) {
             with(toolbar) {
                 setSupportActionBar(this)
+                supportActionBar?.setDisplayShowTitleEnabled(false)
                 setNavigationOnClickListener { presenter.toSettings() }
             }
         }
