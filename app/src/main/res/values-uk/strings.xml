@@ -3,7 +3,6 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Ваш сервер</string>
     <string name="title_log_in">Увійти</string>
-    <string name="title_share_the_app">поділитися прикладом</string>
     <string name="title_register_username">Зареєструвати ім\'я</string>
     <string name="title_reset_password">Відновлення паролю</string>
     <string name="title_sign_up">Зареєструватися</string>
@@ -20,7 +19,6 @@
     <string name="title_admin_panel">Панель адміністратора</string>
     <string name="title_password">Змінити пароль</string>
     <string name="title_update_profile">Оновити профіль</string>
-    <string name="title_about">"Про програму"</string>
     <string name="title_create_channel">Створити новий канал</string>
     <string name="title_license">License</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
@@ -34,6 +32,7 @@
     <string name="action_use_this_username">Використати це ім\'я</string>
     <string name="action_terms_of_service">Умови використання</string>
     <string name="action_privacy_policy">Політика конфіденційності</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">Пошук</string>
     <string name="action_update">Оновити</string>
     <string name="action_settings">Налаштування</string>
@@ -43,11 +42,10 @@
     <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">Підтвердження зміни пароля</string>
     <string name="action_join_chat">Приєднатися до чату</string>
-    <string name="action_add_account">Додати аккаунт</string>
-    <string name="action_online">Онлайн</string>
-    <string name="action_away">Відійшов</string>
-    <string name="action_busy">Зайнятий</string>
-    <string name="action_invisible">Невидимий</string>
+    <string name="msg_online">Онлайн</string>
+    <string name="msg_away">Відійшов</string>
+    <string name="msg_busy">Зайнятий</string>
+    <string name="msg_invisible">Невидимий</string>
     <string name="action_drawing">Малюнок</string>
     <string name="action_save_to_gallery">Зберегти до галереї</string>
     <string name="action_select_photo_from_gallery">Вибрати з галереї</string>
@@ -58,21 +56,22 @@
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
-    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
     <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
     <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
-        <item name="item_password">Change password</item> <!-- TODO Add translation -->
-        <item name="change_language">Change language</item> <!-- TODO Add translation -->
-        <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
-        <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
-        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
-        <item name="item_license">License</item> <!-- TODO Add translation -->
-        <item name="item_about">About</item> <!-- TODO Add translation -->
-    </string-array>
+    <!-- Settings messages -->
+    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    <string name="msg_language">Language</string> <!-- TODO Translate -->
+    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
+    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
+    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
+    <string name="msg_license">License</string> <!-- TODO Translate -->
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
+    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Сталася помилка, спробуйте ще раз.</string>
@@ -161,7 +160,7 @@
     <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
     <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
-    <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+    <string name="msg_your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
     <string name="msg_view_more">view more</string> <!-- TODO - Add proper translation -->
     <string name="msg_view_less">view less</string> <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copied</string> <!-- TODO - Add proper translation -->
@@ -179,6 +178,8 @@
         <item quantity="many">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
     <string name="msg_credentials_saved_successfully">Облікові дані було успішно збережено</string>
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватний</string>
@@ -305,14 +306,13 @@
     <string name="msg_no_recent_emoji">Пусто</string>
     <string name="alert_title_default_skin_tone">Тон шкіри за замовчуванням</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">Сортувати</string>
-    <string name="dialog_sort_title">Сортувати за</string>
-    <string name="dialog_sort_by_alphabet">За алфавітом</string>
-    <string name="dialog_sort_by_activity">За активністю</string>
-    <string name="dialog_group_by_type">Групувати за типом</string>
-    <string name="dialog_group_favourites">Групувати обране</string>
-    <string name="chatroom_header">Заголовок</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->

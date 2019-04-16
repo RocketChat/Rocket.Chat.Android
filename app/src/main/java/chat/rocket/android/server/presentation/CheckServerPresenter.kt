@@ -105,7 +105,7 @@ abstract class CheckServerPresenter constructor(
 
     internal fun setupConnectionInfo(serverUrl: String) {
         currentServer = serverUrl
-        client = factory.create(serverUrl)
+        client = factory.get(serverUrl)
         managerFactory?.create(serverUrl)?.let {
             manager = it
         }
