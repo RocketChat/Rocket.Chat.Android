@@ -390,6 +390,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_widechat_welcome_to_app">Welcome to Viasat Connect.</string>
     <string name="title_chat_details">Chat Details</string>
     <string name="new_group">New Group</string>
+    <string name="new_chat">New Chat</string>
     <string name="new_contact">New Contact</string>
 
     <!--WIDECHAT INVITES-->

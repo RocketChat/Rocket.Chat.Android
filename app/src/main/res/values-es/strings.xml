@@ -374,6 +374,7 @@
     <string name="title_chat_details">Detalles del chat</string>
     <string name="share_via_another_app">Compartir a través de otra aplicación</string>
     <string name="new_group">Nuevo Grupo</string>
+    <string name="new_chat">Nueva conversación</string>
     <string name="new_contact">Nuevo Contacto</string>
 
     <!--WIDECHAT INVITES-->
