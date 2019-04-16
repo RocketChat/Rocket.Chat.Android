@@ -16,8 +16,16 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_admin_panel_web_view.*
 import javax.inject.Inject
 
+internal const val TAG_ADMIN_PANEL_WEB_VIEW_FRAGMENT = "AdminPanelWebViewFragment"
 private const val BUNDLE_WEB_PAGE_URL = "web_page_url"
 private const val BUNDLE_USER_TOKEN = "user_token"
+
+fun newInstance(webPageUrl: String, userToken: String) = AdminPanelWebViewFragment().apply {
+    arguments = Bundle(2).apply {
+        putString(BUNDLE_WEB_PAGE_URL, webPageUrl)
+        putString(BUNDLE_USER_TOKEN, userToken)
+    }
+}
 
 class AdminPanelWebViewFragment : DaggerFragment() {
     private lateinit var webPageUrl: String
@@ -30,7 +38,8 @@ class AdminPanelWebViewFragment : DaggerFragment() {
         arguments?.run {
             webPageUrl = getString(BUNDLE_WEB_PAGE_URL, "")
             userToken = getString(BUNDLE_USER_TOKEN, "")
-        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
+        }
+            ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
 
     override fun onCreateView(
@@ -49,7 +58,7 @@ class AdminPanelWebViewFragment : DaggerFragment() {
 
     private fun setupToolbar() {
         (activity as AppCompatActivity?)?.supportActionBar?.title =
-                getString(R.string.title_admin_panel)
+            getString(R.string.title_admin_panel)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -69,14 +78,5 @@ class AdminPanelWebViewFragment : DaggerFragment() {
             }
         }
         web_view.loadUrl(webPageUrl)
-    }
-
-    companion object {
-        fun newInstance(webPageUrl: String, userToken: String) = AdminPanelWebViewFragment().apply {
-            arguments = Bundle(2).apply {
-                putString(BUNDLE_WEB_PAGE_URL, webPageUrl)
-                putString(BUNDLE_USER_TOKEN, userToken)
-            }
-        }
     }
 }

@@ -22,7 +22,7 @@ class CreateChannelPresenter @Inject constructor(
     val serverInteractor: GetCurrentServerInteractor,
     val factory: RocketChatClientFactory
 ) {
-    private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
+    private val client: RocketChatClient = factory.get(serverInteractor.get()!!)
 
     fun createChannel(
         roomType: RoomType,
@@ -35,7 +35,6 @@ class CreateChannelPresenter @Inject constructor(
             view.disableUserInput()
             try {
                 client.createChannel(roomType, channelName, usersList, readOnly)
-                view.prepareToShowChatList()
                 view.showChannelCreatedSuccessfullyMessage()
                 toChatList()
             } catch (exception: RocketChatException) {
