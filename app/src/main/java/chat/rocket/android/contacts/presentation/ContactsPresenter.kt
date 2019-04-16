@@ -2,7 +2,6 @@ package chat.rocket.android.contacts.presentation
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -14,7 +13,9 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
+import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.UserHelper
+import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.GetAccountInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -38,10 +39,6 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
-
-// EAR Test
-import chat.rocket.android.helper.Constants
-import chat.rocket.android.helper.SharedPreferenceHelper
 
 class ContactsPresenter @Inject constructor(
         private val view: ContactsView,

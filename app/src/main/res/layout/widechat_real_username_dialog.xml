@@ -10,7 +10,7 @@
         android:id="@+id/prompt_request"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add your name to the invite so your friend will know who you are."
+        android:text="@string/invite_realname_prompt"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:text="SAVE"
+            android:text="@string/save"
             android:textColor="@color/widechatGreenGradientLight"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:text="NO THANKS"
+            android:text="@string/no_thanks"
             android:textColor="@color/widechatGreenGradientLight"
             android:textSize="16sp"
             android:textStyle="bold"
