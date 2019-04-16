@@ -271,7 +271,7 @@
     <string name="msg_all_files_appear_here">الملفات تظهر هنا</string>
 
     <!-- Upload Messages -->
-    <string name="max_file_size_exceeded">ملف كبير</string>
+    <string name="max_file_size_exceeded">تجاوز حجم الملف %1$d بايت الحد الأقصى لحجم التحميل وهو %2$d بايت</string>
 
     <!-- Socket status -->
     <string name="status_connected">اتصال</string>
