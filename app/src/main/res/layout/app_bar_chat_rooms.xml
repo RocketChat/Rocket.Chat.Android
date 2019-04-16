@@ -23,9 +23,7 @@
             android:drawablePadding="10dp"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="normal"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             tools:text="Server Name" />
     </androidx.appcompat.widget.Toolbar>
 </com.google.android.material.appbar.AppBarLayout>
