@@ -1,7 +1,5 @@
 package chat.rocket.android.helper
 
-import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
@@ -9,7 +7,6 @@ import android.media.MediaScannerConnection
 import android.os.Environment
 import android.text.TextUtils
 import android.util.TypedValue
-import android.view.ContextThemeWrapper
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -18,7 +15,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.core.view.setPadding
 import chat.rocket.android.R
-import chat.rocket.android.helper.AndroidPermissionsHelper.getWriteExternalStoragePermission
+import chat.rocket.android.helper.AndroidPermissionsHelper.checkWritingPermission
 import chat.rocket.android.helper.AndroidPermissionsHelper.hasWriteExternalStoragePermission
 import com.facebook.binaryresource.FileBinaryResource
 import com.facebook.cache.common.CacheKey
@@ -120,7 +117,7 @@ object ImageHelper {
 
     private fun saveImage(context: Context): Boolean {
         if (!hasWriteExternalStoragePermission(context)) {
-            getWriteExternalStoragePermission(context)
+            checkWritingPermission(context)
             return false
         }
         if (ImagePipelineFactory.getInstance().mainFileCache.hasKey(cacheKey)) {

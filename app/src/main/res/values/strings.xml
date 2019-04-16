@@ -191,6 +191,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     </plurals>
     <string name="msg_credentials_saved_successfully">Credentials saved successfully</string>
     <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string>
+    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string>
     <string name="msg_server">Server</string>
     <string name="msg_add_new_server">Add New Server</string>
 

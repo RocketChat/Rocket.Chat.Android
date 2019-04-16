@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.view.ContextThemeWrapper
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 
 object AndroidPermissionsHelper {
 
@@ -28,28 +29,31 @@ object AndroidPermissionsHelper {
         return AndroidPermissionsHelper.checkPermission(context, Manifest.permission.CAMERA)
     }
 
-    fun getCameraPermission(context: Context) {
-        if (context is ContextThemeWrapper) {
-            val activity = if (context.baseContext is Activity) context.baseContext as Activity else context as Activity
-            AndroidPermissionsHelper.requestPermission(
-                activity,
-                Manifest.permission.CAMERA,
-                AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE
-            )
-        }
+    fun getCameraPermission(fragment: Fragment) {
+        fragment.requestPermissions(
+            arrayOf(Manifest.permission.CAMERA),
+            CAMERA_CODE
+        )
     }
 
     fun hasWriteExternalStoragePermission(context: Context): Boolean {
         return checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
 
-    fun getWriteExternalStoragePermission(context: Context) {
+    fun getWriteExternalStoragePermission(fragment: Fragment) {
+        fragment.requestPermissions(
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            WRITE_EXTERNAL_STORAGE_CODE
+        )
+    }
+
+    fun checkWritingPermission(context: Context) {
         if (context is ContextThemeWrapper) {
             val activity = if (context.baseContext is Activity) context.baseContext as Activity else context as Activity
             AndroidPermissionsHelper.requestPermission(
                 activity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                WRITE_EXTERNAL_STORAGE_CODE
+                AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE
             )
         }
     }

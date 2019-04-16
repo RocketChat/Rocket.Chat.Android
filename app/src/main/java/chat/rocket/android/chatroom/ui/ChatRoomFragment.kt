@@ -918,7 +918,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                     if(hasCameraPermission(it)) {
                         dispatchTakePictureIntent()
                     } else {
-                        getCameraPermission(it)
+                        getCameraPermission(this)
                     }
                 }
                 handler.postDelayed({
@@ -939,10 +939,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_drawing.setOnClickListener {
                 activity?.let { fragmentActivity ->
                     if (!hasWriteExternalStoragePermission(fragmentActivity)) {
-                        getWriteExternalStoragePermission(fragmentActivity)
+                        getWriteExternalStoragePermission(this)
                     } else {
-                        val intent = Intent(fragmentActivity, DrawingActivity::class.java)
-                        startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
+                        dispatchDrawingIntent()
                     }
                 }
 
@@ -951,6 +950,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }, 400)
             }
         }
+    }
+
+    private fun dispatchDrawingIntent() {
+        val intent = Intent(activity, DrawingActivity::class.java)
+        startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
     }
 
     private fun dispatchTakePictureIntent() {
@@ -973,17 +977,38 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Log.e("TAG_permission", requestCode.toString())
         when(requestCode) {
             AndroidPermissionsHelper.CAMERA_CODE -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted
                     dispatchTakePictureIntent()
                 } else {
                     // permission denied
-                    Snackbar.make(root_layout, R.string.msg_camera_permission_denied, Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        root_layout,
+                        R.string.msg_camera_permission_denied,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+                return
+            }
+            AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    dispatchDrawingIntent()
+                } else {
+                    // permission denied
+                    Snackbar.make(
+                        root_layout,
+                        R.string.msg_storage_permission_denied,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
                 return
             }

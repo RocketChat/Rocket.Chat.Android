@@ -193,6 +193,7 @@
     </plurals>
     <string name="msg_credentials_saved_successfully">Credenciales guardadas con éxito</string>
     <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
+    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
