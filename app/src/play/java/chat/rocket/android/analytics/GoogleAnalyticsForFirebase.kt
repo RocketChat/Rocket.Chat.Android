@@ -27,8 +27,8 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
     }
 
     override fun logScreenView(event: ScreenViewEvent) {
-        firebaseAnalytics.logEvent("screen_view", Bundle(1).apply {
-            putString("screen", event.screenName)
+        firebaseAnalytics.logEvent("screen", Bundle(1).apply {
+            putString("name", event.screenName)
         })
     }
 
@@ -73,25 +73,69 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
         })
     }
 
-    override fun logMessageActionAddReaction() = firebaseAnalytics.logEvent("message_action_add_reaction", null)
+    override fun logMessageActionAddReaction() {
+        firebaseAnalytics.logEvent("message_action", Bundle(1).apply {
+            putString("action", "reaction")
+        })
+    }
 
-    override fun logMessageActionReply() = firebaseAnalytics.logEvent("message_action_reply", null)
+    override fun logMessageActionReply() {
+        firebaseAnalytics.logEvent("message_action", Bundle(1).apply {
+            putString("action", "reply")
+        })
+    }
 
-    override fun logMessageActionQuote() = firebaseAnalytics.logEvent("message_action_quote", null)
+    override fun logMessageActionQuote() {
+        firebaseAnalytics.logEvent("message_action", Bundle(1).apply {
+            putString("action", "quote")
+        })
+    }
 
-    override fun logMessageActionPermalink() = firebaseAnalytics.logEvent("message_action_permalink", null)
+    override fun logMessageActionPermalink() {
+        firebaseAnalytics.logEvent("message_action", Bundle(1).apply {
+            putString("action", "permalink")
+        })
+    }
 
-    override fun logMessageActionCopy() = firebaseAnalytics.logEvent("message_action_copy", null)
+    override fun logMessageActionCopy() {
+        firebaseAnalytics.logEvent("message_action", Bundle(1).apply {
+            putString("action", "copy")
+        })
+    }
 
-    override fun logMessageActionEdit() = firebaseAnalytics.logEvent("message_action_edit", null)
+    override fun logMessageActionEdit() {
+        firebaseAnalytics.logEvent("message_action", Bundle(1).apply {
+            putString("action", "edit")
+        })
+    }
 
-    override fun logMessageActionInfo() = firebaseAnalytics.logEvent("message_action_info", null)
+    override fun logMessageActionInfo() {
+        firebaseAnalytics.logEvent("message_action", Bundle(1).apply {
+            putString("action", "info")
+        })
+    }
 
-    override fun logMessageActionStar() = firebaseAnalytics.logEvent("message_action_star", null)
+    override fun logMessageActionStar() {
+        firebaseAnalytics.logEvent("message_action", Bundle(1).apply {
+            putString("action", "star")
+        })
+    }
 
-    override fun logMessageActionPin() = firebaseAnalytics.logEvent("message_action_pin", null)
+    override fun logMessageActionPin() {
+        firebaseAnalytics.logEvent("message_action", Bundle(1).apply {
+            putString("action", "pin")
+        })
+    }
 
-    override fun logMessageActionReport() = firebaseAnalytics.logEvent("message_action_report", null)
+    override fun logMessageActionReport() {
+        firebaseAnalytics.logEvent("message_action", Bundle(1).apply {
+            putString("action", "report")
+        })
+    }
 
-    override fun logMessageActionDelete() = firebaseAnalytics.logEvent("message_action_delete", null)
+    override fun logMessageActionDelete() {
+        firebaseAnalytics.logEvent("message_action", Bundle(1).apply {
+            putString("action", "delete")
+        })
+    }
 }

@@ -29,7 +29,7 @@ class AnswersAnalytics : Analytics {
 
     override fun logScreenView(event: ScreenViewEvent) =
         Answers.getInstance()
-            .logCustom(CustomEvent("screen_view").putCustomAttribute("screen", event.screenName))
+            .logCustom(CustomEvent("screen").putCustomAttribute("name", event.screenName))
 
 
     override fun logMessageSent(event: SubscriptionTypeEvent, serverUrl: String) =
@@ -83,25 +83,47 @@ class AnswersAnalytics : Analytics {
                     .putCustomAttribute("server", serverUrl)
             )
 
-    override fun logMessageActionAddReaction() = Answers.getInstance().logCustom(CustomEvent("message_action_add_reaction"))
+    override fun logMessageActionAddReaction() =
+        Answers.getInstance()
+            .logCustom(CustomEvent("message_action").putCustomAttribute("action", "reaction"))
 
-    override fun logMessageActionReply() = Answers.getInstance().logCustom(CustomEvent("message_action_reply"))
+    override fun logMessageActionReply() =
+        Answers.getInstance()
+            .logCustom(CustomEvent("message_action").putCustomAttribute("action", "reply"))
 
-    override fun logMessageActionQuote() = Answers.getInstance().logCustom(CustomEvent("message_action_quote"))
+    override fun logMessageActionQuote() =
+        Answers.getInstance()
+            .logCustom(CustomEvent("message_action").putCustomAttribute("action", "quote"))
 
-    override fun logMessageActionPermalink() = Answers.getInstance().logCustom(CustomEvent("message_action_permalink"))
+    override fun logMessageActionPermalink() =
+        Answers.getInstance()
+            .logCustom(CustomEvent("message_action").putCustomAttribute("action", "permalink"))
 
-    override fun logMessageActionCopy() = Answers.getInstance().logCustom(CustomEvent("message_action_copy"))
+    override fun logMessageActionCopy() =
+        Answers.getInstance()
+            .logCustom(CustomEvent("message_action").putCustomAttribute("action", "copy"))
 
-    override fun logMessageActionEdit() = Answers.getInstance().logCustom(CustomEvent("message_action_edit"))
+    override fun logMessageActionEdit() =
+        Answers.getInstance()
+            .logCustom(CustomEvent("message_action").putCustomAttribute("action", "edit"))
 
-    override fun logMessageActionInfo() = Answers.getInstance().logCustom(CustomEvent("message_action_info"))
+    override fun logMessageActionInfo() =
+        Answers.getInstance()
+            .logCustom(CustomEvent("message_action").putCustomAttribute("action", "info"))
 
-    override fun logMessageActionStar() = Answers.getInstance().logCustom(CustomEvent("message_action_star"))
+    override fun logMessageActionStar() =
+        Answers.getInstance()
+            .logCustom(CustomEvent("message_action").putCustomAttribute("action", "star"))
 
-    override fun logMessageActionPin() = Answers.getInstance().logCustom(CustomEvent("message_action_pin"))
+    override fun logMessageActionPin() =
+        Answers.getInstance()
+            .logCustom(CustomEvent("message_action").putCustomAttribute("action", "pin"))
 
-    override fun logMessageActionReport() = Answers.getInstance().logCustom(CustomEvent("message_action_report"))
+    override fun logMessageActionReport() =
+        Answers.getInstance()
+            .logCustom(CustomEvent("message_action").putCustomAttribute("action", "report"))
 
-    override fun logMessageActionDelete() = Answers.getInstance().logCustom(CustomEvent("message_action_delete"))
+    override fun logMessageActionDelete() =
+        Answers.getInstance()
+            .logCustom(CustomEvent("message_action").putCustomAttribute("action", "delete"))
 }
