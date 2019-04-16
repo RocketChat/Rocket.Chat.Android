@@ -18,6 +18,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.core.view.setPadding
 import chat.rocket.android.R
+import chat.rocket.android.helper.AndroidPermissionsHelper.getWriteExternalStoragePermission
+import chat.rocket.android.helper.AndroidPermissionsHelper.hasWriteExternalStoragePermission
 import com.facebook.binaryresource.FileBinaryResource
 import com.facebook.cache.common.CacheKey
 import com.facebook.imageformat.ImageFormatChecker
@@ -117,8 +119,8 @@ object ImageHelper {
     }
 
     private fun saveImage(context: Context): Boolean {
-        if (!canWriteToExternalStorage(context)) {
-            checkWritingPermission(context)
+        if (!hasWriteExternalStoragePermission(context)) {
+            getWriteExternalStoragePermission(context)
             return false
         }
         if (ImagePipelineFactory.getInstance().mainFileCache.hasKey(cacheKey)) {
@@ -151,23 +153,5 @@ object ImageHelper {
             }
         }
         return true
-    }
-
-    fun canWriteToExternalStorage(context: Context): Boolean {
-        return AndroidPermissionsHelper.checkPermission(
-            context,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-    }
-
-    fun checkWritingPermission(context: Context) {
-        if (context is ContextThemeWrapper) {
-            val activity = if (context.baseContext is Activity) context.baseContext as Activity else context as Activity
-            AndroidPermissionsHelper.requestPermission(
-                activity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE
-            )
-        }
     }
 }

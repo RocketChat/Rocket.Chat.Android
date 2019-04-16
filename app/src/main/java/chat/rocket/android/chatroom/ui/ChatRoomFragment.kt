@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
 import android.text.SpannableStringBuilder
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.Menu
@@ -66,6 +67,11 @@ import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.helper.AndroidPermissionsHelper
+import chat.rocket.android.helper.AndroidPermissionsHelper.getCameraPermission
+import chat.rocket.android.helper.AndroidPermissionsHelper.getWriteExternalStoragePermission
+import chat.rocket.android.helper.AndroidPermissionsHelper.hasCameraPermission
+import chat.rocket.android.helper.AndroidPermissionsHelper.hasWriteExternalStoragePermission
+import chat.rocket.android.util.TimberLogger
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.createImageFile
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
@@ -912,7 +918,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                     if(hasCameraPermission(it)) {
                         dispatchTakePictureIntent()
                     } else {
-                        getCameraPermission()
+                        getCameraPermission(it)
                     }
                 }
                 handler.postDelayed({
@@ -932,8 +938,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             button_drawing.setOnClickListener {
                 activity?.let { fragmentActivity ->
-                    if (!ImageHelper.canWriteToExternalStorage(fragmentActivity)) {
-                        ImageHelper.checkWritingPermission(fragmentActivity)
+                    if (!hasWriteExternalStoragePermission(fragmentActivity)) {
+                        getWriteExternalStoragePermission(fragmentActivity)
                     } else {
                         val intent = Intent(fragmentActivity, DrawingActivity::class.java)
                         startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
@@ -967,19 +973,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    private fun hasCameraPermission(context: Context): Boolean {
-        return AndroidPermissionsHelper.checkPermission(context, android.Manifest.permission.CAMERA)
-    }
-
-    private fun getCameraPermission() {
-        requestPermissions(
-            arrayOf(android.Manifest.permission.CAMERA),
-            AndroidPermissionsHelper.CAMERA_CODE
-        )
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        Log.e("TAG_permission", requestCode.toString())
         when(requestCode) {
             AndroidPermissionsHelper.CAMERA_CODE -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
