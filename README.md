@@ -10,7 +10,7 @@
 
 ## Description
 
-This repository contains all the code related to the Android native application of [Rocket.Chat](https://github.com/RocketChat/Rocket.Chat/#about-rocketchat). To send new pull-requests, always use the branch `develop` as base and open an issue with the description of what you want/need to accomplish, if the issue wasn't created yet.
+This repository contains all the code related to the Android native application of [Widechat](https://github.com/WideChat/Rocket.Chat/#about-rocketchat). To send new pull-requests, always use the branch `veranda` as base and open an issue with the description of what you want/need to accomplish, if the issue wasn't created yet.
 
 ## How to build
 
@@ -19,7 +19,7 @@ This repository contains all the code related to the Android native application 
 
 ### SDK Instructions
 
-- This version requires the [Kotlin SDK](https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK) for Rocket.Chat. Clone the Kotlin SDK in by running `git clone https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK.git`.
+- This version requires the [Kotlin SDK](https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK) for Rocket.Chat. Clone the Kotlin SDK in by running `git clone https://github.com/WideChat/Rocket.Chat.Kotlin.SDK`.
 - First, a build is required for the SDK, so that required jar files are generated. Make sure that the Android repository and the Kotlin SDK have the same immediate parent directory. Change the current directory to `Rocket.Chat.Android/app` and run the `build-sdk.sh` which will result in creating of the required jar file `core*.jar` and `common*.jar` in `Rocket.Chat.Android/app/libs`, by the following steps in your terminal window:
 
 ```
