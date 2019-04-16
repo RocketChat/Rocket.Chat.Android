@@ -2,12 +2,20 @@ package chat.rocket.android.contacts.presentation
 
 import android.content.Context
 import android.content.Intent
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
+import chat.rocket.android.helper.Constants
+import chat.rocket.android.helper.UserHelper
+import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.GetAccountInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -20,6 +28,7 @@ import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.UserPresence
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
+import chat.rocket.android.contacts.models.Contact
 import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.SpotlightResult
@@ -38,13 +47,15 @@ class ContactsPresenter @Inject constructor(
         private val dbManager: DatabaseManager,
         manager: ConnectionManager,
         private val serverInteractor: GetCurrentServerInteractor,
-        private val getAccountInteractor: GetAccountInteractor
+        private val getAccountInteractor: GetAccountInteractor,
+        val userHelper: UserHelper
 ) {
     @Inject
     lateinit var dynamicLinksManager : DynamicLinksForFirebase
 
     private val client = manager.client
     private val chatRoomsInteractor = FetchChatRoomsInteractor(client,dbManager)
+    private val user = userHelper.user()
 
     fun openDirectMessageChatRoom(username: String) {
         launchUI(strategy) {
@@ -170,10 +181,45 @@ class ContactsPresenter @Inject constructor(
         }
     }
 
-    fun inviteViaEmail(email:String) {
+    fun inviteWithRealNamePrompt(contact: Contact, context: Context?) {
+
+        fun invite(contact: Contact, realname: String? = null) {
+            if (contact.isPhone()) inviteViaSMS(contact.getPhoneNumber()!!, realname)
+            else inviteViaEmail(contact.getEmailAddress()!!, realname)
+        }
+
+        val layoutInflater = LayoutInflater.from(context)
+        val view = layoutInflater.inflate(R.layout.widechat_real_username_dialog, null)
+        val dialog = AlertDialog.Builder(context as Context)
+                .setView(view)
+                .setPositiveButton(null,null)
+                .setNegativeButton(null,null)
+                .create()
+
+        val positiveButton = view.findViewById(R.id.positive_button) as Button
+        val negativeButton = view.findViewById(R.id.negative_button) as Button
+        var realUsername = view.findViewById(R.id.editTextDialogUserInput) as EditText
+
+        if (!SharedPreferenceHelper.getString(Constants.WIDECHAT_REAL_USER_NAME, "").isNullOrEmpty()) {
+            realUsername.setText(SharedPreferenceHelper.getString(Constants.WIDECHAT_REAL_USER_NAME, ""))
+        }
+
+        positiveButton.setOnClickListener(View.OnClickListener {
+            SharedPreferenceHelper.putString(Constants.WIDECHAT_REAL_USER_NAME, realUsername.getText().toString())
+            invite(contact, realUsername.getText().toString())
+            dialog.dismiss()
+        })
+        negativeButton.setOnClickListener(View.OnClickListener {
+            invite(contact)
+            dialog.dismiss()
+        })
+        dialog.show()
+    }
+
+    fun inviteViaEmail(email: String, realname: String?) {
         launchUI(strategy) {
             try {
-                val result:Boolean = retryIO("inviteViaEmail") { client.inviteViaEmail(email, Locale.getDefault().getLanguage()) }
+                val result:Boolean = retryIO("inviteViaEmail") { client.inviteViaEmail(email, Locale.getDefault().getLanguage(), realname) }
                 if (result) {
                     view.showMessage("Invitation Email Sent")
                 } else{
@@ -197,10 +243,10 @@ class ContactsPresenter @Inject constructor(
         }
     }
 
-    fun inviteViaSMS(phone:String) {
+    fun inviteViaSMS(phone: String, realname: String?) {
         launchUI(strategy) {
             try {
-                val result:Boolean = retryIO("inviteViaSMS") { client.inviteViaSMS(phone, Locale.getDefault().getLanguage()) }
+                val result:Boolean = retryIO("inviteViaSMS") { client.inviteViaSMS(phone, Locale.getDefault().getLanguage(), realname) }
                 if (result) {
                     view.showMessage("Invitation SMS Sent")
                 } else{

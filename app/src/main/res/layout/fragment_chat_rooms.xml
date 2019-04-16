@@ -117,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="New Chat"
+                android:text="@string/new_chat"
                 android:textStyle="bold" />
         </androidx.cardview.widget.CardView>
 
@@ -161,7 +161,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="New Group"
+                android:text="@string/new_group"
                 android:textStyle="bold" />
         </androidx.cardview.widget.CardView>
 

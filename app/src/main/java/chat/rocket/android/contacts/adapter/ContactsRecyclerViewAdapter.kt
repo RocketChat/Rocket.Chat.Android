@@ -120,11 +120,7 @@ class ContactsRecyclerViewAdapter(
                 inviteButton.setOnClickListener { view ->
                     run {
                         inviteButton.setText(R.string.Invited)
-                        if (contact.isPhone()) {
-                            presenter.inviteViaSMS(contact.getPhoneNumber()!!)
-                        } else {
-                            presenter.inviteViaEmail(contact.getEmailAddress()!!)
-                        }
+                        presenter.inviteWithRealNamePrompt(contact, frag.context)
                     }
                 }
                 // Clear any previous onClickListener when scrolling

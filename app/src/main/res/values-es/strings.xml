@@ -374,9 +374,15 @@
     <string name="title_chat_details">Detalles del chat</string>
     <string name="share_via_another_app">Compartir a través de otra aplicación</string>
     <string name="new_group">Nuevo Grupo</string>
+    <string name="new_chat">Nueva conversación</string>
     <string name="new_contact">Nuevo Contacto</string>
 
-    <!--Contacts Permissions-->
+    <!--WIDECHAT INVITES-->
+    <string name="invite_realname_prompt">Agrega tu nombre a la invitación para que tu amigo sepa quién eres.</string>
+    <string name="save">SALVAR</string>
+    <string name="no_thanks">NO GRACIAS</string>
+
+    <!--WIDECHAT CONTACTS PERMISSIONS-->
     <string name="permissions_request">Para conectarse fácilmente con amigos y familiares, permita que Viasat Connect acceda a sus contactos.</string>
     <string name="negative_buttton">AHORA NO</string>
     <string name="positive_button">CONTINUAR</string>
