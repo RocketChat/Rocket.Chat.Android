@@ -55,6 +55,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     @Inject lateinit var presenter: ChatRoomsPresenter
     @Inject lateinit var factory: ChatRoomsViewModelFactory
     @Inject lateinit var analyticsManager: AnalyticsManager
+    private val roomsAdapter = RoomsAdapter { presenter.loadChatRoom(it) }
     private lateinit var viewModel: ChatRoomsViewModel
     private var chatRoomId: String? = null
     private var isSortByName = false
@@ -63,8 +64,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var isGroupByFavorites = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
 
         arguments?.run {
             chatRoomId = getString(BUNDLE_CHAT_ROOM_ID)
@@ -86,6 +87,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
+        setupListeners()
 
         with(presenter) {
             getCurrentServerName()
@@ -94,41 +97,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         viewModel = ViewModelProviders.of(this, factory).get(ChatRoomsViewModel::class.java)
         subscribeUi()
-        setupListeners()
+        showAllChats()
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
-    }
-
-    override fun setupToolbar(serverName: String) {
-        with((activity as AppCompatActivity)) {
-            with(toolbar) {
-                setSupportActionBar(this)
-                setNavigationOnClickListener { presenter.toSettings() }
-            }
-        }
-        text_server_name.text = serverName
-    }
-
-    override fun setupSortingAndGrouping(
-        isSortByName: Boolean,
-        isUnreadOnTop: Boolean,
-        isGroupByType: Boolean,
-        isGroupByFavorites: Boolean
-    ) {
-        this.isSortByName = isSortByName
-        this.isUnreadOnTop = isUnreadOnTop
-        this.isGroupByType = isGroupByType
-        this.isGroupByFavorites = isGroupByFavorites
-
-        if (isSortByName) {
-            text_sort_by.text =
-                getString(R.string.msg_sort_by, getString(R.string.msg_sort_by_name).toLowerCase())
-        } else {
-            text_sort_by.text = getString(
-                R.string.msg_sort_by,
-                getString(R.string.msg_sort_by_activity).toLowerCase()
-            )
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -167,104 +138,75 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun showNoChatRoomsToDisplay() {
-//        ui { text_no_data_to_display.isVisible = true }
+    override fun setupToolbar(serverName: String) {
+        with((activity as AppCompatActivity)) {
+            with(toolbar) {
+                setSupportActionBar(this)
+                setNavigationOnClickListener { presenter.toSettings() }
+            }
+        }
+        text_server_name.text = serverName
+    }
+
+    override fun setupSortingAndGrouping(
+        isSortByName: Boolean,
+        isUnreadOnTop: Boolean,
+        isGroupByType: Boolean,
+        isGroupByFavorites: Boolean
+    ) {
+        this.isSortByName = isSortByName
+        this.isUnreadOnTop = isUnreadOnTop
+        this.isGroupByType = isGroupByType
+        this.isGroupByFavorites = isGroupByFavorites
+
+        if (isSortByName) {
+            text_sort_by.text =
+                getString(R.string.msg_sort_by, getString(R.string.msg_sort_by_name).toLowerCase())
+        } else {
+            text_sort_by.text = getString(
+                R.string.msg_sort_by,
+                getString(R.string.msg_sort_by_activity).toLowerCase()
+            )
+        }
     }
 
     override fun showLoading() {
-        view_loading.isVisible = true
+        ui {
+            view_loading.isVisible = true
+        }
     }
 
     override fun hideLoading() {
-        view_loading.isVisible = false
+        ui { view_loading.isVisible = false }
     }
 
     override fun showMessage(resId: Int) {
-        ui {
-            showToast(resId)
-        }
+        ui { showToast(resId) }
     }
 
     override fun showMessage(message: String) {
-        ui {
-            showToast(message)
-        }
+        ui { showToast(message) }
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
-    private fun showConnectionState(state: State) {
-        Timber.d("Got new state: $state")
-//        ui {
-//            text_connection_status.fadeIn()
-//            handler.removeCallbacks(dismissStatus)
-//            text_connection_status.text = when (state) {
-//                is State.Connected -> {
-//                    handler.postDelayed(dismissStatus, 2000)
-//                    getString(R.string.status_connected)
-//                }
-//                is State.Disconnected -> getString(R.string.status_disconnected)
-//                is State.Connecting -> getString(R.string.status_connecting)
-//                is State.Authenticating -> getString(R.string.status_authenticating)
-//                is State.Disconnecting -> getString(R.string.status_disconnecting)
-//                is State.Waiting -> getString(R.string.status_waiting, state.seconds)
-//                else -> {
-//                    handler.postDelayed(dismissStatus, 500)
-//                    ""
-//                }
-//            }
-//        }
-    }
-
-    private fun subscribeUi() {
+    private fun setupRecyclerView() {
         ui {
-            val adapter = RoomsAdapter { room ->
-                presenter.loadChatRoom(room)
-            }
-
             with(recycler_view) {
-                layoutManager = LinearLayoutManager(it)
+                if (adapter == null) {
+                    adapter = roomsAdapter
+                }
+
+                layoutManager = LinearLayoutManager(context)
                 addItemDecoration(
                     DividerItemDecoration(
-                        it,
+                        context,
                         resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
                         resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)
                     )
                 )
                 itemAnimator = DefaultItemAnimator()
             }
-
-            viewModel.getChatRooms().observe(viewLifecycleOwner, Observer { rooms ->
-                rooms?.let {
-                    adapter.values = it
-                    if (recycler_view.adapter != adapter) {
-                        recycler_view.adapter = adapter
-                    }
-                    if (rooms.isNotEmpty()) {
-//                        text_no_data_to_display.isVisible = false
-                    }
-                }
-            })
-
-            viewModel.loadingState.observe(viewLifecycleOwner, Observer { state ->
-                when (state) {
-                    is LoadingState.Loading -> if (state.count == 0L) showLoading()
-                    is LoadingState.Loaded -> {
-                        hideLoading()
-                        if (state.count == 0L) showNoChatRoomsToDisplay()
-                    }
-                    is LoadingState.Error -> {
-                        hideLoading()
-                        showGenericErrorMessage()
-                    }
-                }
-            })
-
-            viewModel.getStatus().observe(viewLifecycleOwner, Observer { status ->
-                status?.let { showConnectionState(status) }
-            })
-
-            showAllChats()
         }
     }
 
@@ -281,6 +223,32 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 activity?.supportFragmentManager,
                 chat.rocket.android.sortingandgrouping.ui.TAG
             )
+        }
+    }
+
+    private fun subscribeUi() {
+        ui {
+            viewModel.getChatRooms().observe(viewLifecycleOwner, Observer { roomModel ->
+                roomModel?.let { roomsAdapter.values = it }
+            })
+
+            viewModel.loadingState.observe(viewLifecycleOwner, Observer { state ->
+                when (state) {
+                    is LoadingState.Loading -> showLoading()
+                    is LoadingState.Loaded -> hideLoading()
+                    is LoadingState.Error -> {
+                        hideLoading()
+                        showGenericErrorMessage()
+                    }
+                }
+            })
+
+            // Actually it is fetching the rooms. We should fix it.
+            viewModel.getStatus().observe(viewLifecycleOwner, Observer { status ->
+                status?.let {
+                    //showConnectionState(status)
+                }
+            })
         }
     }
 

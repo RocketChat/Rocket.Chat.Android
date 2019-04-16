@@ -15,10 +15,8 @@ import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
 
-class TokenRegistrationWorker @Inject constructor(
-    appContext: Context,
-    workerParams: WorkerParameters
-) : Worker(appContext, workerParams) {
+class TokenRegistrationWorker(appContext: Context, workerParams: WorkerParameters) :
+    Worker(appContext, workerParams) {
     @Inject lateinit var factory: RocketChatClientFactory
     @Inject lateinit var getAccountsInteractor: GetAccountsInteractor
     @Inject lateinit var localRepository: LocalRepository

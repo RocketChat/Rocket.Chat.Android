@@ -22,6 +22,7 @@ import chat.rocket.android.settings.presentation.SettingsPresenter
 import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.util.invalidateFirebaseToken
 import com.bumptech.glide.Glide
 import dagger.android.support.AndroidSupportInjection
@@ -39,8 +40,8 @@ class SettingsFragment : Fragment(), SettingsView {
     @Inject lateinit var presenter: SettingsPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -65,67 +66,76 @@ class SettingsFragment : Fragment(), SettingsView {
         isDeleteAccountEnabled: Boolean,
         serverVersion: String
     ) {
-        context?.let { Glide.with(it).load(avatar).into(image_avatar) }
+        ui {
+            context?.let { Glide.with(it).load(avatar).into(image_avatar) }
 
-        text_display_name.text = displayName
+            text_display_name.text = displayName
 
-        text_status.text = status
+            text_status.text = status
 
-        profile_container.setOnClickListener { presenter.toProfile() }
+            profile_container.setOnClickListener { presenter.toProfile() }
 
-        text_contact_us.setOnClickListener { contactSupport() }
+            text_contact_us.setOnClickListener { contactSupport() }
 
-        text_language.setOnClickListener {}
+            text_language.setOnClickListener {}
 
-        text_review_this_app.setOnClickListener { showAppOnStore() }
+            text_review_this_app.setOnClickListener { showAppOnStore() }
 
-        text_share_this_app.setOnClickListener { shareApp() }
+            text_share_this_app.setOnClickListener { shareApp() }
 
-        text_license.setOnClickListener {
-            presenter.toLicense(getString(R.string.license_url), getString(R.string.title_licence))
-        }
-
-        text_app_version.text = getString(R.string.msg_app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
-
-        text_server_version.text = getString(R.string.msg_server_version, serverVersion)
-
-        text_logout.setOnClickListener { showLogoutDialog()}
-
-        with(text_administration) {
-            isVisible = isAdministrationEnabled
-            setOnClickListener { presenter.toAdmin() }
-        }
-
-        with(switch_crash_report) {
-            isChecked = isAnalyticsTrackingEnabled
-            isEnabled = BuildConfig.FLAVOR == "play"
-            setOnCheckedChangeListener { _, isChecked ->
-                presenter.enableAnalyticsTracking(isChecked)
+            text_license.setOnClickListener {
+                presenter.toLicense(
+                    getString(R.string.license_url),
+                    getString(R.string.title_licence)
+                )
             }
-        }
 
-        with(text_delete_account) {
-            isVisible = isDeleteAccountEnabled
-            setOnClickListener { showDeleteAccountDialog() }
+            text_app_version.text = getString(
+                R.string.msg_app_version,
+                BuildConfig.VERSION_NAME,
+                BuildConfig.VERSION_CODE
+            )
+
+            text_server_version.text = getString(R.string.msg_server_version, serverVersion)
+
+            text_logout.setOnClickListener { showLogoutDialog() }
+
+            with(text_administration) {
+                isVisible = isAdministrationEnabled
+                setOnClickListener { presenter.toAdmin() }
+            }
+
+            with(switch_crash_report) {
+                isChecked = isAnalyticsTrackingEnabled
+                isEnabled = BuildConfig.FLAVOR == "play"
+                setOnCheckedChangeListener { _, isChecked ->
+                    presenter.enableAnalyticsTracking(isChecked)
+                }
+            }
+
+            with(text_delete_account) {
+                isVisible = isDeleteAccountEnabled
+                setOnClickListener { showDeleteAccountDialog() }
+            }
         }
     }
 
     override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
 
     override fun showLoading() {
-        view_loading.isVisible = true
+        ui { view_loading.isVisible = true }
     }
 
     override fun hideLoading() {
-        view_loading.isVisible = false
+        ui { view_loading.isVisible = false }
     }
 
     override fun showMessage(resId: Int) {
-        showToast(resId)
+        ui { showToast(resId) }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui { showToast(message) }
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))

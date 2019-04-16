@@ -22,7 +22,6 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.AccountsRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
-import chat.rocket.android.server.domain.SITE_URL
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.retryIO
@@ -45,44 +44,25 @@ import javax.inject.Inject
 
 class RocketChatApplication : Application(), HasActivityInjector, HasServiceInjector,
     HasBroadcastReceiverInjector, HasWorkerInjector {
+    @Inject lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+    @Inject lateinit var serviceDispatchingAndroidInjector: DispatchingAndroidInjector<Service>
+    @Inject lateinit var broadcastReceiverInjector: DispatchingAndroidInjector<BroadcastReceiver>
+    @Inject lateinit var workerInjector: DispatchingAndroidInjector<Worker>
 
-    @Inject
-    lateinit var appLifecycleObserver: AppLifecycleObserver
+    @Inject lateinit var appLifecycleObserver: AppLifecycleObserver
 
-    @Inject
-    lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
-
-    @Inject
-    lateinit var serviceDispatchingAndroidInjector: DispatchingAndroidInjector<Service>
-
-    @Inject
-    lateinit var broadcastReceiverInjector: DispatchingAndroidInjector<BroadcastReceiver>
-
-    @Inject
-    lateinit var workerInjector: DispatchingAndroidInjector<Worker>
-
-    @Inject
-    lateinit var imagePipelineConfig: ImagePipelineConfig
-    @Inject
-    lateinit var draweeConfig: DraweeConfig
+    @Inject lateinit var imagePipelineConfig: ImagePipelineConfig
+    @Inject lateinit var draweeConfig: DraweeConfig
 
     // TODO - remove this from here when we have a proper service handling the connection.
-    @Inject
-    lateinit var getCurrentServerInteractor: GetCurrentServerInteractor
-    @Inject
-    lateinit var settingsInteractor: GetSettingsInteractor
-    @Inject
-    lateinit var tokenRepository: TokenRepository
-    @Inject
-    lateinit var localRepository: LocalRepository
-    @Inject
-    lateinit var accountRepository: AccountsRepository
-    @Inject
-    lateinit var factory: RocketChatClientFactory
+    @Inject lateinit var getCurrentServerInteractor: GetCurrentServerInteractor
+    @Inject lateinit var settingsInteractor: GetSettingsInteractor
+    @Inject lateinit var tokenRepository: TokenRepository
+    @Inject lateinit var localRepository: LocalRepository
+    @Inject lateinit var accountRepository: AccountsRepository
+    @Inject lateinit var factory: RocketChatClientFactory
 
-    @Inject
-    @field:ForMessages
-    lateinit var messagesPrefs: SharedPreferences
+    @Inject @field:ForMessages lateinit var messagesPrefs: SharedPreferences
 
     override fun onCreate() {
         super.onCreate()
@@ -92,9 +72,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
             .build()
             .inject(this)
 
-        ProcessLifecycleOwner.get()
-            .lifecycle
-            .addObserver(appLifecycleObserver)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(appLifecycleObserver)
 
         context = WeakReference(applicationContext)
 
@@ -111,32 +89,8 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
             localRepository.setOldMessagesCleanedUp()
         }
 
-        // TODO - remove REALM files.
-        // TODO - remove this
-        checkCurrentServer()
-
         // TODO - FIXME - we need to properly inject and initialize the EmojiRepository
         loadEmojis()
-    }
-
-    private fun checkCurrentServer() {
-        val currentServer = getCurrentServerInteractor.get() ?: "<unknown>"
-
-        if (currentServer == "<unknown>") {
-            val message = "null currentServer"
-            Timber.d(IllegalStateException(message), message)
-        }
-
-        val settings = settingsInteractor.get(currentServer)
-        if (settings.isEmpty()) {
-            val message = "Empty settings for: $currentServer"
-            Timber.d(IllegalStateException(message), message)
-        }
-        val baseUrl = settings[SITE_URL]
-        if (baseUrl == null) {
-            val message = "Server $currentServer SITE_URL"
-            Timber.d(IllegalStateException(message), message)
-        }
     }
 
     private fun setupFresco() {

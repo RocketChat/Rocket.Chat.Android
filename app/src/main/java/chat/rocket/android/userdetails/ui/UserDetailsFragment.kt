@@ -47,8 +47,8 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
 
         arguments?.run {
             userId = getString(BUNDLE_USER_ID, "")

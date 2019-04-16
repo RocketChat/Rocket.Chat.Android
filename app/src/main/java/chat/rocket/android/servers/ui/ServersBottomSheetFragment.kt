@@ -24,8 +24,8 @@ class ServersBottomSheetFragment : BottomSheetDialogFragment(), ServersView {
     lateinit var presenter: ServersPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(

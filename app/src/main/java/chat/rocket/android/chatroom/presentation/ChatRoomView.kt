@@ -117,8 +117,6 @@ interface ChatRoomView : LoadingView, MessageView {
 
     fun showInvalidFileSize(fileSize: Int, maxFileSize: Int)
 
-    fun showConnectionState(state: State)
-
     fun populatePeopleSuggestions(members: List<PeopleSuggestionUiModel>)
 
     fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionUiModel>)

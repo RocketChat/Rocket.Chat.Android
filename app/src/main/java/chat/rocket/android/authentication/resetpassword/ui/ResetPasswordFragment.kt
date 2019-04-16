@@ -37,8 +37,8 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
     private lateinit var emailAddressDisposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(

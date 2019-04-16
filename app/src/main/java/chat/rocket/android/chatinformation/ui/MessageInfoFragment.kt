@@ -42,8 +42,8 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
     private lateinit var messageId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
 
         val bundle = arguments
         if (bundle != null) {

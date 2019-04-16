@@ -37,8 +37,8 @@ class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), Sorti
     private val groupByFavoritesDrawable by lazy { R.drawable.ic_favorites_20dp }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(

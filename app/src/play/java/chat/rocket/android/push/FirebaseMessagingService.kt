@@ -13,13 +13,11 @@ import dagger.android.AndroidInjection
 import javax.inject.Inject
 
 class FirebaseMessagingService : FirebaseMessagingService() {
-
-    @Inject
-    lateinit var pushManager: PushManager
+    @Inject lateinit var pushManager: PushManager
 
     override fun onCreate() {
-        super.onCreate()
         AndroidInjection.inject(this)
+        super.onCreate()
     }
 
     override fun onMessageReceived(message: RemoteMessage) {

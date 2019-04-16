@@ -40,8 +40,8 @@ class SignupFragment : Fragment(), SignupView {
     private val editTextsDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(

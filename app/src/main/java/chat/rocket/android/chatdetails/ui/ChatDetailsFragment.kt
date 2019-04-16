@@ -60,14 +60,10 @@ private const val BUNDLE_IS_FAVORITE = "BUNDLE_IS_FAVORITE"
 private const val BUNDLE_DISABLE_MENU = "BUNDLE_DISABLE_MENU"
 
 class ChatDetailsFragment : Fragment(), ChatDetailsView {
-    @Inject
-    lateinit var presenter: ChatDetailsPresenter
-    @Inject
-    lateinit var factory: ChatDetailsViewModelFactory
-    @Inject
-    lateinit var serverUrl: CurrentServerRepository
-    @Inject
-    lateinit var settings: GetSettingsInteractor
+    @Inject lateinit var presenter: ChatDetailsPresenter
+    @Inject lateinit var factory: ChatDetailsViewModelFactory
+    @Inject lateinit var serverUrl: CurrentServerRepository
+    @Inject lateinit var settings: GetSettingsInteractor
     private var adapter: ChatDetailsAdapter? = null
     private lateinit var viewModel: ChatDetailsViewModel
 
@@ -78,8 +74,8 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
     private var disableMenu: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
 
         arguments?.run {
             chatRoomId = getString(BUNDLE_CHAT_ROOM_ID)
@@ -154,19 +150,19 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
         adapter?.let {
             if (!disableMenu) {
                 it.addOption(getString(R.string.title_files), R.drawable.ic_files_24dp) {
-                    presenter.toFiles(chatRoomId!!)
+                    presenter.toFiles(chatRoomId)
                 }
             }
 
             if (chatRoomType != RoomType.DIRECT_MESSAGE && !disableMenu) {
                 it.addOption(getString(R.string.msg_mentions), R.drawable.ic_at_black_20dp) {
-                    presenter.toMentions(chatRoomId!!)
+                    presenter.toMentions(chatRoomId)
                 }
                 it.addOption(
                     getString(R.string.title_members),
                     R.drawable.ic_people_outline_black_24dp
                 ) {
-                    presenter.toMembers(chatRoomId!!)
+                    presenter.toMembers(chatRoomId)
                 }
             }
 
@@ -174,13 +170,13 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
                 getString(R.string.title_favorite_messages),
                 R.drawable.ic_star_border_white_24dp
             ) {
-                presenter.toFavorites(chatRoomId!!)
+                presenter.toFavorites(chatRoomId)
             }
             it.addOption(
                 getString(R.string.title_pinned_messages),
                 R.drawable.ic_action_message_pin_24dp
             ) {
-                presenter.toPinned(chatRoomId!!)
+                presenter.toPinned(chatRoomId)
             }
         }
     }
@@ -206,11 +202,11 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
 
     private fun getDetails() {
         if (isSubscribed)
-            viewModel.getDetails(chatRoomId!!).observe(viewLifecycleOwner, Observer { details ->
+            viewModel.getDetails(chatRoomId).observe(viewLifecycleOwner, Observer { details ->
                 displayDetails(details)
             })
         else
-            presenter.getDetails(chatRoomId!!, chatRoomType!!)
+            presenter.getDetails(chatRoomId, chatRoomType)
     }
 
     private fun setupOptions() {

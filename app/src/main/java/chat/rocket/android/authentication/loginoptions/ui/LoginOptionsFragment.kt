@@ -152,8 +152,8 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     private var deepLinkInfo: LoginDeepLinkInfo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
 
         arguments?.run {
             serverName = getString(SERVER_NAME)

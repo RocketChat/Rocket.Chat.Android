@@ -17,14 +17,10 @@ import dagger.android.HasActivityInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), HasActivityInjector,
-    HasSupportFragmentInjector {
-    @Inject
-    lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
-    @Inject
-    lateinit var fagmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
-    @Inject
-    lateinit var presenter: MainPresenter
+class MainActivity : AppCompatActivity(), HasActivityInjector, HasSupportFragmentInjector {
+    @Inject lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+    @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+    @Inject lateinit var presenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -51,7 +47,7 @@ class MainActivity : AppCompatActivity(), HasActivityInjector,
         activityDispatchingAndroidInjector
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> =
-        fagmentDispatchingAndroidInjector
+        fragmentDispatchingAndroidInjector
 
     private fun clearAppNotifications() =
         (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancelAll()

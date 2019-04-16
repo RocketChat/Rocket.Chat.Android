@@ -7,7 +7,6 @@ import chat.rocket.android.server.domain.GetAccountInteractor
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SaveCurrentServerInteractor
-import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
@@ -23,7 +22,6 @@ class ChangeServerPresenter @Inject constructor(
     private val getAccountInteractor: GetAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
     private val analyticsManager: AnalyticsManager,
-    private val settingsRepository: SettingsRepository,
     private val tokenRepository: TokenRepository,
     private val localRepository: LocalRepository,
     private val connectionManager: ConnectionManagerFactory
@@ -46,11 +44,6 @@ class ChangeServerPresenter @Inject constructor(
                     view.hideProgress()
                     navigator.toServerScreen()
                     return@launchUI
-                }
-
-                val settings = settingsRepository.get(serverUrl)
-                if (settings == null) {
-                    // TODO - reload settings...
                 }
 
                 // Call disconnect on the old url if any...

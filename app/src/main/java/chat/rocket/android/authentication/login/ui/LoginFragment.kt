@@ -54,8 +54,8 @@ class LoginFragment : Fragment(), LoginView {
     private val editTextsDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
 
         arguments?.run {
             serverName = getString(SERVER_NAME)

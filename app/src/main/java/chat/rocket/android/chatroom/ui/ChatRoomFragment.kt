@@ -149,7 +149,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     lateinit var analyticsManager: AnalyticsManager
     @Inject
     lateinit var navigator: ChatRoomNavigator
-    private lateinit var adapter: ChatRoomAdapter
+    private lateinit var chatRoomAdapter: ChatRoomAdapter
     internal lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     internal lateinit var chatRoomType: String
@@ -266,8 +266,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
 
         arguments?.run {
             chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")
@@ -282,16 +282,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
             ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
 
-        adapter = ChatRoomAdapter(
-            roomId = chatRoomId,
-            roomType = chatRoomType,
-            roomName = chatRoomName,
-            actionSelectListener = this,
-            reactionListener = this,
-            navigator = navigator,
-            analyticsManager = analyticsManager
-        )
-
         setHasOptionsMenu(true)
     }
 
@@ -305,8 +295,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         super.onViewCreated(view, savedInstanceState)
         setupToolbar(chatRoomName)
 
-        presenter.setupChatRoom(chatRoomId, chatRoomName, chatRoomType, chatRoomMessage)
-        presenter.loadChatRoomsSuggestions()
+        presenter.setup(chatRoomId, chatRoomType)
+
         setupRecyclerView()
         setupFab()
         setupSuggestionsView()
@@ -326,6 +316,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         getDraftMessage()
         subscribeComposeTextMessage()
 
+        presenter.loadChatRoomRolesAndMessages(chatRoomName, chatRoomMessage)
+        presenter.loadChatRoomsSuggestions()
         analyticsManager.logScreenView(ScreenViewEvent.ChatRoom)
     }
 
@@ -381,7 +373,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showMessages(dataSet: List<BaseUiModel<*>>, clearDataSet: Boolean) {
         ui {
             if (clearDataSet) {
-                adapter.clearData()
+                chatRoomAdapter.clearData()
             }
 
             if (dataSet.isNotEmpty()) {
@@ -422,35 +414,32 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }
             }
 
-            if (recycler_view.adapter == null) {
-                recycler_view.adapter = adapter
-                if (dataSet.size >= 30) {
-                    recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
-                }
-                recycler_view.addOnLayoutChangeListener(layoutChangeListener)
-                recycler_view.addOnScrollListener(onScrollListener)
-
-                // Load just once, on the first page...
-                presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
+            if (dataSet.size >= 30) {
+                recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
             }
+            recycler_view.addOnLayoutChangeListener(layoutChangeListener)
+            recycler_view.addOnScrollListener(onScrollListener)
 
-            val oldMessagesCount = adapter.itemCount
-            adapter.appendData(dataSet)
+            // Load just once, on the first page...
+            presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
+
+            val oldMessagesCount = chatRoomAdapter.itemCount
+            chatRoomAdapter.appendData(dataSet)
             if (oldMessagesCount == 0 && dataSet.isNotEmpty()) {
                 recycler_view.scrollToPosition(0)
                 verticalScrollOffset.set(0)
             }
             presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
-            empty_chat_view.isVisible = adapter.itemCount == 0
+            empty_chat_view.isVisible = chatRoomAdapter.itemCount == 0
             dismissEmojiKeyboard()
         }
     }
 
     override fun showSearchedMessages(dataSet: List<BaseUiModel<*>>) {
         recycler_view.removeOnScrollListener(endlessRecyclerViewScrollListener)
-        adapter.clearData()
-        adapter.prependData(dataSet)
-        empty_chat_view.isVisible = adapter.itemCount == 0
+        chatRoomAdapter.clearData()
+        chatRoomAdapter.prependData(dataSet)
+        empty_chat_view.isVisible = chatRoomAdapter.itemCount == 0
         dismissEmojiKeyboard()
     }
 
@@ -534,7 +523,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun showNewMessage(message: List<BaseUiModel<*>>, isMessageReceived: Boolean) {
         ui {
-            adapter.prependData(message)
+            chatRoomAdapter.prependData(message)
             if (isMessageReceived && button_fab.isVisible) {
                 newMessageCount++
                 if (newMessageCount <= 99) {
@@ -547,7 +536,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 recycler_view.scrollToPosition(0)
             }
             verticalScrollOffset.set(0)
-            empty_chat_view.isVisible = adapter.itemCount == 0
+            empty_chat_view.isVisible = chatRoomAdapter.itemCount == 0
             dismissEmojiKeyboard()
         }
     }
@@ -557,9 +546,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             // TODO - investigate WHY we get a empty list here
             if (message.isEmpty()) return@ui
 
-            if (adapter.updateItem(message.last())) {
+            if (chatRoomAdapter.updateItem(message.last())) {
                 if (message.size > 1) {
-                    adapter.prependData(listOf(message.first()))
+                    chatRoomAdapter.prependData(listOf(message.first()))
                 }
             } else {
                 showNewMessage(message, true)
@@ -570,7 +559,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun dispatchDeleteMessage(msgId: String) {
         ui {
-            adapter.removeItem(msgId)
+            chatRoomAdapter.removeItem(msgId)
         }
     }
 
@@ -771,28 +760,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         showMessage(getString(R.string.max_file_size_exceeded, fileSize, maxFileSize))
     }
 
-    override fun showConnectionState(state: State) {
-        ui {
-            text_connection_status.fadeIn()
-            handler.removeCallbacks(dismissStatus)
-            text_connection_status.text = when (state) {
-                is State.Connected -> {
-                    handler.postDelayed(dismissStatus, 2000)
-                    getString(R.string.status_connected)
-                }
-                is State.Disconnected -> getString(R.string.status_disconnected)
-                is State.Connecting -> getString(R.string.status_connecting)
-                is State.Authenticating -> getString(R.string.status_authenticating)
-                is State.Disconnecting -> getString(R.string.status_disconnecting)
-                is State.Waiting -> getString(R.string.status_waiting, state.seconds)
-                else -> {
-                    handler.postDelayed(dismissStatus, 500)
-                    ""
-                }
-            }
-        }
-    }
-
     override fun onJoined(roomUiModel: RoomUiModel) {
         ui {
             input_container.isVisible = true
@@ -802,18 +769,32 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun setupRecyclerView() {
-        // Initialize the endlessRecyclerViewScrollListener so we don't NPE at onDestroyView
-        val linearLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
-        linearLayoutManager.stackFromEnd = true
-        recycler_view.layoutManager = linearLayoutManager
-        recycler_view.itemAnimator = DefaultItemAnimator()
-        endlessRecyclerViewScrollListener = object :
-            EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
-            override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView) {
-                presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
+        chatRoomAdapter = ChatRoomAdapter(
+            roomId = chatRoomId,
+            roomType = chatRoomType,
+            roomName = chatRoomName,
+            actionSelectListener = this,
+            reactionListener = this,
+            navigator = navigator,
+            analyticsManager = analyticsManager
+        )
+
+        with (recycler_view) {
+            if (adapter == null) adapter = chatRoomAdapter
+
+            // Initialize the endlessRecyclerViewScrollListener so we don't NPE at onDestroyView
+            val linearLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
+            linearLayoutManager.stackFromEnd = true
+            layoutManager = linearLayoutManager
+            itemAnimator = DefaultItemAnimator()
+            endlessRecyclerViewScrollListener = object :
+                EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
+                override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView) {
+                    presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
+                }
             }
+            addOnScrollListener(fabScrollListener)
         }
-        recycler_view.addOnScrollListener(fabScrollListener)
     }
 
     private fun setupFab() {

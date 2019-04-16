@@ -88,13 +88,11 @@ import javax.inject.Singleton
 class AppModule {
 
     @Provides
-    @Singleton
     fun provideContext(application: Application): Context {
         return application
     }
 
     @Provides
-    @Singleton
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
         val interceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
             override fun log(message: String) {
@@ -112,19 +110,13 @@ class AppModule {
     }
 
     @Provides
-    @Singleton
     fun provideBasicAuthenticatorInterceptor(
         getBasicAuthInteractor: GetBasicAuthInteractor,
         saveBasicAuthInteractor: SaveBasicAuthInteractor
-    ): BasicAuthenticatorInterceptor {
-        return BasicAuthenticatorInterceptor(
-            getBasicAuthInteractor,
-            saveBasicAuthInteractor
-        )
-    }
+    ): BasicAuthenticatorInterceptor =
+        BasicAuthenticatorInterceptor(getBasicAuthInteractor, saveBasicAuthInteractor)
 
     @Provides
-    @Singleton
     fun provideOkHttpClient(
         logger: HttpLoggingInterceptor,
         basicAuthenticator: BasicAuthenticatorInterceptor
@@ -139,7 +131,6 @@ class AppModule {
     }
 
     @Provides
-    @Singleton
     fun provideImagePipelineConfig(
         context: Context,
         okHttpClient: OkHttpClient
@@ -153,28 +144,18 @@ class AppModule {
     }
 
     @Provides
-    @Singleton
-    fun provideDraweeConfig(): DraweeConfig {
-        return DraweeConfig.newBuilder().build()
-    }
+    fun provideDraweeConfig(): DraweeConfig = DraweeConfig.newBuilder().build()
 
     @Provides
-    @Singleton
-    fun provideTokenRepository(prefs: SharedPreferences, moshi: Moshi): TokenRepository {
-        return SharedPreferencesTokenRepository(prefs, moshi)
-    }
+    fun provideTokenRepository(prefs: SharedPreferences, moshi: Moshi): TokenRepository =
+        SharedPreferencesTokenRepository(prefs, moshi)
 
     @Provides
-    @Singleton
-    fun providePlatformLogger(): PlatformLogger {
-        return TimberLogger
-    }
+    fun providePlatformLogger(): PlatformLogger = TimberLogger
 
     @Provides
-    @Singleton
     fun provideSharedPreferences(context: Application) =
         context.getSharedPreferences("rocket.chat", Context.MODE_PRIVATE)
-
 
     @Provides
     @ForMessages
@@ -182,63 +163,41 @@ class AppModule {
         context.getSharedPreferences("messages", Context.MODE_PRIVATE)
 
     @Provides
-    @Singleton
-    fun provideLocalRepository(prefs: SharedPreferences, moshi: Moshi): LocalRepository {
-        return SharedPreferencesLocalRepository(prefs, moshi)
-    }
+    fun provideLocalRepository(prefs: SharedPreferences, moshi: Moshi): LocalRepository =
+        SharedPreferencesLocalRepository(prefs, moshi)
 
     @Provides
-    @Singleton
-    fun provideCurrentServerRepository(prefs: SharedPreferences): CurrentServerRepository {
-        return SharedPrefsCurrentServerRepository(prefs)
-    }
+    fun provideCurrentServerRepository(prefs: SharedPreferences): CurrentServerRepository =
+        SharedPrefsCurrentServerRepository(prefs)
 
     @Provides
-    @Singleton
-    fun provideAnalyticsTrackingRepository(prefs: SharedPreferences): AnalyticsTrackingRepository {
-        return SharedPrefsAnalyticsTrackingRepository(prefs)
-    }
+    fun provideAnalyticsTrackingRepository(prefs: SharedPreferences): AnalyticsTrackingRepository =
+        SharedPrefsAnalyticsTrackingRepository(prefs)
 
     @Provides
-    @Singleton
-    fun provideSortingAndGroupingRepository(prefs: SharedPreferences): SortingAndGroupingRepository {
-        return SharedPrefsSortingAndGroupingRepository(prefs)
-    }
+    fun provideSortingAndGroupingRepository(prefs: SharedPreferences): SortingAndGroupingRepository =
+        SharedPrefsSortingAndGroupingRepository(prefs)
 
     @Provides
     @ForAuthentication
-    fun provideConnectingServerRepository(prefs: SharedPreferences): CurrentServerRepository {
-        return SharedPrefsConnectingServerRepository(prefs)
-    }
+    fun provideConnectingServerRepository(prefs: SharedPreferences): CurrentServerRepository =
+        SharedPrefsConnectingServerRepository(prefs)
 
     @Provides
-    @Singleton
-    fun provideSettingsRepository(localRepository: LocalRepository): SettingsRepository {
-        return SharedPreferencesSettingsRepository(localRepository)
-    }
+    fun provideSettingsRepository(localRepository: LocalRepository): SettingsRepository =
+        SharedPreferencesSettingsRepository(localRepository)
 
     @Provides
-    @Singleton
     fun providePermissionsRepository(
         localRepository: LocalRepository,
         moshi: Moshi
-    ): PermissionsRepository {
-        return SharedPreferencesPermissionsRepository(localRepository, moshi)
-    }
+    ): PermissionsRepository = SharedPreferencesPermissionsRepository(localRepository, moshi)
 
     @Provides
-    @Singleton
-    fun provideChatRoomRepository(): ChatRoomsRepository {
-        return MemoryChatRoomsRepository()
-    }
+    fun provideChatRoomRepository(): ChatRoomsRepository = MemoryChatRoomsRepository()
 
     @Provides
-    @Singleton
-    fun provideMoshi(
-        logger: PlatformLogger,
-        currentServerInteractor: GetCurrentServerInteractor
-    ): Moshi {
-        val url = currentServerInteractor.get() ?: ""
+    fun provideMoshi(): Moshi {
         return Moshi.Builder()
             .add(FallbackSealedClassJsonAdapter.ADAPTER_FACTORY)
             .add(AppJsonAdapterFactory.INSTANCE)
@@ -258,27 +217,19 @@ class AppModule {
     }
 
     @Provides
-    @Singleton
     fun provideMultiServerTokenRepository(
         repository: LocalRepository,
         moshi: Moshi
-    ): MultiServerTokenRepository {
-        return SharedPreferencesMultiServerTokenRepository(repository, moshi)
-    }
+    ): MultiServerTokenRepository = SharedPreferencesMultiServerTokenRepository(repository, moshi)
 
     @Provides
-    fun provideMessageRepository(databaseManager: DatabaseManager): MessagesRepository {
-        return DatabaseMessagesRepository(databaseManager, DatabaseMessageMapper(databaseManager))
-    }
+    fun provideMessageRepository(databaseManager: DatabaseManager): MessagesRepository =
+        DatabaseMessagesRepository(databaseManager, DatabaseMessageMapper(databaseManager))
 
     @Provides
-    @Singleton
-    fun provideUserRepository(): UsersRepository {
-        return MemoryUsersRepository()
-    }
+    fun provideUserRepository(): UsersRepository = MemoryUsersRepository()
 
     @Provides
-    @Singleton
     fun provideConfiguration(context: Application): SpannableConfiguration {
         val res = context.resources
         return SpannableConfiguration.builder(context)
@@ -303,31 +254,25 @@ class AppModule {
     }
 
     @Provides
-    @Singleton
     fun provideBasicAuthRepository(
         preferences: SharedPreferences,
         moshi: Moshi
-    ): BasicAuthRepository =
-        SharedPrefsBasicAuthRepository(preferences, moshi)
+    ): BasicAuthRepository = SharedPrefsBasicAuthRepository(preferences, moshi)
 
     @Provides
-    @Singleton
     fun provideAccountsRepository(
         preferences: SharedPreferences,
         moshi: Moshi
-    ): AccountsRepository =
-        SharedPreferencesAccountsRepository(preferences, moshi)
+    ): AccountsRepository = SharedPreferencesAccountsRepository(preferences, moshi)
 
     @Provides
     fun provideNotificationManager(context: Application) =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     @Provides
-    @Singleton
     fun provideGroupedPush() = GroupedPush()
 
     @Provides
-    @Singleton
     fun providePushManager(
         context: Application,
         groupedPushes: GroupedPush,
@@ -347,9 +292,8 @@ class AppModule {
     }
 
     @Provides
-    fun provideJobScheduler(context: Application): JobScheduler {
-        return context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-    }
+    fun provideJobScheduler(context: Application): JobScheduler =
+        context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
 
     @Provides
     fun provideSendMessageJob(context: Application): JobInfo {
@@ -365,38 +309,27 @@ class AppModule {
     fun provideJobSchedulerInteractor(
         jobScheduler: JobScheduler,
         jobInfo: JobInfo
-    ): JobSchedulerInteractor {
-        return JobSchedulerInteractorImpl(jobScheduler, jobInfo)
-    }
+    ): JobSchedulerInteractor = JobSchedulerInteractorImpl(jobScheduler, jobInfo)
 
     @Provides
     @Named("currentServer")
-    fun provideCurrentServer(currentServerInteractor: GetCurrentServerInteractor): String {
-        return currentServerInteractor.get()!!
-    }
+    fun provideCurrentServer(currentServerInteractor: GetCurrentServerInteractor): String =
+        currentServerInteractor.get()!!
 
     @Provides
     fun provideDatabaseManager(
         factory: DatabaseManagerFactory,
         @Named("currentServer") currentServer: String
-    ): DatabaseManager {
-        return factory.create(currentServer)
-    }
+    ): DatabaseManager = factory.create(currentServer)
 
     @Provides
-    @Singleton
-    fun provideAnswersAnalytics(): AnswersAnalytics {
-        return AnswersAnalytics()
-    }
+    fun provideAnswersAnalytics(): AnswersAnalytics = AnswersAnalytics()
 
     @Provides
-    @Singleton
-    fun provideGoogleAnalyticsForFirebase(context: Application): GoogleAnalyticsForFirebase {
-        return GoogleAnalyticsForFirebase(context)
-    }
+    fun provideGoogleAnalyticsForFirebase(context: Application): GoogleAnalyticsForFirebase =
+        GoogleAnalyticsForFirebase(context)
 
     @Provides
-    @Singleton
     fun provideAnalyticsManager(
         analyticsTrackingInteractor: AnalyticsTrackingInteractor,
         getCurrentServerInteractor: GetCurrentServerInteractor,

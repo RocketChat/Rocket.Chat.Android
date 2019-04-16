@@ -108,32 +108,22 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     }
 
     override fun showLoading() {
-        ui {
-            view_loading.isVisible = true
-        }
+        ui { view_loading.isVisible = true }
     }
 
     override fun hideLoading() {
-        ui {
-            view_loading.isVisible = false
-        }
+        ui { view_loading.isVisible = false }
     }
 
     override fun showMessage(resId: Int) {
-        ui {
-            showToast(resId)
-        }
+        ui { showToast(resId) }
     }
 
     override fun showMessage(message: String) {
-        ui {
-            showToast(message)
-        }
+        ui { showToast(message) }
     }
 
-    override fun showGenericErrorMessage() {
-        showMessage(getString(R.string.msg_generic_error))
-    }
+    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun showUserSuggestion(dataSet: List<MemberUiModel>) {
         adapter.clearData()
@@ -246,9 +236,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         compositeDisposable.addAll(channelNameDisposable, inviteMembersDisposable)
     }
 
-    private fun unsubscribeEditTexts() {
-        compositeDisposable.dispose()
-    }
+    private fun unsubscribeEditTexts() = compositeDisposable.dispose()
 
     private fun startActionMode() {
         if (actionMode == null) {

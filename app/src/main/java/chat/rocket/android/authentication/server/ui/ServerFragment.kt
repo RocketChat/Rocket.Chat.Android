@@ -64,8 +64,8 @@ class ServerFragment : Fragment(), ServerView {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
         deepLinkInfo = arguments?.getParcelable(DEEP_LINK_INFO)
     }
 

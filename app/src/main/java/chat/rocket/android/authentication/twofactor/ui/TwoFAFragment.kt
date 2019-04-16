@@ -45,8 +45,8 @@ class TwoFAFragment : Fragment(), TwoFAView {
     private lateinit var twoFaCodeDisposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
 
         arguments?.run {
             username = getString(BUNDLE_USERNAME, "")

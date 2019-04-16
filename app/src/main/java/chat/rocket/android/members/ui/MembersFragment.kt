@@ -47,8 +47,8 @@ class MembersFragment : Fragment(), MembersView {
     private lateinit var chatRoomId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
 
         arguments?.run {
             chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")

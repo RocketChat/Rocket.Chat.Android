@@ -41,7 +41,7 @@ abstract class UserDao : BaseDao<UserEntity> {
         users.forEach { internalUpsert(it) }
     }
 
-    private inline fun internalUpsert(user: BaseUserEntity) {
+    private fun internalUpsert(user: BaseUserEntity) {
         val count = if (user is UserStatus) {
             update(user.id, user.status)
         }  else {

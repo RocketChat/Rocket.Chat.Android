@@ -62,8 +62,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private val editTextsDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 

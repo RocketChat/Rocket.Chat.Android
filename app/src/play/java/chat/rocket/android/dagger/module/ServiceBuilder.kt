@@ -26,7 +26,5 @@ abstract class ServiceBuilder {
     @Binds
     @IntoMap
     @WorkerKey(TokenRegistrationWorker::class)
-    abstract fun bindTokenRegistrationWorkerFactory(
-        builder: TokenRegistrationSubComponent.Builder
-    ): AndroidInjector.Factory<out Worker>
+    abstract fun bindTokenRegistrationWorkerFactory(builder: TokenRegistrationSubComponent.Builder): AndroidInjector.Factory<out Worker>
 }

@@ -43,8 +43,8 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
     private val adapter = ChatRoomAdapter(enableActions = false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
 
         arguments?.run {
             chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")

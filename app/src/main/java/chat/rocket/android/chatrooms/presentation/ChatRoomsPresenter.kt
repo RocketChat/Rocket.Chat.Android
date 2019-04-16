@@ -108,7 +108,7 @@ class ChatRoomsPresenter @Inject constructor(
         }
     }
 
-    suspend fun loadChatRoom(chatRoom: ChatRoomEntity, local: Boolean = false) {
+    private suspend fun loadChatRoom(chatRoom: ChatRoomEntity, local: Boolean = false) {
         with(chatRoom) {
             val isDirectMessage = roomTypeOf(type) is RoomType.DirectMessage
             val roomName =
