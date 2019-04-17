@@ -166,7 +166,14 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                 }
             }
 
-            resources.getStringArray(R.array.widechat_settings_actions)[3] -> {
+            resources.getStringArray(R.array.widechat_settings_actions)[3] ->activity?.startActivity(
+                context?.webViewIntent(
+                    getString(R.string.license_url),
+                    getString(R.string.title_licence)
+                )
+            )
+
+            resources.getStringArray(R.array.widechat_settings_actions)[4] -> {
                     showLogoutDialog()
                 }
             }
