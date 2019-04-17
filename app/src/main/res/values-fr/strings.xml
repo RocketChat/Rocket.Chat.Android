@@ -23,7 +23,7 @@
     <string name="title_update_profile">Mettre à jour le profil</string>
     <string name="title_about">À propos</string>
     <string name="title_create_channel">Créer salon</string>
-    <string name="title_licence">les permis</string>
+    <string name="title_license">les permis</string>
     <string name="title_are_you_sure">Êtes-vous sûr?</string>
     <string name="title_channel_details">Détails de la chaîne</string>
     <string name="title_topic">Sujet</string>
@@ -72,7 +72,7 @@
         <item name="item_share_app">Partager l\'application</item>
         <item name="item_rate_us">Évaluez nous</item>
         <item name="item_contact_us">Contactez nous</item>
-        <item name="item_licence">les permis</item>
+        <item name="item_license">les permis</item>
         <item name="item_about">Sur</item>
     </string-array>
 

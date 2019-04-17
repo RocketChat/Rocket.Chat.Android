@@ -122,7 +122,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             resources.getStringArray(R.array.settings_actions)[7] -> activity?.startActivity(
                 context?.webViewIntent(
                     getString(R.string.license_url),
-                    getString(R.string.title_licence)
+                    getString(R.string.title_license)
                 )
             )
 
@@ -169,7 +169,7 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             resources.getStringArray(R.array.widechat_settings_actions)[3] ->activity?.startActivity(
                 context?.webViewIntent(
                     getString(R.string.license_url),
-                    getString(R.string.title_licence)
+                    getString(R.string.title_license)
                 )
             )
 

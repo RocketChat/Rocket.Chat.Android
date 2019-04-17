@@ -23,7 +23,7 @@
     <string name="title_update_profile">تحديث الملف الشخصي</string>
     <string name="title_about">عنا</string>
     <string name="title_create_channel">إنشاء قناة</string>
-    <string name="title_licence">الترخيص</string>
+    <string name="title_license">الترخيص</string>
     <string name="title_are_you_sure">هل أنت متأكد؟</string>
     <string name="title_channel_details">تفاصيل القناة</string>
     <string name="title_topic">موضوع</string>
@@ -71,7 +71,7 @@
         <item name="item_share_app">نشر البرنامج</item>
         <item name="item_rate_us">قيمنا</item>
         <item name="item_contact_us">اتصل بنا</item>
-        <item name="item_licence">الترخيص</item>
+        <item name="item_license">الترخيص</item>
         <item name="item_about">عنا</item>
     </string-array>
 

@@ -22,7 +22,7 @@
     <string name="title_update_profile">Actualizar perfil</string>
     <string name="title_about">Acerca</string>
     <string name="title_create_channel">Criar Canal</string>
-    <string name="title_licence">Licença</string>
+    <string name="title_license">Licença</string>
     <string name="title_are_you_sure">Tem a certeza?</string>
     <string name="title_channel_details">Detalhes do Canal</string>
     <string name="title_topic">Tópico</string>
@@ -68,7 +68,7 @@
         <item name="item_share_app">Partilhe a aplicação</item>
         <item name="item_rate_us">Avalie-nos</item>
         <item name="item_contact_us">Contacte-nos</item>
-        <item name="item_licence">Licença</item>
+        <item name="item_license">Licença</item>
         <item name="item_about">Acerca</item>
     </string-array>
 

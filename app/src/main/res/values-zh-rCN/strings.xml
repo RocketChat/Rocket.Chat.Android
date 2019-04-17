@@ -22,7 +22,7 @@
     <string name="title_update_profile">更新资料</string>
     <string name="title_about">关于</string>
     <string name="title_create_channel">新建频道</string>
-    <string name="title_licence">许可证</string>
+    <string name="title_license">许可证</string>
     <string name="title_are_you_sure">你确定?</string>
     <string name="title_channel_details">频道信息</string>
     <string name="title_topic">主题</string>
@@ -70,7 +70,7 @@
         <item name="item_share_app">分享app</item>
         <item name="item_rate_us">给我们打分</item>
         <item name="item_contact_us">联系我们</item>
-        <item name="item_licence">许可证</item>
+        <item name="item_license">许可证</item>
         <item name="item_about">关于</item>
     </string-array>
 
