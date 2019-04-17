@@ -41,7 +41,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_create_channel">Create Channel</string>
     <string name="title_create_group">Create Group</string>
     <string name="title_group_members">Group Members</string>
-    <string name="title_licence">Licence</string>
+    <string name="title_license">License</string>
     <string name="title_are_you_sure">Are you sure?</string>
     <string name="title_channel_details">Channel Details</string>
     <string name="title_topic">Topic</string>
@@ -91,7 +91,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
         <item name="item_share_app">Share app</item>
         <item name="item_rate_us">Rate us</item>
         <item name="item_contact_us">Contact us</item>
-        <item name="item_licence">Licence</item>
+        <item name="item_license">License</item>
         <item name="item_about">About</item>
     </string-array>
 
@@ -100,6 +100,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
         <item name="item_preferences">Preferences</item>
         <item name="item_privacy">Privacy</item>
         <item name="item_about">About</item>
+        <item name="item_license">License</item>
         <item name="item_logout">Log Out</item>
     </string-array>
 

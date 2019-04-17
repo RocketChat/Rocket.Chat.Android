@@ -22,7 +22,7 @@
     <string name="title_update_profile">更新資料</string>
     <string name="title_about">關於</string>
     <string name="title_create_channel">建立新頻道</string>
-    <string name="title_licence">許可</string>
+    <string name="title_license">許可</string>
     <string name="title_are_you_sure">確定嗎?</string>
     <string name="title_channel_details">頻道訊息</string>
     <string name="title_topic">主題</string>
@@ -70,7 +70,7 @@
         <item name="item_share_app">分享這個App</item>
         <item name="item_rate_us">給我們一個評價</item>
         <item name="item_contact_us">聯絡我們</item>
-        <item name="item_licence">許可證</item>
+        <item name="item_license">許可證</item>
         <item name="item_about">關於</item>
     </string-array>
 

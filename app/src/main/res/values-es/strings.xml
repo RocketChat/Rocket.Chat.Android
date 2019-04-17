@@ -25,7 +25,7 @@
     <string name="title_create_channel">Crear canal</string>
     <string name="title_create_group">Crear grupos</string>
     <string name="title_group_members">Miembros del Grupo</string>
-    <string name="title_licence">Licencia</string>
+    <string name="title_license">Licencia</string>
     <string name="title_are_you_sure">Estás seguro?</string>
     <string name="title_channel_details">detalles del canal</string>
     <string name="title_topic">Tema</string>
@@ -74,7 +74,7 @@
         <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
         <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
         <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
-        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_license">License</item> <!-- TODO Add translation -->
         <item name="item_about">About</item> <!-- TODO Add translation -->
     </string-array>
 
@@ -83,6 +83,7 @@
         <item name="item_preferences">Preferencias</item>
         <item name="item_privacy">Privacy</item>
         <item name="item_about">Acerca de</item>
+        <item name="item_license">Licencia</item>
         <item name="item_logout">Cerrar sesión</item>
     </string-array>
 
