@@ -84,7 +84,7 @@
     <!--WIDECHAT Settings List-->
     <string-array name="widechat_settings_actions">
         <item name="item_preferences">Preferencias</item>
-        <item name="item_privacy">Privacy</item><!-- TODO Add translation -->
+        <item name="item_privacy">Privacy</item> <!-- TODO Add translation -->
         <item name="item_about">Acerca de</item>
         <item name="item_license">Licencia</item>
         <item name="item_logout">Cerrar sesión</item>
