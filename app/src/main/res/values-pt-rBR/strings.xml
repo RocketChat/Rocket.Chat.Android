@@ -23,7 +23,7 @@
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
     <string name="title_create_channel">Criar chat</string>
-    <string name="title_licence">Licença</string>
+    <string name="title_license">Licença</string>
     <string name="title_are_you_sure">Você tem certeza?</string>
     <string name="title_channel_details">Detalhes do canal</string>
     <string name="title_topic">Tópico</string>
@@ -72,7 +72,7 @@
         <item name="item_share_app">Compartilhar app</item>
         <item name="item_rate_us">Classifique-nos</item>
         <item name="item_contact_us">Contate-nos</item>
-        <item name="item_licence">Licença</item>
+        <item name="item_license">Licença</item>
         <item name="item_about">Sobre</item>
     </string-array>
 

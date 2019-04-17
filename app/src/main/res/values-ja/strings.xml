@@ -22,7 +22,7 @@
     <string name="title_password">パスワードの変更</string>
     <string name="title_update_profile">プロフィールの更新</string>
     <string name="title_about">About</string><!-- TODO Add translation -->
-    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
+    <string name="title_license">License</string> <!-- TODO Add translation -->
     <string name="title_create_channel">新しいチャネルを作成</string>
     <string name="title_are_you_sure">本気ですか？</string>
     <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
@@ -71,7 +71,7 @@
         <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
         <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
         <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
-        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
+        <item name="item_license">License</item> <!-- TODO Add translation -->
         <item name="item_about">About</item> <!-- TODO Add translation -->
     </string-array>
 

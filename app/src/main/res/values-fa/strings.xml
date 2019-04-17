@@ -22,7 +22,7 @@
     <string name="title_update_profile">به روزرسانی نمایه</string>
     <string name="title_about">درباره</string>
     <string name="title_create_channel">ایجاد کانال</string>
-    <string name="title_licence">مجوز</string>
+    <string name="title_license">مجوز</string>
     <string name="title_are_you_sure">آیا مطمئن هستید؟</string>
     <string name="title_channel_details">جزئیات کانال</string>
     <string name="title_topic">موضوع</string>
@@ -70,7 +70,7 @@
         <item name="change_language">Change language</item> <!-- TODO Add translation -->
         <item name="item_rate_us">به ما امتیاز دهید</item>
         <item name="item_contact_us">تماس با ما</item>
-        <item name="item_licence">مجوز</item>
+        <item name="item_license">مجوز</item>
         <item name="item_about">درباره</item>
     </string-array>
 
