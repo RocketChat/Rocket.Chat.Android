@@ -214,10 +214,10 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
     private fun bindImage(chatRoomType: String) {
         val drawable = when (roomTypeOf(chatRoomType)) {
             is RoomType.Channel -> {
-                DrawableHelper.getDrawableFromId(R.drawable.ic_hashtag_black_12dp, context!!)
+                DrawableHelper.getDrawableFromId(R.drawable.ic_megaphone_black, context!!)
             }
             is RoomType.PrivateGroup -> {
-                DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_12_dp, context!!)
+                DrawableHelper.getDrawableFromId(R.drawable.ic_community_black, context!!)
             }
             else -> null
         }
