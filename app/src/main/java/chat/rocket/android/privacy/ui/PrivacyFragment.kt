@@ -18,6 +18,7 @@ import javax.inject.Inject
 import android.widget.ArrayAdapter
 import android.widget.AdapterView
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.webview.ui.webViewIntent
 
 
 internal const val TAG_PRIVACY_FRAGMENT = "PrivacyFragment"
@@ -44,6 +45,23 @@ class PrivacyFragment : Fragment(), PrivacyView {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         presenter.showDiscoverability()
+        text_privacy_policy.setOnClickListener{
+            activity?.startActivity(
+                context?.webViewIntent(
+                    getString(R.string.privacy_policy_url),
+                    getString(R.string.title_privacy_policy)
+                )
+            )
+        }
+
+        text_terms_of_service.setOnClickListener {
+            activity?.startActivity(
+                context?.webViewIntent(
+                    getString(R.string.terms_of_service_url),
+                    getString(R.string.title_terms_of_service)
+                )
+            )
+        }
     }
 
     override fun showDiscoverability(discoverability: String) {
