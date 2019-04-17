@@ -78,7 +78,7 @@
     <string name="msg_no_data_to_display">Немає даних для відображення</string>
     <string name="msg_check_this_out">Перевір це</string>
     <string name="msg_share_using">поділитися використанням</string>
-    <string name="msg_profile_update_successfully">"Профіль оновлено успішно "</string>
+    <string name="msg_profile_updated_successfully">"Профіль оновлено успішно "</string>
     <string name="msg_username">Ім\'я користувача</string>
     <string name="msg_username_or_email">Ім\'я користувача або e-mail</string>
     <string name="msg_password">пароль</string>

@@ -78,7 +78,7 @@
     <string name="msg_no_data_to_display">डेटा प्रदर्शित करने के लिए उपलब्ध नहीं हैं</string>
     <string name="msg_check_this_out">इसकी जांच करें</string>
     <string name="msg_share_using">उपयोग कर साझा करें</string>
-    <string name="msg_profile_update_successfully">प्रोफ़ाइल सफलतापूर्वक अपडेट हो गया है</string>
+    <string name="msg_profile_updated_successfully">प्रोफ़ाइल सफलतापूर्वक अपडेट हो गया है</string>
     <string name="msg_username">यूजरनेम</string>
     <string name="msg_username_or_email">यूजरनेम या ईमेल</string>
     <string name="msg_password">पासवर्ड</string>

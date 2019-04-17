@@ -79,7 +79,7 @@
     <string name="msg_no_data_to_display">لا يوجد بيانات للعرض</string>
     <string name="msg_check_this_out">تحقق من هذا</string>
     <string name="msg_share_using">نشر بواسطة</string>
-    <string name="msg_profile_update_successfully">تم تحديث الملف الشخصي بنجاح</string>
+    <string name="msg_profile_updated_successfully">تم تحديث الملف الشخصي بنجاح</string>
     <string name="msg_username">اسم المستخدم</string>
     <string name="msg_username_or_email">اسم المستخدم أو عنوان بريد</string>
     <string name="msg_password">كلمة السر</string>

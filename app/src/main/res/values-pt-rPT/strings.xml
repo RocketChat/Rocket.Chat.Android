@@ -76,7 +76,7 @@
     <string name="msg_no_data_to_display">Sem dados para mostrar</string>
     <string name="msg_check_this_out">Experimente isto</string>
     <string name="msg_share_using">Partilhe usando</string>
-    <string name="msg_profile_update_successfully">Perfil actualizado com sucesso</string>
+    <string name="msg_profile_updated_successfully">Perfil actualizado com sucesso</string>
     <string name="msg_username">utilizador</string>
     <string name="msg_username_or_email">Utilizador ou e-mail</string>
     <string name="msg_password">Palavra-passe</string>

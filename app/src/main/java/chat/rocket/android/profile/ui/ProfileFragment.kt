@@ -6,11 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.RadioGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -141,7 +137,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun showProfileUpdateSuccessfullyMessage() {
-        showMessage(getString(R.string.msg_profile_update_successfully))
+        showMessage(getString(R.string.msg_profile_updated_successfully))
     }
 
     override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
@@ -267,8 +263,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             text_email.asObservable()
         ) { text_name, text_username, text_email ->
             return@combineLatest (text_name.toString() != currentName ||
-                    text_username.toString() != currentUsername ||
-                    text_email.toString() != currentEmail)
+                text_username.toString() != currentUsername ||
+                text_email.toString() != currentEmail)
         }.subscribe { isValid ->
             activity?.invalidateOptionsMenu()
             if (isValid) {

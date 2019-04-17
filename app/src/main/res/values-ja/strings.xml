@@ -78,7 +78,7 @@
     <string name="msg_no_data_to_display">表示するデータがありません</string>
     <string name="msg_check_this_out">これをチェックする</string>
     <string name="msg_share_using">共有する</string>
-    <string name="msg_profile_update_successfully">プロフィールの更新に成功しました</string>
+    <string name="msg_profile_updated_successfully">プロフィールの更新に成功しました</string>
     <string name="msg_username">ユーザー名</string>
     <string name="msg_username_or_email">メールアドレスまたはユーザー名</string>
     <string name="msg_password">パスワード</string>

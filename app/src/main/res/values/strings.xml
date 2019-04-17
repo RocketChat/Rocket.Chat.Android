@@ -90,7 +90,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_no_data_to_display">No data to display</string>
     <string name="msg_check_this_out">Check this out</string>
     <string name="msg_share_using">Share using</string>
-    <string name="msg_profile_update_successfully">Profile update successfully</string>
+    <string name="msg_profile_updated_successfully">Profile updated successfully</string>
     <string name="msg_username">username</string>
     <string name="msg_username_or_email">Username or email</string>
     <string name="msg_password">Password</string>

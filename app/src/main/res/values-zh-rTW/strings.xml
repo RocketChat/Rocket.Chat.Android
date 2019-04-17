@@ -78,7 +78,7 @@
     <string name="msg_no_data_to_display">沒有資料</string>
     <string name="msg_check_this_out">請檢查這裡</string>
     <string name="msg_share_using">分享使用</string>
-    <string name="msg_profile_update_successfully">資料更新成功</string>
+    <string name="msg_profile_updated_successfully">資料更新成功</string>
     <string name="msg_username">使用者名稱</string>
     <string name="msg_username_or_email">使用者名稱或是電子信箱</string>
     <string name="msg_password">密碼</string>
