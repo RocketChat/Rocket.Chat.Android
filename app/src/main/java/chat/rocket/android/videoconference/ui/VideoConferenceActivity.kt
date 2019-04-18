@@ -24,8 +24,7 @@ private const val INTENT_CHAT_ROOM_TYPE = "chat_room_type"
 
 class VideoConferenceActivity : JitsiMeetActivity(), JitsiVideoConferenceView,
     JitsiMeetViewListener {
-    @Inject
-    lateinit var presenter: VideoConferencePresenter
+    @Inject lateinit var presenter: VideoConferencePresenter
     private lateinit var chatRoomId: String
     private lateinit var chatRoomType: String
     private var view: JitsiMeetView? = null
@@ -35,9 +34,7 @@ class VideoConferenceActivity : JitsiMeetActivity(), JitsiVideoConferenceView,
         super.onCreate(savedInstanceState)
 
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
-        requireNotNull(chatRoomId) { "no chat_room_id provided in Intent extras" }
         chatRoomType = intent.getStringExtra(INTENT_CHAT_ROOM_TYPE)
-        requireNotNull(chatRoomType) { "no chat_room_type provided in Intent extras" }
 
         view = JitsiMeetView(this)
         view?.listener = this
@@ -54,26 +51,23 @@ class VideoConferenceActivity : JitsiMeetActivity(), JitsiVideoConferenceView,
         logJitsiMeetViewState("Joined video conferencing", map)
 
     override fun onConferenceTerminated(map: MutableMap<String, Any>?) {
-        if(!map.isNullOrEmpty()){
-            if(map.containsKey("error")) {
+        map?.let {
+            if (it.containsKey("error")) {
                 logJitsiMeetViewState("Terminated video conferencing with error", map)
-            }
-            else{
+            } else {
                 logJitsiMeetViewState("Terminated video conferencing", map)
-                finishJitsiVideoConference()
             }
         }
+        finishJitsiVideoConference()
     }
 
     override fun startJitsiVideoConference(url: String, name: String?) {
-        var options = JitsiMeetConferenceOptions.Builder()
-                .setAudioMuted(true)
-                .setVideoMuted(true)
-                .setServerURL(URL(url))
-                .setAudioOnly(false)
-                .build()
-
-        view?.join(options)
+        JitsiMeetConferenceOptions.Builder()
+            .setAudioMuted(true)
+            .setVideoMuted(true)
+            .setServerURL(URL(url))
+            .setAudioOnly(false)
+            .build().let { view?.join(it) }
     }
 
     override fun finishJitsiVideoConference() {
