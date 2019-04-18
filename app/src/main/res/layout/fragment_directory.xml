@@ -4,56 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".chatrooms.ui.ChatRoomsFragment">
+    tools:context=".directory.ui.DirectoryFragment">
 
     <include
-        android:id="@+id/layout_app_bar_chat_room"
-        layout="@layout/app_bar_chat_rooms"
+        android:id="@+id/layout_app_bar"
+        layout="@layout/app_bar"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/text_directory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_directory_48dp"
-        android:drawablePadding="10dp"
-        android:fontFamily="sans-serif"
-        android:gravity="center_vertical"
-        android:paddingStart="16dp"
-        android:paddingTop="32dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="32dp"
-        android:text="@string/msg_directory"
-        android:textColor="#0c0d0f"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_app_bar_chat_room" />
 
     <TextView
         android:id="@+id/text_sort_by"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:background="#54585E"
-        android:drawableEnd="@drawable/ic_group_by_type_20dp"
+        android:drawableStart="@drawable/ic_hashtag_16dp"
+        android:drawableEnd="@drawable/ic_arrow_down"
+        android:drawablePadding="10dp"
         android:fontFamily="sans-serif-medium"
         android:gravity="center_vertical"
         android:paddingStart="@dimen/screen_edge_left_and_right_margins"
         android:paddingEnd="@dimen/screen_edge_left_and_right_margins"
-        android:text="@string/msg_sort_by_placeholder"
+        android:text="@string/msg_channels"
         android:textColor="#CBCED1"
         android:textSize="14sp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_directory" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_app_bar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_sort_by" />
 

@@ -192,6 +192,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_credentials_saved_successfully">Credentials saved successfully</string>
     <string name="msg_server">Server</string>
     <string name="msg_add_new_server">Add New Server</string>
+    <string name="msg_directory">Directory</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Private</string>
@@ -325,7 +326,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="alert_title_default_skin_tone">Default skin tone</string>
 
     <!-- Sort and group -->
-    <string name="msg_sort_by">Sort by %1$s</string>
+    <string name="msg_sort_by_placeholder">Sort by %1$s</string>
+    <string name="msg_sort_by">Sort by</string>
     <string name="msg_sort_by_activity">Activity</string>
     <string name="msg_sort_by_name">Name</string>
     <string name="msg_group_by_unread_on_top">Unread on top</string>
@@ -334,7 +336,10 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Favorites</string>
-    <string name="header_channel">Channels</string>
+    <string name="msg_channels">Channels</string>
+    <string name="msg_users">Users</string>
+    <string name="msg_search_for_global_users">Search for global users</string>
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string>
     <string name="header_private_groups">Private Groups</string>
     <string name="header_direct_messages">Direct Messages</string>
     <string name="header_live_chats">Live Chats</string>
