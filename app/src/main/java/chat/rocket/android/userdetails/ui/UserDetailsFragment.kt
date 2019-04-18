@@ -20,6 +20,7 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -86,6 +87,8 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         isVideoCallAllowed: Boolean
     ) {
         val requestBuilder = Glide.with(this).load(avatarUrl)
+            .apply(RequestOptions.skipMemoryCacheOf(true))
+            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
 
         requestBuilder.apply(
             RequestOptions.bitmapTransform(MultiTransformation(BlurTransformation(), CenterCrop()))
