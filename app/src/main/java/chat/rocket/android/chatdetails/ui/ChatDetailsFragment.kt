@@ -200,7 +200,7 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
             val wrappedDrawable = DrawableHelper.wrapDrawable(it)
             val mutableDrawable = wrappedDrawable.mutate()
             DrawableHelper.tintDrawable(mutableDrawable, context!!, R.color.colorPrimary)
-            DrawableHelper.compoundDrawable(name, mutableDrawable)
+            DrawableHelper.compoundLeftDrawable(name, mutableDrawable)
         }
     }
 
