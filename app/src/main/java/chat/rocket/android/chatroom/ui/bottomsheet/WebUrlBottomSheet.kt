@@ -16,16 +16,19 @@ import kotlinx.android.synthetic.main.webview_bottomsheet.*
 
 private const val BUNDLE_WEB_PAGE_URL = "web_page_url"
 private const val BUNDLE_CHATROOM_ID = "chatroom_id"
+private const val BUNDLE_BOTTOMSHEET_STATE = "bottomsheet_state"
 
 class WebUrlBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var webPageUrl: String
     private lateinit var chatRoomId: String
+    private lateinit var bottomsheetState: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         arguments?.run {
             webPageUrl = getString(BUNDLE_WEB_PAGE_URL, "")
             chatRoomId = getString(BUNDLE_CHATROOM_ID, "")
+            bottomsheetState = getString(BUNDLE_BOTTOMSHEET_STATE, "")
         } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
         return inflater.inflate(R.layout.webview_bottomsheet, container, false)
     }
@@ -50,7 +53,9 @@ class WebUrlBottomSheet : BottomSheetDialogFragment() {
             }
 
         })
-        behaviour.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        if (bottomsheetState == "compact"){
+            behaviour.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
     }
 
     private fun setupToolbar() {
@@ -84,10 +89,11 @@ class WebUrlBottomSheet : BottomSheetDialogFragment() {
     }
 
     companion object {
-        fun newInstance(webPageUrl: String, chatRoomId: String) = WebUrlBottomSheet().apply {
-            arguments = Bundle(2).apply {
+        fun newInstance(webPageUrl: String, chatRoomId: String, bottomsheetState: String) = WebUrlBottomSheet().apply {
+            arguments = Bundle(3).apply {
                 putString(BUNDLE_WEB_PAGE_URL, webPageUrl)
                 putString(BUNDLE_CHATROOM_ID, chatRoomId)
+                putString(BUNDLE_BOTTOMSHEET_STATE, bottomsheetState)
             }
         }
     }

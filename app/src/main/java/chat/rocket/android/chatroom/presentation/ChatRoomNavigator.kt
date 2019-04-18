@@ -156,7 +156,7 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
     }
 
     fun toCompactWebView(roomId: String, url: String) {
-        val weburlbottomsheet = WebUrlBottomSheet.newInstance(url, roomId)
+        val weburlbottomsheet = WebUrlBottomSheet.newInstance(url, roomId,"compact")
         weburlbottomsheet.show(activity.supportFragmentManager,null)
     }
 }
