@@ -177,6 +177,8 @@
         <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
     <string name="msg_credentials_saved_successfully">資格情報を正常に保存しました</string>
+    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
+    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
     <string name="msg_server">Server</string> <!-- TODO Translate -->
     <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
