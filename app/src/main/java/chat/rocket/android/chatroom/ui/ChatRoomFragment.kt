@@ -284,12 +284,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
 
         adapter = ChatRoomAdapter(
-            chatRoomId,
-            chatRoomType,
-            chatRoomName,
-            this,
+            roomId = chatRoomId,
+            roomType = chatRoomType,
+            roomName = chatRoomName,
+            actionSelectListener = this,
             reactionListener = this,
-            navigator = navigator
+            navigator = navigator,
+            analyticsManager = analyticsManager
         )
     }
 
