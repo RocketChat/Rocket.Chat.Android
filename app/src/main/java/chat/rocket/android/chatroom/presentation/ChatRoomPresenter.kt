@@ -1292,6 +1292,8 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     fun openCompactWebView(roomId: String, url: String) {
-        navigator.toCompactWebView(roomId, url)
+        launchUI(strategy){
+            navigator.toCompactWebView(roomId, url)
+        }
     }
 }

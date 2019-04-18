@@ -215,9 +215,11 @@ class ChatRoomAdapter(
             if (temp.url != null && temp.isWebView != null) {
                 if (temp.isWebView == true) {
                     //Open in a configurable sizable webview
-                    temp.url?.let {
-                        if(roomId != null){
-                            actionSelectListener?.openCompactWebview(roomId, it)
+                    if(temp.webViewHeightRatio == "compact"){
+                        temp.url?.let {
+                            if(roomId != null){
+                                actionSelectListener?.openCompactWebview(roomId, it)
+                            }
                         }
                     }
                     Timber.d("Open in a configurable sizable webview")
