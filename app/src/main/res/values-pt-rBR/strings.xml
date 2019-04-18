@@ -181,6 +181,8 @@
         <item quantity="other">%1$s reagiram com %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Credenciais salvas com sucesso</string>
+    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
+    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
     <string name="msg_server">Server</string> <!-- TODO Translate -->
     <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 

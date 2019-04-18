@@ -23,7 +23,6 @@ import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.invalidateFirebaseToken
-import com.bumptech.glide.Glide
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -65,7 +64,7 @@ class SettingsFragment : Fragment(), SettingsView {
         isDeleteAccountEnabled: Boolean,
         serverVersion: String
     ) {
-        context?.let { Glide.with(it).load(avatar).into(image_avatar) }
+        image_avatar.setImageURI(avatar)
 
         text_display_name.text = displayName
 
@@ -89,7 +88,7 @@ class SettingsFragment : Fragment(), SettingsView {
 
         text_server_version.text = getString(R.string.msg_server_version, serverVersion)
 
-        text_logout.setOnClickListener { showLogoutDialog()}
+        text_logout.setOnClickListener { showLogoutDialog() }
 
         with(text_administration) {
             isVisible = isAdministrationEnabled
@@ -143,8 +142,8 @@ class SettingsFragment : Fragment(), SettingsView {
 
     private fun contactSupport() {
         val uriText = "mailto:${"support@rocket.chat"}" +
-                "?subject=" + Uri.encode(getString(R.string.msg_android_app_support)) +
-                "&body=" + Uri.encode(getDeviceAndAppInformation())
+            "?subject=" + Uri.encode(getString(R.string.msg_android_app_support)) +
+            "&body=" + Uri.encode(getDeviceAndAppInformation())
 
         with(Intent(Intent.ACTION_SENDTO)) {
             data = uriText.toUri()
@@ -177,7 +176,7 @@ class SettingsFragment : Fragment(), SettingsView {
         context?.let {
             val builder = AlertDialog.Builder(it)
             builder.setTitle(R.string.title_are_you_sure)
-                .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout()}
+                .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout() }
                 .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
                 .create()
                 .show()

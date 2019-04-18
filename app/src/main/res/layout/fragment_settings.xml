@@ -34,14 +34,13 @@
                 android:paddingBottom="5dp"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
+                <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/image_avatar"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/bg_border_user_details_avatar"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:srcCompat="@tools:sample/avatars[6]" />
+                    app:roundedCornerRadius="4dp" />
 
                 <TextView
                     android:id="@+id/text_display_name"
@@ -248,7 +247,6 @@
                     android:textColor="#DE000000"
                     android:textSize="16sp"
                     android:textStyle="normal"
-                    app:layout_constraintEnd_toStartOf="@id/switch_analytics_tracking"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
