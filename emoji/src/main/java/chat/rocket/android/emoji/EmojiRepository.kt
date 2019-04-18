@@ -10,22 +10,21 @@ import chat.rocket.android.emoji.internal.db.EmojiDatabase
 import chat.rocket.android.emoji.internal.isCustom
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.GlideException
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.io.Reader
 import java.util.*
 import java.util.regex.Pattern
 import kotlin.collections.ArrayList
-import kotlin.coroutines.experimental.buildSequence
-
 
 object EmojiRepository {
-
     private val FITZPATRICK_REGEX = "(.*)_(tone[0-9]):".toRegex(RegexOption.IGNORE_CASE)
     private val shortNameToUnicode = HashMap<String, String>()
     private val SHORTNAME_PATTERN = Pattern.compile(":([-+\\w]+):")
@@ -43,14 +42,19 @@ object EmojiRepository {
         return if (::currentServerUrl.isInitialized) currentServerUrl else null
     }
 
-    fun load(context: Context, customEmojis: List<Emoji> = emptyList(), path: String = "emoji.json") {
-        launch(CommonPool) {
+    fun load(
+        context: Context,
+        customEmojis: List<Emoji> = emptyList(),
+        path: String = "emoji.json"
+    ) {
+        GlobalScope.launch(Dispatchers.IO) {
             this@EmojiRepository.customEmojis = customEmojis
             val allEmojis = mutableListOf<Emoji>()
             db = EmojiDatabase.getInstance(context)
 
             if (!::cachedTypeface.isInitialized) {
-                cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
+                cachedTypeface =
+                        Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
             }
 
             preferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
@@ -117,9 +121,7 @@ object EmojiRepository {
 
             customEmojis.forEach {
                 try {
-                    val future = Glide.with(context)
-                            .load(it.url)
-                            .submit(px, px)
+                    val future = Glide.with(context).load(it.url).submit(px, px)
                     future.get()
                 } catch (ex: Exception) {
                     Log.d("EmojiRepository", "Error fetching custom emoji ${it.shortname}", ex)
@@ -132,7 +134,7 @@ object EmojiRepository {
     }
 
     private suspend fun saveEmojisToDatabase(emojis: List<Emoji>) {
-        withContext(CommonPool) {
+        withContext(Dispatchers.IO) {
             db.emojiDao().insertAllEmojis(*emojis.toTypedArray())
         }
     }
@@ -146,31 +148,30 @@ object EmojiRepository {
      *
      * @return All emojis for all categories.
      */
-    suspend fun getAll(): List<Emoji> = withContext(CommonPool) {
+    suspend fun getAll(): List<Emoji> = withContext(Dispatchers.IO) {
         return@withContext db.emojiDao().loadAllEmojis()
     }
 
     internal suspend fun getEmojiSequenceByCategory(category: EmojiCategory): Sequence<Emoji> {
-        val list = withContext(CommonPool) {
+        val list = withContext(Dispatchers.IO) {
             db.emojiDao().loadEmojisByCategory(category.name)
         }
 
-        return buildSequence {
-            list.forEach {
-                yield(it)
-            }
+        return sequence {
+            list.forEach { yield(it) }
         }
     }
 
-    internal suspend fun getEmojiSequenceByCategoryAndUrl(category: EmojiCategory, url: String): Sequence<Emoji> {
-        val list = withContext(CommonPool) {
+    internal suspend fun getEmojiSequenceByCategoryAndUrl(
+        category: EmojiCategory,
+        url: String
+    ): Sequence<Emoji> {
+        val list = withContext(Dispatchers.IO) {
             db.emojiDao().loadEmojisByCategoryAndUrl(category.name, "$url%")
         }
 
-        return buildSequence {
-            list.forEach {
-                yield(it)
-            }
+        return sequence {
+            list.forEach { yield(it) }
         }
     }
 
@@ -181,9 +182,10 @@ object EmojiRepository {
      *
      * @return Emoji given by shortname or null
      */
-    private suspend fun getEmojiByShortname(shortname: String): Emoji? = withContext(CommonPool) {
-        return@withContext db.emojiDao().loadAllCustomEmojis().firstOrNull()
-    }
+    private suspend fun getEmojiByShortname(shortname: String): Emoji? =
+        withContext(Dispatchers.IO) {
+            return@withContext db.emojiDao().loadAllCustomEmojis().firstOrNull()
+        }
 
     /**
      * Add an emoji to the Recents category.
@@ -203,9 +205,9 @@ object EmojiRepository {
     }
 
     internal suspend fun getCustomEmojisAsync(): List<Emoji> {
-        return withContext(CommonPool) {
+        return withContext(Dispatchers.IO) {
             db.emojiDao().loadAllCustomEmojis().also {
-                this.customEmojis = it
+                customEmojis = it
             }
         }
     }
@@ -217,7 +219,7 @@ object EmojiRepository {
      *
      * @return All recent emojis ordered by usage.
      */
-    internal suspend fun getRecents(): List<Emoji> = withContext(CommonPool) {
+    internal suspend fun getRecents(): List<Emoji> = withContext(Dispatchers.IO) {
         val list = mutableListOf<Emoji>()
         val recentsJson = JSONObject(preferences.getString(PREF_EMOJI_RECENTS, "{}"))
 
@@ -281,11 +283,13 @@ object EmojiRepository {
         if (!json.has("shortname") || !json.has("unicode")) {
             return null
         }
-        return Emoji(shortname = json.getString("shortname"),
+        return Emoji(
+            shortname = json.getString("shortname"),
             unicode = json.getString("unicode"),
             shortnameAlternates = buildStringListFromJsonArray(json.getJSONArray("shortnameAlternates")),
             category = json.getString("category"),
-            keywords = buildStringListFromJsonArray(json.getJSONArray("keywords")))
+            keywords = buildStringListFromJsonArray(json.getJSONArray("keywords"))
+        )
     }
 
     private fun buildStringListFromJsonArray(array: JSONArray): List<String> {
@@ -297,7 +301,7 @@ object EmojiRepository {
     private fun inputStreamToString(stream: InputStream): String {
         val sb = StringBuilder()
         val isr = InputStreamReader(stream, Charsets.UTF_8)
-        val br = BufferedReader(isr)
+        val br = BufferedReader(isr as Reader?)
         var read: String? = br.readLine()
         while (read != null) {
             sb.append(read)
@@ -315,7 +319,7 @@ object EmojiRepository {
     }
 
     fun init(context: Context) {
-        launch {
+        GlobalScope.launch {
             db = EmojiDatabase.getInstance(context)
             preferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
             cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")

@@ -8,7 +8,7 @@ import chat.rocket.android.main.presentation.MainView
 import chat.rocket.android.main.ui.MainActivity
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.Job
 
 @Module
 class MainModule {

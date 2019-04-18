@@ -59,6 +59,8 @@
     <string name="action_register">注册</string>
     <string name="action_confirm">确定</string>
     <string name="action_delete_account">删除账户</string>
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -94,6 +96,8 @@
     <string name="msg_yesterday">昨天</string>
     <string name="msg_today">今天</string>
     <string name="msg_message">消息</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
+    <string name="msg_join_video_call">Join video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">这个频道只读</string>
     <string name="msg_invalid_2fa_code">无效的2FA码</string>
     <string name="msg_invalid_file">无效文件</string>
@@ -158,9 +162,9 @@
     <string name="msg_two_factor_authentication">两步认证</string>
     <string name="msg__your_2fa_code">什么是2FA 码?</string>
     <string name="msg_permalink_copied">永久链接已拷贝</string>
-    <string name="msg_no_topic">没有添加主题</string>
-    <string name="msg_no_announcement">没有添加公告</string>
-    <string name="msg_no_description">没有添加描述</string>
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
     <string name="msg_send_email">发送邮件</string>
     <string name="msg_android_app_support">安卓app支持</string>
     <string name="msg_unable_to_update_password">无法更新密码，错误信息: %1$s</string>
@@ -169,6 +173,7 @@
         <item quantity="one">%1$s 使用了 %2$s</item>
         <item quantity="other">%1$s 使用了 %2$s</item>
     </plurals>
+    <string name="msg_credentials_saved_successfully">凭证成功保存</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">隐私</string>
@@ -207,23 +212,23 @@
     <string name="message_unmuted">用户 %1$s被%2$s取消禁言</string>
     <string name="message_role_add">%1$s被设置为%2$s 由%3$s操作</string>
     <string name="message_role_removed">%1$s不在是%2$s 由%3$s操作</string>
-    <string name="message_credentials_saved_successfully">凭证成功保存</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">回复</string>
-    <string name="action_msg_info">消息通知</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">编辑</string>
     <string name="action_msg_copy">拷贝</string>
     <string name="action_msg_quote">引用</string>
     <string name="action_msg_delete">删除</string>
-    <string name="action_msg_pin">固定消息</string>
-    <string name="action_msg_unpin">取消固定</string>
-    <string name="action_msg_star">标记消息</string>
-    <string name="action_msg_unstar">取消标记</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">分享消息</string>
     <string name="action_title_editing">编辑消息</string>
     <string name="action_msg_add_reaction">增加操作</string>
-    <string name="action_msg_copy_permalink">拷贝永久链接</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO - Add proper translation -->
     <string name="action_msg_report">报告</string>
 
     <!-- Permission messages -->
@@ -234,10 +239,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">搜索消息</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">收藏</string>
-    <string name="title_unfavorite_chat">取消收藏</string>
 
     <!-- Members List -->
     <string name="title_members_list">成员</string>

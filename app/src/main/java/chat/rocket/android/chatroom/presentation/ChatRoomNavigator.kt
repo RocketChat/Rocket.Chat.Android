@@ -1,5 +1,7 @@
 package chat.rocket.android.chatroom.presentation
 
+import android.os.Build
+import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.chatdetails.ui.TAG_CHAT_DETAILS_FRAGMENT
 import chat.rocket.android.chatinformation.ui.messageInformationIntent
@@ -14,12 +16,26 @@ import chat.rocket.android.pinnedmessages.ui.TAG_PINNED_MESSAGES_FRAGMENT
 import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.userdetails.ui.TAG_USER_DETAILS_FRAGMENT
 import chat.rocket.android.util.extensions.addFragmentBackStack
+import chat.rocket.android.videoconference.ui.videoConferenceIntent
 
 class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
 
     fun toUserDetails(userId: String) {
         activity.addFragmentBackStack(TAG_USER_DETAILS_FRAGMENT, R.id.fragment_container) {
             chat.rocket.android.userdetails.ui.newInstance(userId)
+        }
+    }
+
+    fun toVideoConference(chatRoomId: String, chatRoomType: String) {
+        // TODO: Jitsi isn't working with Android M- version. We need to remove the condition bellow after it's solved. (https://github.com/jitsi/jitsi-meet/pull/3967)/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            activity.startActivity(activity.videoConferenceIntent(chatRoomId, chatRoomType))
+        } else {
+            Toast.makeText(
+                activity,
+                "Sorry, unable to open the video conference due to device configuration",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -52,6 +68,7 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         chatRoomId: String,
         chatRoomType: String,
         isChatRoomSubscribed: Boolean,
+        isChatRoomFavorite: Boolean,
         isMenuDisabled: Boolean
     ) {
         activity.addFragmentBackStack(TAG_CHAT_DETAILS_FRAGMENT, R.id.fragment_container) {
@@ -59,6 +76,7 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
                 chatRoomId,
                 chatRoomType,
                 isChatRoomSubscribed,
+                isChatRoomFavorite,
                 isMenuDisabled
             )
         }

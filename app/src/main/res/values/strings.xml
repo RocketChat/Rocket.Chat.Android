@@ -71,6 +71,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_register">Register</string>
     <string name="action_confirm">Confirm</string>
     <string name="action_delete_account">Delete account</string>
+    <string name="action_favorite">Favorite</string>
+    <string name="action_remove_favorite">Remove favorite</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -107,6 +109,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_yesterday">Yesterday</string>
     <string name="msg_today">Today</string>
     <string name="msg_message">Message</string>
+    <string name="msg_video_call">Video call</string>
+    <string name="msg_join_video_call">Join video call</string>
     <string name="msg_this_room_is_read_only">This room is read only</string>
     <string name="msg_invalid_2fa_code">Invalid 2FA Code</string>
     <string name="msg_invalid_file">Invalid file</string>
@@ -174,9 +178,9 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_two_factor_authentication">Two-factor Authentication</string>
     <string name="msg__your_2fa_code">What’s your 2FA code?</string>
     <string name="msg_permalink_copied">Permalink copied</string>
-    <string name="msg_no_topic">No topic added</string>
-    <string name="msg_no_announcement">No announcement added</string>
-    <string name="msg_no_description">No description added</string>
+    <string name="msg_no_topic">No topic</string>
+    <string name="msg_no_announcement">No announcement</string>
+    <string name="msg_no_description">No description</string>
     <string name="msg_send_email">Send email</string>
     <string name="msg_android_app_support">Android app support</string>
     <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string>
@@ -185,6 +189,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
         <item quantity="one">%1$s reacted with %2$s</item>
         <item quantity="other">%1$s reacted with %2$s</item>
     </plurals>
+    <string name="msg_credentials_saved_successfully">Credentials saved successfully</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Private</string>
@@ -223,23 +228,23 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="message_unmuted">User %1$s unmuted by %2$s</string>
     <string name="message_role_add">%1$s was set %2$s by %3$s</string>
     <string name="message_role_removed">%1$s is no longer %2$s by %3$s</string>
-    <string name="message_credentials_saved_successfully">Credentials saved successfully</string>
+    <string name="message_video_call_started">Video call started by %1$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Reply</string>
-    <string name="action_msg_info">Message info</string>
+    <string name="action_info">Info</string>
     <string name="action_msg_edit">Edit</string>
     <string name="action_msg_copy">Copy</string>
     <string name="action_msg_quote">Quote</string>
     <string name="action_msg_delete">Delete</string>
-    <string name="action_msg_pin">Pin Message</string>
-    <string name="action_msg_unpin">Unpin Message</string>
-    <string name="action_msg_star">Star Message</string>
-    <string name="action_msg_unstar">Unstar Message</string>
+    <string name="action_pin">Pin</string>
+    <string name="action_unpin">Unpin</string>
+    <string name="action_star">Star</string>
+    <string name="action_unstar">Unstar</string>
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">Editing Message</string>
     <string name="action_msg_add_reaction">Add reaction</string>
-    <string name="action_msg_copy_permalink">Copy permalink</string>
+    <string name="action_msg_permalink">Permalink</string>
     <string name="action_msg_report">Report</string>
 
     <!-- Permission messages -->
@@ -250,10 +255,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
 
     <!-- Search message -->
     <string name="title_search_message">Search message</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Favorite chat</string>
-    <string name="title_unfavorite_chat">Unfavorite chat</string>
 
     <!-- Members List -->
     <string name="title_members_list">Members</string>

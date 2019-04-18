@@ -20,16 +20,16 @@ import chat.rocket.core.model.SpotlightResult
 import com.shopify.livedataktx.distinct
 import com.shopify.livedataktx.map
 import com.shopify.livedataktx.nonNull
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.isActive
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.newSingleThreadContext
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.lang.IllegalArgumentException
-import kotlin.coroutines.experimental.coroutineContext
-
+import kotlin.coroutines.coroutineContext
 
 class ChatRoomsViewModel(
     private val connectionManager: ConnectionManager,
@@ -107,7 +107,7 @@ class ChatRoomsViewModel(
     }
 
     private fun fetchRooms() {
-        launch {
+        GlobalScope.launch {
             setLoadingState(LoadingState.Loading(repository.count()))
             try {
                 interactor.refreshChatRooms()
@@ -125,7 +125,7 @@ class ChatRoomsViewModel(
     }
 
     private suspend fun setLoadingState(state: LoadingState) {
-        withContext(UI) {
+        withContext(Dispatchers.Main) {
             loadingState.value = state
         }
     }

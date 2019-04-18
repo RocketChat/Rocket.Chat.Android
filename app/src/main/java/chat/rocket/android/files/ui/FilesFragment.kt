@@ -147,7 +147,7 @@ class FilesFragment : Fragment(), FilesView {
     }
 
     private fun setupToolbar(totalFiles: Long) {
-        (activity as ChatRoomActivity).showToolbarTitle(
+        (activity as ChatRoomActivity).setupToolbarTitle(
             (getString(
                 R.string.title_files_total,
                 totalFiles

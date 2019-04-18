@@ -7,16 +7,22 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.SITE_URL
 import com.crashlytics.android.Crashlytics
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 
-fun installCrashlyticsWrapper(context: Application,
-                              currentServerInteractor: GetCurrentServerInteractor,
-                              settingsInteractor: GetSettingsInteractor,
-                              accountRepository: AccountsRepository,
-                              localRepository: LocalRepository) {
+fun installCrashlyticsWrapper(
+    context: Application,
+    currentServerInteractor: GetCurrentServerInteractor,
+    settingsInteractor: GetSettingsInteractor,
+    accountRepository: AccountsRepository,
+    localRepository: LocalRepository
+) {
     if (isCrashlyticsEnabled()) {
-        Thread.setDefaultUncaughtExceptionHandler(RocketChatUncaughtExceptionHandler(currentServerInteractor,
-                settingsInteractor, accountRepository, localRepository))
+        Thread.setDefaultUncaughtExceptionHandler(
+            RocketChatUncaughtExceptionHandler(
+                currentServerInteractor,
+                settingsInteractor, accountRepository, localRepository
+            )
+        )
     }
 }
 
@@ -25,13 +31,14 @@ private fun isCrashlyticsEnabled(): Boolean {
 }
 
 private class RocketChatUncaughtExceptionHandler(
-        val currentServerInteractor: GetCurrentServerInteractor,
-        val settingsInteractor: GetSettingsInteractor,
-        val accountRepository: AccountsRepository,
-        val localRepository: LocalRepository)
-    : Thread.UncaughtExceptionHandler {
+    val currentServerInteractor: GetCurrentServerInteractor,
+    val settingsInteractor: GetSettingsInteractor,
+    val accountRepository: AccountsRepository,
+    val localRepository: LocalRepository
+) : Thread.UncaughtExceptionHandler {
 
-    val crashlyticsHandler: Thread.UncaughtExceptionHandler? = Thread.getDefaultUncaughtExceptionHandler()
+    val crashlyticsHandler: Thread.UncaughtExceptionHandler? =
+        Thread.getDefaultUncaughtExceptionHandler()
 
     override fun uncaughtException(t: Thread, e: Throwable) {
         val currentServer = currentServerInteractor.get() ?: "<unknown>"
