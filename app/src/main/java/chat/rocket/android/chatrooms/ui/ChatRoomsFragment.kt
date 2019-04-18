@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -43,7 +44,6 @@ import javax.inject.Inject
 internal const val TAG_CHAT_ROOMS_FRAGMENT = "ChatRoomsFragment"
 
 private const val BUNDLE_CHAT_ROOM_ID = "BUNDLE_CHAT_ROOM_ID"
-
 
 fun newInstance(chatRoomId: String?): Fragment = ChatRoomsFragment().apply {
     arguments = Bundle(1).apply {
@@ -103,6 +103,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         with((activity as AppCompatActivity)) {
             with(toolbar) {
                 setSupportActionBar(this)
+                supportActionBar?.setDisplayShowTitleEnabled(false)
                 setNavigationOnClickListener { presenter.toSettings() }
             }
         }
@@ -122,10 +123,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         if (isSortByName) {
             text_sort_by.text =
-                getString(R.string.msg_sort_by, getString(R.string.msg_sort_by_name).toLowerCase())
+                getString(R.string.msg_sort_by_placeholder, getString(R.string.msg_sort_by_name).toLowerCase())
         } else {
             text_sort_by.text = getString(
-                R.string.msg_sort_by,
+                R.string.msg_sort_by_placeholder,
                 getString(R.string.msg_sort_by_activity).toLowerCase()
             )
         }
@@ -149,12 +150,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 // We need to show all the menu items here by invalidating the options to recreate the entire menu.
                 activity?.invalidateOptionsMenu()
                 queryChatRoomsByName(null)
+                hideDirectoryView()
                 return true
             }
 
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 // We need to hide the all the menu items here.
                 menu.findItem(R.id.action_new_channel).isVisible = false
+                showDirectoryView()
                 return true
             }
         })
@@ -282,6 +285,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 chat.rocket.android.sortingandgrouping.ui.TAG
             )
         }
+
+        text_directory.setOnClickListener { presenter.toDirectory() }
     }
 
     fun sortChatRoomsList(
@@ -305,7 +310,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     private fun changeSortByTitle(text: String) {
-        text_sort_by.text = getString(R.string.msg_sort_by, text.toLowerCase())
+        text_sort_by.text = getString(R.string.msg_sort_by_placeholder, text.toLowerCase())
     }
 
     private fun queryChatRoomsByName(name: String?): Boolean {
@@ -323,5 +328,15 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         } else {
             viewModel.setQuery(Query.ByActivity(isGroupByType))
         }
+    }
+
+    private fun showDirectoryView() {
+        text_directory.isVisible = true
+        text_sort_by.isGone = true
+    }
+
+    private fun hideDirectoryView() {
+        text_directory.isGone = true
+        text_sort_by.isVisible = true
     }
 }

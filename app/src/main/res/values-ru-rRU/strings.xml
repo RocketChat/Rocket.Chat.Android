@@ -184,6 +184,7 @@
     <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
     <string name="msg_server">Server</string> <!-- TODO Translate -->
     <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
+    <string name="msg_directory">Directory</string> <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>
@@ -311,7 +312,8 @@
     <string name="alert_title_default_skin_tone">Тон кожи по умолчанию</string>
 
     <!-- Sort and group -->
-    <string name="msg_sort_by">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_placeholder">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by">Sort by</string> <!-- TODO Translate -->
     <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
     <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
     <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
@@ -320,7 +322,10 @@
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Избранные</string>
-    <string name="header_channel">Каналы</string>
+    <string name="msg_channels">Каналы</string>
+    <string name="msg_users">Users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">Приватные каналы</string>
     <string name="header_direct_messages">Личная переписка</string>
     <string name="header_live_chats">Живые чаты</string>
