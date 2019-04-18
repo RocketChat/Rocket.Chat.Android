@@ -37,11 +37,12 @@ class DirectoryPresenter @Inject constructor(
     private val client: RocketChatClient = factory.get(currentServer)
     private var offset: Long = 0
 
-    fun loadAllDirectoryChannels() {
+    fun loadAllDirectoryChannels(query: String? = null) {
         launchUI(strategy) {
             try {
                 view.showLoading()
                 val directoryResult = client.directory(
+                    text = query,
                     directoryRequestType = DirectoryRequestType.Channels(),
                     offset = offset,
                     count = 60
@@ -61,13 +62,18 @@ class DirectoryPresenter @Inject constructor(
         }
     }
 
-    fun loadAllDirectoryUsers(isSearchForGlobalUsers: Boolean) {
+    fun loadAllDirectoryUsers(isSearchForGlobalUsers: Boolean, query: String? = null) {
         launchUI(strategy) {
             try {
                 view.showLoading()
                 val directoryResult = client.directory(
+                    text = query,
                     directoryRequestType = DirectoryRequestType.Users(),
-                    directoryWorkspaceType = if (isSearchForGlobalUsers) DirectoryWorkspaceType.All() else DirectoryWorkspaceType.Local(),
+                    directoryWorkspaceType = if (isSearchForGlobalUsers) {
+                        DirectoryWorkspaceType.All()
+                    } else {
+                        DirectoryWorkspaceType.Local()
+                    },
                     offset = offset,
                     count = 60
                 )
@@ -86,12 +92,16 @@ class DirectoryPresenter @Inject constructor(
         }
     }
 
-    fun updateSorting(isSortByChannels: Boolean, isSearchForGlobalUsers: Boolean) {
+    fun updateSorting(
+        isSortByChannels: Boolean,
+        isSearchForGlobalUsers: Boolean,
+        query: String? = null
+    ) {
         resetOffset()
         if (isSortByChannels) {
-            loadAllDirectoryChannels()
+            loadAllDirectoryChannels(query)
         } else {
-            loadAllDirectoryUsers(isSearchForGlobalUsers)
+            loadAllDirectoryUsers(isSearchForGlobalUsers, query)
         }
     }
 

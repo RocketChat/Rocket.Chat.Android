@@ -2,9 +2,13 @@ package chat.rocket.android.directory.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,7 +23,9 @@ import chat.rocket.android.directory.presentation.DirectoryPresenter
 import chat.rocket.android.directory.presentation.DirectoryView
 import chat.rocket.android.directory.uimodel.DirectoryUiModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
+import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.isNotNullNorBlank
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
@@ -62,6 +68,7 @@ class DirectoryFragment : Fragment(), DirectoryView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -78,6 +85,33 @@ class DirectoryFragment : Fragment(), DirectoryView {
         presenter.loadAllDirectoryChannels()
         analyticsManager.logScreenView(ScreenViewEvent.Directory)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.directory, menu)
+
+        val searchMenuItem = menu.findItem(R.id.action_search)
+        val searchView = searchMenuItem?.actionView as SearchView
+
+        with(searchView) {
+            setIconifiedByDefault(false)
+            maxWidth = Integer.MAX_VALUE
+            onQueryTextListener { updateSorting(isSortByChannels, isSearchForGlobalUsers, it) }
+        }
+
+        searchMenuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                updateSorting(isSortByChannels, isSearchForGlobalUsers, reload = true)
+                return true
+            }
+
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+                return true
+            }
+        })
+
+    }
+
 
     override fun showChannels(dataSet: List<DirectoryUiModel>) {
         ui {
@@ -141,7 +175,17 @@ class DirectoryFragment : Fragment(), DirectoryView {
         view_loading.isVisible = false
     }
 
-    fun updateSorting(isSortByChannels: Boolean, isSearchForGlobalUsers: Boolean) {
+    fun updateSorting(
+        isSortByChannels: Boolean,
+        isSearchForGlobalUsers: Boolean,
+        query: String? = null,
+        reload: Boolean = false
+    ) {
+        if (query.isNotNullNorBlank() || reload) {
+            directoryAdapter.clearData()
+            presenter.updateSorting(isSortByChannels, isSearchForGlobalUsers, query)
+        }
+
         if (this.isSortByChannels != isSortByChannels ||
             this.isSearchForGlobalUsers != isSearchForGlobalUsers
         ) {
@@ -152,7 +196,7 @@ class DirectoryFragment : Fragment(), DirectoryView {
                 clearData()
                 setSorting(isSortByChannels, isSearchForGlobalUsers)
             }
-            presenter.updateSorting(isSortByChannels, isSearchForGlobalUsers)
+            presenter.updateSorting(isSortByChannels, isSearchForGlobalUsers, query)
         }
     }
 
