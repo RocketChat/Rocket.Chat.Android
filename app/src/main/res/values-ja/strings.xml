@@ -3,7 +3,6 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">サーバーに接続</string>
     <string name="title_log_in">ログイン</string>
-    <string name="title_share_the_app">アプリを共有する</string>
     <string name="title_register_username">ユーザー名を登録する</string>
     <string name="title_reset_password">パスワードリセット</string>
     <string name="title_sign_up">サインアップ</string>
@@ -35,6 +34,7 @@
     <string name="action_use_this_username">このユーザー名を使用する</string>
     <string name="action_terms_of_service">サービス利用規約</string>
     <string name="action_privacy_policy">プライバシーポリシー</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">検索</string>
     <string name="action_update">更新</string>
     <string name="action_settings">設定</string>
@@ -44,11 +44,10 @@
     <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">変更したパスワードの確認</string>
     <string name="action_join_chat">チャットに参加</string>
-    <string name="action_add_account">サーバーの追加</string>
-    <string name="action_online">オンライン</string>
-    <string name="action_away">離席中</string>
-    <string name="action_busy">取り込み中</string>
-    <string name="action_invisible">状態を隠す</string>
+    <string name="msg_online">オンライン</string>
+    <string name="msg_away">離席中</string>
+    <string name="msg_busy">取り込み中</string>
+    <string name="msg_invisible">状態を隠す</string>
     <string name="action_drawing">絵を描く</string>
     <string name="action_save_to_gallery">ギャラリーに保存</string>
     <string name="action_select_photo_from_gallery">ギャラリーの写真を選択</string>
@@ -59,19 +58,23 @@
     <string name="action_create_server">新規サーバーを作成</string>
     <string name="action_register">登録</string>
     <string name="action_confirm">確認</string>
-    <string name="action_delete_account">アカウントを削除する</string>
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
-        <item name="item_password">Change password</item> <!-- TODO Add translation -->
-        <item name="change_language">Change language </item><!-- TODO Add translation -->
-        <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
-        <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
-        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
-        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
-        <item name="item_about">About</item> <!-- TODO Add translation -->
-    </string-array>
+    <!-- Settings messages-->
+    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    <string name="msg_language">Language</string> <!-- TODO Translate -->
+    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
+    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
+    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
+    <string name="msg_licence">Licence</string> <!-- TODO Translate -->
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
+    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">エラーが発生しました。もう一度お試しください。</string>
@@ -95,6 +98,8 @@
     <string name="msg_today">今日</string>
     <string name="msg_yesterday">昨日</string>
     <string name="msg_message">メッセージ</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
+    <string name="msg_join_video_call">Join video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">この部屋は読み取り専用です</string>
     <string name="msg_invalid_2fa_code">無効な 2FA コード</string>
     <string name="msg_invalid_file">無効なファイル</string>
@@ -164,15 +169,20 @@
     <string name="msg_view_more">更に表示</string>
     <string name="msg_view_less">隠す</string>
     <string name="msg_muted_on_this_channel">あなたはこのチャンネルでミュートされています</string>
-    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
-    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
-    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
     <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
     <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
-        <item quantity="one">%1$s reacted with %2$s</item>     <!-- TODO - Add proper translation -->
-        <item quantity="other">%1$s reacted with %2$s</item>     <!-- TODO - Add proper translation -->
+        <item quantity="one">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
+        <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
+    <string name="msg_credentials_saved_successfully">資格情報を正常に保存しました</string>
+    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
+    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">プライベート</string>
@@ -211,23 +221,23 @@
     <string name="message_unmuted">ユーザー %1$s は %2$s によってミュートされていません</string>
     <string name="message_role_add">%1$s は %3$s によって %2$s に設定されました</string>
     <string name="message_role_removed">%1$s は %3$s で、もう %2$s ではありません</string>
-    <string name="message_credentials_saved_successfully">資格情報を正常に保存しました</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">返信</string>
-    <string name="action_msg_info">メッセージ情報</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">編集</string>
     <string name="action_msg_copy">コピー</string>
     <string name="action_msg_quote">引用</string>
     <string name="action_msg_delete">削除</string>
-    <string name="action_msg_pin">ピン留めする</string>
-    <string name="action_msg_unpin">ピン留を外す</string>
-    <string name="action_msg_star">スターをつける</string>
-    <string name="action_msg_unstar">スターを外す</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">メッセージの編集</string>
     <string name="action_msg_add_reaction">リアクションする</string>
-    <string name="action_msg_copy_permalink">パーマリンクのコピー</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO Add translation -->
     <string name="action_msg_report">Report</string> <!-- TODO - Add proper translation -->
 
     <!-- Permission messages -->
@@ -238,10 +248,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">メッセージを検索</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">お気に入り</string>
-    <string name="title_unfavorite_chat">お気に入り解除</string>
 
     <!-- Members List -->
     <string name="title_members_list">メンバー</string>
@@ -309,17 +315,16 @@
     <string name="msg_no_recent_emoji">最近の絵文字はありません</string>
     <string name="alert_title_default_skin_tone">デフォルトスキントークン</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">ソート</string>
-    <string name="dialog_sort_title">ソート</string>
-    <string name="dialog_sort_by_alphabet">アルファベット順</string>
-    <string name="dialog_sort_by_activity">アクティビティ順</string>
-    <string name="dialog_group_by_type">グループ別</string>
-    <string name="dialog_group_favourites">お気に入りのグループ</string>
-    <string name="chatroom_header">ヘッダ</string>
-
+    <!-- Sort and group -->
+    <string name="msg_sort_by">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="header_channel">チャンネル</string>
     <string name="header_private_groups">プライベートグループ</string>
     <string name="header_direct_messages">ダイレクトメッセージ</string>

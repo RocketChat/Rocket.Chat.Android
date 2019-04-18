@@ -3,15 +3,11 @@ package chat.rocket.android.app
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import chat.rocket.android.server.domain.GetAccountInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.UserStatus
-import chat.rocket.core.internal.realtime.setTemporaryStatus
-import kotlinx.coroutines.experimental.launch
-import timber.log.Timber
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class AppLifecycleObserver @Inject constructor(
@@ -33,7 +29,7 @@ class AppLifecycleObserver @Inject constructor(
     }
 
     private fun changeTemporaryStatus(userStatus: UserStatus) {
-        launch {
+        GlobalScope.launch {
             serverInteractor.get()?.let { currentServer ->
                 factory.create(currentServer).setTemporaryStatus(userStatus)
             }

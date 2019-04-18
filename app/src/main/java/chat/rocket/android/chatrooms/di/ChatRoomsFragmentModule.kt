@@ -10,7 +10,6 @@ import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.db.ChatRoomDao
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.UserDao
-import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentUserInteractor
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.PublicSettings
@@ -45,7 +44,7 @@ class ChatRoomsFragmentModule {
         factory: RocketChatClientFactory,
         @Named("currentServer") currentServer: String
     ): RocketChatClient {
-        return factory.create(currentServer)
+        return factory.get(currentServer)
     }
 
     @Provides

@@ -5,7 +5,6 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
-import chat.rocket.android.util.retryDB
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
@@ -23,7 +22,7 @@ class FavoriteMessagesPresenter @Inject constructor(
     private val mapper: UiModelMapper,
     val factory: RocketChatClientFactory
 ) {
-    private val client: RocketChatClient = factory.create(currentServer)
+    private val client: RocketChatClient = factory.get(currentServer)
     private var offset: Int = 0
 
     /**
@@ -36,8 +35,7 @@ class FavoriteMessagesPresenter @Inject constructor(
             try {
                 view.showLoading()
                 dbManager.getRoom(roomId)?.let {
-                    val favoriteMessages =
-                            client.getFavoriteMessages(roomId, roomTypeOf(it.chatRoom.type), offset)
+                    val favoriteMessages = client.getFavoriteMessages(roomId, roomTypeOf(it.chatRoom.type), offset)
                     val messageList = mapper.map(favoriteMessages.result, asNotReversed = true)
                     view.showFavoriteMessages(messageList)
                     offset += 1 * 30

@@ -3,7 +3,6 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">به سرور خود متصل شوید</string>
     <string name="title_log_in">ورود</string>
-    <string name="title_share_the_app">به اشتراک‌گذاری اپلیکیشن</string>
     <string name="title_register_username">ثبت شناسه‌ی کاربری</string>
     <string name="title_reset_password">تعویض گذرواژه</string>
     <string name="title_sign_up">ثبت‌‌نام کنید</string>
@@ -20,7 +19,6 @@
     <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
     <string name="title_password">تغییر گذرواژه</string>
     <string name="title_update_profile">به روزرسانی نمایه</string>
-    <string name="title_about">درباره</string>
     <string name="title_create_channel">ایجاد کانال</string>
     <string name="title_licence">مجوز</string>
     <string name="title_are_you_sure">آیا مطمئن هستید؟</string>
@@ -34,6 +32,7 @@
     <string name="action_use_this_username">از این شناسه‌ی کاربری استفاده کنید</string>
     <string name="action_terms_of_service">شرایط خدمات رسانی</string>
     <string name="action_privacy_policy">سیاست حفظ جریم خصوصی</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">جست‌وجو</string>
     <string name="action_update">به روزرسانی</string>
     <string name="action_settings">تنظیمات</string>
@@ -43,11 +42,10 @@
     <string name="action_attach_a_files">ضمیمه کردن پرونده</string>
     <string name="action_confirm_password">موافقت با تغییر گذرواژه</string>
     <string name="action_join_chat">به گفت‌وگو بپیوندید</string>
-    <string name="action_add_account">اضافه کردن حساب کاربری</string>
-    <string name="action_online">آنلاین</string>
-    <string name="action_away">Away</string> <!-- TODO Add translation -->
-    <string name="action_busy">مشغول</string>
-    <string name="action_invisible">نامرئی</string>
+    <string name="msg_online">آنلاین</string>
+    <string name="msg_away">Away</string> <!-- TODO Add translation -->
+    <string name="msg_busy">مشغول</string>
+    <string name="msg_invisible">نامرئی</string>
     <string name="action_drawing">کشیدن</string>
     <string name="action_view_profile_photo">View Profile photo</string><!-- TODO Add translation -->
     <string name="action_save_to_gallery">ذخیره در آلبوم</string>
@@ -59,19 +57,23 @@
     <string name="action_create_server">ایجاد سرور جدید</string>
     <string name="action_register">ثبت‌نام</string>
     <string name="action_confirm">تایید</string>
-    <string name="action_delete_account">حذف حساب کاربری</string>
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">ترجیحات</item>
-        <item name="item_password">تغییر گذرواژه</item>
-        <item name="item_share_app">به اشتراک‌گذاری اپلیکیشن</item>
-        <item name="change_language">Change language</item> <!-- TODO Add translation -->
-        <item name="item_rate_us">به ما امتیاز دهید</item>
-        <item name="item_contact_us">تماس با ما</item>
-        <item name="item_licence">مجوز</item>
-        <item name="item_about">درباره</item>
-    </string-array>
+    <!-- Settings messages-->
+    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    <string name="msg_language">Language</string> <!-- TODO Translate -->
+    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
+    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
+    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
+    <string name="msg_licence">Licence</string> <!-- TODO Translate -->
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
+    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">متاسفانه مشکلی رخ داد، لطفا دوباره تلاش کنید</string>
@@ -95,6 +97,8 @@
     <string name="msg_yesterday">دیروز</string>
     <string name="msg_today">امروز</string>
     <string name="msg_message">پیام</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
+    <string name="msg_join_video_call">Join video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">این اتاق فقط خواندنی است</string>
     <string name="msg_invalid_2fa_code">Invalid 2FA Code</string> <!-- TODO Add translation -->
     <string name="msg_invalid_file">پرونده‌ی نامعتبر</string>
@@ -162,9 +166,9 @@
     <string name="msg_two_factor_authentication">تایید هویت دو فاکتوره</string>
 	<string name="msg__your_2fa_code">کد 2FA تان چیست؟</string>
 	<string name="msg_permalink_copied">پیوند کپی شد</string>
-	<string name="msg_no_topic">هیچ موضوعی اضافه نشد</string>
-    <string name="msg_no_announcement">هیچ اعلانی اضافه نشد</string>
-    <string name="msg_no_description">هیچ توضیحی اضافه نشد</string>
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
     <string name="msg_send_email">ارسال ایمیل</string>
     <string name="msg_android_app_support">حمایت از اپ اندروید</string>
     <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO Add translation -->
@@ -173,6 +177,11 @@
         <item quantity="one">%1$s reacted with %2$s</item>
         <item quantity="other">%1$s reacted with %2$s</item>
     </plurals> <!-- TODO Add translation -->
+    <string name="msg_credentials_saved_successfully">اختیارها با موفقیت ذخیره شد</string>
+    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
+    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">خصوصی</string>
@@ -211,23 +220,23 @@
     <string name="message_unmuted">User %1$s unmuted by %2$s</string> <!-- TODO Add translation -->
     <string name="message_role_add">%1$s was set %2$s by %3$s</string> <!-- TODO Add translation -->
     <string name="message_role_removed">%1$s is no longer %2$s by %3$s</string> <!-- TODO Add translation -->
-    <string name="message_credentials_saved_successfully">اختیارها با موفقیت ذخیره شد</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">جواب</string>
-    <string name="action_msg_info">مشخصات پیام</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">ویرایش</string>
     <string name="action_msg_copy">کپی</string>
     <string name="action_msg_quote">نقل قول</string>
     <string name="action_msg_delete">حذف</string>
-    <string name="action_msg_pin">سوزن کردن پیام</string>
-    <string name="action_msg_unpin">از سوزن دراوردن پیام</string>
-    <string name="action_msg_star">ستاره‌دار کردن پیام</string>
-    <string name="action_msg_unstar">از ستاره دراوردن پیام</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">اشتراک</string>
     <string name="action_title_editing">ویرایش پیام</string>
     <string name="action_msg_add_reaction">اضافه کردن واکنش</string>
-    <string name="action_msg_copy_permalink">Copy permalink</string> <!-- TODO Add translation -->
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO Add translation -->
     <string name="action_msg_report">گزارش</string>
 
     <!-- Permission messages -->
@@ -238,10 +247,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">جست‌وجوی پیام</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">مورد علاقه کردن گفت‌وگو</string>
-    <string name="title_unfavorite_chat">از مورد علاقه دراوردن گفت‌وگو</string>
 
     <!-- Members List -->
     <string name="title_members_list">اعضاء</string>
@@ -309,16 +314,16 @@
     <string name="msg_no_recent_emoji">هیچ ایموجی اخیری موجود نیست</string>
     <string name="alert_title_default_skin_tone">مدل پوسته‌ی پیش‌فرض</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">دسته بندی</string>
-    <string name="dialog_sort_title">دسته بندی بر اساس</string>
-    <string name="dialog_sort_by_alphabet">الفبا</string>
-    <string name="dialog_sort_by_activity">فعالیت</string>
-    <string name="dialog_group_by_type">گروه کردن بر اساس نوع</string>
-    <string name="dialog_group_favourites">گروه کردن موردعلاقه‌ها</string>
-    <string name="chatroom_header">سرپیام</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="header_channel">کانال‌ها</string>
     <string name="header_private_groups">گروه‌های خصوصی</string>
     <string name="header_direct_messages">پیام‌های خصوصی</string>

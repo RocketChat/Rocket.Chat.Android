@@ -51,7 +51,7 @@ class TwoFAPresenter @Inject constructor(
         twoFactorAuthenticationCode: String
     ) {
         launchUI(strategy) {
-            val client = factory.create(currentServer)
+            val client = factory.get(currentServer)
             view.showLoading()
             try {
                 // The token is saved via the client TokenProvider
@@ -94,7 +94,7 @@ class TwoFAPresenter @Inject constructor(
         }
     }
 
-    private suspend fun saveAccount(me: Myself) {
+    private fun saveAccount(me: Myself) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }

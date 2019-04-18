@@ -37,7 +37,8 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.HasBroadcastReceiverInjector
 import dagger.android.HasServiceInjector
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -114,7 +115,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         // TODO - remove this
         checkCurrentServer()
 
-        // TODO - FIXME - we need to proper inject the EmojiRepository and initialize it properly
+        // TODO - FIXME - we need to properly inject and initialize the EmojiRepository
         loadEmojis()
     }
 
@@ -174,8 +175,8 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         EmojiRepository.init(this)
         val currentServer = getCurrentServerInteractor.get()
         currentServer?.let { server ->
-            launch {
-                val client = factory.create(server)
+            GlobalScope.launch {
+                val client = factory.get(server)
                 EmojiRepository.setCurrentServerUrl(server)
                 val customEmojiList = mutableListOf<Emoji>()
                 try {

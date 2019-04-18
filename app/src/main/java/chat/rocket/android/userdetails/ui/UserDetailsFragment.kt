@@ -21,6 +21,7 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -30,11 +31,9 @@ import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_user_details.*
 import javax.inject.Inject
 
-fun newInstance(userId: String): Fragment {
-    return UserDetailsFragment().apply {
-        arguments = Bundle(1).apply {
-            putString(BUNDLE_USER_ID, userId)
-        }
+fun newInstance(userId: String): Fragment = UserDetailsFragment().apply {
+    arguments = Bundle(1).apply {
+        putString(BUNDLE_USER_ID, userId)
     }
 }
 
@@ -53,12 +52,10 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        val bundle = arguments
-        if (bundle != null) {
-            userId = bundle.getString(BUNDLE_USER_ID)
-        } else {
-            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
+        arguments?.run {
+            userId = getString(BUNDLE_USER_ID, "")
         }
+            ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
 
     override fun onCreateView(
@@ -91,14 +88,17 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         super.onDestroyView()
     }
 
-    override fun showUserDetails(
+    override fun showUserDetailsAndActions(
         avatarUrl: String,
         name: String,
         username: String,
         status: String,
-        utcOffset: String
+        utcOffset: String,
+        isVideoCallAllowed: Boolean
     ) {
         val requestBuilder = Glide.with(this).load(avatarUrl)
+            .apply(RequestOptions.skipMemoryCacheOf(true))
+            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
 
         requestBuilder.apply(
             RequestOptions.bitmapTransform(MultiTransformation(BlurTransformation(), CenterCrop()))
@@ -114,6 +114,13 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
         // We should also setup the user details listeners.
         text_message.setOnClickListener { presenter.createDirectMessage(username) }
+
+        if (isVideoCallAllowed) {
+            text_video_call.isVisible = true
+            text_video_call.setOnClickListener { presenter.toVideoConference(username) }
+        } else {
+            text_video_call.isVisible = false
+        }
     }
 
     override fun showLoading() {

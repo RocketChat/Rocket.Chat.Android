@@ -3,7 +3,6 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Faça login no seu servidor</string>
     <string name="title_log_in">Entrar</string>
-    <string name="title_share_the_app">Compartilhe o aplicativo</string>
     <string name="title_register_username">Registre o nome de usuário</string>
     <string name="title_reset_password">Redefinir senha</string>
     <string name="title_sign_up">Inscreva-se</string>
@@ -20,7 +19,6 @@
     <string name="title_admin_panel">Painel administrativo</string>
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
-    <string name="title_about">Sobre</string>
     <string name="title_create_channel">Criar chat</string>
     <string name="title_licence">Licença</string>
     <string name="title_are_you_sure">Você tem certeza?</string>
@@ -34,6 +32,7 @@
     <string name="action_use_this_username">Usar este nome de usuário</string>
     <string name="action_terms_of_service">Termos de Serviço</string>
     <string name="action_privacy_policy">Política de Privacidade</string>
+    <string name="action_new_channel">Novo canal</string>
     <string name="action_search">Pesquisar</string>
     <string name="action_update">Atualizar</string>
     <string name="action_settings">Configurações</string>
@@ -43,11 +42,10 @@
     <string name="action_attach_a_files">Anexar um arquivo</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
     <string name="action_join_chat">Entrar no Chat</string>
-    <string name="action_add_account">Adicionar conta</string>
-    <string name="action_online">Online</string>
-    <string name="action_away">Ausente</string>
-    <string name="action_busy">Ocupado</string>
-    <string name="action_invisible">Invisível</string>
+    <string name="msg_online">Online</string>
+    <string name="msg_away">Ausente</string>
+    <string name="msg_busy">Ocupado</string>
+    <string name="msg_invisible">Invisível</string>
     <string name="action_drawing">Desenhando</string>
     <string name="action_save_to_gallery">Salvar na galeria</string>
     <string name="action_select_photo_from_gallery">Escolher foto da galeria</string>
@@ -59,19 +57,23 @@
     <string name="action_create_server">Criar um novo servidor</string>
     <string name="action_register">Registrar</string>
     <string name="action_confirm">Confirmar</string>
-    <string name="action_delete_account">Deletar conta</string>
+    <string name="action_favorite">Favoritar</string>
+    <string name="action_remove_favorite">Remover favorito</string>
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">Preferências</item>
-        <item name="item_password">Alterar senha</item>
-        <item name="change_language">Alterar idioma</item>
-        <item name="item_share_app">Compartilhar app</item>
-        <item name="item_rate_us">Classifique-nos</item>
-        <item name="item_contact_us">Contate-nos</item>
-        <item name="item_licence">Licença</item>
-        <item name="item_about">Sobre</item>
-    </string-array>
+    <!-- Settings messages-->
+    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    <string name="msg_language">Language</string> <!-- TODO Translate -->
+    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
+    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
+    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
+    <string name="msg_licence">Licence</string> <!-- TODO Translate -->
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
+    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Desculpe, ocorreu um erro, tente novamente</string>
@@ -95,6 +97,8 @@
     <string name="msg_yesterday">Ontem</string>
     <string name="msg_today">Hoje</string>
     <string name="msg_message">Mensagem</string>
+    <string name="msg_video_call">Videochamada</string>
+    <string name="msg_join_video_call">Entrar na videochamada</string>
     <string name="msg_this_room_is_read_only">Este chat é apenas de leitura</string>
     <string name="msg_invalid_2fa_code">Código 2FA inválido</string>
     <string name="msg_invalid_file">Arquivo inválido</string>
@@ -169,16 +173,20 @@
     <string name="msg_send_email">Enviar e-mail</string>
     <string name="msg_android_app_support">Suporte ao aplicativo Android</string>
     <string name="msg_muted_on_this_channel">Você está silenciado neste canal</string>
-    <string name="msg_no_topic">Nenhum tópico adicionado</string>
-    <string name="msg_no_announcement">Nenhum anúncio adicionado</string>
-    <string name="msg_no_description">Nenhuma descrição adicionada</string>
+    <string name="msg_no_topic">Nenhum tópico</string>
+    <string name="msg_no_announcement">Nenhum anúncio</string>
+    <string name="msg_no_description">Nenhuma descrição</string>
     <string name="msg_unable_to_update_password">Não foi possível atualizar a senha. Mensagem de erro: %1$s</string>
     <string name="msg_password_updated_successfully">Senha alterada com sucesso</string>
-    <string name="msg_sort">Ordenar</string>
     <plurals name="msg_reacted_with_">
         <item quantity="one">%1$s reagiu com %2$s</item>
         <item quantity="other">%1$s reagiram com %2$s</item>
     </plurals>
+    <string name="msg_credentials_saved_successfully">Credenciais salvas com sucesso</string>
+    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
+    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
@@ -211,23 +219,23 @@
     <string name="message_unmuted">Usuário %1$s saiu do modo silenciado por %2$s</string>
     <string name="message_role_add">%1$s foi definido %2$s por %3$s</string>
     <string name="message_role_removed">%1$s não é mais %2$s por %3$s</string>
-    <string name="message_credentials_saved_successfully">Credenciais salvas com sucesso</string>
+    <string name="message_video_call_started">Videochamada iniciada por %1$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Responder</string>
-    <string name="action_msg_info">Informações da mensagem</string>
+    <string name="action_info">Informação</string>
     <string name="action_msg_edit">Editar</string>
     <string name="action_msg_copy">Copiar</string>
     <string name="action_msg_quote">Citar</string>
     <string name="action_msg_delete">Remover</string>
-    <string name="action_msg_pin">Fixar mensagem</string>
-    <string name="action_msg_unpin">Desfixar mensagem</string>
-    <string name="action_msg_star">Marcar como favorita</string>
-    <string name="action_msg_unstar">Desmarcar como favorita</string>
+    <string name="action_pin">Fixar</string>
+    <string name="action_unpin">Desfixar</string>
+    <string name="action_star">Favoritar</string>
+    <string name="action_unstar">Desfavoritar</string>
     <string name="action_msg_share">Compartilhar</string>
     <string name="action_title_editing">Editando mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
-    <string name="action_msg_copy_permalink">Copiar permalink</string>
+    <string name="action_msg_permalink">Link permanente</string>
     <string name="action_msg_report">Reportar</string>
 
     <!-- Permission messages -->
@@ -238,10 +246,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">Procurar mensagem</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Marcar canal como favorito</string>
-    <string name="title_unfavorite_chat">Desmarcar canal como favorito</string>
 
     <!-- Members List -->
     <string name="title_members_list">Membros</string>
@@ -309,15 +313,16 @@
     <string name="msg_no_recent_emoji">Nenhum emoji recente</string>
     <string name="alert_title_default_skin_tone">Tom de pele padrão</string>
 
-    <!-- Sorting and grouping-->
-    <string name="dialog_sort_title">Ordenar por</string>
-    <string name="dialog_sort_by_alphabet">Alfabeticamente</string>
-    <string name="dialog_sort_by_activity">Atividade</string>
-    <string name="dialog_group_by_type">Agrupar por tipo</string>
-    <string name="dialog_group_favourites">Grupos favoritos</string>
-    <string name="chatroom_header">Cabeçalho</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by">Ordenar por %1$s</string>
+    <string name="msg_sort_by_activity">Atividade</string>
+    <string name="msg_sort_by_name">Nome</string>
+    <string name="msg_group_by_unread_on_top">Não lidas no topo</string>
+    <string name="msg_group_by_type">Agrupar por tipo</string>
+    <string name="msg_group_by_favorites">Agrupar por favoritos</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Favoritos</string>
     <string name="header_channel">Canais</string>
     <string name="header_private_groups">Grupos Privados</string>
     <string name="header_direct_messages">Mensagens diretas</string>

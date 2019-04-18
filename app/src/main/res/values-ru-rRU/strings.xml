@@ -3,7 +3,6 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Ваш сервер</string>
     <string name="title_log_in">Войти</string>
-    <string name="title_share_the_app">добавить приложение</string>
     <string name="title_register_username">Зарегистрировать имя</string>
     <string name="title_reset_password">Сброс пароля</string>
     <string name="title_sign_up">Зарегистрироваться</string>
@@ -20,7 +19,6 @@
     <string name="title_admin_panel">Панель админа</string>
     <string name="title_password">Изменить пароль</string>
     <string name="title_update_profile">Обновить профиль</string>
-    <string name="title_about">О программе</string>
     <string name="title_create_channel">Создать новый канал</string>
     <string name="title_channel_details">О канале</string>
     <string name="title_topic">Тема</string>
@@ -34,6 +32,7 @@
     <string name="action_use_this_username">Использовать это имя</string>
     <string name="action_terms_of_service">Условия использования</string>
     <string name="action_privacy_policy">Политика конфиденциальности</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">Поиск</string>
     <string name="action_update">Обновить</string>
     <string name="action_settings">Настройки</string>
@@ -43,11 +42,10 @@
     <string name="action_attach_a_files">Прикрепить файл</string>
     <string name="action_confirm_password">Подтверждение изменения пароля</string>
     <string name="action_join_chat">Присоединиться к чату</string>
-    <string name="action_add_account">Добавить аккаунт</string>
-    <string name="action_online">Онлайн</string>
-    <string name="action_away">Отошел</string>
-    <string name="action_busy">Занят</string>
-    <string name="action_invisible">Невидимый</string>
+    <string name="msg_online">Онлайн</string>
+    <string name="msg_away">Отошел</string>
+    <string name="msg_busy">Занят</string>
+    <string name="msg_invisible">Невидимый</string>
     <string name="action_drawing">Рисунок</string>
     <string name="action_save_to_gallery">Сохранить в галерею</string>
     <string name="action_select_photo_from_gallery">Выбрать из галереи</string>
@@ -59,19 +57,23 @@
     <string name="action_create_server">Создать новый сервер</string>
     <string name="action_register">Зарегистрировать</string>
     <string name="action_confirm">Подтвердить</string>
-    <string name="action_delete_account">Удалить аккаунт</string>
+    <string name="action_favorite">В избранное</string>
+    <string name="action_remove_favorite">Удалить из избранного</string>
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">Персональные</item>
-        <item name="item_password">Изменить пароль</item>
-        <item name="change_language">Изменить язык</item>
-        <item name="item_share_app">Поделиться приложением</item>
-        <item name="item_rate_us">Оцените нас</item>
-        <item name="item_contact_us">Связаться с нами</item>
-        <item name="item_licence">Лицензия</item>
-        <item name="item_about">О программе</item>
-    </string-array>
+    <!-- Settings messages-->
+    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    <string name="msg_language">Language</string> <!-- TODO Translate -->
+    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
+    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
+    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
+    <string name="msg_licence">Licence</string> <!-- TODO Translate -->
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
+    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Произошла ошибка, повторите попытку.</string>
@@ -95,6 +97,8 @@
     <string name="msg_yesterday">Вчера</string>
     <string name="msg_today">Сегодня</string>
     <string name="msg_message">Сообщение</string>
+    <string name="msg_video_call">Видеозвонок</string>
+    <string name="msg_join_video_call">Присоединиться к видеозвонку</string>
     <string name="msg_this_room_is_read_only">Канал только для чтения</string>
     <string name="msg_invalid_2fa_code">Неверный код 2FA</string>
     <string name="msg_invalid_file">Неверный файл</string>
@@ -176,6 +180,11 @@
         <item quantity="few">%1$s реагируют с %2$s</item>
         <item quantity="many">%1$s реагируют с %2$s</item>
     </plurals>
+    <string name="msg_credentials_saved_successfully">Учетные данные успешно сохранены</string>
+    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
+    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>
@@ -208,23 +217,23 @@
     <string name="message_unmuted">Пользователю %1$s вернули дар речи по решению %2$s</string>
     <string name="message_role_add">%1$s был назначен %2$s пользователем %3$s</string>
     <string name="message_role_removed">%1$s больше не %2$s по решению %3$s</string>
-    <string name="message_credentials_saved_successfully">Учетные данные успешно сохранены</string>
+    <string name="message_video_call_started">Видеозвонок, начатый %1$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Ответить</string>
-    <string name="action_msg_info">Информация о прочтении</string>
+    <string name="action_info">Информация о прочтении</string>
     <string name="action_msg_edit">Редактировать</string>
     <string name="action_msg_copy">Копировать</string>
     <string name="action_msg_quote">Цитировать</string>
     <string name="action_msg_delete">Удалить</string>
-    <string name="action_msg_pin">Закрепить сообщение</string>
-    <string name="action_msg_unpin">Открепить сообщение</string>
-    <string name="action_msg_star">В избранное</string>
-    <string name="action_msg_unstar">Из избранного</string>
+    <string name="action_pin">Закрепить сообщение</string>
+    <string name="action_unpin">Открепить сообщение</string>
+    <string name="action_star">В избранное</string>
+    <string name="action_unstar">Из избранного</string>
     <string name="action_msg_share">Поделиться</string>
-    <string name="action_title_editing">Редактирование сообщения</string>
+    <string name="action_title_editing">Редактировать</string>
     <string name="action_msg_add_reaction">Отреагировать</string>
-    <string name="action_msg_copy_permalink">Копировать ссылку</string>
+    <string name="action_msg_permalink">Копировать ссылку</string>
     <string name="action_msg_report">Пожаловаться</string>
 
     <!-- Permission messages -->
@@ -235,10 +244,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">Поиск сообщения</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Добавить в избранное</string>
-    <string name="title_unfavorite_chat">Удалить из избранного</string>
 
     <!-- Members List -->
     <string name="title_members_list">Пользователи</string>
@@ -306,16 +311,16 @@
     <string name="msg_no_recent_emoji">Пусто</string>
     <string name="alert_title_default_skin_tone">Тон кожи по умолчанию</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">Сортировать</string>
-    <string name="dialog_sort_title">Сортировать по</string>
-    <string name="dialog_sort_by_alphabet">По алфавиту</string>
-    <string name="dialog_sort_by_activity">По активности</string>
-    <string name="dialog_group_by_type">Группировать по типу</string>
-    <string name="dialog_group_favourites">Группировать избранное</string>
-    <string name="chatroom_header">Заголовок</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
     <!--ChatRooms Headers-->
+    <string name="header_favorite">Избранные</string>
     <string name="header_channel">Каналы</string>
     <string name="header_private_groups">Приватные каналы</string>
     <string name="header_direct_messages">Личная переписка</string>
@@ -333,7 +338,7 @@
     <string name="message_room_changed_privacy">Тип канала изменен на: %1$s пользователем %2$s</string>
 
     <!-- User Details -->
-    <string name="timezone">Часовой поясe</string>
+    <string name="timezone">Часовой пояс</string>
 
     <!-- Report -->
     <string name="submit">Отправить</string>
