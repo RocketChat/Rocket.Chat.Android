@@ -20,7 +20,7 @@
     <string name="title_password">Alterar palavra-passe</string>
     <string name="title_update_profile">Actualizar perfil</string>
     <string name="title_create_channel">Criar Canal</string>
-    <string name="title_licence">Licença</string>
+    <string name="title_license">Licença</string>
     <string name="title_are_you_sure">Tem a certeza?</string>
     <string name="title_channel_details">Detalhes do Canal</string>
     <string name="title_topic">Tópico</string>
@@ -57,19 +57,18 @@
     <string name="action_register">Registar</string>
     <string name="action_confirm">Confirmar</string>
 
-    <!-- Settings messages-->
+    <!-- Settings messages -->
     <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
     <string name="msg_language">Language</string> <!-- TODO Translate -->
     <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
     <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
     <string name="msg_administration">Administration</string> <!-- TODO Translate -->
-    <string name="msg_licence">Licence</string> <!-- TODO Translate -->
+    <string name="msg_license">License</string> <!-- TODO Translate -->
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
-
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
@@ -77,7 +76,7 @@
     <string name="msg_no_data_to_display">Sem dados para mostrar</string>
     <string name="msg_check_this_out">Experimente isto</string>
     <string name="msg_share_using">Partilhe usando</string>
-    <string name="msg_profile_update_successfully">Perfil actualizado com sucesso</string>
+    <string name="msg_profile_updated_successfully">Perfil actualizado com sucesso</string>
     <string name="msg_username">utilizador</string>
     <string name="msg_username_or_email">Utilizador ou e-mail</string>
     <string name="msg_password">Palavra-passe</string>
@@ -86,7 +85,7 @@
     <string name="msg_avatar_url">URL do avatar</string>
     <string name="msg_or_continue_using_social_accounts">Ou continue utilizando uma conta social</string>
     <string name="msg_new_user">Novo utilizador? %1$s</string>
-    <string name="msg_forgot__your_password">Esqueceu a sua palavra-passe?</string>
+    <string name="msg_forgot_your_password">Esqueceu a sua palavra-passe?</string>
     <string name="msg_reset">Repor</string>
     <string name="msg_check_your_email_to_reset_your_password">E-mail enviado! Verifique a sua caixa de entrada para repor a sua palavra-passe.</string>
     <string name="msg_invalid_email">Por favor introduza um endereço de e-mail válido</string>
@@ -100,12 +99,12 @@
     <string name="msg_invalid_file">Ficheiro inválido</string>
     <string name="msg_invalid_server_url">URL de servidor inválido</string>
     <string name="msg_content_description_log_in_using_facebook">Entre utilizando Facebook</string>
-    <string name="msg_content_description_log_in_using_github">Entre utilizando Github</string>
+    <string name="msg_content_description_log_in_using_github">Entre utilizando GitHub</string>
     <string name="msg_content_description_log_in_using_google">Entre utilizando Google</string>
     <string name="msg_content_description_log_in_using_linkedin">Entre utilizando LinkedIn</string>
     <string name="msg_content_description_log_in_using_meteor">Entre utilizando Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Entre utilizando Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">Entre utilizando Gitlab</string>
+    <string name="msg_content_description_log_in_using_gitlab">Entre utilizando GitLab</string>
     <string name="msg_content_description_log_in_using_wordpress">Entre utilizando WordPress</string>
     <string name="msg_content_description_send_message">Enviar mensagem</string>
     <string name="msg_content_description_show_more_login_options">Mostrar mais opções de entrada</string>
@@ -154,13 +153,13 @@
     <string name="msg_login_with_email">Entre com <b>e-mail</b></string>
     <string name="msg_create_account">Crie uma conta</string>
     <string name="msg_continue_with_facebook">Continue com <b>Facebook</b></string>
-    <string name="msg_continue_with_github">Continue com <b>Github</b></string>
+    <string name="msg_continue_with_github">Continue com <b>GitHub</b></string>
     <string name="msg_continue_with_google">Continue com <b>Google</b></string>
-    <string name="msg_continue_with_linkedin">Continue com <b>Linkedin</b></string>
+    <string name="msg_continue_with_linkedin">Continue com <b>LinkedIn</b></string>
     <string name="msg_continue_with_gitlab">Continue com <b>GitLab</b></string>
     <string name="msg_continue_with_wordpress">Continue com <b>WordPress</b></string>
     <string name="msg_two_factor_authentication">Autenticação 2FA</string>
-    <string name="msg__your_2fa_code">Qual é o seu código 2FA?</string>
+    <string name="msg_your_2fa_code">Qual é o seu código 2FA?</string>
     <string name="msg_permalink_copied">Link permanente copiado</string>
     <string name="msg_no_topic">Nenhum tópico adicionado</string>
     <string name="msg_no_announcement">Nenhum anúncio adicionado</string>

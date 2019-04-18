@@ -24,7 +24,7 @@
     <string name="title_topic">Тема</string>
     <string name="title_announcement">Объявление</string>
     <string name="title_description">Описание</string>
-    <string name="title_licence">Лицензия</string>
+    <string name="title_license">Лицензия</string>
     <string name="title_are_you_sure">Вы уверены?</string>
 
     <!-- Actions -->
@@ -59,19 +59,18 @@
     <string name="action_favorite">В избранное</string>
     <string name="action_remove_favorite">Удалить из избранного</string>
 
-    <!-- Settings messages-->
+    <!-- Settings messages -->
     <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
     <string name="msg_language">Language</string> <!-- TODO Translate -->
     <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
     <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
     <string name="msg_administration">Administration</string> <!-- TODO Translate -->
-    <string name="msg_licence">Licence</string> <!-- TODO Translate -->
+    <string name="msg_license">License</string> <!-- TODO Translate -->
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
-
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
@@ -79,7 +78,7 @@
     <string name="msg_no_data_to_display">Нет данных для отображения</string>
     <string name="msg_check_this_out">Проверь это</string>
     <string name="msg_share_using">Совместное использование</string>
-    <string name="msg_profile_update_successfully">Профиль успешно обновлен</string>
+    <string name="msg_profile_updated_successfully">Профиль успешно обновлен</string>
     <string name="msg_username">имя пользователя</string>
     <string name="msg_username_or_email">имя пользователя или e-mail</string>
     <string name="msg_password">пароль</string>
@@ -88,7 +87,7 @@
     <string name="msg_avatar_url">URL аватара</string>
     <string name="msg_or_continue_using_social_accounts">Или продолжить, используя социальные учетные записи</string>
     <string name="msg_new_user">Новый пользователь? %1$s</string>
-    <string name="msg_forgot__your_password">Забыли пароль?</string>
+    <string name="msg_forgot_your_password">Забыли пароль?</string>
     <string name="msg_reset">Сброс</string>
     <string name="msg_check_your_email_to_reset_your_password">Письмо отправлено! Проверьте свой почтовый ящик, чтобы сбросить пароль.</string>
     <string name="msg_invalid_email">Введите действующий e-mail</string>
@@ -103,12 +102,12 @@
     <string name="msg_invalid_file">Неверный файл</string>
     <string name="msg_invalid_server_url">Неверный URL-адрес сервера.</string>
     <string name="msg_content_description_log_in_using_facebook">Войти с помощью Facebook</string>
-    <string name="msg_content_description_log_in_using_github">Войти с помощью Github</string>
+    <string name="msg_content_description_log_in_using_github">Войти с помощью GitHub</string>
     <string name="msg_content_description_log_in_using_google">Войти с помощью Google</string>
-    <string name="msg_content_description_log_in_using_linkedin">Войти с помощью Linkedin</string>
+    <string name="msg_content_description_log_in_using_linkedin">Войти с помощью LinkedIn</string>
     <string name="msg_content_description_log_in_using_meteor">Войти с помощью Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Войти с помощью Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">Войти с помощью Gitlab</string>
+    <string name="msg_content_description_log_in_using_gitlab">Войти с помощью GitLab</string>
     <string name="msg_content_description_log_in_using_wordpress">Войти с помощью WordPress</string>
     <string name="msg_content_description_send_message">Отправить сообщение</string>
     <string name="msg_content_description_show_more_login_options">Больше параметров входа</string>
@@ -156,13 +155,13 @@
     <string name="msg_login_with_email">Войти с помощью <b>e-mail</b></string>
     <string name="msg_create_account">Создать аккаунт</string>
     <string name="msg_continue_with_facebook">Войти с помощью <b>Facebook</b></string>
-    <string name="msg_continue_with_github">Войти с помощью <b>Github</b></string>
+    <string name="msg_continue_with_github">Войти с помощью <b>GitHub</b></string>
     <string name="msg_continue_with_google">Войти с помощью <b>Google</b></string>
-    <string name="msg_continue_with_linkedin">Войти с помощью <b>Linkedin</b></string>
+    <string name="msg_continue_with_linkedin">Войти с помощью <b>LinkedIn</b></string>
     <string name="msg_continue_with_gitlab">Войти с помощью <b>GitLab</b></string>
     <string name="msg_continue_with_wordpress">Войти с помощью <b>WordPress</b></string>
     <string name="msg_two_factor_authentication">Двухфакторная аутентификация</string>
-    <string name="msg__your_2fa_code">Ваш код 2FA?</string>
+    <string name="msg_your_2fa_code">Ваш код 2FA?</string>
     <string name="msg_view_more">больше</string>
     <string name="msg_view_less">меньше</string>
     <string name="msg_permalink_copied">Ссылка скопирована</string>

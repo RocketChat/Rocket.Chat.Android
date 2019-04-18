@@ -182,7 +182,7 @@
                 android:paddingTop="8dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="8dp"
-                android:text="@string/msg_licence"
+                android:text="@string/msg_license"
                 android:textColor="#DE000000"
                 android:textSize="16sp"
                 android:textStyle="normal"
