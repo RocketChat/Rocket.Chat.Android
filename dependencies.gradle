@@ -133,8 +133,7 @@ ext {
             firebaseAnalytics     : "com.google.firebase:firebase-core:${versions.firebaseAnalytics}",
             playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServicesAuth}",
             dynamiclinks          : "com.google.firebase:firebase-dynamic-links:${versions.dynamiclinks}",
-
-
+            
             // For testing
             junit                 : "junit:junit:${versions.junit}",
             espressoCore          : "androidx.test.espresso:espresso-core:${versions.espresso}",

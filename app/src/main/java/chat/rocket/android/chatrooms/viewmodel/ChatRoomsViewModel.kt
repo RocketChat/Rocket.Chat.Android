@@ -33,7 +33,6 @@ import timber.log.Timber
 import java.lang.IllegalArgumentException
 import kotlin.coroutines.coroutineContext
 
-
 class ChatRoomsViewModel(
     private val connectionManager: ConnectionManager,
     private val interactor: FetchChatRoomsInteractor,

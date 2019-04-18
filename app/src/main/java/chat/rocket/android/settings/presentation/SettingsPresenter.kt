@@ -151,8 +151,6 @@ class SettingsPresenter @Inject constructor(
                     context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
                 }
             }
-            Timber.d("#########  EAR >> currentServer is: ${currentServer}")
-            Timber.d("S################## EAR >> username is: ${user?.username!!}")
             dynamicLinksManager.createDynamicLink(user?.username!!, currentServer, deepLinkCallback)
         }
     }

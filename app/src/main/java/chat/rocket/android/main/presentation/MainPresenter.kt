@@ -13,7 +13,6 @@ class MainPresenter @Inject constructor(
     private val mainNavigator: MainNavigator,
     private val refreshSettingsInteractor: RefreshSettingsInteractor,
     private val refreshPermissionsInteractor: RefreshPermissionsInteractor,
-
     private val connectionManagerFactory: ConnectionManagerFactory,
     private val groupedPush: GroupedPush
 ) {
@@ -32,5 +31,4 @@ class MainPresenter @Inject constructor(
     }
 
     fun showChatList(chatRoomId: String? = null, deepLinkInfo: DeepLinkInfo? = null) = mainNavigator.toChatList(chatRoomId, deepLinkInfo)
-
 }
