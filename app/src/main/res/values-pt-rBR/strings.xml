@@ -181,10 +181,11 @@
         <item quantity="other">%1$s reagiram com %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Credenciais salvas com sucesso</string>
-    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
-    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
-    <string name="msg_server">Server</string> <!-- TODO Translate -->
-    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
+    <string name="msg_server">Servidor</string>
+    <string name="msg_add_new_server">Adicionar Novo Servidor</string>
+    <string name="msg_directory">Diretório</string>
+    <string name="msg_camera_permission_denied">A permissão da câmera é necessária</string>
+    <string name="msg_storage_permission_denied">A permissão de armazenamento é necessária</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
@@ -312,7 +313,8 @@
     <string name="alert_title_default_skin_tone">Tom de pele padrão</string>
 
     <!-- Sort and group -->
-    <string name="msg_sort_by">Ordenar por %1$s</string>
+    <string name="msg_sort_by_placeholder">Ordenar por %1$s</string>
+    <string name="msg_sort_by">Ordernar por</string>
     <string name="msg_sort_by_activity">Atividade</string>
     <string name="msg_sort_by_name">Nome</string>
     <string name="msg_group_by_unread_on_top">Não lidas no topo</string>
@@ -321,7 +323,10 @@
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Favoritos</string>
-    <string name="header_channel">Canais</string>
+    <string name="msg_channels">Canais</string>
+    <string name="msg_users">Usuários</string>
+    <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">Grupos Privados</string>
     <string name="header_direct_messages">Mensagens diretas</string>
     <string name="header_live_chats">Live Chats</string>
