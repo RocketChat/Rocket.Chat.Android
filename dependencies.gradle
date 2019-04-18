@@ -57,7 +57,7 @@ ext {
             glide                 : '4.8.0',
             glideTransformations  : '4.0.0',
 
-            jitsi                  : '1.21.0',
+            jitsi                 : '1.21.0',
 
             // For testing
             junit                 : '4.12',

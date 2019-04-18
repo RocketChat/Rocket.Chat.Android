@@ -14,7 +14,7 @@ import chat.rocket.android.webview.ui.webViewIntent
 import chat.rocket.common.util.ifNull
 
 class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
-    public var savedDeepLinkInfo: DeepLinkInfo? = null
+    var savedDeepLinkInfo: DeepLinkInfo? = null
 
     fun saveDeepLinkInfo(deepLinkInfo: DeepLinkInfo) {
         savedDeepLinkInfo = deepLinkInfo

@@ -15,7 +15,6 @@ import chat.rocket.android.authentication.domain.model.isDynamicLink
 import chat.rocket.android.authentication.domain.model.isSupportedLink
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
 import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
-import chat.rocket.android.helper.Constants
 import chat.rocket.common.util.ifNull
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector

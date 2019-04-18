@@ -23,6 +23,7 @@
         <activity
             android:name=".authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
