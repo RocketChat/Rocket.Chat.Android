@@ -185,6 +185,8 @@
     <string name="msg_server">Servidor</string>
     <string name="msg_add_new_server">Adicionar Novo Servidor</string>
     <string name="msg_directory">Diretório</string>
+    <string name="msg_camera_permission_denied">A permissão da câmera é necessária</string>
+    <string name="msg_storage_permission_denied">A permissão de armazenamento é necessária</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
