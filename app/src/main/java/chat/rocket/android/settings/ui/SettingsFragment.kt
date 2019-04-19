@@ -81,7 +81,7 @@ class SettingsFragment : Fragment(), SettingsView {
         text_share_this_app.setOnClickListener { shareApp() }
 
         text_license.setOnClickListener {
-            presenter.toLicense(getString(R.string.license_url), getString(R.string.title_licence))
+            presenter.toLicense(getString(R.string.license_url), getString(R.string.title_license))
         }
 
         text_app_version.text = getString(R.string.msg_app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)

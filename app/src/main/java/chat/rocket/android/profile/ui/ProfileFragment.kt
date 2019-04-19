@@ -141,7 +141,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun showProfileUpdateSuccessfullyMessage() {
-        showMessage(getString(R.string.msg_profile_update_successfully))
+        showMessage(getString(R.string.msg_profile_updated_successfully))
     }
 
     override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
@@ -273,8 +273,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             text_email.asObservable()
         ) { text_name, text_username, text_email ->
             return@combineLatest (text_name.toString() != currentName ||
-                    text_username.toString() != currentUsername ||
-                    text_email.toString() != currentEmail)
+                text_username.toString() != currentUsername ||
+                text_email.toString() != currentEmail)
         }.subscribe { isValid ->
             activity?.invalidateOptionsMenu()
             if (isValid) {

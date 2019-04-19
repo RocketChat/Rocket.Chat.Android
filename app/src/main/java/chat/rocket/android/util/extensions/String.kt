@@ -75,6 +75,8 @@ fun String.lowercaseUrl(): String? = HttpUrl.parse(this)?.run {
 
 fun String?.isNotNullNorEmpty(): Boolean = this != null && this.isNotEmpty()
 
+fun String?.isNotNullNorBlank(): Boolean = this != null && this.isNotBlank()
+
 inline fun String?.ifNotNullNotEmpty(block: (String) -> Unit) {
     if (this != null && this.isNotEmpty()) {
         block(this)
