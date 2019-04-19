@@ -16,6 +16,9 @@
     <string name="title_counted_members">Miembros (%d)</string>
     <string name="title_settings">Configuraciones</string>
     <string name="title_preferences">Preferencias</string>
+    <string name="title_privacy">Privacidad</string>
+    <string name="title_privacy_policy">Política de Privacidad</string>
+    <string name="title_terms_of_service">Términos de Servicio</string>
     <string name="title_change_password">Cambia la contraseña</string>
     <string name="title_rate_us">Nos califica</string>
     <string name="title_admin_panel">Panel de Administrador</string>
@@ -81,8 +84,9 @@
     <!--WIDECHAT Settings List-->
     <string-array name="widechat_settings_actions">
         <item name="item_preferences">Preferencias</item>
-        <item name="item_privacy">Privacy</item>
+        <item name="item_privacy">Privacidad</item>
         <item name="item_about">Acerca de</item>
+        <item name="item_license">Licencia</item>
         <item name="item_logout">Cerrar sesión</item>
     </string-array>
 
