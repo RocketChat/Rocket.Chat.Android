@@ -40,7 +40,6 @@ class ServersAdapter(
         }
     }
 
-
     private fun bindServerViewHolder(holder: ServerViewHolder, position: Int) {
         val account = servers[position]
         holder.bind(account)

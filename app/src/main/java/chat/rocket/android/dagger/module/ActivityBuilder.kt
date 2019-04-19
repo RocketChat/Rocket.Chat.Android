@@ -19,6 +19,7 @@ import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatrooms.di.ChatRoomsFragmentProvider
 import chat.rocket.android.createchannel.di.CreateChannelProvider
 import chat.rocket.android.dagger.scope.PerActivity
+import chat.rocket.android.directory.di.DirectoryFragmentProvider
 import chat.rocket.android.draw.main.di.DrawModule
 import chat.rocket.android.draw.main.ui.DrawingActivity
 import chat.rocket.android.favoritemessages.di.FavoriteMessagesFragmentProvider
@@ -70,7 +71,8 @@ abstract class ActivityBuilder {
             CreateChannelProvider::class,
             ProfileFragmentProvider::class,
             SettingsFragmentProvider::class,
-            AdminPanelWebViewFragmentProvider::class
+            AdminPanelWebViewFragmentProvider::class,
+            DirectoryFragmentProvider::class
         ]
     )
     abstract fun bindMainActivity(): MainActivity
