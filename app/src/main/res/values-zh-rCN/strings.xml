@@ -20,7 +20,7 @@
     <string name="title_password">修改密码</string>
     <string name="title_update_profile">更新资料</string>
     <string name="title_create_channel">新建频道</string>
-    <string name="title_licence">许可证</string>
+    <string name="title_license">许可证</string>
     <string name="title_are_you_sure">你确定?</string>
     <string name="title_channel_details">频道信息</string>
     <string name="title_topic">主题</string>
@@ -60,19 +60,18 @@
     <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
     <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
-    <!-- Settings messages-->
+    <!-- Settings messages -->
     <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
     <string name="msg_language">Language</string> <!-- TODO Translate -->
     <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
     <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
     <string name="msg_administration">Administration</string> <!-- TODO Translate -->
-    <string name="msg_licence">Licence</string> <!-- TODO Translate -->
+    <string name="msg_license">License</string> <!-- TODO Translate -->
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
-
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
     <!-- Regular information messages -->
@@ -80,7 +79,7 @@
     <string name="msg_no_data_to_display">没有数据显示</string>
     <string name="msg_check_this_out">检查这里</string>
     <string name="msg_share_using">分享使用</string>
-    <string name="msg_profile_update_successfully">资料更新成功</string>
+    <string name="msg_profile_updated_successfully">资料更新成功</string>
     <string name="msg_username">用户名</string>
     <string name="msg_username_or_email">用户名或邮箱</string>
     <string name="msg_password">密码</string>
@@ -89,7 +88,7 @@
     <string name="msg_avatar_url">头像网址</string>
     <string name="msg_or_continue_using_social_accounts">或继续使用社交账号</string>
     <string name="msg_new_user">新用户? %1$s</string>
-    <string name="msg_forgot__your_password">忘记密码?</string>
+    <string name="msg_forgot_your_password">忘记密码?</string>
     <string name="msg_reset">重置</string>
     <string name="msg_check_your_email_to_reset_your_password">邮件已发送!请根据邮件提示重置密码.</string>
     <string name="msg_invalid_email">请输入有效邮箱地址</string>
@@ -104,12 +103,12 @@
     <string name="msg_invalid_file">无效文件</string>
     <string name="msg_invalid_server_url">无效的服务器地址</string>
     <string name="msg_content_description_log_in_using_facebook">使用Facebook账户登录</string>
-    <string name="msg_content_description_log_in_using_github">使用Github账户登录</string>
+    <string name="msg_content_description_log_in_using_github">使用GitHub账户登录</string>
     <string name="msg_content_description_log_in_using_google">使用Google账户登录</string>
-    <string name="msg_content_description_log_in_using_linkedin">使用Linkedin账户登录</string>
+    <string name="msg_content_description_log_in_using_linkedin">使用LinkedIn账户登录</string>
     <string name="msg_content_description_log_in_using_meteor">使用Meteor账户登录</string>
     <string name="msg_content_description_log_in_using_twitter">使用Twitter账户登录</string>
-    <string name="msg_content_description_log_in_using_gitlab">使用Gitlab账户登录</string>
+    <string name="msg_content_description_log_in_using_gitlab">使用GitLab账户登录</string>
     <string name="msg_content_description_log_in_using_wordpress">使用WordPress账户登录</string>
     <string name="msg_content_description_send_message">发送消息</string>
     <string name="msg_content_description_show_more_login_options">显示更多登录选项</string>
@@ -155,13 +154,13 @@
     <string name="msg_login_with_email">使用<b>邮箱</b>登录</string>
     <string name="msg_create_account">新建账户</string>
     <string name="msg_continue_with_facebook">使用<b>Facebook</b>账号继续</string>
-    <string name="msg_continue_with_github">使用<b>Github</b>账号继续</string>
+    <string name="msg_continue_with_github">使用<b>GitHub</b>账号继续</string>
     <string name="msg_continue_with_google">使用<b>Google</b>账号继续</string>
-    <string name="msg_continue_with_linkedin">使用<b>Linkedin</b>账号继续</string>
+    <string name="msg_continue_with_linkedin">使用<b>LinkedIn</b>账号继续</string>
     <string name="msg_continue_with_gitlab">使用<b>GitLab</b>账号继续</string>
     <string name="msg_continue_with_wordpress">使用<b>WordPress</b>账号继续</string>
     <string name="msg_two_factor_authentication">两步认证</string>
-    <string name="msg__your_2fa_code">什么是2FA 码?</string>
+    <string name="msg_your_2fa_code">什么是2FA 码?</string>
     <string name="msg_permalink_copied">永久链接已拷贝</string>
     <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
     <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
@@ -179,6 +178,7 @@
     <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
     <string name="msg_server">Server</string> <!-- TODO Translate -->
     <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
+    <string name="msg_directory">Directory</string> <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">隐私</string>
@@ -193,7 +193,7 @@
     <string name="msg_channel_created_successfully">成功建立频道</string>
     <string name="msg_message_copied">消息已拷贝</string>
     <string name="msg_delete_message">删除消息</string>
-    <string name="msg_delete_description">您确定要删除这条消息吗</string>
+    <string name="msg_delete_description">您确定要删除这条消息吗?</string>
     <string name="msg_view_more">显示更多</string>
     <string name="msg_view_less">显示更少</string>
     <string name="msg_muted_on_this_channel">您被禁言了</string>
@@ -312,7 +312,8 @@
     <string name="alert_title_default_skin_tone">默认皮肤颜色</string>
 
     <!-- Sort and group -->
-    <string name="msg_sort_by">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_placeholder">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by">Sort by</string> <!-- TODO Translate -->
     <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
     <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
     <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
@@ -321,7 +322,10 @@
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
-    <string name="header_channel">频道</string>
+    <string name="msg_channels">频道</string>
+    <string name="msg_users">Users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">私人组</string>
     <string name="header_direct_messages">直接对话</string>
     <string name="header_live_chats">Live 对话</string>
