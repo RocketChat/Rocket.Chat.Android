@@ -167,7 +167,7 @@ class RoomUiModelMapper(
 
     private fun roomType(type: String): String = with(context.resources) {
         when (type) {
-            RoomType.CHANNEL -> getString(R.string.header_channel)
+            RoomType.CHANNEL -> getString(R.string.msg_channels)
             RoomType.PRIVATE_GROUP -> getString(R.string.header_private_groups)
             RoomType.DIRECT_MESSAGE -> getString(R.string.header_direct_messages)
             RoomType.LIVECHAT -> getString(R.string.header_live_chats)
