@@ -1,4 +1,4 @@
-package chat.rocket.android.server.infraestructure
+package chat.rocket.android.server.infrastructure
 
 import android.content.SharedPreferences
 import chat.rocket.android.server.domain.CurrentServerRepository

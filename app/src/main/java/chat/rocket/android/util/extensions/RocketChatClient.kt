@@ -2,7 +2,7 @@ package chat.rocket.android.util.extensions
 
 import chat.rocket.android.db.model.MessageEntity
 import chat.rocket.android.server.domain.model.Account
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.retryIO
 import chat.rocket.core.internal.rest.registerPushToken
 import chat.rocket.core.model.Message

@@ -1,4 +1,4 @@
-package chat.rocket.android.server.infraestructure
+package chat.rocket.android.server.infrastructure
 
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.LocalRepository.Companion.SETTINGS_KEY
