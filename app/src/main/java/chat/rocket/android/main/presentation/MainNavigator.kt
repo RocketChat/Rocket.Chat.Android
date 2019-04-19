@@ -6,6 +6,7 @@ import chat.rocket.android.chatroom.ui.chatRoomIntent
 import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
 import chat.rocket.android.createchannel.ui.TAG_CREATE_CHANNEL_FRAGMENT
 import chat.rocket.android.main.ui.MainActivity
+import chat.rocket.android.profile.ui.TAG_IMAGE_DIALOG_FRAGMENT
 import chat.rocket.android.profile.ui.TAG_PROFILE_FRAGMENT
 import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.settings.ui.TAG_SETTINGS_FRAGMENT
@@ -37,6 +38,12 @@ class MainNavigator(internal val activity: MainActivity) {
     fun toProfile() {
         activity.addFragmentBackStack(TAG_PROFILE_FRAGMENT, R.id.fragment_container) {
             chat.rocket.android.profile.ui.newInstance()
+        }
+    }
+
+    fun toProfileImageDialog(avatarUrl: String) {
+        activity.addFragmentBackStack(TAG_IMAGE_DIALOG_FRAGMENT, R.id.fragment_container) {
+            chat.rocket.android.profile.ui.newInstance(avatarUrl)
         }
     }
 

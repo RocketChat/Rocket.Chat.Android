@@ -75,11 +75,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
         user_image_avatar.setOnClickListener {
             val avatarUrl = presenter.getImageUri()
-            chat.rocket.android.profile.ui.newInstance(avatarUrl)
-            fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_container, ImageDialogFragment())
-                ?.addToBackStack(null)
-                ?.commit()
+            presenter.toProfileImage(avatarUrl)
         }
     }
 

@@ -11,6 +11,7 @@ import chat.rocket.android.util.extensions.inflate
 import kotlinx.android.synthetic.main.image_dialog_fragment.*
 
 private lateinit var avatarUrl: String
+internal const val TAG_IMAGE_DIALOG_FRAGMENT = "ImageDialogFragment"
 
 fun newInstance(ImageUri: String): Fragment {
     return ImageDialogFragment().apply {
