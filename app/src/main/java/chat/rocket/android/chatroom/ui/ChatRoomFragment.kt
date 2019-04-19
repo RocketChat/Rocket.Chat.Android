@@ -148,14 +148,10 @@ private const val BUNDLE_CHAT_ROOM_MESSAGE = "chat_room_message"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener,
     ChatRoomAdapter.OnActionSelected, Drawable.Callback {
-    @Inject
-    lateinit var presenter: ChatRoomPresenter
-    @Inject
-    lateinit var parser: MessageParser
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
-    @Inject
-    lateinit var navigator: ChatRoomNavigator
+    @Inject lateinit var presenter: ChatRoomPresenter
+    @Inject lateinit var parser: MessageParser
+    @Inject lateinit var analyticsManager: AnalyticsManager
+    @Inject lateinit var navigator: ChatRoomNavigator
     private lateinit var adapter: ChatRoomAdapter
     internal lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -605,45 +601,31 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun showMessage(message: String) {
-        ui {
-            showToast(message)
-        }
+        ui { showToast(message) }
     }
 
     override fun showMessage(resId: Int) {
-        ui {
-            showToast(resId)
-        }
+        ui { showToast(resId) }
     }
 
     override fun showGenericErrorMessage() {
-        ui {
-            showMessage(getString(R.string.msg_generic_error))
-        }
+        ui { showMessage(getString(R.string.msg_generic_error)) }
     }
 
     override fun populatePeopleSuggestions(members: List<PeopleSuggestionUiModel>) {
-        ui {
-            suggestions_view.addItems("@", members)
-        }
+        ui { suggestions_view.addItems("@", members) }
     }
 
     override fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionUiModel>) {
-        ui {
-            suggestions_view.addItems("#", chatRooms)
-        }
+        ui { suggestions_view.addItems("#", chatRooms) }
     }
 
     override fun populateCommandSuggestions(commands: List<CommandSuggestionUiModel>) {
-        ui {
-            suggestions_view.addItems("/", commands)
-        }
+        ui { suggestions_view.addItems("/", commands) }
     }
 
     override fun populateEmojiSuggestions(emojis: List<EmojiSuggestionUiModel>) {
-        ui {
-            suggestions_view.addItems(":", emojis)
-        }
+        ui { suggestions_view.addItems(":", emojis) }
     }
 
     override fun copyToClipboard(message: String) {

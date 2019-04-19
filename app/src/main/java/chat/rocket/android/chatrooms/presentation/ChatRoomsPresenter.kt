@@ -50,6 +50,8 @@ class ChatRoomsPresenter @Inject constructor(
 
     fun toSettings() = navigator.toSettings()
 
+    fun toDirectory() = navigator.toDirectory()
+
     fun getCurrentServerName() = view.setupToolbar(currentServer)
 
     fun getSortingAndGroupingPreferences() {
