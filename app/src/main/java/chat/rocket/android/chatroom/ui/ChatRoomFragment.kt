@@ -1183,6 +1183,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
+    override fun openTallWebview(roomId: String, url: String) {
+        presenter.openTallWebview(roomId, url)
+    }
+
     override fun copyPermalink(id: String) {
         presenter.copyPermalink(id)
     }

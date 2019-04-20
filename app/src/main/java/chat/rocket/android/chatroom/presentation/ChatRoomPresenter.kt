@@ -1290,4 +1290,10 @@ class ChatRoomPresenter @Inject constructor(
     fun getDraftUnfinishedMessage(): String? {
         return localRepository.get(draftKey)
     }
+
+    fun openTallWebview(roomId: String, url: String) {
+        launchUI(strategy){
+            navigator.toTallWebview(roomId, url)
+        }
+    }
 }
