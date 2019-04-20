@@ -25,6 +25,24 @@ class UserHelper @Inject constructor(
     fun username(): String? = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY, null)
 
     /**
+     * Return the name for the current logged [User].
+     */
+    fun name(): String? = user()?.name
+
+    /**
+     * Return the display name for the given [user].
+     * If setting 'Use_Real_Name' is true then the real name will be given, otherwise the username
+     * without the '@' is yielded.
+     */
+    fun displayName(user: User) = getCurrentServerInteractor.get()?.let {
+        if (settingsRepository.get(it).useRealName()) {
+            user.name
+        } else {
+            user.username
+        }
+    }
+
+    /**
      * Return the display name for the given [user].
      * If setting 'Use_Real_Name' is true then the real name will be given, otherwise the username
      * without the '@' is yielded.

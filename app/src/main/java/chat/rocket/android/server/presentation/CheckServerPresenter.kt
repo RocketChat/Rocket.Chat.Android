@@ -105,7 +105,7 @@ abstract class CheckServerPresenter constructor(
 
     internal fun setupConnectionInfo(serverUrl: String) {
         currentServer = serverUrl
-        client = factory.create(serverUrl)
+        client = factory.get(serverUrl)
         managerFactory?.create(serverUrl)?.let {
             manager = it
         }
@@ -452,7 +452,7 @@ abstract class CheckServerPresenter constructor(
 
     /**
      * Returns the OAuth client ID of a [serviceMap].
-     * REMARK: This function works for common OAuth providers (Google, Facebook, Github and so on)
+     * REMARK: This function works for common OAuth providers (Google, Facebook, GitHub and so on)
      * as well as custom OAuth.
      *
      * @param serviceMap The service map to get the OAuth client ID.
