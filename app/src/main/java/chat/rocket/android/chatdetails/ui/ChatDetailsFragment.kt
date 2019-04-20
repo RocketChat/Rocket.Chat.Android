@@ -1,7 +1,13 @@
 package chat.rocket.android.chatdetails.ui
 
 import DrawableHelper
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ClickableSpan
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -132,7 +138,8 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
             content_announcement.text =
                     if (room.announcement.isNullOrEmpty()) getString(R.string.msg_no_announcement) else room.announcement
             content_description.text =
-                    if (room.description.isNullOrEmpty()) getString(R.string.msg_no_description) else room.description
+                    if (room.description.isNullOrEmpty()) getString(R.string.msg_no_description)
+                    else getClickableSpan(room.description)
         }
     }
 
@@ -241,5 +248,32 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
             hideExpandMoreForToolbar()
             setupToolbarTitle(getString(R.string.title_channel_details))
         }
+    }
+
+    private fun getClickableSpan(description: String): CharSequence {
+        val spannableContent = SpannableStringBuilder(description)
+        val clickablePartList = getUrlList(description)
+        if (clickablePartList != null) {
+            for (clickablePart in clickablePartList) {
+                val clickableSpan = object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(clickablePart))
+                    }
+                }
+                val clickablePartStart = description.indexOf(clickablePart)
+                spannableContent.setSpan(
+                        clickableSpan,
+                        clickablePartStart,
+                        clickablePartStart + clickablePart.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+        }
+        return spannableContent
+    }
+
+    private fun getUrlList(description: String): List<String>? {
+        // Extract all urls from the room description and put them in a list.
+        val urlRegex = Patterns.WEB_URL.toRegex()
+        return urlRegex.findAll(description).map { it.value }.toList()
     }
 }
