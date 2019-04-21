@@ -115,7 +115,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="chat.rocket.android.fileprovider"
+            android:authorities=".fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
