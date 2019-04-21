@@ -18,7 +18,7 @@ class RocketChatClientFactory @Inject constructor(
 ) {
     private val cache = HashMap<String, RocketChatClient>()
 
-    fun create(url: String): RocketChatClient {
+    fun get(url: String): RocketChatClient {
         cache[url]?.let {
             Timber.d("Returning CACHED client for: $url")
             return it

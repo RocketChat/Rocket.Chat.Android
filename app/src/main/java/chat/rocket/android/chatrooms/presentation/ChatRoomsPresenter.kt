@@ -10,6 +10,7 @@ import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.domain.SortingAndGroupingInteractor
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.server.infraestructure.ConnectionManager
@@ -35,6 +36,7 @@ class ChatRoomsPresenter @Inject constructor(
     private val strategy: CancelStrategy,
     private val navigator: MainNavigator,
     @Named("currentServer") private val currentServer: String,
+    private val sortingAndGroupingInteractor: SortingAndGroupingInteractor,
     private val dbManager: DatabaseManager,
     manager: ConnectionManager,
     private val localRepository: LocalRepository,
@@ -44,29 +46,44 @@ class ChatRoomsPresenter @Inject constructor(
     private val client = manager.client
     private val settings = settingsRepository.get(currentServer)
 
+    fun toCreateChannel() = navigator.toCreateChannel()
+
+    fun toSettings() = navigator.toSettings()
+
+    fun toDirectory() = navigator.toDirectory()
+
+    fun getCurrentServerName() = view.setupToolbar(currentServer)
+
+    fun getSortingAndGroupingPreferences() {
+        with(sortingAndGroupingInteractor) {
+            view.setupSortingAndGrouping(
+                getSortByName(currentServer),
+                getUnreadOnTop(currentServer),
+                getGroupByType(currentServer),
+                getGroupByFavorites(currentServer)
+            )
+        }
+    }
+
     fun loadChatRoom(roomId: String) {
         launchUI(strategy) {
-            view.showLoadingRoom("")
             try {
                 val room = dbManager.getRoom(roomId)
                 if (room != null) {
                     loadChatRoom(room.chatRoom, true)
                 } else {
-                    Timber.d("Error loading channel")
+                    Timber.e("Error loading channel")
                     view.showGenericErrorMessage()
                 }
             } catch (ex: Exception) {
-                Timber.d(ex, "Error loading channel")
+                Timber.e(ex, "Error loading channel")
                 view.showGenericErrorMessage()
-            } finally {
-                view.hideLoadingRoom()
             }
         }
     }
 
     fun loadChatRoom(chatRoom: RoomUiModel) {
         launchUI(strategy) {
-            view.showLoadingRoom(chatRoom.name)
             try {
                 val room = retryDB("getRoom(${chatRoom.id}") { dbManager.getRoom(chatRoom.id) }
                 if (room != null) {
@@ -86,10 +103,8 @@ class ChatRoomsPresenter @Inject constructor(
                     }
                 }
             } catch (ex: Exception) {
-                Timber.d(ex, "Error loading channel")
+                Timber.e(ex, "Error loading channel")
                 view.showGenericErrorMessage()
-            } finally {
-                view.hideLoadingRoom()
             }
         }
     }
@@ -97,11 +112,12 @@ class ChatRoomsPresenter @Inject constructor(
     suspend fun loadChatRoom(chatRoom: ChatRoomEntity, local: Boolean = false) {
         with(chatRoom) {
             val isDirectMessage = roomTypeOf(type) is RoomType.DirectMessage
-            val roomName = if (settings.useSpecialCharsOnRoom() || (isDirectMessage && settings.useRealName())) {
-                fullname ?: name
-            } else {
-                name
-            }
+            val roomName =
+                if (settings.useSpecialCharsOnRoom() || (isDirectMessage && settings.useRealName())) {
+                    fullname ?: name
+                } else {
+                    name
+                }
 
             val myself = getCurrentUser()
             if (myself?.username == null) {
@@ -131,14 +147,14 @@ class ChatRoomsPresenter @Inject constructor(
                 }
 
                 navigator.toChatRoom(
-                        chatRoomId = id,
-                        chatRoomName = roomName,
-                        chatRoomType = type,
-                        isReadOnly = readonly ?: false,
-                        chatRoomLastSeen = lastSeen ?: -1,
-                        isSubscribed = open,
-                        isCreator = ownerId == myself.id || isDirectMessage,
-                        isFavorite = favorite ?: false
+                    chatRoomId = id,
+                    chatRoomName = roomName,
+                    chatRoomType = type,
+                    isReadOnly = readonly ?: false,
+                    chatRoomLastSeen = lastSeen ?: -1,
+                    isSubscribed = open,
+                    isCreator = ownerId == myself.id || isDirectMessage,
+                    isFavorite = favorite ?: false
                 )
             }
         }

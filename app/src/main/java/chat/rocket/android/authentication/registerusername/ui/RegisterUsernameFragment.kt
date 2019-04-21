@@ -140,7 +140,7 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
             val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_20dp, it)
             DrawableHelper.wrapDrawable(atDrawable)
             DrawableHelper.tintDrawable(atDrawable, it, R.color.colorDrawableTintGrey)
-            DrawableHelper.compoundDrawable(text_username, atDrawable)
+            DrawableHelper.compoundLeftDrawable(text_username, atDrawable)
         }
     }
 
