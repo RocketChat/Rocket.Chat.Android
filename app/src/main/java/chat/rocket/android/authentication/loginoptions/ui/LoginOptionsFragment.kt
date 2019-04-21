@@ -537,16 +537,13 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     }
 
     private fun expandAccountsView() {
-        val collapsedHeight = accounts_container.height
-        var expandedHeight = collapsedHeight
+        val buttons = (0..accounts_container.childCount)
+            .mapNotNull { accounts_container.getChildAt(it) as? Button }
+            .filter { it.isClickable && !it.isVisible }
         val optionHeight = accounts_container.getChildAt(1).height +
             accounts_container.getChildAt(1).marginTop
-        for (i in 0 until accounts_container.childCount) {
-            val bt = accounts_container.getChildAt(i) as Button
-            if (bt.isClickable && !bt.isVisible) {
-                expandedHeight += optionHeight
-            }
-        }
+        val collapsedHeight = accounts_container.height
+        val expandedHeight = collapsedHeight + optionHeight * buttons.size
         val animation = ValueAnimator.ofInt(collapsedHeight, expandedHeight)
         animation.addUpdateListener {
             val params = accounts_container.layoutParams
@@ -555,14 +552,11 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         }
         animation.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationStart(animator: Animator) {
-                for (i in 0 until accounts_container.childCount) {
-                    val bt = accounts_container.getChildAt(i) as Button
-                    if (!bt.isVisible) {
-                        bt.isVisible = true
-                        val anim = AlphaAnimation(0.0f, 1.0f)
-                        anim.duration = 400
-                        bt.startAnimation(anim)
-                    }
+                buttons.forEach {
+                    it.isVisible = true
+                    val anim = AlphaAnimation(0.0f, 1.0f)
+                    anim.duration = 400
+                    it.startAnimation(anim)
                 }
             }
         })
@@ -570,16 +564,14 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     }
 
     private fun collapseAccountsView() {
-        val expandedHeight = accounts_container.height
-        var collapsedHeight = expandedHeight
+        val buttons = (0..accounts_container.childCount)
+            .mapNotNull { accounts_container.getChildAt(it) as? Button }
+            .filter { it.isClickable && it.isVisible }
+            .drop(3)
         val optionHeight = accounts_container.getChildAt(1).height +
             accounts_container.getChildAt(1).marginTop
-        for (i in 3 until accounts_container.childCount) {
-            val bt = accounts_container.getChildAt(i) as Button
-            if (bt.isClickable && bt.isVisible) {
-                collapsedHeight -= optionHeight
-            }
-        }
+        val expandedHeight = accounts_container.height
+        val collapsedHeight = expandedHeight - optionHeight * buttons.size
         val animation = ValueAnimator.ofInt(expandedHeight, collapsedHeight)
         animation.addUpdateListener {
             val params = accounts_container.layoutParams
@@ -588,26 +580,23 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
         }
         animation.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationStart(animator: Animator) {
-                for (i in 3 until accounts_container.childCount) {
-                    val bt = accounts_container.getChildAt(i) as Button
-                    if (bt.isVisible) {
-                        val anim = AlphaAnimation(1.0f, 0.0f)
-                        anim.duration = 400
-                        anim.setAnimationListener(object : Animation.AnimationListener {
-                            override fun onAnimationStart(animation: Animation) {
+                buttons.forEach {
+                    val anim = AlphaAnimation(1.0f, 0.0f)
+                    anim.duration = 400
+                    anim.setAnimationListener(object : Animation.AnimationListener {
+                        override fun onAnimationStart(animation: Animation) {
 
-                            }
+                        }
 
-                            override fun onAnimationEnd(animation: Animation) {
-                                bt.isVisible = false
-                            }
+                        override fun onAnimationEnd(animation: Animation) {
+                            it.isVisible = false
+                        }
 
-                            override fun onAnimationRepeat(animation: Animation) {
+                        override fun onAnimationRepeat(animation: Animation) {
 
-                            }
-                        })
-                        bt.startAnimation(anim)
-                    }
+                        }
+                    })
+                    it.startAnimation(anim)
                 }
             }
         })
