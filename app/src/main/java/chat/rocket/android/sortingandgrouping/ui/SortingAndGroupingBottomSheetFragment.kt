@@ -140,7 +140,7 @@ class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), Sorti
     }
 
     private fun changeSortByTitle(text: String) {
-        text_sort_by.text = getString(R.string.msg_sort_by, text.toLowerCase())
+        text_sort_by.text = getString(R.string.msg_sort_by_placeholder, text.toLowerCase())
     }
 
     private fun checkSelection(textView: TextView, @DrawableRes leftDrawable: Int) {
