@@ -8,6 +8,7 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.updateProfile
 import javax.inject.Inject
@@ -21,7 +22,7 @@ class PasswordPresenter @Inject constructor(
     factory: RocketChatClientFactory
 ) {
     private val serverUrl = serverInteractor.get()!!
-    private val client: RocketChatClient = factory.get(serverUrl)
+    private val client: RocketChatClient = factory.create(serverUrl)
 
     fun updatePassword(password: String) {
         launchUI(strategy) {

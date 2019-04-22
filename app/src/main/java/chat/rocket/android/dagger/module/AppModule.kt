@@ -27,23 +27,23 @@ import chat.rocket.android.push.PushManager
 import chat.rocket.android.server.domain.AccountsRepository
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.server.domain.AnalyticsTrackingRepository
-import chat.rocket.android.server.domain.BasicAuthRepository
 import chat.rocket.android.server.domain.ChatRoomsRepository
 import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.GetAccountInteractor
 import chat.rocket.android.server.domain.GetAccountsInteractor
-import chat.rocket.android.server.domain.GetBasicAuthInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.JobSchedulerInteractor
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.domain.MultiServerTokenRepository
 import chat.rocket.android.server.domain.PermissionsRepository
-import chat.rocket.android.server.domain.SaveBasicAuthInteractor
 import chat.rocket.android.server.domain.SettingsRepository
-import chat.rocket.android.server.domain.SortingAndGroupingRepository
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.UsersRepository
+import chat.rocket.android.server.domain.BasicAuthRepository
+import chat.rocket.android.server.domain.GetBasicAuthInteractor
+import chat.rocket.android.server.domain.SaveBasicAuthInteractor
+import chat.rocket.android.server.infraestructure.SharedPrefsBasicAuthRepository
 import chat.rocket.android.server.infraestructure.DatabaseMessageMapper
 import chat.rocket.android.server.infraestructure.DatabaseMessagesRepository
 import chat.rocket.android.server.infraestructure.JobSchedulerInteractorImpl
@@ -53,13 +53,11 @@ import chat.rocket.android.server.infraestructure.SharedPreferencesAccountsRepos
 import chat.rocket.android.server.infraestructure.SharedPreferencesPermissionsRepository
 import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsAnalyticsTrackingRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsBasicAuthRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsConnectingServerRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsSortingAndGroupingRepository
 import chat.rocket.android.util.AppJsonAdapterFactory
-import chat.rocket.android.util.BasicAuthenticatorInterceptor
 import chat.rocket.android.util.HttpLoggingInterceptor
+import chat.rocket.android.util.BasicAuthenticatorInterceptor
 import chat.rocket.android.util.TimberLogger
 import chat.rocket.common.internal.FallbackSealedClassJsonAdapter
 import chat.rocket.common.internal.ISO8601Date
@@ -125,10 +123,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(
-        logger: HttpLoggingInterceptor,
-        basicAuthenticator: BasicAuthenticatorInterceptor
-    ): OkHttpClient {
+    fun provideOkHttpClient(logger: HttpLoggingInterceptor, basicAuthenticator: BasicAuthenticatorInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(logger)
             .addInterceptor(basicAuthenticator)
@@ -197,12 +192,6 @@ class AppModule {
     @Singleton
     fun provideAnalyticsTrackingRepository(prefs: SharedPreferences): AnalyticsTrackingRepository {
         return SharedPrefsAnalyticsTrackingRepository(prefs)
-    }
-
-    @Provides
-    @Singleton
-    fun provideSortingAndGroupingRepository(prefs: SharedPreferences): SortingAndGroupingRepository {
-        return SharedPrefsSortingAndGroupingRepository(prefs)
     }
 
     @Provides
@@ -304,10 +293,10 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideBasicAuthRepository(
+    fun provideBasicAuthRepository (
         preferences: SharedPreferences,
         moshi: Moshi
-    ): BasicAuthRepository =
+    ): BasicAuthRepository = 
         SharedPrefsBasicAuthRepository(preferences, moshi)
 
     @Provides

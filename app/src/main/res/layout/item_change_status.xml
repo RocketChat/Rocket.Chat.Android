@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="?android:dividerHorizontal"
+    android:orientation="vertical"
+    android:showDividers="end">
+
+    <TextView
+        android:id="@+id/text_online"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_status_online_12dp"
+        android:text="@string/action_online"
+        android:background="?selectableItemBackground"/>
+
+    <TextView
+        android:id="@+id/text_away"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_status_away_12dp"
+        android:text="@string/action_away"
+        android:background="?selectableItemBackground"/>
+
+    <TextView
+        android:id="@+id/text_busy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_status_busy_12dp"
+        android:text="@string/action_busy"
+        android:background="?selectableItemBackground"/>
+
+    <TextView
+        android:id="@+id/text_invisible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_status_invisible_12dp"
+        android:text="@string/action_invisible"
+        android:background="?selectableItemBackground"/>
+
+</LinearLayout>

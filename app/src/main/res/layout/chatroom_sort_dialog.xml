@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <RadioGroup
+        android:id="@+id/radio_group_sort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radio_sort_alphabetical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/dialog_sort_by_alphabet"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/radio_sort_activity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/dialog_sort_by_activity"
+            android:textSize="18sp" />
+    </RadioGroup>
+
+    <CheckBox
+        android:id="@+id/checkbox_group_by_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:padding="8dp"
+        android:text="@string/dialog_group_by_type"
+        android:textSize="18sp" />
+
+    <!--TODO Add checkbox for "Group favourites after sdk support"-->
+</LinearLayout>

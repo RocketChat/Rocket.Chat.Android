@@ -69,7 +69,7 @@ class PermissionsInteractor @Inject constructor(
     }
 
 
-    fun isAdministrationEnabled(): Boolean {
+    fun canSeeTheAdminPanel(): Boolean {
         currentServerUrl()?.let { serverUrl ->
             val viewStatistics =
                 permissionsRepository.get(serverUrl, VIEW_STATISTICS)

@@ -38,7 +38,7 @@ class RegisterUsernamePresenter @Inject constructor(
     val settingsInteractor: GetSettingsInteractor
 ) {
     private val currentServer = serverInteractor.get()!!
-    private val client: RocketChatClient = factory.get(currentServer)
+    private val client: RocketChatClient = factory.create(currentServer)
     private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
 
     fun registerUsername(username: String, userId: String, authToken: String) {

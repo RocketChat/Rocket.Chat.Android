@@ -27,7 +27,7 @@ class MembersPresenter @Inject constructor(
     val factory: RocketChatClientFactory,
     private val userHelper: UserHelper
 ) {
-    private val client: RocketChatClient = factory.get(currentServer)
+    private val client: RocketChatClient = factory.create(currentServer)
     private var offset: Long = 0
 
     /**

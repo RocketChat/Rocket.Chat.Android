@@ -2,6 +2,7 @@ package chat.rocket.android.profile.ui
 
 import DrawableHelper
 import android.app.Activity
+import androidx.appcompat.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
@@ -11,8 +12,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioGroup
-import androidx.appcompat.app.AlertDialog
+import android.view.MenuInflater
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.net.toUri
@@ -32,13 +33,10 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.util.invalidateFirebaseToken
-import chat.rocket.common.model.UserStatus
-import chat.rocket.common.model.userStatusOf
 import com.facebook.drawee.backends.pipeline.Fresco
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
-import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.avatar_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.update_avatar_options.*
@@ -49,21 +47,24 @@ internal const val TAG_PROFILE_FRAGMENT = "ProfileFragment"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 1
 private const val REQUEST_CODE_FOR_PERFORM_CAMERA = 2
 
-fun newInstance() = ProfileFragment()
-
 class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
-    @Inject lateinit var presenter: ProfilePresenter
-    @Inject lateinit var analyticsManager: AnalyticsManager
-    private var currentStatus = ""
+    @Inject
+    lateinit var presenter: ProfilePresenter
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
     private var currentName = ""
     private var currentUsername = ""
     private var currentEmail = ""
     private var actionMode: ActionMode? = null
     private val editTextsDisposable = CompositeDisposable()
 
+    companion object {
+        fun newInstance() = ProfileFragment()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
@@ -77,12 +78,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar()
+        setupListeners()
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             tintEditTextDrawableStart()
         }
-
         presenter.loadUserProfile()
-        setupListeners()
         subscribeEditTexts()
 
         analyticsManager.logScreenView(ScreenViewEvent.Profile)
@@ -112,21 +112,25 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         super.onPrepareOptionsMenu(menu)
     }
 
-    override fun showProfile(
-        status: String,
-        avatarUrl: String,
-        name: String,
-        username: String,
-        email: String?
-    ) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.profile, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_delete_account -> showDeleteAccountDialog()
+        }
+        return true
+    }
+
+    override fun showProfile(avatarUrl: String, name: String, username: String, email: String?) {
         ui {
-            text_status.text = getString(R.string.status, status.capitalize())
             image_avatar.setImageURI(avatarUrl)
             text_name.textContent = name
             text_username.textContent = username
             text_email.textContent = email ?: ""
 
-            currentStatus = status
             currentName = name
             currentUsername = username
             currentEmail = email ?: ""
@@ -138,10 +142,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun reloadUserAvatar(avatarUrl: String) {
         Fresco.getImagePipeline().evictFromCache(avatarUrl.toUri())
         image_avatar.setImageURI(avatarUrl)
+        (activity as MainActivity).setAvatar(avatarUrl)
     }
 
     override fun showProfileUpdateSuccessfullyMessage() {
-        showMessage(getString(R.string.msg_profile_updated_successfully))
+        showMessage(getString(R.string.msg_profile_update_successfully))
     }
 
     override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
@@ -200,19 +205,10 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun setupToolbar() {
-        with((activity as AppCompatActivity)) {
-            with(toolbar) {
-                setSupportActionBar(this)
-                title = getString(R.string.title_profile)
-                setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-                setNavigationOnClickListener { activity?.onBackPressed() }
-            }
-        }
+        (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_profile)
     }
 
     private fun setupListeners() {
-        text_status.setOnClickListener { showStatusDialog(currentStatus) }
-
         image_avatar.setOnClickListener { showUpdateAvatarOptions() }
 
         view_dim.setOnClickListener { hideUpdateAvatarOptions() }
@@ -267,8 +263,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             text_email.asObservable()
         ) { text_name, text_username, text_email ->
             return@combineLatest (text_name.toString() != currentName ||
-                text_username.toString() != currentUsername ||
-                text_email.toString() != currentEmail)
+                    text_username.toString() != currentUsername ||
+                    text_email.toString() != currentEmail)
         }.subscribe { isValid ->
             activity?.invalidateOptionsMenu()
             if (isValid) {
@@ -297,38 +293,15 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
     }
 
-    private fun showStatusDialog(currentStatus: String) {
-        val dialogLayout = layoutInflater.inflate(R.layout.dialog_status, null)
-        val radioGroup = dialogLayout.findViewById<RadioGroup>(R.id.radio_group_status)
-
-        radioGroup.check(
-            when (userStatusOf(currentStatus)) {
-                is UserStatus.Online -> R.id.radio_button_online
-                is UserStatus.Away -> R.id.radio_button_away
-                is UserStatus.Busy -> R.id.radio_button_busy
-                else -> R.id.radio_button_invisible
-            }
-        )
-
-        var newStatus: UserStatus = userStatusOf(currentStatus)
-        radioGroup.setOnCheckedChangeListener { _, checkId ->
-            when (checkId) {
-                R.id.radio_button_online -> newStatus = UserStatus.Online()
-                R.id.radio_button_away -> newStatus = UserStatus.Away()
-                R.id.radio_button_busy -> newStatus = UserStatus.Busy()
-                else -> newStatus = UserStatus.Offline()
-            }
-        }
-
+    fun showDeleteAccountDialog() {
         context?.let {
-            AlertDialog.Builder(it)
-                .setView(dialogLayout)
-                .setPositiveButton(R.string.msg_change_status) { dialog, _ ->
-                    presenter.updateStatus(newStatus)
-                    text_status.text = getString(R.string.status, newStatus.toString().capitalize())
-                    this.currentStatus = newStatus.toString()
-                    dialog.dismiss()
-                }.show()
+            val passwordEText = EditText(context);
+            val mDialogView = LayoutInflater.from(it).inflate(R.layout.item_account_delete, null)
+            val mBuilder = AlertDialog.Builder(it)
+
+            mBuilder.setView(mDialogView).setPositiveButton(R.string.action_delete_account) { _, _ ->
+                presenter.deleteAccount(passwordEText.text.toString())
+            }.setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }.create().show()
         }
     }
 }

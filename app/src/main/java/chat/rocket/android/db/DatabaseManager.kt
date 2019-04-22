@@ -139,7 +139,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     }
 
     /*
-     * Creates a list of database operations
+     * Creates a list of data base operations
      */
     fun processChatRoomsBatch(batch: List<StreamMessage<BaseRoom>>) {
         GlobalScope.launch(dbManagerContext) {

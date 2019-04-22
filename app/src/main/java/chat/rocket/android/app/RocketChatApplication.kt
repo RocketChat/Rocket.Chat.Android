@@ -115,7 +115,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         // TODO - remove this
         checkCurrentServer()
 
-        // TODO - FIXME - we need to properly inject and initialize the EmojiRepository
+        // TODO - FIXME - we need to proper inject the EmojiRepository and initialize it properly
         loadEmojis()
     }
 
@@ -176,7 +176,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         val currentServer = getCurrentServerInteractor.get()
         currentServer?.let { server ->
             GlobalScope.launch {
-                val client = factory.get(server)
+                val client = factory.create(server)
                 EmojiRepository.setCurrentServerUrl(server)
                 val customEmojiList = mutableListOf<Emoji>()
                 try {

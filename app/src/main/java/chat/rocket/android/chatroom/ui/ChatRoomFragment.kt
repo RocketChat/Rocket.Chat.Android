@@ -5,7 +5,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -62,13 +61,9 @@ import chat.rocket.android.emoji.EmojiPickerPopup
 import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.emoji.internal.isCustom
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
+import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.helper.AndroidPermissionsHelper
-import chat.rocket.android.helper.AndroidPermissionsHelper.getCameraPermission
-import chat.rocket.android.helper.AndroidPermissionsHelper.getWriteExternalStoragePermission
-import chat.rocket.android.helper.AndroidPermissionsHelper.hasCameraPermission
-import chat.rocket.android.helper.AndroidPermissionsHelper.hasWriteExternalStoragePermission
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.createImageFile
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
@@ -86,7 +81,6 @@ import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
 import com.bumptech.glide.Glide
-import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -147,10 +141,14 @@ private const val BUNDLE_CHAT_ROOM_MESSAGE = "chat_room_message"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener,
     ChatRoomAdapter.OnActionSelected, Drawable.Callback {
-    @Inject lateinit var presenter: ChatRoomPresenter
-    @Inject lateinit var parser: MessageParser
-    @Inject lateinit var analyticsManager: AnalyticsManager
-    @Inject lateinit var navigator: ChatRoomNavigator
+    @Inject
+    lateinit var presenter: ChatRoomPresenter
+    @Inject
+    lateinit var parser: MessageParser
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
+    @Inject
+    lateinit var navigator: ChatRoomNavigator
     private lateinit var adapter: ChatRoomAdapter
     internal lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -270,6 +268,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        setHasOptionsMenu(true)
 
         arguments?.run {
             chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")
@@ -293,8 +292,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             navigator = navigator,
             analyticsManager = analyticsManager
         )
-
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -599,31 +596,45 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun showMessage(message: String) {
-        ui { showToast(message) }
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showMessage(resId: Int) {
-        ui { showToast(resId) }
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showGenericErrorMessage() {
-        ui { showMessage(getString(R.string.msg_generic_error)) }
+        ui {
+            showMessage(getString(R.string.msg_generic_error))
+        }
     }
 
     override fun populatePeopleSuggestions(members: List<PeopleSuggestionUiModel>) {
-        ui { suggestions_view.addItems("@", members) }
+        ui {
+            suggestions_view.addItems("@", members)
+        }
     }
 
     override fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionUiModel>) {
-        ui { suggestions_view.addItems("#", chatRooms) }
+        ui {
+            suggestions_view.addItems("#", chatRooms)
+        }
     }
 
     override fun populateCommandSuggestions(commands: List<CommandSuggestionUiModel>) {
-        ui { suggestions_view.addItems("/", commands) }
+        ui {
+            suggestions_view.addItems("/", commands)
+        }
     }
 
     override fun populateEmojiSuggestions(emojis: List<EmojiSuggestionUiModel>) {
-        ui { suggestions_view.addItems(":", emojis) }
+        ui {
+            suggestions_view.addItems(":", emojis)
+        }
     }
 
     override fun copyToClipboard(message: String) {
@@ -892,14 +903,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_add_reaction_or_show_keyboard.setOnClickListener { toggleKeyboard() }
 
             button_take_a_photo.setOnClickListener {
-                // Check for camera permission
-                context?.let {
-                    if(hasCameraPermission(it)) {
-                        dispatchTakePictureIntent()
-                    } else {
-                        getCameraPermission(this)
-                    }
-                }
+                dispatchTakePictureIntent()
+
                 handler.postDelayed({
                     hideAttachmentOptions()
                 }, 400)
@@ -917,10 +922,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             button_drawing.setOnClickListener {
                 activity?.let { fragmentActivity ->
-                    if (!hasWriteExternalStoragePermission(fragmentActivity)) {
-                        getWriteExternalStoragePermission(this)
+                    if (!ImageHelper.canWriteToExternalStorage(fragmentActivity)) {
+                        ImageHelper.checkWritingPermission(fragmentActivity)
                     } else {
-                        dispatchDrawingIntent()
+                        val intent = Intent(fragmentActivity, DrawingActivity::class.java)
+                        startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
                     }
                 }
 
@@ -929,11 +935,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }, 400)
             }
         }
-    }
-
-    private fun dispatchDrawingIntent() {
-        val intent = Intent(activity, DrawingActivity::class.java)
-        startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
     }
 
     private fun dispatchTakePictureIntent() {
@@ -952,44 +953,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 )
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, takenPhotoUri)
                 startActivityForResult(takePictureIntent, REQUEST_CODE_FOR_PERFORM_CAMERA)
-            }
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode) {
-            AndroidPermissionsHelper.CAMERA_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted
-                    dispatchTakePictureIntent()
-                } else {
-                    // permission denied
-                    Snackbar.make(
-                        root_layout,
-                        R.string.msg_camera_permission_denied,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }
-                return
-            }
-            AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted
-                    dispatchDrawingIntent()
-                } else {
-                    // permission denied
-                    Snackbar.make(
-                        root_layout,
-                        R.string.msg_storage_permission_denied,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }
-                return
             }
         }
     }

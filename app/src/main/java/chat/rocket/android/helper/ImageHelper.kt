@@ -1,5 +1,7 @@
 package chat.rocket.android.helper
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
@@ -7,6 +9,7 @@ import android.media.MediaScannerConnection
 import android.os.Environment
 import android.text.TextUtils
 import android.util.TypedValue
+import android.view.ContextThemeWrapper
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,8 +18,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.core.view.setPadding
 import chat.rocket.android.R
-import chat.rocket.android.helper.AndroidPermissionsHelper.checkWritingPermission
-import chat.rocket.android.helper.AndroidPermissionsHelper.hasWriteExternalStoragePermission
 import com.facebook.binaryresource.FileBinaryResource
 import com.facebook.cache.common.CacheKey
 import com.facebook.imageformat.ImageFormatChecker
@@ -116,7 +117,7 @@ object ImageHelper {
     }
 
     private fun saveImage(context: Context): Boolean {
-        if (!hasWriteExternalStoragePermission(context)) {
+        if (!canWriteToExternalStorage(context)) {
             checkWritingPermission(context)
             return false
         }
@@ -150,5 +151,23 @@ object ImageHelper {
             }
         }
         return true
+    }
+
+    fun canWriteToExternalStorage(context: Context): Boolean {
+        return AndroidPermissionsHelper.checkPermission(
+            context,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+    }
+
+    fun checkWritingPermission(context: Context) {
+        if (context is ContextThemeWrapper) {
+            val activity = if (context.baseContext is Activity) context.baseContext as Activity else context as Activity
+            AndroidPermissionsHelper.requestPermission(
+                activity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE
+            )
+        }
     }
 }

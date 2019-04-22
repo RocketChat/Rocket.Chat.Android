@@ -15,11 +15,11 @@ object OauthHelper {
                 "\"isCordova\":true}").encodeToBase64()
 
     /**
-     * Returns the GitHub Oauth URL.
+     * Returns the Github Oauth URL.
      *
      * @param clientId The GitHub client ID.
      * @param state An unguessable random string used to protect against forgery attacks.
-     * @return The GitHub Oauth URL.
+     * @return The Github Oauth URL.
      */
     fun getGithubOauthUrl(clientId: String, state: String): String {
         return "https://github.com/login/oauth/authorize" +
@@ -46,12 +46,12 @@ object OauthHelper {
     }
 
     /**
-     * Returns the LinkedIn Oauth URL.
+     * Returns the Linkedin Oauth URL.
      *
-     * @param clientId The LinkedIn client ID.
+     * @param clientId The Linkedin client ID.
      * @param serverUrl The server URL.
      * @param state An unguessable random string used to protect against forgery attacks.
-     * @return The LinkedIn Oauth URL.
+     * @return The Linkedin Oauth URL.
      */
     fun getLinkedinOauthUrl(clientId: String, serverUrl: String, state: String): String {
         return "https://linkedin.com/oauth/v2/authorization" +
@@ -62,13 +62,13 @@ object OauthHelper {
     }
 
     /**
-     * Returns the GitLab Oauth URL.
+     * Returns the Gitlab Oauth URL.
      *
-     * @param host The GitLab host.
-     * @param clientId The GitLab client ID.
+     * @param host The Gitlab host.
+     * @param clientId The Gitlab client ID.
      * @param serverUrl The server URL.
      * @param state An unguessable random string used to protect against forgery attacks.
-     * @return The GitLab Oauth URL.
+     * @return The Gitlab Oauth URL.
      */
     fun getGitlabOauthUrl(
         host: String? = "https://gitlab.com",

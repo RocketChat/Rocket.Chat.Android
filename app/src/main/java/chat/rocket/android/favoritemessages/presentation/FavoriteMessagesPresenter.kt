@@ -5,6 +5,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
+import chat.rocket.android.util.retryDB
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
@@ -22,7 +23,7 @@ class FavoriteMessagesPresenter @Inject constructor(
     private val mapper: UiModelMapper,
     val factory: RocketChatClientFactory
 ) {
-    private val client: RocketChatClient = factory.get(currentServer)
+    private val client: RocketChatClient = factory.create(currentServer)
     private var offset: Int = 0
 
     /**

@@ -60,7 +60,7 @@ class LoginPresenter @Inject constructor(
 
     private fun setupConnectionInfo(serverUrl: String) {
         currentServer = serverUrl
-        client = factory.get(currentServer)
+        client = factory.create(currentServer)
         settings = settingsInteractor.get(currentServer)
     }
 

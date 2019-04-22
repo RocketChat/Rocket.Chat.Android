@@ -4,12 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    android:focusableInTouchMode="true"
     tools:context="createchannel.ui.CreateChannelFragment">
-
-    <include
-        android:id="@+id/layout_app_bar"
-        layout="@layout/app_bar"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"
@@ -21,26 +18,23 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_app_bar"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
     <TextView
         android:id="@+id/text_channel_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:text="@string/msg_public_channel"
         android:textColor="@color/colorPrimaryText"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_app_bar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_channel_type_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:text="@string/msg_public_channel_description"
         android:textColor="@color/colorSecondaryText"
         android:textSize="12sp"
@@ -51,7 +45,6 @@
         android:id="@+id/switch_channel_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/text_channel_type_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/text_channel_type" />
@@ -60,8 +53,6 @@
         android:id="@+id/text_read_only"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-
         android:layout_marginTop="16dp"
         android:text="@string/msg_ready_only_channel"
         android:textColor="@color/colorPrimaryText"
@@ -73,8 +64,6 @@
         android:id="@+id/text_read_only_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_marginStart="16dp"
         android:text="@string/msg_ready_only_channel_description"
         android:textColor="@color/colorSecondaryText"
         android:textSize="12sp"
@@ -85,8 +74,6 @@
         android:id="@+id/switch_read_only"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-
         app:layout_constraintBottom_toBottomOf="@+id/text_read_only_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/text_read_only" />
@@ -94,9 +81,7 @@
     <ImageView
         android:id="@+id/image_channel_icon"
         android:layout_width="wrap_content"
-
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="22dp"
         android:src="@drawable/ic_hashtag_black_12dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -106,8 +91,6 @@
         android:id="@+id/text_channel_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:backgroundTint="@color/colorDim"
         android:hint="@string/msg_channel_name"
         android:inputType="text"
@@ -124,7 +107,6 @@
         android:id="@+id/image_invite_member"
         android:layout_width="14dp"
         android:layout_height="14dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_at_black_20dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -134,8 +116,6 @@
         android:id="@+id/text_invite_members"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:backgroundTint="@color/colorDim"
         android:hint="@string/msg_invite_members"
         android:inputType="text"

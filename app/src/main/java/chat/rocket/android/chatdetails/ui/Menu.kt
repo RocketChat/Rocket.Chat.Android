@@ -13,7 +13,7 @@ internal fun ChatDetailsFragment.setupMenu(menu: Menu) {
         with(settings.get(it)) {
             if (isJitsiEnabled()) {
                 if (roomTypeOf(chatRoomType) !is RoomType.DirectMessage && !isJitsiEnabledForChannels()) {
-                    return@let
+                    return
                 }
                 menu.add(
                     Menu.NONE,
