@@ -20,7 +20,7 @@
     <string name="title_password">Password</string>
     <string name="title_update_profile">Aggiorna Profilo</string>
     <string name="title_create_channel">Crea Canale</string>
-    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation --
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_license">licenza</string>
     <string name="title_are_you_sure">Sei sicuro che vuoi uscire?</string>
     <string name="title_channel_details">Allegare un file</string>
