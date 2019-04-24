@@ -824,41 +824,41 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
         recycler_view.addOnScrollListener(fabScrollListener)
 
-        // TODO disable swipe if user can't send message.
-        // if(!isReadOnly || roomUiModel.writable)
-        val touchCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                return true
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                var replyId: String? = null
-
-                when (viewHolder) {
-                    is MessageViewHolder -> replyId = viewHolder.data?.messageId
-                    is AttachmentViewHolder -> replyId = viewHolder.data?.messageId
+        if (!isReadOnly) {
+            val touchCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                    return true
                 }
 
-                replyId?.let {
-                    citeMessage(chatRoomName, chatRoomType, it, true)
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    var replyId: String? = null
+
+                    when (viewHolder) {
+                        is MessageViewHolder -> replyId = viewHolder.data?.messageId
+                        is AttachmentViewHolder -> replyId = viewHolder.data?.messageId
+                    }
+
+                    replyId?.let {
+                        citeMessage(chatRoomName, chatRoomType, it, true)
+                    }
+
+                    adapter.notifyItemChanged(viewHolder.adapterPosition)
                 }
 
-                adapter.notifyItemChanged(viewHolder.adapterPosition)
-            }
+                override fun getSwipeDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+                    // Currently enable swipes for text and attachment messages only
 
-            override fun getSwipeDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-                // Currently enable swipes for text and attachment messages only
+                    if (viewHolder is MessageViewHolder || viewHolder is AttachmentViewHolder) {
+                        return super.getSwipeDirs(recyclerView, viewHolder)
+                    }
 
-                if (viewHolder is MessageViewHolder || viewHolder is AttachmentViewHolder) {
-                    return super.getSwipeDirs(recyclerView, viewHolder)
+                    return 0
                 }
-
-                return 0
             }
+
+            val itemTouchHelper = ItemTouchHelper(touchCallback)
+            itemTouchHelper.attachToRecyclerView(recycler_view)
         }
-
-        val itemTouchHelper = ItemTouchHelper(touchCallback)
-        itemTouchHelper.attachToRecyclerView(recycler_view)
     }
 
     private fun setupFab() {
