@@ -32,7 +32,7 @@
     <string name="action_use_this_username">Использовать это имя</string>
     <string name="action_terms_of_service">Условия использования</string>
     <string name="action_privacy_policy">Политика конфиденциальности</string>
-    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
+    <string name="action_new_channel">Новый канал</string>
     <string name="action_search">Поиск</string>
     <string name="action_update">Обновить</string>
     <string name="action_settings">Настройки</string>
@@ -60,18 +60,18 @@
     <string name="action_remove_favorite">Удалить из избранного</string>
 
     <!-- Settings messages -->
-    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
-    <string name="msg_language">Language</string> <!-- TODO Translate -->
-    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
-    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
-    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
-    <string name="msg_license">License</string> <!-- TODO Translate -->
-    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
-    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
-    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
-    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
-    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
-    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
+    <string name="msg_contact_us">Связаться с нами</string>
+    <string name="msg_language">Изменить язык</string>
+    <string name="msg_review_this_app">Оставить отзыв</string>
+    <string name="msg_share_this_app">Поделиться приложением</string>
+    <string name="msg_administration">Панель админа</string>
+    <string name="msg_license">Лицензия</string>
+    <string name="msg_app_version">Версия программы: %1$s (%2$d)</string>
+    <string name="msg_server_version">Версия сервера: %1$s</string>
+    <string name="msg_send_analytics">Отправка аналитики</string>
+    <string name="msg_logout_from_rocket_chat">Выйти из Rocket.Chat</string>
+    <string name="msg_delete_account">Удалить аккаунт</string>
+    <string name="msg_change_status">Изменить статус</string>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Произошла ошибка, повторите попытку.</string>
@@ -179,11 +179,11 @@
         <item quantity="many">%1$s реагируют с %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Учетные данные успешно сохранены</string>
-    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
-    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
-    <string name="msg_server">Server</string> <!-- TODO Translate -->
-    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
-    <string name="msg_directory">Directory</string> <!-- TODO Translate -->
+    <string name="msg_camera_permission_denied">Необходимо разрешение на использование камеры</string>
+    <string name="msg_storage_permission_denied">Необходимо разрешение на использование хранилища</string>
+    <string name="msg_server">Сервер</string>
+    <string name="msg_add_new_server">Добавить новый сервер</string>
+    <string name="msg_directory">Директория</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>
@@ -311,20 +311,20 @@
     <string name="alert_title_default_skin_tone">Тон кожи по умолчанию</string>
 
     <!-- Sort and group -->
-    <string name="msg_sort_by_placeholder">Sort by %1$s</string> <!-- TODO Translate -->
-    <string name="msg_sort_by">Sort by</string> <!-- TODO Translate -->
-    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
-    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
-    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
-    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
-    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_placeholder">Сортировать по %1$s</string>
+    <string name="msg_sort_by">Сортировать по</string>
+    <string name="msg_sort_by_activity">Активности</string>
+    <string name="msg_sort_by_name">Имени</string>
+    <string name="msg_group_by_unread_on_top">Непрочитанные сверху</string>
+    <string name="msg_group_by_type">Группировать по типу</string>
+    <string name="msg_group_by_favorites">Группировать по избранному</string>
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Избранные</string>
     <string name="msg_channels">Каналы</string>
-    <string name="msg_users">Users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
+    <string name="msg_users">Пользователи</string>
+    <string name="msg_search_for_global_users">Поиск глобальных пользователей</string>
+    <string name="msg_search_for_global_users_description">При активации станет возможен поиск любого пользователя из других компаний или серверов.</string>
     <string name="header_private_groups">Приватные каналы</string>
     <string name="header_direct_messages">Личная переписка</string>
     <string name="header_live_chats">Живые чаты</string>

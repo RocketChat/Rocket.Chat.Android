@@ -3,7 +3,7 @@ package chat.rocket.android.helper
 object JitsiHelper {
 
     /**
-     * Returns the for the Jitsi video conferencing URL.
+     * Returns the Jitsi video conferencing URL.
      *
      * @param isSecureProtocol True if using SSL, false otherwise - from the public settings.
      * @param domain The Jitsi domain - from public settings.
