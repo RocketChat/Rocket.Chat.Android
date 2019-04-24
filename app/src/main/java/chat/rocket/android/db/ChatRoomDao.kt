@@ -69,7 +69,7 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
     @Query("""
         $BASE_QUERY
         $FILTER_NOT_OPENED
-        ORDER BY name
+        ORDER BY name COLLATE NOCASE
         """)
     abstract fun getAllAlphabetically(): LiveData<List<ChatRoom>>
 
@@ -79,7 +79,7 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
         $FILTER_NOT_OPENED
         ORDER BY
             $TYPE_ORDER,
-            name
+            name COLLATE NOCASE
         """)
     abstract fun getAllAlphabeticallyGrouped(): LiveData<List<ChatRoom>>
 
