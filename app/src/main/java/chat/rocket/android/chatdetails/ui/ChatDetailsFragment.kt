@@ -199,7 +199,15 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
                     presenter.toPinned(chatRoomId!!)
                 }
             } else {
+                if (!disableMenu) {
+                    it.addOption(getString(R.string.title_files), R.drawable.ic_files_24dp) {
+                        presenter.toFiles(chatRoomId!!)
+                    }
+                }
                 if (chatRoomType != RoomType.DIRECT_MESSAGE && !disableMenu) {
+                    it.addOption(getString(R.string.msg_mentions), R.drawable.ic_at_black_20dp) {
+                        presenter.toMentions(chatRoomId!!)
+                    }
                     it.addOption(
                             getString(R.string.title_members),
                             R.drawable.ic_people_outline_black_24dp
