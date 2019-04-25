@@ -1,4 +1,4 @@
-package chat.rocket.android.server.infraestructure
+package chat.rocket.android.server.infrastructure
 
 interface CurrentLanguageRepository {
 

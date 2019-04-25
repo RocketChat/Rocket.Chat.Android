@@ -44,8 +44,8 @@ import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.SortingAndGroupingRepository
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.UsersRepository
-import chat.rocket.android.server.infraestructure.CurrentLanguageRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsCurrentLanguageRepository
+import chat.rocket.android.server.infrastructure.CurrentLanguageRepository
+import chat.rocket.android.server.infrastructure.SharedPrefsCurrentLanguageRepository
 import chat.rocket.android.server.infrastructure.DatabaseMessageMapper
 import chat.rocket.android.server.infrastructure.DatabaseMessagesRepository
 import chat.rocket.android.server.infrastructure.JobSchedulerInteractorImpl

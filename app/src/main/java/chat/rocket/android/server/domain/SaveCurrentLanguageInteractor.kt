@@ -1,6 +1,6 @@
 package chat.rocket.android.server.domain
 
-import chat.rocket.android.server.infraestructure.CurrentLanguageRepository
+import chat.rocket.android.server.infrastructure.CurrentLanguageRepository
 import javax.inject.Inject
 
 class SaveCurrentLanguageInteractor @Inject constructor(
