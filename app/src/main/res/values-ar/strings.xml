@@ -75,22 +75,23 @@
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
-    <string-array name="languages">
+    <string-array name="languages"> <!-- TODO Add translations -->
         <item>English</item>
-        <item>Hindi</item>
-        <item>Japanese</item>
-        <item>Russian</item>
-        <item>Italian</item>
-        <item>Portuguese(BR)</item>
-        <item>Portuguese(PT)</item>
-        <item>Chinese</item>
+        <item>Arabic</item>
         <item>German</item>
         <item>Spanish</item>
-        <item>Urdu</item>
-        <item>Chinese</item>
+        <item>Persian</item>
         <item>French</item>
+        <item>Hindi (IN)</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Portuguese (BR)</item>
+        <item>Portuguese (PT)</item>
+        <item>Russian (RU)</item>
         <item>Turkish</item>
         <item>Ukrainian</item>
+        <item>Chinese (CN)</item>
+        <item>Chinese (TW)</item>
     </string-array>
 
     <!-- Regular information messages -->

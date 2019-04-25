@@ -74,22 +74,23 @@
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
-    <string-array name="languages">
-        <item>English</item> <!-- TODO Add translation -->
-        <item>Hindi</item> <!-- TODO Add translation -->
-        <item>Japanese</item> <!-- TODO Add translation -->
-        <item>Russian</item> <!-- TODO Add translation -->
-        <item>Italian</item> <!-- TODO Add translation -->
-        <item>Portuguese(BR)</item> <!-- TODO Add translation -->
-        <item>Portuguese(PT)</item> <!-- TODO Add translation -->
-        <item>Chinese</item> <!-- TODO Add translation -->
-        <item>German</item> <!-- TODO Add translation -->
-        <item>Spanish</item> <!-- TODO Add translation -->
-        <item>Urdu</item> <!-- TODO Add translation -->
-        <item>Chinese</item> <!-- TODO Add translation -->
-        <item>French</item> <!-- TODO Add translation -->
-        <item>Turkish</item> <!-- TODO Add translation -->
-        <item>Ukrainian</item> <!-- TODO Add translation -->
+    <string-array name="languages"> <!-- TODO Add translations -->
+        <item>English</item>
+        <item>Arabic</item>
+        <item>German</item>
+        <item>Spanish</item>
+        <item>Persian</item>
+        <item>French</item>
+        <item>Hindi (IN)</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Portuguese (BR)</item>
+        <item>Portuguese (PT)</item>
+        <item>Russian (RU)</item>
+        <item>Turkish</item>
+        <item>Ukrainian</item>
+        <item>Chinese (CN)</item>
+        <item>Chinese (TW)</item>
     </string-array>
 
     <!-- Regular information messages -->

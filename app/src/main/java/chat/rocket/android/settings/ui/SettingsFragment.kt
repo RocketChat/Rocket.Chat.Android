@@ -2,11 +2,8 @@ package chat.rocket.android.settings.ui
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.LocaleList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +28,6 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
 
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
@@ -115,24 +111,8 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
     }
 
     override fun updateLanguage(language: String, country: String?) {
-        val locale: Locale = if (country != null) {
-            Locale(language, country)
-        } else {
-            Locale(language)
-        }
-
-        Locale.setDefault(locale)
-
-        val config = Configuration()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            config.locales = LocaleList(locale)
-        } else {
-            config.locale = locale
-        }
-
-        context?.createConfigurationContext(config)
-        presenter.saveLocale(language)
+        presenter.saveLocale(language, country)
+        activity?.recreate()
     }
 
     override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
@@ -182,69 +162,29 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
     }
 
     private fun changeLanguage() {
-        val languages = resources.getStringArray(R.array.languages)
-
         context?.let {
             AlertDialog.Builder(it)
                 .setTitle(R.string.title_choose_language)
-                .setSingleChoiceItems(languages, -1) { dialog, option ->
+                .setSingleChoiceItems(
+                    resources.getStringArray(R.array.languages), -1
+                ) { dialog, option ->
                     when (option) {
-                        0 -> {
-                            updateLanguage("en")
-                            activity?.recreate()
-                        }
-                        1 -> {
-                            updateLanguage("hi")
-                            activity?.recreate()
-                        }
-                        2 -> {
-                            updateLanguage("ja")
-                            activity?.recreate()
-                        }
-                        3 -> {
-                            updateLanguage("ru")
-                            activity?.recreate()
-                        }
-                        4 -> {
-                            updateLanguage("it")
-                            activity?.recreate()
-                        }
-                        5 -> {
-                            updateLanguage("pt", "BR")
-                            activity?.recreate()
-                        }
-                        6 -> {
-                            updateLanguage("pt", "PT")
-                            activity?.recreate()
-                        }
-                        7 -> {
-                            updateLanguage("zh")
-                            activity?.recreate()
-                        }
-                        8 -> {
-                            updateLanguage("de")
-                            activity?.recreate()
-                        }
-                        9 -> {
-                            updateLanguage("es")
-                            activity?.recreate()
-                        }
-                        10 -> {
-                            updateLanguage("fa")
-                            activity?.recreate()
-                        }
-                        11 -> {
-                            updateLanguage("fr")
-                            activity?.recreate()
-                        }
-                        12 -> {
-                            updateLanguage("tr")
-                            activity?.recreate()
-                        }
-                        13 -> {
-                            updateLanguage("uk")
-                            activity?.recreate()
-                        }
+                        0 -> updateLanguage("en")
+                        1 -> updateLanguage("ar")
+                        2 -> updateLanguage("de")
+                        3 -> updateLanguage("es")
+                        4 -> updateLanguage("fa")
+                        5 -> updateLanguage("fr")
+                        6 -> updateLanguage("hi", "IN")
+                        7 -> updateLanguage("it")
+                        8 -> updateLanguage("ja")
+                        9 -> updateLanguage("pt", "BR")
+                        10 -> updateLanguage("pt", "PT")
+                        11 -> updateLanguage("ru", "RU")
+                        12 -> updateLanguage("tr")
+                        13 -> updateLanguage("uk")
+                        14 -> updateLanguage("zh", "CN")
+                        15 -> updateLanguage("zh", "TW")
                     }
                     dialog.dismiss()
                 }

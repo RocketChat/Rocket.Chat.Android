@@ -75,7 +75,9 @@ class MainActivity : AppCompatActivity(), HasActivityInjector,
             config.locale = locale
         }
 
-        createConfigurationContext(config)
+        // TODO We need to check out a better way to use createConfigurationContext
+        // instead of updateConfiguration here since it is deprecated.
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 
     private fun clearAppNotifications() =

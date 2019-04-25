@@ -6,5 +6,5 @@ import javax.inject.Inject
 class SaveCurrentLanguageInteractor @Inject constructor(
     private val repository: CurrentLanguageRepository
 ) {
-    fun save(language: String) = repository.save(language)
+    fun save(language: String, country: String?) = repository.save(language, country)
 }

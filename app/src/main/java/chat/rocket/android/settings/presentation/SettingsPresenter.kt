@@ -126,8 +126,8 @@ class SettingsPresenter @Inject constructor(
         }
     }
 
-    fun saveLocale(language: String) {
-        saveLanguageInteractor.save(language)
+    fun saveLocale(language: String, country: String? = null) {
+        saveLanguageInteractor.save(language, country)
     }
 
     fun toProfile() = navigator.toProfile()

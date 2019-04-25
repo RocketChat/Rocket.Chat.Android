@@ -7,5 +7,6 @@ class GetCurrentLanguageInteractor @Inject constructor(
     private val repository: CurrentLanguageRepository
 ) {
 
-    fun get(): String? = repository.get()
+    fun getLanguage(): String? = repository.getLanguage()
+    fun getCountry(): String? = repository.getCountry()
 }
