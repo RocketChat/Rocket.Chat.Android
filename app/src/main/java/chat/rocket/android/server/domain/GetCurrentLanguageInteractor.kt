@@ -6,6 +6,6 @@ import javax.inject.Inject
 class GetCurrentLanguageInteractor @Inject constructor(
     private val repository: CurrentLanguageRepository
 ) {
-    fun get(): String? = repository.get()
 
+    fun get(): String? = repository.get()
 }

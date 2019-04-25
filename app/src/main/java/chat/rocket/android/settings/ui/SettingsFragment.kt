@@ -2,8 +2,11 @@ package chat.rocket.android.settings.ui
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.LocaleList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +20,8 @@ import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.core.behaviours.AppLanguageView
 import chat.rocket.android.helper.TextHelper.getDeviceAndAppInformation
-import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.settings.presentation.SettingsPresenter
 import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.util.extensions.inflate
@@ -28,17 +31,16 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
 fun newInstance(): Fragment = SettingsFragment()
 
-class SettingsFragment : Fragment(), SettingsView {
+class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
     @Inject lateinit var analyticsManager: AnalyticsManager
     @Inject lateinit var presenter: SettingsPresenter
-    @Inject lateinit var mainPresenter: MainPresenter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,6 +114,27 @@ class SettingsFragment : Fragment(), SettingsView {
         }
     }
 
+    override fun updateLanguage(language: String, country: String?) {
+        val locale: Locale = if (country != null) {
+            Locale(language, country)
+        } else {
+            Locale(language)
+        }
+
+        Locale.setDefault(locale)
+
+        val config = Configuration()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            config.locales = LocaleList(locale)
+        } else {
+            config.locale = locale
+        }
+
+        context?.createConfigurationContext(config)
+        presenter.saveLocale(language)
+    }
+
     override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
 
     override fun showLoading() {
@@ -143,77 +166,6 @@ class SettingsFragment : Fragment(), SettingsView {
         }
     }
 
-    fun changeLanguage() {
-        val languages = resources.getStringArray(R.array.languages)
-
-        context?.let {
-            AlertDialog.Builder(it)
-                .setTitle(R.string.title_choose_language)
-                .setSingleChoiceItems(languages, -1) { dialog, which ->
-                    when (which) {
-                        0 -> {
-                            mainPresenter.setLocale("en", it)
-                            activity?.recreate()
-                        }
-                        1 -> {
-                            mainPresenter.setLocale("hi", it)
-                            activity?.recreate()
-                        }
-                        2 -> {
-                            mainPresenter.setLocale("ja", it)
-                            activity?.recreate()
-                        }
-                        3 -> {
-                            mainPresenter.setLocale("ru", it)
-                            activity?.recreate()
-                        }
-                        4 -> {
-                            mainPresenter.setLocale("it", it)
-                            activity?.recreate()
-                        }
-                        5->{
-                            mainPresenter.setLocaleWithRegion("pt", "BR", it)
-                            activity?.recreate()
-                        }
-                        6->{
-                            mainPresenter.setLocaleWithRegion("pt", "PT", it)
-                            activity?.recreate()
-                        }
-                        7->{
-                            mainPresenter.setLocale("zh", it)
-                            activity?.recreate()
-                        }
-                        8->{
-                            mainPresenter.setLocale("de", it)
-                            activity?.recreate()
-                        }
-                        9->{
-                            mainPresenter.setLocale("es", it)
-                            activity?.recreate()
-                        }
-                        10->{
-                            mainPresenter.setLocale("fa", it)
-                            activity?.recreate()
-                        }
-                        11->{
-                            mainPresenter.setLocale("fr", it)
-                            activity?.recreate()
-                        }
-                        12->{
-                            mainPresenter.setLocale("tr", it)
-                            activity?.recreate()
-                        }
-                        13->{
-                            mainPresenter.setLocale("uk", it)
-                            activity?.recreate()
-                        }
-                    }
-                    dialog.dismiss()
-                }
-                .create().show()
-        }
-    }
-
     private fun contactSupport() {
         val uriText = "mailto:${"support@rocket.chat"}" +
             "?subject=" + Uri.encode(getString(R.string.msg_android_app_support)) +
@@ -226,6 +178,78 @@ class SettingsFragment : Fragment(), SettingsView {
             } catch (ex: ActivityNotFoundException) {
                 Timber.e(ex)
             }
+        }
+    }
+
+    private fun changeLanguage() {
+        val languages = resources.getStringArray(R.array.languages)
+
+        context?.let {
+            AlertDialog.Builder(it)
+                .setTitle(R.string.title_choose_language)
+                .setSingleChoiceItems(languages, -1) { dialog, option ->
+                    when (option) {
+                        0 -> {
+                            updateLanguage("en")
+                            activity?.recreate()
+                        }
+                        1 -> {
+                            updateLanguage("hi")
+                            activity?.recreate()
+                        }
+                        2 -> {
+                            updateLanguage("ja")
+                            activity?.recreate()
+                        }
+                        3 -> {
+                            updateLanguage("ru")
+                            activity?.recreate()
+                        }
+                        4 -> {
+                            updateLanguage("it")
+                            activity?.recreate()
+                        }
+                        5 -> {
+                            updateLanguage("pt", "BR")
+                            activity?.recreate()
+                        }
+                        6 -> {
+                            updateLanguage("pt", "PT")
+                            activity?.recreate()
+                        }
+                        7 -> {
+                            updateLanguage("zh")
+                            activity?.recreate()
+                        }
+                        8 -> {
+                            updateLanguage("de")
+                            activity?.recreate()
+                        }
+                        9 -> {
+                            updateLanguage("es")
+                            activity?.recreate()
+                        }
+                        10 -> {
+                            updateLanguage("fa")
+                            activity?.recreate()
+                        }
+                        11 -> {
+                            updateLanguage("fr")
+                            activity?.recreate()
+                        }
+                        12 -> {
+                            updateLanguage("tr")
+                            activity?.recreate()
+                        }
+                        13 -> {
+                            updateLanguage("uk")
+                            activity?.recreate()
+                        }
+                    }
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
         }
     }
 
