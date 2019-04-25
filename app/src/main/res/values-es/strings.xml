@@ -85,6 +85,7 @@
     <string-array name="widechat_settings_actions">
         <item name="item_preferences">Preferencias</item>
         <item name="item_privacy">Privacidad</item>
+        <item name="item_share_app">Compartir aplicación</item>
         <item name="item_about">Acerca de</item>
         <item name="item_license">Licencia</item>
         <item name="item_logout">Cerrar sesión</item>

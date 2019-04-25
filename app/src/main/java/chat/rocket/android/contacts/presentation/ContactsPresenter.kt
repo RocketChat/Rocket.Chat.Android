@@ -1,7 +1,6 @@
 package chat.rocket.android.contacts.presentation
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -12,7 +11,6 @@ import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.model.ChatRoomEntity
-import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.helper.SharedPreferenceHelper
@@ -29,12 +27,11 @@ import chat.rocket.common.model.UserPresence
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.android.contacts.models.Contact
+import chat.rocket.android.helper.ShareAppHelper
 import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.SpotlightResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
@@ -51,7 +48,7 @@ class ContactsPresenter @Inject constructor(
         val userHelper: UserHelper
 ) {
     @Inject
-    lateinit var dynamicLinksManager : DynamicLinksForFirebase
+    lateinit var shareAppHelper: ShareAppHelper
 
     private val client = manager.client
     private val chatRoomsInteractor = FetchChatRoomsInteractor(client,dbManager)
@@ -271,22 +268,7 @@ class ContactsPresenter @Inject constructor(
     }
 
     fun shareViaApp(context: Context){
-        GlobalScope.launch {
-            //get serverUrl and username
-            val server = serverInteractor.get()!!
-            val account = getAccountInteractor.get(server)!!
-            val userName = account.userName
-
-            var deepLinkCallback = { returnedString: String? ->
-                with(Intent(Intent.ACTION_SEND)) {
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.msg_check_this_out))
-                    putExtra(Intent.EXTRA_TEXT, "Default Invitation Text : $returnedString")
-                    context.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
-                }
-            }
-            dynamicLinksManager.createDynamicLink(userName, server, deepLinkCallback)
-        }
+        shareAppHelper.shareViaApp(context)
     }
 
     suspend fun getUserPresence(userId: String): UserPresence? {

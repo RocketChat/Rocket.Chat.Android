@@ -34,6 +34,7 @@ import javax.inject.Inject
 
 // WIDECHAT
 import chat.rocket.android.helper.Constants
+import chat.rocket.android.helper.ShareAppHelper
 import chat.rocket.android.privacy.ui.PrivacyFragment
 import chat.rocket.android.privacy.ui.TAG_PRIVACY_FRAGMENT
 import kotlinx.android.synthetic.main.app_bar.* // need this for back button in setupToolbar
@@ -46,6 +47,9 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     lateinit var analyticsManager: AnalyticsManager
 
     // WIDECHAT
+    @Inject
+    lateinit var shareAppHelper: ShareAppHelper
+
     private var settingsFragment: Int = R.layout.fragment_settings_widechat
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -158,6 +162,10 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
             }
 
             resources.getStringArray(R.array.widechat_settings_actions)[2] -> {
+                shareApp()
+            }
+
+            resources.getStringArray(R.array.widechat_settings_actions)[3] -> {
                 (activity as AppCompatActivity).addFragmentBackStack(
                     TAG_ABOUT_FRAGMENT,
                     R.id.fragment_container
@@ -166,14 +174,14 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                 }
             }
 
-            resources.getStringArray(R.array.widechat_settings_actions)[3] ->activity?.startActivity(
+            resources.getStringArray(R.array.widechat_settings_actions)[4] ->activity?.startActivity(
                 context?.webViewIntent(
                     getString(R.string.license_url),
                     getString(R.string.title_license)
                 )
             )
 
-            resources.getStringArray(R.array.widechat_settings_actions)[4] -> {
+            resources.getStringArray(R.array.widechat_settings_actions)[5] -> {
                     showLogoutDialog()
                 }
             }
@@ -227,11 +235,8 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     }
 
     private fun shareApp() {
-        with(Intent(Intent.ACTION_SEND)) {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_check_this_out))
-            putExtra(Intent.EXTRA_TEXT, getString(R.string.play_store_link))
-            startActivity(Intent.createChooser(this, getString(R.string.msg_share_using)))
+        this.context?.let {
+            shareAppHelper.shareViaApp(it)
         }
     }
 
