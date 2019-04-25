@@ -15,9 +15,9 @@ import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.infraestructure.ConnectionManager
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.ConnectionManager
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.core.RocketChatClient
 import dagger.Module
 import dagger.Provides

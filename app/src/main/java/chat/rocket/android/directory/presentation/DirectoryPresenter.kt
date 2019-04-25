@@ -7,7 +7,7 @@ import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.directory.uimodel.DirectoryUiModelMapper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.main.presentation.MainNavigator
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf

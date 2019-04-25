@@ -71,6 +71,7 @@ import chat.rocket.android.helper.AndroidPermissionsHelper.hasCameraPermission
 import chat.rocket.android.helper.AndroidPermissionsHelper.hasWriteExternalStoragePermission
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.createImageFile
+import chat.rocket.android.util.extension.orFalse
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
 import chat.rocket.android.util.extensions.clearLightStatusBar
 import chat.rocket.android.util.extensions.fadeIn
@@ -463,6 +464,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             setupToolbar(roomUiModel.name.toString())
             setupMessageComposer(roomUiModel)
             isBroadcastChannel = roomUiModel.broadcast
+            isFavorite = roomUiModel.favorite.orFalse()
             if (isBroadcastChannel && !roomUiModel.canModerate) {
                 disableMenu = true
                 activity?.invalidateOptionsMenu()

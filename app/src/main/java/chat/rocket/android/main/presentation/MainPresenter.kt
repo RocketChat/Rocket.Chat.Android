@@ -5,7 +5,7 @@ import chat.rocket.android.push.GroupedPush
 import chat.rocket.android.server.domain.GetCurrentLanguageInteractor
 import chat.rocket.android.server.domain.RefreshPermissionsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import javax.inject.Inject
 import javax.inject.Named
 
