@@ -109,15 +109,15 @@ import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 fun newInstance(
-        chatRoomId: String,
-        chatRoomName: String,
-        chatRoomType: String,
-        isReadOnly: Boolean,
-        chatRoomLastSeen: Long,
-        isSubscribed: Boolean = true,
-        isCreator: Boolean = false,
-        isFavorite: Boolean = false,
-        chatRoomMessage: String? = null
+    chatRoomId: String,
+    chatRoomName: String,
+    chatRoomType: String,
+    isReadOnly: Boolean,
+    chatRoomLastSeen: Long,
+    isSubscribed: Boolean = true,
+    isCreator: Boolean = false,
+    isFavorite: Boolean = false,
+    chatRoomMessage: String? = null
 ): Fragment = ChatRoomFragment().apply {
     arguments = Bundle(1).apply {
         putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
@@ -149,10 +149,14 @@ private const val BUNDLE_CHAT_ROOM_MESSAGE = "chat_room_message"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener,
         ChatRoomAdapter.OnActionSelected, Drawable.Callback {
-    @Inject lateinit var presenter: ChatRoomPresenter
-    @Inject lateinit var parser: MessageParser
-    @Inject lateinit var analyticsManager: AnalyticsManager
-    @Inject lateinit var navigator: ChatRoomNavigator
+    @Inject
+    lateinit var presenter: ChatRoomPresenter
+    @Inject
+    lateinit var parser: MessageParser
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
+    @Inject
+    lateinit var navigator: ChatRoomNavigator
     private lateinit var adapter: ChatRoomAdapter
     internal lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -300,9 +304,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? = container?.inflate(R.layout.fragment_chat_room)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -491,14 +495,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             when (usernameList.size) {
                 1 -> text_typing_status.text =
                         SpannableStringBuilder()
-                                .bold { append(usernameList[0]) }
-                                .append(getString(R.string.msg_is_typing))
+                            .bold { append(usernameList[0]) }
+                            .append(getString(R.string.msg_is_typing))
                 2 -> text_typing_status.text =
                         SpannableStringBuilder()
-                                .bold { append(usernameList[0]) }
-                                .append(getString(R.string.msg_and))
-                                .bold { append(usernameList[1]) }
-                                .append(getString(R.string.msg_are_typing))
+                            .bold { append(usernameList[0]) }
+                            .append(getString(R.string.msg_and))
+                            .bold { append(usernameList[1]) }
+                            .append(getString(R.string.msg_are_typing))
 
                 else -> text_typing_status.text = getString(R.string.msg_several_users_are_typing)
             }
@@ -580,9 +584,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun showReplyingAction(
-            username: String,
-            replyMarkdown: String,
-            quotedMessage: String
+        username: String,
+        replyMarkdown: String,
+        quotedMessage: String
     ) {
         ui {
             citation = replyMarkdown
@@ -680,16 +684,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun onReactionLongClicked(
-            shortname: String,
-            isCustom: Boolean,
-            url: String?,
-            usernames: List<String>
+        shortname: String,
+        isCustom: Boolean,
+        url: String?,
+        usernames: List<String>
     ) {
         val layout =
                 LayoutInflater.from(requireContext()).inflate(R.layout.reaction_praises_list_item, null)
         val dialog = AlertDialog.Builder(requireContext())
-                .setView(layout)
-                .setCancelable(true)
+            .setView(layout)
+            .setCancelable(true)
 
         with(layout) {
             view_flipper.displayedChild = if (isCustom) 1 else 0
@@ -841,9 +845,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             activity?.supportFragmentManager?.registerFragmentLifecycleCallbacks(
                     object : FragmentManager.FragmentLifecycleCallbacks() {
                         override fun onFragmentAttached(
-                                fm: FragmentManager,
-                                f: Fragment,
-                                context: Context
+                            fm: FragmentManager,
+                            f: Fragment,
+                            context: Context
                         ) {
                             if (f is MessageActionsBottomSheet) {
                                 dismissEmojiKeyboard()
@@ -897,7 +901,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_take_a_photo.setOnClickListener {
                 // Check for camera permission
                 context?.let {
-                    if(hasCameraPermission(it)) {
+                    if (hasCameraPermission(it)) {
                         dispatchTakePictureIntent()
                     } else {
                         getCameraPermission(this)
@@ -965,7 +969,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode) {
+        when (requestCode) {
             AndroidPermissionsHelper.CAMERA_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted
@@ -973,9 +977,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 } else {
                     // permission denied
                     Snackbar.make(
-                        root_layout,
-                        R.string.msg_camera_permission_denied,
-                        Snackbar.LENGTH_SHORT
+                            root_layout,
+                            R.string.msg_camera_permission_denied,
+                            Snackbar.LENGTH_SHORT
                     ).show()
                 }
                 return
@@ -987,9 +991,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 } else {
                     // permission denied
                     Snackbar.make(
-                        root_layout,
-                        R.string.msg_storage_permission_denied,
-                        Snackbar.LENGTH_SHORT
+                            root_layout,
+                            R.string.msg_storage_permission_denied,
+                            Snackbar.LENGTH_SHORT
                     ).show()
                 }
                 return
@@ -1009,27 +1013,27 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupSuggestionsView() {
         suggestions_view.anchorTo(text_message)
-                .setMaximumHeight(resources.getDimensionPixelSize(R.dimen.suggestions_box_max_height))
-                .addTokenAdapter(PeopleSuggestionsAdapter(context!!))
-                .addTokenAdapter(CommandSuggestionsAdapter())
-                .addTokenAdapter(RoomSuggestionsAdapter())
-                .addTokenAdapter(EmojiSuggestionsAdapter())
-                .addSuggestionProviderAction("@") { query ->
-                    if (query.isNotEmpty()) {
-                        presenter.spotlight(query, PEOPLE, true)
-                    }
+            .setMaximumHeight(resources.getDimensionPixelSize(R.dimen.suggestions_box_max_height))
+            .addTokenAdapter(PeopleSuggestionsAdapter(context!!))
+            .addTokenAdapter(CommandSuggestionsAdapter())
+            .addTokenAdapter(RoomSuggestionsAdapter())
+            .addTokenAdapter(EmojiSuggestionsAdapter())
+            .addSuggestionProviderAction("@") { query ->
+                if (query.isNotEmpty()) {
+                    presenter.spotlight(query, PEOPLE, true)
                 }
-                .addSuggestionProviderAction("#") { query ->
-                    if (query.isNotEmpty()) {
-                        presenter.loadChatRoomsSuggestions()
-                    }
+            }
+            .addSuggestionProviderAction("#") { query ->
+                if (query.isNotEmpty()) {
+                    presenter.loadChatRoomsSuggestions()
                 }
-                .addSuggestionProviderAction("/") {
-                    presenter.loadCommands()
-                }
-                .addSuggestionProviderAction(":") {
-                    presenter.loadEmojis()
-                }
+            }
+            .addSuggestionProviderAction("/") {
+                presenter.loadCommands()
+            }
+            .addSuggestionProviderAction(":") {
+                presenter.loadEmojis()
+            }
 
         presenter.loadEmojis()
         presenter.loadCommands()
@@ -1074,8 +1078,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun subscribeComposeTypingStatus(observable: Observable<CharSequence>): Disposable {
         return observable.debounce(300, TimeUnit.MILLISECONDS)
-                .skip(1)
-                .subscribe { t -> sendTypingStatus(t) }
+            .skip(1)
+            .subscribe { t -> sendTypingStatus(t) }
     }
 
     private fun setupComposeButtons(charSequence: CharSequence) {
@@ -1141,10 +1145,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun citeMessage(
-            roomName: String,
-            roomType: String,
-            messageId: String,
-            mentionAuthor: Boolean
+        roomName: String,
+        roomType: String,
+        messageId: String,
+        mentionAuthor: Boolean
     ) {
         presenter.citeMessage(roomName, roomType, messageId, mentionAuthor)
     }
@@ -1177,15 +1181,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             val builder = AlertDialog.Builder(it)
             builder.setTitle(it.getString(R.string.msg_delete_message))
-                    .setMessage(it.getString(R.string.msg_delete_description))
-                    .setPositiveButton(it.getString(android.R.string.ok)) { _, _ ->
-                        presenter.deleteMessage(
-                                roomId,
-                                id
-                        )
-                    }
-                    .setNegativeButton(it.getString(android.R.string.cancel)) { _, _ -> }
-                    .show()
+                .setMessage(it.getString(R.string.msg_delete_description))
+                .setPositiveButton(it.getString(android.R.string.ok)) { _, _ ->
+                    presenter.deleteMessage(
+                            roomId,
+                            id
+                    )
+                }
+                .setNegativeButton(it.getString(android.R.string.cancel)) { _, _ -> }
+                .show()
         }
     }
 

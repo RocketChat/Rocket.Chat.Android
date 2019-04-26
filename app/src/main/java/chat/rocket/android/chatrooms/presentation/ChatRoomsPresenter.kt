@@ -34,16 +34,16 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class ChatRoomsPresenter @Inject constructor(
-        private val view: ChatRoomsView,
-        private val strategy: CancelStrategy,
-        private val navigator: MainNavigator,
-        @Named("currentServer") private val currentServer: String,
-        private val sortingAndGroupingInteractor: SortingAndGroupingInteractor,
+    private val view: ChatRoomsView,
+    private val strategy: CancelStrategy,
+    private val navigator: MainNavigator,
+    @Named("currentServer") private val currentServer: String,
+    private val sortingAndGroupingInteractor: SortingAndGroupingInteractor,
     private val dbManager: DatabaseManager,
-        manager: ConnectionManager,
-        private val localRepository: LocalRepository,
-        private val userHelper: UserHelper,
-        settingsRepository: SettingsRepository
+    manager: ConnectionManager,
+    private val localRepository: LocalRepository,
+    private val userHelper: UserHelper,
+    settingsRepository: SettingsRepository
 ) {
     private val client = manager.client
     private val settings = settingsRepository.get(currentServer)
@@ -93,13 +93,13 @@ class ChatRoomsPresenter @Inject constructor(
                 } else {
                     with(chatRoom) {
                         val entity = ChatRoomEntity(
-                                id = id,
-                                subscriptionId = "",
-                                type = type.toString(),
-                                name = username ?: name.toString(),
-                                fullname = name.toString(),
-                                open = open,
-                                muted = muted
+                            id = id,
+                            subscriptionId = "",
+                            type = type.toString(),
+                            name = username ?: name.toString(),
+                            fullname = name.toString(),
+                            open = open,
+                            muted = muted
                         )
                         loadChatRoom(entity, false)
                     }
@@ -115,11 +115,11 @@ class ChatRoomsPresenter @Inject constructor(
         with(chatRoom) {
             val isDirectMessage = roomTypeOf(type) is RoomType.DirectMessage
             val roomName =
-                if (settings.useSpecialCharsOnRoom() || (isDirectMessage && settings.useRealName())) {
-                    fullname ?: name
-                } else {
-                    name
-                }
+                    if (settings.useSpecialCharsOnRoom() || (isDirectMessage && settings.useRealName())) {
+                        fullname ?: name
+                    } else {
+                        name
+                    }
 
             val myself = getCurrentUser()
             if (myself?.username == null) {
@@ -177,13 +177,13 @@ class ChatRoomsPresenter @Inject constructor(
         try {
             val myself = retryIO { client.me() }
             val user = User(
-                    id = myself.id,
-                    username = myself.username,
-                    name = myself.name,
-                    status = myself.status,
-                    utcOffset = myself.utcOffset,
-                    emails = null,
-                    roles = myself.roles
+                id = myself.id,
+                username = myself.username,
+                name = myself.name,
+                status = myself.status,
+                utcOffset = myself.utcOffset,
+                emails = null,
+                roles = myself.roles
             )
             localRepository.saveCurrentUser(url = currentServer, user = user)
         } catch (ex: RocketChatException) {
