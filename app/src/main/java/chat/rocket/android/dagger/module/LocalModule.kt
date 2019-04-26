@@ -6,7 +6,7 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPreferencesLocalRepository
 import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
+import chat.rocket.android.server.infrastructure.SharedPrefsCurrentServerRepository
 import chat.rocket.android.util.AppJsonAdapterFactory
 import chat.rocket.android.util.TimberLogger
 import chat.rocket.common.internal.FallbackSealedClassJsonAdapter

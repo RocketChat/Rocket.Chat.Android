@@ -27,4 +27,5 @@ sealed class ScreenViewEvent(val screenName: String) {
     object Preferences : ScreenViewEvent("PreferencesFragment")
     object Profile : ScreenViewEvent("ProfileFragment")
     object Settings : ScreenViewEvent("SettingsFragment")
+    object Directory : ScreenViewEvent("DirectoryFragment")
 }

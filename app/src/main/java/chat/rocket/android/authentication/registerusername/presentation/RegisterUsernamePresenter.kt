@@ -13,7 +13,7 @@ import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.favicon
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.domain.wideTile
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.serverLogoUrl
@@ -38,7 +38,7 @@ class RegisterUsernamePresenter @Inject constructor(
     val settingsInteractor: GetSettingsInteractor
 ) {
     private val currentServer = serverInteractor.get()!!
-    private val client: RocketChatClient = factory.create(currentServer)
+    private val client: RocketChatClient = factory.get(currentServer)
     private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
 
     fun registerUsername(username: String, userId: String, authToken: String) {

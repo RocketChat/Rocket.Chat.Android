@@ -13,7 +13,7 @@ import chat.rocket.android.server.domain.SaveCurrentServerInteractor
 import chat.rocket.android.server.domain.favicon
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.domain.wideTile
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.privacyPolicyUrl
@@ -44,7 +44,7 @@ class SignupPresenter @Inject constructor(
     private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
 
     fun signup(name: String, username: String, password: String, email: String) {
-        val client = factory.create(currentServer)
+        val client = factory.get(currentServer)
         launchUI(strategy) {
             view.showLoading()
             try {

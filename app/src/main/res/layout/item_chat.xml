@@ -63,7 +63,7 @@
         app:layout_constraintEnd_toStartOf="@+id/layout_unread_messages_badge"
         app:layout_constraintStart_toStartOf="@+id/image_chat_icon"
         app:layout_constraintTop_toBottomOf="@+id/text_chat_name"
-        tools:text="Filipe de Lima Brito: Type something that is very big and need at least to lines, or maybe even more" />
+        tools:text="Filipe de Lima Brito: Type something that is very long and need at least two lines, or maybe even more" />
 
     <include
         android:id="@+id/layout_unread_messages_badge"

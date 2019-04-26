@@ -11,24 +11,23 @@ import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.RemoveAccountInteractor
 import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extension.compressImageAndGetByteArray
-import chat.rocket.android.util.extension.gethash
 import chat.rocket.android.util.extension.launchUI
-import chat.rocket.android.util.extension.toHex
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.model.UserStatus
+import chat.rocket.common.model.userStatusOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.rest.deleteOwnAccount
+import chat.rocket.core.internal.realtime.setDefaultStatus
+import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.resetAvatar
 import chat.rocket.core.internal.rest.setAvatar
 import chat.rocket.core.internal.rest.updateProfile
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 
@@ -56,18 +55,23 @@ class ProfilePresenter @Inject constructor(
     navigator = navigator
 ) {
     private val serverUrl = serverInteractor.get()!!
-    private val client: RocketChatClient = factory.create(serverUrl)
+    private val client: RocketChatClient = factory.get(serverUrl)
     private val user = userHelper.user()
 
     fun loadUserProfile() {
         launchUI(strategy) {
             view.showLoading()
             try {
+                val me = retryIO(description = "serverInfo", times = 5) {
+                    client.me()
+                }
+
                 view.showProfile(
-                    serverUrl.avatarUrl(user?.username ?: ""),
-                    user?.name ?: "",
-                    user?.username ?: "",
-                    user?.emails?.getOrNull(0)?.address ?: ""
+                    me.status.toString(),
+                    serverUrl.avatarUrl(me.username ?: ""),
+                    me.name ?: "",
+                    me.username ?: "",
+                    me.emails?.getOrNull(0)?.address ?: ""
                 )
             } catch (exception: RocketChatException) {
                 view.showMessage(exception)
@@ -82,9 +86,17 @@ class ProfilePresenter @Inject constructor(
             view.showLoading()
             try {
                 user?.id?.let { id ->
-                    retryIO { client.updateProfile(userId = id, email = email, name = name, username = username) }
+                    retryIO {
+                        client.updateProfile(
+                            userId = id,
+                            email = email,
+                            name = name,
+                            username = username
+                        )
+                    }
                     view.showProfileUpdateSuccessfullyMessage()
                     view.showProfile(
+                        user.status.toString(),
                         serverUrl.avatarUrl(user.username ?: ""),
                         name,
                         username,
@@ -176,25 +188,16 @@ class ProfilePresenter @Inject constructor(
         }
     }
 
-    fun deleteAccount(password: String) {
+    fun updateStatus(status: UserStatus) {
         launchUI(strategy) {
-            view.showLoading()
             try {
-                withContext(Dispatchers.Default) {
-                    // REMARK: Backend API is only working with a lowercase hash.
-                    // https://github.com/RocketChat/Rocket.Chat/issues/12573
-                    retryIO { client.deleteOwnAccount(password.gethash().toHex().toLowerCase()) }
-                    setupConnectionInfo(serverUrl)
-                    logout(null)
-                }
-            } catch (exception: Exception) {
+                client.setDefaultStatus(status)
+            } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }
-            } finally {
-                view.hideLoading()
             }
         }
     }

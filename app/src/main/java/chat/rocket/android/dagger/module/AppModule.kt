@@ -12,8 +12,8 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.AnswersAnalytics
 import chat.rocket.android.analytics.GoogleAnalyticsForFirebase
-import chat.rocket.android.authentication.infraestructure.SharedPreferencesMultiServerTokenRepository
-import chat.rocket.android.authentication.infraestructure.SharedPreferencesTokenRepository
+import chat.rocket.android.authentication.infrastructure.SharedPreferencesMultiServerTokenRepository
+import chat.rocket.android.authentication.infrastructure.SharedPreferencesTokenRepository
 import chat.rocket.android.chatroom.service.MessageService
 import chat.rocket.android.dagger.qualifier.ForAuthentication
 import chat.rocket.android.dagger.qualifier.ForMessages
@@ -27,37 +27,39 @@ import chat.rocket.android.push.PushManager
 import chat.rocket.android.server.domain.AccountsRepository
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.server.domain.AnalyticsTrackingRepository
+import chat.rocket.android.server.domain.BasicAuthRepository
 import chat.rocket.android.server.domain.ChatRoomsRepository
 import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.GetAccountInteractor
 import chat.rocket.android.server.domain.GetAccountsInteractor
+import chat.rocket.android.server.domain.GetBasicAuthInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.JobSchedulerInteractor
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.domain.MultiServerTokenRepository
 import chat.rocket.android.server.domain.PermissionsRepository
+import chat.rocket.android.server.domain.SaveBasicAuthInteractor
 import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.domain.SortingAndGroupingRepository
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.UsersRepository
-import chat.rocket.android.server.domain.BasicAuthRepository
-import chat.rocket.android.server.domain.GetBasicAuthInteractor
-import chat.rocket.android.server.domain.SaveBasicAuthInteractor
-import chat.rocket.android.server.infraestructure.SharedPrefsBasicAuthRepository
-import chat.rocket.android.server.infraestructure.DatabaseMessageMapper
-import chat.rocket.android.server.infraestructure.DatabaseMessagesRepository
-import chat.rocket.android.server.infraestructure.JobSchedulerInteractorImpl
-import chat.rocket.android.server.infraestructure.MemoryChatRoomsRepository
-import chat.rocket.android.server.infraestructure.MemoryUsersRepository
-import chat.rocket.android.server.infraestructure.SharedPreferencesAccountsRepository
-import chat.rocket.android.server.infraestructure.SharedPreferencesPermissionsRepository
-import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsAnalyticsTrackingRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsConnectingServerRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
+import chat.rocket.android.server.infrastructure.DatabaseMessageMapper
+import chat.rocket.android.server.infrastructure.DatabaseMessagesRepository
+import chat.rocket.android.server.infrastructure.JobSchedulerInteractorImpl
+import chat.rocket.android.server.infrastructure.MemoryChatRoomsRepository
+import chat.rocket.android.server.infrastructure.MemoryUsersRepository
+import chat.rocket.android.server.infrastructure.SharedPreferencesAccountsRepository
+import chat.rocket.android.server.infrastructure.SharedPreferencesPermissionsRepository
+import chat.rocket.android.server.infrastructure.SharedPreferencesSettingsRepository
+import chat.rocket.android.server.infrastructure.SharedPrefsAnalyticsTrackingRepository
+import chat.rocket.android.server.infrastructure.SharedPrefsBasicAuthRepository
+import chat.rocket.android.server.infrastructure.SharedPrefsConnectingServerRepository
+import chat.rocket.android.server.infrastructure.SharedPrefsCurrentServerRepository
+import chat.rocket.android.server.infrastructure.SharedPrefsSortingAndGroupingRepository
 import chat.rocket.android.util.AppJsonAdapterFactory
-import chat.rocket.android.util.HttpLoggingInterceptor
 import chat.rocket.android.util.BasicAuthenticatorInterceptor
+import chat.rocket.android.util.HttpLoggingInterceptor
 import chat.rocket.android.util.TimberLogger
 import chat.rocket.common.internal.FallbackSealedClassJsonAdapter
 import chat.rocket.common.internal.ISO8601Date
@@ -123,7 +125,10 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(logger: HttpLoggingInterceptor, basicAuthenticator: BasicAuthenticatorInterceptor): OkHttpClient {
+    fun provideOkHttpClient(
+        logger: HttpLoggingInterceptor,
+        basicAuthenticator: BasicAuthenticatorInterceptor
+    ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(logger)
             .addInterceptor(basicAuthenticator)
@@ -192,6 +197,12 @@ class AppModule {
     @Singleton
     fun provideAnalyticsTrackingRepository(prefs: SharedPreferences): AnalyticsTrackingRepository {
         return SharedPrefsAnalyticsTrackingRepository(prefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSortingAndGroupingRepository(prefs: SharedPreferences): SortingAndGroupingRepository {
+        return SharedPrefsSortingAndGroupingRepository(prefs)
     }
 
     @Provides
@@ -293,10 +304,10 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideBasicAuthRepository (
+    fun provideBasicAuthRepository(
         preferences: SharedPreferences,
         moshi: Moshi
-    ): BasicAuthRepository = 
+    ): BasicAuthRepository =
         SharedPrefsBasicAuthRepository(preferences, moshi)
 
     @Provides
