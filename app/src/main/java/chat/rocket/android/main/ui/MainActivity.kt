@@ -19,7 +19,7 @@ import javax.inject.Inject
 import chat.rocket.android.sharehandler.ShareHandler
 
 class MainActivity : AppCompatActivity(), HasActivityInjector,
-        HasSupportFragmentInjector {
+    HasSupportFragmentInjector {
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
     @Inject
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity(), HasActivityInjector,
         activityDispatchingAndroidInjector
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> =
-            fagmentDispatchingAndroidInjector
+        fagmentDispatchingAndroidInjector
 
     private fun clearAppNotifications() =
         (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancelAll()
