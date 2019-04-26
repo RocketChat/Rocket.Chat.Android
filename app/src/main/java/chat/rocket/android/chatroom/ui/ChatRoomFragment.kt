@@ -148,7 +148,7 @@ private const val BUNDLE_CHAT_ROOM_IS_FAVORITE = "chat_room_is_favorite"
 private const val BUNDLE_CHAT_ROOM_MESSAGE = "chat_room_message"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener,
-        ChatRoomAdapter.OnActionSelected, Drawable.Callback {
+    ChatRoomAdapter.OnActionSelected, Drawable.Callback {
     @Inject
     lateinit var presenter: ChatRoomPresenter
     @Inject
@@ -215,19 +215,19 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private var takenPhotoUri: Uri? = null
 
     private val layoutChangeListener =
-            View.OnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-                val y = oldBottom - bottom
-                if (Math.abs(y) > 0 && isAdded) {
-                    // if y is positive the keyboard is up else it's down
-                    recycler_view.post {
-                        if (y > 0 || Math.abs(verticalScrollOffset.get()) >= Math.abs(y)) {
-                            ui { recycler_view.scrollBy(0, y) }
-                        } else {
-                            ui { recycler_view.scrollBy(0, verticalScrollOffset.get()) }
-                        }
+        View.OnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+            val y = oldBottom - bottom
+            if (Math.abs(y) > 0 && isAdded) {
+                // if y is positive the keyboard is up else it's down
+                recycler_view.post {
+                    if (y > 0 || Math.abs(verticalScrollOffset.get()) >= Math.abs(y)) {
+                        ui { recycler_view.scrollBy(0, y) }
+                    } else {
+                        ui { recycler_view.scrollBy(0, verticalScrollOffset.get()) }
                     }
                 }
             }
+        }
 
     private lateinit var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener
 
@@ -494,15 +494,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             when (usernameList.size) {
                 1 -> text_typing_status.text =
-                        SpannableStringBuilder()
-                            .bold { append(usernameList[0]) }
-                            .append(getString(R.string.msg_is_typing))
+                    SpannableStringBuilder()
+                        .bold { append(usernameList[0]) }
+                        .append(getString(R.string.msg_is_typing))
                 2 -> text_typing_status.text =
-                        SpannableStringBuilder()
-                            .bold { append(usernameList[0]) }
-                            .append(getString(R.string.msg_and))
-                            .bold { append(usernameList[1]) }
-                            .append(getString(R.string.msg_are_typing))
+                    SpannableStringBuilder()
+                        .bold { append(usernameList[0]) }
+                        .append(getString(R.string.msg_and))
+                        .bold { append(usernameList[1]) }
+                        .append(getString(R.string.msg_are_typing))
 
                 else -> text_typing_status.text = getString(R.string.msg_several_users_are_typing)
             }
@@ -690,7 +690,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         usernames: List<String>
     ) {
         val layout =
-                LayoutInflater.from(requireContext()).inflate(R.layout.reaction_praises_list_item, null)
+            LayoutInflater.from(requireContext()).inflate(R.layout.reaction_praises_list_item, null)
         val dialog = AlertDialog.Builder(requireContext())
             .setView(layout)
             .setCancelable(true)
@@ -718,7 +718,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }
 
                 listing =
-                        listing.replace(", |", " ${requireContext().getString(R.string.msg_and)} ")
+                    listing.replace(", |", " ${requireContext().getString(R.string.msg_and)} ")
             }
 
             text_view_usernames.text = requireContext().resources.getQuantityString(
@@ -803,7 +803,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         recycler_view.layoutManager = linearLayoutManager
         recycler_view.itemAnimator = DefaultItemAnimator()
         endlessRecyclerViewScrollListener = object :
-                EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
+            EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView) {
                 presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
             }
@@ -858,7 +858,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             )
 
             emojiKeyboardPopup =
-                    EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
+                EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
 
             emojiKeyboardPopup.listener = this
 
