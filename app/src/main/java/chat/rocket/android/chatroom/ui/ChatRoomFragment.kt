@@ -185,14 +185,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     // For reveal and unreveal anim.
     private val hypotenuse by lazy {
         Math.hypot(
-                root_layout.width.toDouble(),
-                root_layout.height.toDouble()
+            root_layout.width.toDouble(),
+            root_layout.height.toDouble()
         ).toFloat()
     }
     private val max by lazy {
         Math.max(
-                layout_message_attachment_options.width.toDouble(),
-                layout_message_attachment_options.height.toDouble()
+            layout_message_attachment_options.width.toDouble(),
+            layout_message_attachment_options.height.toDouble()
         ).toFloat()
     }
     private val centerX by lazy { recycler_view.right }
@@ -291,13 +291,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
 
         adapter = ChatRoomAdapter(
-                roomId = chatRoomId,
-                roomType = chatRoomType,
-                roomName = chatRoomName,
-                actionSelectListener = this,
-                reactionListener = this,
-                navigator = navigator,
-                analyticsManager = analyticsManager
+            roomId = chatRoomId,
+            roomType = chatRoomType,
+            roomName = chatRoomName,
+            actionSelectListener = this,
+            reactionListener = this,
+            navigator = navigator,
+            analyticsManager = analyticsManager
         )
 
         setHasOptionsMenu(true)
@@ -323,11 +323,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             setupToolbarTitle(chatRoomName)
             setupExpandMoreForToolbar {
                 presenter.toChatDetails(
-                        chatRoomId,
-                        chatRoomType,
-                        isSubscribed,
-                        isFavorite,
-                        disableMenu
+                    chatRoomId,
+                    chatRoomType,
+                    isSubscribed,
+                    isFavorite,
+                    disableMenu
                 )
             }
         }
@@ -657,8 +657,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             context?.let {
                 val offset = if (!emoji.isCustom()) emoji.unicode.length else emoji.shortname.length
                 val parsed = if (emoji.isCustom()) emoji.shortname else EmojiParser.parse(
-                        it,
-                        emoji.shortname
+                    it,
+                    emoji.shortname
                 )
                 text_message.text?.insert(cursorPosition, parsed)
                 text_message.setSelection(cursorPosition + offset)
@@ -722,7 +722,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
 
             text_view_usernames.text = requireContext().resources.getQuantityString(
-                    R.plurals.msg_reacted_with_, usernames.size, listing, shortname
+                R.plurals.msg_reacted_with_, usernames.size, listing, shortname
             )
 
             dialog.show()
@@ -826,12 +826,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             text_room_is_read_only.isVisible = true
             input_container.isVisible = false
             text_room_is_read_only.setText(
-                    if (isReadOnly) {
-                        R.string.msg_this_room_is_read_only
-                    } else {
-                        // Not a read-only channel but user has been muted.
-                        R.string.msg_muted_on_this_channel
-                    }
+                if (isReadOnly) {
+                    R.string.msg_this_room_is_read_only
+                } else {
+                    // Not a read-only channel but user has been muted.
+                    R.string.msg_muted_on_this_channel
+                }
             )
         } else if (!isSubscribed && roomTypeOf(chatRoomType) !is RoomType.DirectMessage) {
             input_container.isVisible = false
@@ -843,18 +843,18 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_show_attachment_options.alpha = 1f
 
             activity?.supportFragmentManager?.registerFragmentLifecycleCallbacks(
-                    object : FragmentManager.FragmentLifecycleCallbacks() {
-                        override fun onFragmentAttached(
-                            fm: FragmentManager,
-                            f: Fragment,
-                            context: Context
-                        ) {
-                            if (f is MessageActionsBottomSheet) {
-                                dismissEmojiKeyboard()
-                            }
+                object : FragmentManager.FragmentLifecycleCallbacks() {
+                    override fun onFragmentAttached(
+                        fm: FragmentManager,
+                        f: Fragment,
+                        context: Context
+                    ) {
+                        if (f is MessageActionsBottomSheet) {
+                            dismissEmojiKeyboard()
                         }
-                    },
-                    true
+                    }
+                },
+                true
             )
 
             emojiKeyboardPopup =
@@ -955,7 +955,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             // Continue only if the File was successfully created
             photoFile?.also {
                 takenPhotoUri = FileProvider.getUriForFile(
-                        requireContext(), "chat.rocket.android.fileprovider", it
+                    requireContext(), "chat.rocket.android.fileprovider", it
                 )
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, takenPhotoUri)
                 startActivityForResult(takePictureIntent, REQUEST_CODE_FOR_PERFORM_CAMERA)
@@ -977,9 +977,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 } else {
                     // permission denied
                     Snackbar.make(
-                            root_layout,
-                            R.string.msg_camera_permission_denied,
-                            Snackbar.LENGTH_SHORT
+                        root_layout,
+                        R.string.msg_camera_permission_denied,
+                        Snackbar.LENGTH_SHORT
                     ).show()
                 }
                 return
@@ -991,9 +991,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 } else {
                     // permission denied
                     Snackbar.make(
-                            root_layout,
-                            R.string.msg_storage_permission_denied,
-                            Snackbar.LENGTH_SHORT
+                        root_layout,
+                        R.string.msg_storage_permission_denied,
+                        Snackbar.LENGTH_SHORT
                     ).show()
                 }
                 return
@@ -1062,8 +1062,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private fun subscribeComposeTextMessage() {
         text_message.asObservable().let {
             compositeDisposable.addAll(
-                    subscribeComposeButtons(it),
-                    subscribeComposeTypingStatus(it)
+                subscribeComposeButtons(it),
+                subscribeComposeTypingStatus(it)
             )
         }
     }
@@ -1184,8 +1184,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 .setMessage(it.getString(R.string.msg_delete_description))
                 .setPositiveButton(it.getString(android.R.string.ok)) { _, _ ->
                     presenter.deleteMessage(
-                            roomId,
-                            id
+                        roomId,
+                        id
                     )
                 }
                 .setNegativeButton(it.getString(android.R.string.cancel)) { _, _ -> }
@@ -1211,8 +1211,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun reportMessage(id: String) {
         presenter.reportMessage(
-                messageId = id,
-                description = "This message was reported by a user from the Android app"
+            messageId = id,
+            description = "This message was reported by a user from the Android app"
         )
     }
 
