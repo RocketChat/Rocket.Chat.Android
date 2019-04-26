@@ -44,6 +44,8 @@ import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.SortingAndGroupingRepository
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.UsersRepository
+import chat.rocket.android.server.infrastructure.CurrentLanguageRepository
+import chat.rocket.android.server.infrastructure.SharedPrefsCurrentLanguageRepository
 import chat.rocket.android.server.infrastructure.DatabaseMessageMapper
 import chat.rocket.android.server.infrastructure.DatabaseMessagesRepository
 import chat.rocket.android.server.infrastructure.JobSchedulerInteractorImpl
@@ -175,7 +177,6 @@ class AppModule {
     fun provideSharedPreferences(context: Application) =
         context.getSharedPreferences("rocket.chat", Context.MODE_PRIVATE)
 
-
     @Provides
     @ForMessages
     fun provideMessagesSharedPreferences(context: Application) =
@@ -209,6 +210,12 @@ class AppModule {
     @ForAuthentication
     fun provideConnectingServerRepository(prefs: SharedPreferences): CurrentServerRepository {
         return SharedPrefsConnectingServerRepository(prefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCurrentLanguageRepository(prefs: SharedPreferences): CurrentLanguageRepository {
+        return SharedPrefsCurrentLanguageRepository(prefs)
     }
 
     @Provides

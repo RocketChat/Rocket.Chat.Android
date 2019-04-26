@@ -19,6 +19,7 @@
     <string name="title_admin_panel">Панель админа</string>
     <string name="title_password">Изменить пароль</string>
     <string name="title_update_profile">Обновить профиль</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_create_channel">Создать новый канал</string>
     <string name="title_channel_details">О канале</string>
     <string name="title_topic">Тема</string>
@@ -72,6 +73,25 @@
     <string name="msg_logout_from_rocket_chat">Выйти из Rocket.Chat</string>
     <string name="msg_delete_account">Удалить аккаунт</string>
     <string name="msg_change_status">Изменить статус</string>
+
+    <string-array name="languages"> <!-- TODO Add translations -->
+        <item>English</item>
+        <item>Arabic</item>
+        <item>German</item>
+        <item>Spanish</item>
+        <item>Persian</item>
+        <item>French</item>
+        <item>Hindi (IN)</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Portuguese (BR)</item>
+        <item>Portuguese (PT)</item>
+        <item>Russian (RU)</item>
+        <item>Turkish</item>
+        <item>Ukrainian</item>
+        <item>Chinese (CN)</item>
+        <item>Chinese (TW)</item>
+    </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Произошла ошибка, повторите попытку.</string>
