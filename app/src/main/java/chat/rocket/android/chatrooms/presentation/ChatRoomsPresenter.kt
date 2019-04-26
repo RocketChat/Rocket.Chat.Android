@@ -93,6 +93,7 @@ class ChatRoomsPresenter @Inject constructor(
                         val entity = ChatRoomEntity(
                             id = id,
                             subscriptionId = "",
+                            parentId = null,
                             type = type.toString(),
                             name = username ?: name.toString(),
                             fullname = name.toString(),

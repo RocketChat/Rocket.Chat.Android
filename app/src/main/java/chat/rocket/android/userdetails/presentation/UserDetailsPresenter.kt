@@ -89,6 +89,7 @@ class UserDetailsPresenter @Inject constructor(
                     val chatRoomEntity = ChatRoomEntity(
                         id = directMessage.id,
                         name = userEntity.username ?: userEntity.name.orEmpty(),
+                        parentId = null,
                         description = null,
                         type = RoomType.DIRECT_MESSAGE,
                         fullname = userEntity.name,
