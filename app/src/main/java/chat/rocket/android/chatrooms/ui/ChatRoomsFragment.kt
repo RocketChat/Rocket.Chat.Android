@@ -28,10 +28,6 @@ import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.chatrooms.viewmodel.Query
 import chat.rocket.android.servers.ui.ServersBottomSheetFragment
 import chat.rocket.android.sortingandgrouping.ui.SortingAndGroupingBottomSheetFragment
-import chat.rocket.android.helper.ChatRoomsSortOrder
-import chat.rocket.android.helper.Constants
-import chat.rocket.android.helper.SharedPreferenceHelper
-import chat.rocket.android.sharehandler.ShareHandler
 import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.ifNotNullNotEmpty
 import chat.rocket.android.util.extensions.inflate
@@ -56,9 +52,12 @@ fun newInstance(chatRoomId: String?): Fragment = ChatRoomsFragment().apply {
 }
 
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
-    @Inject lateinit var presenter: ChatRoomsPresenter
-    @Inject lateinit var factory: ChatRoomsViewModelFactory
-    @Inject lateinit var analyticsManager: AnalyticsManager
+    @Inject
+    lateinit var presenter: ChatRoomsPresenter
+    @Inject
+    lateinit var factory: ChatRoomsViewModelFactory
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
     private lateinit var viewModel: ChatRoomsViewModel
     private var chatRoomId: String? = null
     private var isSortByName = false
@@ -83,9 +82,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? = container?.inflate(R.layout.fragment_chat_rooms)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -275,47 +274,48 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
     }
 
-private fun setupListeners() {
-    text_server_name.setOnClickListener {
-        ServersBottomSheetFragment().show(
+    private fun setupListeners() {
+        text_server_name.setOnClickListener {
+            ServersBottomSheetFragment().show(
                 activity?.supportFragmentManager,
                 chat.rocket.android.servers.ui.TAG
-        )
-    }
+            )
+        }
 
-    text_sort_by.setOnClickListener {
-        SortingAndGroupingBottomSheetFragment().show(
+        text_sort_by.setOnClickListener {
+            SortingAndGroupingBottomSheetFragment().show(
                 activity?.supportFragmentManager,
                 chat.rocket.android.sortingandgrouping.ui.TAG
-        )
+            )
+        }
+
+        text_directory.setOnClickListener { presenter.toDirectory() }
     }
 
-    text_directory.setOnClickListener { presenter.toDirectory() }
-}
-
-fun sortChatRoomsList(
+    fun sortChatRoomsList(
         isSortByName: Boolean,
         isUnreadOnTop: Boolean,
         isGroupByType: Boolean,
         isGroupByFavorites: Boolean
-) {
-    this.isSortByName = isSortByName
-    this.isUnreadOnTop = isUnreadOnTop
-    this.isGroupByType = isGroupByType
-    this.isGroupByFavorites = isGroupByFavorites
+    ) {
+        this.isSortByName = isSortByName
+        this.isUnreadOnTop = isUnreadOnTop
+        this.isGroupByType = isGroupByType
+        this.isGroupByFavorites = isGroupByFavorites
 
-    if (isSortByName) {
-        viewModel.setQuery(Query.ByName(isGroupByType))
-        changeSortByTitle(getString(R.string.msg_sort_by_name))
-    } else {
-        viewModel.setQuery(Query.ByActivity(isGroupByType))
-        changeSortByTitle(getString(R.string.msg_sort_by_activity))
+        if (isSortByName) {
+            viewModel.setQuery(Query.ByName(isGroupByType))
+            changeSortByTitle(getString(R.string.msg_sort_by_name))
+        } else {
+            viewModel.setQuery(Query.ByActivity(isGroupByType))
+            changeSortByTitle(getString(R.string.msg_sort_by_activity))
+        }
     }
-}
 
-private fun changeSortByTitle(text: String) {
-    text_sort_by.text = getString(R.string.msg_sort_by_placeholder, text.toLowerCase())
-}
+    private fun changeSortByTitle(text: String) {
+        text_sort_by.text = getString(R.string.msg_sort_by_placeholder, text.toLowerCase())
+    }
+
     private fun queryChatRoomsByName(name: String?): Boolean {
         if (name.isNullOrEmpty()) {
             showAllChats()
