@@ -115,11 +115,11 @@ class ChatRoomsPresenter @Inject constructor(
         with(chatRoom) {
             val isDirectMessage = roomTypeOf(type) is RoomType.DirectMessage
             val roomName =
-                    if (settings.useSpecialCharsOnRoom() || (isDirectMessage && settings.useRealName())) {
-                        fullname ?: name
-                    } else {
-                        name
-                    }
+                if (settings.useSpecialCharsOnRoom() || (isDirectMessage && settings.useRealName())) {
+                    fullname ?: name
+                } else {
+                    name
+                }
 
             val myself = getCurrentUser()
             if (myself?.username == null) {
