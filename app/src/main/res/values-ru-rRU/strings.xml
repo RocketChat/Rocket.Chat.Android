@@ -344,7 +344,7 @@
     <string name="msg_channels">Каналы</string>
     <string name="msg_users">Пользователи</string>
     <string name="msg_search_for_global_users">Поиск глобальных пользователей</string>
-    <string name="msg_search_for_global_users_description">При активации станет возможен поиск любого пользователя из других компаний или серверов.</string>
+    <string name="msg_search_for_global_users_description">При активации станет возможен поиск любого пользователя с других серверов.</string>
     <string name="header_private_groups">Приватные каналы</string>
     <string name="header_direct_messages">Личная переписка</string>
     <string name="header_live_chats">Живые чаты</string>
