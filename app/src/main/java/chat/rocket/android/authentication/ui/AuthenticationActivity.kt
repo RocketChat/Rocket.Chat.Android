@@ -83,6 +83,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         with(toolbar) {
             setSupportActionBar(this)
             setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            setNavigationContentDescription(R.string.go_back_button_description)
             setNavigationOnClickListener { onBackPressed() }
         }
         supportActionBar?.setDisplayShowTitleEnabled(false)

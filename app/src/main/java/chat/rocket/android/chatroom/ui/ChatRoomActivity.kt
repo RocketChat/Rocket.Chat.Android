@@ -132,6 +132,7 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolbar.setNavigationContentDescription(R.string.go_back_button_description)
         toolbar.setNavigationOnClickListener { finishActivity() }
     }
 

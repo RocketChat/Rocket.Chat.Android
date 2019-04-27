@@ -288,6 +288,7 @@ class ContactsFragment : Fragment(), ContactsView {
 
     fun setupToolbar(){
         (activity as MainActivity).toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        (activity as MainActivity).toolbar.setNavigationContentDescription(R.string.go_back_button_description)
         (activity as MainActivity).toolbar.setNavigationOnClickListener {
             activity?.onBackPressed()
         }
