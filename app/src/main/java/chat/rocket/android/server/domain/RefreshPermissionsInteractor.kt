@@ -1,6 +1,6 @@
 package chat.rocket.android.server.domain
 
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.retryIO
 import chat.rocket.core.internal.rest.permissions
 import kotlinx.coroutines.Dispatchers

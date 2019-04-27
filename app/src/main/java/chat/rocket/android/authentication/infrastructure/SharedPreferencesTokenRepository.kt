@@ -1,4 +1,4 @@
-package chat.rocket.android.authentication.infraestructure
+package chat.rocket.android.authentication.infrastructure
 
 import android.content.SharedPreferences
 import androidx.core.content.edit

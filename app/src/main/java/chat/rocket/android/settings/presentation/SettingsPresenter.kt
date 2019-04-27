@@ -5,12 +5,14 @@ import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
+import chat.rocket.android.server.domain.GetCurrentLanguageInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.RemoveAccountInteractor
+import chat.rocket.android.server.domain.SaveCurrentLanguageInteractor
 import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extension.gethash
 import chat.rocket.android.util.extension.launchUI
@@ -41,7 +43,8 @@ class SettingsPresenter @Inject constructor(
     getCurrentServerInteractor: GetCurrentServerInteractor,
     removeAccountInteractor: RemoveAccountInteractor,
     databaseManagerFactory: DatabaseManagerFactory,
-    connectionManagerFactory: ConnectionManagerFactory
+    connectionManagerFactory: ConnectionManagerFactory,
+    private val saveLanguageInteractor: SaveCurrentLanguageInteractor
 ) : CheckServerPresenter(
     strategy = strategy,
     factory = rocketChatClientFactory,
@@ -121,6 +124,10 @@ class SettingsPresenter @Inject constructor(
                 view.hideLoading()
             }
         }
+    }
+
+    fun saveLocale(language: String, country: String? = null) {
+        saveLanguageInteractor.save(language, country)
     }
 
     fun toProfile() = navigator.toProfile()

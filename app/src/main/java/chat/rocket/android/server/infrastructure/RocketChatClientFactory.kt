@@ -1,4 +1,4 @@
-package chat.rocket.android.server.infraestructure
+package chat.rocket.android.server.infrastructure
 
 import android.os.Build
 import chat.rocket.android.BuildConfig

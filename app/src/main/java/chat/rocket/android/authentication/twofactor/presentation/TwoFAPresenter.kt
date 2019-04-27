@@ -14,7 +14,7 @@ import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.favicon
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.domain.wideTile
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.isEmail
