@@ -40,11 +40,12 @@ class SettingsPresenter @Inject constructor(
     private val tokenRepository: TokenRepository,
     private val permissions: PermissionsInteractor,
     private val rocketChatClientFactory: RocketChatClientFactory,
+    private val saveLanguageInteractor: SaveCurrentLanguageInteractor,
+    val getCurrentLanguageInteractor: GetCurrentLanguageInteractor,
     getCurrentServerInteractor: GetCurrentServerInteractor,
     removeAccountInteractor: RemoveAccountInteractor,
     databaseManagerFactory: DatabaseManagerFactory,
-    connectionManagerFactory: ConnectionManagerFactory,
-    private val saveLanguageInteractor: SaveCurrentLanguageInteractor
+    connectionManagerFactory: ConnectionManagerFactory
 ) : CheckServerPresenter(
     strategy = strategy,
     factory = rocketChatClientFactory,
@@ -92,7 +93,6 @@ class SettingsPresenter @Inject constructor(
 
     fun enableAnalyticsTracking(isEnabled: Boolean) {
         analyticsTrackingInteractor.save(isEnabled)
-
     }
 
     fun logout() {

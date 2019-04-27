@@ -35,8 +35,10 @@ internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 fun newInstance(): Fragment = SettingsFragment()
 
 class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
-    @Inject lateinit var analyticsManager: AnalyticsManager
-    @Inject lateinit var presenter: SettingsPresenter
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
+    @Inject
+    lateinit var presenter: SettingsPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -163,29 +165,45 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
     private fun changeLanguage() {
         context?.let {
+            val locales = ArrayList<Pair<String, String>>()
+            with(locales) {
+                add(Pair("en", ""))
+                add(Pair("ar", ""))
+                add(Pair("de", ""))
+                add(Pair("es", ""))
+                add(Pair("fa", ""))
+                add(Pair("fr", ""))
+                add(Pair("hi", "IN"))
+                add(Pair("it", ""))
+                add(Pair("ja", ""))
+                add(Pair("pt", "BR"))
+                add(Pair("pt", "PT"))
+                add(Pair("ru", "RU"))
+                add(Pair("tr", ""))
+                add(Pair("uk", ""))
+                add(Pair("zh", "CN"))
+                add(Pair("zh", "TW"))
+            }
+            val selectedLanguage = presenter.getCurrentLanguageInteractor.getLanguage()
+            val selectedCountry = presenter.getCurrentLanguageInteractor.getCountry()
+            var localeIndex = -1
+            locales.forEachIndexed { index, locale ->
+                // If country is specified, then return the respective locale, else return the
+                // first locale found if the language is as specified regardless of the country.
+                if (locale.first == selectedLanguage && (localeIndex == -1 || locale.second == selectedCountry)) {
+                    localeIndex = index
+                    if (locale.second == selectedCountry) return@forEachIndexed
+                }
+            }
+            // This is needed if none of the device locales is implemented in the app.
+            // By default, set locale will be English
+            if (localeIndex == -1) localeIndex = 0
             AlertDialog.Builder(it)
                 .setTitle(R.string.title_choose_language)
                 .setSingleChoiceItems(
-                    resources.getStringArray(R.array.languages), -1
+                    resources.getStringArray(R.array.languages), localeIndex
                 ) { dialog, option ->
-                    when (option) {
-                        0 -> updateLanguage("en")
-                        1 -> updateLanguage("ar")
-                        2 -> updateLanguage("de")
-                        3 -> updateLanguage("es")
-                        4 -> updateLanguage("fa")
-                        5 -> updateLanguage("fr")
-                        6 -> updateLanguage("hi", "IN")
-                        7 -> updateLanguage("it")
-                        8 -> updateLanguage("ja")
-                        9 -> updateLanguage("pt", "BR")
-                        10 -> updateLanguage("pt", "PT")
-                        11 -> updateLanguage("ru", "RU")
-                        12 -> updateLanguage("tr")
-                        13 -> updateLanguage("uk")
-                        14 -> updateLanguage("zh", "CN")
-                        15 -> updateLanguage("zh", "TW")
-                    }
+                    updateLanguage(locales[option].first, locales[option].second)
                     dialog.dismiss()
                 }
                 .create()
