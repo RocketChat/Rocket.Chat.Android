@@ -19,7 +19,7 @@
     <string name="title_admin_panel">Панель админа</string>
     <string name="title_password">Изменить пароль</string>
     <string name="title_update_profile">Обновить профиль</string>
-    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
+    <string name="title_choose_language">Изменить язык</string>
     <string name="title_create_channel">Создать новый канал</string>
     <string name="title_channel_details">О канале</string>
     <string name="title_topic">Тема</string>
@@ -74,7 +74,7 @@
     <string name="msg_delete_account">Удалить аккаунт</string>
     <string name="msg_change_status">Изменить статус</string>
 
-    <string-array name="languages"> <!-- TODO Add translations -->
+    <string-array name="языки">
         <item>English</item>
         <item>Arabic</item>
         <item>German</item>
@@ -203,7 +203,7 @@
     <string name="msg_storage_permission_denied">Необходимо разрешение на использование хранилища</string>
     <string name="msg_server">Сервер</string>
     <string name="msg_add_new_server">Добавить новый сервер</string>
-    <string name="msg_directory">Директория</string>
+    <string name="msg_directory">Каталог</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>
