@@ -172,10 +172,10 @@ fun Query.asSortingOrder(): ChatRoomsRepository.Order {
                 ChatRoomsRepository.Order.GROUPED_NAME
             }
             else if(unreadOnTop && !grouped){
-                ChatRoomsRepository.Order.UNREADONTOP_NAME
+                ChatRoomsRepository.Order.UNREAD_ON_TOP_NAME
             }
             else if(unreadOnTop && grouped){
-                ChatRoomsRepository.Order.UNREADONTOP_GROUPED_NAME
+                ChatRoomsRepository.Order.UNREAD_ON_TOP_GROUPED_NAME
             }
             else {
                 ChatRoomsRepository.Order.NAME
@@ -186,10 +186,10 @@ fun Query.asSortingOrder(): ChatRoomsRepository.Order {
                 ChatRoomsRepository.Order.GROUPED_ACTIVITY
             }
             else if(unreadOnTop && !grouped){
-                ChatRoomsRepository.Order.UNREADONTOP_ACTIVITY
+                ChatRoomsRepository.Order.UNREAD_ON_TOP_ACTIVITY
             }
             else if(unreadOnTop && grouped){
-                ChatRoomsRepository.Order.UNREADONTOP_GROUPED_ACTIVITY
+                ChatRoomsRepository.Order.UNREAD_ON_TOP_GROUPED_ACTIVITY
             }
             else {
                 ChatRoomsRepository.Order.ACTIVITY
