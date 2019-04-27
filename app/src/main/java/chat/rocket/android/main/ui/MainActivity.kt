@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity(), HasActivityInjector,
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
     @Inject
-    lateinit var fagmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
     lateinit var presenter: MainPresenter
 
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), HasActivityInjector,
         activityDispatchingAndroidInjector
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> =
-        fagmentDispatchingAndroidInjector
+        fragmentDispatchingAndroidInjector
 
     override fun updateLanguage(language: String, country: String?) {
         val locale: Locale = if (country != null) {
