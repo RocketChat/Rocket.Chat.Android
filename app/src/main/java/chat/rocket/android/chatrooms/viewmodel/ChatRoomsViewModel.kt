@@ -142,7 +142,7 @@ sealed class LoadingState {
 sealed class Query {
 
     data class ByActivity(val grouped: Boolean = false, val unreadOnTop: Boolean = false) : Query()
-    data class ByName(val grouped: Boolean = false,val unreadOnTop: Boolean = false ) : Query()
+    data class ByName(val grouped: Boolean = false, val unreadOnTop: Boolean = false ) : Query()
 
     data class Search(val query: String) : Query()
 }
