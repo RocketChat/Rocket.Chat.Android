@@ -301,10 +301,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         this.isGroupByFavorites = isGroupByFavorites
 
         if (isSortByName) {
-            viewModel.setQuery(Query.ByName(isGroupByType,isUnreadOnTop))
+            viewModel.setQuery(Query.ByName(isGroupByType, isUnreadOnTop))
             changeSortByTitle(getString(R.string.msg_sort_by_name))
         } else {
-            viewModel.setQuery(Query.ByActivity(isGroupByType,isUnreadOnTop))
+            viewModel.setQuery(Query.ByActivity(isGroupByType, isUnreadOnTop))
             changeSortByTitle(getString(R.string.msg_sort_by_activity))
         }
     }
@@ -324,7 +324,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun showAllChats() {
         if (isSortByName) {
-            viewModel.setQuery(Query.ByName(isGroupByType,isUnreadOnTop))
+            viewModel.setQuery(Query.ByName(isGroupByType, isUnreadOnTop))
         } else {
             viewModel.setQuery(Query.ByActivity(isGroupByType, isUnreadOnTop))
         }
