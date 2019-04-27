@@ -190,9 +190,13 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
             locales.forEachIndexed { index, locale ->
                 // If country is specified, then return the respective locale, else return the
                 // first locale found if the language is as specified regardless of the country.
-                if (locale.first == selectedLanguage && (localeIndex == -1 || locale.second == selectedCountry)) {
-                    localeIndex = index
-                    if (locale.second == selectedCountry) return@forEachIndexed
+                if (locale.first == selectedLanguage) {
+                    if (locale.second == selectedCountry) {
+                        localeIndex = index
+                        return@forEachIndexed
+                    } else if (localeIndex == -1) {
+                        localeIndex = index
+                    }
                 }
             }
             // This is needed if none of the device locales is implemented in the app.
