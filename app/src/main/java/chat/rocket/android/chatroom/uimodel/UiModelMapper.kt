@@ -108,7 +108,7 @@ class UiModelMapper @Inject constructor(
         readReceipts.forEach {
             list.add(
                 ReadReceiptViewModel(
-                    avatar = baseUrl.avatarUrl(it.user.username ?: ""),
+                    avatar = baseUrl.avatarUrl(it.user.username!!, token?.userId, token?.authToken),
                     name = userHelper.displayName(it.user),
                     time = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(it.timestamp))
                 )
@@ -526,7 +526,7 @@ class UiModelMapper @Inject constructor(
 
         val username = message.sender?.username ?: "?"
         return baseUrl.let {
-            baseUrl.avatarUrl(username)
+            baseUrl.avatarUrl(username, token?.userId, token?.authToken)
         }
     }
 

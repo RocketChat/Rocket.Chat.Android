@@ -56,6 +56,7 @@ class SettingsPresenter @Inject constructor(
     tokenView = view,
     navigator = navigator
 ) {
+    private val token = tokenRepository.get(currentServer)
 
     fun setupView() {
         launchUI(strategy) {
@@ -70,7 +71,7 @@ class SettingsPresenter @Inject constructor(
 
                 userHelper.user()?.let { user ->
                     view.setupSettingsView(
-                        currentServer.avatarUrl(me.username ?: ""),
+                        currentServer.avatarUrl(me.username!!, token?.userId, token?.authToken),
                         userHelper.displayName(user) ?: me.username ?: "",
                         me.status.toString(),
                         permissions.isAdministrationEnabled(),

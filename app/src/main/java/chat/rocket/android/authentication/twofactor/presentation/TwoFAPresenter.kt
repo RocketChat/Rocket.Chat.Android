@@ -43,7 +43,8 @@ class TwoFAPresenter @Inject constructor(
     val settingsInteractor: GetSettingsInteractor
 ) {
     private val currentServer = serverInteractor.get()!!
-    private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
+    private var settings: PublicSettings = settingsInteractor.get(currentServer)
+    private val token = tokenRepository.get(currentServer)
 
     fun authenticate(
         usernameOrEmail: String,
@@ -101,7 +102,7 @@ class TwoFAPresenter @Inject constructor(
         val logo = settings.wideTile()?.let {
             currentServer.serverLogoUrl(it)
         }
-        val thumb = currentServer.avatarUrl(me.username!!)
+        val thumb = currentServer.avatarUrl(me.username!!, token?.userId, token?.authToken)
         val account = Account(currentServer, icon, logo, me.username!!, thumb)
         saveAccountInteractor.save(account)
     }

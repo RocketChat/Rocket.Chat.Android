@@ -39,7 +39,8 @@ class RegisterUsernamePresenter @Inject constructor(
 ) {
     private val currentServer = serverInteractor.get()!!
     private val client: RocketChatClient = factory.get(currentServer)
-    private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
+    private var settings: PublicSettings = settingsInteractor.get(currentServer)
+    private val token = tokenRepository.get(currentServer)
 
     fun registerUsername(username: String, userId: String, authToken: String) {
         launchUI(strategy) {
@@ -72,14 +73,14 @@ class RegisterUsernamePresenter @Inject constructor(
         }
     }
 
-    private suspend fun saveAccount(username: String) {
+    private fun saveAccount(username: String) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }
         val logo = settings.wideTile()?.let {
             currentServer.serverLogoUrl(it)
         }
-        val thumb = currentServer.avatarUrl(username)
+        val thumb = currentServer.avatarUrl(username, token?.userId, token?.authToken)
         val account = Account(currentServer, icon, logo, username, thumb)
         saveAccountInteractor.save(account)
     }
