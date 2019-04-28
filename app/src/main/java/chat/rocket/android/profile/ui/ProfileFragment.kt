@@ -3,6 +3,7 @@ package chat.rocket.android.profile.ui
 import DrawableHelper
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -21,6 +22,9 @@ import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.helper.AndroidPermissionsHelper
+import chat.rocket.android.helper.AndroidPermissionsHelper.getCameraPermission
+import chat.rocket.android.helper.AndroidPermissionsHelper.hasCameraPermission
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
@@ -35,12 +39,15 @@ import chat.rocket.android.util.invalidateFirebaseToken
 import chat.rocket.common.model.UserStatus
 import chat.rocket.common.model.userStatusOf
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.avatar_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.fragment_profile.view_dim
+import kotlinx.android.synthetic.main.fragment_profile.view_loading
 import kotlinx.android.synthetic.main.update_avatar_options.*
 import javax.inject.Inject
 
@@ -52,8 +59,10 @@ private const val REQUEST_CODE_FOR_PERFORM_CAMERA = 2
 fun newInstance() = ProfileFragment()
 
 class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
-    @Inject lateinit var presenter: ProfilePresenter
-    @Inject lateinit var analyticsManager: AnalyticsManager
+    @Inject
+    lateinit var presenter: ProfilePresenter
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
     private var currentStatus = ""
     private var currentName = ""
     private var currentUsername = ""
@@ -223,7 +232,13 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
 
         button_take_a_photo.setOnClickListener {
-            dispatchTakePicture(REQUEST_CODE_FOR_PERFORM_CAMERA)
+            context?.let {
+                if (hasCameraPermission(it)) {
+                    dispatchTakePicture(REQUEST_CODE_FOR_PERFORM_CAMERA)
+                } else {
+                    getCameraPermission(this)
+                }
+            }
             hideUpdateAvatarOptions()
         }
 
@@ -329,6 +344,30 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                     this.currentStatus = newStatus.toString()
                     dialog.dismiss()
                 }.show()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            AndroidPermissionsHelper.CAMERA_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    dispatchTakePicture(REQUEST_CODE_FOR_PERFORM_CAMERA)
+                } else {
+                    // permission denied
+                    Snackbar.make(
+                        relative_layout,
+                        R.string.msg_camera_permission_denied,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+                return
+            }
         }
     }
 }

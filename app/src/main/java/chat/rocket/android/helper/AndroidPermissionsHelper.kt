@@ -26,7 +26,7 @@ object AndroidPermissionsHelper {
     }
 
     fun hasCameraPermission(context: Context): Boolean {
-        return AndroidPermissionsHelper.checkPermission(context, Manifest.permission.CAMERA)
+        return checkPermission(context, Manifest.permission.CAMERA)
     }
 
     fun getCameraPermission(fragment: Fragment) {
@@ -50,10 +50,10 @@ object AndroidPermissionsHelper {
     fun checkWritingPermission(context: Context) {
         if (context is ContextThemeWrapper) {
             val activity = if (context.baseContext is Activity) context.baseContext as Activity else context as Activity
-            AndroidPermissionsHelper.requestPermission(
+            requestPermission(
                 activity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE
+                WRITE_EXTERNAL_STORAGE_CODE
             )
         }
     }
