@@ -13,7 +13,7 @@ import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.SortingAndGroupingInteractor
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
-import chat.rocket.android.server.infraestructure.ConnectionManager
+import chat.rocket.android.server.infrastructure.ConnectionManager
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
@@ -49,6 +49,8 @@ class ChatRoomsPresenter @Inject constructor(
     fun toCreateChannel() = navigator.toCreateChannel()
 
     fun toSettings() = navigator.toSettings()
+
+    fun toDirectory() = navigator.toDirectory()
 
     fun getCurrentServerName() = view.setupToolbar(currentServer)
 

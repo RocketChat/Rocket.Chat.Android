@@ -21,7 +21,8 @@
     <string name="title_password">تغيير كلمة السر</string>
     <string name="title_update_profile">تحديث الملف الشخصي</string>
     <string name="title_create_channel">إنشاء قناة</string>
-    <string name="title_licence">الترخيص</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
+    <string name="title_license">الترخيص</string>
     <string name="title_are_you_sure">هل أنت متأكد؟</string>
     <string name="title_channel_details">تفاصيل القناة</string>
     <string name="title_topic">موضوع</string>
@@ -60,27 +61,45 @@
     <string name="action_favorite">Favorite</string> <!-- TODO Translate -->
     <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Translate -->
 
-    <!-- Settings messages-->
+    <!-- Settings messages -->
     <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
     <string name="msg_language">Language</string> <!-- TODO Translate -->
     <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
     <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
     <string name="msg_administration">Administration</string> <!-- TODO Translate -->
-    <string name="msg_licence">Licence</string> <!-- TODO Translate -->
+    <string name="msg_license">License</string> <!-- TODO Translate -->
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
-
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
+
+    <string-array name="languages"> <!-- TODO Add translations -->
+        <item>English</item>
+        <item>Arabic</item>
+        <item>German</item>
+        <item>Spanish</item>
+        <item>Persian</item>
+        <item>French</item>
+        <item>Hindi (IN)</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Portuguese (BR)</item>
+        <item>Portuguese (PT)</item>
+        <item>Russian (RU)</item>
+        <item>Turkish</item>
+        <item>Ukrainian</item>
+        <item>Chinese (CN)</item>
+        <item>Chinese (TW)</item>
+    </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">نأسف حدث خطأ ما حاول مرة أخرى</string>
     <string name="msg_no_data_to_display">لا يوجد بيانات للعرض</string>
     <string name="msg_check_this_out">تحقق من هذا</string>
     <string name="msg_share_using">نشر بواسطة</string>
-    <string name="msg_profile_update_successfully">تم تحديث الملف الشخصي بنجاح</string>
+    <string name="msg_profile_updated_successfully">تم تحديث الملف الشخصي بنجاح</string>
     <string name="msg_username">اسم المستخدم</string>
     <string name="msg_username_or_email">اسم المستخدم أو عنوان بريد</string>
     <string name="msg_password">كلمة السر</string>
@@ -89,7 +108,7 @@
     <string name="msg_avatar_url">رابط الشخصية</string>
     <string name="msg_or_continue_using_social_accounts">استمرار باستخدام حساب التواصل الاجتماعي</string>
     <string name="msg_new_user">مستخدم جديد؟ %1$s</string>
-    <string name="msg_forgot__your_password">نسيت كلمة السر؟</string>
+    <string name="msg_forgot_your_password">نسيت كلمة السر؟</string>
     <string name="msg_reset">إعادة تعيين</string>
     <string name="msg_check_your_email_to_reset_your_password">تم إرسال الإيميل راجع إيميلك لتحديث كلمة السر</string>
     <string name="msg_invalid_email">من فضلك أدخل عنوان بريد صحيح</string>
@@ -104,12 +123,12 @@
     <string name="msg_invalid_file">ملف غير صالح</string>
     <string name="msg_invalid_server_url">رابط خادم غير صحيح</string>
     <string name="msg_content_description_log_in_using_facebook">تسجيل باستخدام فيسبوك</string>
-    <string name="msg_content_description_log_in_using_github">تسجيل باستخدام Github</string>
+    <string name="msg_content_description_log_in_using_github">تسجيل باستخدام GitHub</string>
     <string name="msg_content_description_log_in_using_google">تسجيل باستخدام Google</string>
     <string name="msg_content_description_log_in_using_linkedin">تسجيل باستخدام LinkedIn</string>
     <string name="msg_content_description_log_in_using_meteor">تسجيل باستخدام Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">تسجيل باستخدام Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">تسجيل باستخدام Gitlab</string>
+    <string name="msg_content_description_log_in_using_gitlab">تسجيل باستخدام GitLab</string>
     <string name="msg_content_description_log_in_using_wordpress">تسجيل باستخدام WordPress</string>
     <string name="msg_content_description_send_message">ارسال رسالة</string>
     <string name="msg_content_description_show_more_login_options">إظهار طرق تسجيل أخرى</string>
@@ -130,11 +149,8 @@
     <string name="msg_no_messages_yet">ليس هناك رسائل بعد</string>
     <string name="msg_build">Build %1$d - %2$s - %3$s</string>
     <string name="msg_update_app_version_in_order_to_continue">خادم منتهي برجاء التواصل مع مدير الخادم للاستمرار</string>
-    <string name="msg_ver_not_recommended">
-        يبدو أن خادمك قديم %1$s يمكنك الاستمرار لكن ليس بكامل الفعالية</string>
-    <string name="msg_ver_not_minimum">
-        يبدو أن خادمك قديم %1$s من فضلك حدث الخادم للاستمرار
-    </string>
+    <string name="msg_ver_not_recommended">يبدو أن خادمك قديم %1$s يمكنك الاستمرار لكن ليس بكامل الفعالية</string>
+    <string name="msg_ver_not_minimum">يبدو أن خادمك قديم %1$s من فضلك حدث الخادم للاستمرار</string>
     <string name="msg_no_chat_title">لا توجد رسائل</string>
     <string name="msg_no_chat_description">إبدأ المحادثة لترى الرسائل هنا</string>
     <string name="msg_http_insecure">أنت تستخدم  HTTP وهو غير آمن ونحن لا نحبذ ذلك.</string>
@@ -155,16 +171,16 @@
     <string name="msg_sent_attachment">إرسال مرفق</string>
     <string name="msg_welcome_to_rocket_chat">أهلا بك في Rocket.Chat</string>
     <string name="msg_team_communication">التواصل مع الفريق</string>
-    <string name="msg_login_with_email">تسجيل ب  <b>عنوان البريد </b></string>
+    <string name="msg_login_with_email">تسجيل ب <b>عنوان البريد</b></string>
     <string name="msg_create_account">إنشاء حساب</string>
     <string name="msg_continue_with_facebook">استمرار ب <b>Facebook</b></string>
-    <string name="msg_continue_with_github">استمرار ب <b>Github</b></string>
+    <string name="msg_continue_with_github">استمرار ب <b>GitHub</b></string>
     <string name="msg_continue_with_google">استمرار ب <b>Google</b></string>
-    <string name="msg_continue_with_linkedin">استمرار ب <b>Linkedin</b></string>
+    <string name="msg_continue_with_linkedin">استمرار ب <b>LinkedIn</b></string>
     <string name="msg_continue_with_gitlab">استمرار ب <b>GitLab</b></string>
     <string name="msg_continue_with_wordpress">استمرار ب <b>WordPress</b></string>
     <string name="msg_two_factor_authentication">مصادقة مزدوجة</string>
-    <string name="msg__your_2fa_code">ما هو رمز 2FA?</string>
+    <string name="msg_your_2fa_code">ما هو رمز 2FA؟</string>
     <string name="msg_permalink_copied">الرابط الثابت المنسوخ</string>
     <string name="msg_no_topic">لا يوجد موضوع مضاف</string>
     <string name="msg_no_announcement">لا يوجد ملف مضاف</string>
@@ -186,6 +202,7 @@
     <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
     <string name="msg_server">Server</string> <!-- TODO Translate -->
     <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
+    <string name="msg_directory">Directory</string> <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">خاص</string>
@@ -199,8 +216,8 @@
     <string name="msg_member_not_found">عضو غير موجود</string>
     <string name="msg_channel_created_successfully">تم انشاء القناة بنجاح</string>
     <string name="msg_message_copied">تم نسخ الرسالة</string>
-    <string name="msg_delete_message">تم حذف الرسالة</string>
-    <string name="msg_delete_description">هل أنت متأكد من حذف هذه الرسالة</string>
+    <string name="msg_delete_message">حذف الرسالة</string>
+    <string name="msg_delete_description">هل أنت متأكد من حذف هذه الرسالة؟</string>
     <string name="msg_view_more">رؤية المزيد</string>
     <string name="msg_view_less">رؤية أقل</string>
     <string name="msg_muted_on_this_channel">لقد جعلت هذه القناة صامتة</string>
@@ -277,7 +294,7 @@
     <string name="msg_all_files_appear_here">الملفات تظهر هنا</string>
 
     <!-- Upload Messages -->
-    <string name="max_file_size_exceeded">ملف كبير</string>
+    <string name="max_file_size_exceeded">تجاوز حجم الملف %1$d بايت الحد الأقصى لحجم التحميل وهو %2$d بايت</string>
 
     <!-- Socket status -->
     <string name="status_connected">اتصال</string>
@@ -319,7 +336,8 @@
     <string name="alert_title_default_skin_tone">نغمة الجلد الافتراضية</string>
 
     <!-- Sort and group -->
-    <string name="msg_sort_by">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_placeholder">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by">Sort by</string> <!-- TODO Translate -->
     <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
     <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
     <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
@@ -328,7 +346,10 @@
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Favorites</string> <!-- TODO Translate -->
-    <string name="header_channel">القنوات</string>
+    <string name="msg_channels">القنوات</string>
+    <string name="msg_users">Users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">المجموعات الخاصة</string>
     <string name="header_direct_messages">الرسائل المباشرة</string>
     <string name="header_live_chats">محادثات حية</string>
