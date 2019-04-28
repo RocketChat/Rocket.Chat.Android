@@ -1,8 +1,12 @@
 package chat.rocket.android.sharehandler
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Parcelable
+import android.content.pm.ResolveInfo
+import android.content.pm.PackageManager
+
 
 object ShareHandler {
 
@@ -14,9 +18,11 @@ object ShareHandler {
     private var sharedText: String? = null
     private var sharedImage: Uri? = null
 
-
-    fun handle(intent: Intent?) {
+    // TODO request permission.
+    fun handle(intent: Intent?, context: Context) {
         intent?.let {
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
             val action = it.action
             val type = it.type
 
@@ -27,7 +33,7 @@ object ShareHandler {
                 if ("text/plain" == type) {
                     handleSendText(intent)
                 } else if (type.startsWith("image/")) {
-                    handleSendImage(intent)
+                    handleSendImage(intent, context)
                 }
             }
         }
@@ -37,8 +43,10 @@ object ShareHandler {
         sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
     }
 
-    private fun handleSendImage(intent: Intent) {
+    private fun handleSendImage(intent: Intent, context: Context) {
         sharedImage = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as Uri?
+
+//        context.grantUriPermission("chat.rocket.android.dev", sharedImage, Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
 
     fun getTextAndClear(): String {
@@ -46,6 +54,13 @@ object ShareHandler {
         sharedText = null
 
         return text
+    }
+
+    fun getImageAndClear(): Uri? {
+        val uri = sharedImage
+
+        sharedImage = null
+        return uri
     }
 
     fun clearShare() {

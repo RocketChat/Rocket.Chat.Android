@@ -333,6 +333,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
         getDraftMessage()
         subscribeComposeTextMessage()
+        shareIntent()
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRoom)
     }
@@ -1003,10 +1004,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun getDraftMessage() {
         val unfinishedMessage = presenter.getDraftUnfinishedMessage()
-
-        if (ShareHandler.hasSharedText()) {
-            text_message.setText(ShareHandler.getTextAndClear())
-        } else if (unfinishedMessage.isNotNullNorEmpty()) {
+        if (unfinishedMessage.isNotNullNorEmpty()) {
             text_message.setText(unfinishedMessage)
         }
     }
@@ -1238,4 +1236,19 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             setReactionButtonIcon(R.drawable.ic_reaction_24dp)
         }
     }
+
+    private fun shareIntent() {
+        if (ShareHandler.hasShare()) {
+            if (ShareHandler.hasSharedText()) {
+                sendMessage(ShareHandler.getTextAndClear())
+            }
+
+            if (ShareHandler.hasSharedImage()) {
+                ShareHandler.getImageAndClear()?.let {
+                    showFileAttachmentDialog(it)
+                }
+            }
+        }
+    }
+
 }

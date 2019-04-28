@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
@@ -27,6 +28,7 @@ import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModelFactory
 import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.chatrooms.viewmodel.Query
 import chat.rocket.android.servers.ui.ServersBottomSheetFragment
+import chat.rocket.android.sharehandler.ShareHandler
 import chat.rocket.android.sortingandgrouping.ui.SortingAndGroupingBottomSheetFragment
 import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.ifNotNullNotEmpty
@@ -225,7 +227,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private fun subscribeUi() {
         ui {
             val adapter = RoomsAdapter { room ->
-                presenter.loadChatRoom(room)
+                if (ShareHandler.hasShare()) {
+                    confirmShare {
+                        presenter.loadChatRoom(room)
+                    }
+                } else {
+                    presenter.loadChatRoom(room)
+                }
             }
 
             with(recycler_view) {
@@ -271,6 +279,19 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             })
 
             showAllChats()
+        }
+    }
+
+    private fun confirmShare(callback: () -> Unit) {
+        ui {
+            AlertDialog.Builder(it)
+                .setTitle(R.string.app_name)
+                .setMessage("Do you confirm to send?")
+                .setPositiveButton("Send") { _, _ ->
+                    callback()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
         }
     }
 

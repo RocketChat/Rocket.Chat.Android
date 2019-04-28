@@ -30,8 +30,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
-
-        ShareHandler.handle(intent)
+        ShareHandler.handle(intent, this)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication)
