@@ -148,10 +148,14 @@ private const val BUNDLE_CHAT_ROOM_MESSAGE = "chat_room_message"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener,
     ChatRoomAdapter.OnActionSelected, Drawable.Callback {
-    @Inject lateinit var presenter: ChatRoomPresenter
-    @Inject lateinit var parser: MessageParser
-    @Inject lateinit var analyticsManager: AnalyticsManager
-    @Inject lateinit var navigator: ChatRoomNavigator
+    @Inject
+    lateinit var presenter: ChatRoomPresenter
+    @Inject
+    lateinit var parser: MessageParser
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
+    @Inject
+    lateinit var navigator: ChatRoomNavigator
     private lateinit var adapter: ChatRoomAdapter
     internal lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -476,11 +480,17 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun sendMessage(text: String) {
         ui {
             if (!text.isBlank()) {
-                if (!text.startsWith("/")) {
-                    presenter.sendMessage(chatRoomId, text, editingMessageId)
-                } else {
+                if (text.startsWith("/")) {
                     presenter.runCommand(text, chatRoomId)
+                    return@ui
+                } else if (text.startsWith("+") && presenter.getLastMessageId() != null) {
+                    val trimmedText = text.substring(1).trimEnd()
+                    if (trimmedText.length - trimmedText.removeSurrounding(":").length == 2) {
+                        presenter.react(presenter.getLastMessageId()!!, trimmedText, chatRoomId)
+                        return@ui
+                    }
                 }
+                presenter.sendMessage(chatRoomId, text, editingMessageId)
             }
         }
     }
@@ -523,7 +533,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             text_message.isEnabled = true
         }
     }
-
 
     override fun clearMessageComposition(deleteMessage: Boolean) {
         ui {
@@ -671,11 +680,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun onReactionTouched(messageId: String, emojiShortname: String) {
-        presenter.react(messageId, emojiShortname)
+        presenter.react(messageId, emojiShortname, chatRoomId)
     }
 
     override fun onReactionAdded(messageId: String, emoji: Emoji) {
-        presenter.react(messageId, emoji.shortname)
+        presenter.react(messageId, emoji.shortname, chatRoomId)
     }
 
     override fun onReactionLongClicked(
@@ -896,7 +905,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_take_a_photo.setOnClickListener {
                 // Check for camera permission
                 context?.let {
-                    if(hasCameraPermission(it)) {
+                    if (hasCameraPermission(it)) {
                         dispatchTakePictureIntent()
                     } else {
                         getCameraPermission(this)
@@ -964,7 +973,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode) {
+        when (requestCode) {
             AndroidPermissionsHelper.CAMERA_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted
