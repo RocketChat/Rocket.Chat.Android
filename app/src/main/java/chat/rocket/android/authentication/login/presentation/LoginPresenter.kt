@@ -15,6 +15,7 @@ import chat.rocket.android.server.domain.favicon
 import chat.rocket.android.server.domain.isLdapAuthenticationEnabled
 import chat.rocket.android.server.domain.isPasswordResetEnabled
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.server.domain.siteName
 import chat.rocket.android.server.domain.wideTile
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
@@ -142,7 +143,14 @@ class LoginPresenter @Inject constructor(
             currentServer.serverLogoUrl(it)
         }
         val thumb = currentServer.avatarUrl(username, token?.userId, token?.authToken)
-        val account = Account(currentServer, icon, logo, username, thumb)
+        val account = Account(
+            settings.siteName() ?: currentServer,
+            currentServer,
+            icon,
+            logo,
+            username,
+            thumb
+        )
         saveAccountInteractor.save(account)
     }
 
