@@ -460,13 +460,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             setupToolbar(roomUiModel.name.toString())
             setupMessageComposer(roomUiModel)
             isBroadcastChannel = roomUiModel.broadcast
-            if (isBroadcastChannel && !roomUiModel.canModerate) {
-                disableMenu = true
-                activity?.invalidateOptionsMenu()
-            }
+            disableMenu = (roomUiModel.broadcast && !roomUiModel.canModerate)
+            activity?.invalidateOptionsMenu()
         }
     }
-
 
     override fun sendMessage(text: String) {
         ui {
