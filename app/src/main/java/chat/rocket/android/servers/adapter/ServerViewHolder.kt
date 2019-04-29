@@ -13,7 +13,7 @@ class ServerViewHolder(itemView: View, private val currentServerUrl: String) :
     fun bind(account: Account) {
         with(itemView) {
             Glide.with(context).load(account.serverLogo).into(image_server)
-            text_server_name.text = account.serverUrl
+            text_server_name.text = account.serverName ?: account.serverUrl
             text_server_url.text = account.serverUrl
             image_check.isInvisible = currentServerUrl != account.serverUrl
         }
