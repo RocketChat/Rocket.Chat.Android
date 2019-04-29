@@ -86,12 +86,20 @@ class ChatRoomsFragmentModule {
     @PerFragment
     fun provideRoomMapper(
         context: Application,
-        repository: SettingsRepository,
+        settingsRepository: SettingsRepository,
         userInteractor: GetCurrentUserInteractor,
+        tokenRepository: TokenRepository,
         @Named("currentServer") serverUrl: String,
         permissionsInteractor: PermissionsInteractor
     ): RoomUiModelMapper {
-        return RoomUiModelMapper(context, repository.get(serverUrl), userInteractor, serverUrl, permissionsInteractor)
+        return RoomUiModelMapper(
+            context,
+            settingsRepository.get(serverUrl),
+            userInteractor,
+            tokenRepository,
+            serverUrl,
+            permissionsInteractor
+        )
     }
 
     @Provides
