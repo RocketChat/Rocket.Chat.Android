@@ -173,17 +173,8 @@ class ChatRoomPresenter @Inject constructor(
             if (getChatRole()) {
                 canModerate = isOwnerOrMod()
                 if (canModerate) {
-                    room?.let {
-                        chatIsBroadcast = it.chatRoom.broadcast ?: false
-                        val roomUiModel = roomMapper.map(it, true)
-                        launchUI(strategy) {
-                            view.onRoomUpdated(roomUiModel = roomUiModel.copy(
-                                    broadcast = chatIsBroadcast,
-                                    canModerate = canModerate,
-                                    writable = roomUiModel.writable || canModerate
-                            ))
-                        }
-                    }
+                    //FIXME: add this in when moderator page is actually created
+                    //view.updateModeration()
                 }
             }
 
