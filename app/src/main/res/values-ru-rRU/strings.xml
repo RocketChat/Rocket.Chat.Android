@@ -74,23 +74,23 @@
     <string name="msg_delete_account">Удалить аккаунт</string>
     <string name="msg_change_status">Изменить статус</string>
 
-    <string-array name="языки">
-        <item>English</item>
-        <item>Arabic</item>
-        <item>German</item>
-        <item>Spanish</item>
-        <item>Persian</item>
-        <item>French</item>
-        <item>Hindi (IN)</item>
-        <item>Italian</item>
-        <item>Japanese</item>
-        <item>Portuguese (BR)</item>
-        <item>Portuguese (PT)</item>
-        <item>Russian (RU)</item>
-        <item>Turkish</item>
-        <item>Ukrainian</item>
-        <item>Chinese (CN)</item>
-        <item>Chinese (TW)</item>
+    <string-array name="languages">
+        <item>Английский</item>
+        <item>Арабский</item>
+        <item>Немецкий</item>
+        <item>Испанский</item>
+        <item>Персидский</item>
+        <item>Французский</item>
+        <item>Хинди (IN)</item>
+        <item>Итальянский</item>
+        <item>Японский</item>
+        <item>Португальский (BR)</item>
+        <item>Португальский (PT)</item>
+        <item>Русский (RU)</item>
+        <item>Турецкий</item>
+        <item>Украинский</item>
+        <item>Китайский (CN)</item>
+        <item>Китайский (TW)</item>
     </string-array>
 
     <!-- Regular information messages -->
