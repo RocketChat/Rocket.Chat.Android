@@ -172,15 +172,17 @@ class ChatRoomPresenter @Inject constructor(
                       information locally*/
             if (getChatRole()) {
                 canModerate = isOwnerOrMod()
-                room?.let {
-                    chatIsBroadcast = it.chatRoom.broadcast ?: false
-                    val roomUiModel = roomMapper.map(it, true)
-                    launchUI(strategy) {
-                        view.onRoomUpdated(roomUiModel = roomUiModel.copy(
-                                broadcast = chatIsBroadcast,
-                                canModerate = canModerate,
-                                writable = roomUiModel.writable || canModerate
-                        ))
+                if (canModerate) {
+                    room?.let {
+                        chatIsBroadcast = it.chatRoom.broadcast ?: false
+                        val roomUiModel = roomMapper.map(it, true)
+                        launchUI(strategy) {
+                            view.onRoomUpdated(roomUiModel = roomUiModel.copy(
+                                    broadcast = chatIsBroadcast,
+                                    canModerate = canModerate,
+                                    writable = roomUiModel.writable || canModerate
+                            ))
+                        }
                     }
                 }
             }
