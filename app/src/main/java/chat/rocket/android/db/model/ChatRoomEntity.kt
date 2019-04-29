@@ -26,6 +26,7 @@ import chat.rocket.android.emoji.internal.db.StringListConverter
 data class ChatRoomEntity(
     @PrimaryKey var id: String,
     var subscriptionId: String,
+    var parentId: String?,
     var type: String,
     var name: String,
     var fullname: String? = null,
