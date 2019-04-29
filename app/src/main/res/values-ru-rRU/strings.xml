@@ -19,7 +19,7 @@
     <string name="title_admin_panel">Панель админа</string>
     <string name="title_password">Изменить пароль</string>
     <string name="title_update_profile">Обновить профиль</string>
-    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
+    <string name="title_choose_language">Изменить язык</string>
     <string name="title_create_channel">Создать новый канал</string>
     <string name="title_channel_details">О канале</string>
     <string name="title_topic">Тема</string>
@@ -74,23 +74,23 @@
     <string name="msg_delete_account">Удалить аккаунт</string>
     <string name="msg_change_status">Изменить статус</string>
 
-    <string-array name="languages"> <!-- TODO Add translations -->
-        <item>English</item>
-        <item>Arabic</item>
-        <item>German</item>
-        <item>Spanish</item>
-        <item>Persian</item>
-        <item>French</item>
-        <item>Hindi (IN)</item>
-        <item>Italian</item>
-        <item>Japanese</item>
-        <item>Portuguese (BR)</item>
-        <item>Portuguese (PT)</item>
-        <item>Russian (RU)</item>
-        <item>Turkish</item>
-        <item>Ukrainian</item>
-        <item>Chinese (CN)</item>
-        <item>Chinese (TW)</item>
+    <string-array name="languages">
+        <item>Английский</item>
+        <item>Арабский</item>
+        <item>Немецкий</item>
+        <item>Испанский</item>
+        <item>Персидский</item>
+        <item>Французский</item>
+        <item>Хинди (IN)</item>
+        <item>Итальянский</item>
+        <item>Японский</item>
+        <item>Португальский (BR)</item>
+        <item>Португальский (PT)</item>
+        <item>Русский (RU)</item>
+        <item>Турецкий</item>
+        <item>Украинский</item>
+        <item>Китайский (CN)</item>
+        <item>Китайский (TW)</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -203,7 +203,7 @@
     <string name="msg_storage_permission_denied">Необходимо разрешение на использование хранилища</string>
     <string name="msg_server">Сервер</string>
     <string name="msg_add_new_server">Добавить новый сервер</string>
-    <string name="msg_directory">Директория</string>
+    <string name="msg_directory">Каталог</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>
@@ -344,7 +344,7 @@
     <string name="msg_channels">Каналы</string>
     <string name="msg_users">Пользователи</string>
     <string name="msg_search_for_global_users">Поиск глобальных пользователей</string>
-    <string name="msg_search_for_global_users_description">При активации станет возможен поиск любого пользователя из других компаний или серверов.</string>
+    <string name="msg_search_for_global_users_description">При активации станет возможен поиск пользователей на других серверах.</string>
     <string name="header_private_groups">Приватные каналы</string>
     <string name="header_direct_messages">Личная переписка</string>
     <string name="header_live_chats">Живые чаты</string>
