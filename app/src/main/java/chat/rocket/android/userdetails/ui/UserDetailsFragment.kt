@@ -79,7 +79,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     }
 
     override fun showUserDetailsAndActions(
-        avatarUrl: String?,
+        avatarUrl: String,
         name: String?,
         username: String?,
         status: String?,
@@ -103,7 +103,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         val userStatus = if(status != null) status.substring(0, 1).toUpperCase() + status.substring(1) else  ""
         text_description_status.text = userStatus
 
-        val userUtcOffset = if(utcOffset != "null") utcOffset else "None"
+        val userUtcOffset = if(utcOffset.equals("null")) getString(R.string.user_timezone_none) else utcOffset
         text_description_timezone.text = userUtcOffset
 
         text_video_call.isVisible = isVideoCallAllowed

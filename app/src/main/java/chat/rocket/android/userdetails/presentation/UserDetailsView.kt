@@ -16,7 +16,7 @@ interface UserDetailsView : LoadingView, MessageView {
      * @param isVideoCallAllowed True if the video call is allowed, false otherwise.
      */
     fun showUserDetailsAndActions(
-        avatarUrl: String?,
+        avatarUrl: String,
         name: String?,
         username: String?,
         status: String?,

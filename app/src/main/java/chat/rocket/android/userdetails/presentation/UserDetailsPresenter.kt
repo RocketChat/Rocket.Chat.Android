@@ -62,7 +62,7 @@ class UserDetailsPresenter @Inject constructor(
 
                     if (avatarUrl != null || username != null || name != null || utcOffset != null) {
                         view.showUserDetailsAndActions(
-                            avatarUrl = avatarUrl,
+                            avatarUrl = avatarUrl.toString(),
                             name = name,
                             username = username,
                             status = userEntity.status,
