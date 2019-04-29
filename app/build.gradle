@@ -182,8 +182,8 @@ dependencies {
     playImplementation libraries.firebaseAnalytics
     playImplementation libraries.playServicesAuth
     playImplementation libraries.dynamiclinks
-    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.8@aar') { transitive = true }
-    playImplementation('com.crashlytics.sdk.android:answers:1.4.6@aar') { transitive = true }
+    playImplementation ('com.google.firebase:firebase-core:16.0.8@aar') { transitive = true}
+    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.9@aar') { transitive = true }
 
     testImplementation libraries.junit
     testImplementation libraries.truth
