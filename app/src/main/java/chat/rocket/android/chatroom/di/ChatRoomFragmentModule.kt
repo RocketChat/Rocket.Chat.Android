@@ -56,6 +56,7 @@ class ChatRoomFragmentModule {
         context: Application,
         repository: SettingsRepository,
         userInteractor: GetCurrentUserInteractor,
+        tokenRepository: TokenRepository,
         @Named("currentServer") serverUrl: String,
         permissionsInteractor: PermissionsInteractor
     ): RoomUiModelMapper {
@@ -63,6 +64,7 @@ class ChatRoomFragmentModule {
             context,
             repository.get(serverUrl),
             userInteractor,
+            tokenRepository,
             serverUrl,
             permissionsInteractor
         )

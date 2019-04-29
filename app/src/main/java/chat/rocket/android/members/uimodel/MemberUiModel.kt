@@ -2,6 +2,7 @@ package chat.rocket.android.members.uimodel
 
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.common.model.Token
 import chat.rocket.common.model.User
 import chat.rocket.common.model.UserStatus
 import chat.rocket.core.model.Value
@@ -9,7 +10,8 @@ import chat.rocket.core.model.Value
 class MemberUiModel(
     private val member: User,
     private val settings: Map<String, Value<Any>>,
-    private val baseUrl: String?
+    private val baseUrl: String?,
+    private val token: Token?
 ) {
     val userId: String = member.id
     val avatarUri: String?
@@ -33,7 +35,7 @@ class MemberUiModel(
     private fun getUserAvatar(): String? {
         val username = member.username ?: "?"
         return baseUrl?.let {
-            baseUrl.avatarUrl(username, format = "png")
+            baseUrl.avatarUrl(username, token?.userId, token?.authToken, format = "png")
         }
     }
 
