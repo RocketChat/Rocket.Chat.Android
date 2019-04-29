@@ -1,6 +1,5 @@
 package chat.rocket.android.userdetails.presentation
 
-import android.util.Log
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.core.lifecycle.CancelStrategy
@@ -61,7 +60,6 @@ class UserDetailsPresenter @Inject constructor(
                     val utcOffset =
                         userEntity.utcOffset // TODO Convert UTC and display like the mockup
 
-                    Log.d("profile",avatarUrl+" " + username+" " +name+" " + utcOffset)
                     if (avatarUrl != null || username != null || name != null || utcOffset != null) {
                         view.showUserDetailsAndActions(
                             avatarUrl = avatarUrl,

@@ -103,20 +103,16 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         val userStatus = if(status != null) status.substring(0, 1).toUpperCase() + status.substring(1) else  ""
         text_description_status.text = userStatus
 
-        if(utcOffset != "null") {
-            text_description_timezone.text = utcOffset
-        } else {
-            text_title_timezone.isVisible = false
-        }
-        // We should also setup the user details listeners.
-        if(username != null){
-            text_message.setOnClickListener { presenter.createDirectMessage(username) }
+        val userUtcOffset = if(utcOffset != "null") utcOffset else "None"
+        text_description_timezone.text = userUtcOffset
 
+        text_video_call.isVisible = isVideoCallAllowed
+
+        // We should also setup the user details listeners.
+        username?.run {
+            text_message.setOnClickListener { presenter.createDirectMessage(this) }
             if (isVideoCallAllowed) {
-                text_video_call.isVisible = true
-                text_video_call.setOnClickListener { presenter.toVideoConference(username) }
-            } else {
-                text_video_call.isVisible = false
+                text_video_call.setOnClickListener { presenter.toVideoConference(this) }
             }
         }
     }
