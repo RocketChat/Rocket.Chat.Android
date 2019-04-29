@@ -186,7 +186,7 @@ fun Query.asSortingOrder(): ChatRoomsRepository.Order {
                 ChatRoomsRepository.Order.GROUPED_ACTIVITY
             }
             else if(unreadOnTop && !grouped){
-                ChatRoomsRepository.Order.UNREAD_ON_TOP_ACTIVITY
+                ChatRoomsRepository.Order.UNREAD_ON_TOP_ACTIVITY //test
             }
             else if(unreadOnTop && grouped){
                 ChatRoomsRepository.Order.UNREAD_ON_TOP_GROUPED_ACTIVITY
