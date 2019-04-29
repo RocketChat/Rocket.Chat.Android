@@ -9,7 +9,7 @@ import chat.rocket.android.chatrooms.adapter.LoadingItemHolder
 import chat.rocket.android.chatrooms.adapter.RoomUiModelMapper
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.chatrooms.infrastructure.ChatRoomsRepository
-import chat.rocket.android.server.infraestructure.ConnectionManager
+import chat.rocket.android.server.infrastructure.ConnectionManager
 import chat.rocket.android.util.livedata.transform
 import chat.rocket.android.util.livedata.wrap
 import chat.rocket.android.util.retryIO

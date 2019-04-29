@@ -1,5 +1,8 @@
 package chat.rocket.android.authentication.loginoptions.ui
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
 import android.graphics.PorterDuff
@@ -7,10 +10,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.view.isVisible
+import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
@@ -28,6 +34,7 @@ import chat.rocket.android.webview.sso.ui.ssoWebViewIntent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_authentication_login_options.*
+import timber.log.Timber
 import javax.inject.Inject
 
 private const val SERVER_NAME = "server_name"
@@ -60,6 +67,8 @@ private const val DEEP_LINK_INFO = "deep-link-info"
 internal const val REQUEST_CODE_FOR_OAUTH = 1
 internal const val REQUEST_CODE_FOR_CAS = 2
 internal const val REQUEST_CODE_FOR_SAML = 3
+
+private const val DEFAULT_ANIMATION_DURATION = 400L
 
 fun newInstance(
     serverName: String,
@@ -238,7 +247,6 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
             enableLoginByLinkedin()
         }
 
-
         if (gitlabOauthUrl != null && state != null) {
             setupGitlabButtonListener(gitlabOauthUrl.toString(), state.toString())
             enableLoginByGitlab()
@@ -390,11 +398,11 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
             var isAccountsCollapsed = true
             button_expand_collapse_accounts.setOnClickListener {
                 isAccountsCollapsed = if (isAccountsCollapsed) {
-                    button_expand_collapse_accounts.rotateBy(180F, 400)
+                    button_expand_collapse_accounts.rotateBy(180F, DEFAULT_ANIMATION_DURATION)
                     expandAccountsView()
                     false
                 } else {
-                    button_expand_collapse_accounts.rotateBy(180F, 400)
+                    button_expand_collapse_accounts.rotateBy(180F, DEFAULT_ANIMATION_DURATION)
                     collapseAccountsView()
                     true
                 }
@@ -532,17 +540,73 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
     }
 
     private fun expandAccountsView() {
-        (0..accounts_container.childCount)
+        val buttons = (0..accounts_container.childCount)
             .mapNotNull { accounts_container.getChildAt(it) as? Button }
             .filter { it.isClickable && !it.isVisible }
-            .forEach { it.isVisible = true }
+        val optionHeight = accounts_container.getChildAt(1).height +
+            accounts_container.getChildAt(1).marginTop
+        val collapsedHeight = accounts_container.height
+        val expandedHeight = collapsedHeight + optionHeight * buttons.size
+
+        with(ValueAnimator.ofInt(collapsedHeight, expandedHeight)) {
+            addUpdateListener {
+                val params = accounts_container.layoutParams
+                params.height = animatedValue as Int
+                accounts_container.layoutParams = params
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animator: Animator) {
+                    buttons.forEach {
+                        it.isVisible = true
+                        val anim = AlphaAnimation(0.0f, 1.0f)
+                        anim.duration = DEFAULT_ANIMATION_DURATION
+                        it.startAnimation(anim)
+                    }
+                }
+            })
+            setDuration(DEFAULT_ANIMATION_DURATION).start()
+        }
     }
 
     private fun collapseAccountsView() {
-        (0..accounts_container.childCount)
+        val buttons = (0..accounts_container.childCount)
             .mapNotNull { accounts_container.getChildAt(it) as? Button }
             .filter { it.isClickable && it.isVisible }
             .drop(3)
-            .forEach { it.isVisible = false }
+        val optionHeight = accounts_container.getChildAt(1).height +
+            accounts_container.getChildAt(1).marginTop
+        val expandedHeight = accounts_container.height
+        val collapsedHeight = expandedHeight - optionHeight * buttons.size
+
+        with(ValueAnimator.ofInt(expandedHeight, collapsedHeight)) {
+            addUpdateListener {
+                val params = accounts_container.layoutParams
+                params.height = animatedValue as Int
+                accounts_container.layoutParams = params
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animator: Animator) {
+                    buttons.forEach {
+                        val anim = AlphaAnimation(1.0f, 0.0f)
+                        anim.duration = DEFAULT_ANIMATION_DURATION
+                        anim.setAnimationListener(object : Animation.AnimationListener {
+                            override fun onAnimationStart(animation: Animation) {
+                                Timber.d("Animation starts: $animation")
+                            }
+
+                            override fun onAnimationEnd(animation: Animation) {
+                                it.isVisible = false
+                            }
+
+                            override fun onAnimationRepeat(animation: Animation) {
+                                Timber.d("Animation repeats: $animation")
+                            }
+                        })
+                        it.startAnimation(anim)
+                    }
+                }
+            })
+            setDuration(DEFAULT_ANIMATION_DURATION).start()
+        }
     }
 }

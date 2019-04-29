@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
 import dagger.android.AndroidInjection

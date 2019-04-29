@@ -24,7 +24,7 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.SITE_URL
 import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.retryIO
 import chat.rocket.android.util.setupFabric
 import chat.rocket.common.RocketChatException

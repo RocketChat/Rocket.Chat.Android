@@ -33,8 +33,8 @@ import chat.rocket.android.server.domain.UsersRepository
 import chat.rocket.android.server.domain.uploadMaxFileSize
 import chat.rocket.android.server.domain.uploadMimeTypeFilter
 import chat.rocket.android.server.domain.useRealName
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
-import chat.rocket.android.server.infraestructure.state
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.state
 import chat.rocket.android.util.extension.getByteArray
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
