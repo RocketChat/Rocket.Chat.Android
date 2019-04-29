@@ -476,21 +476,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-
     override fun sendMessage(text: String) {
         ui {
             if (!text.isBlank()) {
                 if (text.startsWith("/")) {
                     presenter.runCommand(text, chatRoomId)
-                    return@ui
-                } else if (text.startsWith("+") && presenter.getLastMessageId() != null) {
-                    val trimmedText = text.substring(1).trimEnd()
-                    if (trimmedText.length - trimmedText.removeSurrounding(":").length == 2) {
-                        presenter.react(presenter.getLastMessageId()!!, trimmedText, chatRoomId)
-                        return@ui
-                    }
+                } else if (text.startsWith("+")) {
+                    presenter.reactToLastMessage(text, chatRoomId)
+                } else {
+                    presenter.sendMessage(chatRoomId, text, editingMessageId)
                 }
-                presenter.sendMessage(chatRoomId, text, editingMessageId)
             }
         }
     }
@@ -680,11 +675,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun onReactionTouched(messageId: String, emojiShortname: String) {
-        presenter.react(messageId, emojiShortname, chatRoomId)
+        presenter.react(messageId, emojiShortname)
     }
 
     override fun onReactionAdded(messageId: String, emoji: Emoji) {
-        presenter.react(messageId, emoji.shortname, chatRoomId)
+        presenter.react(messageId, emoji.shortname)
     }
 
     override fun onReactionLongClicked(

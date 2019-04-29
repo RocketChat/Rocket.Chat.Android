@@ -224,7 +224,7 @@ class ChatRoomPresenter @Inject constructor(
                         isBroadcast = chatIsBroadcast, isRoom = true
                     )
                     )
-                    lastMessageId = localMessages.first().id
+                    lastMessageId = localMessages.firstOrNull()?.id
                     val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
                     if (oldMessages.isNotEmpty() && lastSyncDate != null) {
                         view.showMessages(oldMessages, clearDataSet)
@@ -237,7 +237,7 @@ class ChatRoomPresenter @Inject constructor(
                 }
 
                 // TODO: For now we are marking the room as read if we can get the messages (I mean, no exception occurs)
-                // but should mark only when the user see the first unread message.
+                // but should mark only when the user sees the first unread message.
                 markRoomAsRead(chatRoomId)
 
                 subscribeMessages(chatRoomId)
@@ -1079,7 +1079,7 @@ class ChatRoomPresenter @Inject constructor(
     /**
      * Send an emoji reaction to a message.
      */
-    fun react(messageId: String, emoji: String, roomId: String) {
+    fun react(messageId: String, emoji: String) {
         launchUI(strategy) {
             try {
                 retryIO("toggleEmoji($messageId, $emoji)") {
@@ -1088,10 +1088,31 @@ class ChatRoomPresenter @Inject constructor(
                 logReactionEvent()
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
-                // emoji is not valid, post it
-                sendMessage(roomId, "+$emoji", null)
-            } finally {
-                view.clearMessageComposition(true)
+            }
+        }
+    }
+
+    fun reactToLastMessage(text: String, roomId: String) {
+        launchUI(strategy) {
+            lastMessageId?.let { messageId ->
+                val emoji = text.substring(1).trimEnd()
+                if (emoji.length >= 2 && emoji.startsWith(":") && emoji.endsWith(":")) {
+                    try {
+                        retryIO("toggleEmoji($messageId, $emoji)") {
+                            client.toggleReaction(messageId, emoji.removeSurrounding(":"))
+                        }
+                        logReactionEvent()
+                        view.clearMessageComposition(true)
+                    } catch (ex: RocketChatException) {
+                        Timber.e(ex)
+                        // emoji is not valid, post it
+                        sendMessage(roomId, text, null)
+                    }
+                } else {
+                    sendMessage(roomId, text, null)
+                }
+            }.ifNull {
+                sendMessage(roomId, text, null)
             }
         }
     }
@@ -1180,7 +1201,9 @@ class ChatRoomPresenter @Inject constructor(
                     val result = retryIO("runCommand($name, $params, $roomId)") {
                         client.runCommand(Command(name, params), roomId)
                     }
-                    if (!result) {
+                    if (result) {
+                        view.clearMessageComposition(true)
+                    } else {
                         // failed, command is not valid so post it
                         sendMessage(roomId, text, null)
                     }
@@ -1190,7 +1213,6 @@ class ChatRoomPresenter @Inject constructor(
                 // command is not valid, post it
                 sendMessage(roomId, text, null)
             } finally {
-                view.clearMessageComposition(true)
                 view.enableSendMessageButton()
             }
         }
@@ -1303,9 +1325,5 @@ class ChatRoomPresenter @Inject constructor(
      */
     fun getDraftUnfinishedMessage(): String? {
         return localRepository.get(draftKey)
-    }
-
-    fun getLastMessageId(): String? {
-        return lastMessageId
     }
 }
