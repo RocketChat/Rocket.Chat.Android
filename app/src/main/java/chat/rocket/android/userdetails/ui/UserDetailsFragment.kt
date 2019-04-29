@@ -79,11 +79,11 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     }
 
     override fun showUserDetailsAndActions(
-        avatarUrl: String,
-        name: String,
-        username: String,
-        status: String,
-        utcOffset: String,
+        avatarUrl: String?,
+        name: String?,
+        username: String?,
+        status: String?,
+        utcOffset: String?,
         isVideoCallAllowed: Boolean
     ) {
         val requestBuilder = Glide.with(this).load(avatarUrl)
@@ -97,19 +97,27 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         requestBuilder.apply(RequestOptions.bitmapTransform(RoundedCorners(14)))
             .into(image_avatar)
 
-        text_name.text = name
-        text_username.text = username
-        text_description_status.text = status.substring(0, 1).toUpperCase() + status.substring(1)
-        text_description_timezone.text = utcOffset
+        text_name.text = name ?: ""
+        text_username.text = username ?: ""
 
-        // We should also setup the user details listeners.
-        text_message.setOnClickListener { presenter.createDirectMessage(username) }
+        val userStatus = if(status != null) status.substring(0, 1).toUpperCase() + status.substring(1) else  ""
+        text_description_status.text = userStatus
 
-        if (isVideoCallAllowed) {
-            text_video_call.isVisible = true
-            text_video_call.setOnClickListener { presenter.toVideoConference(username) }
+        if(utcOffset != "null") {
+            text_description_timezone.text = utcOffset
         } else {
-            text_video_call.isVisible = false
+            text_title_timezone.isVisible = false
+        }
+        // We should also setup the user details listeners.
+        if(username != null){
+            text_message.setOnClickListener { presenter.createDirectMessage(username) }
+
+            if (isVideoCallAllowed) {
+                text_video_call.isVisible = true
+                text_video_call.setOnClickListener { presenter.toVideoConference(username) }
+            } else {
+                text_video_call.isVisible = false
+            }
         }
     }
 
