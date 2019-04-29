@@ -365,6 +365,7 @@
 
     <!-- User Details -->
     <string name="timezone">Fuseau horaire</string>
+    <string name="user_timezone_none">None</string><!-- TODO Add translation -->
 
     <!-- Report -->
     <string name="submit">Soumettre</string>

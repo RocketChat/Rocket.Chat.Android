@@ -366,6 +366,7 @@
 
     <!-- User Details -->
     <string name="timezone">المنظقة الزمنية</string>
+    <string name="user_timezone_none">None</string><!-- TODO Add translation -->
 
     <!-- Report -->
     <string name="submit">تأكيد</string>

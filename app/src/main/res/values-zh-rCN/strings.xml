@@ -364,6 +364,7 @@
     <!-- User Details -->
     <string name="timezone">时区</string>
     <string name="status" translatable="false">状态: %1$s</string>
+    <string name="user_timezone_none">None</string><!-- TODO Add translation -->
 
     <!-- Report -->
     <string name="submit">提交</string>
