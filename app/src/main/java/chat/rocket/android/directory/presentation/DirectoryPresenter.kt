@@ -146,6 +146,7 @@ class DirectoryPresenter @Inject constructor(
 
                     val chatRoomEntity = ChatRoomEntity(
                         id = directMessage.id,
+                        parentId = null,
                         name = username,
                         description = null,
                         type = RoomType.DIRECT_MESSAGE,
