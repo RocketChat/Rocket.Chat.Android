@@ -20,6 +20,7 @@
     <string name="title_password">Şifrenizi Değiştirin</string>
     <string name="title_update_profile">Profilinizi Düzenleyin</string>
     <string name="title_create_channel">Yeni Kanal Oluştur</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_license">License</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
     <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
@@ -73,6 +74,25 @@
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
+
+    <string-array name="languages"> <!-- TODO Add translations -->
+        <item>English</item>
+        <item>Arabic</item>
+        <item>German</item>
+        <item>Spanish</item>
+        <item>Persian</item>
+        <item>French</item>
+        <item>Hindi (IN)</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Portuguese (BR)</item>
+        <item>Portuguese (PT)</item>
+        <item>Russian (RU)</item>
+        <item>Turkish</item>
+        <item>Ukrainian</item>
+        <item>Chinese (CN)</item>
+        <item>Chinese (TW)</item>
+    </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Üzgünüz! bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.</string>

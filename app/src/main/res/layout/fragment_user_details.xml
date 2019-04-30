@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
             android:layout_marginTop="20dp"
-            android:text="@string/status"
+            android:text="@string/user_detail_status"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_message" />
 
