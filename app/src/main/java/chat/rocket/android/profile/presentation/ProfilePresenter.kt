@@ -214,7 +214,7 @@ class ProfilePresenter @Inject constructor(
     }
 
     fun getImageUri(): String {
-        return serverUrl.avatarUrl(user?.username ?: "")
+        return serverUrl.avatarUrl(user?.username ?: "", token?.userId, token?.authToken)
     }
 
     fun updateStatus(status: UserStatus) {

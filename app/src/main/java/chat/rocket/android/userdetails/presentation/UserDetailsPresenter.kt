@@ -87,7 +87,8 @@ class UserDetailsPresenter @Inject constructor(
     }
 
     fun getImageUri(): String {
-        return userEntity.username?.let { currentServer.avatarUrl(avatar = it) }!!
+        return userEntity.username?.let { currentServer.avatarUrl(avatar = it, userId = token?.userId,
+            token = token?.authToken) }!!
     }
 
     fun createDirectMessage(username: String) {
@@ -160,6 +161,5 @@ class UserDetailsPresenter @Inject constructor(
     }
 
     fun toProfileImage(avatarUrl: String) = navigator.toProfileImageDialog(avatarUrl)
-
 }
 
