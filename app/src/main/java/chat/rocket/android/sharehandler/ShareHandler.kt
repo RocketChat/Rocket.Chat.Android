@@ -2,10 +2,8 @@ package chat.rocket.android.sharehandler
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Parcelable
-import android.content.pm.ResolveInfo
-import android.content.pm.PackageManager
+import chat.rocket.android.util.extensions.getFileName
+import java.io.InputStream
 
 
 object ShareHandler {
@@ -13,12 +11,12 @@ object ShareHandler {
     fun hasShare(): Boolean = hasSharedText() || hasSharedImage()
 
     fun hasSharedText(): Boolean = sharedText != null
-    fun hasSharedImage(): Boolean = sharedImage != null
+    fun hasSharedImage(): Boolean = files.size > 0
 
-    private var sharedText: String? = null
-    private var sharedImage: Uri? = null
+    var sharedText: String? = null
 
-    // TODO request permission.
+    var files: ArrayList<SharedFile> = arrayListOf()
+
     fun handle(intent: Intent?, context: Context) {
         intent?.let {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -32,7 +30,11 @@ object ShareHandler {
             if (Intent.ACTION_SEND == action) {
                 if ("text/plain" == type) {
                     handleSendText(intent)
-                } else if (type.startsWith("image/")) {
+                } else if (type.startsWith("image")) {
+                    handleSendImage(intent, context)
+                }
+            } else if (Intent.ACTION_SEND_MULTIPLE == action) {
+                if (type.startsWith("image")) {
                     handleSendImage(intent, context)
                 }
             }
@@ -44,9 +46,17 @@ object ShareHandler {
     }
 
     private fun handleSendImage(intent: Intent, context: Context) {
-        sharedImage = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as Uri?
+        intent.clipData?.apply {
+            for (pos in 0 until itemCount) {
+                val uri = getItemAt(pos).uri
 
-//        context.grantUriPermission("chat.rocket.android.dev", sharedImage, Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                context.contentResolver.apply {
+                    openInputStream(getItemAt(pos).uri)?.let {
+                        files.add(SharedFile(it, uri.getFileName(context).orEmpty()))
+                    }
+                }
+            }
+        }
     }
 
     fun getTextAndClear(): String {
@@ -56,16 +66,5 @@ object ShareHandler {
         return text
     }
 
-    fun getImageAndClear(): Uri? {
-        val uri = sharedImage
-
-        sharedImage = null
-        return uri
-    }
-
-    fun clearShare() {
-        sharedText = null
-        sharedImage = null
-    }
-
+    class SharedFile(var fis: InputStream, var name: String)
 }
