@@ -36,6 +36,7 @@ import chat.rocket.android.server.domain.uploadMimeTypeFilter
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.server.infrastructure.state
+import chat.rocket.android.sharehandler.ShareHandler
 import chat.rocket.android.util.extension.getByteArray
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
@@ -515,6 +516,47 @@ class ChatRoomPresenter @Inject constructor(
                     view.showMessage(it)
                 }.ifNull {
                     view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideLoading()
+            }
+        }
+    }
+
+    fun uploadSharedFile(roomId: String, file: ShareHandler.SharedFile) {
+        launchUI(strategy) {
+            view.showLoading()
+            try {
+                withContext(Dispatchers.Default) {
+                    val fileName = file.name
+                    val fileSize = file.size
+                    val maxFileSizeAllowed = settings.uploadMaxFileSize()
+
+                    when {
+                        fileName.isEmpty() -> view.showInvalidFileMessage()
+                        fileSize > maxFileSizeAllowed && maxFileSizeAllowed !in -1..0 ->
+                            view.showInvalidFileSize(fileSize, maxFileSizeAllowed)
+                        else -> {
+                            retryIO("uploadFile($roomId, $fileName, ${file.mimeType}") {
+                                client.uploadFile(
+                                    roomId,
+                                    fileName,
+                                    file.mimeType,
+                                    file.name,
+                                    description = fileName
+                                ) {
+                                    file.fis
+                                }
+                            }
+                            logMediaUploaded(file.mimeType)
+                        }
+                    }
+                }
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error uploading file")
+                when (ex) {
+                    is RocketChatException -> view.showMessage(ex)
+                    else -> view.showGenericErrorMessage()
                 }
             } finally {
                 view.hideLoading()

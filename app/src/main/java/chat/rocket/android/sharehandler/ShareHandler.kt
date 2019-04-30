@@ -3,6 +3,8 @@ package chat.rocket.android.sharehandler
 import android.content.Context
 import android.content.Intent
 import chat.rocket.android.util.extensions.getFileName
+import chat.rocket.android.util.extensions.getFileSize
+import chat.rocket.android.util.extensions.getMimeType
 import java.io.InputStream
 
 
@@ -27,15 +29,13 @@ object ShareHandler {
             if (type.isNullOrEmpty() || action.isNullOrEmpty())
                 return@let
 
-            if (Intent.ACTION_SEND == action) {
-                if ("text/plain" == type) {
-                    handleSendText(intent)
-                } else if (type.startsWith("image")) {
-                    handleSendImage(intent, context)
-                }
-            } else if (Intent.ACTION_SEND_MULTIPLE == action) {
-                if (type.startsWith("image")) {
-                    handleSendImage(intent, context)
+            if ("text/plain" == type) {
+                handleSendText(intent)
+            } else {
+                intent.clipData?.let { data ->
+                    if (data.itemCount > 0) {
+                        loadFiles(intent, context)
+                    }
                 }
             }
         }
@@ -45,14 +45,19 @@ object ShareHandler {
         sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
     }
 
-    private fun handleSendImage(intent: Intent, context: Context) {
+    private fun loadFiles(intent: Intent, context: Context) {
         intent.clipData?.apply {
             for (pos in 0 until itemCount) {
                 val uri = getItemAt(pos).uri
 
                 context.contentResolver.apply {
                     openInputStream(getItemAt(pos).uri)?.let {
-                        files.add(SharedFile(it, uri.getFileName(context).orEmpty()))
+                        files.add(SharedFile(
+                            it,
+                            uri.getFileName(context) ?: uri.toString(),
+                            uri.getMimeType(context), // TODO some mime types missing and causing crash.
+                            uri.getFileSize(context)
+                        ))
                     }
                 }
             }
@@ -66,5 +71,5 @@ object ShareHandler {
         return text
     }
 
-    class SharedFile(var fis: InputStream, var name: String)
+    class SharedFile(var fis: InputStream, var name: String, val mimeType: String, val size: Int)
 }

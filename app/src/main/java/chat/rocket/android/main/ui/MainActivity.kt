@@ -21,7 +21,6 @@ import dagger.android.HasActivityInjector
 import dagger.android.support.HasSupportFragmentInjector
 import java.util.*
 import javax.inject.Inject
-import chat.rocket.android.sharehandler.ShareHandler
 
 class MainActivity : AppCompatActivity(), HasActivityInjector,
     HasSupportFragmentInjector, AppLanguageView {

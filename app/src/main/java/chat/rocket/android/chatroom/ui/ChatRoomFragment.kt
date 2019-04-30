@@ -1245,11 +1245,18 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             if (ShareHandler.hasSharedImage()) {
                 ShareHandler.files.forEach {
-                    presenter.uploadDrawingImage(
-                        chatRoomId,
-                        it.fis.readBytes(),
-                        it.name
-                    )
+                    if (it.mimeType.startsWith("image")) {
+                        presenter.uploadDrawingImage(
+                            chatRoomId,
+                            it.fis.readBytes(),
+                            it.name
+                        )
+                    } else {
+                        presenter.uploadSharedFile(
+                            chatRoomId,
+                            it
+                        )
+                    }
                 }
             }
         }
