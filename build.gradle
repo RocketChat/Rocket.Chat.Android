@@ -26,6 +26,7 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://jitpack.io" }
         maven { url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases" }
+        maven { url 'https://maven.google.com' }
     }
 
     apply from: rootProject.file('dependencies.gradle')

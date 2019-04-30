@@ -133,8 +133,8 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="12ac6e94f850aaffcdff52001af77ca415d06a43" />
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
