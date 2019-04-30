@@ -153,6 +153,8 @@ class ChatRoomPresenter @Inject constructor(
             }
 
             loadMessages(roomId, chatRoomType, clearDataSet = true)
+            loadActiveMembers(roomId, chatRoomType, filterSelfOut = true)
+
             chatRoomMessage?.let { messageHelper.messageIdFromPermalink(it) }
                     ?.let { messageId ->
                         val name = messageHelper.roomNameFromPermalink(chatRoomMessage)
@@ -231,8 +233,7 @@ class ChatRoomPresenter @Inject constructor(
     ) {
         this.chatRoomId = chatRoomId
         this.chatRoomType = chatRoomType
-        launchUI(strategy) {
-            view.showLoading()
+        GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
             try {
                 if (offset == 0L) {
                     // FIXME - load just 50 messages from DB to speed up. We will reload from Network after that
@@ -248,7 +249,6 @@ class ChatRoomPresenter @Inject constructor(
                     val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
                     if (oldMessages.isNotEmpty() && lastSyncDate != null) {
                         view.showMessages(oldMessages, clearDataSet)
-                        view.hideLoading()
                         loadMissingMessages()
                     } else {
                         loadAndShowMessages(chatRoomId, chatRoomType, offset, clearDataSet)
@@ -269,8 +269,6 @@ class ChatRoomPresenter @Inject constructor(
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }
-            } finally {
-                view.hideLoading()
             }
 
             subscribeTypingStatus()
@@ -816,13 +814,15 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    fun loadActiveMembers(
+    suspend fun loadActiveMembers(
         chatRoomId: String,
         chatRoomType: String,
         offset: Long = 0,
         filterSelfOut: Boolean = false
     ) {
-        launchUI(strategy) {
+        val activeUsers = mutableListOf<PeopleSuggestionUiModel>()
+
+        withContext(Dispatchers.IO + strategy.jobs) {
             try {
                 val members = retryIO("getMembers($chatRoomId, $chatRoomType, $offset)") {
                     client.getMembers(chatRoomId, roomTypeOf(chatRoomType), offset, 50).result
@@ -832,8 +832,7 @@ class ChatRoomPresenter @Inject constructor(
                 val self = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
                 // Take at most the 100 most recent messages distinguished by user. Can return less.
                 val recentMessages = messagesRepository.getRecentMessages(chatRoomId, 100)
-                    .filterNot { filterSelfOut && it.sender?.username == self }
-                val activeUsers = mutableListOf<PeopleSuggestionUiModel>()
+                        .filterNot { filterSelfOut && it.sender?.username == self }
                 recentMessages.forEach {
                     val sender = it.sender
                     val username = sender?.username ?: ""
@@ -843,10 +842,10 @@ class ChatRoomPresenter @Inject constructor(
                     val status = if (found != null) found.status else UserStatus.Offline()
                     val searchList = mutableListOf(username, name)
                     activeUsers.add(
-                        PeopleSuggestionUiModel(
-                            avatarUrl, username, username, name, status,
-                            true, searchList
-                        )
+                            PeopleSuggestionUiModel(
+                                    avatarUrl, username, username, name, status,
+                                    true, searchList
+                            )
                     )
                 }
                 // Filter out from members list the active users.
@@ -862,20 +861,21 @@ class ChatRoomPresenter @Inject constructor(
                     val avatarUrl = currentServer.avatarUrl(username)
                     val searchList = mutableListOf(username, name)
                     PeopleSuggestionUiModel(
-                        avatarUrl,
-                        username,
-                        username,
-                        name,
-                        it.status,
-                        true,
-                        searchList
+                            avatarUrl,
+                            username,
+                            username,
+                            name,
+                            it.status,
+                            true,
+                            searchList
                     )
                 })
-
-                view.populatePeopleSuggestions(activeUsers)
             } catch (e: RocketChatException) {
                 Timber.e(e)
             }
+        }
+        launchUI(strategy) {
+            view.populatePeopleSuggestions(activeUsers)
         }
     }
 
