@@ -31,7 +31,6 @@ import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
-import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.userId
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -237,7 +236,8 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                                 reaction,
                                 message.id,
                                 size,
-                                reactionValue.joinToString()
+                                reactionValue.first.joinToString(),
+                                reactionValue.second.joinToString()
                             )
                         )
                     }
@@ -383,16 +383,13 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         }
     }
 
-    private fun mapLastMessageText(message: Message?): String? = message?.run {
-        if (this.message.isEmpty() && attachments?.isNotEmpty() == true) {
-            message.attachments?.let { mapAttachmentText(it[0]) }
+    private fun mapLastMessageText(message: Message?): String? = message?.let { lastMessage ->
+        if (lastMessage.message.isEmpty() && lastMessage.attachments?.isNotEmpty() == true) {
+            context.getString(R.string.msg_sent_attachment)
         } else {
-            this.message
+            lastMessage.message
         }
     }
-
-    private fun mapAttachmentText(attachment: Attachment): String =
-        context.getString(R.string.msg_sent_attachment)
 
     private suspend fun updateSubscription(data: Subscription): ChatRoomEntity? {
         return retryDB("getRoom(${data.roomId}") { chatRoomDao().getSync(data.roomId) }?.let { current ->

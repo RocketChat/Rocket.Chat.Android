@@ -472,18 +472,20 @@ class UiModelMapper @Inject constructor(
             val list = mutableListOf<ReactionUiModel>()
             val customEmojis = EmojiRepository.getCustomEmojis()
             it.getShortNames().forEach { shortname ->
-                val usernames = it.getUsernames(shortname).orEmpty()
-                val count = usernames.size
-                val custom = customEmojis.firstOrNull { emoji -> emoji.shortname == shortname }
-                list.add(
-                    ReactionUiModel(messageId = message.id,
-                        shortname = shortname,
-                        unicode = EmojiParser.parse(context, shortname),
-                        count = count,
-                        usernames = usernames,
-                        url = custom?.url,
-                        isCustom = custom != null)
-                )
+                it.getUsernames(shortname)?.let { usernames ->
+                    val count = usernames.size
+                    val custom = customEmojis.firstOrNull { emoji -> emoji.shortname == shortname }
+                    list.add(
+                        ReactionUiModel(messageId = message.id,
+                            shortname = shortname,
+                            unicode = EmojiParser.parse(context, shortname),
+                            count = count,
+                            usernames = usernames,
+                            url = custom?.url,
+                            isCustom = custom != null)
+                    )
+
+                }
             }
             list
         }
