@@ -17,6 +17,7 @@ import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.core.behaviours.AppLanguageView
 import chat.rocket.android.helper.TextHelper.getDeviceAndAppInformation
 import chat.rocket.android.settings.presentation.SettingsPresenter
 import chat.rocket.android.settings.presentation.SettingsView
@@ -33,7 +34,7 @@ internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
 fun newInstance(): Fragment = SettingsFragment()
 
-class SettingsFragment : Fragment(), SettingsView {
+class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
     @Inject lateinit var analyticsManager: AnalyticsManager
     @Inject lateinit var presenter: SettingsPresenter
 
@@ -74,7 +75,7 @@ class SettingsFragment : Fragment(), SettingsView {
 
         text_contact_us.setOnClickListener { contactSupport() }
 
-        text_language.setOnClickListener {}
+        text_language.setOnClickListener { changeLanguage() }
 
         text_review_this_app.setOnClickListener { showAppOnStore() }
 
@@ -107,6 +108,11 @@ class SettingsFragment : Fragment(), SettingsView {
             isVisible = isDeleteAccountEnabled
             setOnClickListener { showDeleteAccountDialog() }
         }
+    }
+
+    override fun updateLanguage(language: String, country: String?) {
+        presenter.saveLocale(language, country)
+        activity?.recreate()
     }
 
     override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
@@ -152,6 +158,38 @@ class SettingsFragment : Fragment(), SettingsView {
             } catch (ex: ActivityNotFoundException) {
                 Timber.e(ex)
             }
+        }
+    }
+
+    private fun changeLanguage() {
+        context?.let {
+            AlertDialog.Builder(it)
+                .setTitle(R.string.title_choose_language)
+                .setSingleChoiceItems(
+                    resources.getStringArray(R.array.languages), -1
+                ) { dialog, option ->
+                    when (option) {
+                        0 -> updateLanguage("en")
+                        1 -> updateLanguage("ar")
+                        2 -> updateLanguage("de")
+                        3 -> updateLanguage("es")
+                        4 -> updateLanguage("fa")
+                        5 -> updateLanguage("fr")
+                        6 -> updateLanguage("hi", "IN")
+                        7 -> updateLanguage("it")
+                        8 -> updateLanguage("ja")
+                        9 -> updateLanguage("pt", "BR")
+                        10 -> updateLanguage("pt", "PT")
+                        11 -> updateLanguage("ru", "RU")
+                        12 -> updateLanguage("tr")
+                        13 -> updateLanguage("uk")
+                        14 -> updateLanguage("zh", "CN")
+                        15 -> updateLanguage("zh", "TW")
+                    }
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
         }
     }
 

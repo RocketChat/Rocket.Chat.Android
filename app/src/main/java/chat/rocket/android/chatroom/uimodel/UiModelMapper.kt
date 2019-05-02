@@ -30,7 +30,7 @@ import chat.rocket.android.server.domain.baseUrl
 import chat.rocket.android.server.domain.messageReadReceiptEnabled
 import chat.rocket.android.server.domain.messageReadReceiptStoreUsers
 import chat.rocket.android.server.domain.useRealName
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.isImage
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.ifNotNullNorEmpty
@@ -108,7 +108,7 @@ class UiModelMapper @Inject constructor(
         readReceipts.forEach {
             list.add(
                 ReadReceiptViewModel(
-                    avatar = baseUrl.avatarUrl(it.user.username ?: ""),
+                    avatar = baseUrl.avatarUrl(it.user.username!!, token?.userId, token?.authToken),
                     name = userHelper.displayName(it.user),
                     time = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(it.timestamp))
                 )
@@ -173,6 +173,7 @@ class UiModelMapper @Inject constructor(
                 ChatRoom(
                     id = id,
                     subscriptionId = subscriptionId,
+                    parentId = parentId,
                     type = roomTypeOf(type),
                     unread = unread,
                     broadcast = broadcast ?: false,
@@ -525,7 +526,7 @@ class UiModelMapper @Inject constructor(
 
         val username = message.sender?.username ?: "?"
         return baseUrl.let {
-            baseUrl.avatarUrl(username)
+            baseUrl.avatarUrl(username, token?.userId, token?.authToken)
         }
     }
 

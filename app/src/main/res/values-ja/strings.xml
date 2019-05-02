@@ -19,6 +19,7 @@
     <string name="title_admin_panel">管理パネル</string>
     <string name="title_password">パスワードの変更</string>
     <string name="title_update_profile">プロフィールの更新</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_license">License</string> <!-- TODO Add translation -->
     <string name="title_create_channel">新しいチャネルを作成</string>
     <string name="title_are_you_sure">本気ですか？</string>
@@ -72,6 +73,25 @@
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
+
+    <string-array name="languages"> <!-- TODO Add translations -->
+        <item>English</item>
+        <item>Arabic</item>
+        <item>German</item>
+        <item>Spanish</item>
+        <item>Persian</item>
+        <item>French</item>
+        <item>Hindi (IN)</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Portuguese (BR)</item>
+        <item>Portuguese (PT)</item>
+        <item>Russian (RU)</item>
+        <item>Turkish</item>
+        <item>Ukrainian</item>
+        <item>Chinese (CN)</item>
+        <item>Chinese (TW)</item>
+    </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">エラーが発生しました。もう一度お試しください。</string>

@@ -1,4 +1,4 @@
-package chat.rocket.android.authentication.infraestructure
+package chat.rocket.android.authentication.infrastructure
 
 import chat.rocket.android.authentication.domain.model.TokenModel
 import chat.rocket.android.dagger.scope.PerActivity
