@@ -401,7 +401,7 @@ class UiModelMapper @Inject constructor(
 
     private fun attachmentUrl(url: String?): String? {
         if (url.isNullOrEmpty()) return null
-        if (url!!.startsWith("http")) return url
+        if (url.startsWith("http")) return url
 
         val fullUrl = "$baseUrl$url"
         val httpUrl = HttpUrl.parse(fullUrl)
