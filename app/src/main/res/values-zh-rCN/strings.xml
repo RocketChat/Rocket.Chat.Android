@@ -359,11 +359,10 @@
     <string name="message_information_title">消息信息</string>
     <string name="message_room_changed_privacy">频道类型更改为: %1$s by %2$s</string>
 
-    <string name="foss" translatable="false">(开源)</string>
-
     <!-- User Details -->
     <string name="timezone">时区</string>
-    <string name="status" translatable="false">状态: %1$s</string>
+    <string name="status">状态: %1$s</string>
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">提交</string>

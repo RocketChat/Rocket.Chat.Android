@@ -379,8 +379,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
 
     <!-- User Details -->
     <string name="timezone">Timezone</string>
-    <string name="status" translatable="false">Status: %1$s</string>
-    <string name="user_detail_status" translatable="false">Status</string>
+    <string name="status">Status: %1$s</string>
+    <string name="user_detail_status">Status</string>
 
     <!-- Report -->
     <string name="submit">Submit</string>

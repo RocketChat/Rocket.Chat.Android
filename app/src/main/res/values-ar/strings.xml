@@ -365,6 +365,8 @@
 
     <!-- User Details -->
     <string name="timezone">المنطقة الزمنية</string>
+    <string name="status">الوضع: %1$s</string>
+    <string name="user_detail_status">الوضع</string>
 
     <!-- Report -->
     <string name="submit">تأكيد</string>

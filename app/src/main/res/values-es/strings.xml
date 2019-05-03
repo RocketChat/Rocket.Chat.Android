@@ -251,8 +251,7 @@
     <string name="action_title_editing">Edición de mensaje</string>
     <string name="action_msg_add_reaction">Añadir una reacción</string>
     <string name="action_msg_permalink">Permalink</string> <!-- TODO Add translation -->
-    <!-- TODO - Add proper translation -->
-    <string name="action_msg_report">Report</string>
+    <string name="action_msg_report">Report</string> <!-- TODO Add translation -->
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">La edición no és permitida</string>
@@ -366,6 +365,8 @@
 
     <!-- User Details -->
     <string name="timezone">Timezone</string> <!-- TODO - Add proper translation -->
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Submit</string> <!--TODO - Add proper translation-->

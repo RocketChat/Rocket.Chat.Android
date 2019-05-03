@@ -362,9 +362,10 @@
     <string name="msg_sent_attachment">Envoyé un fichier</string>
     <string name="message_room_changed_privacy">Changé de type de chambre : %1$s de %2$s</string>
 
-
     <!-- User Details -->
     <string name="timezone">Fuseau horaire</string>
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Soumettre</string>

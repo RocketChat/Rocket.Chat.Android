@@ -57,6 +57,8 @@
     <string name="action_create_server">Crie um novo servidor</string>
     <string name="action_register">Registar</string>
     <string name="action_confirm">Confirmar</string>
+    <string name="action_favorite">Marcar chat como favorito</string>
+    <string name="action_remove_favorite">Desmarcar chat como favorito</string>
 
     <!-- Settings messages -->
     <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
@@ -109,10 +111,11 @@
     <string name="msg_check_your_email_to_reset_your_password">E-mail enviado! Verifique a sua caixa de entrada para repor a sua palavra-passe.</string>
     <string name="msg_invalid_email">Por favor introduza um endereço de e-mail válido</string>
     <string name="msg_new_user_agreement">Ao prosseguir, você concorda com os nossos \n%1$s e %2$s</string>
-    <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
     <string name="msg_yesterday">Ontem</string>
     <string name="msg_today">Hoje</string>
     <string name="msg_message">Mensagem</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Translate -->
+    <string name="msg_join_video_call">Join video call</string> <!-- TODO Translate -->
     <string name="msg_this_room_is_read_only">Esta sala é apenas de leitura</string>
     <string name="msg_invalid_2fa_code">Código 2FA inválido</string>
     <string name="msg_invalid_file">Ficheiro inválido</string>
@@ -191,6 +194,7 @@
         <item quantity="one">%1$s reagiu com %2$s</item>
         <item quantity="other">%1$s reagiram com %2$s</item>
     </plurals>
+    <string name="msg_credentials_saved_successfully">Credentials saved successfully</string> <!-- TODO Translate -->
     <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
     <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
     <string name="msg_server">Server</string> <!-- TODO Translate -->
@@ -234,8 +238,7 @@
     <string name="message_unmuted">Utilizador %2$s removeu o silêncio de %1$s</string>
     <string name="message_role_add">%3$s deu estatuto de %2$s a %1$s</string>
     <string name="message_role_removed">%3$s retirou o estatuto de %2$s a %1$s</string>
-    <string name="action_favorite">Marcar chat como favorito</string>
-    <string name="action_remove_favorite">Desmarcar chat como favorito</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Translate -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">Responder</string>
@@ -358,11 +361,10 @@
     <string name="message_information_title">Informação da Mensagem</string>
     <string name="message_room_changed_privacy">Tipo de sala alterado para: %1$s por %2$s</string>
 
-    <string name="foss" translatable="false">(FOSS)</string>
-
     <!-- User Details -->
     <string name="timezone">Fuso Horário</string>
     <string name="status">Estado: %1$s</string>
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Enviar</string>

@@ -182,8 +182,8 @@
     <string name="msg_continue_with_gitlab">ادامه دادن با <b>گیت‌لب</b></string>
     <string name="msg_continue_with_wordpress">ادامه دادن با <b>وردپرس</b></string>
     <string name="msg_two_factor_authentication">تایید هویت دو فاکتوره</string>
-	<string name="msg_your_2fa_code">کد 2FA تان چیست؟</string>
-	<string name="msg_permalink_copied">پیوند کپی شد</string>
+    <string name="msg_your_2fa_code">کد 2FA تان چیست؟</string>
+    <string name="msg_permalink_copied">پیوند کپی شد</string>
     <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
     <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
     <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
@@ -363,7 +363,9 @@
     <string name="message_room_changed_privacy">Room type changed to: %1$s by %2$s</string> <!-- TODO Add translation -->
 
     <!-- User Details -->
-    <string name="timezone">منطقه‌ی زمانی</string>
+    <string name="timezone">منطقه‌ زمانی</string>
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">واگذاری</string>

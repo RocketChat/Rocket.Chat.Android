@@ -362,6 +362,8 @@
 
     <!-- User Details -->
     <string name="timezone">Часовой пояс</string>
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Отправить</string>

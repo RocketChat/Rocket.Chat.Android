@@ -366,6 +366,8 @@
 
     <!-- User Details -->
     <string name="timezone">समय क्षेत्र</string>
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">जमा करें</string>

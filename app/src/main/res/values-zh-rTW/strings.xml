@@ -23,6 +23,7 @@
     <string name="title_license">許可</string>
     <string name="title_are_you_sure">確定嗎?</string>
     <string name="title_channel_details">頻道訊息</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Translate -->
     <string name="title_topic">主題</string>
     <string name="title_announcement">公告</string>
     <string name="title_description">描述</string>
@@ -339,11 +340,10 @@
     <string name="message_information_title">消息訊息</string>
     <string name="message_room_changed_privacy">頻道類型更改為: %1$s by %2$s</string>
 
-    <string name="foss" translatable="false">(FOSS)</string>
-
     <!-- User Details -->
     <string name="timezone">時區</string>
-    <string name="status" translatable="false">狀態: %1$s</string>
+    <string name="status">狀態: %1$s</string>
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">提交</string>

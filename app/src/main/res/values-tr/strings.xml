@@ -365,6 +365,8 @@
 
     <!-- User Details -->
     <string name="timezone">Timezone</string> <!--TODO - Add proper translation-->
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Submit</string> <!--TODO - Add proper translation-->

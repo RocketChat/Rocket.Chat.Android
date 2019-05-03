@@ -361,6 +361,8 @@
 
     <!-- User Details -->
     <string name="timezone">Fuso Orario</string>
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Invia</string>
