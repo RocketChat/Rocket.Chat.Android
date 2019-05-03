@@ -74,22 +74,6 @@ class AttachmentViewHolder(
             }
 
             // File description - self describing
-
-            // Message attachment
-
-            // Author
-
-            // If not media or message, show the text with quote bar
-
-            // If it has titleLink and is not "type = file" show the title/titleLink on this field.
-
-            // Fields
-
-            // Actions
-
-            // Quote bar
-
-            // File description - self describing
             file_description.isVisible = data.hasDescription
             file_description.text = data.description
 
