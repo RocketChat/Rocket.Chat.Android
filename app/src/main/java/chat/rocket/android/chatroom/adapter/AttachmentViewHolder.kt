@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.uimodel.AttachmentUiModel
 import chat.rocket.android.emoji.EmojiReactionListener
-import chat.rocket.android.helper.DataMeasure
 import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.player.PlayerActivity
 import chat.rocket.android.util.extensions.content
@@ -322,6 +321,13 @@ class AttachmentViewHolder(
             return lp.height == ViewGroup.LayoutParams.WRAP_CONTENT
         }
     }
+}
+
+object DataMeasure {
+    const val BYTE = 1
+    const val KILOBYTE = 1024
+    const val MEGABYTE = KILOBYTE * 1024
+    const val GIGABYTE = MEGABYTE * 1024
 }
 
 private fun Long.toDataSize(): String {
