@@ -197,7 +197,7 @@ class AttachmentViewHolder(
             text_content.addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
 
                 override fun onLayoutChange(v: View, left: Int, top: Int, right: Int, bottom: Int,
-                    oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
+                                            oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
                     val textMeasuredHeight = bottom - top
                     if (collapsedHeight >= textMeasuredHeight) {
                         text_view_more.isVisible = false
@@ -206,13 +206,13 @@ class AttachmentViewHolder(
                     }
 
                     val expandAnimation = ValueAnimator
-                        .ofInt(collapsedHeight, textMeasuredHeight)
-                        .setDuration(300)
+                            .ofInt(collapsedHeight, textMeasuredHeight)
+                            .setDuration(300)
                     expandAnimation.interpolator = LinearInterpolator()
 
                     val collapseAnimation = ValueAnimator
-                        .ofInt(textMeasuredHeight, collapsedHeight)
-                        .setDuration(300)
+                            .ofInt(textMeasuredHeight, collapsedHeight)
+                            .setDuration(300)
                     collapseAnimation.interpolator = LinearInterpolator()
 
                     expandAnimation.addUpdateListener {
