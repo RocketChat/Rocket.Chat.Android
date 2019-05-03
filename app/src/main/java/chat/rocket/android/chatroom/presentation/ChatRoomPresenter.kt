@@ -29,12 +29,13 @@ import chat.rocket.android.server.domain.JobSchedulerInteractor
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.UsersRepository
 import chat.rocket.android.server.domain.uploadMaxFileSize
 import chat.rocket.android.server.domain.uploadMimeTypeFilter
 import chat.rocket.android.server.domain.useRealName
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
-import chat.rocket.android.server.infraestructure.state
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.state
 import chat.rocket.android.util.extension.getByteArray
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
@@ -101,6 +102,7 @@ class ChatRoomPresenter @Inject constructor(
     private val jobSchedulerInteractor: JobSchedulerInteractor,
     private val messageHelper: MessageHelper,
     private val dbManager: DatabaseManager,
+    tokenRepository: TokenRepository,
     getSettingsInteractor: GetSettingsInteractor,
     serverInteractor: GetCurrentServerInteractor,
     factory: ConnectionManagerFactory
@@ -109,6 +111,7 @@ class ChatRoomPresenter @Inject constructor(
     private val manager = factory.create(currentServer)
     private val client = manager.client
     private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
+    private val token = tokenRepository.get(currentServer)
     private val currentLoggedUsername = userHelper.username()
     private val messagesChannel = Channel<Message>()
 
@@ -327,7 +330,7 @@ class ChatRoomPresenter @Inject constructor(
                         timestamp = Instant.now().toEpochMilli(),
                         sender = SimpleUser(user?.id, user?.username ?: username, user?.name),
                         attachments = null,
-                        avatar = currentServer.avatarUrl(username ?: ""),
+                        avatar = currentServer.avatarUrl(username!!, token?.userId, token?.authToken),
                         channels = null,
                         editedAt = null,
                         editedBy = null,
@@ -812,7 +815,7 @@ class ChatRoomPresenter @Inject constructor(
                     val sender = it.sender
                     val username = sender?.username ?: ""
                     val name = sender?.name ?: ""
-                    val avatarUrl = currentServer.avatarUrl(username)
+                    val avatarUrl = currentServer.avatarUrl(username, token?.userId, token?.authToken)
                     val found = members.firstOrNull { member -> member.username == username }
                     val status = if (found != null) found.status else UserStatus.Offline()
                     val searchList = mutableListOf(username, name)
@@ -833,7 +836,7 @@ class ChatRoomPresenter @Inject constructor(
                 activeUsers.addAll(others.map {
                     val username = it.username ?: ""
                     val name = it.name ?: ""
-                    val avatarUrl = currentServer.avatarUrl(username)
+                    val avatarUrl = currentServer.avatarUrl(username, token?.userId, token?.authToken)
                     val searchList = mutableListOf(username, name)
                     PeopleSuggestionUiModel(
                         avatarUrl,
@@ -869,7 +872,7 @@ class ChatRoomPresenter @Inject constructor(
                             val searchList = mutableListOf(username, name)
                             it.emails?.forEach { email -> searchList.add(email.address) }
                             PeopleSuggestionUiModel(
-                                currentServer.avatarUrl(username),
+                                currentServer.avatarUrl(username, token?.userId, token?.authToken),
                                 username, username, name, it.status, false, searchList
                             )
                         }.filterNot { filterSelfOut && self != null && self == it.text })
@@ -931,6 +934,7 @@ class ChatRoomPresenter @Inject constructor(
                     ChatRoom(
                         id = id,
                         subscriptionId = subscriptionId,
+                        parentId = parentId,
                         type = roomTypeOf(type),
                         unread = unread,
                         broadcast = broadcast ?: false,
@@ -974,6 +978,7 @@ class ChatRoomPresenter @Inject constructor(
                     ChatRoom(
                         id = id,
                         subscriptionId = subscriptionId,
+                        parentId = parentId,
                         type = roomTypeOf(type),
                         unread = unread,
                         broadcast = broadcast ?: false,

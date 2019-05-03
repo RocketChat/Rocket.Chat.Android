@@ -3,7 +3,6 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Sunucunuza Bağlantı Kurun</string>
     <string name="title_log_in">Giriş Yapın</string>
-    <string name="title_share_the_app">uygulamayı Paylaş</string>
     <string name="title_register_username">Kullanıcı Adıyla Kaydolun</string>
     <string name="title_reset_password">Şifre Sıfırlama</string>
     <string name="title_sign_up">Kayıt Olun</string>
@@ -20,9 +19,9 @@
     <string name="title_admin_panel">Yönetici Paneli</string>
     <string name="title_password">Şifrenizi Değiştirin</string>
     <string name="title_update_profile">Profilinizi Düzenleyin</string>
-    <string name="title_about">Hakkında</string>
     <string name="title_create_channel">Yeni Kanal Oluştur</string>
-    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
+    <string name="title_license">License</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
     <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
     <string name="title_topic">konu</string>
@@ -34,6 +33,7 @@
     <string name="action_use_this_username">Bu kullanıcı adını kullan</string>
     <string name="action_terms_of_service">Kullanım Şartları</string>
     <string name="action_privacy_policy">Gizlilik Sözleşmesi</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">Ara</string>
     <string name="action_update">Güncelle</string>
     <string name="action_settings">Ayarlar</string>
@@ -43,11 +43,10 @@
     <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">Şifre Değişikliğini Onaylayın</string>
     <string name="action_join_chat">Sohbete Bağlan</string>
-    <string name="action_add_account">Hesap Ekle</string>
-    <string name="action_online">Çevrimiçi</string>
-    <string name="action_away">Uzakta</string>
-    <string name="action_busy">Meşgul</string>
-    <string name="action_invisible">Görünmez</string>
+    <string name="msg_online">Çevrimiçi</string>
+    <string name="msg_away">Uzakta</string>
+    <string name="msg_busy">Meşgul</string>
+    <string name="msg_invisible">Görünmez</string>
     <string name="action_drawing">Çizim</string>
     <string name="action_save_to_gallery">Galeriye kaydet</string>
     <string name="action_select_photo_from_gallery">Galeriden resim seç</string>
@@ -58,20 +57,40 @@
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
-    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
     <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
     <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
-        <item name="item_password">Change password</item> <!-- TODO Add translation -->
-        <item name="change_language">Change language</item> <!-- TODO Add translation -->
-        <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
-        <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
-        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
-        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
-        <item name="item_about">About</item> <!-- TODO Add translation -->
+    <!-- Settings messages -->
+    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    <string name="msg_language">Language</string> <!-- TODO Translate -->
+    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
+    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
+    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
+    <string name="msg_license">License</string> <!-- TODO Translate -->
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
+    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
+
+    <string-array name="languages"> <!-- TODO Add translations -->
+        <item>English</item>
+        <item>Arabic</item>
+        <item>German</item>
+        <item>Spanish</item>
+        <item>Persian</item>
+        <item>French</item>
+        <item>Hindi (IN)</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Portuguese (BR)</item>
+        <item>Portuguese (PT)</item>
+        <item>Russian (RU)</item>
+        <item>Turkish</item>
+        <item>Ukrainian</item>
+        <item>Chinese (CN)</item>
+        <item>Chinese (TW)</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -79,7 +98,7 @@
     <string name="msg_no_data_to_display">Görüntülenecek veri bulunmamaktadır.</string>
     <string name="msg_check_this_out">bunu kontrol et</string>
     <string name="msg_share_using">kullanarak paylaş</string>
-    <string name="msg_profile_update_successfully">Profil bilgileri başarıyla güncellenmiştir.</string>
+    <string name="msg_profile_updated_successfully">Profil bilgileri başarıyla güncellenmiştir.</string>
     <string name="msg_username">kullanıcı adı</string>
     <string name="msg_username_or_email">kullanıcı adı veya eposta</string>
     <string name="msg_password">şifre</string>
@@ -88,7 +107,7 @@
     <string name="msg_avatar_url">avatar URL</string>
     <string name="msg_or_continue_using_social_accounts">Veya sosyal medya hesaplarınızdan birini kullanarak devam edin</string>
     <string name="msg_new_user">Yeni kullanıcı? %1$s</string>
-    <string name="msg_forgot__your_password">Forgot your password?</string> <!-- TODO Add translation -->
+    <string name="msg_forgot_your_password">Forgot your password?</string> <!-- TODO Add translation -->
     <string name="msg_reset">Sıfırla</string>
     <string name="msg_check_your_email_to_reset_your_password">Eposta gönderilmiştir! Şifrenizi sıfırlamak için eposta kutunuzu kontrol ediniz.</string>
     <string name="msg_invalid_email">Lütfen, geçerli bir eposta adresi giriniz</string>
@@ -103,13 +122,13 @@
     <string name="msg_invalid_file">Geçersiz dosya</string>
     <string name="msg_invalid_server_url">Geçersiz sunucu adresi</string>
     <string name="msg_content_description_log_in_using_facebook">Facebook Hesabı ile Giriş Yap</string>
-    <string name="msg_content_description_log_in_using_github">Github Hesabı ile Giriş Yap</string>
+    <string name="msg_content_description_log_in_using_github">GitHub Hesabı ile Giriş Yap</string>
     <string name="msg_content_description_log_in_using_google">Google Hesabı ile Giriş Yap</string>
     <string name="msg_content_description_log_in_using_linkedin">LinkedIn Hesabı ile Giriş Yap</string>
     <string name="msg_content_description_log_in_using_meteor">Meteor Hesabı ile Giriş Yap</string>
     <string name="msg_content_description_log_in_using_twitter">Twitter Hesabı ile Giriş Yap</string>
-    <string name="msg_content_description_log_in_using_gitlab">Gitlab Hesabı ile Giriş Yap</string>
-    <string name="msg_content_description_log_in_using_wordpress">Wordpress Hesabı ile Giriş Yap</string>
+    <string name="msg_content_description_log_in_using_gitlab">GitLab Hesabı ile Giriş Yap</string>
+    <string name="msg_content_description_log_in_using_wordpress">WordPress Hesabı ile Giriş Yap</string>
     <string name="msg_content_description_send_message">Mesaj gönder</string>
     <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Add translation -->
     <string name="msg_content_description_show_attachment_options">Dosya eki seçeneklerini göster</string>
@@ -157,13 +176,15 @@
     <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->
     <string name="msg_create_account">Create an account</string> <!-- TODO Add translation -->
     <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_github">Continue with <b>Github</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_github">Continue with <b>GitHub</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_google">Continue with <b>Google</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_linkedin">Continue with <b>LinkedIn</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
     <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
-    <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+    <string name="msg_your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
+    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Özel</string>
@@ -178,7 +199,7 @@
     <string name="msg_channel_created_successfully">Kanal başarıyla oluşturuldu</string>
     <string name="msg_message_copied">Mesaj kopyalandı</string>
     <string name="msg_delete_message">Mesajı Sil</string>
-    <string name="msg_delete_description">Bu mesajı silmek istediğinizden emin misiniz</string>
+    <string name="msg_delete_description">Bu mesajı silmek istediğinizden emin misiniz?</string>
     <string name="msg_view_more">Daha fazla göster</string>
     <string name="msg_view_less">Daha az göster</string>
     <string name="msg_permalink_copied">Permalink copied</string> <!-- TODO - Add proper translation -->
@@ -195,6 +216,9 @@
         <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
     <string name="msg_credentials_saved_successfully">Kimlik bilgileri başarıyla kaydedildi</string>
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
+    <string name="msg_directory">Directory</string> <!-- TODO Translate -->
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">İstatistik takibi</string>
@@ -310,18 +334,21 @@
     <string name="msg_no_recent_emoji">Son kullanılan emoji bulunmamaktadır</string>
     <string name="alert_title_default_skin_tone">Varsayılan tasarım tonu</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">Sırala</string>
-    <string name="dialog_sort_title">Sırala</string>
-    <string name="dialog_sort_by_alphabet">Alfabetik</string>
-    <string name="dialog_sort_by_activity">Aktiviteye Göre</string>
-    <string name="dialog_group_by_type">Türüne göre grupla</string>
-    <string name="dialog_group_favourites">Favorileri grupla</string>
-    <string name="chatroom_header">Başlık</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by_placeholder">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by">Sort by</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
-    <string name="header_channel">Kanallar</string>
+    <string name="msg_channels">Kanallar</string>
+    <string name="msg_users">Users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">Gizli Gruplar</string>
     <string name="header_direct_messages">Direkt Mesajlar</string>
     <string name="header_live_chats">Canlı Sohbetler</string>

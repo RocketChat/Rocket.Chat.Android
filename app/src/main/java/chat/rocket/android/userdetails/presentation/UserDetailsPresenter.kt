@@ -8,12 +8,14 @@ import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.db.model.UserEntity
 import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.isJitsiEnabled
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.createDirectMessage
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +28,7 @@ class UserDetailsPresenter @Inject constructor(
     private val dbManager: DatabaseManager,
     private val strategy: CancelStrategy,
     private val navigator: ChatRoomNavigator,
+    tokenRepository: TokenRepository,
     settingsInteractor: GetSettingsInteractor,
     serverInteractor: CurrentServerRepository,
     factory: ConnectionManagerFactory
@@ -35,6 +38,7 @@ class UserDetailsPresenter @Inject constructor(
     private val client = manager.client
     private val interactor = FetchChatRoomsInteractor(client, dbManager)
     private val settings = settingsInteractor.get(currentServer)
+    private val token = tokenRepository.get(currentServer)
     private lateinit var userEntity: UserEntity
 
     fun loadUserDetails(userId: String) {
@@ -44,7 +48,13 @@ class UserDetailsPresenter @Inject constructor(
                 dbManager.getUser(userId)?.let {
                     userEntity = it
                     val avatarUrl =
-                        userEntity.username?.let { username -> currentServer.avatarUrl(avatar = username) }
+                        userEntity.username?.let { username ->
+                            currentServer.avatarUrl(
+                                username,
+                                token?.userId,
+                                token?.authToken
+                            )
+                        }
                     val username = userEntity.username
                     val name = userEntity.name
                     val utcOffset =
@@ -89,6 +99,7 @@ class UserDetailsPresenter @Inject constructor(
                     val chatRoomEntity = ChatRoomEntity(
                         id = directMessage.id,
                         name = userEntity.username ?: userEntity.name.orEmpty(),
+                        parentId = null,
                         description = null,
                         type = RoomType.DIRECT_MESSAGE,
                         fullname = userEntity.name,

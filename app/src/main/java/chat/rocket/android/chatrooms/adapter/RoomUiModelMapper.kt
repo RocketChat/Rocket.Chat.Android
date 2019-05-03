@@ -8,11 +8,13 @@ import chat.rocket.android.db.model.ChatRoom
 import chat.rocket.android.server.domain.GetCurrentUserInteractor
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.showLastMessage
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.date
+import chat.rocket.android.util.extensions.isNotNullNorEmpty
 import chat.rocket.android.util.extensions.localDateTime
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.User
@@ -26,10 +28,12 @@ class RoomUiModelMapper(
     private val context: Application,
     private val settings: PublicSettings,
     private val userInteractor: GetCurrentUserInteractor,
+    private val tokenRepository: TokenRepository,
     private val serverUrl: String,
     private val permissions: PermissionsInteractor
 ) {
     private val currentUser by lazy { userInteractor.get() }
+    private val token by lazy { tokenRepository.get(serverUrl) }
 
     fun map(
         rooms: List<ChatRoom>,
@@ -80,7 +84,7 @@ class RoomUiModelMapper(
     private fun mapUser(user: User): RoomUiModel = with(user) {
         val name = mapName(user.username!!, user.name)
         val status = user.status
-        val avatar = serverUrl.avatarUrl(user.username!!)
+        val avatar = serverUrl.avatarUrl(user.username!!, token?.userId, token?.authToken)
         val username = user.username!!
 
         RoomUiModel(
@@ -98,7 +102,7 @@ class RoomUiModelMapper(
                 id = id,
                 name = name!!,
                 type = type,
-                avatar = serverUrl.avatarUrl(name!!, isGroupOrChannel = true),
+                avatar = serverUrl.avatarUrl(name!!, token?.userId, token?.authToken, isGroupOrChannel = true),
                 lastMessage = if (showLastMessage) {
                     mapLastMessage(
                             lastMessage?.sender?.id, lastMessage?.sender?.username,
@@ -113,36 +117,40 @@ class RoomUiModelMapper(
         )
     }
 
-    fun map(chatRoom: ChatRoom, showLastMessage: Boolean = true): RoomUiModel = with(chatRoom.chatRoom) {
-        val isUnread = alert || unread > 0
-        val type = roomTypeOf(type)
-        val status = chatRoom.status?.let { userStatusOf(it) }
-        val roomName = mapName(name, fullname)
-        val favorite = favorite
-        val timestamp = mapDate(lastMessageTimestamp ?: updatedAt)
-        val avatar = if (type is RoomType.DirectMessage) {
-            serverUrl.avatarUrl(name)
-        } else {
-            serverUrl.avatarUrl(name, isGroupOrChannel = true)
-        }
-        val unread = mapUnread(unread)
-        val lastMessage = if (showLastMessage) {
-            mapLastMessage(
+    fun map(chatRoom: ChatRoom, showLastMessage: Boolean = true): RoomUiModel =
+        with(chatRoom.chatRoom) {
+            val isUnread = alert || unread > 0
+            val type = roomTypeOf(type)
+            val status = chatRoom.status?.let { userStatusOf(it) }
+            val roomName = mapName(name, fullname)
+            val favorite = favorite
+            val timestamp = mapDate(lastMessageTimestamp ?: updatedAt)
+            val avatar =
+                if (type is RoomType.DirectMessage) {
+                    serverUrl.avatarUrl(name, token?.userId, token?.authToken)
+                } else {
+                    serverUrl.avatarUrl(name, token?.userId, token?.authToken, isGroupOrChannel = true)
+                }
+            val unread = mapUnread(unread)
+            val lastMessage = if (showLastMessage) {
+                mapLastMessage(
                     lastMessageUserId,
                     chatRoom.lastMessageUserName,
                     chatRoom.lastMessageUserFullName,
                     lastMessageText,
                     type is RoomType.DirectMessage
-            )
-        } else {
-            null
-        }
-        val hasMentions = mapMentions(userMentions, groupMentions)
-        val open = open
-        val lastMessageMarkdown = lastMessage?.let { Markwon.markdown(context, it.toString()).toString() }
+                )
+            } else {
+                null
+            }
+            val hasMentions = mapMentions(userMentions, groupMentions)
+            val open = open
+            val lastMessageMarkdown =
+                lastMessage?.let { Markwon.markdown(context, it.toString()).toString() }
 
-        RoomUiModel(
+            RoomUiModel(
                 id = id,
+                isDiscussion = parentId.isNotNullNorEmpty(),
                 name = roomName,
                 type = type,
                 avatar = avatar,
@@ -157,8 +165,8 @@ class RoomUiModelMapper(
                 username = if (type is RoomType.DirectMessage) name else null,
                 muted = muted.orEmpty(),
                 writable = isChannelWritable(muted)
-        )
-    }
+            )
+        }
 
     private fun isChannelWritable(muted: List<String>?): Boolean {
         val canWriteToReadOnlyChannels = permissions.canPostToReadOnlyChannels()
@@ -167,7 +175,7 @@ class RoomUiModelMapper(
 
     private fun roomType(type: String): String = with(context.resources) {
         when (type) {
-            RoomType.CHANNEL -> getString(R.string.header_channel)
+            RoomType.CHANNEL -> getString(R.string.msg_channels)
             RoomType.PRIVATE_GROUP -> getString(R.string.header_private_groups)
             RoomType.DIRECT_MESSAGE -> getString(R.string.header_direct_messages)
             RoomType.LIVECHAT -> getString(R.string.header_live_chats)

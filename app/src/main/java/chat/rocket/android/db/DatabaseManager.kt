@@ -139,7 +139,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     }
 
     /*
-     * Creates a list of data base operations
+     * Creates a list of database operations
      */
     fun processChatRoomsBatch(batch: List<StreamMessage<BaseRoom>>) {
         GlobalScope.launch(dbManagerContext) {
@@ -475,6 +475,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         return ChatRoomEntity(
             id = room.id,
             subscriptionId = subscription.id,
+            parentId = subscription.parentId,
             type = room.type.toString(),
             name = room.name ?: subscription.name
             ?: throw NullPointerException(), // this should be filtered on the SDK
@@ -516,6 +517,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
             return ChatRoomEntity(
                 id = id,
                 subscriptionId = subscriptionId,
+                parentId = parentId,
                 type = type.toString(),
                 name = name,
                 fullname = fullName,

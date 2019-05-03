@@ -3,7 +3,6 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">अपने सर्वर में साइन इन करें</string>
     <string name="title_log_in">लॉग इन करें</string>
-    <string name="title_share_the_app">ऐप शेयर करे</string>
     <string name="title_register_username">रजिस्टर उपयोगकर्ता नाम</string>
     <string name="title_reset_password">पासवर्ड रीसेट करें</string>
     <string name="title_sign_up">साइन अप करें</string>
@@ -20,9 +19,9 @@
     <string name="title_admin_panel">एडमिन पैनल</string>
     <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
-    <string name="title_about">परिचय</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_create_channel">चैनल बनाएं</string>
-    <string name="title_licence">लाइसेंस</string>
+    <string name="title_license">लाइसेंस</string>
     <string name="title_are_you_sure">क्या आपको यकीन है?</string>
     <string name="title_channel_details">चैनल विवरण</string>
     <string name="title_topic">विषय</string>
@@ -34,6 +33,7 @@
     <string name="action_use_this_username">इस उपयोगकर्ता नाम का उपयोग करें</string>
     <string name="action_terms_of_service">सेवा की शर्तें</string>
     <string name="action_privacy_policy">गोपनीयता नीति</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">खोजें</string>
     <string name="action_update">अद्यतन करें</string>
     <string name="action_settings">सेटिंग्स</string>
@@ -43,11 +43,10 @@
     <string name="action_attach_a_files">एक फ़ाइल जोडो</string>
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
     <string name="action_join_chat">चैट में शामिल हों</string>
-    <string name="action_add_account">खाता जोड़ो</string>
-    <string name="action_online">ऑनलाइन</string>
-    <string name="action_away">दूर</string>
-    <string name="action_busy">व्यस्त</string>
-    <string name="action_invisible">अदृश्य</string>
+    <string name="msg_online">ऑनलाइन</string>
+    <string name="msg_away">दूर</string>
+    <string name="msg_busy">व्यस्त</string>
+    <string name="msg_invisible">अदृश्य</string>
     <string name="action_save_to_gallery">गैलरी में सहेजें</string>
     <string name="action_drawing">चित्रकारी</string>
     <string name="action_select_photo_from_gallery">गैलरी से फोटो का चयन करें</string>
@@ -58,20 +57,40 @@
     <string name="action_create_server">नया सर्वर बनाएं</string>
     <string name="action_register">रजिस्टर</string>
     <string name="action_confirm">पुष्टि करें</string>
-    <string name="action_delete_account">खाता हटा दो</string>
     <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
     <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">पसंद</item>
-        <item name="item_password">पासवर्ड बदलें</item>
-        <item name="change_language">भाषा बदलें</item>
-        <item name="item_share_app">ऐप शेयर करें</item>
-        <item name="item_rate_us">हमें रेटिंग दें</item>
-        <item name="item_contact_us">हमसे संपर्क करें</item>
-        <item name="item_licence">लाइसेंस</item>
-        <item name="item_about">के बारे में</item>
+    <!-- Settings messages -->
+    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    <string name="msg_language">Language</string> <!-- TODO Translate -->
+    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
+    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
+    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
+    <string name="msg_license">License</string> <!-- TODO Translate -->
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
+    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
+
+    <string-array name="languages"> <!-- TODO Add translations -->
+        <item>English</item>
+        <item>Arabic</item>
+        <item>German</item>
+        <item>Spanish</item>
+        <item>Persian</item>
+        <item>French</item>
+        <item>Hindi (IN)</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Portuguese (BR)</item>
+        <item>Portuguese (PT)</item>
+        <item>Russian (RU)</item>
+        <item>Turkish</item>
+        <item>Ukrainian</item>
+        <item>Chinese (CN)</item>
+        <item>Chinese (TW)</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -79,7 +98,7 @@
     <string name="msg_no_data_to_display">डेटा प्रदर्शित करने के लिए उपलब्ध नहीं हैं</string>
     <string name="msg_check_this_out">इसकी जांच करें</string>
     <string name="msg_share_using">उपयोग कर साझा करें</string>
-    <string name="msg_profile_update_successfully">प्रोफ़ाइल सफलतापूर्वक अपडेट हो गया है</string>
+    <string name="msg_profile_updated_successfully">प्रोफ़ाइल सफलतापूर्वक अपडेट हो गया है</string>
     <string name="msg_username">यूजरनेम</string>
     <string name="msg_username_or_email">यूजरनेम या ईमेल</string>
     <string name="msg_password">पासवर्ड</string>
@@ -88,7 +107,7 @@
     <string name="msg_avatar_url">अवतार यूआरएल</string>
     <string name="msg_or_continue_using_social_accounts">या सामाजिक खाते का उपयोग करना जारी रखें</string>
     <string name="msg_new_user">नया उपयोगकर्ता? %1$s</string>
-    <string name="msg_forgot__your_password">पासवर्ड भूल गए?</string>
+    <string name="msg_forgot_your_password">पासवर्ड भूल गए?</string>
     <string name="msg_reset">रीसेट करें</string>
     <string name="msg_check_your_email_to_reset_your_password">ईमेल गया गया है! अपना पासवर्ड रीसेट करने के लिए अपने इनबॉक्स की जांच करें।</string>
     <string name="msg_invalid_email">कृपया एक वैध ई-मेल टाइप करें</string>
@@ -103,12 +122,12 @@
     <string name="msg_invalid_file">अवैध फाइल</string>
     <string name="msg_invalid_server_url">अमान्य सर्वर यूआरL</string>
     <string name="msg_content_description_log_in_using_facebook">Facebook द्वारा लॉगिन करें</string>
-    <string name="msg_content_description_log_in_using_github">Github द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_github">GitHub द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_google">Google द्वारा लॉगिन करें</string>
-    <string name="msg_content_description_log_in_using_linkedin">Linkedin द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_linkedin">LinkedIn द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_meteor">Meteor द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_twitter">Twitter द्वारा लॉगिन करें</string>
-    <string name="msg_content_description_log_in_using_gitlab">Gitlab द्वारा लॉगिन करें</string>
+    <string name="msg_content_description_log_in_using_gitlab">GitLab द्वारा लॉगिन करें</string>
     <string name="msg_content_description_log_in_using_wordpress">WordPress द्वारा लॉगिन करें</string>
     <string name="msg_content_description_send_message">मेसेज भेजें</string>
     <string name="msg_content_description_show_more_login_options">अधिक लॉगिन विकल्प दिखाएं</string>
@@ -154,19 +173,21 @@
     <string name="msg_send">भेजें</string>
     <string name="msg_sent_attachment">एक अनुलग्नक भेजा</string>
     <string name="msg_delete_message">संदेश को हटाएं</string>
-    <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
+    <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं?</string>
     <string name="msg_welcome_to_rocket_chat">Rocket.Chat में आपका स्वागत है</string>
     <string name="msg_team_communication">टीम संचार</string>
     <string name="msg_login_with_email">ई-मेल के साथ लॉगिन करें</string>
     <string name="msg_create_account">खाता बनाएं</string>
     <string name="msg_continue_with_facebook"><b>Facebook</b> के साथ जारी रखें</string>
-    <string name="msg_continue_with_github"><b>Github</b> के साथ जारी रखें</string>
+    <string name="msg_continue_with_github"><b>GitHub</b> के साथ जारी रखें</string>
     <string name="msg_continue_with_google"><b>Google</b> के साथ जारी रखें</string>
-    <string name="msg_continue_with_linkedin"><b>Linkedin</b> के साथ जारी रखें</string>
+    <string name="msg_continue_with_linkedin"><b>LinkedIn</b> के साथ जारी रखें</string>
     <string name="msg_continue_with_gitlab"><b>GitLab</b> के साथ जारी रखें</string>
     <string name="msg_continue_with_wordpress"><b>WordPress</b> के साथ जारी रखें</string>
     <string name="msg_two_factor_authentication">दो तरीकों से प्रमाणीकरण</string>
-    <string name="msg__your_2fa_code">आपका 2FA कोड क्या है?</string>
+    <string name="msg_your_2fa_code">आपका 2FA कोड क्या है?</string>
+    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
+    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">प्राइवेट</string>
@@ -196,6 +217,9 @@
         <item quantity="many">%1$s ने %2$s के साथ प्रतिक्रिया व्यक्त की</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">प्रमाण पत्र सफलतापूर्वक सहेजे गए</string>
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
+    <string name="msg_directory">Directory</string> <!-- TODO Translate -->
 
     <!-- Preferences messages -->
     <string name="msg_analytics_tracking">एनालिटिक्स ट्रैकिंग</string>
@@ -310,19 +334,22 @@
     <string name="msg_no_recent_emoji"> कोई नया इमोजी नहीं</string>
     <string name="alert_title_default_skin_tone">डिफ़ॉल्ट त्वचा टोन</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">क्रम</string>
-    <string name="dialog_sort_title">द्वारा सॉर्ट करें</string>
-    <string name="dialog_sort_by_alphabet">वर्णानुक्रम</string>
-    <string name="dialog_sort_by_activity">गतिविधि</string>
-    <string name="dialog_group_by_type">प्रकार के आधार पर समूह</string>
-    <string name="dialog_group_favourites">पसंदीदा समूह</string>
-    <string name="chatroom_header">हैडर</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by_placeholder">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by">Sort by</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">पसंदीदा</string>
-    <string name="header_channel">चैनलों</string>
+    <string name="msg_channels">चैनलों</string>
+    <string name="msg_users">Users</string> <!-- TODO Translate -->
     <string name="header_private_groups">निजी समूहों</string>
+    <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
     <string name="header_direct_messages">प्रत्यक्ष संदेश</string>
     <string name="header_live_chats">लाइव चैट</string>
     <string name="header_unknown">अज्ञात</string>

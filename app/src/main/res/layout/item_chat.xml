@@ -8,21 +8,22 @@
     android:paddingStart="@dimen/screen_edge_left_and_right_padding"
     android:paddingTop="@dimen/chat_item_top_and_bottom_padding"
     android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
-    android:paddingBottom="@dimen/chat_item_top_and_bottom_padding">
+    android:paddingBottom="@dimen/chat_item_top_and_bottom_padding"
+    tools:context=".chatrooms.adapter.RoomsAdapter">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/image_avatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="2dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:roundedCornerRadius="4dp" />
+        tools:src="@tools:sample/avatars" />
 
     <ImageView
         android:id="@+id/image_chat_icon"
         android:layout_width="12dp"
-        android:layout_height="0dp"
+        android:layout_height="12dp"
         android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/text_chat_name"
         app:layout_constraintStart_toEndOf="@+id/image_avatar"
@@ -35,6 +36,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/text_view_drawable_padding"
+        android:layout_marginEnd="@dimen/text_view_drawable_padding"
         android:textDirection="locale"
         app:layout_constraintEnd_toStartOf="@+id/text_timestamp"
         app:layout_constraintStart_toEndOf="@+id/image_chat_icon"
@@ -63,7 +65,7 @@
         app:layout_constraintEnd_toStartOf="@+id/layout_unread_messages_badge"
         app:layout_constraintStart_toStartOf="@+id/image_chat_icon"
         app:layout_constraintTop_toBottomOf="@+id/text_chat_name"
-        tools:text="Filipe de Lima Brito: Type something that is very big and need at least to lines, or maybe even more" />
+        tools:text="Filipe de Lima Brito: Type something that is very long and need at least two lines, or maybe even more" />
 
     <include
         android:id="@+id/layout_unread_messages_badge"

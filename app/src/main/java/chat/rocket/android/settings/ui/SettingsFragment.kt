@@ -7,35 +7,36 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
-import chat.rocket.android.about.ui.AboutFragment
-import chat.rocket.android.about.ui.TAG_ABOUT_FRAGMENT
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.core.behaviours.AppLanguageView
 import chat.rocket.android.helper.TextHelper.getDeviceAndAppInformation
-import chat.rocket.android.main.ui.MainActivity
-import chat.rocket.android.preferences.ui.PreferencesFragment
-import chat.rocket.android.preferences.ui.TAG_PREFERENCES_FRAGMENT
-import chat.rocket.android.settings.password.ui.PasswordActivity
+import chat.rocket.android.settings.presentation.SettingsPresenter
 import chat.rocket.android.settings.presentation.SettingsView
-import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.webview.ui.webViewIntent
+import chat.rocket.android.util.invalidateFirebaseToken
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import timber.log.Timber
 import javax.inject.Inject
 
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
-class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListener {
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
+fun newInstance(): Fragment = SettingsFragment()
+
+class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
+    @Inject lateinit var analyticsManager: AnalyticsManager
+    @Inject lateinit var presenter: SettingsPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,86 +52,104 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
-        setupListView()
+        presenter.setupView()
         analyticsManager.logScreenView(ScreenViewEvent.Settings)
     }
 
-    override fun onResume() {
-        // FIXME - gambiarra ahead. will fix when moving to new androidx Navigation
-        (activity as? MainActivity)?.setupNavigationView()
-        super.onResume()
-    }
+    override fun setupSettingsView(
+        avatar: String,
+        displayName: String,
+        status: String,
+        isAdministrationEnabled: Boolean,
+        isAnalyticsTrackingEnabled: Boolean,
+        isDeleteAccountEnabled: Boolean,
+        serverVersion: String
+    ) {
+        image_avatar.setImageURI(avatar)
 
-    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        when (parent?.getItemAtPosition(position).toString()) {
-            resources.getStringArray(R.array.settings_actions)[0] -> {
-                (activity as AppCompatActivity).addFragmentBackStack(
-                    TAG_PREFERENCES_FRAGMENT,
-                    R.id.fragment_container
-                ) {
-                    PreferencesFragment.newInstance()
-                }
+        text_display_name.text = displayName
+
+        text_status.text = status
+
+        profile_container.setOnClickListener { presenter.toProfile() }
+
+        text_contact_us.setOnClickListener { contactSupport() }
+
+        text_language.setOnClickListener { changeLanguage() }
+
+        text_review_this_app.setOnClickListener { showAppOnStore() }
+
+        text_share_this_app.setOnClickListener { shareApp() }
+
+        text_license.setOnClickListener {
+            presenter.toLicense(getString(R.string.license_url), getString(R.string.title_license))
+        }
+
+        text_app_version.text = getString(R.string.msg_app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+
+        text_server_version.text = getString(R.string.msg_server_version, serverVersion)
+
+        text_logout.setOnClickListener { showLogoutDialog() }
+
+        with(text_administration) {
+            isVisible = isAdministrationEnabled
+            setOnClickListener { presenter.toAdmin() }
+        }
+
+        with(switch_crash_report) {
+            isChecked = isAnalyticsTrackingEnabled
+            isEnabled = BuildConfig.FLAVOR == "play"
+            setOnCheckedChangeListener { _, isChecked ->
+                presenter.enableAnalyticsTracking(isChecked)
             }
+        }
 
-            resources.getStringArray(R.array.settings_actions)[1] ->
-                activity?.startActivity(Intent(activity, PasswordActivity::class.java))
-
-            // TODO (https://github.com/RocketChat/Rocket.Chat.Android/pull/1918)
-            resources.getStringArray(R.array.settings_actions)[2] -> showToast("Coming soon")
-
-            resources.getStringArray(R.array.settings_actions)[3] -> shareApp()
-
-            resources.getStringArray(R.array.settings_actions)[4] -> showAppOnStore()
-
-            resources.getStringArray(R.array.settings_actions)[5] -> contactSupport()
-
-            resources.getStringArray(R.array.settings_actions)[6] -> activity?.startActivity(
-                context?.webViewIntent(
-                    getString(R.string.license_url),
-                    getString(R.string.title_licence)
-                )
-            )
-
-            resources.getStringArray(R.array.settings_actions)[7] -> {
-                (activity as AppCompatActivity).addFragmentBackStack(
-                    TAG_ABOUT_FRAGMENT,
-                    R.id.fragment_container
-                ) {
-                    AboutFragment.newInstance()
-                }
-            }
+        with(text_delete_account) {
+            isVisible = isDeleteAccountEnabled
+            setOnClickListener { showDeleteAccountDialog() }
         }
     }
 
-    private fun showAppOnStore() {
-        try {
-            startActivity(Intent(Intent.ACTION_VIEW, getString(R.string.market_link).toUri()))
-        } catch (error: ActivityNotFoundException) {
-            startActivity(Intent(Intent.ACTION_VIEW, getString(R.string.play_store_link).toUri()))
-        }
+    override fun updateLanguage(language: String, country: String?) {
+        presenter.saveLocale(language, country)
+        activity?.recreate()
     }
 
-    private fun setupListView() {
-        settings_list.onItemClickListener = this
+    override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
+
+    override fun showLoading() {
+        view_loading.isVisible = true
     }
+
+    override fun hideLoading() {
+        view_loading.isVisible = false
+    }
+
+    override fun showMessage(resId: Int) {
+        showToast(resId)
+    }
+
+    override fun showMessage(message: String) {
+        showToast(message)
+    }
+
+    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     private fun setupToolbar() {
-        (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_settings)
-    }
-
-    private fun shareApp() {
-        with(Intent(Intent.ACTION_SEND)) {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_check_this_out))
-            putExtra(Intent.EXTRA_TEXT, getString(R.string.play_store_link))
-            startActivity(Intent.createChooser(this, getString(R.string.msg_share_using)))
+        with((activity as AppCompatActivity)) {
+            with(toolbar) {
+                setSupportActionBar(this)
+                title = getString(R.string.title_settings)
+                setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+                setNavigationOnClickListener { activity?.onBackPressed() }
+            }
         }
     }
 
     private fun contactSupport() {
         val uriText = "mailto:${"support@rocket.chat"}" +
-                "?subject=" + Uri.encode(getString(R.string.msg_android_app_support)) +
-                "&body=" + Uri.encode(getDeviceAndAppInformation())
+            "?subject=" + Uri.encode(getString(R.string.msg_android_app_support)) +
+            "&body=" + Uri.encode(getDeviceAndAppInformation())
 
         with(Intent(Intent.ACTION_SENDTO)) {
             data = uriText.toUri()
@@ -142,7 +161,74 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
         }
     }
 
-    companion object {
-        fun newInstance() = SettingsFragment()
+    private fun changeLanguage() {
+        context?.let {
+            AlertDialog.Builder(it)
+                .setTitle(R.string.title_choose_language)
+                .setSingleChoiceItems(
+                    resources.getStringArray(R.array.languages), -1
+                ) { dialog, option ->
+                    when (option) {
+                        0 -> updateLanguage("en")
+                        1 -> updateLanguage("ar")
+                        2 -> updateLanguage("de")
+                        3 -> updateLanguage("es")
+                        4 -> updateLanguage("fa")
+                        5 -> updateLanguage("fr")
+                        6 -> updateLanguage("hi", "IN")
+                        7 -> updateLanguage("it")
+                        8 -> updateLanguage("ja")
+                        9 -> updateLanguage("pt", "BR")
+                        10 -> updateLanguage("pt", "PT")
+                        11 -> updateLanguage("ru", "RU")
+                        12 -> updateLanguage("tr")
+                        13 -> updateLanguage("uk")
+                        14 -> updateLanguage("zh", "CN")
+                        15 -> updateLanguage("zh", "TW")
+                    }
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
+        }
+    }
+
+    private fun showAppOnStore() {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, getString(R.string.market_link).toUri()))
+        } catch (error: ActivityNotFoundException) {
+            startActivity(Intent(Intent.ACTION_VIEW, getString(R.string.play_store_link).toUri()))
+        }
+    }
+
+    private fun shareApp() {
+        with(Intent(Intent.ACTION_SEND)) {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_check_this_out))
+            putExtra(Intent.EXTRA_TEXT, getString(R.string.play_store_link))
+            startActivity(Intent.createChooser(this, getString(R.string.msg_share_using)))
+        }
+    }
+
+    private fun showLogoutDialog() {
+        context?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.setTitle(R.string.title_are_you_sure)
+                .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout() }
+                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
+                .create()
+                .show()
+        }
+    }
+
+    private fun showDeleteAccountDialog() {
+        context?.let {
+            AlertDialog.Builder(it)
+                .setView(LayoutInflater.from(it).inflate(R.layout.dialog_delete_account, null))
+                .setPositiveButton(R.string.msg_delete_account) { _, _ ->
+                    presenter.deleteAccount(EditText(context).text.toString())
+                }.setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }.create()
+                .show()
+        }
     }
 }

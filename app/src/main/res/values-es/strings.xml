@@ -3,7 +3,6 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Inicia sesión en tu servidor</string>
     <string name="title_log_in">Iniciar sesión</string>
-    <string name="title_share_the_app">Compartir aplicación</string>
     <string name="title_register_username">Registrar nombre de usuario</string>
     <string name="title_reset_password">Restablecer la contraseña</string>
     <string name="title_sign_up">Regístrate</string>
@@ -20,9 +19,9 @@
     <string name="title_admin_panel">Admin panel</string> <!-- TODO Add translation -->
     <string name="title_password">Cambia la contraseña</string>
     <string name="title_update_profile">Actualización del perfil</string>
-    <string name="title_about">Acerca de</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_create_channel">Crear canal</string>
-    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
+    <string name="title_license">License</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
     <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
     <string name="title_topic">Tema</string>
@@ -34,6 +33,7 @@
     <string name="action_use_this_username">Usa este nombre de usuario</string>
     <string name="action_terms_of_service">Términos de Servicio</string>
     <string name="action_privacy_policy">Política de Privacidad</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">Buscar</string>
     <string name="action_update">Actualizar</string>
     <string name="action_settings">Configuraciones</string>
@@ -43,11 +43,10 @@
     <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">Confirmar cambio de contraseña</string>
     <string name="action_join_chat">Unirse al chat</string>
-    <string name="action_add_account">Añadir cuenta</string>
-    <string name="action_online">Conectado(s)</string>
-    <string name="action_away">Ausente</string>
-    <string name="action_busy">Ocupado</string>
-    <string name="action_invisible">Invisible</string>
+    <string name="msg_online">Conectado(s)</string>
+    <string name="msg_away">Ausente</string>
+    <string name="msg_busy">Ocupado</string>
+    <string name="msg_invisible">Invisible</string>
     <string name="action_drawing">Dibujo</string>
     <string name="action_save_to_gallery">Guardar en la galería</string>
     <string name="action_select_photo_from_gallery">Select photo from gallery</string> <!-- TODO Add translation -->
@@ -58,20 +57,40 @@
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
-    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
     <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
     <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
-        <item name="item_password">Change password</item> <!-- TODO Add translation -->
-        <item name="change_language">Change language</item> <!-- TODO Add translation -->
-        <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
-        <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
-        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
-        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
-        <item name="item_about">About</item> <!-- TODO Add translation -->
+    <!-- Settings messages -->
+    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    <string name="msg_language">Language</string> <!-- TODO Translate -->
+    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
+    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
+    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
+    <string name="msg_license">License</string> <!-- TODO Translate -->
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
+    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
+
+    <string-array name="languages"> <!-- TODO Add translations -->
+        <item>English</item>
+        <item>Arabic</item>
+        <item>German</item>
+        <item>Spanish</item>
+        <item>Persian</item>
+        <item>French</item>
+        <item>Hindi (IN)</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Portuguese (BR)</item>
+        <item>Portuguese (PT)</item>
+        <item>Russian (RU)</item>
+        <item>Turkish</item>
+        <item>Ukrainian</item>
+        <item>Chinese (CN)</item>
+        <item>Chinese (TW)</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -79,7 +98,7 @@
     <string name="msg_no_data_to_display">No hay información para mostrar</string>
     <string name="msg_check_this_out">Mira esto</string>
     <string name="msg_share_using">Compartir usando</string>
-    <string name="msg_profile_update_successfully">Actualización de perfil con éxito</string>
+    <string name="msg_profile_updated_successfully">Actualización de perfil con éxito</string>
     <string name="msg_username">usuario</string>
     <string name="msg_username_or_email">Nombre de usuario o correo electrónico</string>
     <string name="msg_password">Contraseña</string>
@@ -88,7 +107,7 @@
     <string name="msg_avatar_url">URL del avatar</string>
     <string name="msg_or_continue_using_social_accounts">O continuar usando cuentas sociales</string>
     <string name="msg_new_user">Nuevo usuario? %1$s</string>
-    <string name="msg_forgot__your_password">Se te olvidó tu contraseña?</string>
+    <string name="msg_forgot_your_password">Se te olvidó tu contraseña?</string>
     <string name="msg_reset">reiniciar</string>
     <string name="msg_check_your_email_to_reset_your_password">¡Email enviado! Verifique su bandeja de entrada para restablecer su contraseña.</string>
     <string name="msg_invalid_email">Por favor escriba un correo electrónico válido</string>
@@ -103,12 +122,12 @@
     <string name="msg_invalid_file">Archivo inválido</string>
     <string name="msg_invalid_server_url">URL del servidor inválido</string>
     <string name="msg_content_description_log_in_using_facebook">Inicia sesión usando Facebook</string>
-    <string name="msg_content_description_log_in_using_github">Inicia sesión usando Github</string>
+    <string name="msg_content_description_log_in_using_github">Inicia sesión usando GitHub</string>
     <string name="msg_content_description_log_in_using_google">Inicia sesión usando Google</string>
-    <string name="msg_content_description_log_in_using_linkedin">Inicia sesión usando Linkedin</string>
+    <string name="msg_content_description_log_in_using_linkedin">Inicia sesión usando LinkedIn</string>
     <string name="msg_content_description_log_in_using_meteor">Inicia sesión usando Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Inicia sesión usando Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">Inicia sesión usando Gitlab</string>
+    <string name="msg_content_description_log_in_using_gitlab">Inicia sesión usando GitLab</string>
     <string name="msg_content_description_log_in_using_wordpress">Inicia sesión usando WordPress</string>
     <string name="msg_content_description_send_message">Enviar mensaje</string>
     <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Translate-->
@@ -148,20 +167,23 @@
     <string name="msg_search">Buscar</string>
     <string name="msg_message_copied">Mensaje copiado</string>
     <string name="msg_delete_message">Borrar mensaje</string>
-    <string name="msg_delete_description">Seguro que quieres borrar este mensaje</string>
+    <string name="msg_delete_description">¿Seguro que quieres borrar este mensaje?</string>
     <string name="msg_no_search_found">No se han encontrado resultados</string>
     <string name="msg_welcome_to_rocket_chat">Welcome to Rocket.Chat</string> <!-- TODO Add translation -->
     <string name="msg_team_communication">Team Communication</string> <!-- TODO Translate -->
     <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->
     <string name="msg_create_account">Create an account</string> <!-- TODO Add translation -->
     <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_github">Continue with <b>Github</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_github">Continue with <b>GitHub</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_google">Continue with <b>Google</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_linkedin">Continue with <b>LinkedIn</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
     <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
-    <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+    <string name="msg_your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
+    <string name="msg_directory">Directory</string> <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>
@@ -190,12 +212,14 @@
         <item quantity="other">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
     <string name="msg_credentials_saved_successfully">Credenciales guardadas con éxito</string>
+    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
+    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
 
     <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Analytics tracking</string> <!-- TODO Add translation -->
-    <string name="msg_send_analytics_tracking">Send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
-    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statics to help improving this app</string> <!-- TODO Add translation -->
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string> <!-- TODO Add translation -->
+    <string name="msg_analytics_tracking">Seguimiento analítico</string>
+    <string name="msg_send_analytics_tracking">Envía estadísticas anónimas para ayudar a mejorar esta aplicación</string>
+    <string name="msg_do_not_send_analytics_tracking">No envíe estadísticas anónimas para ayudar a mejorar esta aplicación</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">No aplica ya que es una versión FOSS</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nombre de la sala cambiado para: %1$s por %2$s</string>
@@ -306,18 +330,21 @@
     <string name="msg_no_recent_emoji">Sin emojis recientes</string>
     <string name="alert_title_default_skin_tone">Tono de piel predeterminado</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">Ordenar</string>
-    <string name="dialog_sort_title">Ordenar por</string>
-    <string name="dialog_sort_by_alphabet">Alfabético</string>
-    <string name="dialog_sort_by_activity">Actividad</string>
-    <string name="dialog_group_by_type">Agrupar por tipo</string>
-    <string name="dialog_group_favourites">Agrupar favoritos</string>
-    <string name="chatroom_header">Cabezazo</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by_placeholder">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by">Sort by</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
-    <string name="header_channel">Canales</string>
+    <string name="msg_channels">Canales</string>
+    <string name="msg_users">Users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">Grupos privados</string>
     <string name="header_direct_messages">Mensajes directos</string>
     <string name="header_live_chats">Chats en vivo</string>

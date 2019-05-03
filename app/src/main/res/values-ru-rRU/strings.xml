@@ -3,7 +3,6 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Ваш сервер</string>
     <string name="title_log_in">Войти</string>
-    <string name="title_share_the_app">добавить приложение</string>
     <string name="title_register_username">Зарегистрировать имя</string>
     <string name="title_reset_password">Сброс пароля</string>
     <string name="title_sign_up">Зарегистрироваться</string>
@@ -20,13 +19,13 @@
     <string name="title_admin_panel">Панель админа</string>
     <string name="title_password">Изменить пароль</string>
     <string name="title_update_profile">Обновить профиль</string>
-    <string name="title_about">О программе</string>
+    <string name="title_choose_language">Изменить язык</string>
     <string name="title_create_channel">Создать новый канал</string>
     <string name="title_channel_details">О канале</string>
     <string name="title_topic">Тема</string>
     <string name="title_announcement">Объявление</string>
     <string name="title_description">Описание</string>
-    <string name="title_licence">Лицензия</string>
+    <string name="title_license">Лицензия</string>
     <string name="title_are_you_sure">Вы уверены?</string>
 
     <!-- Actions -->
@@ -34,6 +33,7 @@
     <string name="action_use_this_username">Использовать это имя</string>
     <string name="action_terms_of_service">Условия использования</string>
     <string name="action_privacy_policy">Политика конфиденциальности</string>
+    <string name="action_new_channel">Новый канал</string>
     <string name="action_search">Поиск</string>
     <string name="action_update">Обновить</string>
     <string name="action_settings">Настройки</string>
@@ -43,11 +43,10 @@
     <string name="action_attach_a_files">Прикрепить файл</string>
     <string name="action_confirm_password">Подтверждение изменения пароля</string>
     <string name="action_join_chat">Присоединиться к чату</string>
-    <string name="action_add_account">Добавить аккаунт</string>
-    <string name="action_online">Онлайн</string>
-    <string name="action_away">Отошел</string>
-    <string name="action_busy">Занят</string>
-    <string name="action_invisible">Невидимый</string>
+    <string name="msg_online">Онлайн</string>
+    <string name="msg_away">Отошел</string>
+    <string name="msg_busy">Занят</string>
+    <string name="msg_invisible">Невидимый</string>
     <string name="action_drawing">Рисунок</string>
     <string name="action_save_to_gallery">Сохранить в галерею</string>
     <string name="action_select_photo_from_gallery">Выбрать из галереи</string>
@@ -58,20 +57,40 @@
     <string name="action_create_server">Создать новый сервер</string>
     <string name="action_register">Зарегистрировать</string>
     <string name="action_confirm">Подтвердить</string>
-    <string name="action_delete_account">Удалить аккаунт</string>
     <string name="action_favorite">В избранное</string>
     <string name="action_remove_favorite">Удалить из избранного</string>
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">Персональные</item>
-        <item name="item_password">Изменить пароль</item>
-        <item name="change_language">Изменить язык</item>
-        <item name="item_share_app">Поделиться приложением</item>
-        <item name="item_rate_us">Оцените нас</item>
-        <item name="item_contact_us">Связаться с нами</item>
-        <item name="item_licence">Лицензия</item>
-        <item name="item_about">О программе</item>
+    <!-- Settings messages -->
+    <string name="msg_contact_us">Связаться с нами</string>
+    <string name="msg_language">Изменить язык</string>
+    <string name="msg_review_this_app">Оставить отзыв</string>
+    <string name="msg_share_this_app">Поделиться приложением</string>
+    <string name="msg_administration">Панель админа</string>
+    <string name="msg_license">Лицензия</string>
+    <string name="msg_app_version">Версия программы: %1$s (%2$d)</string>
+    <string name="msg_server_version">Версия сервера: %1$s</string>
+    <string name="msg_send_analytics">Отправка аналитики</string>
+    <string name="msg_logout_from_rocket_chat">Выйти из Rocket.Chat</string>
+    <string name="msg_delete_account">Удалить аккаунт</string>
+    <string name="msg_change_status">Изменить статус</string>
+
+    <string-array name="languages">
+        <item>Английский</item>
+        <item>Арабский</item>
+        <item>Немецкий</item>
+        <item>Испанский</item>
+        <item>Персидский</item>
+        <item>Французский</item>
+        <item>Хинди (IN)</item>
+        <item>Итальянский</item>
+        <item>Японский</item>
+        <item>Португальский (BR)</item>
+        <item>Португальский (PT)</item>
+        <item>Русский (RU)</item>
+        <item>Турецкий</item>
+        <item>Украинский</item>
+        <item>Китайский (CN)</item>
+        <item>Китайский (TW)</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -79,7 +98,7 @@
     <string name="msg_no_data_to_display">Нет данных для отображения</string>
     <string name="msg_check_this_out">Проверь это</string>
     <string name="msg_share_using">Совместное использование</string>
-    <string name="msg_profile_update_successfully">Профиль успешно обновлен</string>
+    <string name="msg_profile_updated_successfully">Профиль успешно обновлен</string>
     <string name="msg_username">имя пользователя</string>
     <string name="msg_username_or_email">имя пользователя или e-mail</string>
     <string name="msg_password">пароль</string>
@@ -88,7 +107,7 @@
     <string name="msg_avatar_url">URL аватара</string>
     <string name="msg_or_continue_using_social_accounts">Или продолжить, используя социальные учетные записи</string>
     <string name="msg_new_user">Новый пользователь? %1$s</string>
-    <string name="msg_forgot__your_password">Забыли пароль?</string>
+    <string name="msg_forgot_your_password">Забыли пароль?</string>
     <string name="msg_reset">Сброс</string>
     <string name="msg_check_your_email_to_reset_your_password">Письмо отправлено! Проверьте свой почтовый ящик, чтобы сбросить пароль.</string>
     <string name="msg_invalid_email">Введите действующий e-mail</string>
@@ -103,12 +122,12 @@
     <string name="msg_invalid_file">Неверный файл</string>
     <string name="msg_invalid_server_url">Неверный URL-адрес сервера.</string>
     <string name="msg_content_description_log_in_using_facebook">Войти с помощью Facebook</string>
-    <string name="msg_content_description_log_in_using_github">Войти с помощью Github</string>
+    <string name="msg_content_description_log_in_using_github">Войти с помощью GitHub</string>
     <string name="msg_content_description_log_in_using_google">Войти с помощью Google</string>
-    <string name="msg_content_description_log_in_using_linkedin">Войти с помощью Linkedin</string>
+    <string name="msg_content_description_log_in_using_linkedin">Войти с помощью LinkedIn</string>
     <string name="msg_content_description_log_in_using_meteor">Войти с помощью Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Войти с помощью Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">Войти с помощью Gitlab</string>
+    <string name="msg_content_description_log_in_using_gitlab">Войти с помощью GitLab</string>
     <string name="msg_content_description_log_in_using_wordpress">Войти с помощью WordPress</string>
     <string name="msg_content_description_send_message">Отправить сообщение</string>
     <string name="msg_content_description_show_more_login_options">Больше параметров входа</string>
@@ -156,13 +175,13 @@
     <string name="msg_login_with_email">Войти с помощью <b>e-mail</b></string>
     <string name="msg_create_account">Создать аккаунт</string>
     <string name="msg_continue_with_facebook">Войти с помощью <b>Facebook</b></string>
-    <string name="msg_continue_with_github">Войти с помощью <b>Github</b></string>
+    <string name="msg_continue_with_github">Войти с помощью <b>GitHub</b></string>
     <string name="msg_continue_with_google">Войти с помощью <b>Google</b></string>
-    <string name="msg_continue_with_linkedin">Войти с помощью <b>Linkedin</b></string>
+    <string name="msg_continue_with_linkedin">Войти с помощью <b>LinkedIn</b></string>
     <string name="msg_continue_with_gitlab">Войти с помощью <b>GitLab</b></string>
     <string name="msg_continue_with_wordpress">Войти с помощью <b>WordPress</b></string>
     <string name="msg_two_factor_authentication">Двухфакторная аутентификация</string>
-    <string name="msg__your_2fa_code">Ваш код 2FA?</string>
+    <string name="msg_your_2fa_code">Ваш код 2FA?</string>
     <string name="msg_view_more">больше</string>
     <string name="msg_view_less">меньше</string>
     <string name="msg_permalink_copied">Ссылка скопирована</string>
@@ -180,6 +199,11 @@
         <item quantity="many">%1$s реагируют с %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Учетные данные успешно сохранены</string>
+    <string name="msg_camera_permission_denied">Необходимо разрешение на использование камеры</string>
+    <string name="msg_storage_permission_denied">Необходимо разрешение на использование хранилища</string>
+    <string name="msg_server">Сервер</string>
+    <string name="msg_add_new_server">Добавить новый сервер</string>
+    <string name="msg_directory">Каталог</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>
@@ -306,18 +330,21 @@
     <string name="msg_no_recent_emoji">Пусто</string>
     <string name="alert_title_default_skin_tone">Тон кожи по умолчанию</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">Сортировать</string>
-    <string name="dialog_sort_title">Сортировать по</string>
-    <string name="dialog_sort_by_alphabet">По алфавиту</string>
-    <string name="dialog_sort_by_activity">По активности</string>
-    <string name="dialog_group_by_type">Группировать по типу</string>
-    <string name="dialog_group_favourites">Группировать избранное</string>
-    <string name="chatroom_header">Заголовок</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by_placeholder">Сортировать по %1$s</string>
+    <string name="msg_sort_by">Сортировать по</string>
+    <string name="msg_sort_by_activity">Активности</string>
+    <string name="msg_sort_by_name">Имени</string>
+    <string name="msg_group_by_unread_on_top">Непрочитанные сверху</string>
+    <string name="msg_group_by_type">Группировать по типу</string>
+    <string name="msg_group_by_favorites">Группировать по избранному</string>
 
     <!--ChatRooms Headers-->
     <string name="header_favorite">Избранные</string>
-    <string name="header_channel">Каналы</string>
+    <string name="msg_channels">Каналы</string>
+    <string name="msg_users">Пользователи</string>
+    <string name="msg_search_for_global_users">Поиск глобальных пользователей</string>
+    <string name="msg_search_for_global_users_description">При активации станет возможен поиск пользователей на других серверах.</string>
     <string name="header_private_groups">Приватные каналы</string>
     <string name="header_direct_messages">Личная переписка</string>
     <string name="header_live_chats">Живые чаты</string>

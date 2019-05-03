@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 11,
-    "identityHash": "fb9f1c815809b0217d326452aeb34e92",
+    "identityHash": "f0e15bc95a0bb09b052c484704dd3abd",
     "entities": [
       {
         "tableName": "users",
@@ -59,7 +59,7 @@
       },
       {
         "tableName": "chatrooms",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `subscriptionId` TEXT NOT NULL, `type` TEXT NOT NULL, `name` TEXT NOT NULL, `fullname` TEXT, `userId` TEXT, `ownerId` TEXT, `readonly` INTEGER, `isDefault` INTEGER, `favorite` INTEGER, `topic` TEXT, `announcement` TEXT, `description` TEXT, `open` INTEGER NOT NULL, `alert` INTEGER NOT NULL, `unread` INTEGER NOT NULL, `userMentions` INTEGER, `groupMentions` INTEGER, `updatedAt` INTEGER, `timestamp` INTEGER, `lastSeen` INTEGER, `lastMessageText` TEXT, `lastMessageUserId` TEXT, `lastMessageTimestamp` INTEGER, `broadcast` INTEGER, `muted` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`ownerId`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`userId`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`lastMessageUserId`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `subscriptionId` TEXT NOT NULL, `parentId` TEXT, `type` TEXT NOT NULL, `name` TEXT NOT NULL, `fullname` TEXT, `userId` TEXT, `ownerId` TEXT, `readonly` INTEGER, `isDefault` INTEGER, `favorite` INTEGER, `topic` TEXT, `announcement` TEXT, `description` TEXT, `open` INTEGER NOT NULL, `alert` INTEGER NOT NULL, `unread` INTEGER NOT NULL, `userMentions` INTEGER, `groupMentions` INTEGER, `updatedAt` INTEGER, `timestamp` INTEGER, `lastSeen` INTEGER, `lastMessageText` TEXT, `lastMessageUserId` TEXT, `lastMessageTimestamp` INTEGER, `broadcast` INTEGER, `muted` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`ownerId`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`userId`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`lastMessageUserId`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -72,6 +72,12 @@
             "columnName": "subscriptionId",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "parentId",
+            "columnName": "parentId",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "type",
@@ -1099,7 +1105,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"fb9f1c815809b0217d326452aeb34e92\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f0e15bc95a0bb09b052c484704dd3abd\")"
     ]
   }
 }

@@ -1,6 +1,5 @@
 package chat.rocket.android.dagger.module
 
-import chat.rocket.android.about.di.AboutFragmentProvider
 import chat.rocket.android.authentication.di.AuthenticationModule
 import chat.rocket.android.authentication.login.di.LoginFragmentProvider
 import chat.rocket.android.authentication.loginoptions.di.LoginOptionsFragmentProvider
@@ -20,6 +19,7 @@ import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatrooms.di.ChatRoomsFragmentProvider
 import chat.rocket.android.createchannel.di.CreateChannelProvider
 import chat.rocket.android.dagger.scope.PerActivity
+import chat.rocket.android.directory.di.DirectoryFragmentProvider
 import chat.rocket.android.draw.main.di.DrawModule
 import chat.rocket.android.draw.main.ui.DrawingActivity
 import chat.rocket.android.favoritemessages.di.FavoriteMessagesFragmentProvider
@@ -29,13 +29,14 @@ import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.members.di.MembersFragmentProvider
 import chat.rocket.android.mentions.di.MentionsFragmentProvider
 import chat.rocket.android.pinnedmessages.di.PinnedMessagesFragmentProvider
-import chat.rocket.android.preferences.di.PreferencesFragmentProvider
 import chat.rocket.android.profile.di.ProfileFragmentProvider
 import chat.rocket.android.server.di.ChangeServerModule
 import chat.rocket.android.server.ui.ChangeServerActivity
+import chat.rocket.android.servers.di.ServersBottomSheetFragmentProvider
 import chat.rocket.android.settings.di.SettingsFragmentProvider
 import chat.rocket.android.settings.password.di.PasswordFragmentProvider
 import chat.rocket.android.settings.password.ui.PasswordActivity
+import chat.rocket.android.sortingandgrouping.di.SortingAndGroupingBottomSheetFragmentProvider
 import chat.rocket.android.userdetails.di.UserDetailsFragmentProvider
 import chat.rocket.android.videoconference.di.VideoConferenceModule
 import chat.rocket.android.videoconference.ui.VideoConferenceActivity
@@ -65,12 +66,13 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(
         modules = [MainModule::class,
             ChatRoomsFragmentProvider::class,
+            ServersBottomSheetFragmentProvider::class,
+            SortingAndGroupingBottomSheetFragmentProvider::class,
             CreateChannelProvider::class,
             ProfileFragmentProvider::class,
             SettingsFragmentProvider::class,
-            AboutFragmentProvider::class,
-            PreferencesFragmentProvider::class,
-            AdminPanelWebViewFragmentProvider::class
+            AdminPanelWebViewFragmentProvider::class,
+            DirectoryFragmentProvider::class
         ]
     )
     abstract fun bindMainActivity(): MainActivity

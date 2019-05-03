@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.view.isVisible
-import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +18,6 @@ import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.createchannel.presentation.CreateChannelPresenter
 import chat.rocket.android.createchannel.presentation.CreateChannelView
-import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.uimodel.MemberUiModel
 import chat.rocket.android.util.extension.asObservable
@@ -32,17 +30,18 @@ import com.google.android.material.chip.Chip
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_create_channel.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 internal const val TAG_CREATE_CHANNEL_FRAGMENT = "CreateChannelFragment"
 
+fun newInstance() = CreateChannelFragment()
+
 class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback {
-    @Inject
-    lateinit var createChannelPresenter: CreateChannelPresenter
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
+    @Inject lateinit var presenter: CreateChannelPresenter
+    @Inject lateinit var analyticsManager: AnalyticsManager
     private var actionMode: ActionMode? = null
     private val adapter: MembersAdapter = MembersAdapter {
         it.username?.run { processSelectedMember(this) }
@@ -51,10 +50,6 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     private var channelType: String = RoomType.CHANNEL
     private var isChannelReadOnly: Boolean = false
     private var memberList = arrayListOf<String>()
-
-    companion object {
-        fun newInstance() = CreateChannelFragment()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -93,7 +88,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_create_channel -> {
-                createChannelPresenter.createChannel(
+                presenter.createChannel(
                     roomTypeOf(channelType),
                     text_channel_name.text.toString(),
                     memberList,
@@ -165,17 +160,6 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         view_member_suggestion_loading.isVisible = false
     }
 
-    override fun prepareToShowChatList() {
-        with(activity as MainActivity) {
-            setCheckedNavDrawerItem(R.id.menu_action_chats)
-            openDrawer()
-            getDrawerLayout().postDelayed(1000) {
-                closeDrawer()
-                createChannelPresenter.toChatList()
-            }
-        }
-    }
-
     override fun showChannelCreatedSuccessfullyMessage() {
         showMessage(getString(R.string.msg_channel_created_successfully))
     }
@@ -191,8 +175,14 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     }
 
     private fun setupToolBar() {
-        (activity as AppCompatActivity?)?.supportActionBar?.title =
-            getString(R.string.title_create_channel)
+        with((activity as AppCompatActivity)) {
+            with(toolbar) {
+                setSupportActionBar(this)
+                title = getString(R.string.title_create_channel)
+                setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+                setNavigationOnClickListener { activity?.onBackPressed() }
+            }
+        }
     }
 
     private fun setupViewListeners() {
@@ -247,7 +237,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
             .filter { t -> t.isNotBlank() }
             .subscribe {
                 if (it.length >= 3) {
-                    createChannelPresenter.searchUser(it.toString())
+                    presenter.searchUser(it.toString())
                 } else {
                     view_member_suggestion.isVisible = false
                 }
