@@ -117,6 +117,7 @@ class ChatRoomPresenter @Inject constructor(
 
     private var chatRoomId: String? = null
     private lateinit var chatRoomType: String
+    private lateinit var chatRoomName: String
     private var chatIsBroadcast: Boolean = false
     private var chatRoles = emptyList<ChatRoomRole>()
     private val stateChannel = Channel<State>()
@@ -135,47 +136,73 @@ class ChatRoomPresenter @Inject constructor(
         draftKey = "${currentServer}_${LocalRepository.DRAFT_KEY}$roomId"
         chatRoomId = roomId
         chatRoomType = roomType
+        chatRoomName = roomName
+        chatRoles = emptyList()
+        var canModerate = isOwnerOrMod()
+
         GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
-            try {
-                chatRoles = if (roomTypeOf(roomType) !is RoomType.DirectMessage) {
-                    client.chatRoomRoles(roomType = roomTypeOf(roomType), roomName = roomName)
-                } else {
-                    emptyList()
-                }
-            } catch (ex: Exception) {
-                Timber.e(ex)
-                chatRoles = emptyList()
-            } finally {
-                // User has at least an 'owner' or 'moderator' role.
-                val canModerate = isOwnerOrMod()
-                // Can post anyway if has the 'post-readonly' permission on server.
-                val room = dbManager.getRoom(roomId)
-                room?.let {
-                    chatIsBroadcast = it.chatRoom.broadcast ?: false
-                    val roomUiModel = roomMapper.map(it, true)
-                    launchUI(strategy) {
-                        view.onRoomUpdated(roomUiModel = roomUiModel.copy(
+            // Can post anyway if has the 'post-readonly' permission on server.
+            val room = dbManager.getRoom(roomId)
+            room?.let {
+                chatIsBroadcast = it.chatRoom.broadcast ?: false
+                val roomUiModel = roomMapper.map(it, true)
+                launchUI(strategy) {
+                    view.onRoomUpdated(roomUiModel = roomUiModel.copy(
                             broadcast = chatIsBroadcast,
                             canModerate = canModerate,
                             writable = roomUiModel.writable || canModerate
-                        ))
-                    }
+                    ))
                 }
+            }
 
-                loadMessages(roomId, roomType, clearDataSet = true)
-                chatRoomMessage?.let { messageHelper.messageIdFromPermalink(it) }
+            loadMessages(roomId, chatRoomType, clearDataSet = true)
+            loadActiveMembers(roomId, chatRoomType, filterSelfOut = true)
+
+            chatRoomMessage?.let { messageHelper.messageIdFromPermalink(it) }
                     ?.let { messageId ->
                         val name = messageHelper.roomNameFromPermalink(chatRoomMessage)
                         citeMessage(
-                            name!!,
-                            messageHelper.roomTypeFromPermalink(chatRoomMessage)!!,
-                            messageId,
-                            true
+                                name!!,
+                                messageHelper.roomTypeFromPermalink(chatRoomMessage)!!,
+                                messageId,
+                                true
                         )
                     }
-                subscribeRoomChanges()
+
+
+            /*FIXME:  Get chat role can cause unresponsive problems especially on slower connections
+                      We are updating the room again after the first step so that initial messages
+                      get loaded in and the system appears more responsive.  Something should be
+                      done to either fix the load in speed of moderator roles or store the
+                      information locally*/
+            if (getChatRole()) {
+                canModerate = isOwnerOrMod()
+                if (canModerate) {
+                    //FIXME: add this in when moderator page is actually created
+                    //view.updateModeration()
+                }
             }
+
+            subscribeRoomChanges()
         }
+    }
+
+    private suspend fun getChatRole() : Boolean {
+        var returnVal = false
+        try {
+            if (roomTypeOf(chatRoomType) !is RoomType.DirectMessage) {
+                chatRoles = withContext(Dispatchers.IO + strategy.jobs) {
+                    client.chatRoomRoles(roomType = roomTypeOf(chatRoomType), roomName = chatRoomName)
+                }
+                returnVal = true
+            } else {
+                chatRoles = emptyList()
+            }
+        } catch (ex: Exception) {
+            Timber.e(ex)
+            chatRoles = emptyList()
+        }
+        return returnVal
     }
 
     private suspend fun subscribeRoomChanges() {
@@ -209,8 +236,8 @@ class ChatRoomPresenter @Inject constructor(
     ) {
         this.chatRoomId = chatRoomId
         this.chatRoomType = chatRoomType
-        launchUI(strategy) {
-            view.showLoading()
+
+        GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
             try {
                 if (offset == 0L) {
                     // FIXME - load just 50 messages from DB to speed up. We will reload from Network after that
@@ -246,8 +273,6 @@ class ChatRoomPresenter @Inject constructor(
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }
-            } finally {
-                view.hideLoading()
             }
 
             subscribeTypingStatus()
@@ -793,13 +818,15 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    fun loadActiveMembers(
+    suspend fun loadActiveMembers(
         chatRoomId: String,
         chatRoomType: String,
         offset: Long = 0,
         filterSelfOut: Boolean = false
     ) {
-        launchUI(strategy) {
+        val activeUsers = mutableListOf<PeopleSuggestionUiModel>()
+
+        withContext(Dispatchers.IO + strategy.jobs) {
             try {
                 val members = retryIO("getMembers($chatRoomId, $chatRoomType, $offset)") {
                     client.getMembers(chatRoomId, roomTypeOf(chatRoomType), offset, 50).result
@@ -810,7 +837,6 @@ class ChatRoomPresenter @Inject constructor(
                 // Take at most the 100 most recent messages distinguished by user. Can return less.
                 val recentMessages = messagesRepository.getRecentMessages(chatRoomId, 100)
                     .filterNot { filterSelfOut && it.sender?.username == self }
-                val activeUsers = mutableListOf<PeopleSuggestionUiModel>()
                 recentMessages.forEach {
                     val sender = it.sender
                     val username = sender?.username ?: ""
@@ -849,10 +875,12 @@ class ChatRoomPresenter @Inject constructor(
                     )
                 })
 
-                view.populatePeopleSuggestions(activeUsers)
             } catch (e: RocketChatException) {
                 Timber.e(e)
             }
+        }
+        launchUI(strategy) {
+            view.populatePeopleSuggestions(activeUsers)
         }
     }
 
