@@ -89,7 +89,8 @@ class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
         val map = Reactions()
         reactions.forEach { reaction ->
             val usernames = reaction.usernames.split(",").map { it.trim() }
-            map[reaction.reaction] = usernames
+            val names = reaction.names.split(",").map { it.trim() }
+            map[reaction.reaction] = Pair(usernames, names)
         }
 
         return map
