@@ -25,21 +25,21 @@ import kotlinx.android.synthetic.main.item_message_attachment.view.*
 import timber.log.Timber
 
 class AttachmentViewHolder(
-        itemView: View,
-        listener: ActionsListener,
-        reactionListener: EmojiReactionListener? = null,
-        var actionAttachmentOnClickListener: ActionAttachmentOnClickListener
+    itemView: View,
+    listener: ActionsListener,
+    reactionListener: EmojiReactionListener? = null,
+    var actionAttachmentOnClickListener: ActionAttachmentOnClickListener
 ) : BaseViewHolder<AttachmentUiModel>(itemView, listener, reactionListener) {
 
     private val messageViews = listOf<View>(
-            itemView.text_sender,
-            itemView.text_message_time,
-            itemView.text_content,
-            itemView.text_view_more
+        itemView.text_sender,
+        itemView.text_message_time,
+        itemView.text_content,
+        itemView.text_view_more
     )
     private val audioVideoViews = listOf<View>(
-            itemView.audio_video_attachment,
-            itemView.play_button
+        itemView.audio_video_attachment,
+        itemView.play_button
     )
 
     private val quoteBarColor = ContextCompat.getColor(itemView.context, R.color.quoteBar)
@@ -154,9 +154,9 @@ class AttachmentViewHolder(
             image_attachment.controller = controller
             image_attachment.setOnClickListener {
                 ImageHelper.openImage(
-                        context,
-                        data.imageUrl!!,
-                        data.title?.toString()
+                    context,
+                    data.imageUrl!!,
+                    data.title?.toString()
                 )
             }
 
@@ -213,7 +213,7 @@ class AttachmentViewHolder(
             text_content.addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
 
                 override fun onLayoutChange(v: View, left: Int, top: Int, right: Int, bottom: Int,
-                                            oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
+                    oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
                     val textMeasuredHeight = bottom - top
                     if (collapsedHeight >= textMeasuredHeight) {
                         text_view_more.isVisible = false
@@ -222,13 +222,13 @@ class AttachmentViewHolder(
                     }
 
                     val expandAnimation = ValueAnimator
-                            .ofInt(collapsedHeight, textMeasuredHeight)
-                            .setDuration(300)
+                        .ofInt(collapsedHeight, textMeasuredHeight)
+                        .setDuration(300)
                     expandAnimation.interpolator = LinearInterpolator()
 
                     val collapseAnimation = ValueAnimator
-                            .ofInt(textMeasuredHeight, collapsedHeight)
-                            .setDuration(300)
+                        .ofInt(textMeasuredHeight, collapsedHeight)
+                        .setDuration(300)
                     collapseAnimation.interpolator = LinearInterpolator()
 
                     expandAnimation.addUpdateListener {
@@ -307,10 +307,10 @@ class AttachmentViewHolder(
             attachment_text.isVisible = data.hasText
             attachment_text.text = data.text
             actions_list.layoutManager = LinearLayoutManager(itemView.context,
-                    when (alignment) {
-                        "horizontal" -> LinearLayoutManager.HORIZONTAL
-                        else -> LinearLayoutManager.VERTICAL //Default
-                    }, false)
+                when (alignment) {
+                    "horizontal" -> LinearLayoutManager.HORIZONTAL
+                    else -> LinearLayoutManager.VERTICAL //Default
+                }, false)
             actions_list.adapter = ActionsListAdapter(actions, actionAttachmentOnClickListener)
         }
     }
@@ -331,7 +331,7 @@ object DataMeasure {
 }
 
 private fun Long.toDataSize(): String {
-    var size = this.toFloat()
+    val size = this.toFloat()
 
     return when {
         size > DataMeasure.GIGABYTE -> String.format("%.2f Gb", size / DataMeasure.GIGABYTE)
