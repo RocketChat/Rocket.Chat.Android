@@ -279,7 +279,7 @@
     <string name="status_disconnecting">斷線中</string>
     <string name="status_waiting">連線持續了 %d 秒</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">提醒頻道內所有成員</string>
     <string name="suggest_here_description">提醒頻道內所有在線上的成員</string>
 
@@ -306,7 +306,7 @@
     <string name="Guggy_Command_Description">根據輸入訊息產生GIF</string>
     <string name="Slash_Topic_Description">設定主題</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">最近沒有使用emojis</string>
     <string name="alert_title_default_skin_tone">預設主題顏色</string>
 
@@ -319,18 +319,18 @@
     <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
     <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="msg_channels">頻道</string>
     <string name="msg_users">Users</string> <!-- TODO Translate -->
     <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">私人群組</string>
     <string name="header_direct_messages">直接對話</string>
     <string name="header_live_chats">Live 對話</string>
     <string name="header_unknown">未知</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">編輯分享的訊息</string>
     <string name="notif_action_reply_hint">回覆</string>
     <string name="notif_error_sending">回覆失敗，請重試.</string>

@@ -300,7 +300,7 @@
     <string name="status_disconnecting">Déconnexion</string>
     <string name="status_waiting">Connexion dans %d secondes</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">Notifier tous les utilisateurs dans ce salon</string>
     <string name="suggest_here_description">Notifier les utilisateurs actifs dans ce salon</string>
 
@@ -327,7 +327,7 @@
     <string name="Guggy_Command_Description">Génère un gif basé sur le texte fourni</string>
     <string name="Slash_Topic_Description">Définir le sujet</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">Aucun emoji récent</string>
     <string name="alert_title_default_skin_tone">Tonalité de peau par défaut</string>
 
@@ -340,18 +340,18 @@
     <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
     <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Favoris</string>
     <string name="msg_channels">Salons</string>
     <string name="msg_users">Users</string> <!-- TODO Translate -->
     <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">Groupes privés</string>
     <string name="header_direct_messages">Messages directs</string>
     <string name="header_live_chats">Chats en direct</string>
     <string name="header_unknown">Inconnu</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">Modifier le message partagé</string>
     <string name="notif_action_reply_hint">RÉPONDRE</string>
     <string name="notif_error_sending">La réponse a échoué. Veuillez réessayer.</string>

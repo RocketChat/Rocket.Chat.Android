@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Titles -->
@@ -304,7 +303,7 @@
     <string name="status_disconnecting">يتم قطع الاتصال</string>
     <string name="status_waiting">متصل في %d ثانية</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">تنبيه كل من في الغرفة</string>
     <string name="suggest_here_description">تنبيه الأعضاء المتصلين</string>
 
@@ -331,7 +330,7 @@
     <string name="Guggy_Command_Description">صنع gif بناءا على النص المعطى</string>
     <string name="Slash_Topic_Description">وضع الموضوع</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">لا يوجد ايموجيز</string>
     <string name="alert_title_default_skin_tone">لون البشرة الافتراضي</string>
 
@@ -344,7 +343,7 @@
     <string name="msg_group_by_type">تجميع حسب النوع</string>
     <string name="msg_group_by_favorites">تجميع حسب المفضلات</string>
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">المفضلات</string>
     <string name="msg_channels">القنوات</string>
     <string name="msg_users">المستخدمين</string>
@@ -355,7 +354,7 @@
     <string name="header_live_chats">محادثات حية</string>
     <string name="header_unknown">غير معروف</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">تعديل الرسالة المنشورة</string>
     <string name="notif_action_reply_hint">رد</string>
     <string name="notif_error_sending">فشل الرد حاول مرة أخرى</string>

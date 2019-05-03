@@ -302,7 +302,7 @@
     <string name="status_disconnecting">درحال قطع شده</string>
     <string name="status_waiting">Connecting in %d seconds</string> <!-- TODO Add translation -->
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">به همه در این اتاق خبر بده</string>
     <string name="suggest_here_description">به کاربران فعال در این اتاق خبر بده</string>
 
@@ -329,7 +329,7 @@
     <string name="Guggy_Command_Description">ساخت یک gif بر اساس متن آماده‌شده</string>
     <string name="Slash_Topic_Description">تعیین موضوع</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">هیچ ایموجی اخیری موجود نیست</string>
     <string name="alert_title_default_skin_tone">مدل پوسته‌ی پیش‌فرض</string>
 
@@ -342,18 +342,18 @@
     <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
     <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="msg_channels">کانال‌ها</string>
     <string name="msg_users">Users</string> <!-- TODO Translate -->
     <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">گروه‌های خصوصی</string>
     <string name="header_direct_messages">پیام‌های خصوصی</string>
     <string name="header_live_chats">گفت‌وگوهای زنده</string>
     <string name="header_unknown">ناشناس</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">ویراش پیام به اشتراک گذاشته شده</string>
     <string name="notif_action_reply_hint">جواب دادن</string>
     <string name="notif_error_sending">جواب با شکست مواجه شد. لطفا دوباره تلاش کنید.</string>

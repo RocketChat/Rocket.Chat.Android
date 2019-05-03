@@ -302,7 +302,7 @@
     <string name="status_disconnecting">Trenne</string>
     <string name="status_waiting">Verbinde in %d Sekunden</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">Benachrichtige alle in diesem Raum</string>
     <string name="suggest_here_description">Benachrichtige aktive Benutzer in diesem Raum</string>
 
@@ -329,7 +329,7 @@
     <string name="Guggy_Command_Description">Erstelle ein Gif, basierend auf den eingegebenen Text</string>
     <string name="Slash_Topic_Description">Setze Topic</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">Keine letzten Emojis</string>
     <string name="alert_title_default_skin_tone">Standard Hautton</string>
 
@@ -342,7 +342,7 @@
     <string name="msg_group_by_type">Gruppieren nach Typ</string>
     <string name="msg_group_by_favorites">Gruppieren nach Favoriten</string>
     
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Favoriten</string>
     <string name="msg_channels">Räume</string>
     <string name="msg_users">Benutzer</string>
@@ -353,7 +353,7 @@
     <string name="header_live_chats">Live Chats</string>
     <string name="header_unknown">Unbekannt</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">Bearbeite geteilte Nachricht</string>
     <string name="notif_action_reply_hint">Antworten</string>
     <string name="notif_error_sending">Antworten fehlgeschlagen. Bitte versuchen Sie es noch einmal.</string>
