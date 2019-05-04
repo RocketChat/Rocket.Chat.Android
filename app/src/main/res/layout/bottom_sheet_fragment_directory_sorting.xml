@@ -83,7 +83,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_divider_two" />
 
-
     <Switch
         android:id="@+id/switch_global_users"
         android:layout_width="wrap_content"
@@ -107,6 +106,5 @@
         android:textStyle="normal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_search_for_global_users" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
