@@ -299,7 +299,7 @@
     <string name="status_disconnecting">Отключаемся…</string>
     <string name="status_waiting">Соединение через %d секунд</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">Уведомить всех в этом чате</string>
     <string name="suggest_here_description">Уведомить всех активных пользователей в этом чате</string>
 
@@ -326,7 +326,7 @@
     <string name="Guggy_Command_Description">Создает gif на основе предоставленного текста</string>
     <string name="Slash_Topic_Description">Задать тему</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">Пусто</string>
     <string name="alert_title_default_skin_tone">Тон кожи по умолчанию</string>
 
@@ -339,7 +339,7 @@
     <string name="msg_group_by_type">Группировать по типу</string>
     <string name="msg_group_by_favorites">Группировать по избранному</string>
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Избранные</string>
     <string name="msg_channels">Каналы</string>
     <string name="msg_users">Пользователи</string>
@@ -350,7 +350,7 @@
     <string name="header_live_chats">Живые чаты</string>
     <string name="header_unknown">Неизвестные</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">Редактировать сообщение</string>
     <string name="notif_action_reply_hint">ОТВЕТИТЬ</string>
     <string name="notif_error_sending">Не удалось ответить. Пожалуйста, попробуйте еще раз.</string>
@@ -362,6 +362,8 @@
 
     <!-- User Details -->
     <string name="timezone">Часовой пояс</string>
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Отправить</string>

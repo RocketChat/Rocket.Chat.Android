@@ -302,7 +302,7 @@
     <string name="status_disconnecting">切断</string>
     <string name="status_waiting">%d 秒間接続中</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">このルームの全員に通知</string>
     <string name="suggest_here_description">この部屋のアクティブユーザーに通知する</string>
 
@@ -329,7 +329,7 @@
     <string name="Guggy_Command_Description">提供されたテキストに基づいてgifを生成する</string>
     <string name="Slash_Topic_Description">設定トピック</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">最近の絵文字はありません</string>
     <string name="alert_title_default_skin_tone">デフォルトスキントークン</string>
 
@@ -342,18 +342,18 @@
     <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
     <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="msg_channels">チャンネル</string>
     <string name="msg_users">Users</string> <!-- TODO Translate -->
     <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">プライベートグループ</string>
     <string name="header_direct_messages">ダイレクトメッセージ</string>
     <string name="header_live_chats">ライブチャット</string>
     <string name="header_unknown">不明</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">共有メッセージの編集</string>
     <string name="notif_action_reply_hint">返信</string>
     <string name="notif_error_sending">送信に失敗しました。もう一度お試しください。</string>
@@ -365,6 +365,8 @@
 
     <!-- User Details -->
     <string name="timezone">Timezone</string> <!--TODO - Add proper translation-->
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Submit</string> <!--TODO - Add proper translation-->
