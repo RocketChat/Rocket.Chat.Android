@@ -116,7 +116,7 @@ fun PublicSettings.messageReadReceiptStoreUsers(): Boolean = this[MESSAGE_READ_R
 fun PublicSettings.uploadMimeTypeFilter(): Array<String>? {
     val values = this[UPLOAD_WHITELIST_MIMETYPES]?.value as String?
     if (!values.isNullOrBlank()) {
-        return values!!.split(",").mapToTypedArray { it.trim() }
+        return values.split(",").mapToTypedArray { it.trim() }
     }
     return null
 }

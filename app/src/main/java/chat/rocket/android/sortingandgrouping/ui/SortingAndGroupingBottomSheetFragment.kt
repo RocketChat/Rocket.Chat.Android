@@ -143,21 +143,21 @@ class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), Sorti
         text_sort_by.text = getString(R.string.msg_sort_by_placeholder, text.toLowerCase())
     }
 
-    private fun checkSelection(textView: TextView, @DrawableRes leftDrawable: Int) {
+    private fun checkSelection(textView: TextView, @DrawableRes startDrawable: Int) {
         context?.let {
-            DrawableHelper.compoundLeftAndRightDrawable(
+            DrawableHelper.compoundStartAndEndDrawable(
                 textView,
-                DrawableHelper.getDrawableFromId(leftDrawable, it),
+                DrawableHelper.getDrawableFromId(startDrawable, it),
                 DrawableHelper.getDrawableFromId(R.drawable.ic_check, it)
             )
         }
     }
 
-    private fun uncheckSelection(textView: TextView, @DrawableRes leftDrawable: Int) {
+    private fun uncheckSelection(textView: TextView, @DrawableRes startDrawable: Int) {
         context?.let {
-            DrawableHelper.compoundLeftDrawable(
+            DrawableHelper.compoundStartDrawable(
                 textView,
-                DrawableHelper.getDrawableFromId(leftDrawable, it)
+                DrawableHelper.getDrawableFromId(startDrawable, it)
             )
         }
     }
