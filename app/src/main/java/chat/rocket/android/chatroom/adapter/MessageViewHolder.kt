@@ -77,11 +77,18 @@ class MessageViewHolder(
                 read_receipt_view.isVisible = true
             }
 
-            image_avatar.setOnClickListener {
-                data.message.sender?.id?.let { userId ->
-                    avatarListener(userId)
+            if (!groupMessage) {
+                image_avatar.setOnClickListener {
+                    data.message.sender?.id?.let { userId ->
+                        avatarListener(userId)
+                    }
+
                 }
+            } else {
+                image_avatar.visibility = View.GONE
             }
+
+
         }
     }
 

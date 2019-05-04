@@ -106,9 +106,19 @@ class ChatRoomAdapter(
             }
         }
 
+        var groupMessage = false
+
+        dataSet[position].message.sender?.let { a ->
+            dataSet[position + 1].message.sender?.let { b ->
+                if (a.id.equals(b.id)) {
+                    groupMessage = true
+                }
+            }
+        }
+
         when (holder) {
             is MessageViewHolder ->
-                holder.bind(dataSet[position] as MessageUiModel)
+                holder.bind(dataSet[position] as MessageUiModel, groupMessage)
             is UrlPreviewViewHolder -> {
                 holder.bind(dataSet[position] as UrlPreviewUiModel)
             }
