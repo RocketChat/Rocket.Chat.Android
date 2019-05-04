@@ -34,10 +34,8 @@ internal const val TAG_MESSAGE_INFO_FRAGMENT = "MessageInfoFragment"
 private const val BUNDLE_MESSAGE_ID = "message_id"
 
 class MessageInfoFragment : Fragment(), MessageInfoView {
-    @Inject
-    lateinit var presenter: MessageInfoPresenter
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
+    @Inject lateinit var presenter: MessageInfoPresenter
+    @Inject lateinit var analyticsManager: AnalyticsManager
     private lateinit var adapter: ReadReceiptAdapter
     private lateinit var messageId: String
 

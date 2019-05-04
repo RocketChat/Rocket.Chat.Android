@@ -303,7 +303,7 @@
     <string name="status_disconnecting">डिसकनेक्टिंग</string>
     <string name="status_waiting">%d सेकेंड में कनेक्ट हो रहा है</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">इस कमरे में सभी को सूचित करें</string>
     <string name="suggest_here_description">इस कमरे में सक्रिय उपयोगकर्ताओं को सूचित करना</string>
 
@@ -330,7 +330,7 @@
     <string name="Guggy_Command_Description">दिए गए पाठ पर आधारित gif उत्पन्न करता</string>
     <string name="Slash_Topic_Description">विषय सेट करें</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji"> कोई नया इमोजी नहीं</string>
     <string name="alert_title_default_skin_tone">डिफ़ॉल्ट त्वचा टोन</string>
 
@@ -343,18 +343,18 @@
     <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
     <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">पसंदीदा</string>
     <string name="msg_channels">चैनलों</string>
     <string name="msg_users">Users</string> <!-- TODO Translate -->
     <string name="header_private_groups">निजी समूहों</string>
     <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string> <!-- TODO Translate -->
     <string name="header_direct_messages">प्रत्यक्ष संदेश</string>
     <string name="header_live_chats">लाइव चैट</string>
     <string name="header_unknown">अज्ञात</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">साझा संदेश संपादित करें</string>
     <string name="notif_action_reply_hint">जवाब</string>
     <string name="notif_error_sending">उत्तर विफल हुआ है। कृपया फिर से प्रयास करें।</string>
@@ -366,6 +366,8 @@
 
     <!-- User Details -->
     <string name="timezone">समय क्षेत्र</string>
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">जमा करें</string>

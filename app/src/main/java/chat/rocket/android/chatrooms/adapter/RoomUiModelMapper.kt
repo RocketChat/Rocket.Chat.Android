@@ -105,9 +105,11 @@ class RoomUiModelMapper(
                 avatar = serverUrl.avatarUrl(name!!, token?.userId, token?.authToken, isGroupOrChannel = true),
                 lastMessage = if (showLastMessage) {
                     mapLastMessage(
-                            lastMessage?.sender?.id, lastMessage?.sender?.username,
-                            lastMessage?.sender?.name, lastMessage?.message,
-                            isDirectMessage = type is RoomType.DirectMessage
+                        lastMessage?.sender?.id,
+                        lastMessage?.sender?.username,
+                        lastMessage?.sender?.name,
+                        lastMessage?.message,
+                        isDirectMessage = type is RoomType.DirectMessage
                     )
                 } else {
                     null
