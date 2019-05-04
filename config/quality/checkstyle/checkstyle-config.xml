@@ -95,11 +95,11 @@
             <property name="tokens" value="COMMA"/>
             <property name="option" value="EOL"/>
         </module>
-        <!-- TODO module name="PackageName">
+        <!-- TODO <module name="PackageName">
           <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
           <message key="name.invalidPattern"
               value="Package name ''{0}'' must match pattern ''{1}''."/>
-        </module-->
+        </module>-->
         <module name="TypeName">
             <message key="name.invalidPattern"
                     value="Type name ''{0}'' must match pattern ''{1}''."/>
@@ -162,16 +162,16 @@
         </module>
         <module name="AbbreviationAsWordInName">
             <property name="ignoreFinal" value="false"/>
-            <!-- TODO property name="allowedAbbreviationLength" value="1"/-->
+            <!-- TODO <property name="allowedAbbreviationLength" value="1"/>-->
         </module>
         <module name="OverloadMethodsDeclarationOrder"/>
         <module name="VariableDeclarationUsageDistance"/>
-        <!-- TODO module name="CustomImportOrder">
+        <!-- TODO <module name="CustomImportOrder">
           <property name="specialImportsRegExp" value="com.google"/>
           <property name="sortImportsInGroupAlphabetically" value="true"/>
           <property name="customImportOrderRules"
               value="STATIC###SPECIAL_IMPORTS###THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE"/>
-        </module-->
+        </module>-->
         <module name="MethodParamPad"/>
         <module name="OperatorWrap">
             <property name="option" value="NL"/>
