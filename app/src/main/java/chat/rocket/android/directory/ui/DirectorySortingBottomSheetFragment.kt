@@ -69,7 +69,6 @@ class DirectorySortingBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onCancel(dialog: DialogInterface?) {
         super.onCancel(dialog)
-        directoryFragment.updateSorting(isSortByChannels, isSearchForGlobalUsers)
     }
 
     private fun setupView() {
@@ -87,16 +86,19 @@ class DirectorySortingBottomSheetFragment : BottomSheetDialogFragment() {
             checkSelection(text_channels, hashtagDrawable)
             uncheckSelection(text_users, userDrawable)
             isSortByChannels = true
+            directoryFragment.updateSorting(isSortByChannels, isSearchForGlobalUsers)
         }
 
         text_users.setOnClickListener {
             checkSelection(text_users, userDrawable)
             uncheckSelection(text_channels, hashtagDrawable)
             isSortByChannels = false
+            directoryFragment.updateSorting(isSortByChannels, isSearchForGlobalUsers)
         }
 
         switch_global_users.setOnCheckedChangeListener { _, isChecked ->
             isSearchForGlobalUsers = isChecked
+            directoryFragment.updateSorting(isSortByChannels, isSearchForGlobalUsers)
         }
     }
 
