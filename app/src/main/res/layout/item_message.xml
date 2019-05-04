@@ -147,6 +147,7 @@
 
     <TextView
         android:id="@+id/text_content"
+        android:layout_marginStart="16dp"
         style="@style/Message.TextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -154,7 +155,7 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="2dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/message_header"
+        app:layout_constraintStart_toEndOf="@+id/layout_avatar"
         app:layout_constraintTop_toBottomOf="@+id/message_header"
         tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
 
