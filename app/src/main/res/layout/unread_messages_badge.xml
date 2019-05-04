@@ -9,6 +9,7 @@
         style="@style/ChatList.Badge.TextView"
         android:layout_width="21dp"
         android:layout_height="21dp"
+        android:autoSizeTextType="uniform"
         android:background="@drawable/style_total_unread_messages"
         android:visibility="gone"
         tools:text="1"
