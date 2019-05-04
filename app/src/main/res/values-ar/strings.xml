@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Titles -->
@@ -21,7 +20,7 @@
     <string name="title_password">تغيير كلمة السر</string>
     <string name="title_update_profile">تحديث الملف الشخصي</string>
     <string name="title_create_channel">إنشاء قناة</string>
-    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
+    <string name="title_choose_language">اختر اللغة</string>
     <string name="title_license">الترخيص</string>
     <string name="title_are_you_sure">هل أنت متأكد؟</string>
     <string name="title_channel_details">تفاصيل القناة</string>
@@ -34,7 +33,7 @@
     <string name="action_use_this_username">استخدم هذا الاسم</string>
     <string name="action_terms_of_service">شروط الخدمة</string>
     <string name="action_privacy_policy">شروط الخدمة</string>
-    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
+    <string name="action_new_channel">قناة جديدة</string>
     <string name="action_search">بحث</string>
     <string name="action_update">تحديث</string>
     <string name="action_settings">الإعدادات</string>
@@ -58,40 +57,40 @@
     <string name="action_create_server">إنشاء خادم جديد</string>
     <string name="action_register">تسجيل</string>
     <string name="action_confirm">تأكيد</string>
-    <string name="action_favorite">Favorite</string> <!-- TODO Translate -->
-    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Translate -->
+    <string name="action_favorite">تفضيل</string>
+    <string name="action_remove_favorite">إزالة التفضيل</string>
 
     <!-- Settings messages -->
-    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
-    <string name="msg_language">Language</string> <!-- TODO Translate -->
-    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
-    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
-    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
-    <string name="msg_license">License</string> <!-- TODO Translate -->
-    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
-    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
-    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
-    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
-    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
-    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
+    <string name="msg_contact_us">اتصل بنا</string>
+    <string name="msg_language">تغيير اللغة</string>
+    <string name="msg_review_this_app">قيم هذا التطبيق</string>
+    <string name="msg_share_this_app">شارك هذا التطبيق</string>
+    <string name="msg_administration">الادارة</string>
+    <string name="msg_license">الرخصة</string>
+    <string name="msg_app_version">الإصدار: %1$s (%2$d)</string>
+    <string name="msg_server_version">إصدار الخادم: %1$s</string>
+    <string name="msg_send_analytics">إرسال التحليلات</string>
+    <string name="msg_logout_from_rocket_chat">تسجيل الخروج من Rocket.Chat</string>
+    <string name="msg_delete_account">حذف الحساب</string>
+    <string name="msg_change_status">تغيير الوضع</string>
 
-    <string-array name="languages"> <!-- TODO Add translations -->
-        <item>English</item>
-        <item>Arabic</item>
-        <item>German</item>
-        <item>Spanish</item>
-        <item>Persian</item>
-        <item>French</item>
-        <item>Hindi (IN)</item>
-        <item>Italian</item>
-        <item>Japanese</item>
-        <item>Portuguese (BR)</item>
-        <item>Portuguese (PT)</item>
-        <item>Russian (RU)</item>
-        <item>Turkish</item>
-        <item>Ukrainian</item>
-        <item>Chinese (CN)</item>
-        <item>Chinese (TW)</item>
+    <string-array name="languages">
+        <item>الإنجليزية</item>
+        <item>العربية</item>
+        <item>الألمانية</item>
+        <item>الأسبانية</item>
+        <item>الفارسية</item>
+        <item>الفرنسية</item>
+        <item>الهندية (IN)</item>
+        <item>الإيطالية</item>
+        <item>اليابانية</item>
+        <item>البرتغالية (BR)</item>
+        <item>البرتغالية (PT)</item>
+        <item>الروسية (RU)</item>
+        <item>التركية</item>
+        <item>الأوكرانية</item>
+        <item>الصينية (CN)</item>
+        <item>الصينية (TW)</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -116,10 +115,10 @@
     <string name="msg_yesterday">أمس</string>
     <string name="msg_today">اليوم</string>
     <string name="msg_message">رسالة</string>
-    <string name="msg_video_call">Video call</string> <!-- TODO Translate -->
-    <string name="msg_join_video_call">Join video call</string> <!-- TODO Translate -->
-    <string name="msg_this_room_is_read_only">هذه الغرفة للقراءة فقك</string>
-    <string name="msg_invalid_2fa_code">Invalid 2FA Code</string>
+    <string name="msg_video_call">مكالمة فيديو</string>
+    <string name="msg_join_video_call">انضم إلى مكالمة الفيديو</string>
+    <string name="msg_this_room_is_read_only">هذه الغرفة للقراءة فقط</string>
+    <string name="msg_invalid_2fa_code">رمز 2FA غير صالح</string>
     <string name="msg_invalid_file">ملف غير صالح</string>
     <string name="msg_invalid_server_url">رابط خادم غير صحيح</string>
     <string name="msg_content_description_log_in_using_facebook">تسجيل باستخدام فيسبوك</string>
@@ -136,7 +135,7 @@
     <string name="msg_you">أنت</string>
     <string name="msg_unknown">غير معرف</string>
     <string name="msg_email_address">عنوان بريد</string>
-    <string name="msg_utc_offset">UTC offset</string>
+    <string name="msg_utc_offset">التقديم عن UTC</string>
     <string name="msg_new_password">إدخال كلمة سر جديدة</string>
     <string name="msg_confirm_password">تأكيد كلمة السر</string>
     <string name="msg_channel_name">تغيير الاسم</string>
@@ -155,7 +154,7 @@
     <string name="msg_no_chat_description">إبدأ المحادثة لترى الرسائل هنا</string>
     <string name="msg_http_insecure">أنت تستخدم  HTTP وهو غير آمن ونحن لا نحبذ ذلك.</string>
     <string name="msg_error_checking_server_version">حدذ خطأ عند محاولة الوصول نسخة خادمك حاول مرة أخرى</string>
-    <string name="msg_invalid_server_protocol">النظام المستخدم غير مقبول حاول ب  HTTPS</string>
+    <string name="msg_invalid_server_protocol">النظام المستخدم غير مقبول، حاول ب HTTPS</string>
     <string name="msg_image_saved_successfully">تم حفظ الصورة في المعرض</string>
     <string name="msg_image_saved_failed">لم يتم حفظ الصورة</string>
     <string name="msg_edited">(معدلة)</string>
@@ -190,19 +189,19 @@
     <string name="msg_unable_to_update_password">لا يمكن تحديث كلمة السر خطأ: %1$s</string>
     <string name="msg_password_updated_successfully">تم تحديث كلمة السر</string>
     <plurals name="msg_reacted_with_">
-        <item quantity="one">%1$s reacted with %2$s</item>
-        <item quantity="other">%1$s reacted with %2$s</item>
-        <item quantity="many">%1$s reacted with %2$s</item>
-        <item quantity="zero">%1$s reacted with %2$s</item>
-        <item quantity="few">%1$s reacted with %2$s</item>
-        <item quantity="two">%1$s reacted with %2$s</item>
+        <item quantity="one">%1$s تفاعل مع %2$s</item>
+        <item quantity="other">%1$s تفاعل مع %2$s</item>
+        <item quantity="many">%1$s تفاعلوا مع %2$s</item>
+        <item quantity="zero">%1$s تفاعل مع %2$s</item>
+        <item quantity="few">%1$s تفاعلوا مع %2$s</item>
+        <item quantity="two">%1$s تفاعلا مع %2$s</item>
     </plurals>
-    <string name="msg_credentials_saved_successfully">Credentials saved successfully</string> <!-- TODO Translate -->
-    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
-    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
-    <string name="msg_server">Server</string> <!-- TODO Translate -->
-    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
-    <string name="msg_directory">Directory</string> <!-- TODO Translate -->
+    <string name="msg_credentials_saved_successfully">تم حفظ البيانات بنجاح</string>
+    <string name="msg_camera_permission_denied">هناك حاجة إلى إذن الكاميرا لفتحها.</string>
+    <string name="msg_storage_permission_denied">هناك حاجة إلى إذن التخزين لفتح الرسم.</string>
+    <string name="msg_server">الخادم</string>
+    <string name="msg_add_new_server">إضافة خادم جديد</string>
+    <string name="msg_directory">الدليل</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">خاص</string>
@@ -226,7 +225,7 @@
     <string name="msg_analytics_tracking">تتبع التحليلات</string>
     <string name="msg_send_analytics_tracking">إرسال تحليل لمساعدة تطوير البرنامج</string>
     <string name="msg_do_not_send_analytics_tracking">لا يتم إرسال تحليل لمساعدة تطوير البرنامج</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">لا يمكن لأنه إصدار  FOSS</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">لا يمكن لأنه إصدار FOSS</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">تم تغيير اسم الغرفة ل: %1$s بواسطة %2$s</string>
@@ -241,23 +240,23 @@
     <string name="message_unmuted">المستخدم %1$s غير صامت بواسطة %2$s</string>
     <string name="message_role_add">%1$s تم جعله %2$s بواسطة %3$s</string>
     <string name="message_role_removed">%1$s لم يعد %2$s بواسطة %3$s</string>
-    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Translate -->
+    <string name="message_video_call_started">بدأت مكالمة الفيديو بواسطة %1$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">رد</string>
-    <string name="action_info">Info</string>  <!-- TODO Translate -->
+    <string name="action_info">معلومات</string>
     <string name="action_msg_edit">تعديل</string>
     <string name="action_msg_copy">نسخ</string>
     <string name="action_msg_quote">اقتباس</string>
     <string name="action_msg_delete">حذف</string>
-    <string name="action_pin">Pin</string> <!-- TODO Translate -->
-    <string name="action_unpin">Unpin</string> <!-- TODO Translate -->
-    <string name="action_star">Star</string> <!-- TODO Translate -->
-    <string name="action_unstar">Unstar</string> <!-- TODO Translate -->
+    <string name="action_pin">علق</string>
+    <string name="action_unpin">إزالة التعليق</string>
+    <string name="action_star">التمييز بنجمة</string>
+    <string name="action_unstar">إزالة النجمة</string>
     <string name="action_msg_share">نشر</string>
     <string name="action_title_editing">تعديل الرسالة</string>
     <string name="action_msg_add_reaction">إضافة تفاعل</string>
-    <string name="action_msg_permalink">Permalink</string>  <!-- TODO Translate -->
+    <string name="action_msg_permalink">ربط رابط ثابت</string>
     <string name="action_msg_report">إبلاغ</string>
 
     <!-- Permission messages -->
@@ -304,7 +303,7 @@
     <string name="status_disconnecting">يتم قطع الاتصال</string>
     <string name="status_waiting">متصل في %d ثانية</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">تنبيه كل من في الغرفة</string>
     <string name="suggest_here_description">تنبيه الأعضاء المتصلين</string>
 
@@ -331,31 +330,31 @@
     <string name="Guggy_Command_Description">صنع gif بناءا على النص المعطى</string>
     <string name="Slash_Topic_Description">وضع الموضوع</string>
 
-    <!-- Emoji message-->
-    <string name="msg_no_recent_emoji">لا يوجد ايموجيز </string>
-    <string name="alert_title_default_skin_tone">نغمة الجلد الافتراضية</string>
+    <!-- Emoji messages -->
+    <string name="msg_no_recent_emoji">لا يوجد ايموجيز</string>
+    <string name="alert_title_default_skin_tone">لون البشرة الافتراضي</string>
 
     <!-- Sort and group -->
-    <string name="msg_sort_by_placeholder">Sort by %1$s</string> <!-- TODO Translate -->
-    <string name="msg_sort_by">Sort by</string> <!-- TODO Translate -->
-    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
-    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
-    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
-    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
-    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_placeholder">ترتيب حسب %1$s</string>
+    <string name="msg_sort_by">ترتيب حسب</string>
+    <string name="msg_sort_by_activity">النشاط</string>
+    <string name="msg_sort_by_name">الاسم</string>
+    <string name="msg_group_by_unread_on_top">غير مقروء على القمة</string>
+    <string name="msg_group_by_type">تجميع حسب النوع</string>
+    <string name="msg_group_by_favorites">تجميع حسب المفضلات</string>
 
-    <!--ChatRooms Headers-->
-    <string name="header_favorite">Favorites</string> <!-- TODO Translate -->
+    <!-- ChatRooms Headers -->
+    <string name="header_favorite">المفضلات</string>
     <string name="msg_channels">القنوات</string>
-    <string name="msg_users">Users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
+    <string name="msg_users">المستخدمين</string>
+    <string name="msg_search_for_global_users">البحث عن المستخدمين العالميين</string>
+    <string name="msg_search_for_global_users_description">إذا قمت بالتشغيل، يمكنك البحث عن أي مستخدم من شركات أو خوادم أخرى.</string>
     <string name="header_private_groups">المجموعات الخاصة</string>
     <string name="header_direct_messages">الرسائل المباشرة</string>
     <string name="header_live_chats">محادثات حية</string>
     <string name="header_unknown">غير معروف</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">تعديل الرسالة المنشورة</string>
     <string name="notif_action_reply_hint">رد</string>
     <string name="notif_error_sending">فشل الرد حاول مرة أخرى</string>
@@ -365,7 +364,9 @@
     <string name="message_room_changed_privacy">تم تغيير نوع الغرفة ل: %1$s بواسطة %2$s</string>
 
     <!-- User Details -->
-    <string name="timezone">المنظقة الزمنية</string>
+    <string name="timezone">المنطقة الزمنية</string>
+    <string name="status">الوضع: %1$s</string>
+    <string name="user_detail_status">الوضع</string>
 
     <!-- Report -->
     <string name="submit">تأكيد</string>

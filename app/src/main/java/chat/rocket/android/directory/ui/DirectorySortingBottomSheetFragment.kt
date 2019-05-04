@@ -100,21 +100,21 @@ class DirectorySortingBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun checkSelection(textView: TextView, leftDrawable: Drawable) {
+    private fun checkSelection(textView: TextView, startDrawable: Drawable) {
         context?.let {
-            DrawableHelper.compoundLeftAndRightDrawable(
+            DrawableHelper.compoundStartAndEndDrawable(
                 textView,
-                leftDrawable,
+                startDrawable,
                 checkDrawable
             )
         }
     }
 
-    private fun uncheckSelection(textView: TextView, leftDrawable: Drawable) {
+    private fun uncheckSelection(textView: TextView, startDrawable: Drawable) {
         context?.let {
-            DrawableHelper.compoundLeftDrawable(
+            DrawableHelper.compoundStartDrawable(
                 textView,
-                leftDrawable
+                startDrawable
             )
         }
     }

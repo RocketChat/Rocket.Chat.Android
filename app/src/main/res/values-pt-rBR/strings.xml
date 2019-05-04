@@ -301,7 +301,7 @@
     <string name="status_disconnecting">Desconectando</string>
     <string name="status_waiting">Conectando em %d segundos</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">Notifica todos nesta sala</string>
     <string name="suggest_here_description">Notifica usuários ativos nesta sala</string>
 
@@ -328,7 +328,7 @@
     <string name="Guggy_Command_Description">Gera um gif baseado no texto dado</string>
     <string name="Slash_Topic_Description">Definir tópico</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">Nenhum emoji recente</string>
     <string name="alert_title_default_skin_tone">Tom de pele padrão</string>
 
@@ -341,18 +341,18 @@
     <string name="msg_group_by_type">Agrupar por tipo</string>
     <string name="msg_group_by_favorites">Agrupar por favoritos</string>
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Favoritos</string>
     <string name="msg_channels">Canais</string>
     <string name="msg_users">Usuários</string>
     <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">Grupos Privados</string>
     <string name="header_direct_messages">Mensagens diretas</string>
     <string name="header_live_chats">Live Chats</string>
     <string name="header_unknown">Desconhecido</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">Editar mensagem compartilhada</string>
     <string name="notif_action_reply_hint">RESPONDER</string>
     <string name="notif_error_sending">Falha ao enviar a mensagem.</string>
@@ -365,6 +365,8 @@
 
     <!-- User Details -->
     <string name="timezone">Fuso horário</string>
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Enviar</string>
