@@ -1190,13 +1190,12 @@ class ChatRoomPresenter @Inject constructor(
                     sendMessage(roomId, text, null)
                 } else {
                     view.disableSendMessageButton()
-                    val command = text.split(" ")
-                    val name = command[0].substring(1)
+                    val index = text.indexOf(" ")
+                    var name = ""
                     var params = ""
-                    command.forEachIndexed { index, param ->
-                        if (index > 0) {
-                            params += "$param "
-                        }
+                    if (index >= 1) {
+                        name = text.substring(1, index)
+                        params = text.substring(index + 1).trim()
                     }
                     val result = retryIO("runCommand($name, $params, $roomId)") {
                         client.runCommand(Command(name, params), roomId)
