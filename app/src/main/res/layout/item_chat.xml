@@ -70,8 +70,8 @@
     <include
         android:id="@+id/layout_unread_messages_badge"
         layout="@layout/unread_messages_badge"
-        android:layout_width="21dp"
-        android:layout_height="21dp"
+        android:layout_width="21sp"
+        android:layout_height="21sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/text_last_message" />
 

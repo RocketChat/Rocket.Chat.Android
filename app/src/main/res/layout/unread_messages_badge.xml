@@ -7,8 +7,8 @@
     <TextView
         android:id="@+id/text_total_unread_messages"
         style="@style/ChatList.Badge.TextView"
-        android:layout_width="21dp"
-        android:layout_height="21dp"
+        android:layout_width="21sp"
+        android:layout_height="21sp"
         android:background="@drawable/style_total_unread_messages"
         android:visibility="gone"
         tools:text="1"
