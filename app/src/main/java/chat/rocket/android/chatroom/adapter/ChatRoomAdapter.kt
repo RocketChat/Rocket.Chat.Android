@@ -18,6 +18,7 @@ import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.openTabbedUrl
 import chat.rocket.core.model.Message
+import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.attachment.actions.Action
 import chat.rocket.core.model.attachment.actions.ButtonAction
 import chat.rocket.core.model.isSystemMessage
@@ -117,6 +118,12 @@ class ChatRoomAdapter(
             val b = dataSet[position + 1].message
 
             groupMessage = shouldGroupMessage(a, b)
+
+            a.attachments?.let {
+                if(it.any { a -> a.type != null }){ // check if message media attachment.
+                    groupMessage = false
+                }
+            }
         }
 
         when (holder) {
@@ -140,7 +147,7 @@ class ChatRoomAdapter(
                     val date1 = a.getDate()
                     val date2 = b.getDate()
 
-                    if (date1.isSameDay(date2))
+                    if (date1.isSameDay(date2) && date1.timeInMillis - date2.timeInMillis <= 900000) // this should be depend on settings.
                         return true
                 }
             }
