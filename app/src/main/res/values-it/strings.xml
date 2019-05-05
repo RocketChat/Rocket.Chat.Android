@@ -299,7 +299,7 @@
     <string name="status_disconnecting">Disconessione</string>
     <string name="status_waiting">Collegamento fra %d secondi</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">Notifica tutti in questa stanza</string>
     <string name="suggest_here_description">Notifica gli utenti attivi di questa stanza</string>
 
@@ -326,7 +326,7 @@
     <string name="Guggy_Command_Description">Genera una gif in base al testo fornito</string>
     <string name="Slash_Topic_Description">Imposta argomento</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">No recent emojis</string>
     <string name="alert_title_default_skin_tone">Default skin tone</string>
 
@@ -339,18 +339,18 @@
     <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
     <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="msg_channels">Canali</string>
     <string name="msg_users">Users</string> <!-- TODO Translate -->
     <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">Gruppi Privati</string>
     <string name="header_direct_messages">Messaggi Diretti</string>
     <string name="header_live_chats">Stanza in diretta</string>
     <string name="header_unknown">Sconosciuto</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">Modifica messaggio condiviso</string>
     <string name="notif_action_reply_hint">Risposta</string>
     <string name="notif_error_sending">La risposta è fallita. Per favore riprova.</string>
@@ -361,6 +361,8 @@
 
     <!-- User Details -->
     <string name="timezone">Fuso Orario</string>
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Invia</string>
