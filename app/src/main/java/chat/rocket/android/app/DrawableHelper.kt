@@ -1,5 +1,6 @@
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -60,7 +61,7 @@ object DrawableHelper {
     /**
      * Tints a Drawable.
      *
-     * REMARK: you MUST always wrap the Drawable before tint it.
+     * REMARK: you MUST always wrap the Drawable before tinting it.
      *
      * @param drawable The Drawable to tint.
      * @param context The context.
@@ -72,58 +73,74 @@ object DrawableHelper {
         DrawableCompat.setTint(drawable, ContextCompat.getColor(context, resId))
 
     /**
-     * Compounds an array of Drawable (to appear to the left of the text) into an array of TextView.
+     * Compounds an array of Drawable (to appear on the start side of a text) into an array of TextView.
      *
-     * REMARK: the number of elements in both array of Drawable and EditText MUST be equal.
+     * REMARK: the number of elements in both arrays of Drawable and TextView MUST be equal.
      *
      * @param textView The array of TextView.
      * @param drawables The array of Drawable.
-     * @see compoundLeftDrawable
+     * @see compoundStartDrawable
      */
     fun compoundDrawables(textView: Array<TextView>, drawables: Array<Drawable>) {
         if (textView.size != drawables.size) {
             return
         } else {
             for (i in textView.indices) {
-                textView[i].setCompoundDrawablesWithIntrinsicBounds(drawables[i], null, null, null)
+                if (textView[i].resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR) {
+                    textView[i].setCompoundDrawablesWithIntrinsicBounds(drawables[i], null, null, null)
+                } else {
+                    textView[i].setCompoundDrawablesWithIntrinsicBounds(null, null, drawables[i], null)
+                }
             }
         }
     }
 
     /**
-     * Compounds a Drawable (to appear on the left side of a text) into a TextView.
+     * Compounds a Drawable (to appear on the start side of a text) into a TextView.
      *
      * @param textView The TextView.
      * @param drawable The Drawable.
      * @see compoundDrawables
      */
-    fun compoundLeftDrawable(textView: TextView, drawable: Drawable) =
-        textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+    fun compoundStartDrawable(textView: TextView, drawable: Drawable) =
+        if (textView.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR) {
+            textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+        } else {
+            textView.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+        }
 
     /**
-     * Compounds a Drawable (to appear on the right side of a text) into a TextView.
+     * Compounds a Drawable (to appear on the end side of a text) into a TextView.
      *
      * @param textView The TextView.
      * @param drawable The Drawable.
-     * @see compoundLeftDrawable
+     * @see compoundStartDrawable
      */
-    fun compoundRightDrawable(textView: TextView, drawable: Drawable) =
-        textView.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+    fun compoundEndDrawable(textView: TextView, drawable: Drawable) =
+        if (textView.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR) {
+            textView.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+        } else {
+            textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+        }
 
     /**
-     * Compounds a Drawable (to appear on the left and right side of a text) into a TextView.
+     * Compounds a Drawable (to appear on the start and end side of a text) into a TextView.
      *
      * @param textView The TextView.
-     * @param leftDrawable The left Drawable.
-     * @param rightDrawable The right Drawable.
-     * @see compoundLeftDrawable
+     * @param startDrawable The start Drawable.
+     * @param endDrawable The end Drawable.
+     * @see compoundStartDrawable
      */
-    fun compoundLeftAndRightDrawable(
+    fun compoundStartAndEndDrawable(
         textView: TextView,
-        leftDrawable: Drawable,
-        rightDrawable: Drawable
+        startDrawable: Drawable,
+        endDrawable: Drawable
     ) =
-        textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, null, rightDrawable, null)
+        if (textView.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR) {
+            textView.setCompoundDrawablesWithIntrinsicBounds(startDrawable, null, endDrawable, null)
+        } else {
+            textView.setCompoundDrawablesWithIntrinsicBounds(endDrawable, null, startDrawable, null)
+        }
 
     /**
      * Returns the user status drawable.
