@@ -25,6 +25,7 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize">
 
             <intent-filter>

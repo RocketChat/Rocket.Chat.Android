@@ -284,14 +284,28 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun confirmShare(callback: () -> Unit) {
         ui {
-            AlertDialog.Builder(it)
-                .setTitle(R.string.app_name)
-                .setMessage("Do you confirm to send?")
+            val builder = AlertDialog.Builder(it)
+                .setTitle("Do you confirm to send?")
                 .setPositiveButton("Send") { _, _ ->
                     callback()
                 }
                 .setNegativeButton("Cancel", null)
-                .show()
+
+            if (ShareHandler.hasSharedText()) {
+                builder.setMessage(ShareHandler.sharedText)
+            } else if (ShareHandler.hasSharedFile()) {
+                val filesAdapter = ShareHandler.getFilesAsString()
+                val checks = BooleanArray(filesAdapter.size) {
+                    return@BooleanArray true
+                }
+
+                builder.setMultiChoiceItems(filesAdapter, checks) { _, pos, value ->
+                    checks[pos] = value
+                    ShareHandler.files[pos].send = value
+                }
+            }
+
+            builder.show()
         }
     }
 

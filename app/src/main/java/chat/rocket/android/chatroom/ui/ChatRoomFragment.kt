@@ -1243,8 +1243,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 sendMessage(ShareHandler.getTextAndClear())
             }
 
-            if (ShareHandler.hasSharedImage()) {
-                ShareHandler.files.forEach {
+            if (ShareHandler.hasSharedFile()) {
+                ShareHandler.files.filter { it.send }.forEach {
                     if (it.mimeType.startsWith("image")) {
                         presenter.uploadDrawingImage(
                             chatRoomId,
@@ -1258,6 +1258,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                         )
                     }
                 }
+
+                ShareHandler.files.clear()
             }
         }
     }

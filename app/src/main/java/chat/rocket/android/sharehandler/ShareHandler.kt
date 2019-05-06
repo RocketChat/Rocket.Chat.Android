@@ -10,16 +10,18 @@ import java.io.InputStream
 
 object ShareHandler {
 
-    fun hasShare(): Boolean = hasSharedText() || hasSharedImage()
+    fun hasShare(): Boolean = hasSharedText() || hasSharedFile()
 
     fun hasSharedText(): Boolean = sharedText != null
-    fun hasSharedImage(): Boolean = files.size > 0
+    fun hasSharedFile(): Boolean = files.size > 0
 
     var sharedText: String? = null
 
     var files: ArrayList<SharedFile> = arrayListOf()
 
     fun handle(intent: Intent?, context: Context) {
+        clearAll()
+
         intent?.let {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
@@ -39,6 +41,11 @@ object ShareHandler {
                 }
             }
         }
+    }
+
+    private fun clearAll() {
+        files.clear()
+        sharedText = null
     }
 
     private fun handleSendText(intent: Intent) {
@@ -64,6 +71,12 @@ object ShareHandler {
         }
     }
 
+    fun getFilesAsString(): Array<String> {
+        return Array(files.size) {
+            return@Array files[it].name
+        }
+    }
+
     fun getTextAndClear(): String {
         val text = sharedText.orEmpty()
         sharedText = null
@@ -71,5 +84,9 @@ object ShareHandler {
         return text
     }
 
-    class SharedFile(var fis: InputStream, var name: String, val mimeType: String, val size: Int)
+    fun getText(): String {
+        return sharedText.orEmpty()
+    }
+
+    class SharedFile(var fis: InputStream, var name: String, val mimeType: String, val size: Int, var send: Boolean = true)
 }
