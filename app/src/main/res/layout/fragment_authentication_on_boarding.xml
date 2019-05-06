@@ -25,6 +25,7 @@
             android:id="@+id/text_on_boarding_title"
             style="@style/Authentication.TextView.Headline"
             android:layout_marginTop="32dp"
+            android:gravity="center"
             android:text="@string/msg_welcome_to_rocket_chat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,6 +34,7 @@
         <TextView
             android:id="@+id/text_on_boarding_description"
             style="@style/Authentication.TextView.Description"
+            android:gravity="center"
             android:text="@string/msg_team_communication"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +43,7 @@
         <RelativeLayout
             android:id="@+id/connect_with_a_server_container"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="60sp"
             android:layout_marginTop="32dp"
             android:background="@drawable/rounded_border"
             android:foreground="?selectableItemBackground"
@@ -84,7 +86,7 @@
         <RelativeLayout
             android:id="@+id/join_community_container"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="60sp"
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_border"
             android:foreground="?selectableItemBackground"
@@ -136,7 +138,7 @@
         <RelativeLayout
             android:id="@+id/create_server_container"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="60sp"
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_color_accent"
             android:foreground="?selectableItemBackground"
