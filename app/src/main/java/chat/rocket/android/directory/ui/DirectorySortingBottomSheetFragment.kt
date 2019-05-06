@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import chat.rocket.android.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottom_seet_fragment_directory_sorting.*
+import kotlinx.android.synthetic.main.bottom_sheet_fragment_directory_sorting.*
 
 fun showDirectorySortingBottomSheetFragment(
     isSortByChannels: Boolean,
@@ -59,7 +59,7 @@ class DirectorySortingBottomSheetFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? =
-        inflater.inflate(R.layout.bottom_seet_fragment_directory_sorting, container, false)
+        inflater.inflate(R.layout.bottom_sheet_fragment_directory_sorting, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -100,21 +100,21 @@ class DirectorySortingBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun checkSelection(textView: TextView, leftDrawable: Drawable) {
+    private fun checkSelection(textView: TextView, startDrawable: Drawable) {
         context?.let {
-            DrawableHelper.compoundLeftAndRightDrawable(
+            DrawableHelper.compoundStartAndEndDrawable(
                 textView,
-                leftDrawable,
+                startDrawable,
                 checkDrawable
             )
         }
     }
 
-    private fun uncheckSelection(textView: TextView, leftDrawable: Drawable) {
+    private fun uncheckSelection(textView: TextView, startDrawable: Drawable) {
         context?.let {
-            DrawableHelper.compoundLeftDrawable(
+            DrawableHelper.compoundStartDrawable(
                 textView,
-                leftDrawable
+                startDrawable
             )
         }
     }

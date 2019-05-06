@@ -26,6 +26,7 @@
             android:id="@+id/text_sign_in_to_your_server"
             style="@style/Authentication.TextView.Headline"
             android:layout_marginTop="8dp"
+            android:gravity="center"
             android:text="@string/title_sign_in_your_server"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
