@@ -114,7 +114,7 @@
     <string name="msg_reset">إعادة تعيين</string>
     <string name="msg_check_your_email_to_reset_your_password">تم إرسال الإيميل راجع إيميلك لتحديث كلمة السر</string>
     <string name="msg_invalid_email">من فضلك أدخل عنوان بريد صحيح</string>
-    <string name="msg_new_user_agreement">بالاستمرار أنت توافق على \n%1$s و %2$s</string>
+    <string name="msg_new_user_agreement">بالاستمرار أنت توافق على\n%1$s و %2$s</string>
     <string name="msg_yesterday">أمس</string>
     <string name="msg_today">اليوم</string>
     <string name="msg_message">رسالة</string>
@@ -209,7 +209,7 @@
     <!-- Create channel messages -->
     <string name="msg_private_channel">خاص</string>
     <string name="msg_public_channel">عام</string>
-    <string name="msg_private_channel_description">أنت فقط والأشخاص المدعوون يمكنكم دخول هذه القناة</string>
+    <string name="msg_private_channel_description">أنت والأشخاص المدعوون فقط يمكنكم دخول هذه القناة</string>
     <string name="msg_public_channel_description">يمكن للجميع دخول هذه القناة</string>
     <string name="msg_ready_only_channel">قناة للقراءة فقط</string>
     <string name="msg_ready_only_channel_description">المدير فقط يمكنه الكتابة</string>
@@ -270,17 +270,17 @@
 
     <!-- Mentions -->
     <string name="msg_mentions">إشارات</string>
-    <string name="msg_no_mention">لا إشارة</string>
-    <string name="msg_all_the_mentions_appear_here">الإشارات \nتظهر هنا</string>
+    <string name="msg_no_mention">لا يوجد إشارة</string>
+    <string name="msg_all_the_mentions_appear_here">الإشارات\nتظهر هنا</string>
 
     <!-- Pinned Messages -->
-    <string name="title_pinned_messages">رسالة مميزة</string>
-    <string name="no_pinned_messages">رسائل غير مميزة</string>
+    <string name="title_pinned_messages">الرسائل المميزة</string>
+    <string name="no_pinned_messages">لا يوجد رسائل مميزة</string>
     <string name="no_pinned_description">الرسائل المميزة\nتظهر هنا</string>
 
     <!-- Favorite Messages -->
     <string name="title_favorite_messages">الرسائل المفضلة</string>
-    <string name="no_favorite_messages">الرسائل غير المفضلة</string>
+    <string name="no_favorite_messages">لا يوجد رسائل مفضلة</string>
     <string name="no_favorite_description">الرسائل المفضلة\nتظهر هنا</string>
 
     <!-- Files -->
@@ -293,12 +293,12 @@
     <string name="max_file_size_exceeded">تجاوز حجم الملف %1$d بايت الحد الأقصى لحجم التحميل وهو %2$d بايت</string>
 
     <!-- Socket status -->
-    <string name="status_connected">اتصال</string>
-    <string name="status_disconnected">قطع الاتصال</string>
+    <string name="status_connected">متصل</string>
+    <string name="status_disconnected">غير متصل</string>
     <string name="status_connecting">يتم الاتصال</string>
-    <string name="status_authenticating">المصادقة</string>
+    <string name="status_authenticating">يتم المصادقة</string>
     <string name="status_disconnecting">يتم قطع الاتصال</string>
-    <string name="status_waiting">متصل في %d ثانية</string>
+    <string name="status_waiting">يتم الاتصال في %d ثانية</string>
 
     <!-- Suggestions -->
     <string name="suggest_all_description">تنبيه كل من في الغرفة</string>
@@ -312,9 +312,9 @@
     <string name="Slash_TableUnflip_Description">عرض ┬─┬ ノ( ゜-゜ノ)</string>
     <string name="Create_A_New_Channel">إنشاء قناة جديدة</string>
     <string name="Show_the_keyboard_shortcut_list">عرض اختصارات الكيبورد</string>
-    <string name="Invite_user_to_join_channel_all_from">دعوة أعضاء [#channel] للانضمام لهذه المجموعة</string>
-    <string name="Invite_user_to_join_channel_all_to">دعوة أعضاء هذه المجموعة للانضمام ل [#channel]</string>
-    <string name="Archive">ارشيف</string>
+    <string name="Invite_user_to_join_channel_all_from">دعوة أعضاء [#channel] للانضمام لهذه القناة</string>
+    <string name="Invite_user_to_join_channel_all_to">دعوة أعضاء هذه القناة للانضمام ل [#channel]</string>
+    <string name="Archive">أرشيف</string>
     <string name="Remove_someone_from_room">إزالة شخص من الغرفة</string>
     <string name="Leave_the_current_channel">مغادرة القناة الحالية</string>
     <string name="Displays_action_text">عرض نص الاجراء</string>
@@ -348,7 +348,7 @@
     <string name="msg_search_for_global_users_description">إذا قمت بالتشغيل، يمكنك البحث عن أي مستخدم من شركات أو خوادم أخرى.</string>
     <string name="header_private_groups">المجموعات الخاصة</string>
     <string name="header_direct_messages">الرسائل المباشرة</string>
-    <string name="header_live_chats">محادثات حية</string>
+    <string name="header_live_chats">المحادثات الحية</string>
     <string name="header_unknown">غير معروف</string>
 
     <!-- Notifications -->
