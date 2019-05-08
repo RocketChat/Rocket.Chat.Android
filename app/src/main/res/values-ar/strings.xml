@@ -63,6 +63,7 @@
     <!-- Settings messages -->
     <string name="msg_contact_us">اتصل بنا</string>
     <string name="msg_language">تغيير اللغة</string>
+    <string name="msg_download_my_data">تحميل البيانات الخاصة بي</string>
     <string name="msg_review_this_app">قيم هذا التطبيق</string>
     <string name="msg_share_this_app">شارك هذا التطبيق</string>
     <string name="msg_administration">الادارة</string>
