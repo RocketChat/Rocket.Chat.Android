@@ -27,6 +27,9 @@ ext {
             dynamiclinks          : '16.1.5',
             playServices          : '16.0.1',
             playServicesAuth      : '16.0.1',
+            firebaseCore          : '16.0.8',
+            firebaseCrashlytics   : '2.9.9',
+            firebasePerf          : '16.2.5',
             exoPlayer             : '2.8.2',
             flexbox               : '1.1.0',
             material              : '1.0.0',
@@ -138,6 +141,9 @@ ext {
 
             dynamiclinks          : "com.google.firebase:firebase-dynamic-links:${versions.dynamiclinks}",
             playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServicesAuth}",
+            firebaseCore          : "com.google.firebase:firebase-core:${versions.firebaseCore}",
+            firebaseCrashlytics   : "com.crashlytics.sdk.android:crashlytics:${versions.firebaseCrashlytics}",
+            firebasePerf          : "com.google.firebase:firebase-perf:${versions.firebasePerf}",
 
             // For testing
             junit                 : "junit:junit:${versions.junit}",
