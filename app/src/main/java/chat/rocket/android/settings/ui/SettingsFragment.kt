@@ -77,6 +77,8 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
         text_language.setOnClickListener { changeLanguage() }
 
+        text_download_my_data.setOnClickListener { presenter.requestDataDownload() }
+
         text_review_this_app.setOnClickListener { showAppOnStore() }
 
         text_share_this_app.setOnClickListener { shareApp() }
