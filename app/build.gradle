@@ -7,9 +7,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "com.github.ben-manes.versions"
-// ear test
-//apply plugin: 'com.google.firebase.firebase-perf'
-
 
 android {
     compileSdkVersion versions.compileSdk
@@ -186,10 +183,6 @@ dependencies {
     playImplementation libraries.firebaseCore
     playImplementation libraries.firebaseCrashlytics
     playImplementation libraries.firebasePerf
-
-//    playImplementation('com.google.firebase:firebase-core:16.0.8@aar') { transitive = true}
-//    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.9@aar') { transitive = true }
-//    playImplementation('com.google.firebase:firebase-perf:16.2.5@aar') { transitive = true }
 
     testImplementation libraries.junit
     testImplementation libraries.truth
