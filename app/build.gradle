@@ -209,7 +209,5 @@ preBuild.dependsOn compileSdk
 if (isPlay) {
     apply plugin: 'com.google.gms.google-services'
     apply plugin: 'io.fabric'
-    if (isRelease) {
-        apply plugin: 'com.google.firebase.firebase-perf'
-    }
+    apply plugin: 'com.google.firebase.firebase-perf'
 }
