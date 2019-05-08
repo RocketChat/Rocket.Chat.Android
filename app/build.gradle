@@ -1,14 +1,15 @@
 def taskRequests = getGradle().getStartParameter().getTaskRequests().toString()
 def isPlay = !(taskRequests.contains("Foss") || taskRequests.contains("foss"))
+def isRelease = (taskRequests.contains("Release") || taskRequests.contains("release"))
 
 apply plugin: 'com.android.application'
-if (isPlay) {
-    apply plugin: 'io.fabric'
-}
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "com.github.ben-manes.versions"
+// ear test
+//apply plugin: 'com.google.firebase.firebase-perf'
+
 
 android {
     compileSdkVersion versions.compileSdk
@@ -182,8 +183,13 @@ dependencies {
     playImplementation libraries.firebaseAnalytics
     playImplementation libraries.playServicesAuth
     playImplementation libraries.dynamiclinks
-    playImplementation('com.google.firebase:firebase-core:16.0.8@aar') { transitive = true}
-    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.9@aar') { transitive = true }
+    playImplementation libraries.firebaseCore
+    playImplementation libraries.firebaseCrashlytics
+    playImplementation libraries.firebasePerf
+
+//    playImplementation('com.google.firebase:firebase-core:16.0.8@aar') { transitive = true}
+//    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.9@aar') { transitive = true }
+//    playImplementation('com.google.firebase:firebase-perf:16.2.5@aar') { transitive = true }
 
     testImplementation libraries.junit
     testImplementation libraries.truth
@@ -209,4 +215,8 @@ task compileSdk(type: Exec) {
 preBuild.dependsOn compileSdk
 if (isPlay) {
     apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'io.fabric'
+    if (isRelease) {
+        apply plugin: 'com.google.firebase.firebase-perf'
+    }
 }
