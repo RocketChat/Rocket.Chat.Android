@@ -1,6 +1,5 @@
 def taskRequests = getGradle().getStartParameter().getTaskRequests().toString()
 def isPlay = !(taskRequests.contains("Foss") || taskRequests.contains("foss"))
-def isRelease = (taskRequests.contains("Release") || taskRequests.contains("release"))
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
