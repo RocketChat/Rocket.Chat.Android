@@ -3,6 +3,7 @@ package chat.rocket.android.chatrooms.adapter
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.view.View
+import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -15,7 +16,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.item_chat.view.*
-import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
 class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit) :
     ViewHolder<RoomItemHolder>(itemView) {
@@ -31,8 +31,6 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
     override fun bindViews(data: RoomItemHolder) {
         val room = data.data
         with(itemView) {
-            val avatar = room.avatar
-
             Glide.with(image_avatar.context)
                 .load(room.avatar)
                 .apply(RequestOptions.bitmapTransform(RoundedCorners(10)))
@@ -63,6 +61,7 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
             }
 
             if (room.alert) {
+                val text_total_unread_messages = text_total_unread_messages as TextView
                 if (room.unread == null) text_total_unread_messages.text = "!"
                 if (room.unread != null) text_total_unread_messages.text = room.unread
                 if (room.mentions) text_total_unread_messages.text = "@${room.unread}"
