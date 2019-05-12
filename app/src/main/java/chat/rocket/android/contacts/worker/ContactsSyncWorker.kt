@@ -141,7 +141,7 @@ class ContactsSyncWorker(context : Context, params : WorkerParameters)
                                 ContactsContract.CommonDataKinds.Email.DATA))
                         val contact = Contact()
                         contact.setName(name)
-                        contact.setEmailAddress(emailID)
+                        contact.setEmailAddress(emailID.toLowerCase())
                         contactArrayList.add(contact)
                     }
                     eCur.close()
