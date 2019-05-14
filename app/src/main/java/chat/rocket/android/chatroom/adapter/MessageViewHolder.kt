@@ -7,6 +7,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ImageSpan
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.uimodel.MessageUiModel
@@ -79,8 +80,9 @@ class MessageViewHolder(
             }
 
             if (!groupMessage) {
-                layout_avatar.visibility = View.VISIBLE
-                message_header.visibility = View.VISIBLE
+                layout_avatar.isVisible = true
+                message_header.isVisible = true
+
                 (text_content.layoutParams as ViewGroup.MarginLayoutParams).apply {
                     marginStart = 16.toPx.toInt()
                 }
@@ -91,8 +93,8 @@ class MessageViewHolder(
                     }
                 }
             } else {
-                layout_avatar.visibility = View.GONE
-                message_header.visibility = View.GONE
+                layout_avatar.isGone = true
+                message_header.isGone = true
 
                 (text_content.layoutParams as ViewGroup.MarginLayoutParams).apply {
                     marginStart = 56.toPx.toInt()
