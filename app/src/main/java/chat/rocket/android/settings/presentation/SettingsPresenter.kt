@@ -5,7 +5,6 @@ import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
-import chat.rocket.android.server.domain.GetCurrentLanguageInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.RemoveAccountInteractor
@@ -19,10 +18,13 @@ import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extension.toHex
 import chat.rocket.android.util.extensions.adminPanelUrl
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.isNotNullNorBlank
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.util.ifNull
+import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.deleteOwnAccount
 import chat.rocket.core.internal.rest.me
+import chat.rocket.core.internal.rest.requestDataDownload
 import chat.rocket.core.internal.rest.serverInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -40,7 +42,7 @@ class SettingsPresenter @Inject constructor(
     private val tokenRepository: TokenRepository,
     private val permissions: PermissionsInteractor,
     private val rocketChatClientFactory: RocketChatClientFactory,
-    getCurrentServerInteractor: GetCurrentServerInteractor,
+    serverInteractor: GetCurrentServerInteractor,
     removeAccountInteractor: RemoveAccountInteractor,
     databaseManagerFactory: DatabaseManagerFactory,
     connectionManagerFactory: ConnectionManagerFactory,
@@ -48,7 +50,7 @@ class SettingsPresenter @Inject constructor(
 ) : CheckServerPresenter(
     strategy = strategy,
     factory = rocketChatClientFactory,
-    serverInteractor = getCurrentServerInteractor,
+    serverInteractor = serverInteractor,
     removeAccountInteractor = removeAccountInteractor,
     tokenRepository = tokenRepository,
     dbManagerFactory = databaseManagerFactory,
@@ -56,6 +58,8 @@ class SettingsPresenter @Inject constructor(
     tokenView = view,
     navigator = navigator
 ) {
+    private val serverUrl = serverInteractor.get()!!
+    private val client: RocketChatClient = rocketChatClientFactory.get(serverUrl)
     private val token = tokenRepository.get(currentServer)
 
     fun setupView() {
@@ -84,6 +88,28 @@ class SettingsPresenter @Inject constructor(
                 Timber.d(exception, "Error getting server info")
                 exception.message?.let {
                     view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            }
+        }
+    }
+
+    fun requestDataDownload() {
+        launchUI(strategy) {
+            try {
+                userHelper.user()?.let { user ->
+                    val response = retryIO { client.requestDataDownload(user.id) }
+                    if (response.requested) {
+                        view.showMessage("Data download request placed successfully")
+                    } else if (response.exportOperation.status.isNotNullNorBlank()) {
+                        view.showMessage("Data download request already placed and has status: ${ response.exportOperation.status }")
+                    }
+                }
+            } catch (exception: Exception) {
+                Timber.d(exception, "Error placing request for data download")
+                exception.message?.let {
+                    view.showMessage("Error placing request for data download: $it")
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }

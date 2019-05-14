@@ -112,6 +112,25 @@
                 app:layout_constraintTop_toBottomOf="@+id/text_contact_us" />
 
             <TextView
+                android:id="@+id/text_download_my_data"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorLightGrey"
+                android:fontFamily="sans-serif-medium"
+                android:foreground="?selectableItemBackground"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
+                android:text="@string/msg_download_my_data"
+                android:textColor="#DE000000"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_language" />
+
+            <TextView
                 android:id="@+id/text_review_this_app"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -128,7 +147,7 @@
                 android:textStyle="normal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_language" />
+                app:layout_constraintTop_toBottomOf="@+id/text_download_my_data" />
 
             <TextView
                 android:id="@+id/text_share_this_app"

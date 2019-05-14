@@ -63,6 +63,7 @@
     <!-- Settings messages -->
     <string name="msg_contact_us">Связаться с нами</string>
     <string name="msg_language">Изменить язык</string>
+    <string name="msg_download_my_data">Скачать мои данные</string>
     <string name="msg_review_this_app">Оставить отзыв</string>
     <string name="msg_share_this_app">Поделиться приложением</string>
     <string name="msg_administration">Панель админа</string>
