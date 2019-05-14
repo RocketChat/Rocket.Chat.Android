@@ -429,25 +429,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }
             }
 
-            if (recycler_view.adapter == null) {
-                recycler_view.adapter = adapter
-                if (dataSet.size >= 30) {
-                    recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
-                }
-                recycler_view.addOnLayoutChangeListener(layoutChangeListener)
-                recycler_view.addOnScrollListener(onScrollListener)
-
-                // Load just once, on the first page...
-                presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
-            }
-
             val oldMessagesCount = adapter.itemCount
             adapter.appendData(dataSet)
             if (oldMessagesCount == 0 && dataSet.isNotEmpty()) {
                 recycler_view.scrollToPosition(0)
                 verticalScrollOffset.set(0)
             }
-            presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
             empty_chat_view.isVisible = adapter.itemCount == 0
             dismissEmojiKeyboard()
         }
@@ -469,10 +456,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             setupMessageComposer(roomUiModel)
             isBroadcastChannel = roomUiModel.broadcast
             isFavorite = roomUiModel.favorite.orFalse()
-            if (isBroadcastChannel && !roomUiModel.canModerate) {
-                disableMenu = true
-                activity?.invalidateOptionsMenu()
-            }
+            disableMenu = (roomUiModel.broadcast && !roomUiModel.canModerate)
+            activity?.invalidateOptionsMenu()
         }
     }
 
@@ -807,7 +792,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
             }
         }
+
+        recycler_view.adapter = adapter
         recycler_view.addOnScrollListener(fabScrollListener)
+        recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
+        recycler_view.addOnLayoutChangeListener(layoutChangeListener)
+        recycler_view.addOnScrollListener(onScrollListener)
     }
 
     private fun setupFab() {
