@@ -119,7 +119,7 @@ class ChatRoomAdapter(
             groupMessage = shouldGroupMessage(a, b)
 
             a.attachments?.let {
-                if(it.any { a -> a.type != null }){ // check if message media attachment.
+                if (it.any { a -> a.type != null }) { // check if message media attachment.
                     groupMessage = false
                 }
             }
@@ -140,16 +140,12 @@ class ChatRoomAdapter(
 
 
     private fun shouldGroupMessage(a: Message, b: Message): Boolean {
-        a.sender?.let { u1 ->
-            b.sender?.let { u2 ->
-                if (u1.id.equals(u2.id)) {
-                    val date1 = a.getDate()
-                    val date2 = b.getDate()
+        if (a.senderAlias == b.senderAlias) {
+            val date1 = a.getDate()
+            val date2 = b.getDate()
 
-                    if (date1.isSameDay(date2) && date1.timeInMillis - date2.timeInMillis <= 900000) // this should be depend on settings.
-                        return true
-                }
-            }
+            if (date1.isSameDay(date2) && date1.timeInMillis - date2.timeInMillis <= 900000) // this should be depend on settings.
+                return true
         }
 
         return false
