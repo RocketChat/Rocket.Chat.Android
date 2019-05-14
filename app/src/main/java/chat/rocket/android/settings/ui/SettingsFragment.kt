@@ -31,6 +31,24 @@ import timber.log.Timber
 import javax.inject.Inject
 
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
+private val LOCALES = arrayOf(
+    "en",
+    "ar",
+    "de",
+    "es",
+    "fa",
+    "fr",
+    "hi,IN",
+    "it",
+    "ja",
+    "pt,BR",
+    "pt,PT",
+    "ru,RU",
+    "tr",
+    "uk",
+    "zh,CN",
+    "zh,TW"
+)
 
 fun newInstance(): Fragment = SettingsFragment()
 
@@ -165,37 +183,12 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
     private fun changeLanguage() {
         context?.let {
-            // Add [String] for locales without specified countries, and
-            // add [Pair] for locales with specified countries.
-            val locales = arrayOf(
-                "en",
-                "ar",
-                "de",
-                "es",
-                "fa",
-                "fr",
-                Pair("hi", "IN"),
-                "it",
-                "ja",
-                Pair("pt", "BR"),
-                Pair("pt", "PT"),
-                Pair("ru", "RU"),
-                "tr",
-                "uk",
-                Pair("zh", "CN"),
-                Pair("zh", "TW")
-            )
             val selectedLocale = presenter.getCurrentLocale(it)
             var localeIndex = -1
-            locales.forEachIndexed { index, locale ->
-                var language: String? = null
-                var country = ""
-                if (locale is String) {
-                    language = locale
-                } else if (locale is Pair<*, *>) {
-                    language = locale.first as String
-                    country = locale.second as String
-                }
+            LOCALES.forEachIndexed { index, locale ->
+                val array = locale.split(",")
+                val language = array[0]
+                val country = if (array.size > 1) array[1] else ""
                 // If language and country are specified, return the respective locale, else return
                 // the first locale found if the language is as specified regardless of the country.
                 if (language == selectedLocale.language) {
@@ -212,11 +205,11 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
                 .setSingleChoiceItems(
                     resources.getStringArray(R.array.languages), localeIndex
                 ) { dialog, option ->
-                    if (locales[option] is String) {
-                        updateLanguage(locales[option] as String)
-                    } else if (locales[option] is Pair<*, *>) {
-                        updateLanguage((locales[option] as Pair<*, *>).first as String,
-                            (locales[option] as Pair<*, *>).second as String)
+                    val array = LOCALES[option].split(",")
+                    if (array.size > 1) {
+                        updateLanguage(array[0], array[1])
+                    } else {
+                        updateLanguage(array[0])
                     }
                     dialog.dismiss()
                 }
