@@ -35,8 +35,10 @@ internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 fun newInstance(): Fragment = SettingsFragment()
 
 class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
-    @Inject lateinit var analyticsManager: AnalyticsManager
-    @Inject lateinit var presenter: SettingsPresenter
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
+    @Inject
+    lateinit var presenter: SettingsPresenter
     private val locales = arrayListOf(
         "en",
         "ar",
