@@ -138,9 +138,9 @@
     <string name="msg_utc_offset">التقديم عن UTC</string>
     <string name="msg_new_password">إدخال كلمة سر جديدة</string>
     <string name="msg_confirm_password">تأكيد كلمة السر</string>
-    <string name="msg_channel_name">تغيير الاسم</string>
+    <string name="msg_channel_name">اسم القناة</string>
     <string name="msg_search">بحث</string>
-    <string name="msg_unread_messages">لرسالة غير مقروءة</string>
+    <string name="msg_unread_messages">رسائل غير مقروءة</string>
     <string name="msg_preview_video">فيديو</string>
     <string name="msg_preview_audio">صوت</string>
     <string name="msg_preview_photo">صورة</string>
@@ -152,7 +152,7 @@
     <string name="msg_ver_not_minimum">يبدو أن خادمك قديم %1$s من فضلك حدث الخادم للاستمرار</string>
     <string name="msg_no_chat_title">لا توجد رسائل</string>
     <string name="msg_no_chat_description">إبدأ المحادثة لترى الرسائل هنا</string>
-    <string name="msg_http_insecure">أنت تستخدم  HTTP وهو غير آمن ونحن لا نحبذ ذلك.</string>
+    <string name="msg_http_insecure">أنت تستخدم HTTP وهو غير آمن ونحن لا نحبذ ذلك.</string>
     <string name="msg_error_checking_server_version">حدذ خطأ عند محاولة الوصول نسخة خادمك حاول مرة أخرى</string>
     <string name="msg_invalid_server_protocol">النظام المستخدم غير مقبول، حاول ب HTTPS</string>
     <string name="msg_image_saved_successfully">تم حفظ الصورة في المعرض</string>
@@ -185,7 +185,7 @@
     <string name="msg_no_announcement">لا يوجد ملف مضاف</string>
     <string name="msg_no_description">لا يوجد وصف مضاف</string>
     <string name="msg_send_email">أرسال بريد</string>
-    <string name="msg_android_app_support">خدمة البرنامج </string>
+    <string name="msg_android_app_support">خدمة البرنامج</string>
     <string name="msg_unable_to_update_password">لا يمكن تحديث كلمة السر خطأ: %1$s</string>
     <string name="msg_password_updated_successfully">تم تحديث كلمة السر</string>
     <plurals name="msg_reacted_with_">
@@ -235,7 +235,7 @@
     <string name="message_user_joined_channel">إنضم للقناة</string>
     <string name="message_welcome">أهلا %s</string>
     <string name="message_removed">تم حذف الرسالة</string>
-    <string name="message_pinned">تمميز رسالة:</string>
+    <string name="message_pinned">تعلق رسالة:</string>
     <string name="message_muted">المسخدم %1$s صامت بواسطة %2$s</string>
     <string name="message_unmuted">المستخدم %1$s غير صامت بواسطة %2$s</string>
     <string name="message_role_add">%1$s تم جعله %2$s بواسطة %3$s</string>
@@ -272,7 +272,7 @@
     <string name="title_members_list">الأعضاء</string>
 
     <!-- Mentions -->
-    <string name="msg_mentions">إشارة</string>
+    <string name="msg_mentions">إشارات</string>
     <string name="msg_no_mention">لا إشارة</string>
     <string name="msg_all_the_mentions_appear_here">الإشارات \nتظهر هنا</string>
 
@@ -282,7 +282,7 @@
     <string name="no_pinned_description">الرسائل المميزة\nتظهر هنا</string>
 
     <!-- Favorite Messages -->
-    <string name="title_favorite_messages">الرسائل المفصلة</string>
+    <string name="title_favorite_messages">الرسائل المفضلة</string>
     <string name="no_favorite_messages">الرسائل غير المفضلة</string>
     <string name="no_favorite_description">الرسائل المفضلة\nتظهر هنا</string>
 
@@ -315,10 +315,10 @@
     <string name="Slash_TableUnflip_Description">عرض ┬─┬ ノ( ゜-゜ノ)</string>
     <string name="Create_A_New_Channel">إنشاء قناة جديدة</string>
     <string name="Show_the_keyboard_shortcut_list">عرض اختصارات الكيبورد</string>
-    <string name="Invite_user_to_join_channel_all_from">دعوة أعضاء  [#channel] للانضمام لهذه المجموعة</string>
+    <string name="Invite_user_to_join_channel_all_from">دعوة أعضاء [#channel] للانضمام لهذه المجموعة</string>
     <string name="Invite_user_to_join_channel_all_to">دعوة أعضاء هذه المجموعة للانضمام ل [#channel]</string>
     <string name="Archive">ارشيف</string>
-    <string name="Remove_someone_from_room">إوالة شخص من الغرفة</string>
+    <string name="Remove_someone_from_room">إزالة شخص من الغرفة</string>
     <string name="Leave_the_current_channel">مغادرة القناة الحالية</string>
     <string name="Displays_action_text">عرض نص الاجراء</string>
     <string name="Direct_message_someone">رسالة مباشرة</string>
@@ -328,7 +328,7 @@
     <string name="Unarchive">حذف من الأرشيف</string>
     <string name="Join_the_given_channel">الانضمام للقناة المعطاه</string>
     <string name="Guggy_Command_Description">صنع gif بناءا على النص المعطى</string>
-    <string name="Slash_Topic_Description">وضع الموضوع</string>
+    <string name="Slash_Topic_Description">تعيين الموضوع</string>
 
     <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">لا يوجد ايموجيز</string>

@@ -157,7 +157,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/layout_avatar"
         app:layout_constraintTop_toBottomOf="@+id/message_header"
-        tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
+        tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have made sure that everything is amazing!" />
 
     <Button
         android:id="@+id/button_join_video_call"
