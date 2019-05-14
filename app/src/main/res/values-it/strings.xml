@@ -361,7 +361,6 @@
 
     <!-- User Details -->
     <string name="timezone">Fuso Orario</string>
-    <string name="user_timezone_none">None</string><!-- TODO Add translation -->
 
     <!-- Report -->
     <string name="submit">Invia</string>

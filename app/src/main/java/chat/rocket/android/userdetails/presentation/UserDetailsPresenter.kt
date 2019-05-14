@@ -47,31 +47,21 @@ class UserDetailsPresenter @Inject constructor(
                 view.showLoading()
                 dbManager.getUser(userId)?.let {
                     userEntity = it
-                    val avatarUrl =
-                        userEntity.username?.let { username ->
-                            currentServer.avatarUrl(
-                                username,
-                                token?.userId,
-                                token?.authToken
-                            )
-                        }
+                    val avatarUrl = userEntity.username?.let { username ->
+                        currentServer.avatarUrl(username, token?.userId, token?.authToken)
+                    }
                     val username = userEntity.username
                     val name = userEntity.name
-                    val utcOffset =
-                        userEntity.utcOffset // TODO Convert UTC and display like the mockup
+                    val utcOffset = userEntity.utcOffset // FIXME Convert UTC
 
-                    if (avatarUrl != null || username != null || name != null || utcOffset != null) {
-                        view.showUserDetailsAndActions(
-                            avatarUrl = avatarUrl.toString(),
-                            name = name,
-                            username = username,
-                            status = userEntity.status,
-                            utcOffset = utcOffset.toString(),
-                            isVideoCallAllowed = settings.isJitsiEnabled()
-                        )
-                    } else {
-                        throw Exception()
-                    }
+                    view.showUserDetailsAndActions(
+                        avatarUrl = avatarUrl,
+                        name = name,
+                        username = username,
+                        status = userEntity.status,
+                        utcOffset = utcOffset.toString(),
+                        isVideoCallAllowed = settings.isJitsiEnabled()
+                    )
                 }
             } catch (ex: Exception) {
                 Timber.e(ex)

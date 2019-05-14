@@ -362,7 +362,6 @@
 
     <!-- User Details -->
     <string name="timezone">Timezone</string>
-    <string name="user_timezone_none">None</string><!-- TODO Add translation -->
 
     <!-- Report -->
     <string name="submit">Submit</string> <!-- TODO - Add proper translation -->

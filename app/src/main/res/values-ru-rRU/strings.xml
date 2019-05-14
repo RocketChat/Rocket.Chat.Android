@@ -362,7 +362,6 @@
 
     <!-- User Details -->
     <string name="timezone">Часовой пояс</string>
-    <string name="user_timezone_none">None</string><!-- TODO Add translation -->
 
     <!-- Report -->
     <string name="submit">Отправить</string>

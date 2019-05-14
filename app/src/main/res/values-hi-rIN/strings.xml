@@ -366,7 +366,6 @@
 
     <!-- User Details -->
     <string name="timezone">समय क्षेत्र</string>
-    <string name="user_timezone_none">None</string><!-- TODO Add translation -->
 
     <!-- Report -->
     <string name="submit">जमा करें</string>

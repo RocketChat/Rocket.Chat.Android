@@ -79,14 +79,15 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     }
 
     override fun showUserDetailsAndActions(
-        avatarUrl: String,
+        avatarUrl: String?,
         name: String?,
         username: String?,
         status: String?,
         utcOffset: String?,
         isVideoCallAllowed: Boolean
     ) {
-        val requestBuilder = Glide.with(this).load(avatarUrl)
+        val requestBuilder = Glide.with(this)
+            .load(avatarUrl)
             .apply(RequestOptions.skipMemoryCacheOf(true))
             .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
 
@@ -97,14 +98,12 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         requestBuilder.apply(RequestOptions.bitmapTransform(RoundedCorners(14)))
             .into(image_avatar)
 
-        text_name.text = name ?: ""
-        text_username.text = username ?: ""
+        text_name.text = name ?: getString(R.string.msg_unknown)
+        text_username.text = username ?: getString(R.string.msg_unknown)
 
-        val userStatus = if(status != null) status.substring(0, 1).toUpperCase() + status.substring(1) else  ""
-        text_description_status.text = userStatus
+        text_description_status.text = status?.capitalize() ?: getString(R.string.msg_unknown)
 
-        val userUtcOffset = if(utcOffset.equals("null")) getString(R.string.user_timezone_none) else utcOffset
-        text_description_timezone.text = userUtcOffset
+        text_description_timezone.text = utcOffset ?: getString(R.string.msg_unknown)
 
         text_video_call.isVisible = isVideoCallAllowed
 
