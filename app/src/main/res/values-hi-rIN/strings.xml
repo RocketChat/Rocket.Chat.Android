@@ -70,6 +70,9 @@
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics_tracking">इस ऐप को बेहतर बनाने में मदद के लिए अज्ञात स्टेटिक्स भेजें</string>
+    <string name="msg_do_not_send_analytics_tracking">इस ऐप को बेहतर बनाने में मदद के लिए अनाम स्टेटिक न भेजें</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">लागू नहीं है क्योंकि यह एक FOSS संस्करण है</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
@@ -221,12 +224,6 @@
     <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
     <string name="msg_directory">Directory</string> <!-- TODO Translate -->
 
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">एनालिटिक्स ट्रैकिंग</string>
-    <string name="msg_send_analytics_tracking">इस ऐप को बेहतर बनाने में मदद के लिए अज्ञात स्टेटिक्स भेजें</string>
-    <string name="msg_do_not_send_analytics_tracking">इस ऐप को बेहतर बनाने में मदद के लिए अनाम स्टेटिक न भेजें</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">लागू नहीं है क्योंकि यह एक FOSS संस्करण है</string>
-
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
     <string name="message_user_added_by">उपयोगकर्ता %1$s द्वारा %2$s को जोड़ा गया</string>
@@ -303,7 +300,7 @@
     <string name="status_disconnecting">डिसकनेक्टिंग</string>
     <string name="status_waiting">%d सेकेंड में कनेक्ट हो रहा है</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">इस कमरे में सभी को सूचित करें</string>
     <string name="suggest_here_description">इस कमरे में सक्रिय उपयोगकर्ताओं को सूचित करना</string>
 
@@ -330,7 +327,7 @@
     <string name="Guggy_Command_Description">दिए गए पाठ पर आधारित gif उत्पन्न करता</string>
     <string name="Slash_Topic_Description">विषय सेट करें</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji"> कोई नया इमोजी नहीं</string>
     <string name="alert_title_default_skin_tone">डिफ़ॉल्ट त्वचा टोन</string>
 
@@ -343,18 +340,18 @@
     <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
     <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">पसंदीदा</string>
     <string name="msg_channels">चैनलों</string>
     <string name="msg_users">Users</string> <!-- TODO Translate -->
     <string name="header_private_groups">निजी समूहों</string>
     <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string> <!-- TODO Translate -->
     <string name="header_direct_messages">प्रत्यक्ष संदेश</string>
     <string name="header_live_chats">लाइव चैट</string>
     <string name="header_unknown">अज्ञात</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">साझा संदेश संपादित करें</string>
     <string name="notif_action_reply_hint">जवाब</string>
     <string name="notif_error_sending">उत्तर विफल हुआ है। कृपया फिर से प्रयास करें।</string>
@@ -366,6 +363,8 @@
 
     <!-- User Details -->
     <string name="timezone">समय क्षेत्र</string>
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">जमा करें</string>

@@ -62,16 +62,16 @@
         android:layout_marginEnd="12dp"
         android:textDirection="locale"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/layout_unread_messages_badge"
+        app:layout_constraintEnd_toStartOf="@+id/text_total_unread_messages"
         app:layout_constraintStart_toStartOf="@+id/image_chat_icon"
         app:layout_constraintTop_toBottomOf="@+id/text_chat_name"
         tools:text="Filipe de Lima Brito: Type something that is very long and need at least two lines, or maybe even more" />
 
     <include
-        android:id="@+id/layout_unread_messages_badge"
+        android:id="@+id/text_total_unread_messages"
         layout="@layout/unread_messages_badge"
-        android:layout_width="21dp"
-        android:layout_height="21dp"
+        android:layout_width="21sp"
+        android:layout_height="21sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/text_last_message" />
 

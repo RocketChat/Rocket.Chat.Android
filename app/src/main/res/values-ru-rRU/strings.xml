@@ -70,6 +70,9 @@
     <string name="msg_app_version">Версия программы: %1$s (%2$d)</string>
     <string name="msg_server_version">Версия сервера: %1$s</string>
     <string name="msg_send_analytics">Отправка аналитики</string>
+    <string name="msg_send_analytics_tracking">Отправлять анонимную статистику для улучшения приложения.</string>
+    <string name="msg_do_not_send_analytics_tracking">Не отправлять анонимную статистику для улучшения приложения</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Не применимо, так как это FOSS версия</string>
     <string name="msg_logout_from_rocket_chat">Выйти из Rocket.Chat</string>
     <string name="msg_delete_account">Удалить аккаунт</string>
     <string name="msg_change_status">Изменить статус</string>
@@ -217,12 +220,6 @@
     <string name="msg_member_not_found">Пользователь не найден</string>
     <string name="msg_channel_created_successfully">Канал создан успешно</string>
 
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Отслеживание аналитики</string>
-    <string name="msg_send_analytics_tracking">Отправлять анонимную статистику для улучшения приложения.</string>
-    <string name="msg_do_not_send_analytics_tracking">Не отправлять анонимную статистику для улучшения приложения</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Не применимо, так как это FOSS версия</string>
-
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s изменил название канала на %1$s</string>
     <string name="message_user_added_by">Пользователь %1$s добавлен пользователем %2$s</string>
@@ -299,7 +296,7 @@
     <string name="status_disconnecting">Отключаемся…</string>
     <string name="status_waiting">Соединение через %d секунд</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">Уведомить всех в этом чате</string>
     <string name="suggest_here_description">Уведомить всех активных пользователей в этом чате</string>
 
@@ -326,7 +323,7 @@
     <string name="Guggy_Command_Description">Создает gif на основе предоставленного текста</string>
     <string name="Slash_Topic_Description">Задать тему</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">Пусто</string>
     <string name="alert_title_default_skin_tone">Тон кожи по умолчанию</string>
 
@@ -339,7 +336,7 @@
     <string name="msg_group_by_type">Группировать по типу</string>
     <string name="msg_group_by_favorites">Группировать по избранному</string>
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Избранные</string>
     <string name="msg_channels">Каналы</string>
     <string name="msg_users">Пользователи</string>
@@ -350,7 +347,7 @@
     <string name="header_live_chats">Живые чаты</string>
     <string name="header_unknown">Неизвестные</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">Редактировать сообщение</string>
     <string name="notif_action_reply_hint">ОТВЕТИТЬ</string>
     <string name="notif_error_sending">Не удалось ответить. Пожалуйста, попробуйте еще раз.</string>
@@ -362,6 +359,8 @@
 
     <!-- User Details -->
     <string name="timezone">Часовой пояс</string>
+    <string name="status">Статус: %1$s</string>
+    <string name="user_detail_status">Статус</string>
 
     <!-- Report -->
     <string name="submit">Отправить</string>
