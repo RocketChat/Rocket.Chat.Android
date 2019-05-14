@@ -1,6 +1,7 @@
 package chat.rocket.android.server.infrastructure
 
 import android.content.SharedPreferences
+import java.util.*
 
 private const val CURRENT_LANGUAGE = "current_language"
 private const val CURRENT_LANGUAGE_COUNTRY = "current_language_country"
@@ -16,10 +17,10 @@ class SharedPrefsCurrentLanguageRepository(private val preferences: SharedPrefer
     }
 
     override fun getLanguage(): String? {
-        return preferences.getString(CURRENT_LANGUAGE, "")
+        return preferences.getString(CURRENT_LANGUAGE, Locale.getDefault().language)
     }
 
     override fun getCountry(): String? {
-        return preferences.getString(CURRENT_LANGUAGE_COUNTRY, "")
+        return preferences.getString(CURRENT_LANGUAGE_COUNTRY, Locale.getDefault().country)
     }
 }

@@ -70,6 +70,9 @@
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics_tracking">برای بهبود این کاره آمار ناشناس بفرستید</string>
+    <string name="msg_do_not_send_analytics_tracking">برای بهبود این کاره آمار ناشناس نفرستید</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">قابل اجرا نیست زیرا نسخه‌ی FOSS است</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
@@ -219,12 +222,6 @@
     <string name="msg_view_more">مشاهده‌ی بیشتر</string>
     <string name="msg_view_less">مشاهده‌ی کمتر</string>
     <string name="msg_muted_on_this_channel">آیا این کانال را بی‌صدا کردید؟</string>
-
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">ردگیری تحلیلی</string>
-    <string name="msg_send_analytics_tracking">برای بهبود این کاره آمار ناشناس بفرستید</string>
-    <string name="msg_do_not_send_analytics_tracking">برای بهبود این کاره آمار ناشناس نفرستید</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">قابل اجرا نیست زیرا نسخه‌ی FOSS است</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string> <!-- TODO Add translation -->

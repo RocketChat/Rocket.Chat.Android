@@ -125,6 +125,7 @@ class ChatRoomPresenter @Inject constructor(
     private var lastState = manager.state
     private var typingStatusList = arrayListOf<String>()
     private val roomChangesChannel = Channel<Room>(Channel.CONFLATED)
+    private var lastMessageId: String? = null
     private lateinit var draftKey: String
 
     fun setupChatRoom(
@@ -250,6 +251,7 @@ class ChatRoomPresenter @Inject constructor(
                         isBroadcast = chatIsBroadcast, isRoom = true
                     )
                     )
+                    lastMessageId = localMessages.firstOrNull()?.id
                     val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
                     if (oldMessages.isNotEmpty() && lastSyncDate != null) {
                         view.showMessages(oldMessages, clearDataSet)
@@ -262,7 +264,7 @@ class ChatRoomPresenter @Inject constructor(
                 }
 
                 // TODO: For now we are marking the room as read if we can get the messages (I mean, no exception occurs)
-                // but should mark only when the user see the first unread message.
+                // but should mark only when the user sees the first unread message.
                 markRoomAsRead(chatRoomId)
 
                 subscribeMessages(chatRoomId)
@@ -396,6 +398,7 @@ class ChatRoomPresenter @Inject constructor(
                             throw ex
                         }
                     }
+                    lastMessageId = id
                 } else {
                     client.updateMessage(chatRoomId, messageId, text)
                 }
@@ -1117,6 +1120,31 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
+    fun reactToLastMessage(text: String, roomId: String) {
+        launchUI(strategy) {
+            lastMessageId?.let { messageId ->
+                val emoji = text.substring(1).trimEnd()
+                if (emoji.length >= 2 && emoji.startsWith(":") && emoji.endsWith(":")) {
+                    try {
+                        retryIO("toggleEmoji($messageId, $emoji)") {
+                            client.toggleReaction(messageId, emoji.removeSurrounding(":"))
+                        }
+                        logReactionEvent()
+                        view.clearMessageComposition(true)
+                    } catch (ex: RocketChatException) {
+                        Timber.e(ex)
+                        // emoji is not valid, post it
+                        sendMessage(roomId, text, null)
+                    }
+                } else {
+                    sendMessage(roomId, text, null)
+                }
+            }.ifNull {
+                sendMessage(roomId, text, null)
+            }
+        }
+    }
+
     private fun logReactionEvent() {
         when {
             roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
@@ -1190,18 +1218,19 @@ class ChatRoomPresenter @Inject constructor(
                     sendMessage(roomId, text, null)
                 } else {
                     view.disableSendMessageButton()
-                    val command = text.split(" ")
-                    val name = command[0].substring(1)
+                    val index = text.indexOf(" ")
+                    var name = ""
                     var params = ""
-                    command.forEachIndexed { index, param ->
-                        if (index > 0) {
-                            params += "$param "
-                        }
+                    if (index >= 1) {
+                        name = text.substring(1, index)
+                        params = text.substring(index + 1).trim()
                     }
                     val result = retryIO("runCommand($name, $params, $roomId)") {
                         client.runCommand(Command(name, params), roomId)
                     }
-                    if (!result) {
+                    if (result) {
+                        view.clearMessageComposition(true)
+                    } else {
                         // failed, command is not valid so post it
                         sendMessage(roomId, text, null)
                     }
@@ -1279,8 +1308,8 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             val viewModelStreamedMessage = mapper.map(
                 streamedMessage, RoomUiModel(
-                    roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
-                )
+                roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
+            )
             )
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
@@ -1314,6 +1343,7 @@ class ChatRoomPresenter @Inject constructor(
     fun clearDraftMessage() {
         localRepository.clear(draftKey)
     }
+
     /**
      * Get unfinished message from local repository, when user left chat room without
      * sending a message and now the user is back.

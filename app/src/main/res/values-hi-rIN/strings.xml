@@ -70,6 +70,9 @@
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics_tracking">इस ऐप को बेहतर बनाने में मदद के लिए अज्ञात स्टेटिक्स भेजें</string>
+    <string name="msg_do_not_send_analytics_tracking">इस ऐप को बेहतर बनाने में मदद के लिए अनाम स्टेटिक न भेजें</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">लागू नहीं है क्योंकि यह एक FOSS संस्करण है</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
@@ -220,12 +223,6 @@
     <string name="msg_server">Server</string> <!-- TODO Translate -->
     <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
     <string name="msg_directory">Directory</string> <!-- TODO Translate -->
-
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">एनालिटिक्स ट्रैकिंग</string>
-    <string name="msg_send_analytics_tracking">इस ऐप को बेहतर बनाने में मदद के लिए अज्ञात स्टेटिक्स भेजें</string>
-    <string name="msg_do_not_send_analytics_tracking">इस ऐप को बेहतर बनाने में मदद के लिए अनाम स्टेटिक न भेजें</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">लागू नहीं है क्योंकि यह एक FOSS संस्करण है</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>

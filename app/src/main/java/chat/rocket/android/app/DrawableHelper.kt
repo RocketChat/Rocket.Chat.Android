@@ -86,10 +86,10 @@ object DrawableHelper {
             return
         } else {
             for (i in textView.indices) {
-                if (textView[i].resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR) {
-                    textView[i].setCompoundDrawablesWithIntrinsicBounds(drawables[i], null, null, null)
-                } else {
+                if (textView[i].resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
                     textView[i].setCompoundDrawablesWithIntrinsicBounds(null, null, drawables[i], null)
+                } else {
+                    textView[i].setCompoundDrawablesWithIntrinsicBounds(drawables[i], null, null, null)
                 }
             }
         }
@@ -103,10 +103,10 @@ object DrawableHelper {
      * @see compoundDrawables
      */
     fun compoundStartDrawable(textView: TextView, drawable: Drawable) =
-        if (textView.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR) {
-            textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
-        } else {
+        if (textView.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
             textView.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+        } else {
+            textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         }
 
     /**
@@ -117,10 +117,10 @@ object DrawableHelper {
      * @see compoundStartDrawable
      */
     fun compoundEndDrawable(textView: TextView, drawable: Drawable) =
-        if (textView.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR) {
-            textView.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
-        } else {
+        if (textView.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
             textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+        } else {
+            textView.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
         }
 
     /**
@@ -136,10 +136,10 @@ object DrawableHelper {
         startDrawable: Drawable,
         endDrawable: Drawable
     ) =
-        if (textView.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR) {
-            textView.setCompoundDrawablesWithIntrinsicBounds(startDrawable, null, endDrawable, null)
-        } else {
+        if (textView.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
             textView.setCompoundDrawablesWithIntrinsicBounds(endDrawable, null, startDrawable, null)
+        } else {
+            textView.setCompoundDrawablesWithIntrinsicBounds(startDrawable, null, endDrawable, null)
         }
 
     /**
