@@ -31,32 +31,30 @@ import timber.log.Timber
 import javax.inject.Inject
 
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
-private val LOCALES = arrayOf(
-    "en",
-    "ar",
-    "de",
-    "es",
-    "fa",
-    "fr",
-    "hi,IN",
-    "it",
-    "ja",
-    "pt,BR",
-    "pt,PT",
-    "ru,RU",
-    "tr",
-    "uk",
-    "zh,CN",
-    "zh,TW"
-)
 
 fun newInstance(): Fragment = SettingsFragment()
 
 class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
-    @Inject
-    lateinit var presenter: SettingsPresenter
+    @Inject lateinit var analyticsManager: AnalyticsManager
+    @Inject lateinit var presenter: SettingsPresenter
+    private val locales = arrayListOf(
+        "en",
+        "ar",
+        "de",
+        "es",
+        "fa",
+        "fr",
+        "hi,IN",
+        "it",
+        "ja",
+        "pt,BR",
+        "pt,PT",
+        "ru,RU",
+        "tr",
+        "uk",
+        "zh,CN",
+        "zh,TW"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -185,7 +183,7 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
         context?.let {
             val selectedLocale = presenter.getCurrentLocale(it)
             var localeIndex = -1
-            LOCALES.forEachIndexed { index, locale ->
+            locales.forEachIndexed { index, locale ->
                 val array = locale.split(",")
                 val language = array[0]
                 val country = if (array.size > 1) array[1] else ""
@@ -205,7 +203,7 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
                 .setSingleChoiceItems(
                     resources.getStringArray(R.array.languages), localeIndex
                 ) { dialog, option ->
-                    val array = LOCALES[option].split(",")
+                    val array = locales[option].split(",")
                     if (array.size > 1) {
                         updateLanguage(array[0], array[1])
                     } else {
