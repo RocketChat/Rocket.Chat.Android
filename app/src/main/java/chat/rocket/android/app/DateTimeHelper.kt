@@ -37,7 +37,7 @@ object DateTimeHelper {
     fun getDate(localDateTime: LocalDateTime, context: Context): String {
         val localDate = localDateTime.toLocalDate()
         return when (localDate) {
-            today -> formatLocalTime(localDateTime.toLocalTime())
+            today -> formatLocalTime(localDateTime.toLocalTime(), localDate)
             yesterday -> context.getString(R.string.msg_yesterday)
             else -> {
                 if (Period.between(lastWeek, localDate).days <= 0) {
@@ -89,8 +89,9 @@ object DateTimeHelper {
         return localDate.format(formatter).toString()
     }
 
-    private fun formatLocalTime(localTime: LocalTime): String {
+    private fun formatLocalTime(localTime: LocalTime, localDate: LocalDate): String {
         val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
-        return localTime.format(formatter).toString()
+        val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
+        return localTime.format(formatter).toString() +" "+ localDate.format(dateFormatter).toString()
     }
 }
