@@ -9,7 +9,7 @@ import chat.rocket.android.chatrooms.adapter.LoadingItemHolder
 import chat.rocket.android.chatrooms.adapter.RoomUiModelMapper
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.chatrooms.infrastructure.ChatRoomsRepository
-import chat.rocket.android.server.infraestructure.ConnectionManager
+import chat.rocket.android.server.infrastructure.ConnectionManager
 import chat.rocket.android.util.livedata.transform
 import chat.rocket.android.util.livedata.wrap
 import chat.rocket.android.util.retryIO
@@ -140,8 +140,10 @@ sealed class LoadingState {
 }
 
 sealed class Query {
-    data class ByActivity(val grouped: Boolean = false) : Query()
-    data class ByName(val grouped: Boolean = false) : Query()
+
+    data class ByActivity(val grouped: Boolean = false, val unreadOnTop: Boolean = false) : Query()
+    data class ByName(val grouped: Boolean = false, val unreadOnTop: Boolean = false ) : Query()
+
     data class Search(val query: String) : Query()
 }
 
@@ -155,19 +157,41 @@ fun Query.isGrouped(): Boolean {
     }
 }
 
+fun Query.isUnreadOnTop(): Boolean {
+    return when(this) {
+        is Query.Search -> false
+        is Query.ByName -> unreadOnTop
+        is Query.ByActivity -> unreadOnTop
+    }
+}
+
 fun Query.asSortingOrder(): ChatRoomsRepository.Order {
     return when(this) {
         is Query.ByName -> {
-            if (grouped) {
+            if (grouped  && !unreadOnTop) {
                 ChatRoomsRepository.Order.GROUPED_NAME
-            } else {
+            }
+            else if(unreadOnTop && !grouped){
+                ChatRoomsRepository.Order.UNREAD_ON_TOP_NAME
+            }
+            else if(unreadOnTop && grouped){
+                ChatRoomsRepository.Order.UNREAD_ON_TOP_GROUPED_NAME
+            }
+            else {
                 ChatRoomsRepository.Order.NAME
             }
         }
         is Query.ByActivity -> {
-            if (grouped) {
+            if (grouped && !unreadOnTop) {
                 ChatRoomsRepository.Order.GROUPED_ACTIVITY
-            } else {
+            }
+            else if(unreadOnTop && !grouped){
+                ChatRoomsRepository.Order.UNREAD_ON_TOP_ACTIVITY
+            }
+            else if(unreadOnTop && grouped){
+                ChatRoomsRepository.Order.UNREAD_ON_TOP_GROUPED_ACTIVITY
+            }
+            else {
                 ChatRoomsRepository.Order.ACTIVITY
             }
         }

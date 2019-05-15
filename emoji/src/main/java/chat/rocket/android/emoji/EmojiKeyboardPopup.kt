@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.viewpager.widget.ViewPager
 import chat.rocket.android.emoji.internal.EmojiCategory
 import chat.rocket.android.emoji.internal.EmojiPagerAdapter
 import chat.rocket.android.emoji.internal.PREF_EMOJI_SKIN_TONE
@@ -27,7 +26,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow(context, view) {
-    private lateinit var viewPager: ViewPager
+    private lateinit var viewPager: EmojiViewPager
     private lateinit var tabLayout: TabLayout
     private lateinit var searchView: View
     private lateinit var backspaceView: View
@@ -155,7 +154,7 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
                     val fragments = (it as AppCompatActivity).supportFragmentManager.fragments
                     if (fragments.size == 0 || fragments[0] !is EmojiKeyboardListener) {
                         // Since the app can arrive in an inconsistent state at this point, do not throw
-//                        throw IllegalStateException("activity/fragment should implement Listener interface")
+                        // throw IllegalStateException("activity/fragment should implement Listener interface")
                         null
                     } else {
                         fragments[0] as EmojiKeyboardListener
@@ -177,8 +176,8 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
                 val tab = tabLayout.getTabAt(category.ordinal)
                 val tabView = LayoutInflater.from(context).inflate(R.layout.emoji_picker_tab, null)
                 tab?.customView = tabView
-                val textView = tabView.findViewById(R.id.image_category) as ImageView
-                textView.setImageResource(category.resourceIcon())
+                val imageView = tabView.findViewById(R.id.image_category) as ImageView
+                imageView.setImageResource(category.resourceIcon())
             }
 
             val currentTab = if (EmojiRepository.getRecents().isEmpty()) {
@@ -186,7 +185,6 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
             } else {
                 EmojiCategory.RECENTS.ordinal
             }
-
             viewPager.currentItem = currentTab
         }
     }
@@ -203,7 +201,7 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
                 val start = message.getSpanStart(span)
                 val end = message.getSpanEnd(span)
 
-                // Remove the span
+                // Remove the span.
                 message.removeSpan(span)
 
                 // Remove the remaining emoticon text.

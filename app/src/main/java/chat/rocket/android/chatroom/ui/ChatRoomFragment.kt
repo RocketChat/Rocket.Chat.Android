@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -28,14 +29,17 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.chatroom.adapter.AttachmentViewHolder
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.adapter.CommandSuggestionsAdapter
 import chat.rocket.android.chatroom.adapter.EmojiSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.MessageViewHolder
 import chat.rocket.android.chatroom.adapter.PEOPLE
 import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter
 import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter
@@ -61,11 +65,16 @@ import chat.rocket.android.emoji.EmojiPickerPopup
 import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.emoji.internal.isCustom
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
-import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
+import chat.rocket.android.helper.AndroidPermissionsHelper
+import chat.rocket.android.helper.AndroidPermissionsHelper.getCameraPermission
+import chat.rocket.android.helper.AndroidPermissionsHelper.getWriteExternalStoragePermission
+import chat.rocket.android.helper.AndroidPermissionsHelper.hasCameraPermission
+import chat.rocket.android.helper.AndroidPermissionsHelper.hasWriteExternalStoragePermission
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.createImageFile
+import chat.rocket.android.util.extension.orFalse
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
 import chat.rocket.android.util.extensions.clearLightStatusBar
 import chat.rocket.android.util.extensions.fadeIn
@@ -81,6 +90,7 @@ import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -149,7 +159,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     lateinit var analyticsManager: AnalyticsManager
     @Inject
     lateinit var navigator: ChatRoomNavigator
-    private lateinit var adapter: ChatRoomAdapter
+    private lateinit var chatRoomAdapter: ChatRoomAdapter
     internal lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     internal lateinit var chatRoomType: String
@@ -268,7 +278,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        setHasOptionsMenu(true)
 
         arguments?.run {
             chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")
@@ -283,7 +292,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
             ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
 
-        adapter = ChatRoomAdapter(
+        chatRoomAdapter = ChatRoomAdapter(
             roomId = chatRoomId,
             roomType = chatRoomType,
             roomName = chatRoomName,
@@ -292,6 +301,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             navigator = navigator,
             analyticsManager = analyticsManager
         )
+
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -380,7 +391,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showMessages(dataSet: List<BaseUiModel<*>>, clearDataSet: Boolean) {
         ui {
             if (clearDataSet) {
-                adapter.clearData()
+                chatRoomAdapter.clearData()
             }
 
             if (dataSet.isNotEmpty()) {
@@ -421,35 +432,22 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }
             }
 
-            if (recycler_view.adapter == null) {
-                recycler_view.adapter = adapter
-                if (dataSet.size >= 30) {
-                    recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
-                }
-                recycler_view.addOnLayoutChangeListener(layoutChangeListener)
-                recycler_view.addOnScrollListener(onScrollListener)
-
-                // Load just once, on the first page...
-                presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
-            }
-
-            val oldMessagesCount = adapter.itemCount
-            adapter.appendData(dataSet)
+            val oldMessagesCount = chatRoomAdapter.itemCount
+            chatRoomAdapter.appendData(dataSet)
             if (oldMessagesCount == 0 && dataSet.isNotEmpty()) {
                 recycler_view.scrollToPosition(0)
                 verticalScrollOffset.set(0)
             }
-            presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
-            empty_chat_view.isVisible = adapter.itemCount == 0
+            empty_chat_view.isVisible = chatRoomAdapter.itemCount == 0
             dismissEmojiKeyboard()
         }
     }
 
     override fun showSearchedMessages(dataSet: List<BaseUiModel<*>>) {
         recycler_view.removeOnScrollListener(endlessRecyclerViewScrollListener)
-        adapter.clearData()
-        adapter.prependData(dataSet)
-        empty_chat_view.isVisible = adapter.itemCount == 0
+        chatRoomAdapter.clearData()
+        chatRoomAdapter.prependData(dataSet)
+        empty_chat_view.isVisible = chatRoomAdapter.itemCount == 0
         dismissEmojiKeyboard()
     }
 
@@ -460,21 +458,21 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             setupToolbar(roomUiModel.name.toString())
             setupMessageComposer(roomUiModel)
             isBroadcastChannel = roomUiModel.broadcast
-            if (isBroadcastChannel && !roomUiModel.canModerate) {
-                disableMenu = true
-                activity?.invalidateOptionsMenu()
-            }
+            isFavorite = roomUiModel.favorite.orFalse()
+            disableMenu = (roomUiModel.broadcast && !roomUiModel.canModerate)
+            activity?.invalidateOptionsMenu()
         }
     }
-
 
     override fun sendMessage(text: String) {
         ui {
             if (!text.isBlank()) {
-                if (!text.startsWith("/")) {
-                    presenter.sendMessage(chatRoomId, text, editingMessageId)
-                } else {
+                if (text.startsWith("/")) {
                     presenter.runCommand(text, chatRoomId)
+                } else if (text.startsWith("+")) {
+                    presenter.reactToLastMessage(text, chatRoomId)
+                } else {
+                    presenter.sendMessage(chatRoomId, text, editingMessageId)
                 }
             }
         }
@@ -519,7 +517,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-
     override fun clearMessageComposition(deleteMessage: Boolean) {
         ui {
             citation = null
@@ -533,7 +530,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun showNewMessage(message: List<BaseUiModel<*>>, isMessageReceived: Boolean) {
         ui {
-            adapter.prependData(message)
+            chatRoomAdapter.prependData(message)
             if (isMessageReceived && button_fab.isVisible) {
                 newMessageCount++
                 if (newMessageCount <= 99) {
@@ -546,7 +543,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 recycler_view.scrollToPosition(0)
             }
             verticalScrollOffset.set(0)
-            empty_chat_view.isVisible = adapter.itemCount == 0
+            empty_chat_view.isVisible = chatRoomAdapter.itemCount == 0
             dismissEmojiKeyboard()
         }
     }
@@ -556,9 +553,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             // TODO - investigate WHY we get a empty list here
             if (message.isEmpty()) return@ui
 
-            if (adapter.updateItem(message.last())) {
+            if (chatRoomAdapter.updateItem(message.last())) {
                 if (message.size > 1) {
-                    adapter.prependData(listOf(message.first()))
+                    chatRoomAdapter.prependData(listOf(message.first()))
                 }
             } else {
                 showNewMessage(message, true)
@@ -569,7 +566,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun dispatchDeleteMessage(msgId: String) {
         ui {
-            adapter.removeItem(msgId)
+            chatRoomAdapter.removeItem(msgId)
         }
     }
 
@@ -596,45 +593,31 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun showMessage(message: String) {
-        ui {
-            showToast(message)
-        }
+        ui { showToast(message) }
     }
 
     override fun showMessage(resId: Int) {
-        ui {
-            showToast(resId)
-        }
+        ui { showToast(resId) }
     }
 
     override fun showGenericErrorMessage() {
-        ui {
-            showMessage(getString(R.string.msg_generic_error))
-        }
+        ui { showMessage(getString(R.string.msg_generic_error)) }
     }
 
     override fun populatePeopleSuggestions(members: List<PeopleSuggestionUiModel>) {
-        ui {
-            suggestions_view.addItems("@", members)
-        }
+        ui { suggestions_view.addItems("@", members) }
     }
 
     override fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionUiModel>) {
-        ui {
-            suggestions_view.addItems("#", chatRooms)
-        }
+        ui { suggestions_view.addItems("#", chatRooms) }
     }
 
     override fun populateCommandSuggestions(commands: List<CommandSuggestionUiModel>) {
-        ui {
-            suggestions_view.addItems("/", commands)
-        }
+        ui { suggestions_view.addItems("/", commands) }
     }
 
     override fun populateEmojiSuggestions(emojis: List<EmojiSuggestionUiModel>) {
-        ui {
-            suggestions_view.addItems(":", emojis)
-        }
+        ui { suggestions_view.addItems(":", emojis) }
     }
 
     override fun copyToClipboard(message: String) {
@@ -812,7 +795,56 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
             }
         }
-        recycler_view.addOnScrollListener(fabScrollListener)
+
+        with (recycler_view) {
+            adapter = chatRoomAdapter
+            addOnScrollListener(endlessRecyclerViewScrollListener)
+            addOnLayoutChangeListener(layoutChangeListener)
+            addOnScrollListener(onScrollListener)
+            addOnScrollListener(fabScrollListener)
+        }
+        if (!isReadOnly) {
+            val touchCallback: ItemTouchHelper.SimpleCallback =
+                object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                    override fun onMove(
+                        recyclerView: RecyclerView,
+                        viewHolder: RecyclerView.ViewHolder,
+                        target: RecyclerView.ViewHolder
+                    ): Boolean {
+                        return true
+                    }
+
+                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                        var replyId: String? = null
+
+                        when (viewHolder) {
+                            is MessageViewHolder -> replyId = viewHolder.data?.messageId
+                            is AttachmentViewHolder -> replyId = viewHolder.data?.messageId
+                        }
+
+                        replyId?.let {
+                            citeMessage(chatRoomName, chatRoomType, it, true)
+                        }
+
+                        chatRoomAdapter.notifyItemChanged(viewHolder.adapterPosition)
+                    }
+
+                    override fun getSwipeDirs(
+                        recyclerView: RecyclerView,
+                        viewHolder: RecyclerView.ViewHolder
+                    ): Int {
+                        // Currently enable swipes for text and attachment messages only
+
+                        if (viewHolder is MessageViewHolder || viewHolder is AttachmentViewHolder) {
+                            return super.getSwipeDirs(recyclerView, viewHolder)
+                        }
+
+                        return 0
+                    }
+                }
+
+            ItemTouchHelper(touchCallback).attachToRecyclerView(recycler_view)
+        }
     }
 
     private fun setupFab() {
@@ -903,8 +935,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_add_reaction_or_show_keyboard.setOnClickListener { toggleKeyboard() }
 
             button_take_a_photo.setOnClickListener {
-                dispatchTakePictureIntent()
-
+                // Check for camera permission
+                context?.let {
+                    if (hasCameraPermission(it)) {
+                        dispatchTakePictureIntent()
+                    } else {
+                        getCameraPermission(this)
+                    }
+                }
                 handler.postDelayed({
                     hideAttachmentOptions()
                 }, 400)
@@ -922,11 +960,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             button_drawing.setOnClickListener {
                 activity?.let { fragmentActivity ->
-                    if (!ImageHelper.canWriteToExternalStorage(fragmentActivity)) {
-                        ImageHelper.checkWritingPermission(fragmentActivity)
+                    if (!hasWriteExternalStoragePermission(fragmentActivity)) {
+                        getWriteExternalStoragePermission(this)
                     } else {
-                        val intent = Intent(fragmentActivity, DrawingActivity::class.java)
-                        startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
+                        dispatchDrawingIntent()
                     }
                 }
 
@@ -935,6 +972,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }, 400)
             }
         }
+    }
+
+    private fun dispatchDrawingIntent() {
+        val intent = Intent(activity, DrawingActivity::class.java)
+        startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
     }
 
     private fun dispatchTakePictureIntent() {
@@ -953,6 +995,44 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 )
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, takenPhotoUri)
                 startActivityForResult(takePictureIntent, REQUEST_CODE_FOR_PERFORM_CAMERA)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            AndroidPermissionsHelper.CAMERA_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    dispatchTakePictureIntent()
+                } else {
+                    // permission denied
+                    Snackbar.make(
+                        root_layout,
+                        R.string.msg_camera_permission_denied,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+                return
+            }
+            AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    dispatchDrawingIntent()
+                } else {
+                    // permission denied
+                    Snackbar.make(
+                        root_layout,
+                        R.string.msg_storage_permission_denied,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+                return
             }
         }
     }

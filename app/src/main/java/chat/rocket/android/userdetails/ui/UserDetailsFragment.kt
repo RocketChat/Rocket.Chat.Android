@@ -20,6 +20,7 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -78,14 +79,17 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     }
 
     override fun showUserDetailsAndActions(
-        avatarUrl: String,
-        name: String,
-        username: String,
-        status: String,
-        utcOffset: String,
+        avatarUrl: String?,
+        name: String?,
+        username: String?,
+        status: String?,
+        utcOffset: String?,
         isVideoCallAllowed: Boolean
     ) {
-        val requestBuilder = Glide.with(this).load(avatarUrl)
+        val requestBuilder = Glide.with(this)
+            .load(avatarUrl)
+            .apply(RequestOptions.skipMemoryCacheOf(true))
+            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
 
         requestBuilder.apply(
             RequestOptions.bitmapTransform(MultiTransformation(BlurTransformation(), CenterCrop()))
@@ -94,19 +98,21 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         requestBuilder.apply(RequestOptions.bitmapTransform(RoundedCorners(14)))
             .into(image_avatar)
 
-        text_name.text = name
-        text_username.text = username
-        text_description_status.text = status.substring(0, 1).toUpperCase() + status.substring(1)
-        text_description_timezone.text = utcOffset
+        text_name.text = name ?: getString(R.string.msg_unknown)
+        text_username.text = username ?: getString(R.string.msg_unknown)
+
+        text_description_status.text = status?.capitalize() ?: getString(R.string.msg_unknown)
+
+        text_description_timezone.text = utcOffset ?: getString(R.string.msg_unknown)
+
+        text_video_call.isVisible = isVideoCallAllowed
 
         // We should also setup the user details listeners.
-        text_message.setOnClickListener { presenter.createDirectMessage(username) }
-
-        if (isVideoCallAllowed) {
-            text_video_call.isVisible = true
-            text_video_call.setOnClickListener { presenter.toVideoConference(username) }
-        } else {
-            text_video_call.isVisible = false
+        username?.run {
+            text_message.setOnClickListener { presenter.createDirectMessage(this) }
+            if (isVideoCallAllowed) {
+                text_video_call.setOnClickListener { presenter.toVideoConference(this) }
+            }
         }
     }
 

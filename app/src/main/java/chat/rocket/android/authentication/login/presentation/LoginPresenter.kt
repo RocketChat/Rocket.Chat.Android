@@ -15,8 +15,9 @@ import chat.rocket.android.server.domain.favicon
 import chat.rocket.android.server.domain.isLdapAuthenticationEnabled
 import chat.rocket.android.server.domain.isPasswordResetEnabled
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.server.domain.siteName
 import chat.rocket.android.server.domain.wideTile
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.isEmail
@@ -50,6 +51,7 @@ class LoginPresenter @Inject constructor(
 ) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
     private var currentServer = serverInteractor.get()!!
+    private val token = tokenRepository.get(currentServer)
     private lateinit var client: RocketChatClient
     private lateinit var settings: PublicSettings
 
@@ -60,7 +62,7 @@ class LoginPresenter @Inject constructor(
 
     private fun setupConnectionInfo(serverUrl: String) {
         currentServer = serverUrl
-        client = factory.create(currentServer)
+        client = factory.get(currentServer)
         settings = settingsInteractor.get(currentServer)
     }
 
@@ -140,8 +142,15 @@ class LoginPresenter @Inject constructor(
         val logo = settings.wideTile()?.let {
             currentServer.serverLogoUrl(it)
         }
-        val thumb = currentServer.avatarUrl(username)
-        val account = Account(currentServer, icon, logo, username, thumb)
+        val thumb = currentServer.avatarUrl(username, token?.userId, token?.authToken)
+        val account = Account(
+            settings.siteName() ?: currentServer,
+            currentServer,
+            icon,
+            logo,
+            username,
+            thumb
+        )
         saveAccountInteractor.save(account)
     }
 

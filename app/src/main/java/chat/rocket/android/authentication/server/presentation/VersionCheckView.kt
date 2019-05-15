@@ -26,7 +26,7 @@ interface VersionCheckView {
     fun versionOk() {}
 
     /**
-     * Alters the user this protocol is invalid. This is optional.
+     * Alters the user that this protocol is invalid. This is optional.
      */
     fun errorInvalidProtocol() {}
 

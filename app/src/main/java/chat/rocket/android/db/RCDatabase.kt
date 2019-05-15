@@ -32,7 +32,7 @@ import chat.rocket.android.emoji.internal.db.StringListConverter
         ReactionEntity::class,
         MessagesSync::class
     ],
-    version = 12,
+    version = 13,
     exportSchema = true
 )
 @TypeConverters(StringListConverter::class)
