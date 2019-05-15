@@ -73,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="32dp"
                 android:drawableStart="@drawable/ic_email_black_20dp"
                 android:hint="@string/msg_email"
                 android:inputType="textEmailAddress" />
