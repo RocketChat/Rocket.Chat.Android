@@ -36,10 +36,17 @@
                 android:layout_marginTop="32dp" />
 
             <TextView
+                android:id="@+id/text_status"
+                style="@style/Profile.TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/status" />
+
+            <TextView
+                style="@style/Profile.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Profile.TextView"
-                android:text="@string/msg_name"/>
+                android:text="@string/msg_name" />
 
             <EditText
                 android:id="@+id/text_name"
@@ -50,10 +57,10 @@
                 android:inputType="textCapWords" />
 
             <TextView
+                style="@style/Profile.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Profile.TextView"
-                android:text="@string/msg_username"/>
+                android:text="@string/msg_username" />
 
             <EditText
                 android:id="@+id/text_username"
@@ -64,10 +71,10 @@
                 android:inputType="text" />
 
             <TextView
+                style="@style/Profile.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Profile.TextView"
-                android:text="@string/msg_email"/>
+                android:text="@string/msg_email" />
 
             <EditText
                 android:id="@+id/text_email"
