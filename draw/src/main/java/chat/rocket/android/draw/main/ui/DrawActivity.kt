@@ -44,6 +44,7 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
             .show()
     }
 
+
     private fun setupListeners() {
         custom_draw_view.setOnTouchListener { view, event ->
             custom_draw_view.onTouch(
