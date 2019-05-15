@@ -74,4 +74,34 @@ class AnswersAnalytics : Analytics {
                 CustomEvent("reset_password")
                     .putCustomAttribute("resetPasswordSucceeded", resetPasswordSucceeded.toString())
             )
+
+    override fun logVideoConference(event: SubscriptionTypeEvent, serverUrl: String) =
+        Answers.getInstance()
+            .logCustom(
+                CustomEvent("video_conference")
+                    .putCustomAttribute("subscription_type", event.subscriptionTypeName)
+                    .putCustomAttribute("server", serverUrl)
+            )
+
+    override fun logMessageActionAddReaction() = Answers.getInstance().logCustom(CustomEvent("message_action_add_reaction"))
+
+    override fun logMessageActionReply() = Answers.getInstance().logCustom(CustomEvent("message_action_reply"))
+
+    override fun logMessageActionQuote() = Answers.getInstance().logCustom(CustomEvent("message_action_quote"))
+
+    override fun logMessageActionPermalink() = Answers.getInstance().logCustom(CustomEvent("message_action_permalink"))
+
+    override fun logMessageActionCopy() = Answers.getInstance().logCustom(CustomEvent("message_action_copy"))
+
+    override fun logMessageActionEdit() = Answers.getInstance().logCustom(CustomEvent("message_action_edit"))
+
+    override fun logMessageActionInfo() = Answers.getInstance().logCustom(CustomEvent("message_action_info"))
+
+    override fun logMessageActionStar() = Answers.getInstance().logCustom(CustomEvent("message_action_star"))
+
+    override fun logMessageActionPin() = Answers.getInstance().logCustom(CustomEvent("message_action_pin"))
+
+    override fun logMessageActionReport() = Answers.getInstance().logCustom(CustomEvent("message_action_report"))
+
+    override fun logMessageActionDelete() = Answers.getInstance().logCustom(CustomEvent("message_action_delete"))
 }

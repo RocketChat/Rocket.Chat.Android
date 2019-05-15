@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:paddingStart="@dimen/screen_edge_left_and_right_padding"
+    android:paddingTop="8dp"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+    android:paddingBottom="8dp">
+
+    <ImageView
+        android:id="@+id/image_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars[6]" />
+
+    <TextView
+        android:id="@+id/text_user_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="10dp"
+        android:fontFamily="sans-serif-medium"
+        android:maxLines="1"
+        android:textColor="#0c0d0f"
+        android:textSize="17sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toStartOf="@+id/text_server_url"
+        app:layout_constraintLeft_toRightOf="@+id/image_avatar"
+        app:layout_constraintStart_toEndOf="@+id/image_avatar"
+        app:layout_constraintTop_toTopOf="@+id/image_avatar"
+        tools:text="User" />
+
+    <TextView
+        android:id="@+id/text_user_username"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:fontFamily="sans-serif"
+        android:maxLines="1"
+        android:textColor="#9ea2a8"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toStartOf="@+id/text_server_url"
+        app:layout_constraintStart_toStartOf="@+id/text_user_name"
+        app:layout_constraintTop_toBottomOf="@+id/text_user_name"
+        tools:text="Username" />
+
+    <!-- We only show the server url if the user is searching for global users-->
+    <TextView
+        android:id="@+id/text_server_url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:maxLines="1"
+        android:textColor="#9da2a9"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/text_user_username"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text_user_name"
+        tools:text="230K members" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

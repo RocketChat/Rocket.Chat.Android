@@ -6,8 +6,8 @@ import android.os.Environment
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import kotlinx.coroutines.experimental.DefaultDispatcher
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -25,11 +25,10 @@ import java.util.*
 suspend fun Bitmap.compressImageAndGetInputStream(mimeType: String): InputStream? {
     var inputStream: InputStream? = null
 
-    withContext(DefaultDispatcher) {
+    withContext(Dispatchers.Default) {
         val byteArrayOutputStream = ByteArrayOutputStream()
         // TODO: Add an option the the app to the user be able to select the quality of the compressed image
-        val isCompressed =
-            this.compress(mimeType.getCompressFormat(), 70, byteArrayOutputStream)
+        val isCompressed = compress(mimeType.getCompressFormat(), 70, byteArrayOutputStream)
         if (isCompressed) {
             inputStream = ByteArrayInputStream(byteArrayOutputStream.toByteArray())
         }
@@ -74,10 +73,9 @@ suspend fun Bitmap.getByteArray(
 suspend fun Bitmap.compressImageAndGetByteArray(mimeType: String, quality: Int = 100): ByteArray? {
     var byteArray: ByteArray? = null
 
-    withContext(DefaultDispatcher) {
+    withContext(Dispatchers.Default) {
         val byteArrayOutputStream = ByteArrayOutputStream()
-        val isCompressed =
-            this.compress(mimeType.getCompressFormat(), quality, byteArrayOutputStream)
+        val isCompressed = compress(mimeType.getCompressFormat(), quality, byteArrayOutputStream)
         if (isCompressed) {
             byteArray = byteArrayOutputStream.toByteArray()
         }

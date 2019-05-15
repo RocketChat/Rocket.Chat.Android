@@ -10,15 +10,14 @@ import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.db.ChatRoomDao
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.UserDao
-import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentUserInteractor
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.infraestructure.ConnectionManager
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.ConnectionManager
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.core.RocketChatClient
 import dagger.Module
 import dagger.Provides
@@ -45,7 +44,7 @@ class ChatRoomsFragmentModule {
         factory: RocketChatClientFactory,
         @Named("currentServer") currentServer: String
     ): RocketChatClient {
-        return factory.create(currentServer)
+        return factory.get(currentServer)
     }
 
     @Provides
@@ -87,12 +86,20 @@ class ChatRoomsFragmentModule {
     @PerFragment
     fun provideRoomMapper(
         context: Application,
-        repository: SettingsRepository,
+        settingsRepository: SettingsRepository,
         userInteractor: GetCurrentUserInteractor,
+        tokenRepository: TokenRepository,
         @Named("currentServer") serverUrl: String,
         permissionsInteractor: PermissionsInteractor
     ): RoomUiModelMapper {
-        return RoomUiModelMapper(context, repository.get(serverUrl), userInteractor, serverUrl, permissionsInteractor)
+        return RoomUiModelMapper(
+            context,
+            settingsRepository.get(serverUrl),
+            userInteractor,
+            tokenRepository,
+            serverUrl,
+            permissionsInteractor
+        )
     }
 
     @Provides

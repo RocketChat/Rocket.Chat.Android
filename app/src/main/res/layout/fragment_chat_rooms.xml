@@ -1,59 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".chatrooms.ui.ChatRoomsFragment">
 
+    <include
+        android:id="@+id/layout_app_bar_chat_room"
+        layout="@layout/app_bar_chat_rooms"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_directory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_directory_48dp"
+        android:drawablePadding="10dp"
+        android:fontFamily="sans-serif"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingTop="32dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="32dp"
+        android:text="@string/msg_directory"
+        android:textColor="#0c0d0f"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_app_bar_chat_room" />
+
+    <TextView
+        android:id="@+id/text_sort_by"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="#54585E"
+        android:drawableEnd="@drawable/ic_group_by_type_20dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/screen_edge_left_and_right_margins"
+        android:paddingEnd="@dimen/screen_edge_left_and_right_margins"
+        android:text="@string/msg_sort_by_placeholder"
+        android:textColor="#CBCED1"
+        android:textSize="14sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_directory" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:layout_below="@+id/text_connection_status"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_sort_by" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:visibility="gone"
         app:indicatorColor="@color/colorBlack"
-        app:indicatorName="BallPulseIndicator" />
-
-    <TextView
-        android:id="@+id/text_no_data_to_display"
-        style="@style/TextAppearance.AppCompat.Subhead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/msg_no_data_to_display"
-        android:visibility="gone"
+        app:indicatorName="BallPulseIndicator"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_sort_by"
         tools:visibility="visible" />
 
-    <TextView
-        android:id="@+id/text_connection_status"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:alpha="0"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="@color/colorWhite"
-        android:visibility="gone"
-        tools:alpha="1"
-        tools:text="connected"
-        tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/text_no_result_found"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="56dp"
-        android:text="@string/msg_no_search_found"
-        android:textSize="20sp"
-        android:visibility="gone"
-        tools:visibility="visible" />
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

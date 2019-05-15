@@ -27,11 +27,9 @@ import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_members.*
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String): Fragment {
-    return MembersFragment().apply {
-        arguments = Bundle(1).apply {
-            putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-        }
+fun newInstance(chatRoomId: String): Fragment = MembersFragment().apply {
+    arguments = Bundle(1).apply {
+        putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
     }
 }
 
@@ -52,12 +50,9 @@ class MembersFragment : Fragment(), MembersView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        val bundle = arguments
-        if (bundle != null) {
-            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
-        } else {
-            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
-        }
+        arguments?.run {
+            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")
+        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
 
     override fun onCreateView(
@@ -80,7 +75,7 @@ class MembersFragment : Fragment(), MembersView {
             setupToolbar(total)
             if (adapter.itemCount == 0) {
                 adapter.prependData(dataSet)
-                if (dataSet.size >= 59) { // TODO Check why the API retorns the specified count -1
+                if (dataSet.size >= 59) { // TODO Check why the API returns the specified count -1
                     recycler_view.addOnScrollListener(object :
                         EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(
@@ -107,15 +102,11 @@ class MembersFragment : Fragment(), MembersView {
     }
 
     override fun showMessage(resId: Int) {
-        ui {
-            showToast(resId)
-        }
+        ui { showToast(resId) }
     }
 
     override fun showMessage(message: String) {
-        ui {
-            showToast(message)
-        }
+        ui { showToast(message) }
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
@@ -136,9 +127,9 @@ class MembersFragment : Fragment(), MembersView {
     private fun setupToolbar(totalMembers: Long? = null) {
         with((activity as ChatRoomActivity)) {
             if (totalMembers != null) {
-                showToolbarTitle((getString(R.string.title_counted_members, totalMembers)))
+                setupToolbarTitle((getString(R.string.title_counted_members, totalMembers)))
             } else {
-                showToolbarTitle((getString(R.string.title_members)))
+                setupToolbarTitle((getString(R.string.title_members)))
             }
             this.clearLightStatusBar()
             toolbar.isVisible = true

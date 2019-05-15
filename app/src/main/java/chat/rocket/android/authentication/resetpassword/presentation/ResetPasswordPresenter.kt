@@ -3,7 +3,7 @@ package chat.rocket.android.authentication.resetpassword.presentation
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetConnectingServerInteractor
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
@@ -21,7 +21,7 @@ class ResetPasswordPresenter @Inject constructor(
     serverInteractor: GetConnectingServerInteractor
 ) {
     private val currentServer = serverInteractor.get()!!
-    private val client: RocketChatClient = factory.create(currentServer)
+    private val client: RocketChatClient = factory.get(currentServer)
 
     fun resetPassword(email: String) {
         launchUI(strategy) {

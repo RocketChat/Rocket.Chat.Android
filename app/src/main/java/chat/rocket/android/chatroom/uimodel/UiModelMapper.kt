@@ -30,7 +30,7 @@ import chat.rocket.android.server.domain.baseUrl
 import chat.rocket.android.server.domain.messageReadReceiptEnabled
 import chat.rocket.android.server.domain.messageReadReceiptStoreUsers
 import chat.rocket.android.server.domain.useRealName
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.isImage
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.ifNotNullNorEmpty
@@ -44,8 +44,8 @@ import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.attachment.Field
 import chat.rocket.core.model.isSystemMessage
 import chat.rocket.core.model.url.Url
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
 import java.security.InvalidParameterException
 import java.util.*
@@ -79,7 +79,7 @@ class UiModelMapper @Inject constructor(
         message: Message,
         roomUiModel: RoomUiModel = RoomUiModel(roles = emptyList(), isBroadcast = true)
     ): List<BaseUiModel<*>> =
-        withContext(CommonPool) {
+        withContext(Dispatchers.IO) {
             return@withContext translate(message, roomUiModel)
         }
 
@@ -88,7 +88,7 @@ class UiModelMapper @Inject constructor(
         roomUiModel: RoomUiModel = RoomUiModel(roles = emptyList(), isBroadcast = true),
         asNotReversed: Boolean = false
     ): List<BaseUiModel<*>> =
-        withContext(CommonPool) {
+        withContext(Dispatchers.IO) {
             val list = ArrayList<BaseUiModel<*>>(messages.size)
 
             messages.forEach {
@@ -102,13 +102,13 @@ class UiModelMapper @Inject constructor(
 
     suspend fun map(
         readReceipts: List<ReadReceipt>
-    ): List<ReadReceiptViewModel> = withContext(CommonPool) {
+    ): List<ReadReceiptViewModel> = withContext(Dispatchers.IO) {
         val list = arrayListOf<ReadReceiptViewModel>()
 
         readReceipts.forEach {
             list.add(
                 ReadReceiptViewModel(
-                    avatar = baseUrl.avatarUrl(it.user.username ?: ""),
+                    avatar = baseUrl.avatarUrl(it.user.username!!, token?.userId, token?.authToken),
                     name = userHelper.displayName(it.user),
                     time = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(it.timestamp))
                 )
@@ -121,7 +121,7 @@ class UiModelMapper @Inject constructor(
         message: Message,
         roomUiModel: RoomUiModel
     ): List<BaseUiModel<*>> =
-        withContext(CommonPool) {
+        withContext(Dispatchers.IO) {
             val list = ArrayList<BaseUiModel<*>>()
 
             getChatRoomAsync(message.roomId)?.let { chatRoom ->
@@ -167,12 +167,13 @@ class UiModelMapper @Inject constructor(
         }
 
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
-    private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(CommonPool) {
+    private suspend fun getChatRoomAsync(roomId: String): ChatRoom? = withContext(Dispatchers.IO) {
         return@withContext dbManager.getRoom(id = roomId)?.let {
             with(it.chatRoom) {
                 ChatRoom(
                     id = id,
                     subscriptionId = subscriptionId,
+                    parentId = parentId,
                     type = roomTypeOf(type),
                     unread = unread,
                     broadcast = broadcast ?: false,
@@ -204,7 +205,7 @@ class UiModelMapper @Inject constructor(
 
     private fun mapVisibleActions(viewModel: BaseUiModel<*>) {
         if (!settings.messageReadReceiptStoreUsers()) {
-            viewModel.menuItemsToHide.add(R.id.action_message_info)
+            viewModel.menuItemsToHide.add(R.id.action_info)
         }
     }
 
@@ -212,7 +213,7 @@ class UiModelMapper @Inject constructor(
         message: Message,
         roomUiModel: RoomUiModel
     ): List<BaseUiModel<*>> =
-        withContext(CommonPool) {
+        withContext(Dispatchers.IO) {
             val list = ArrayList<BaseUiModel<*>>()
 
             getChatRoomAsync(message.roomId)?.let { chatRoom ->
@@ -401,7 +402,7 @@ class UiModelMapper @Inject constructor(
 
     private fun attachmentUrl(url: String?): String? {
         if (url.isNullOrEmpty()) return null
-        if (url!!.startsWith("http")) return url
+        if (url.startsWith("http")) return url
 
         val fullUrl = "$baseUrl$url"
         val httpUrl = HttpUrl.parse(fullUrl)
@@ -416,21 +417,19 @@ class UiModelMapper @Inject constructor(
         return fullUrl
     }
 
-    private fun attachmentText(text: String?, attachment: Attachment?, context: Context): String? {
-        return if (attachment != null) {
+    private fun attachmentText(text: String?, attachment: Attachment?, context: Context): String? = attachment?.run {
+        with(context) {
             when {
-                attachment.imageUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_photo)
-                attachment.videoUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_video)
-                attachment.audioUrl.isNotNullNorEmpty() -> context.getString(R.string.msg_preview_audio)
-                attachment.titleLink.isNotNullNorEmpty() &&
-                        attachment.type?.contentEquals("file") == true ->
-                    context.getString(R.string.msg_preview_file)
+                imageUrl.isNotNullNorEmpty() -> getString(R.string.msg_preview_photo)
+                videoUrl.isNotNullNorEmpty() -> getString(R.string.msg_preview_video)
+                audioUrl.isNotNullNorEmpty() -> getString(R.string.msg_preview_audio)
+                titleLink.isNotNullNorEmpty() &&
+                        type?.contentEquals("file") == true ->
+                    getString(R.string.msg_preview_file)
                 else -> text
             }
-        } else {
-            text
         }
-    }
+    } ?: text
 
     private fun attachmentDescription(attachment: Attachment): String? {
         return attachment.description
@@ -439,7 +438,7 @@ class UiModelMapper @Inject constructor(
     private suspend fun mapMessage(
         message: Message,
         chatRoom: ChatRoom
-    ): MessageUiModel = withContext(CommonPool) {
+    ): MessageUiModel = withContext(Dispatchers.IO) {
         val sender = getSenderName(message)
         val time = getTime(message.timestamp)
         val avatar = getUserAvatar(message)
@@ -464,11 +463,9 @@ class UiModelMapper @Inject constructor(
             subscriptionId = chatRoom.subscriptionId)
     }
 
-    private fun mapMessagePreview(message: Message): Message {
-        return when (message.isSystemMessage()) {
-            false -> stripMessageQuotes(message)
-            true -> message.copy(message = getSystemMessage(message).toString())
-        }
+    private fun mapMessagePreview(message: Message): Message = when (message.isSystemMessage()) {
+        false -> stripMessageQuotes(message)
+        true -> message.copy(message = getSystemMessage(message).toString())
     }
 
     private fun getReactions(message: Message): List<ReactionUiModel> {
@@ -476,18 +473,20 @@ class UiModelMapper @Inject constructor(
             val list = mutableListOf<ReactionUiModel>()
             val customEmojis = EmojiRepository.getCustomEmojis()
             it.getShortNames().forEach { shortname ->
-                val usernames = it.getUsernames(shortname).orEmpty()
-                val count = usernames.size
-                val custom = customEmojis.firstOrNull { emoji -> emoji.shortname == shortname }
-                list.add(
-                    ReactionUiModel(messageId = message.id,
-                        shortname = shortname,
-                        unicode = EmojiParser.parse(context, shortname),
-                        count = count,
-                        usernames = usernames,
-                        url = custom?.url,
-                        isCustom = custom != null)
-                )
+                it.getUsernames(shortname)?.let { usernames ->
+                    val count = usernames.size
+                    val custom = customEmojis.firstOrNull { emoji -> emoji.shortname == shortname }
+                    list.add(
+                        ReactionUiModel(messageId = message.id,
+                            shortname = shortname,
+                            unicode = EmojiParser.parse(context, shortname),
+                            count = count,
+                            usernames = usernames,
+                            url = custom?.url,
+                            isCustom = custom != null)
+                    )
+
+                }
             }
             list
         }
@@ -529,44 +528,42 @@ class UiModelMapper @Inject constructor(
 
         val username = message.sender?.username ?: "?"
         return baseUrl.let {
-            baseUrl.avatarUrl(username)
+            baseUrl.avatarUrl(username, token?.userId, token?.authToken)
         }
     }
 
     private fun getTime(timestamp: Long) = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(timestamp))
 
-    private fun getContent(message: Message): CharSequence {
-        return when (message.isSystemMessage()) {
-            true -> getSystemMessage(message)
-            false -> parser.render(message, currentUsername)
-        }
+    private fun getContent(message: Message): CharSequence = when (message.isSystemMessage()) {
+        true -> getSystemMessage(message)
+        false -> parser.render(message, currentUsername)
     }
 
     private fun getSystemMessage(message: Message): CharSequence {
-        val content = when (message.type) {
-            //TODO: Add implementation for Welcome type.
-            is MessageType.MessageRemoved -> context.getString(R.string.message_removed)
-            is MessageType.UserJoined -> context.getString(R.string.message_user_joined_channel)
-            is MessageType.UserLeft -> context.getString(R.string.message_user_left)
-            is MessageType.UserAdded -> context.getString(R.string.message_user_added_by, message.message, message.sender?.username)
-            is MessageType.RoomNameChanged -> context.getString(R.string.message_room_name_changed, message.message, message.sender?.username)
-            is MessageType.UserRemoved -> context.getString(R.string.message_user_removed_by, message.message, message.sender?.username)
-            is MessageType.MessagePinned -> context.getString(R.string.message_pinned)
-            is MessageType.UserMuted -> context.getString(R.string.message_muted, message.message, message.sender?.username)
-            is MessageType.UserUnMuted -> context.getString(R.string.message_unmuted, message.message, message.sender?.username)
-            is MessageType.SubscriptionRoleAdded -> context.getString(R.string.message_role_add, message.message, message.role, message.sender?.username)
-            is MessageType.SubscriptionRoleRemoved -> context.getString(R.string.message_role_removed, message.message, message.role, message.sender?.username)
-            is MessageType.RoomChangedPrivacy -> context.getString(R.string.message_room_changed_privacy, message.message, message.sender?.username)
-            else -> {
-                throw InvalidParameterException("Invalid message type: ${message.type}")
+        val content = with(context) {
+            when (message.type) {
+                //TODO: Add implementation for Welcome type.
+                is MessageType.MessageRemoved -> getString(R.string.message_removed)
+                is MessageType.UserJoined -> getString(R.string.message_user_joined_channel)
+                is MessageType.UserLeft -> getString(R.string.message_user_left)
+                is MessageType.UserAdded -> getString(R.string.message_user_added_by, message.message, message.sender?.username)
+                is MessageType.RoomNameChanged -> getString(R.string.message_room_name_changed, message.message, message.sender?.username)
+                is MessageType.UserRemoved -> getString(R.string.message_user_removed_by, message.message, message.sender?.username)
+                is MessageType.MessagePinned -> getString(R.string.message_pinned)
+                is MessageType.UserMuted -> getString(R.string.message_muted, message.message, message.sender?.username)
+                is MessageType.UserUnMuted -> getString(R.string.message_unmuted, message.message, message.sender?.username)
+                is MessageType.SubscriptionRoleAdded -> getString(R.string.message_role_add, message.message, message.role, message.sender?.username)
+                is MessageType.SubscriptionRoleRemoved -> getString(R.string.message_role_removed, message.message, message.role, message.sender?.username)
+                is MessageType.RoomChangedPrivacy -> getString(R.string.message_room_changed_privacy, message.message, message.sender?.username)
+                is MessageType.JitsiCallStarted -> context.getString(
+                    R.string.message_video_call_started, message.sender?.username
+                )
+                else -> throw InvalidParameterException("Invalid message type: ${message.type}")
             }
         }
         val spannableMsg = SpannableStringBuilder(content)
-        spannableMsg.setSpan(StyleSpan(Typeface.ITALIC), 0, spannableMsg.length,
-            0)
-        spannableMsg.setSpan(ForegroundColorSpan(Color.GRAY), 0, spannableMsg.length,
-            0)
-
+        spannableMsg.setSpan(StyleSpan(Typeface.ITALIC), 0, spannableMsg.length, 0)
+        spannableMsg.setSpan(ForegroundColorSpan(Color.GRAY), 0, spannableMsg.length, 0)
         return spannableMsg
     }
 }
