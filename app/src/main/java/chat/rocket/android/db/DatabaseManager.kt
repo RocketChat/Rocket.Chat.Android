@@ -25,6 +25,7 @@ import chat.rocket.android.util.retryDB
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.SimpleUser
+import chat.rocket.common.model.Token
 import chat.rocket.common.model.User
 import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.socket.model.StreamMessage
@@ -51,8 +52,7 @@ import kotlin.collections.component2
 import kotlin.collections.set
 import kotlin.system.measureTimeMillis
 
-class DatabaseManager(val context: Application, val serverUrl: String) {
-
+class DatabaseManager(val context: Application, val serverUrl: String, val token: Token) {
     private val database: RCDatabase = androidx.room.Room.databaseBuilder(
         context,
         RCDatabase::class.java, serverUrl.databaseName()
@@ -61,22 +61,22 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         .build()
     private val dbContext = newSingleThreadContext("$serverUrl-db-context")
     private val dbManagerContext = newSingleThreadContext("$serverUrl-db-manager-context")
-
     private val writeChannel = Channel<Operation>(Channel.UNLIMITED)
     private var dbJob: Job? = null
-
     private val insertSubs = HashMap<String, Subscription>()
     private val insertRooms = HashMap<String, Room>()
     private val updateSubs = LinkedHashMap<String, Subscription>()
     private val updateRooms = LinkedHashMap<String, Room>()
 
-    fun chatRoomDao(): ChatRoomDao = database.chatRoomDao()
-    fun userDao(): UserDao = database.userDao()
-    fun messageDao(): MessageDao = database.messageDao()
-
     init {
         start()
     }
+
+    fun chatRoomDao(): ChatRoomDao = database.chatRoomDao()
+
+    fun userDao(): UserDao = database.userDao()
+
+    fun messageDao(): MessageDao = database.messageDao()
 
     fun start() {
         dbJob?.cancel()
@@ -196,7 +196,13 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                 myself.name == null && myself.username == null
             ) {
                 user?.username?.let {
-                    Fresco.getImagePipeline().evictFromCache(serverUrl.avatarUrl(it).toUri())
+                    Fresco.getImagePipeline().evictFromCache(
+                        serverUrl.avatarUrl(
+                            it,
+                            token.userId,
+                            token.authToken
+                        ).toUri()
+                    )
                 }
             }
 
