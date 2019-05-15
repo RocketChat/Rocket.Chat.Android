@@ -11,7 +11,7 @@ android {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode 1
-        versionName "0.1"
+        versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -40,6 +40,9 @@ dependencies {
     implementation libraries.androidKtx
 
     implementation libraries.material
+    implementation libraries.glide
+
+    implementation libraries.timber
 
     implementation libraries.room
     kapt libraries.roomProcessor
