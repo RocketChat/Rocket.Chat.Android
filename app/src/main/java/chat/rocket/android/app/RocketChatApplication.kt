@@ -24,7 +24,7 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.SITE_URL
 import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.retryIO
 import chat.rocket.android.util.setupFabric
 import chat.rocket.common.RocketChatException
@@ -37,7 +37,8 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.HasBroadcastReceiverInjector
 import dagger.android.HasServiceInjector
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -114,7 +115,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         // TODO - remove this
         checkCurrentServer()
 
-        // TODO - FIXME - we need to proper inject the EmojiRepository and initialize it properly
+        // TODO - FIXME - we need to properly inject and initialize the EmojiRepository
         loadEmojis()
     }
 
@@ -174,8 +175,8 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         EmojiRepository.init(this)
         val currentServer = getCurrentServerInteractor.get()
         currentServer?.let { server ->
-            launch {
-                val client = factory.create(server)
+            GlobalScope.launch {
+                val client = factory.get(server)
                 EmojiRepository.setCurrentServerUrl(server)
                 val customEmojiList = mutableListOf<Emoji>()
                 try {

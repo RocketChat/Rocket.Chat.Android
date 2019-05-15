@@ -12,7 +12,10 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.android.synthetic.main.item_action_button.view.*
 import timber.log.Timber
 
-class ActionsListAdapter(actions: List<Action>, var actionAttachmentOnClickListener: ActionAttachmentOnClickListener) : RecyclerView.Adapter<ActionsListAdapter.ViewHolder>() {
+class ActionsListAdapter(
+    actions: List<Action>,
+    var actionAttachmentOnClickListener: ActionAttachmentOnClickListener
+) : RecyclerView.Adapter<ActionsListAdapter.ViewHolder>() {
 
     var actions: List<Action> = actions
 
@@ -62,9 +65,7 @@ class ActionsListAdapter(actions: List<Action>, var actionAttachmentOnClickListe
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return actions.size
-    }
+    override fun getItemCount(): Int = actions.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val action = actions[position]

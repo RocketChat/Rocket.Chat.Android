@@ -6,7 +6,7 @@ import chat.rocket.android.draw.main.presenter.DrawView
 import chat.rocket.android.draw.main.ui.DrawingActivity
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.Job
 
 @Module
 class DrawModule {

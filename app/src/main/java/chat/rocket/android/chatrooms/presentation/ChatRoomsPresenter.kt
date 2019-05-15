@@ -2,6 +2,7 @@ package chat.rocket.android.chatrooms.presentation
 
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
+import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.model.ChatRoomEntity
@@ -9,9 +10,11 @@ import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.domain.SortingAndGroupingInteractor
+import chat.rocket.android.server.domain.siteName
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
-import chat.rocket.android.server.infraestructure.ConnectionManager
+import chat.rocket.android.server.infrastructure.ConnectionManager
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
@@ -22,17 +25,19 @@ import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.createDirectMessage
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.show
-import kotlinx.coroutines.experimental.withTimeout
+import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class ChatRoomsPresenter @Inject constructor(
     private val view: ChatRoomsView,
     private val strategy: CancelStrategy,
     private val navigator: MainNavigator,
     @Named("currentServer") private val currentServer: String,
+    private val sortingAndGroupingInteractor: SortingAndGroupingInteractor,
     private val dbManager: DatabaseManager,
     manager: ConnectionManager,
     private val localRepository: LocalRepository,
@@ -42,29 +47,44 @@ class ChatRoomsPresenter @Inject constructor(
     private val client = manager.client
     private val settings = settingsRepository.get(currentServer)
 
+    fun toCreateChannel() = navigator.toCreateChannel()
+
+    fun toSettings() = navigator.toSettings()
+
+    fun toDirectory() = navigator.toDirectory()
+
+    fun getCurrentServerName() = view.setupToolbar(settings.siteName() ?: currentServer)
+
+    fun getSortingAndGroupingPreferences() {
+        with(sortingAndGroupingInteractor) {
+            view.setupSortingAndGrouping(
+                getSortByName(currentServer),
+                getUnreadOnTop(currentServer),
+                getGroupByType(currentServer),
+                getGroupByFavorites(currentServer)
+            )
+        }
+    }
+
     fun loadChatRoom(roomId: String) {
         launchUI(strategy) {
-            view.showLoadingRoom("")
             try {
                 val room = dbManager.getRoom(roomId)
                 if (room != null) {
                     loadChatRoom(room.chatRoom, true)
                 } else {
-                    Timber.d("Error loading channel")
+                    Timber.e("Error loading channel")
                     view.showGenericErrorMessage()
                 }
             } catch (ex: Exception) {
-                Timber.d(ex, "Error loading channel")
+                Timber.e(ex, "Error loading channel")
                 view.showGenericErrorMessage()
-            } finally {
-                view.hideLoadingRoom()
             }
         }
     }
 
     fun loadChatRoom(chatRoom: RoomUiModel) {
         launchUI(strategy) {
-            view.showLoadingRoom(chatRoom.name)
             try {
                 val room = retryDB("getRoom(${chatRoom.id}") { dbManager.getRoom(chatRoom.id) }
                 if (room != null) {
@@ -74,6 +94,7 @@ class ChatRoomsPresenter @Inject constructor(
                         val entity = ChatRoomEntity(
                             id = id,
                             subscriptionId = "",
+                            parentId = null,
                             type = type.toString(),
                             name = username ?: name.toString(),
                             fullname = name.toString(),
@@ -84,10 +105,8 @@ class ChatRoomsPresenter @Inject constructor(
                     }
                 }
             } catch (ex: Exception) {
-                Timber.d(ex, "Error loading channel")
+                Timber.e(ex, "Error loading channel")
                 view.showGenericErrorMessage()
-            } finally {
-                view.hideLoadingRoom()
             }
         }
     }
@@ -95,11 +114,12 @@ class ChatRoomsPresenter @Inject constructor(
     suspend fun loadChatRoom(chatRoom: ChatRoomEntity, local: Boolean = false) {
         with(chatRoom) {
             val isDirectMessage = roomTypeOf(type) is RoomType.DirectMessage
-            val roomName = if (settings.useSpecialCharsOnRoom() || (isDirectMessage && settings.useRealName())) {
-                fullname ?: name
-            } else {
-                name
-            }
+            val roomName =
+                if (settings.useSpecialCharsOnRoom() || (isDirectMessage && settings.useRealName())) {
+                    fullname ?: name
+                } else {
+                    name
+                }
 
             val myself = getCurrentUser()
             if (myself?.username == null) {
@@ -116,6 +136,7 @@ class ChatRoomsPresenter @Inject constructor(
                         retryIO("createDirectMessage($name)") {
                             withTimeout(10000) {
                                 createDirectMessage(name)
+                                FetchChatRoomsInteractor(client, dbManager).refreshChatRooms()
                             }
                         }
                         val fromTo = mutableListOf(myself.id, id).apply {
@@ -128,14 +149,14 @@ class ChatRoomsPresenter @Inject constructor(
                 }
 
                 navigator.toChatRoom(
-                        chatRoomId = id,
-                        chatRoomName = roomName,
-                        chatRoomType = type,
-                        isReadOnly = readonly ?: false,
-                        chatRoomLastSeen = lastSeen ?: -1,
-                        isSubscribed = open,
-                        isCreator = ownerId == myself.id || isDirectMessage,
-                        isFavorite = favorite ?: false
+                    chatRoomId = id,
+                    chatRoomName = roomName,
+                    chatRoomType = type,
+                    isReadOnly = readonly ?: false,
+                    chatRoomLastSeen = lastSeen ?: -1,
+                    isSubscribed = open,
+                    isCreator = ownerId == myself.id || isDirectMessage,
+                    isFavorite = favorite ?: false
                 )
             }
         }
