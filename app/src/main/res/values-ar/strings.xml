@@ -1,0 +1,372 @@
+<resources>
+
+    <!-- Titles -->
+    <string name="title_sign_in_your_server">تسجيل الدخول إلى خادمك</string>
+    <string name="title_log_in">تسجيل الدخول</string>
+    <string name="title_register_username">اسم المستخدم</string>
+    <string name="title_reset_password">إعادة تعيين كلمة السر</string>
+    <string name="title_sign_up">سجل</string>
+    <string name="title_authentication">المصادقة</string>
+    <string name="title_legal_terms">قواعد قانونية</string>
+    <string name="title_chats">المحادثات</string>
+    <string name="title_profile">الملف الشخصي</string>
+    <string name="title_members">الأعضاء</string>
+    <string name="title_counted_members">الأعضاء (%d)</string>
+    <string name="title_settings">الإعدادات</string>
+    <string name="title_preferences">تفضيلات</string>
+    <string name="title_change_password">تغيير كلمة السر</string>
+    <string name="title_rate_us">قيمنا</string>
+    <string name="title_admin_panel">لوحة الإدارة</string>
+    <string name="title_password">تغيير كلمة السر</string>
+    <string name="title_update_profile">تحديث الملف الشخصي</string>
+    <string name="title_create_channel">إنشاء قناة</string>
+    <string name="title_choose_language">اختر اللغة</string>
+    <string name="title_license">الترخيص</string>
+    <string name="title_are_you_sure">هل أنت متأكد؟</string>
+    <string name="title_channel_details">تفاصيل القناة</string>
+    <string name="title_topic">موضوع</string>
+    <string name="title_announcement">أخبار</string>
+    <string name="title_description">وصف</string>
+
+    <!-- Actions -->
+    <string name="action_connect">توصيل</string>
+    <string name="action_use_this_username">استخدم هذا الاسم</string>
+    <string name="action_terms_of_service">شروط الخدمة</string>
+    <string name="action_privacy_policy">شروط الخدمة</string>
+    <string name="action_new_channel">قناة جديدة</string>
+    <string name="action_search">بحث</string>
+    <string name="action_update">تحديث</string>
+    <string name="action_settings">الإعدادات</string>
+    <string name="action_create_channel">إنشاء قناة</string>
+    <string name="action_create">إنشاء</string>
+    <string name="action_logout">تسجيل الخروج</string>
+    <string name="action_attach_a_files">إضافة ملف</string>
+    <string name="action_confirm_password">تأكيد تغيير كلمة السر</string>
+    <string name="action_join_chat">إنضم للمحادثة</string>
+    <string name="msg_online">متصل</string>
+    <string name="msg_away">بعيد</string>
+    <string name="msg_busy">مشغول</string>
+    <string name="msg_invisible">مخفي</string>
+    <string name="action_drawing">رسم</string>
+    <string name="action_save_to_gallery">حفظ في المعرض</string>
+    <string name="action_select_photo_from_gallery">اختيار صورة من المعرض</string>
+    <string name="action_take_a_photo">التقاط صورة</string>
+    <string name="action_reset_avatar">تغيير الشخصية</string>
+    <string name="action_connect_server">اتصال بالخادم</string>
+    <string name="action_join_community">الانضمام للمجموعة</string>
+    <string name="action_create_server">إنشاء خادم جديد</string>
+    <string name="action_register">تسجيل</string>
+    <string name="action_confirm">تأكيد</string>
+    <string name="action_favorite">تفضيل</string>
+    <string name="action_remove_favorite">إزالة التفضيل</string>
+
+    <!-- Settings messages -->
+    <string name="msg_contact_us">اتصل بنا</string>
+    <string name="msg_language">تغيير اللغة</string>
+    <string name="msg_review_this_app">قيم هذا التطبيق</string>
+    <string name="msg_share_this_app">شارك هذا التطبيق</string>
+    <string name="msg_administration">الادارة</string>
+    <string name="msg_license">الرخصة</string>
+    <string name="msg_app_version">الإصدار: %1$s (%2$d)</string>
+    <string name="msg_server_version">إصدار الخادم: %1$s</string>
+    <string name="msg_send_analytics">إرسال التحليلات</string>
+    <string name="msg_send_analytics_tracking">إرسال تحليلات لمساعدة تطوير البرنامج</string>
+    <string name="msg_do_not_send_analytics_tracking">لا يتم إرسال تحليلات لمساعدة تطوير البرنامج</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">لا يمكن لأنه إصدار FOSS</string>
+    <string name="msg_logout_from_rocket_chat">تسجيل الخروج من Rocket.Chat</string>
+    <string name="msg_delete_account">حذف الحساب</string>
+    <string name="msg_change_status">تغيير الوضع</string>
+
+    <string-array name="languages">
+        <item>الإنجليزية</item>
+        <item>العربية</item>
+        <item>الألمانية</item>
+        <item>الأسبانية</item>
+        <item>الفارسية</item>
+        <item>الفرنسية</item>
+        <item>الهندية (IN)</item>
+        <item>الإيطالية</item>
+        <item>اليابانية</item>
+        <item>البرتغالية (BR)</item>
+        <item>البرتغالية (PT)</item>
+        <item>الروسية (RU)</item>
+        <item>التركية</item>
+        <item>الأوكرانية</item>
+        <item>الصينية (CN)</item>
+        <item>الصينية (TW)</item>
+    </string-array>
+
+    <!-- Regular information messages -->
+    <string name="msg_generic_error">نأسف حدث خطأ ما، حاول مرة أخرى</string>
+    <string name="msg_no_data_to_display">لا يوجد بيانات للعرض</string>
+    <string name="msg_check_this_out">تحقق من هذا</string>
+    <string name="msg_share_using">نشر بواسطة</string>
+    <string name="msg_profile_updated_successfully">تم تحديث الملف الشخصي بنجاح</string>
+    <string name="msg_username">اسم المستخدم</string>
+    <string name="msg_username_or_email">اسم المستخدم أو عنوان بريد</string>
+    <string name="msg_password">كلمة السر</string>
+    <string name="msg_name">الاسم</string>
+    <string name="msg_email">عنوان بريد</string>
+    <string name="msg_avatar_url">رابط الشخصية</string>
+    <string name="msg_or_continue_using_social_accounts">استمرار باستخدام حساب التواصل الاجتماعي</string>
+    <string name="msg_new_user">مستخدم جديد؟ %1$s</string>
+    <string name="msg_forgot_your_password">نسيت كلمة السر؟</string>
+    <string name="msg_reset">إعادة تعيين</string>
+    <string name="msg_check_your_email_to_reset_your_password">تم إرسال الإيميل راجع إيميلك لتحديث كلمة السر</string>
+    <string name="msg_invalid_email">من فضلك أدخل عنوان بريد صحيح</string>
+    <string name="msg_new_user_agreement">بالاستمرار أنت توافق على\n%1$s و %2$s</string>
+    <string name="msg_yesterday">أمس</string>
+    <string name="msg_today">اليوم</string>
+    <string name="msg_message">رسالة</string>
+    <string name="msg_video_call">مكالمة فيديو</string>
+    <string name="msg_join_video_call">انضم إلى مكالمة الفيديو</string>
+    <string name="msg_this_room_is_read_only">هذه الغرفة للقراءة فقط</string>
+    <string name="msg_invalid_2fa_code">رمز 2FA غير صالح</string>
+    <string name="msg_invalid_file">ملف غير صالح</string>
+    <string name="msg_invalid_server_url">رابط خادم غير صحيح</string>
+    <string name="msg_content_description_log_in_using_facebook">تسجيل باستخدام فيسبوك</string>
+    <string name="msg_content_description_log_in_using_github">تسجيل باستخدام GitHub</string>
+    <string name="msg_content_description_log_in_using_google">تسجيل باستخدام Google</string>
+    <string name="msg_content_description_log_in_using_linkedin">تسجيل باستخدام LinkedIn</string>
+    <string name="msg_content_description_log_in_using_meteor">تسجيل باستخدام Meteor</string>
+    <string name="msg_content_description_log_in_using_twitter">تسجيل باستخدام Twitter</string>
+    <string name="msg_content_description_log_in_using_gitlab">تسجيل باستخدام GitLab</string>
+    <string name="msg_content_description_log_in_using_wordpress">تسجيل باستخدام WordPress</string>
+    <string name="msg_content_description_send_message">ارسال رسالة</string>
+    <string name="msg_content_description_show_more_login_options">إظهار طرق تسجيل أخرى</string>
+    <string name="msg_content_description_show_attachment_options">إظهار خيارات المرفق</string>
+    <string name="msg_you">أنت</string>
+    <string name="msg_unknown">غير معرف</string>
+    <string name="msg_email_address">عنوان بريد</string>
+    <string name="msg_utc_offset">التقديم عن UTC</string>
+    <string name="msg_new_password">إدخال كلمة سر جديدة</string>
+    <string name="msg_confirm_password">تأكيد كلمة السر</string>
+    <string name="msg_channel_name">اسم القناة</string>
+    <string name="msg_search">بحث</string>
+    <string name="msg_unread_messages">رسائل غير مقروءة</string>
+    <string name="msg_preview_video">فيديو</string>
+    <string name="msg_preview_audio">صوت</string>
+    <string name="msg_preview_photo">صورة</string>
+    <string name="msg_preview_file">ملف</string>
+    <string name="msg_no_messages_yet">ليس هناك رسائل بعد</string>
+    <string name="msg_build">Build %1$d - %2$s - %3$s</string>
+    <string name="msg_update_app_version_in_order_to_continue">خادم منتهي برجاء التواصل مع مدير الخادم للاستمرار</string>
+    <string name="msg_ver_not_recommended">يبدو أن خادمك قديم %1$s يمكنك الاستمرار لكن ليس بكامل الفعالية</string>
+    <string name="msg_ver_not_minimum">يبدو أن خادمك قديم %1$s من فضلك حدث الخادم للاستمرار</string>
+    <string name="msg_no_chat_title">لا توجد رسائل</string>
+    <string name="msg_no_chat_description">إبدأ المحادثة لترى الرسائل هنا</string>
+    <string name="msg_http_insecure">أنت تستخدم HTTP وهو غير آمن ونحن لا نحبذ ذلك.</string>
+    <string name="msg_error_checking_server_version">حدث خطأ أثناء التحقق من إصدار الخادم الخاص بك، حاول مرة أخرى</string>
+    <string name="msg_invalid_server_protocol">النظام المستخدم غير مقبول، حاول ب HTTPS</string>
+    <string name="msg_image_saved_successfully">تم حفظ الصورة في المعرض</string>
+    <string name="msg_image_saved_failed">لم يتم حفظ الصورة</string>
+    <string name="msg_edited">(معدلة)</string>
+    <string name="msg_and">\u0020و\u0020</string>
+    <string name="msg_is_typing">\u0020يكتب …</string>
+    <string name="msg_are_typing">\u0020يكتبون …</string>
+    <string name="msg_several_users_are_typing">العديد من المستخدمين يكتبون…</string>
+    <string name="msg_no_search_found">لا توجد نتائج</string>
+    <string name="msg_log_out">تسجيل الخروج…</string>
+    <string name="msg_upload_file">رفع ملف</string>
+    <string name="msg_file_description">وصف الملف</string>
+    <string name="msg_send">إرسال</string>
+    <string name="msg_sent_attachment">إرسال مرفق</string>
+    <string name="msg_welcome_to_rocket_chat">أهلا بك في Rocket.Chat</string>
+    <string name="msg_team_communication">التواصل مع الفريق</string>
+    <string name="msg_login_with_email">تسجيل ب <b>عنوان البريد</b></string>
+    <string name="msg_create_account">إنشاء حساب</string>
+    <string name="msg_continue_with_facebook">استمرار ب <b>Facebook</b></string>
+    <string name="msg_continue_with_github">استمرار ب <b>GitHub</b></string>
+    <string name="msg_continue_with_google">استمرار ب <b>Google</b></string>
+    <string name="msg_continue_with_linkedin">استمرار ب <b>LinkedIn</b></string>
+    <string name="msg_continue_with_gitlab">استمرار ب <b>GitLab</b></string>
+    <string name="msg_continue_with_wordpress">استمرار ب <b>WordPress</b></string>
+    <string name="msg_two_factor_authentication">مصادقة مزدوجة</string>
+    <string name="msg_your_2fa_code">ما هو رمز 2FA؟</string>
+    <string name="msg_permalink_copied">الرابط الثابت المنسوخ</string>
+    <string name="msg_no_topic">لا يوجد موضوع مضاف</string>
+    <string name="msg_no_announcement">لا يوجد ملف مضاف</string>
+    <string name="msg_no_description">لا يوجد وصف مضاف</string>
+    <string name="msg_send_email">أرسال بريد</string>
+    <string name="msg_android_app_support">خدمة البرنامج</string>
+    <string name="msg_unable_to_update_password">لا يمكن تحديث كلمة السر خطأ: %1$s</string>
+    <string name="msg_password_updated_successfully">تم تحديث كلمة السر</string>
+    <plurals name="msg_reacted_with_">
+        <item quantity="one">%1$s تفاعل ب %2$s</item>
+        <item quantity="other">%1$s تفاعل ب %2$s</item>
+        <item quantity="many">%1$s تفاعلوا ب %2$s</item>
+        <item quantity="zero">%1$s تفاعل ب %2$s</item>
+        <item quantity="few">%1$s تفاعلوا ب %2$s</item>
+        <item quantity="two">%1$s تفاعلا ب %2$s</item>
+    </plurals>
+    <string name="msg_credentials_saved_successfully">تم حفظ البيانات بنجاح</string>
+    <string name="msg_camera_permission_denied">هناك حاجة إلى إذن الكاميرا لفتحها.</string>
+    <string name="msg_storage_permission_denied">هناك حاجة إلى إذن التخزين لفتح الرسم.</string>
+    <string name="msg_server">الخادم</string>
+    <string name="msg_add_new_server">إضافة خادم جديد</string>
+    <string name="msg_directory">الدليل</string>
+
+    <!-- Create channel messages -->
+    <string name="msg_private_channel">خاص</string>
+    <string name="msg_public_channel">عام</string>
+    <string name="msg_private_channel_description">أنت والأشخاص المدعوون فقط يمكنكم دخول هذه القناة</string>
+    <string name="msg_public_channel_description">يمكن للجميع دخول هذه القناة</string>
+    <string name="msg_ready_only_channel">قناة للقراءة فقط</string>
+    <string name="msg_ready_only_channel_description">المدير فقط يمكنه الكتابة</string>
+    <string name="msg_invite_members">دعوة عضو للقناة</string>
+    <string name="msg_member_already_added">لقد قمت باختيار هذا العضو من قبل</string>
+    <string name="msg_member_not_found">عضو غير موجود</string>
+    <string name="msg_channel_created_successfully">تم انشاء القناة بنجاح</string>
+    <string name="msg_message_copied">تم نسخ الرسالة</string>
+    <string name="msg_delete_message">حذف الرسالة</string>
+    <string name="msg_delete_description">هل أنت متأكد من حذف هذه الرسالة؟</string>
+    <string name="msg_view_more">رؤية المزيد</string>
+    <string name="msg_view_less">رؤية أقل</string>
+    <string name="msg_muted_on_this_channel">لقد جعلت هذه القناة صامتة</string>
+
+    <!-- System messages -->
+    <string name="message_room_name_changed">تم تغيير اسم الغرفة ل: %1$s بواسطة %2$s</string>
+    <string name="message_user_added_by">المستخدم %1$s أضيف بواسطة %2$s</string>
+    <string name="message_user_removed_by">المستخدم %1$s حذف بواسطة %2$s</string>
+    <string name="message_user_left">غادر القناة.</string>
+    <string name="message_user_joined_channel">انضم للقناة</string>
+    <string name="message_welcome">أهلا %s</string>
+    <string name="message_removed">تم حذف الرسالة</string>
+    <string name="message_pinned">تعلق رسالة:</string>
+    <string name="message_muted">المسخدم %1$s صامت بواسطة %2$s</string>
+    <string name="message_unmuted">المستخدم %1$s غير صامت بواسطة %2$s</string>
+    <string name="message_role_add">%1$s تم جعله %2$s بواسطة %3$s</string>
+    <string name="message_role_removed">%1$s لم يعد %2$s بواسطة %3$s</string>
+    <string name="message_video_call_started">بدأت مكالمة الفيديو بواسطة %1$s</string>
+
+    <!-- Message actions -->
+    <string name="action_msg_reply">رد</string>
+    <string name="action_info">معلومات</string>
+    <string name="action_msg_edit">تعديل</string>
+    <string name="action_msg_copy">نسخ</string>
+    <string name="action_msg_quote">اقتباس</string>
+    <string name="action_msg_delete">حذف</string>
+    <string name="action_pin">علق</string>
+    <string name="action_unpin">إزالة التعليق</string>
+    <string name="action_star">التمييز بنجمة</string>
+    <string name="action_unstar">إزالة النجمة</string>
+    <string name="action_msg_share">نشر</string>
+    <string name="action_title_editing">تعديل الرسالة</string>
+    <string name="action_msg_add_reaction">إضافة تفاعل</string>
+    <string name="action_msg_permalink">ربط رابط ثابت</string>
+    <string name="action_msg_report">إبلاغ</string>
+
+    <!-- Permission messages -->
+    <string name="permission_editing_not_allowed">التعديل غير مسموح</string>
+    <string name="permission_deleting_not_allowed">الحذف غير مسموح</string>
+    <string name="permission_pinning_not_allowed">التمييز غير مسموح</string>
+    <string name="permission_starring_not_allowed">التمييز بنجمة غير مسموح</string>
+
+    <!-- Search message -->
+    <string name="title_search_message">بحث عن رسالة</string>
+
+    <!-- Members List -->
+    <string name="title_members_list">الأعضاء</string>
+
+    <!-- Mentions -->
+    <string name="msg_mentions">إشارات</string>
+    <string name="msg_no_mention">لا يوجد إشارة</string>
+    <string name="msg_all_the_mentions_appear_here">الإشارات\nتظهر هنا</string>
+
+    <!-- Pinned Messages -->
+    <string name="title_pinned_messages">الرسائل المميزة</string>
+    <string name="no_pinned_messages">لا يوجد رسائل مميزة</string>
+    <string name="no_pinned_description">الرسائل المميزة\nتظهر هنا</string>
+
+    <!-- Favorite Messages -->
+    <string name="title_favorite_messages">الرسائل المفضلة</string>
+    <string name="no_favorite_messages">لا يوجد رسائل مفضلة</string>
+    <string name="no_favorite_description">الرسائل المفضلة\nتظهر هنا</string>
+
+    <!-- Files -->
+    <string name="title_files">ملفات</string>
+    <string name="title_files_total">ملفات (%d)</string>
+    <string name="msg_no_files">لا يوجد ملفات</string>
+    <string name="msg_all_files_appear_here">الملفات تظهر هنا</string>
+
+    <!-- Upload Messages -->
+    <string name="max_file_size_exceeded">تجاوز حجم الملف %1$d بايت الحد الأقصى لحجم التحميل وهو %2$d بايت</string>
+
+    <!-- Socket status -->
+    <string name="status_connected">متصل</string>
+    <string name="status_disconnected">غير متصل</string>
+    <string name="status_connecting">يتم الاتصال</string>
+    <string name="status_authenticating">يتم المصادقة</string>
+    <string name="status_disconnecting">يتم قطع الاتصال</string>
+    <string name="status_waiting">يتم الاتصال في %d ثانية</string>
+
+    <!-- Suggestions -->
+    <string name="suggest_all_description">تنبيه كل من في الغرفة</string>
+    <string name="suggest_here_description">تنبيه الأعضاء المتصلين</string>
+
+    <!-- Slash Commands -->
+    <string name="Slash_Gimme_Description">عرض ༼ つ ◕_◕ ༽つ قبل رسالتك</string>
+    <string name="Slash_LennyFace_Description">عرض ( ͡° ͜ʖ ͡°) بعد رسالتك</string>
+    <string name="Slash_Shrug_Description">عرض ¯\_(ツ)_/¯ بعد رسالتك</string>
+    <string name="Slash_Tableflip_Description">عرض (╯°□°）╯︵ ┻━┻</string>
+    <string name="Slash_TableUnflip_Description">عرض ┬─┬ ノ( ゜-゜ノ)</string>
+    <string name="Create_A_New_Channel">إنشاء قناة جديدة</string>
+    <string name="Show_the_keyboard_shortcut_list">عرض اختصارات الكيبورد</string>
+    <string name="Invite_user_to_join_channel_all_from">دعوة أعضاء [#channel] للانضمام لهذه القناة</string>
+    <string name="Invite_user_to_join_channel_all_to">دعوة أعضاء هذه القناة للانضمام ل [#channel]</string>
+    <string name="Archive">أرشيف</string>
+    <string name="Remove_someone_from_room">إزالة شخص من الغرفة</string>
+    <string name="Leave_the_current_channel">مغادرة القناة الحالية</string>
+    <string name="Displays_action_text">عرض نص الاجراء</string>
+    <string name="Direct_message_someone">رسالة مباشرة</string>
+    <string name="Mute_someone_in_room">اجعل شخص صامت في هذه الغرفة</string>
+    <string name="Unmute_someone_in_room">اجعل شخص غير صامت في هذه الغرفة</string>
+    <string name="Invite_user_to_join_channel">دعوة شخص واحد للانضمام لهذه القناة</string>
+    <string name="Unarchive">حذف من الأرشيف</string>
+    <string name="Join_the_given_channel">الانضمام للقناة المعطاه</string>
+    <string name="Guggy_Command_Description">صنع gif بناءا على النص المعطى</string>
+    <string name="Slash_Topic_Description">تعيين الموضوع</string>
+
+    <!-- Emoji messages -->
+    <string name="msg_no_recent_emoji">لا يوجد ايموجيز</string>
+    <string name="alert_title_default_skin_tone">لون البشرة الافتراضي</string>
+
+    <!-- Sort and group -->
+    <string name="msg_sort_by_placeholder">ترتيب حسب %1$s</string>
+    <string name="msg_sort_by">ترتيب حسب</string>
+    <string name="msg_sort_by_activity">النشاط</string>
+    <string name="msg_sort_by_name">الاسم</string>
+    <string name="msg_group_by_unread_on_top">غير مقروء على القمة</string>
+    <string name="msg_group_by_type">تجميع حسب النوع</string>
+    <string name="msg_group_by_favorites">تجميع حسب المفضلات</string>
+
+    <!-- ChatRooms Headers -->
+    <string name="header_favorite">المفضلات</string>
+    <string name="msg_channels">القنوات</string>
+    <string name="msg_users">المستخدمين</string>
+    <string name="msg_search_for_global_users">البحث عن المستخدمين عالميا</string>
+    <string name="msg_search_for_global_users_description">إذا قمت بالتشغيل، يمكنك البحث عن أي مستخدم من شركات أو خوادم أخرى.</string>
+    <string name="header_private_groups">المجموعات الخاصة</string>
+    <string name="header_direct_messages">الرسائل المباشرة</string>
+    <string name="header_live_chats">المحادثات الحية</string>
+    <string name="header_unknown">غير معروف</string>
+
+    <!-- Notifications -->
+    <string name="share_label">تعديل الرسالة المنشورة</string>
+    <string name="notif_action_reply_hint">رد</string>
+    <string name="notif_error_sending">فشل الرد، حاول مرة أخرى</string>
+    <string name="notif_success_sending">تم إرسال الرسالة ل %1$s!</string>
+    <string name="read_by">تمت القراءة بواسطة</string>
+    <string name="message_information_title">معلومات الرسالة</string>
+    <string name="message_room_changed_privacy">تم تغيير نوع الغرفة ل: %1$s بواسطة %2$s</string>
+
+    <!-- User Details -->
+    <string name="timezone">المنطقة الزمنية</string>
+    <string name="status">الوضع: %1$s</string>
+    <string name="user_detail_status">الوضع</string>
+
+    <!-- Report -->
+    <string name="submit">تأكيد</string>
+    <string name="required">*مطلوب</string>
+    <string name="report_sent">تم إرسال تقريرك!</string>
+</resources>

@@ -26,9 +26,9 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.RemoveAccountInteractor
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
-import chat.rocket.android.server.infraestructure.ConnectionManager
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.ConnectionManager
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.VersionInfo
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.casUrl
@@ -45,10 +45,10 @@ import chat.rocket.core.internal.rest.serverInfo
 import chat.rocket.core.internal.rest.settingsOauth
 import chat.rocket.core.internal.rest.unregisterPushToken
 import chat.rocket.core.model.Myself
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.channels.Channel
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 private const val SERVICE_NAME_FACEBOOK = "facebook"
@@ -105,7 +105,7 @@ abstract class CheckServerPresenter constructor(
 
     internal fun setupConnectionInfo(serverUrl: String) {
         currentServer = serverUrl
-        client = factory.create(serverUrl)
+        client = factory.get(serverUrl)
         managerFactory?.create(serverUrl)?.let {
             manager = it
         }
@@ -220,7 +220,7 @@ abstract class CheckServerPresenter constructor(
                 }
                 removeAccountInteractor?.remove(currentServer)
                 tokenRepository?.remove(currentServer)
-                withContext(CommonPool) { dbManager.logout() }
+                withContext(Dispatchers.IO) { dbManager.logout() }
                 navigator?.switchOrAddNewServer()
             } catch (ex: Exception) {
                 Timber.e(ex, "Error cleaning up the session...")
@@ -452,7 +452,7 @@ abstract class CheckServerPresenter constructor(
 
     /**
      * Returns the OAuth client ID of a [serviceMap].
-     * REMARK: This function works for common OAuth providers (Google, Facebook, Github and so on)
+     * REMARK: This function works for common OAuth providers (Google, Facebook, GitHub and so on)
      * as well as custom OAuth.
      *
      * @param serviceMap The service map to get the OAuth client ID.

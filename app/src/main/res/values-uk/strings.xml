@@ -3,7 +3,6 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Ваш сервер</string>
     <string name="title_log_in">Увійти</string>
-    <string name="title_share_the_app">поділитися прикладом</string>
     <string name="title_register_username">Зареєструвати ім\'я</string>
     <string name="title_reset_password">Відновлення паролю</string>
     <string name="title_sign_up">Зареєструватися</string>
@@ -20,9 +19,9 @@
     <string name="title_admin_panel">Панель адміністратора</string>
     <string name="title_password">Змінити пароль</string>
     <string name="title_update_profile">Оновити профіль</string>
-    <string name="title_about">"Про програму"</string>
     <string name="title_create_channel">Створити новий канал</string>
-    <string name="title_licence">Licence</string> <!-- TODO Add translation -->
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
+    <string name="title_license">License</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
     <string name="title_channel_details">Channel Details</string> <!-- TODO add translation -->
     <string name="title_topic">Тема</string>
@@ -34,6 +33,7 @@
     <string name="action_use_this_username">Використати це ім\'я</string>
     <string name="action_terms_of_service">Умови використання</string>
     <string name="action_privacy_policy">Політика конфіденційності</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">Пошук</string>
     <string name="action_update">Оновити</string>
     <string name="action_settings">Налаштування</string>
@@ -43,11 +43,10 @@
     <string name="action_attach_a_files">Attach a file</string> <!-- TODO Add translation -->
     <string name="action_confirm_password">Підтвердження зміни пароля</string>
     <string name="action_join_chat">Приєднатися до чату</string>
-    <string name="action_add_account">Додати аккаунт</string>
-    <string name="action_online">Онлайн</string>
-    <string name="action_away">Відійшов</string>
-    <string name="action_busy">Зайнятий</string>
-    <string name="action_invisible">Невидимий</string>
+    <string name="msg_online">Онлайн</string>
+    <string name="msg_away">Відійшов</string>
+    <string name="msg_busy">Зайнятий</string>
+    <string name="msg_invisible">Невидимий</string>
     <string name="action_drawing">Малюнок</string>
     <string name="action_save_to_gallery">Зберегти до галереї</string>
     <string name="action_select_photo_from_gallery">Вибрати з галереї</string>
@@ -58,18 +57,43 @@
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
     <string name="action_register">Register</string> <!-- TODO Add translation -->
     <string name="action_confirm">Confirm</string> <!-- TODO Add translation -->
-    <string name="action_delete_account">Delete account</string> <!-- TODO Add translation -->
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
-    <!-- Settings List -->
-    <string-array name="settings_actions">
-        <item name="item_preferences">Preferences</item> <!-- TODO Add translation -->
-        <item name="item_password">Change password</item> <!-- TODO Add translation -->
-        <item name="change_language">Change language</item> <!-- TODO Add translation -->
-        <item name="item_share_app">Share app</item> <!-- TODO Add translation -->
-        <item name="item_rate_us">Rate us</item> <!-- TODO Add translation -->
-        <item name="item_contact_us">Contact us</item> <!-- TODO Add translation -->
-        <item name="item_licence">Licence</item> <!-- TODO Add translation -->
-        <item name="item_about">About</item> <!-- TODO Add translation -->
+    <!-- Settings messages -->
+    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    <string name="msg_language">Language</string> <!-- TODO Translate -->
+    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
+    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
+    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
+    <string name="msg_license">License</string> <!-- TODO Translate -->
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics_tracking">Надсилати анонімну статистику для покращення роботи програми</string>
+    <string name="msg_do_not_send_analytics_tracking">Не надсилати анонімну статистику для покращення роботи програми</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Недоступно у FOSS версії</string>
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
+    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
+
+    <string-array name="languages"> <!-- TODO Add translations -->
+        <item>English</item>
+        <item>Arabic</item>
+        <item>German</item>
+        <item>Spanish</item>
+        <item>Persian</item>
+        <item>French</item>
+        <item>Hindi (IN)</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Portuguese (BR)</item>
+        <item>Portuguese (PT)</item>
+        <item>Russian (RU)</item>
+        <item>Turkish</item>
+        <item>Ukrainian</item>
+        <item>Chinese (CN)</item>
+        <item>Chinese (TW)</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -77,7 +101,7 @@
     <string name="msg_no_data_to_display">Немає даних для відображення</string>
     <string name="msg_check_this_out">Перевір це</string>
     <string name="msg_share_using">поділитися використанням</string>
-    <string name="msg_profile_update_successfully">"Профіль оновлено успішно "</string>
+    <string name="msg_profile_updated_successfully">"Профіль оновлено успішно "</string>
     <string name="msg_username">Ім\'я користувача</string>
     <string name="msg_username_or_email">Ім\'я користувача або e-mail</string>
     <string name="msg_password">пароль</string>
@@ -86,26 +110,28 @@
     <string name="msg_avatar_url">URL аватара</string>
     <string name="msg_or_continue_using_social_accounts">Або продовжити, за допомогою акаунта у соціальних мережах</string>
     <string name="msg_new_user">Новий користувач? %1$s</string>
-    <string name="msg_forgot__your_password">Забули пароль? %1$s</string>
+    <string name="msg_forgot_your_password">Забули пароль? %1$s</string>
     <string name="msg_reset">Скинути</string>
     <string name="msg_check_your_email_to_reset_your_password">Лист було відправлено! Перевірте свою поштову скриньку, щоб скинути пароль.</string>
     <string name="msg_invalid_email">Введіть діючий e-mail</string>
     <string name="msg_new_user_agreement">Продовжуючи, ви погоджуєтеся з %1$s і %2$s</string>
     <string name="msg_yesterday">Вчора</string>
     <string name="msg_today">Сьогодні</string>
-    <string name="msg_message">"Повідомлення "</string>
+    <string name="msg_message">Повідомлення</string>
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
+    <string name="msg_join_video_call">Join video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">Канал тільки для читання</string>
     <string name="msg_invalid_2fa_code">Неправильний код 2FA</string>
     <string name="msg_invalid_file">Неправильний файл</string>
     <string name="msg_invalid_server_url">Неправильний URL-адреса сервера.</string>
     <string name="msg_content_description_log_in_using_facebook">Увійти за допомогою Facebook</string>
-    <string name="msg_content_description_log_in_using_github">Увійти за допомогою Github</string>
+    <string name="msg_content_description_log_in_using_github">Увійти за допомогою GitHub</string>
     <string name="msg_content_description_log_in_using_google">Увійти за допомогою Google</string>
-    <string name="msg_content_description_log_in_using_linkedin">Увійти за допомогою Linkedin</string>
+    <string name="msg_content_description_log_in_using_linkedin">Увійти за допомогою LinkedIn</string>
     <string name="msg_content_description_log_in_using_meteor">Увійти за допомогою Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Увійти за допомогою Twitter</string>
-    <string name="msg_content_description_log_in_using_gitlab">Увійти за допомогою Gitlab</string>
-    <string name="msg_content_description_log_in_using_wordpress">Увійти за допомогою Wordpress</string>
+    <string name="msg_content_description_log_in_using_gitlab">Увійти за допомогою GitLab</string>
+    <string name="msg_content_description_log_in_using_wordpress">Увійти за допомогою WordPress</string>
     <string name="msg_content_description_send_message">Надіслати повідомлення</string>
     <string name="msg_content_description_show_more_login_options">Show more login options</string> <!-- TODO Translate-->
     <string name="msg_content_description_show_attachment_options">Показати параметри долучення</string>
@@ -151,22 +177,22 @@
     <string name="msg_login_with_email">Login with <b>e-mail</b></string> <!-- TODO Add translation -->
     <string name="msg_create_account">Create an account</string> <!-- TODO Add translation -->
     <string name="msg_continue_with_facebook">Continue with <b>Facebook</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_github">Continue with <b>Github</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_github">Continue with <b>GitHub</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_google">Continue with <b>Google</b></string> <!-- TODO Add translation -->
-    <string name="msg_continue_with_linkedin">Continue with <b>Linkedin</b></string> <!-- TODO Add translation -->
+    <string name="msg_continue_with_linkedin">Continue with <b>LinkedIn</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_gitlab">Continue with <b>GitLab</b></string> <!-- TODO Add translation -->
     <string name="msg_continue_with_wordpress">Continue with <b>WordPress</b></string> <!-- TODO Add translation -->
     <string name="msg_two_factor_authentication">Two-factor Authentication</string> <!-- TODO Add translation -->
-    <string name="msg__your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
+    <string name="msg_your_2fa_code">What’s your 2FA code?</string> <!-- TODO Add translation -->
     <string name="msg_view_more">view more</string> <!-- TODO - Add proper translation -->
     <string name="msg_view_less">view less</string> <!-- TODO - Add proper translation -->
     <string name="msg_permalink_copied">Permalink copied</string> <!-- TODO - Add proper translation -->
     <string name="msg_send_email">Send email</string> <!-- TODO - Add proper translation -->
     <string name="msg_android_app_support">Android app support</string> <!-- TODO - Add proper translation -->
     <string name="msg_muted_on_this_channel">You are muted on this channel</string> <!-- TODO - Add proper translation -->
-    <string name="msg_no_topic">No topic added</string> <!-- TODO Add translation -->
-    <string name="msg_no_announcement">No announcement added</string> <!-- TODO Add translation -->
-    <string name="msg_no_description">No description added</string> <!-- TODO Add translation -->
+    <string name="msg_no_topic">No topic</string> <!-- TODO Add translation -->
+    <string name="msg_no_announcement">No announcement</string> <!-- TODO Add translation -->
+    <string name="msg_no_description">No description</string> <!-- TODO Add translation -->
     <string name="msg_unable_to_update_password">Unable to update password. Error message: %1$s</string> <!-- TODO - Add proper translation -->
     <string name="msg_password_updated_successfully">Password updated successfully</string> <!-- TODO - Add proper translation -->
     <plurals name="msg_reacted_with_">
@@ -174,6 +200,12 @@
         <item quantity="few">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
         <item quantity="many">%1$s reacted with %2$s</item> <!-- TODO - Add proper translation -->
     </plurals>
+    <string name="msg_credentials_saved_successfully">Облікові дані було успішно збережено</string>
+    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
+    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
+    <string name="msg_directory">Directory</string> <!-- TODO Translate -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватний</string>
@@ -186,12 +218,6 @@
     <string name="msg_member_already_added">Ви вже обрали цього користувача</string>
     <string name="msg_member_not_found">"Користувача не знайдено "</string>
     <string name="msg_channel_created_successfully">Канал був створений успішно</string>
-
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Збір аналітики</string>
-    <string name="msg_send_analytics_tracking">Надсилати анонімну статистику для покращення роботи програми</string>
-    <string name="msg_do_not_send_analytics_tracking">Не надсилати анонімну статистику для покращення роботи програми</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Недоступно у FOSS версії</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s змінив назву каналу на %1$s</string>
@@ -206,26 +232,24 @@
     <string name="message_unmuted">Користувачу і%1$s повернули дар мови за рішенням %2$s</string>
     <string name="message_role_add">%1$s був призначений як %2$s користувачем %3$s</string>
     <string name="message_role_removed">%1$s більше не %2$s за рішенням %3$s</string>
-    <string name="message_credentials_saved_successfully">Облікові дані було успішно збережено</string>
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">Відповісти</string>
-    <string name="action_msg_info">Інформація про прочитання</string>
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">Відредагувати</string>
     <string name="action_msg_copy">Скопіювати</string>
     <string name="action_msg_quote">Цитувати</string>
     <string name="action_msg_delete">Видалити</string>
-    <string name="action_msg_pin">Зафіксувати повідомлення</string>
-    <string name="action_msg_unpin">Відмінити фіксацію повідомлення</string>
-    <string name="action_msg_star">До обраного</string>
-    <string name="action_msg_unstar">Видалити з обраного</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">Поділитися</string>
     <string name="action_title_editing">Редагування повідомлення</string>
     <string name="action_msg_add_reaction">Відреагувати</string>
-    <!-- TODO - Add proper translation -->
-    <string name="action_msg_copy_permalink">Copy permalink</string>
-    <!-- TODO - Add proper translation -->
-    <string name="action_msg_report">Report</string>
+    <string name="action_msg_permalink">Permalink</string> <!-- TODO - Add proper translation -->
+    <string name="action_msg_report">Report</string> <!-- TODO - Add proper translation -->
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редагування заборонено</string>
@@ -235,10 +259,6 @@
 
     <!-- Search message -->
     <string name="title_search_message">Пошук повідомлення</string>
-
-    <!-- Favorite/Unfavorite chat room -->
-    <string name="title_favorite_chat">Додати до обраного</string>
-    <string name="title_unfavorite_chat">Видалити з обраного</string>
 
     <!-- Members List -->
     <string name="title_members_list">Користувачі</string>
@@ -275,7 +295,7 @@
     <string name="status_disconnecting">Відключаємося…</string>
     <string name="status_waiting">З\'єднання через %d секунд</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">Повідомити всіх у цьому чаті</string>
     <string name="suggest_here_description">Повідомити всіх активних користувачів у цьому чаті</string>
 
@@ -302,28 +322,31 @@
     <string name="Guggy_Command_Description">Створює gif використовуючи наданий текст</string>
     <string name="Slash_Topic_Description">Встановити тему</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">Пусто</string>
     <string name="alert_title_default_skin_tone">Тон шкіри за замовчуванням</string>
 
-    <!-- Sorting and grouping-->
-    <string name="msg_sort">Сортувати</string>
-    <string name="dialog_sort_title">Сортувати за</string>
-    <string name="dialog_sort_by_alphabet">За алфавітом</string>
-    <string name="dialog_sort_by_activity">За активністю</string>
-    <string name="dialog_group_by_type">Групувати за типом</string>
-    <string name="dialog_group_favourites">Групувати обране</string>
-    <string name="chatroom_header">Заголовок</string>
+    <!-- Sort and group -->
+    <string name="msg_sort_by_placeholder">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by">Sort by</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
-    <string name="header_channel">Канали</string>
+    <string name="msg_channels">Канали</string>
+    <string name="msg_users">Users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">Приватні канали</string>
     <string name="header_direct_messages">Особисті повідомлення</string>
     <string name="header_live_chats">Живі чати</string>
     <string name="header_unknown">Невідомі</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">Редагувати повідомлення</string>
     <string name="notif_action_reply_hint">ВІДПОВІСТИ</string>
     <string name="notif_error_sending">Не вдалося відповісти. Будь ласка, спробуйте ще раз.</string>
@@ -336,6 +359,8 @@
 
     <!-- User Details -->
     <string name="timezone">Timezone</string>
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Submit</string> <!-- TODO - Add proper translation -->
