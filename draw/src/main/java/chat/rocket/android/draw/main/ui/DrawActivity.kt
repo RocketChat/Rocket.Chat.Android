@@ -44,7 +44,15 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
             .show()
     }
 
+
     private fun setupListeners() {
+        custom_draw_view.setOnTouchListener { view, event ->
+            custom_draw_view.onTouch(
+                event,
+                draw_tools,
+                ::toggleCompleteDrawTools)
+        }
+
         image_close_drawing.setOnClickListener { finish() }
 
         image_send_drawing.setOnClickListener {
@@ -116,6 +124,15 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
             view.animate().translationY((56).toPx)
         }
     }
+
+    fun toggleCompleteDrawTools(view: View, showView: Boolean = true) {
+        if (view.translationY == (112).toPx && showView) {
+            toggleDrawTools(draw_tools, false)
+        } else {
+            view.animate().translationY((112).toPx)
+        }
+    }
+
 
     private fun colorSelector() {
         image_color_black.setOnClickListener {
@@ -231,6 +248,7 @@ class DrawingActivity : DaggerAppCompatActivity(), DrawView {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
     }
+
 
     private val Int.toPx: Float
         get() = (this * Resources.getSystem().displayMetrics.density)
