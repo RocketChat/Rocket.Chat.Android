@@ -42,7 +42,6 @@ class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attr
     fun undo() {
         if (mPaths.isEmpty() && mLastPaths.isNotEmpty()) {
             mPaths = mLastPaths.clone() as LinkedHashMap<MyPath, PaintOptions>
-            mLastPaths.clear()
             invalidate()
             return
         }
@@ -80,7 +79,7 @@ class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attr
     }
 
     fun setAlpha(newAlpha: Int) {
-        val alpha = (newAlpha*255)/100
+        val alpha = (newAlpha * 255) / 100
         mPaintOptions.alpha = alpha
         setColor(mPaintOptions.color)
     }
@@ -155,24 +154,31 @@ class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attr
 
         mPaths.put(mPath, mPaintOptions)
         mPath = MyPath()
-        mPaintOptions = PaintOptions(mPaintOptions.color, mPaintOptions.strokeWidth, mPaintOptions.alpha)
+        mPaintOptions =
+            PaintOptions(mPaintOptions.color, mPaintOptions.strokeWidth, mPaintOptions.alpha)
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
+    fun onTouch(
+        event: MotionEvent,
+        drawTools: View,
+        toggleDrawTools: (View, Boolean) -> Unit
+    ): Boolean {
         val x = event.x
         val y = event.y
-
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
+                toggleDrawTools(drawTools, false)
                 mStartX = x
                 mStartY = y
                 actionDown(x, y)
                 mUndonePaths.clear()
             }
             MotionEvent.ACTION_MOVE -> actionMove(x, y)
-            MotionEvent.ACTION_UP -> actionUp()
+            MotionEvent.ACTION_UP -> {
+                toggleDrawTools(drawTools, true)
+                actionUp()
+            }
         }
-
         invalidate()
         return true
     }

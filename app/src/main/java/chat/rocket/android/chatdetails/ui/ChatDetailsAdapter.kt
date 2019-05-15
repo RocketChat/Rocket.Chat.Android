@@ -11,9 +11,15 @@ import chat.rocket.android.util.extensions.inflate
 class ChatDetailsAdapter: RecyclerView.Adapter<OptionViewHolder>() {
     private val options: MutableList<Option> = ArrayList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OptionViewHolder = OptionViewHolder(parent.inflate(R.layout.item_detail_option))
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): OptionViewHolder = OptionViewHolder(parent.inflate(R.layout.item_detail_option))
 
-    override fun onBindViewHolder(holder: OptionViewHolder, position: Int) = holder.bindViews(OptionItemHolder(options[position]))
+    override fun onBindViewHolder(
+        holder: OptionViewHolder,
+        position: Int
+    ) = holder.bindViews(OptionItemHolder(options[position]))
 
     override fun getItemCount(): Int = options.size
 

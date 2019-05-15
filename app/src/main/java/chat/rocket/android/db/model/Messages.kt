@@ -8,11 +8,13 @@ import androidx.room.Relation
 
 interface BaseMessageEntity
 
-@Entity(tableName = "messages",
-        foreignKeys = [
-            ForeignKey(entity = UserEntity::class, parentColumns = ["id"], childColumns = ["senderId"]),
-            ForeignKey(entity = UserEntity::class, parentColumns = ["id"], childColumns = ["editedBy"])
-        ])
+@Entity(
+    tableName = "messages",
+    foreignKeys = [
+        ForeignKey(entity = UserEntity::class, parentColumns = ["id"], childColumns = ["senderId"]),
+        ForeignKey(entity = UserEntity::class, parentColumns = ["id"], childColumns = ["editedBy"])
+    ]
+)
 data class MessageEntity(
     @PrimaryKey val id: String,
     val roomId: String,
@@ -33,36 +35,47 @@ data class MessageEntity(
     val unread: Boolean? = null
 ) : BaseMessageEntity
 
-@Entity(tableName = "message_favorites",
-        primaryKeys = ["messageId", "userId"],
-        foreignKeys = [
-            ForeignKey(entity = MessageEntity::class, parentColumns = ["id"],
-                    childColumns = ["messageId"], onDelete = ForeignKey.CASCADE),
-            ForeignKey(entity = UserEntity::class, parentColumns = ["id"], childColumns = ["userId"])
-        ])
+@Entity(
+    tableName = "message_favorites",
+    primaryKeys = ["messageId", "userId"],
+    foreignKeys = [
+        ForeignKey(
+            entity = MessageEntity::class, parentColumns = ["id"],
+            childColumns = ["messageId"], onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(entity = UserEntity::class, parentColumns = ["id"], childColumns = ["userId"])
+    ]
+)
 data class MessageFavoritesRelation(
     val messageId: String,
     val userId: String
 ) : BaseMessageEntity
 
-@Entity(tableName = "message_mentions",
-        primaryKeys = ["messageId", "userId"],
-        foreignKeys = [
-            ForeignKey(entity = MessageEntity::class, parentColumns = ["id"],
-                    childColumns = ["messageId"], onDelete = ForeignKey.CASCADE),
-            ForeignKey(entity = UserEntity::class, parentColumns = ["id"], childColumns = ["userId"])
-        ])
+@Entity(
+    tableName = "message_mentions",
+    primaryKeys = ["messageId", "userId"],
+    foreignKeys = [
+        ForeignKey(
+            entity = MessageEntity::class, parentColumns = ["id"],
+            childColumns = ["messageId"], onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(entity = UserEntity::class, parentColumns = ["id"], childColumns = ["userId"])
+    ]
+)
 data class MessageMentionsRelation(
     val messageId: String,
     val userId: String
 ) : BaseMessageEntity
 
-@Entity(tableName = "message_channels",
-        primaryKeys = ["messageId", "roomId"],
-        foreignKeys = [
-            ForeignKey(entity = MessageEntity::class, parentColumns = ["id"],
-                    childColumns = ["messageId"], onDelete = ForeignKey.CASCADE)
-        ]
+@Entity(
+    tableName = "message_channels",
+    primaryKeys = ["messageId", "roomId"],
+    foreignKeys = [
+        ForeignKey(
+            entity = MessageEntity::class, parentColumns = ["id"],
+            childColumns = ["messageId"], onDelete = ForeignKey.CASCADE
+        )
+    ]
 )
 data class MessageChannels(
     val messageId: String,
@@ -95,8 +108,6 @@ data class PartialMessage(
     override fun toString(): String {
         return "PartialMessage(message=$message, senderName=$senderName, senderUsername=$senderUsername, editName=$editName, editUsername=$editUsername, urls=$urls, attachments=$attachments, reactions=$reactions, channels=$channels)"
     }
-
-
 }
 
 data class FullMessage(

@@ -10,14 +10,15 @@ import chat.rocket.android.util.extensions.inflate
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_member.view.*
 
-class MembersAdapter(private val listener: (MemberUiModel) -> Unit) :
-    RecyclerView.Adapter<MembersAdapter.ViewHolder>() {
+class MembersAdapter(
+    private val listener: (MemberUiModel) -> Unit
+) : RecyclerView.Adapter<MembersAdapter.ViewHolder>() {
     private var dataSet: List<MemberUiModel> = ArrayList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MembersAdapter.ViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(parent.inflate(R.layout.item_member))
 
-    override fun onBindViewHolder(holder: MembersAdapter.ViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(dataSet[position], listener)
 
     override fun getItemCount(): Int = dataSet.size
@@ -43,7 +44,8 @@ class MembersAdapter(private val listener: (MemberUiModel) -> Unit) :
         fun bind(memberUiModel: MemberUiModel, listener: (MemberUiModel) -> Unit) = with(itemView) {
             image_avatar.setImageURI(memberUiModel.avatarUri)
             text_member.content = memberUiModel.displayName
-            text_member.setCompoundDrawablesRelativeWithIntrinsicBounds(DrawableHelper.getUserStatusDrawable(memberUiModel.status, context), null, null, null)
+            text_member.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    DrawableHelper.getUserStatusDrawable(memberUiModel.status, context), null, null, null)
             setOnClickListener { listener(memberUiModel) }
         }
     }

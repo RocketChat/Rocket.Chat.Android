@@ -80,12 +80,10 @@ fun AppCompatActivity.toPreviousView() {
 }
 
 fun Activity.hideKeyboard() {
-    if (currentFocus != null) {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(
-            currentFocus.windowToken,
-            InputMethodManager.RESULT_UNCHANGED_SHOWN
-        )
+    currentFocus?.run {
+        (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).also {
+            it.hideSoftInputFromWindow(windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
+        }
     }
 }
 

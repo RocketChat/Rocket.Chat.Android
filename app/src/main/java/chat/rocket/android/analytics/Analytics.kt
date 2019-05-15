@@ -10,7 +10,7 @@ interface Analytics {
      * Logs the login event.
      *
      * @param event The [AuthenticationEvent] used to log in.
-     * @param loginSucceeded True if successful logged in, false otherwise.
+     * @param loginSucceeded True if logged in successfully, false otherwise.
      */
     fun logLogin(event: AuthenticationEvent, loginSucceeded: Boolean) {}
 
@@ -18,7 +18,7 @@ interface Analytics {
      * Logs the sign up event.
      *
      * @param event The [AuthenticationEvent] used to sign up.
-     * @param signUpSucceeded True if successful signed up, false otherwise.
+     * @param signUpSucceeded True if signed up successfully, false otherwise.
      */
     fun logSignUp(event: AuthenticationEvent, signUpSucceeded: Boolean) {}
 
@@ -71,4 +71,67 @@ interface Analytics {
      * @param resetPasswordSucceeded True if successful reset password, false otherwise.
      */
     fun logResetPassword(resetPasswordSucceeded: Boolean) {}
+
+    /**
+     * Logs the video conference event.
+     *
+     * @param event The [SubscriptionTypeEvent] to log.
+     * @param serverUrl The server URL to log.
+     */
+    fun logVideoConference(event: SubscriptionTypeEvent, serverUrl: String) {}
+
+    /**
+     * Logs the add reaction message action.
+     */
+    fun logMessageActionAddReaction() {}
+
+    /**
+     * Logs the replay message action.
+     */
+    fun logMessageActionReply() {}
+
+    /**
+     * Logs the quote message action.
+     */
+    fun logMessageActionQuote() {}
+
+    /**
+     * Logs the permalink message action.
+     */
+    fun logMessageActionPermalink() {}
+
+    /**
+     * Logs the copy message action.
+     */
+    fun logMessageActionCopy() {}
+
+    /**
+     * Logs the edit message action.
+     */
+    fun logMessageActionEdit() {}
+
+    /**
+     * Logs the info message action.
+     */
+    fun logMessageActionInfo() {}
+
+    /**
+     * Logs the star message action.
+     */
+    fun logMessageActionStar() {}
+
+    /**
+     * Logs the pin message action.
+     */
+    fun logMessageActionPin() {}
+
+    /**
+     * Logs the report message action.
+     */
+    fun logMessageActionReport() {}
+
+    /**
+     * Logs the delete message action.
+     */
+    fun logMessageActionDelete() {}
 }

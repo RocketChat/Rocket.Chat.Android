@@ -14,8 +14,9 @@ import chat.rocket.android.server.domain.SaveCurrentServerInteractor
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.favicon
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.server.domain.siteName
 import chat.rocket.android.server.domain.wideTile
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.serverLogoUrl
@@ -31,8 +32,7 @@ import chat.rocket.core.internal.rest.loginWithCas
 import chat.rocket.core.internal.rest.loginWithOauth
 import chat.rocket.core.internal.rest.loginWithSaml
 import chat.rocket.core.internal.rest.me
-import kotlinx.coroutines.experimental.delay
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 private const val TYPE_LOGIN_OAUTH = 1
@@ -55,6 +55,7 @@ class LoginOptionsPresenter @Inject constructor(
 ) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
     private var currentServer = serverInteractor.get()!!
+    private val token = tokenRepository.get(currentServer)
     private lateinit var client: RocketChatClient
     private lateinit var settings: PublicSettings
     private lateinit var credentialToken: String
@@ -109,11 +110,11 @@ class LoginOptionsPresenter @Inject constructor(
                     when (loginType) {
                         TYPE_LOGIN_OAUTH -> client.loginWithOauth(credentialToken, credentialSecret)
                         TYPE_LOGIN_CAS -> {
-                            delay(3, TimeUnit.SECONDS)
+                            delay(3000)
                             client.loginWithCas(credentialToken)
                         }
                         TYPE_LOGIN_SAML -> {
-                            delay(3, TimeUnit.SECONDS)
+                            delay(3000)
                             client.loginWithSaml(credentialToken)
                         }
                         TYPE_LOGIN_DEEP_LINK -> {
@@ -170,19 +171,26 @@ class LoginOptionsPresenter @Inject constructor(
 
     private fun setupConnectionInfo(serverUrl: String) {
         currentServer = serverUrl
-        client = factory.create(currentServer)
+        client = factory.get(currentServer)
         settings = settingsInteractor.get(currentServer)
     }
 
-    private suspend fun saveAccount(username: String) {
+    private fun saveAccount(username: String) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }
         val logo = settings.wideTile()?.let {
             currentServer.serverLogoUrl(it)
         }
-        val thumb = currentServer.avatarUrl(username)
-        val account = Account(currentServer, icon, logo, username, thumb)
+        val thumb = currentServer.avatarUrl(username, token?.userId, token?.authToken)
+        val account = Account(
+            settings.siteName() ?: currentServer,
+            currentServer,
+            icon,
+            logo,
+            username,
+            thumb
+        )
         saveAccountInteractor.save(account)
     }
 
