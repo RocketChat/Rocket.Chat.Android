@@ -113,20 +113,15 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_no_data_to_display">No data to display</string>
     <string name="msg_check_this_out">Check this out</string>
     <string name="msg_share_using">Share using</string>
-<<<<<<< HEAD
-    <string name="msg_profile_update_successfully">Profile update successfully</string>
     <string name="msg_username">Username</string>
-    <string name="msg_profile_username_hint" translatable="false">Please enter your username…</string>
-=======
+    <string name="msg_profile_username_hint" translatable="false">Please enter your username</string> <!-- TODO Make translatable and add translations -->
     <string name="msg_profile_updated_successfully">Profile updated successfully</string>
-    <string name="msg_username">username</string>
->>>>>>> dd938089e9ef495da5a5afd57651f611c1ad7bae
     <string name="msg_username_or_email">Username or email</string>
     <string name="msg_password">Password</string>
     <string name="msg_name">Name</string>
     <string name="msg_profile_name_hint" translatable="false">Please enter your name…</string>
     <string name="msg_email">Email</string>
-    <string name="msg_profile_email_hint" translatable="false">Please enter your email address…</string>
+    <string name="msg_profile_email_hint" translatable="false">Please enter your email address</string> <!-- TODO Make translatable and add translations -->
     <string name="msg_avatar_url">avatar URL</string>
     <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
     <string name="msg_new_user">New user? %1$s</string>
