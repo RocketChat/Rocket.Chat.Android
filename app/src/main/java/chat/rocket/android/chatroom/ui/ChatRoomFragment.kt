@@ -29,14 +29,17 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.chatroom.adapter.AttachmentViewHolder
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.adapter.CommandSuggestionsAdapter
 import chat.rocket.android.chatroom.adapter.EmojiSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.MessageViewHolder
 import chat.rocket.android.chatroom.adapter.PEOPLE
 import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter
 import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter
@@ -156,7 +159,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     lateinit var analyticsManager: AnalyticsManager
     @Inject
     lateinit var navigator: ChatRoomNavigator
-    private lateinit var adapter: ChatRoomAdapter
+    private lateinit var chatRoomAdapter: ChatRoomAdapter
     internal lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     internal lateinit var chatRoomType: String
@@ -289,7 +292,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
             ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
 
-        adapter = ChatRoomAdapter(
+        chatRoomAdapter = ChatRoomAdapter(
             roomId = chatRoomId,
             roomType = chatRoomType,
             roomName = chatRoomName,
@@ -388,7 +391,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showMessages(dataSet: List<BaseUiModel<*>>, clearDataSet: Boolean) {
         ui {
             if (clearDataSet) {
-                adapter.clearData()
+                chatRoomAdapter.clearData()
             }
 
             if (dataSet.isNotEmpty()) {
@@ -429,22 +432,22 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }
             }
 
-            val oldMessagesCount = adapter.itemCount
-            adapter.appendData(dataSet)
+            val oldMessagesCount = chatRoomAdapter.itemCount
+            chatRoomAdapter.appendData(dataSet)
             if (oldMessagesCount == 0 && dataSet.isNotEmpty()) {
                 recycler_view.scrollToPosition(0)
                 verticalScrollOffset.set(0)
             }
-            empty_chat_view.isVisible = adapter.itemCount == 0
+            empty_chat_view.isVisible = chatRoomAdapter.itemCount == 0
             dismissEmojiKeyboard()
         }
     }
 
     override fun showSearchedMessages(dataSet: List<BaseUiModel<*>>) {
         recycler_view.removeOnScrollListener(endlessRecyclerViewScrollListener)
-        adapter.clearData()
-        adapter.prependData(dataSet)
-        empty_chat_view.isVisible = adapter.itemCount == 0
+        chatRoomAdapter.clearData()
+        chatRoomAdapter.prependData(dataSet)
+        empty_chat_view.isVisible = chatRoomAdapter.itemCount == 0
         dismissEmojiKeyboard()
     }
 
@@ -527,7 +530,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun showNewMessage(message: List<BaseUiModel<*>>, isMessageReceived: Boolean) {
         ui {
-            adapter.prependData(message)
+            chatRoomAdapter.prependData(message)
             if (isMessageReceived && button_fab.isVisible) {
                 newMessageCount++
                 if (newMessageCount <= 99) {
@@ -540,7 +543,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 recycler_view.scrollToPosition(0)
             }
             verticalScrollOffset.set(0)
-            empty_chat_view.isVisible = adapter.itemCount == 0
+            empty_chat_view.isVisible = chatRoomAdapter.itemCount == 0
             dismissEmojiKeyboard()
         }
     }
@@ -550,9 +553,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             // TODO - investigate WHY we get a empty list here
             if (message.isEmpty()) return@ui
 
-            if (adapter.updateItem(message.last())) {
+            if (chatRoomAdapter.updateItem(message.last())) {
                 if (message.size > 1) {
-                    adapter.prependData(listOf(message.first()))
+                    chatRoomAdapter.prependData(listOf(message.first()))
                 }
             } else {
                 showNewMessage(message, true)
@@ -563,7 +566,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun dispatchDeleteMessage(msgId: String) {
         ui {
-            adapter.removeItem(msgId)
+            chatRoomAdapter.removeItem(msgId)
         }
     }
 
@@ -793,11 +796,55 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
         }
 
-        recycler_view.adapter = adapter
-        recycler_view.addOnScrollListener(fabScrollListener)
-        recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
-        recycler_view.addOnLayoutChangeListener(layoutChangeListener)
-        recycler_view.addOnScrollListener(onScrollListener)
+        with (recycler_view) {
+            adapter = chatRoomAdapter
+            addOnScrollListener(endlessRecyclerViewScrollListener)
+            addOnLayoutChangeListener(layoutChangeListener)
+            addOnScrollListener(onScrollListener)
+            addOnScrollListener(fabScrollListener)
+        }
+        if (!isReadOnly) {
+            val touchCallback: ItemTouchHelper.SimpleCallback =
+                object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                    override fun onMove(
+                        recyclerView: RecyclerView,
+                        viewHolder: RecyclerView.ViewHolder,
+                        target: RecyclerView.ViewHolder
+                    ): Boolean {
+                        return true
+                    }
+
+                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                        var replyId: String? = null
+
+                        when (viewHolder) {
+                            is MessageViewHolder -> replyId = viewHolder.data?.messageId
+                            is AttachmentViewHolder -> replyId = viewHolder.data?.messageId
+                        }
+
+                        replyId?.let {
+                            citeMessage(chatRoomName, chatRoomType, it, true)
+                        }
+
+                        chatRoomAdapter.notifyItemChanged(viewHolder.adapterPosition)
+                    }
+
+                    override fun getSwipeDirs(
+                        recyclerView: RecyclerView,
+                        viewHolder: RecyclerView.ViewHolder
+                    ): Int {
+                        // Currently enable swipes for text and attachment messages only
+
+                        if (viewHolder is MessageViewHolder || viewHolder is AttachmentViewHolder) {
+                            return super.getSwipeDirs(recyclerView, viewHolder)
+                        }
+
+                        return 0
+                    }
+                }
+
+            ItemTouchHelper(touchCallback).attachToRecyclerView(recycler_view)
+        }
     }
 
     private fun setupFab() {
