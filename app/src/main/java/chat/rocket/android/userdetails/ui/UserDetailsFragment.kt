@@ -20,6 +20,7 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -29,11 +30,9 @@ import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_user_details.*
 import javax.inject.Inject
 
-fun newInstance(userId: String): Fragment {
-    return UserDetailsFragment().apply {
-        arguments = Bundle(1).apply {
-            putString(BUNDLE_USER_ID, userId)
-        }
+fun newInstance(userId: String): Fragment = UserDetailsFragment().apply {
+    arguments = Bundle(1).apply {
+        putString(BUNDLE_USER_ID, userId)
     }
 }
 
@@ -52,12 +51,10 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        val bundle = arguments
-        if (bundle != null) {
-            userId = bundle.getString(BUNDLE_USER_ID)
-        } else {
-            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
+        arguments?.run {
+            userId = getString(BUNDLE_USER_ID, "")
         }
+            ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
 
     override fun onCreateView(
@@ -81,14 +78,18 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         super.onDestroyView()
     }
 
-    override fun showUserDetails(
-        avatarUrl: String,
-        name: String,
-        username: String,
-        status: String,
-        utcOffset: String
+    override fun showUserDetailsAndActions(
+        avatarUrl: String?,
+        name: String?,
+        username: String?,
+        status: String?,
+        utcOffset: String?,
+        isVideoCallAllowed: Boolean
     ) {
-        val requestBuilder = Glide.with(this).load(avatarUrl)
+        val requestBuilder = Glide.with(this)
+            .load(avatarUrl)
+            .apply(RequestOptions.skipMemoryCacheOf(true))
+            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
 
         requestBuilder.apply(
             RequestOptions.bitmapTransform(MultiTransformation(BlurTransformation(), CenterCrop()))
@@ -97,13 +98,22 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         requestBuilder.apply(RequestOptions.bitmapTransform(RoundedCorners(14)))
             .into(image_avatar)
 
-        text_name.text = name
-        text_username.text = username
-        text_description_status.text = status.substring(0, 1).toUpperCase() + status.substring(1)
-        text_description_timezone.text = utcOffset
+        text_name.text = name ?: getString(R.string.msg_unknown)
+        text_username.text = username ?: getString(R.string.msg_unknown)
+
+        text_description_status.text = status?.capitalize() ?: getString(R.string.msg_unknown)
+
+        text_description_timezone.text = utcOffset ?: getString(R.string.msg_unknown)
+
+        text_video_call.isVisible = isVideoCallAllowed
 
         // We should also setup the user details listeners.
-        text_message.setOnClickListener { presenter.createDirectMessage(username) }
+        username?.run {
+            text_message.setOnClickListener { presenter.createDirectMessage(this) }
+            if (isVideoCallAllowed) {
+                text_video_call.setOnClickListener { presenter.toVideoConference(this) }
+            }
+        }
     }
 
     override fun showLoading() {

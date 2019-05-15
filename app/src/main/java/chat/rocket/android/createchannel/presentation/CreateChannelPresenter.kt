@@ -4,7 +4,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.members.uimodel.MemberUiModelMapper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -22,7 +22,7 @@ class CreateChannelPresenter @Inject constructor(
     val serverInteractor: GetCurrentServerInteractor,
     val factory: RocketChatClientFactory
 ) {
-    private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
+    private val client: RocketChatClient = factory.get(serverInteractor.get()!!)
 
     fun createChannel(
         roomType: RoomType,
@@ -35,7 +35,6 @@ class CreateChannelPresenter @Inject constructor(
             view.disableUserInput()
             try {
                 client.createChannel(roomType, channelName, usersList, readOnly)
-                view.prepareToShowChatList()
                 view.showChannelCreatedSuccessfullyMessage()
                 toChatList()
             } catch (exception: RocketChatException) {

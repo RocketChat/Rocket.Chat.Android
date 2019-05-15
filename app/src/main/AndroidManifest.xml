@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".app.RocketChatApplication"
@@ -74,6 +76,11 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
+            android:name=".videoconference.ui.VideoConferenceActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
+        <activity
             android:name=".chatroom.ui.ChatRoomActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
@@ -83,7 +90,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
-        <!-- TODO: Change to fragment-->
+        <!-- TODO: Change to fragment -->
         <activity
             android:name=".settings.password.ui.PasswordActivity"
             android:theme="@style/AppTheme" />

@@ -1,8 +1,8 @@
 package chat.rocket.android.server.domain
 
 import chat.rocket.core.model.ChatRoom
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ChatRoomsInteractor @Inject constructor(private val repository: ChatRoomsRepository) {
@@ -23,15 +23,16 @@ class ChatRoomsInteractor @Inject constructor(private val repository: ChatRoomsR
      * @param name The name of chat room to look for or a chat room that contains this name.
      * @return A list of ChatRoom objects with the given name.
      */
-    suspend fun getAllByName(url: String, name: String): List<ChatRoom> = withContext(CommonPool) {
-        val allChatRooms = repository.get(url)
-        if (name.isEmpty()) {
-            return@withContext allChatRooms
+    suspend fun getAllByName(url: String, name: String): List<ChatRoom> =
+        withContext(Dispatchers.IO) {
+            val allChatRooms = repository.get(url)
+            if (name.isEmpty()) {
+                return@withContext allChatRooms
+            }
+            return@withContext allChatRooms.filter {
+                it.name.contains(name, true)
+            }
         }
-        return@withContext allChatRooms.filter {
-            it.name.contains(name, true)
-        }
-    }
 
     /**
      * Get a specific [ChatRoom] by its id.
@@ -40,11 +41,12 @@ class ChatRoomsInteractor @Inject constructor(private val repository: ChatRoomsR
      * @param roomId The id of the room to get.
      * @return The [ChatRoom] object or null if we couldn't find any.
      */
-    suspend fun getById(serverUrl: String, roomId: String): ChatRoom? = withContext(CommonPool) {
-        return@withContext repository.get(serverUrl).find {
-            it.id == roomId
+    suspend fun getById(serverUrl: String, roomId: String): ChatRoom? =
+        withContext(Dispatchers.IO) {
+            return@withContext repository.get(serverUrl).find {
+                it.id == roomId
+            }
         }
-    }
 
     /**
      * Get a specific [ChatRoom] by its name.
