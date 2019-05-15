@@ -56,7 +56,7 @@ ext {
             glide                 : '4.8.0',
             glideTransformations  : '4.0.0',
 
-            jitsi                 : '+', // TODO Avoid using + (https://github.com/jitsi/jitsi-meet/issues/3987)
+            jitsi                 : '2.1.0',
 
             // For testing
             junit                 : '4.12',

@@ -13,8 +13,9 @@ import chat.rocket.android.server.domain.SaveCurrentServerInteractor
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.favicon
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.server.domain.siteName
 import chat.rocket.android.server.domain.wideTile
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.isEmail
@@ -43,7 +44,8 @@ class TwoFAPresenter @Inject constructor(
     val settingsInteractor: GetSettingsInteractor
 ) {
     private val currentServer = serverInteractor.get()!!
-    private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
+    private var settings: PublicSettings = settingsInteractor.get(currentServer)
+    private val token = tokenRepository.get(currentServer)
 
     fun authenticate(
         usernameOrEmail: String,
@@ -51,7 +53,7 @@ class TwoFAPresenter @Inject constructor(
         twoFactorAuthenticationCode: String
     ) {
         launchUI(strategy) {
-            val client = factory.create(currentServer)
+            val client = factory.get(currentServer)
             view.showLoading()
             try {
                 // The token is saved via the client TokenProvider
@@ -101,8 +103,15 @@ class TwoFAPresenter @Inject constructor(
         val logo = settings.wideTile()?.let {
             currentServer.serverLogoUrl(it)
         }
-        val thumb = currentServer.avatarUrl(me.username!!)
-        val account = Account(currentServer, icon, logo, me.username!!, thumb)
+        val thumb = currentServer.avatarUrl(me.username!!, token?.userId, token?.authToken)
+        val account = Account(
+            settings.siteName() ?: currentServer,
+            currentServer,
+            icon,
+            logo,
+            me.username!!,
+            thumb
+        )
         saveAccountInteractor.save(account)
     }
 }

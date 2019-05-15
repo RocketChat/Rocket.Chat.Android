@@ -102,15 +102,11 @@ class MembersFragment : Fragment(), MembersView {
     }
 
     override fun showMessage(resId: Int) {
-        ui {
-            showToast(resId)
-        }
+        ui { showToast(resId) }
     }
 
     override fun showMessage(message: String) {
-        ui {
-            showToast(message)
-        }
+        ui { showToast(message) }
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))

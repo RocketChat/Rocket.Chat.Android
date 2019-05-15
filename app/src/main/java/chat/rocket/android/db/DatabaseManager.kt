@@ -31,7 +31,6 @@ import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
-import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.userId
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -139,7 +138,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
     }
 
     /*
-     * Creates a list of data base operations
+     * Creates a list of database operations
      */
     fun processChatRoomsBatch(batch: List<StreamMessage<BaseRoom>>) {
         GlobalScope.launch(dbManagerContext) {
@@ -237,7 +236,8 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                                 reaction,
                                 message.id,
                                 size,
-                                reactionValue.joinToString()
+                                reactionValue.first.joinToString(),
+                                reactionValue.second.joinToString()
                             )
                         )
                     }
@@ -383,16 +383,13 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         }
     }
 
-    private fun mapLastMessageText(message: Message?): String? = message?.run {
-        if (this.message.isEmpty() && attachments?.isNotEmpty() == true) {
-            message.attachments?.let { mapAttachmentText(it[0]) }
+    private fun mapLastMessageText(message: Message?): String? = message?.let { lastMessage ->
+        if (lastMessage.message.isEmpty() && lastMessage.attachments?.isNotEmpty() == true) {
+            context.getString(R.string.msg_sent_attachment)
         } else {
-            this.message
+            lastMessage.message
         }
     }
-
-    private fun mapAttachmentText(attachment: Attachment): String =
-        context.getString(R.string.msg_sent_attachment)
 
     private suspend fun updateSubscription(data: Subscription): ChatRoomEntity? {
         return retryDB("getRoom(${data.roomId}") { chatRoomDao().getSync(data.roomId) }?.let { current ->
@@ -475,6 +472,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         return ChatRoomEntity(
             id = room.id,
             subscriptionId = subscription.id,
+            parentId = subscription.parentId,
             type = room.type.toString(),
             name = room.name ?: subscription.name
             ?: throw NullPointerException(), // this should be filtered on the SDK
@@ -516,6 +514,7 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
             return ChatRoomEntity(
                 id = id,
                 subscriptionId = subscriptionId,
+                parentId = parentId,
                 type = type.toString(),
                 name = name,
                 fullname = fullName,

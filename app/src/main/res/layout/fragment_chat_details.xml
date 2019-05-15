@@ -21,7 +21,9 @@
                 style="@style/ChatDetails.Title.TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="#important" />
+                android:drawableStart="@drawable/ic_hashtag_black_12dp"
+                android:drawablePadding="@dimen/text_view_drawable_padding"
+                tools:text="important" />
 
             <TextView
                 android:id="@+id/title_description"

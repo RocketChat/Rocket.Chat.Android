@@ -12,8 +12,9 @@ import chat.rocket.android.server.domain.SaveCurrentServerInteractor
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.favicon
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.server.domain.siteName
 import chat.rocket.android.server.domain.wideTile
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.serverLogoUrl
@@ -38,8 +39,9 @@ class RegisterUsernamePresenter @Inject constructor(
     val settingsInteractor: GetSettingsInteractor
 ) {
     private val currentServer = serverInteractor.get()!!
-    private val client: RocketChatClient = factory.create(currentServer)
-    private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
+    private val client: RocketChatClient = factory.get(currentServer)
+    private var settings: PublicSettings = settingsInteractor.get(currentServer)
+    private val token = tokenRepository.get(currentServer)
 
     fun registerUsername(username: String, userId: String, authToken: String) {
         launchUI(strategy) {
@@ -72,15 +74,22 @@ class RegisterUsernamePresenter @Inject constructor(
         }
     }
 
-    private suspend fun saveAccount(username: String) {
+    private fun saveAccount(username: String) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }
         val logo = settings.wideTile()?.let {
             currentServer.serverLogoUrl(it)
         }
-        val thumb = currentServer.avatarUrl(username)
-        val account = Account(currentServer, icon, logo, username, thumb)
+        val thumb = currentServer.avatarUrl(username, token?.userId, token?.authToken)
+        val account = Account(
+            settings.siteName() ?: currentServer,
+            currentServer,
+            icon,
+            logo,
+            username,
+            thumb
+        )
         saveAccountInteractor.save(account)
     }
 }
