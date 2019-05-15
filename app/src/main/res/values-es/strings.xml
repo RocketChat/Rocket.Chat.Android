@@ -71,6 +71,9 @@
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics_tracking">Envía estadísticas anónimas para ayudar a mejorar esta aplicación</string>
+    <string name="msg_do_not_send_analytics_tracking">No envíe estadísticas anónimas para ayudar a mejorar esta aplicación</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">No aplica ya que es una versión FOSS</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
@@ -216,12 +219,6 @@
     <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
     <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
 
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Seguimiento analítico</string>
-    <string name="msg_send_analytics_tracking">Envía estadísticas anónimas para ayudar a mejorar esta aplicación</string>
-    <string name="msg_do_not_send_analytics_tracking">No envíe estadísticas anónimas para ayudar a mejorar esta aplicación</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">No aplica ya que es una versión FOSS</string>
-
     <!-- System messages -->
     <string name="message_room_name_changed">Nombre de la sala cambiado para: %1$s por %2$s</string>
     <string name="message_user_added_by">Usuario %1$s añadido por %2$s</string>
@@ -252,8 +249,7 @@
     <string name="action_title_editing">Edición de mensaje</string>
     <string name="action_msg_add_reaction">Añadir una reacción</string>
     <string name="action_msg_permalink">Permalink</string> <!-- TODO Add translation -->
-    <!-- TODO - Add proper translation -->
-    <string name="action_msg_report">Report</string>
+    <string name="action_msg_report">Report</string> <!-- TODO Add translation -->
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">La edición no és permitida</string>
@@ -300,7 +296,7 @@
     <string name="status_disconnecting">Desconectando</string>
     <string name="status_waiting">Conectando en %d segundos</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">Notificar a todos en esta sala</string>
     <string name="suggest_here_description">Notificar usuarios activos en esta sala</string>
 
@@ -327,7 +323,7 @@
     <string name="Guggy_Command_Description">Genera un gif basado en el texto proporcionado</string>
     <string name="Slash_Topic_Description">Establecer tema</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">Sin emojis recientes</string>
     <string name="alert_title_default_skin_tone">Tono de piel predeterminado</string>
 
@@ -340,18 +336,18 @@
     <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
     <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="msg_channels">Canales</string>
     <string name="msg_users">Users</string> <!-- TODO Translate -->
     <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">Grupos privados</string>
     <string name="header_direct_messages">Mensajes directos</string>
     <string name="header_live_chats">Chats en vivo</string>
     <string name="header_unknown">Desconocido</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">Edita mensaje compartido</string>
     <string name="notif_action_reply_hint">RESPUESTA</string>
     <string name="notif_error_sending">La respuesta ha fallado. Inténtalo de nuevo.</string>
@@ -367,6 +363,8 @@
 
     <!-- User Details -->
     <string name="timezone">Timezone</string> <!-- TODO - Add proper translation -->
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Submit</string> <!--TODO - Add proper translation-->

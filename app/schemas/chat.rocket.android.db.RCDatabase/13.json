@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 12,
-    "identityHash": "f0e15bc95a0bb09b052c484704dd3abd",
+    "version": 13,
+    "identityHash": "3bef73b44ae4edf2a74b48fd68f2c599",
     "entities": [
       {
         "tableName": "users",
@@ -1019,7 +1019,7 @@
       },
       {
         "tableName": "reactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`reaction` TEXT NOT NULL, `messageId` TEXT NOT NULL, `count` INTEGER NOT NULL, `usernames` TEXT NOT NULL, PRIMARY KEY(`reaction`), FOREIGN KEY(`messageId`) REFERENCES `messages`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`reaction` TEXT NOT NULL, `messageId` TEXT NOT NULL, `count` INTEGER NOT NULL, `usernames` TEXT NOT NULL, `names` TEXT NOT NULL, PRIMARY KEY(`reaction`), FOREIGN KEY(`messageId`) REFERENCES `messages`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "reaction",
@@ -1042,6 +1042,12 @@
           {
             "fieldPath": "usernames",
             "columnName": "usernames",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "names",
+            "columnName": "names",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -1105,7 +1111,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f0e15bc95a0bb09b052c484704dd3abd\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3bef73b44ae4edf2a74b48fd68f2c599\")"
     ]
   }
 }

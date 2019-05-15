@@ -71,6 +71,9 @@
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics_tracking">Envoyer des statistiques anonymes pour aider à l\'amélioration de l\'application</string>
+    <string name="msg_do_not_send_analytics_tracking">Ne pas envoyer des statistiques anonymes pour aider à l\'amélioration de l\'application</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Ne s\'applique pas étant donné qu\'il s\'agit d\'une version FOSS</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
@@ -219,12 +222,6 @@
     <string name="msg_member_not_found">Membre non trouvé</string>
     <string name="msg_channel_created_successfully">Salon créé</string>
 
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Pistage à des fins d\'analyses</string>
-    <string name="msg_send_analytics_tracking">Envoyer des statistiques anonymes pour aider à l\'amélioration de l\'application</string>
-    <string name="msg_do_not_send_analytics_tracking">Ne pas envoyer des statistiques anonymes pour aider à l\'amélioration de l\'application</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Ne s\'applique pas étant donné qu\'il s\'agit d\'une version FOSS</string>
-
     <!-- System messages -->
     <string name="message_room_name_changed">Le nom du salon %1$s a été changé en %2$s</string>
     <string name="message_user_added_by">Utilisateur %1$s ajouté par %2$s</string>
@@ -301,7 +298,7 @@
     <string name="status_disconnecting">Déconnexion</string>
     <string name="status_waiting">Connexion dans %d secondes</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">Notifier tous les utilisateurs dans ce salon</string>
     <string name="suggest_here_description">Notifier les utilisateurs actifs dans ce salon</string>
 
@@ -328,7 +325,7 @@
     <string name="Guggy_Command_Description">Génère un gif basé sur le texte fourni</string>
     <string name="Slash_Topic_Description">Définir le sujet</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">Aucun emoji récent</string>
     <string name="alert_title_default_skin_tone">Tonalité de peau par défaut</string>
 
@@ -341,18 +338,18 @@
     <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
     <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Favoris</string>
     <string name="msg_channels">Salons</string>
     <string name="msg_users">Users</string> <!-- TODO Translate -->
     <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">Groupes privés</string>
     <string name="header_direct_messages">Messages directs</string>
     <string name="header_live_chats">Chats en direct</string>
     <string name="header_unknown">Inconnu</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">Modifier le message partagé</string>
     <string name="notif_action_reply_hint">RÉPONDRE</string>
     <string name="notif_error_sending">La réponse a échoué. Veuillez réessayer.</string>
@@ -363,9 +360,10 @@
     <string name="msg_sent_attachment">Envoyé un fichier</string>
     <string name="message_room_changed_privacy">Changé de type de chambre : %1$s de %2$s</string>
 
-
     <!-- User Details -->
     <string name="timezone">Fuseau horaire</string>
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Soumettre</string>

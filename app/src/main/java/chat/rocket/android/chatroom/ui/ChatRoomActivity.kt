@@ -139,7 +139,7 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     fun setupExpandMoreForToolbar(listener: (View) -> Unit) {
-        DrawableHelper.compoundRightDrawable(
+        DrawableHelper.compoundEndDrawable(
             text_toolbar_title,
             DrawableHelper.getDrawableFromId(R.drawable.ic_chatroom_toolbar_expand_more_20dp, this)
         )
