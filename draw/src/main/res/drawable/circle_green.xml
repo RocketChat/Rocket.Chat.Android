@@ -3,6 +3,6 @@
     android:shape="oval">
 
     <solid android:color="@color/color_green" />
-        <corners android:radius="50dp" />
+    <corners android:radius="50dp" />
 
 </shape>

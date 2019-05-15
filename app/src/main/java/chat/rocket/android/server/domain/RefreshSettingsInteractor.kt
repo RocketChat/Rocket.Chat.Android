@@ -1,6 +1,6 @@
 package chat.rocket.android.server.domain
 
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.retryIO
 import chat.rocket.core.internal.rest.settings
 import kotlinx.coroutines.Dispatchers
@@ -74,7 +74,7 @@ class RefreshSettingsInteractor @Inject constructor(
 
     suspend fun refresh(server: String) {
         withContext(Dispatchers.IO) {
-            factory.create(server).let { client ->
+            factory.get(server).let { client ->
                 val settings = retryIO(
                     description = "settings",
                     times = 5,

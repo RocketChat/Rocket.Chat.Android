@@ -6,7 +6,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.JitsiHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.server.domain.*
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf

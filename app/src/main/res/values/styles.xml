@@ -10,6 +10,7 @@
         <item name="searchViewStyle">@style/ChatRoom.SearchView</item>
         <item name="actionModeBackground">@color/colorPrimary</item>
         <item name="android:actionModeBackground">@color/colorPrimary</item>
+        <item name="android:textDirection">locale</item>
     </style>
 
     <!-- Widget styles. -->
@@ -261,7 +262,18 @@
 
     // REMARK: To be removed.
     <style name="Profile.EditText" parent="Authentication.EditText.Border">
-        <item name="android:background">@drawable/style_edit_text_profile</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+
+    <style name="Profile.TextView" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:maxLines">1</item>
     </style>
 
     <style name="ActionModeStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
