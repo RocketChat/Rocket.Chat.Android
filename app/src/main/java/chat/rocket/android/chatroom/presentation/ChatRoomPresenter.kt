@@ -1375,4 +1375,12 @@ class ChatRoomPresenter @Inject constructor(
     fun getDraftUnfinishedMessage(): String? {
         return localRepository.get(draftKey)
     }
+
+    fun openFullWebPage(roomId: String, url: String){
+        navigator.toFullWebPage(roomId, url)
+    }
+
+    fun openConfigurableWebPage(roomId: String, url: String, heightRatio: String){
+        navigator.toConfigurableWebPage(roomId, url, heightRatio)
+    }
 }

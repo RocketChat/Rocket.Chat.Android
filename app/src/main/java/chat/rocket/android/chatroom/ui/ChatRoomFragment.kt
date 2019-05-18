@@ -387,6 +387,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         super.onPrepareOptionsMenu(menu)
     }
 
+    override fun openFullWebPage(roomId: String, url: String) {
+        presenter.openFullWebPage(roomId, url)
+    }
+
+    override fun openConfigurableWebPage(roomId: String, url: String, heightRatio: String) {
+        presenter.openConfigurableWebPage(roomId, url, heightRatio)
+    }
+
 
     override fun showMessages(dataSet: List<BaseUiModel<*>>, clearDataSet: Boolean) {
         ui {
