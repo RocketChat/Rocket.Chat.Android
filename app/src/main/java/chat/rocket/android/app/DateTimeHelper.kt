@@ -37,7 +37,7 @@ object DateTimeHelper {
     fun getDate(localDateTime: LocalDateTime, context: Context): String {
         val localDate = localDateTime.toLocalDate()
         return when (localDate) {
-            today -> formatLocalTime(localDateTime.toLocalTime(), localDate)
+            today ->"Today"+" "+formatLocalTime(localDateTime.toLocalTime())
             yesterday -> context.getString(R.string.msg_yesterday)
             else -> {
                 if (Period.between(lastWeek, localDate).days <= 0) {
@@ -65,8 +65,8 @@ object DateTimeHelper {
      * @return The time from a [LocalDateTime].
      */
     fun getTime(localDateTime: LocalDateTime): String {
-        val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.FULL)
-        return localDateTime.format(formatter).toString()
+        val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+        return localDateTime.toLocalTime().format(formatter).toString()
     }
 
     /**
@@ -80,18 +80,17 @@ object DateTimeHelper {
     }
 
     private fun formatLocalDateTime(localDateTime: LocalDateTime): String {
-        val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)
+        val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
         return localDateTime.format(formatter).toString()
     }
 
     private fun formatLocalDate(localDate: LocalDate): String {
-        val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
+        val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
         return localDate.format(formatter).toString()
     }
 
-    private fun formatLocalTime(localTime: LocalTime, localDate: LocalDate): String {
+    private fun formatLocalTime(localTime: LocalTime): String {
         val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
-        val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
-        return localTime.format(formatter).toString() +" "+ localDate.format(dateFormatter).toString()
+        return localTime.format(formatter).toString()
     }
 }
