@@ -37,7 +37,7 @@ object DateTimeHelper {
     fun getDate(localDateTime: LocalDateTime, context: Context): String {
         val localDate = localDateTime.toLocalDate()
         return when (localDate) {
-            today ->"Today"+" "+formatLocalTime(localDateTime.toLocalTime())
+            today -> "Today " + formatLocalTime(localDateTime.toLocalTime())
             yesterday -> context.getString(R.string.msg_yesterday)
             else -> {
                 if (Period.between(lastWeek, localDate).days <= 0) {
