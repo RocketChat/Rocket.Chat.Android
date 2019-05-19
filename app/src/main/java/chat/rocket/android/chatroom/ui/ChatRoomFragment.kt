@@ -548,7 +548,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 if (newMessageCount <= 99) {
                     text_count.text = newMessageCount.toString()
                 } else {
-                    text_count.text = "99+"
+                    text_count.text = getString(R.string.msg_more_than_ninety_nine_unread_messages)
                 }
                 text_count.isVisible = true
             } else if (!button_fab.isVisible) {
