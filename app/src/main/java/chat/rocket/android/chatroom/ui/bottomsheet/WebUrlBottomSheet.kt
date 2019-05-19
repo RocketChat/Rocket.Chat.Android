@@ -53,16 +53,19 @@ class WebUrlBottomSheet : BottomSheetDialogFragment() {
                 if(heightRatio == "tall" && newState == BottomSheetBehavior.STATE_DRAGGING){
                     behaviour.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
+                if(heightRatio == "compact" && newState == BottomSheetBehavior.STATE_EXPANDED){
+                    behaviour.isHideable = false
+                }
             }
 
         })
         when(heightRatio){
-            "compact" -> setupCompactWebPage(bottomsheet, behaviour)
+            "compact" -> setupCompactWebPage(behaviour)
             "tall" -> setupTallWebPage(bottomsheet, behaviour)
         }
     }
 
-    private fun setupCompactWebPage(bottomsheet: FrameLayout, behaviour: BottomSheetBehavior<FrameLayout>) {
+    private fun setupCompactWebPage(behaviour: BottomSheetBehavior<FrameLayout>) {
         behaviour.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 
