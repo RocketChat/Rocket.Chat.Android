@@ -19,7 +19,6 @@ private const val BUNDLE_CHATROOM_ID = "chatroom_id"
 private const val BUNDLE_HEIGHT_RATIO = "height_ratio"
 
 class WebUrlBottomSheet : BottomSheetDialogFragment() {
-
     private lateinit var webPageUrl: String
     private lateinit var chatRoomId: String
     private lateinit var heightRatio: String
