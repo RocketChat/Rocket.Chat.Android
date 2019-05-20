@@ -53,6 +53,7 @@ class WebViewActivity : AppCompatActivity() {
     private fun setupToolbar() {
         toolbar.title = if(toolbarTitle != null) toolbarTitle else webPageUrl.replace("https://","")
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp)
+        toolbar.setNavigationContentDescription(R.string.close_button_description)
         toolbar.setNavigationOnClickListener {
             finishActivity()
         }

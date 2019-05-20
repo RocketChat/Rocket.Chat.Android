@@ -319,6 +319,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
 
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
+        toolbar.setNavigationContentDescription(R.string.menu_button_description)
         toolbar.setNavigationOnClickListener { openDrawer() }
     }
 

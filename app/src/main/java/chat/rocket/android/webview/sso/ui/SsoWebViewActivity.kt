@@ -66,6 +66,7 @@ class SsoWebViewActivity : AppCompatActivity() {
     private fun setupToolbar() {
         toolbar.title = getString(R.string.title_authentication)
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp)
+        toolbar.setNavigationContentDescription(R.string.close_button_description)
         toolbar.setNavigationOnClickListener { closeView() }
     }
 

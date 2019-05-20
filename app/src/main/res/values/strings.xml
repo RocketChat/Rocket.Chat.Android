@@ -396,6 +396,9 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="new_group">New Group</string>
     <string name="new_chat">New Chat</string>
     <string name="new_contact">New Contact</string>
+    <string name="close_button_description">Close</string>
+    <string name="go_back_button_description">Go back</string>
+    <string name="menu_button_description">Menu</string>
 
     <!--WIDECHAT INVITES-->
     <string name="invite_realname_prompt">Add your name to the invite so your friend will know who you are.</string>

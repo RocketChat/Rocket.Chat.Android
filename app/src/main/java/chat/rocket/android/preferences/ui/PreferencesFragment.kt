@@ -72,6 +72,7 @@ class PreferencesFragment : Fragment(), PreferencesView {
         with((activity as MainActivity).toolbar) {
             title = getString(R.string.title_preferences)
             setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            setNavigationContentDescription(R.string.go_back_button_description)
             setNavigationOnClickListener { activity?.onBackPressed() }
         }
     }
