@@ -47,4 +47,4 @@ Are you having a technical issue trying to compile the app, or setting up Push N
 
 ## Coding Style
 
-Please follow the official [Kotlin coding conventions](https://kotlinlang.org/docs/reference/coding-conventions.html) when contributing.
+Please follow the official [Kotlin coding conventions](https://kotlinlang.org/docs/reference/coding-conventions.html) When contributing.
