@@ -143,6 +143,6 @@
             android:id="@+id/group_user_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="image_blur, image_avatar, text_name, text_username, text_message, text_title_status, text_description_status, text_title_timezone, text_description_timezone" />
+            app:constraint_referenced_ids="image_blur, image_avatar, text_name, text_username, text_message, text_title_status, text_description_status, text_title_timezone, text_description_timezone, text_video_call" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
