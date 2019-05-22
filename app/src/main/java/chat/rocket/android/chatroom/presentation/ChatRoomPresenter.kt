@@ -113,18 +113,19 @@ class ChatRoomPresenter @Inject constructor(
     private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
     private val token = tokenRepository.get(currentServer)
     private val currentLoggedUsername = userHelper.username()
-    private val messagesChannel = Channel<Message>()
+
+    private val stateChannel = Channel<State>(Channel.UNLIMITED)
+    private val roomChangesChannel = Channel<Room>(Channel.UNLIMITED)
+    private val messagesChannel = Channel<Message>(Channel.UNLIMITED)
 
     private var chatRoomId: String? = null
     private lateinit var chatRoomType: String
     private lateinit var chatRoomName: String
     private var isBroadcast: Boolean = false
     private var chatRoles = emptyList<ChatRoomRole>()
-    private val stateChannel = Channel<State>()
     private var typingStatusSubscriptionId: String? = null
     private var lastState = manager.state
     private var typingStatusList = arrayListOf<String>()
-    private val roomChangesChannel = Channel<Room>(Channel.CONFLATED)
     private var lastMessageId: String? = null
     private lateinit var draftKey: String
 
@@ -217,10 +218,7 @@ class ChatRoomPresenter @Inject constructor(
                 for (room in roomChangesChannel) {
                     dbManager.getRoom(room.id)?.let { chatRoom ->
                         view.onRoomUpdated(
-                            roomMapper.map(
-                                chatRoom = chatRoom,
-                                showLastMessage = true
-                            )
+                            roomMapper.map(chatRoom = chatRoom, showLastMessage = true)
                         )
                     }
                 }
