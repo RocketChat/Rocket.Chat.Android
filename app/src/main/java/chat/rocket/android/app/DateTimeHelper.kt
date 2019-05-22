@@ -15,7 +15,7 @@ object DateTimeHelper {
     private val today = LocalDate.now()
     private val yesterday = today.minusDays(1)
     private val lastWeek = today.minusWeeks(1)
-
+    var isSearching = false
     /**
      * Returns a [LocalDateTime] from a [Long].
      *
@@ -66,6 +66,9 @@ object DateTimeHelper {
      */
     fun getTime(localDateTime: LocalDateTime): String {
         val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+        if(isSearching){
+            return formatLocalDateTime(localDateTime)
+        }
         return localDateTime.toLocalTime().format(formatter).toString()
     }
 
