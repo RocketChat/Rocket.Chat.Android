@@ -173,7 +173,7 @@ class ChatRoomAdapter(
         notifyDataSetChanged()
     }
 
-    fun updateItem(message: BaseUiModel<*>): Boolean {
+    fun updateItem(message: BaseUiModel<*>): Int {
         val index = dataSet.indexOfLast { it.messageId == message.messageId }
         val indexOfNext = dataSet.indexOfFirst { it.messageId == message.messageId }
         Timber.d("index: $index")
@@ -184,7 +184,13 @@ class ChatRoomAdapter(
                     if (viewModel.nextDownStreamMessage == null) {
                         viewModel.reactions = message.reactions
                     }
-                    notifyItemChanged(ind)
+
+                    if (ind > 0 &&
+                        dataSet[ind].message.timestamp > dataSet[ind - 1].message.timestamp) {
+                        return 2
+                    } else {
+                        notifyItemChanged(ind)
+                    }
                 }
             }
             // Delete message only if current is a system message update, i.e.: Message Removed
@@ -192,9 +198,9 @@ class ChatRoomAdapter(
                 dataSet.removeAt(indexOfNext)
                 notifyItemRemoved(indexOfNext)
             }
-            return true
+            return 0
         }
-        return false
+        return 1
     }
 
     fun removeItem(messageId: String) {
