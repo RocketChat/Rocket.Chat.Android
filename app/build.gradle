@@ -44,6 +44,11 @@ android {
         }
     }
 
+    testOptions {
+        unitTests.includeAndroidResources = true
+        unitTests.returnDefaultValues = true
+    }
+
     signingConfigs {
         release {
             storeFile project.rootProject.file('Rocket.jks').getCanonicalFile()
@@ -184,6 +189,19 @@ dependencies {
     testImplementation libraries.truth
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoIntents
+    androidTestImplementation libraries.espressoIdling
+    testImplementation libraries.mockito
+    testImplementation libraries.mockitoInline
+    androidTestImplementation libraries.mockitoAndroid
+    testImplementation libraries.roboelectric
+}
+
+tasks.withType(Test) {
+    testLogging {
+        exceptionFormat "full"
+        events "passed", "failed"
+        showStandardStreams true
+    }
 }
 
 androidExtensions {
