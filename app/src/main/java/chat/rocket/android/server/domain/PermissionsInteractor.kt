@@ -1,12 +1,20 @@
 package chat.rocket.android.server.domain
 
+import android.util.Log
 import chat.rocket.android.helper.UserHelper
+import chat.rocket.core.model.ChatRoomRole
 import javax.inject.Inject
 
 // Creating rooms
 private const val CREATE_PUBLIC_CHANNELS = "create-c"
 private const val CREATE_DIRECT_MESSAGES = "create-d"
 private const val CREATE_PRIVATE_CHANNELS = "create-p"
+
+// Add/Remove user
+const val REMOVE_USER = "remove-user"
+const val ADD_USER_TO_JOINED_ROOM = "add-user-to-joined-room"
+const val ADD_USER_TO_ANY_CHANNEL_ROOM = "add-user-to-any-c-room"
+const val ADD_USER_TO_ANY_PRIVATE_ROOM = "add-user-to-any-p-room"
 
 // Messages
 private const val DELETE_MESSAGE = "delete-message"
@@ -68,7 +76,6 @@ class PermissionsInteractor @Inject constructor(
         } == true || userHelper.isAdmin()
     }
 
-
     fun isAdministrationEnabled(): Boolean {
         currentServerUrl()?.let { serverUrl ->
             val viewStatistics =
@@ -88,6 +95,29 @@ class PermissionsInteractor @Inject constructor(
             }
         }
         return false
+    }
+
+    fun roles(permissionType: String): List<String>? {
+        val url = getCurrentServerInteractor.get()!!
+		var permissionRoles: List<String> = emptyList()
+
+        Log.d("PERM", permissionsRepository.get(url, permissionType).toString())
+		permissionsRepository.get(url, permissionType)?.let{
+            permission -> permissionRoles = permission.roles
+        }
+
+		return permissionRoles
+    }
+
+    fun hasPermission(permissionType: String, chatRoles: List<ChatRoomRole>): Boolean{
+        val permissionRoles = roles(permissionType)
+        val roles: List<String>? = chatRoles.firstOrNull { it.user.username == userHelper.username()}?.roles
+        Log.d("PERM", permissionRoles.toString())
+        return if (roles.isNullOrEmpty() || permissionRoles.isNullOrEmpty()){
+            false
+        } else {
+            roles.intersect(permissionRoles).isNotEmpty()
+        }
     }
 
     private fun currentServerUrl(): String? {
