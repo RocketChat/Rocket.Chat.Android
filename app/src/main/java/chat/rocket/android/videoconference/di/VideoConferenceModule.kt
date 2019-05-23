@@ -20,7 +20,7 @@ class VideoConferenceModule {
 
     @Provides
     @PerActivity
-    fun provideJob() = Job()
+    fun provideJob(): Job = Job()
 
     @Provides
     @PerActivity
