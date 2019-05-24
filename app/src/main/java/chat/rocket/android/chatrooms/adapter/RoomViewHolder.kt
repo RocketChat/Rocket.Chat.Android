@@ -43,7 +43,9 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
             } else if (room.status != null && room.type is RoomType.DirectMessage) {
                 image_chat_icon.setImageDrawable(getStatusDrawable(room.status))
             } else {
-                image_chat_icon.setImageDrawable(getRoomDrawable(room.type))
+                room.type?.let {
+                    image_chat_icon.setImageDrawable(getRoomDrawable(it))
+                }
             }
 
             if (room.lastMessage != null) {

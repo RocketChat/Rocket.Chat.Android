@@ -311,7 +311,9 @@ class ChatRoomPresenter @Inject constructor(
                 messagesRepository.saveLastSyncDate(chatRoomId, System.currentTimeMillis())
             } else {
                 //assume that BE returns ordered messages, the first message is the latest one
-                messagesRepository.saveLastSyncDate(chatRoomId, messages.first().timestamp)
+                messages.first().timestamp?.let { timestamp ->
+                    messagesRepository.saveLastSyncDate(chatRoomId, timestamp)
+                }
             }
         }
 
@@ -654,10 +656,9 @@ class ChatRoomPresenter @Inject constructor(
                         messagesRepository.saveAll(messages.result)
                         //if success - saving last synced time
                         //assume that BE returns ordered messages, the first message is the latest one
-                        messagesRepository.saveLastSyncDate(
-                            chatRoomId,
-                            messages.result.first().timestamp
-                        )
+                        messages.result.first().timestamp?.let { timestamp ->
+                            messagesRepository.saveLastSyncDate(chatRoomId, timestamp)
+                        }
 
                         launchUI(strategy) {
                             view.showNewMessage(models, true)
@@ -1116,11 +1117,13 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 messagesRepository.getById(messageId)?.let { message ->
-                    getChatRoomAsync(message.roomId)?.let {
-                        val models = mapper.map(message)
-                        models.firstOrNull()?.permalink?.let {
-                            view.copyToClipboard(it)
-                            view.showMessage(R.string.msg_permalink_copied)
+                    message.roomId?.let { roomId ->
+                        getChatRoomAsync(roomId)?.let {
+                            val models = mapper.map(message)
+                            models.firstOrNull()?.permalink?.let {
+                                view.copyToClipboard(it)
+                                view.showMessage(R.string.msg_permalink_copied)
+                            }
                         }
                     }
                 }
@@ -1347,7 +1350,10 @@ class ChatRoomPresenter @Inject constructor(
                     roles = chatRoles, isBroadcast = isBroadcast, isRoom = true
                 )
             )
-            val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
+            var roomMessages = listOf<Message>()
+            streamedMessage.roomId?.let { roomId->
+                roomMessages = messagesRepository.getByRoomId(roomId)
+            }
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
             if (index > -1) {
                 Timber.d("Updating message at $index")

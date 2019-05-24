@@ -17,9 +17,9 @@ interface BaseMessageEntity
 )
 data class MessageEntity(
     @PrimaryKey val id: String,
-    val roomId: String,
+    val roomId: String?,
     val message: String,
-    val timestamp: Long,
+    val timestamp: Long?,
     val senderId: String?,
     val updatedAt: Long?,
     val editedAt: Long?,

@@ -93,7 +93,7 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
     }
 
     suspend fun sendOperation(operation: Operation) {
-        Timber.d("writerChannel: $writeChannel, closedForSend: ${writeChannel.isClosedForSend}, closedForReceive: ${writeChannel.isClosedForReceive}, empty: ${writeChannel.isEmpty}, full: ${writeChannel.isFull}")
+        Timber.d("writerChannel: $writeChannel, closedForSend: ${writeChannel.isClosedForSend}, closedForReceive: ${writeChannel.isClosedForReceive}, empty: ${writeChannel.isEmpty}")
         writeChannel.send(operation)
     }
 
@@ -130,8 +130,8 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
             val list = ArrayList<BaseUserEntity>(users.size)
             val time = measureTimeMillis {
                 users.forEach { user ->
-                    user.toEntity()?.let { entity ->
-                        list.add(entity)
+                    if (user.id != null) {
+                        user.toEntity()?.let { entity -> list.add(entity) }
                     }
                 }
             }

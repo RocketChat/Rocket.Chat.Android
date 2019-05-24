@@ -53,14 +53,16 @@ class MessageService : JobService() {
             val client = factory.create(serverUrl).client
             temporaryMessages.forEach { message ->
                 try {
-                    client.sendMessage(
-                        message = message.message,
-                        messageId = message.id,
-                        roomId = message.roomId,
-                        avatar = message.avatar,
-                        attachments = message.attachments,
-                        alias = message.senderAlias
-                    )
+                    message.roomId?.let { roomId ->
+                        client.sendMessage(
+                            message = message.message,
+                            messageId = message.id,
+                            roomId = roomId,
+                            avatar = message.avatar,
+                            attachments = message.attachments,
+                            alias = message.senderAlias
+                        )
+                    }
                     messageRepository.save(message.copy(synced = true))
                     Timber.d("Sent scheduled message given by id: ${message.id}")
                 } catch (ex: Exception) {

@@ -150,9 +150,9 @@ class ChatRoomAdapter(
             }
             return@filter (matchedIndex < 0)
         }
-        val minAdditionDate = filteredDataSet.minBy { it.message.timestamp } ?: return
+        val minAdditionDate = filteredDataSet.minBy { it.message.timestamp!! } ?: return
         //---In the most cases we will just add new elements to the top of messages heap
-        if (this.dataSet.isEmpty() || minAdditionDate.message.timestamp > this.dataSet[0].message.timestamp) {
+        if (this.dataSet.isEmpty() || minAdditionDate.message.timestamp!! > this.dataSet[0].message.timestamp!!) {
             this.dataSet.addAll(0, filteredDataSet)
             notifyItemRangeInserted(0, filteredDataSet.size)
             return
@@ -162,11 +162,11 @@ class ChatRoomAdapter(
         if (filteredDataSet.isEmpty()) return
         this.dataSet.addAll(0, filteredDataSet)
         val tmp = this.dataSet.sortedWith(Comparator { t, t2 ->
-            val timeComparison = t.message.timestamp.compareTo(t2.message.timestamp)
+            val timeComparison = t.message.timestamp?.compareTo(t2.message.timestamp!!)
             if (timeComparison == 0) {
                 return@Comparator t.viewType.compareTo(t2.viewType)
             }
-            timeComparison
+            timeComparison!!
         }).reversed()
         this.dataSet.clear()
         this.dataSet.addAll(tmp)
@@ -265,8 +265,10 @@ class ChatRoomAdapter(
                         }
 
                         R.id.action_edit -> {
-                            actionSelectListener.editMessage(roomId, id, this.message)
-                            analyticsManager.logMessageActionEdit()
+                            roomId?.let {
+                                actionSelectListener.editMessage(it, id, this.message)
+                                analyticsManager.logMessageActionEdit()
+                            }
                         }
 
                         R.id.action_star -> {
@@ -280,8 +282,10 @@ class ChatRoomAdapter(
                         }
 
                         R.id.action_delete -> {
-                            actionSelectListener.deleteMessage(roomId, id)
-                            analyticsManager.logMessageActionDelete()
+                            roomId?.let {
+                                actionSelectListener.deleteMessage(it, id)
+                                analyticsManager.logMessageActionDelete()
+                            }
                         }
 
                         R.id.action_add_reaction -> {
@@ -297,6 +301,9 @@ class ChatRoomAdapter(
                         R.id.action_report -> {
                             actionSelectListener.reportMessage(id)
                             analyticsManager.logMessageActionReport()
+                        }
+                        else -> {
+                            // DO nothing.
                         }
                     }
                 }

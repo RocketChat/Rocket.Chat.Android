@@ -418,16 +418,18 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
                     if (!firstUnread && msgModel is MessageUiModel) {
                         val msg = msgModel.rawData
-                        if (msg.timestamp < chatRoomLastSeen) {
-                            // This message was sent before the last seen of the room. Hence, it was seen.
-                            // if there is a message after (below) this, mark it firstUnread.
-                            if (prevMessageUiModel != null) {
-                                prevMessageUiModel.isFirstUnread = true
+                        msg.timestamp?.let { timestamp ->
+                            if (timestamp < chatRoomLastSeen) {
+                                // This message was sent before the last seen of the room. Hence, it was seen.
+                                // if there is a message after (below) this, mark it firstUnread.
+                                if (prevMessageUiModel != null) {
+                                    prevMessageUiModel?.isFirstUnread = true
+                                }
+                                // Found first unread message.
+                                firstUnread = true
                             }
-                            // Found first unread message.
-                            firstUnread = true
+                            prevMessageUiModel = msgModel
                         }
-                        prevMessageUiModel = msgModel
                     }
                 }
             }
