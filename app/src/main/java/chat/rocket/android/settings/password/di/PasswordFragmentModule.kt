@@ -14,7 +14,7 @@ class PasswordFragmentModule {
 
     @Provides
     @PerFragment
-    fun provideJob() = Job()
+    fun provideJob(): Job = Job()
 
     @Provides
     @PerFragment
