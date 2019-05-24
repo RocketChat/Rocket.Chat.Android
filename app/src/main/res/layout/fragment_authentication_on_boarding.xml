@@ -63,6 +63,7 @@
                 tools:ignore="ContentDescription" />
 
             <TextView
+                android:id="@+id/text_connect_with_server"
                 style="@style/Authentication.Button.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -158,6 +159,7 @@
                 tools:ignore="ContentDescription" />
 
             <TextView
+                android:id="@+id/text_create_a_new_server"
                 style="@style/Authentication.Button.Title.White"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

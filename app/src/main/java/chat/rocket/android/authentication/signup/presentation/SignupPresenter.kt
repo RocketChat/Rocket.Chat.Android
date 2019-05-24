@@ -43,7 +43,7 @@ class SignupPresenter @Inject constructor(
     tokenRepository: TokenRepository,
     settingsInteractor: GetSettingsInteractor
 ) {
-    private val currentServer = serverInteractor.get()!!
+    private val currentServer = serverInteractor.get()?: "https://open.rocket.chat"
     private var settings: PublicSettings = settingsInteractor.get(currentServer)
     private val token = tokenRepository.get(currentServer)
 
