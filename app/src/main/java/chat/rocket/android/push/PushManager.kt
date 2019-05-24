@@ -32,7 +32,6 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.runBlocking
 import se.ansman.kotshi.JsonSerializable
-import se.ansman.kotshi.KotshiConstructor
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -424,7 +423,7 @@ data class PushMessage(
 }
 
 @JsonSerializable
-data class PushInfo @KotshiConstructor constructor(
+data class PushInfo constructor(
     @Json(name = "host") val hostname: String,
     @Json(name = "rid") val roomId: String,
     val type: RoomType,
@@ -480,7 +479,7 @@ data class PushInfo @KotshiConstructor constructor(
 }
 
 @JsonSerializable
-data class PushSender @KotshiConstructor constructor(
+data class PushSender constructor(
     @Json(name = "_id") val id: String,
     val username: String?,
     val name: String?
