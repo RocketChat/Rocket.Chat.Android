@@ -60,10 +60,10 @@ class MembersPresenter @Inject constructor(
         }
     }
 
-    fun toMemberDetails(memberUiModel: MemberUiModel) {
+    fun toMemberDetails(memberUiModel: MemberUiModel, chatRoomId: String) {
         with(memberUiModel) {
             if (userId != userHelper.user()?.id) {
-                navigator.toMemberDetails(userId)
+                navigator.toMemberDetails(userId, chatRoomId)
             }
         }
     }

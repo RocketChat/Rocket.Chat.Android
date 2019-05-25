@@ -81,6 +81,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_delete_account">Delete account</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_remove_favorite">Remove favorite</string>
+    <string name="action_remove_user">Remove user from room</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -211,6 +212,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
         <item quantity="other">%1$s reacted with %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Credentials saved successfully</string>
+    <string name="msg_removed_user_successfully">Removed user successfully</string> <!-- TODO Add translation -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Private</string>

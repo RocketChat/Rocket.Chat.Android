@@ -1,7 +1,7 @@
 package chat.rocket.android.server.domain
 
+import chat.rocket.android.helper.ChatRoomRoleHelper
 import chat.rocket.android.helper.UserHelper
-import chat.rocket.core.model.ChatRoomRole
 import javax.inject.Inject
 
 // Creating rooms
@@ -31,7 +31,8 @@ class PermissionsInteractor @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val permissionsRepository: PermissionsRepository,
     private val getCurrentServerInteractor: GetCurrentServerInteractor,
-    private val userHelper: UserHelper
+    private val userHelper: UserHelper,
+    private val chatRoomRoleHelper: ChatRoomRoleHelper
 ) {
     private fun publicSettings(): PublicSettings? = settingsRepository.get(currentServerUrl()!!)
 
@@ -97,25 +98,27 @@ class PermissionsInteractor @Inject constructor(
         return false
     }
 
-    fun roles(permissionType: String): List<String>? {
-        val url = getCurrentServerInteractor.get()!!
-		var permissionRoles: List<String> = emptyList()
+    suspend fun hasPermission(permissionType: String, chatRoomId: String): Boolean {
+        val permissionRoles = getPermissionRoles(permissionType)
+        val chatRoomRoles = chatRoomRoleHelper.getChatRoles(chatRoomId)
 
-		permissionsRepository.get(url, permissionType)?.let{
-            permission -> permissionRoles = permission.roles
-        }
-
-		return permissionRoles
-    }
-
-    fun hasPermission(permissionType: String, chatRoles: List<ChatRoomRole>): Boolean{
-        val permissionRoles = roles(permissionType)
-        val roles: List<String>? = chatRoles.firstOrNull { it.user.username == userHelper.username()}?.roles
-        return if (roles.isNullOrEmpty() || permissionRoles.isNullOrEmpty()){
+        val currentUserRoles: List<String>? = chatRoomRoles.firstOrNull { it.user.username == userHelper.username() }?.roles
+        return if (currentUserRoles.isNullOrEmpty() || permissionRoles.isNullOrEmpty()) {
             false
         } else {
-            roles.intersect(permissionRoles).isNotEmpty()
+            currentUserRoles.intersect(permissionRoles).isNotEmpty()
         }
+    }
+
+    private fun getPermissionRoles(permissionType: String): List<String>? {
+        val url = getCurrentServerInteractor.get()!!
+        var permissionRoles: List<String> = emptyList()
+
+        permissionsRepository.get(url, permissionType)?.let { permission ->
+            permissionRoles = permission.roles
+        }
+
+        return permissionRoles
     }
 
     private fun currentServerUrl(): String? {
