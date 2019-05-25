@@ -1,23 +1,24 @@
 package chat.rocket.android.userdetails.presentation
 
+import android.util.Log
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.db.model.UserEntity
-import chat.rocket.android.server.domain.CurrentServerRepository
-import chat.rocket.android.server.domain.GetSettingsInteractor
-import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.domain.isJitsiEnabled
+import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.model.RoomType
-import chat.rocket.common.model.Token
+import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
+import chat.rocket.core.internal.rest.chatRoomRoles
 import chat.rocket.core.internal.rest.createDirectMessage
+import chat.rocket.core.internal.rest.kick
+import chat.rocket.core.model.ChatRoomRole
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -28,6 +29,7 @@ class UserDetailsPresenter @Inject constructor(
     private val dbManager: DatabaseManager,
     private val strategy: CancelStrategy,
     private val navigator: ChatRoomNavigator,
+	private val permissionsInteractor: PermissionsInteractor,
     tokenRepository: TokenRepository,
     settingsInteractor: GetSettingsInteractor,
     serverInteractor: CurrentServerRepository,
@@ -144,5 +146,43 @@ class UserDetailsPresenter @Inject constructor(
             }
         }
     }
+
+	fun removeUser(userId: String, chatRoomId: String) {
+		launchUI(strategy) {
+			try {
+				dbManager.getRoom(chatRoomId)?.let {
+					val result = retryIO("kick($chatRoomId,${roomTypeOf(it.chatRoom.type)},$userId)") {
+						client.kick(chatRoomId, roomTypeOf(it.chatRoom.type), userId)
+					}
+					if (result) {
+						view.showUserRemovedMessage()
+					}
+				}.ifNull {
+					Timber.e("Couldn't find a room with id: $chatRoomId at current server.")
+				}
+			} catch (exception: Exception) {
+				Timber.e(exception)
+				exception.message?.let {
+					view.showMessage(it)
+				}.ifNull {
+					view.showGenericErrorMessage()
+				}
+			}
+		}
+	}
+
+	fun checkRemoveUserPermission(chatRoomId: String) {
+		launchUI(strategy) {
+			if (hasRemoveUserPermission(chatRoomId)) {
+				view.showRemoveUserButton()
+			} else {
+				view.hideRemoveUserButton()
+			}
+		}
+	}
+
+	private suspend fun hasRemoveUserPermission(chatRoomId: String): Boolean {
+		return permissionsInteractor.hasPermission(REMOVE_USER, chatRoomId)
+	}
 }
 

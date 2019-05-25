@@ -71,6 +71,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_confirm">Confirm</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_remove_favorite">Remove favorite</string>
+    <string name="action_remove_user">Remove user from room</string> <!-- TODO Add translation -->
 
     <!-- Settings messages -->
     <string name="msg_contact_us">Contact us</string>
@@ -88,6 +89,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string>
     <string name="msg_delete_account">Delete account</string>
     <string name="msg_change_status">Change status</string>
+    <string name="msg_removed_user_successfully">Removed user successfully</string> <!-- TODO Add translation -->
 
     <string-array name="languages">
         <item>English</item>

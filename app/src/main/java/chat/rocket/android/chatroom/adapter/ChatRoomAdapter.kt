@@ -50,7 +50,13 @@ class ChatRoomAdapter(
                     view,
                     actionsListener,
                     reactionListener,
-                    { userId -> navigator?.toUserDetails(userId) },
+                    { userId ->
+                        run {
+                            if (roomId != null) {
+                                navigator?.toUserDetails(userId, roomId)
+                            }
+                        }
+                    },
                     {
                         if (roomId != null && roomType != null) {
                             navigator?.toVideoConference(roomId, roomType)

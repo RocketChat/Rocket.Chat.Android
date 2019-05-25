@@ -172,7 +172,7 @@ class ChatRoomPresenter @Inject constructor(
                       information locally*/
             if (getChatRole()) {
 
-                val canRemove = permissions.hasPermission(REMOVE_USER, chatRoles)
+                val canRemove = permissions.hasPermission(REMOVE_USER, chatRoomId!!)
 
                 Log.d("PERM", chatRoles.toString())
                 Log.d("PERM", canRemove.toString())
