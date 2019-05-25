@@ -101,7 +101,6 @@ object DateTimeHelper {
     private fun formatSearchMessages(localDateTime: LocalDateTime): String {
         val localDate = localDateTime.toLocalDate()
         val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-        val context: Context
         return localDate.format(formatter).toString()
     }
 }
