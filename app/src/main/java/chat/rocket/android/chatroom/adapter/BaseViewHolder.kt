@@ -18,7 +18,6 @@ import chat.rocket.android.util.extensions.toList
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
 import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 
@@ -63,7 +62,7 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
                     }
 
                     override fun onReactionLongClicked(shortname: String, isCustom: Boolean, url: String?, usernames: List<String>) {
-                        reactionListener?.onReactionLongClicked(shortname, isCustom,url, usernames)
+                        reactionListener?.onReactionLongClicked(shortname, isCustom, url, usernames)
                     }
                 }
 

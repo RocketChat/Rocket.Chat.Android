@@ -33,7 +33,6 @@
             android:visibility="gone" />
     </LinearLayout>
 
-
     <TextView
         android:id="@+id/text_file_name"
         android:layout_width="0dp"

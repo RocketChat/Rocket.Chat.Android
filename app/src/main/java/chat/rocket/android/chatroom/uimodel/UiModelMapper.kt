@@ -140,11 +140,20 @@ class UiModelMapper @Inject constructor(
                     list.addAll(it)
                 }
 
-                mapMessage(message, chatRoom).let {
-                    if (list.isNotEmpty()) {
-                        it.preview = list.first().preview
+                if (message.isSystemMessage()) {
+                    mapSystemMessage(message, chatRoom).let {
+                        if (list.isNotEmpty()) {
+                            it.preview = list.first().preview
+                        }
+                        list.add(it)
                     }
-                    list.add(it)
+                } else {
+                    mapMessage(message, chatRoom).let {
+                        if (list.isNotEmpty()) {
+                            it.preview = list.first().preview
+                        }
+                        list.add(it)
+                    }
                 }
             }
 
@@ -217,11 +226,20 @@ class UiModelMapper @Inject constructor(
             val list = ArrayList<BaseUiModel<*>>()
 
             getChatRoomAsync(message.roomId)?.let { chatRoom ->
-                mapMessage(message, chatRoom).let {
-                    if (list.isNotEmpty()) {
-                        it.preview = list.first().preview
+                if (message.isSystemMessage()) {
+                    mapSystemMessage(message, chatRoom).let {
+                        if (list.isNotEmpty()) {
+                            it.preview = list.first().preview
+                        }
+                        list.add(it)
                     }
-                    list.add(it)
+                } else {
+                    mapMessage(message, chatRoom).let {
+                        if (list.isNotEmpty()) {
+                            it.preview = list.first().preview
+                        }
+                        list.add(it)
+                    }
                 }
 
                 message.attachments?.forEach {
@@ -266,6 +284,34 @@ class UiModelMapper @Inject constructor(
         return roomUiModel.isRoom && roomUiModel.isBroadcast &&
             !message.isSystemMessage() &&
             senderUsername != currentUsername
+    }
+
+    private suspend fun mapSystemMessage(
+        message: Message,
+        chatRoom: ChatRoom
+    ): SystemMessageUiModel = withContext(Dispatchers.IO) {
+        val sender = getSenderName(message)
+        val time = getTime(message.timestamp)
+        val avatar = getUserAvatar(message)
+        val preview = mapMessagePreview(message)
+        val synced = message.synced
+        val unread = if (settings.messageReadReceiptEnabled()) {
+            message.unread ?: false
+        } else {
+            null
+        }
+
+        val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
+        val dayMarkerText = DateTimeHelper.getFormattedDateForMessages(localDateTime, context)
+        val permalink = messageHelper.createPermalink(message, chatRoom, false)
+
+        val content = getContent(stripMessageQuotes(message))
+        SystemMessageUiModel(message = stripMessageQuotes(message), rawData = message,
+            messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
+            content = content, isPinned = message.pinned, currentDayMarkerText = dayMarkerText,
+            showDayMarker = false, reactions = getReactions(message), isFirstUnread = false,
+            preview = preview, isTemporary = !synced, unread = unread, permalink = permalink,
+            subscriptionId = chatRoom.subscriptionId)
     }
 
     private fun mapMessageReply(message: Message, chatRoom: ChatRoom): MessageReplyUiModel {

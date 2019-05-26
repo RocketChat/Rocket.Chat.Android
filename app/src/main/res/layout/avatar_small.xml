@@ -6,8 +6,8 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_avatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:roundedCornerRadius="3dp" />
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:roundedCornerRadius="1.5dp" />
 
 </FrameLayout>

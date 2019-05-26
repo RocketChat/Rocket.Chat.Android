@@ -11,6 +11,7 @@ import chat.rocket.android.chatroom.uimodel.AttachmentUiModel
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.chatroom.uimodel.MessageReplyUiModel
 import chat.rocket.android.chatroom.uimodel.MessageUiModel
+import chat.rocket.android.chatroom.uimodel.SystemMessageUiModel
 import chat.rocket.android.chatroom.uimodel.UrlPreviewUiModel
 import chat.rocket.android.chatroom.uimodel.toViewType
 import chat.rocket.android.emoji.EmojiReactionListener
@@ -21,7 +22,6 @@ import chat.rocket.core.model.attachment.actions.Action
 import chat.rocket.core.model.attachment.actions.ButtonAction
 import chat.rocket.core.model.isSystemMessage
 import timber.log.Timber
-import java.security.InvalidParameterException
 
 class ChatRoomAdapter(
     private val roomId: String? = null,
@@ -44,6 +44,14 @@ class ChatRoomAdapter(
             BaseUiModel.ViewType.MESSAGE -> {
                 val view = parent.inflate(R.layout.item_message)
                 MessageViewHolder(
+                    view,
+                    actionsListener,
+                    reactionListener
+                ) { userId -> navigator?.toUserDetails(userId) }
+            }
+            BaseUiModel.ViewType.SYSTEM_MESSAGE -> {
+                val view = parent.inflate(R.layout.item_system_message)
+                SystemMessageViewHolder(
                     view,
                     actionsListener,
                     reactionListener,
@@ -78,9 +86,6 @@ class ChatRoomAdapter(
                     actionSelectListener?.openDirectMessage(roomName, permalink)
                 }
             }
-            else -> {
-                throw InvalidParameterException("TODO - implement for ${viewType.toViewType()}")
-            }
         }
     }
 
@@ -109,9 +114,10 @@ class ChatRoomAdapter(
         when (holder) {
             is MessageViewHolder ->
                 holder.bind(dataSet[position] as MessageUiModel)
-            is UrlPreviewViewHolder -> {
+            is SystemMessageViewHolder ->
+                holder.bind(dataSet[position] as SystemMessageUiModel)
+            is UrlPreviewViewHolder ->
                 holder.bind(dataSet[position] as UrlPreviewUiModel)
-            }
             is MessageReplyViewHolder ->
                 holder.bind(dataSet[position] as MessageReplyUiModel)
             is AttachmentViewHolder ->
