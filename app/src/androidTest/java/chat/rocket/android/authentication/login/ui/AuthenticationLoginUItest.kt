@@ -11,16 +11,10 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.matchers.withHint
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.server.domain.CurrentServerRepository
-import chat.rocket.android.server.domain.SaveConnectingServerInteractor
-import chat.rocket.android.server.domain.SaveCurrentServerInteractor
 import chat.rocket.android.util.extensions.addFragmentBackStack
-import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito
-import org.mockito.Mockito.mock
 
 class AuthenticationLoginUItest {
 
