@@ -38,7 +38,7 @@ class RegisterUsernamePresenter @Inject constructor(
     val factory: RocketChatClientFactory,
     val settingsInteractor: GetSettingsInteractor
 ) {
-    private val currentServer = serverInteractor.get()!!
+    private val currentServer = serverInteractor.get()?: "https://open.rocket.chat"
     private val client: RocketChatClient = factory.get(currentServer)
     private var settings: PublicSettings = settingsInteractor.get(currentServer)
     private val token = tokenRepository.get(currentServer)

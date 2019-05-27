@@ -179,7 +179,7 @@ jobs:
             adb shell input keyevent 82
       - run:
           name: Run EspressoTests
-          command: ./gradlew app:connectedPlayDebugAndroidTest
+          command: ./gradlew connectedAndroidTest
       - store_artifacts:
           path: app/build/reports
           destination: reports

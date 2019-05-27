@@ -54,7 +54,7 @@ class LoginOptionsPresenter @Inject constructor(
     serverInteractor: GetConnectingServerInteractor
 ) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
-    private var currentServer = serverInteractor.get()!!
+    private var currentServer = serverInteractor.get()?: "https://open.rocket.chat"
     private val token = tokenRepository.get(currentServer)
     private lateinit var client: RocketChatClient
     private lateinit var settings: PublicSettings
@@ -169,13 +169,13 @@ class LoginOptionsPresenter @Inject constructor(
         }
     }
 
-    private fun setupConnectionInfo(serverUrl: String) {
+    fun setupConnectionInfo(serverUrl: String) {
         currentServer = serverUrl
         client = factory.get(currentServer)
         settings = settingsInteractor.get(currentServer)
     }
 
-    private fun saveAccount(username: String) {
+    fun saveAccount(username: String) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }
