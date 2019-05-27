@@ -1101,9 +1101,13 @@ class ChatRoomPresenter @Inject constructor(
                         }
                     }
                 }
-            } catch (ex: Exception) {
-                Timber.e(ex)
-                view.showMessage(ex.message!!)
+            } catch (exception: Exception) {
+                Timber.e(exception)
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
             }
         }
     }
@@ -1120,8 +1124,13 @@ class ChatRoomPresenter @Inject constructor(
                         }
                     }
                 }
-            } catch (ex: Exception) {
-                Timber.e(ex)
+            } catch (exception: Exception) {
+                Timber.e(exception)
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
             }
         }
     }
@@ -1136,8 +1145,13 @@ class ChatRoomPresenter @Inject constructor(
                     client.toggleReaction(messageId, emoji.removeSurrounding(":"))
                 }
                 logReactionEvent()
-            } catch (ex: RocketChatException) {
-                Timber.e(ex)
+            } catch (exception: RocketChatException) {
+                Timber.e(exception)
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
             }
         }
     }
