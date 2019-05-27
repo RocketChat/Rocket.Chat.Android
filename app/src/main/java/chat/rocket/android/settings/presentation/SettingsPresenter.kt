@@ -148,4 +148,6 @@ class SettingsPresenter @Inject constructor(
 
     fun toLicense(licenseUrl: String, licenseTitle: String) =
         navigator.toLicense(licenseUrl, licenseTitle)
+
+    fun recreateActivity() = navigator.recreateActivity()
 }
