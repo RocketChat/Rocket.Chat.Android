@@ -93,6 +93,9 @@ android {
 
     productFlavors {
         // includes proprietary libs
+        bundle {
+            dimension "type"
+        }
         play {
             dimension "type"
         }
