@@ -102,9 +102,8 @@ jobs:
       - run:
           name: Build APK
           command: |
-            ./gradlew --no-daemon bundleRelease --info --console=plain --stacktrace
+            ./gradlew --no-daemon bundleReleaseAar --info --console=plain --stacktrace
       - store_artifacts:
-          # path: app/build/outputs/
           path: app/build/bundle/
           destination: apks
   build-foss-apk:
