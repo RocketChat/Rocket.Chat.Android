@@ -102,7 +102,6 @@ jobs:
       - run:
           name: Build APK
           command: |
-            # ./gradlew --no-daemon assemblePlayRelease --info --console=plain --stacktrace
             ./gradlew --no-daemon bundleRelease --info --console=plain --stacktrace
       - store_artifacts:
           # path: app/build/outputs/
