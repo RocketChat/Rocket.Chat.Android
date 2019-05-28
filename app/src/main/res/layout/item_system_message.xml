@@ -87,14 +87,15 @@
             android:layout_marginStart="4dp"
             android:layout_weight="1"
             android:background="@color/colorRed" />
+
     </LinearLayout>
 
-    <LinearLayout
+    <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/message_header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:orientation="horizontal"
+        app:flexWrap="wrap"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/layout_avatar"
         app:layout_constraintTop_toBottomOf="@+id/day_marker_layout">
@@ -106,18 +107,16 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:maxLength="22"
-            tools:text="User Name" />
+            tools:text="UserName" />
 
         <TextView
             android:id="@+id/text_content"
             style="@style/Message.TextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
             tools:text="Has joined the channel." />
 
-    </LinearLayout>
+    </com.google.android.flexbox.FlexboxLayout>
 
     <Button
         android:id="@+id/button_join_video_call"

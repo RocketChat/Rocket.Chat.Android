@@ -53,7 +53,6 @@ class ChatRoomAdapter(
                 val view = parent.inflate(R.layout.item_system_message)
                 SystemMessageViewHolder(
                     view,
-                    actionsListener,
                     reactionListener,
                     { userId -> navigator?.toUserDetails(userId) },
                     {
@@ -118,10 +117,10 @@ class ChatRoomAdapter(
                 holder.bind(dataSet[position] as SystemMessageUiModel)
             is UrlPreviewViewHolder ->
                 holder.bind(dataSet[position] as UrlPreviewUiModel)
-            is MessageReplyViewHolder ->
-                holder.bind(dataSet[position] as MessageReplyUiModel)
             is AttachmentViewHolder ->
                 holder.bind(dataSet[position] as AttachmentUiModel)
+            is MessageReplyViewHolder ->
+                holder.bind(dataSet[position] as MessageReplyUiModel)
         }
     }
 

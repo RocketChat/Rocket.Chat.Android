@@ -172,7 +172,6 @@ class ChatRoomPresenter @Inject constructor(
                     )
                 }
 
-
             /*FIXME:  Get chat role can cause unresponsive problems especially on slower connections
                       We are updating the room again after the first step so that initial messages
                       get loaded in and the system appears more responsive.  Something should be

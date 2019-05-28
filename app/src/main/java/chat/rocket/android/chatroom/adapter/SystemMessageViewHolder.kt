@@ -12,11 +12,10 @@ import kotlinx.android.synthetic.main.item_system_message.view.*
 
 class SystemMessageViewHolder(
     itemView: View,
-    listener: ActionsListener,
     reactionListener: EmojiReactionListener? = null,
     private val avatarListener: (String) -> Unit,
     private val joinVideoCallListener: (View) -> Unit
-) : BaseViewHolder<SystemMessageUiModel>(itemView, listener, reactionListener) {
+) : BaseViewHolder<SystemMessageUiModel>(itemView, null, reactionListener) {
 
     init {
         with(itemView) {
@@ -41,7 +40,7 @@ class SystemMessageViewHolder(
             image_avatar.setImageURI(data.avatar)
             text_content.setTextColor(if (data.isTemporary) Color.GRAY else Color.BLACK)
 
-            itemView.setOnClickListener {
+            setOnClickListener {
                 data.message.sender?.id?.let { userId ->
                     avatarListener(userId)
                 }

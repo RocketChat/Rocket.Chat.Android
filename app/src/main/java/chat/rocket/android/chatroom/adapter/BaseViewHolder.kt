@@ -23,7 +23,7 @@ import com.google.android.flexbox.JustifyContent
 
 abstract class BaseViewHolder<T : BaseUiModel<*>>(
     itemView: View,
-    private val listener: ActionsListener,
+    private val listener: ActionsListener? = null,
     var reactionListener: EmojiReactionListener? = null
 ) : RecyclerView.ViewHolder(itemView),
     MenuItem.OnMenuItemClickListener {
@@ -118,7 +118,7 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
     }
 
     internal fun setupActionMenu(view: View) {
-        if (listener.isActionsEnabled()) {
+        if (listener?.isActionsEnabled() == true) {
             view.setOnClickListener(onClickListener)
             if (view is ViewGroup) {
                 for (child in view.children) {
@@ -132,7 +132,7 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         data?.let {
-            listener.onActionSelected(item, it.message)
+            listener?.onActionSelected(item, it.message)
         }
         return true
     }

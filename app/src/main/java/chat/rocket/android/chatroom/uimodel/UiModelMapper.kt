@@ -157,7 +157,6 @@ class UiModelMapper @Inject constructor(
                 }
             }
 
-
             for (i in list.size - 1 downTo 0) {
                 val next = if (i - 1 < 0) null else list[i - 1]
                 list[i].nextDownStreamMessage = next
