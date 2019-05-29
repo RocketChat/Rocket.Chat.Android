@@ -13,4 +13,14 @@ interface MembersView: LoadingView, MessageView {
      * @param total The total number of members.
      */
     fun showMembers(dataSet: List<MemberUiModel>, total: Long)
+
+    /**
+     * Show Invite Users Button
+     **/
+    fun showInviteUsersButton()
+
+    /**
+     * Hide Invite Users Button
+     **/
+    fun hideInviteUserButton()
 }
