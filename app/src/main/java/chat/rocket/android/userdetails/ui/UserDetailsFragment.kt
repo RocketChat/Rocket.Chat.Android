@@ -122,11 +122,11 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     }
 
     override fun showRemoveUserButton() {
-        button_remove_user?.isVisible = true
+        layout_remove_user?.isVisible = true
     }
 
     override fun hideRemoveUserButton() {
-        button_remove_user?.isVisible = false
+        layout_remove_user?.isVisible = false
     }
 
     override fun showUserRemovedMessage() {
@@ -168,6 +168,6 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
     private fun setupListeners() {
         image_arrow_back.setOnClickListener { activity?.onBackPressed() }
-        button_remove_user.setOnClickListener { presenter.removeUser(userId,chatRoomId) }
+        layout_remove_user.setOnClickListener { presenter.removeUser(userId,chatRoomId) }
     }
 }
