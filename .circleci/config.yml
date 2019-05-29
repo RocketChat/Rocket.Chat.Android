@@ -104,7 +104,7 @@ jobs:
           command: |
             ./gradlew --no-daemon bundlePlayRelease --info --console=plain --stacktrace
       - store_artifacts:
-          path: app/build/bundle/
+          path: app/build/outputs/bundle/playRelease
           destination: apks
   build-foss-apk:
     docker:
