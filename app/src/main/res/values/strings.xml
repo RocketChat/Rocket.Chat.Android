@@ -82,6 +82,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_favorite">Favorite</string>
     <string name="action_remove_favorite">Remove favorite</string>
     <string name="action_remove_user">Remove user from room</string> <!-- TODO Add translation -->
+    <string name="action_invite_users">Invite Users</string> <!-- TODO Add translation -->
 
     <!-- Settings List -->
     <string-array name="settings_actions">

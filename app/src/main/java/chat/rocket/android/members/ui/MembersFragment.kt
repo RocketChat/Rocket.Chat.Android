@@ -65,6 +65,8 @@ class MembersFragment : Fragment(), MembersView {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupRecyclerView()
+		setupListeners()
+        presenter.checkInviteUserPermission(chatRoomId)
         presenter.loadChatRoomsMembers(chatRoomId)
 
         analyticsManager.logScreenView(ScreenViewEvent.Members)
@@ -113,6 +115,14 @@ class MembersFragment : Fragment(), MembersView {
         }
     }
 
+    override fun showInviteUsersButton() {
+        ui { layout_invite_users.isVisible = true }
+    }
+
+    override fun hideInviteUserButton() {
+        ui { layout_invite_users.isVisible = false }
+    }
+
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     private fun setupRecyclerView() {
@@ -139,4 +149,8 @@ class MembersFragment : Fragment(), MembersView {
             toolbar.isVisible = true
         }
     }
+
+	private fun setupListeners(){
+		layout_invite_users.setOnClickListener { presenter.toInviteUsers(chatRoomId) }
+	}
 }

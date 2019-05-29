@@ -71,8 +71,8 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
         setupToolbar()
         setupListeners()
-        presenter.loadUserDetails(userId)
         presenter.checkRemoveUserPermission(chatRoomId)
+        presenter.loadUserDetails(userId)
 
         analyticsManager.logScreenView(ScreenViewEvent.UserDetails)
     }

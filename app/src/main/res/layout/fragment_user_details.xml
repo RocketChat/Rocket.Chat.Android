@@ -158,6 +158,7 @@
             android:drawableStart="@drawable/ic_action_remove_user"
             android:drawablePadding="8dp"
             android:text="@string/action_remove_user"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
