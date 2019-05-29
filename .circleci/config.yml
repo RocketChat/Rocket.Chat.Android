@@ -103,15 +103,12 @@ jobs:
           name: Build Bundle
           command: |
             ./gradlew --no-daemon bundlePlayRelease --info --console=plain --stacktrace
-      - store_artifacts:
-          path: app/build/outputs/bundle/playRelease
-          destination: apks
       - run:
           name: Build APK
           command: |
             ./gradlew --no-daemon assemblePlayRelease --info --console=plain --stacktrace
       - store_artifacts:
-          path: app/build/outputs/apk
+          path: app/build/outputs
           destination: apks
   build-foss-apk:
     docker:
