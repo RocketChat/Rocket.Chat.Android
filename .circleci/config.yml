@@ -15,7 +15,7 @@ jobs:
           command: git clone https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK.git ../Rocket.Chat.Kotlin.SDK
       - run:
           name: ANDROID_HOME
-          command: echo "sdk.dir="$ANDROID_HOME > local.properties 
+          command: echo "sdk.dir="$ANDROID_HOME > local.properties
       - run:
           name: Build Kotlin.SDK
           command: pushd app/ ; ./build-sdk.sh ; popd
@@ -32,7 +32,7 @@ jobs:
       - store_artifacts:
           path: app/libs/
           destination: libs
-  code-analysis:
+  run-unit-tests:
     docker:
       - image: circleci/android:api-28-alpha
     environment:
@@ -150,6 +150,11 @@ jobs:
       JVM_OPTS: -Xmx3200m
     steps:
       - checkout
+      - run:
+          name: restore files from ENV
+          command: |
+            echo $ROCKET_JKS_BASE64 | base64 --decode > Rocket.jks
+            echo $ROCKET_PLAY_JSON | base64 --decode > app/rocket-chat.json
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
@@ -191,20 +196,20 @@ workflows:
   build-deploy:
     jobs:
       - build-kotlin-sdk
-      - run-ui-tests
-      - code-analysis:
+      - run-unit-tests:
           requires:
             - build-kotlin-sdk
           filters:
             branches:
               ignore: # skip on merge commits.
-                - develop
                 - develop-2.x
                 - master
+      - run-ui-tests:
+          requires:
+            - build-kotlin-sdk
       - build-play-apk:
           requires:
             - build-kotlin-sdk
       - build-foss-apk:
           requires:
             - build-kotlin-sdk
-          
