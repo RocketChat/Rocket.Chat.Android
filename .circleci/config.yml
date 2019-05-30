@@ -150,6 +150,11 @@ jobs:
       JVM_OPTS: -Xmx3200m
     steps:
       - checkout
+      - run:
+          name: restore files from ENV
+          command: |
+            echo $ROCKET_JKS_BASE64 | base64 --decode > Rocket.jks
+            echo $ROCKET_PLAY_JSON | base64 --decode > app/rocket-chat.json
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
