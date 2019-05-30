@@ -20,6 +20,7 @@ sealed class ScreenViewEvent(val screenName: String) {
     object FavoriteMessages : ScreenViewEvent("FavoriteMessagesFragment")
     object Files : ScreenViewEvent("FilesFragment")
     object Members : ScreenViewEvent("MembersFragment")
+    object InviteUsers : ScreenViewEvent("InviteUsersFragment")
     object Mentions : ScreenViewEvent("MentionsFragment")
     object MessageInfo : ScreenViewEvent("MessageInfoFragment")
     object Password : ScreenViewEvent("PasswordFragment")

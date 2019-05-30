@@ -90,7 +90,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string>
     <string name="msg_delete_account">Delete account</string>
     <string name="msg_change_status">Change status</string>
-    <string name="msg_removed_user_successfully">Removed user successfully</string> <!-- TODO Add translation -->
 
     <string-array name="languages">
         <item>English</item>
@@ -285,6 +284,14 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
 
     <!-- Members List -->
     <string name="title_members_list">Members</string>
+
+    <!-- Invite Users-->
+    <string name="title_invite_users">Invite Users</string> <!-- TODO Add translation -->
+    <string name="text_cancel">Cancel</string> <!-- TODO Add translation -->
+    <string name="text_invite_users">Invite Users</string> <!-- TODO Add translation -->
+
+    <!-- Remove User-->
+    <string name="msg_removed_user_successfully">Removed user successfully</string> <!-- TODO Add translation -->
 
     <!-- Mentions -->
     <string name="msg_mentions">Mentions</string>
