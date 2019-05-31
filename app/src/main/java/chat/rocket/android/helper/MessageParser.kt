@@ -70,7 +70,8 @@ class MessageParser @Inject constructor(
 
         message.mentions?.forEach {
             val mention = getMention(it)
-            mentions.add(mention)
+            if(mention.isNotEmpty())
+                mentions.add(mention)
             if (it.username != null) {
                 text = text.replace("@${it.username}", mention)
             }
