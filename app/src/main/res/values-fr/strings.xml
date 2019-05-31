@@ -185,7 +185,7 @@
     <string name="msg_continue_with_linkedin">Continuer avec <b>LinkedIn</b></string>
     <string name="msg_continue_with_gitlab">Continuer avec <b>GitLab</b></string>
     <string name="msg_continue_with_wordpress">Continuer avec <b>WordPress</b></string>
-    <string name="msg_two_factor_authentication"Authentification à deux facteurs</string>
+    <string name="msg_two_factor_authentication">Authentification à deux facteurs</string>
     <string name="msg_your_2fa_code">Quel est votre code 2FA?</string>
     <string name="msg_view_more">voir plus</string>
     <string name="msg_view_less">voir moins</string>
@@ -333,7 +333,7 @@
     <string name="msg_sort_by">Trier par</string>
     <string name="msg_sort_by_activity">Activité</string>
     <string name="msg_sort_by_name">Nom</string>
-    <string name="msg_group_by_unread_on_top">Non lus d'abord</string>
+    <string name="msg_group_by_unread_on_top">Non lus d\'abord</string>
     <string name="msg_group_by_type">Grouper par type</string>
     <string name="msg_group_by_favorites">Grouper par favoris</string>
 
@@ -342,7 +342,7 @@
     <string name="msg_channels">Salons</string>
     <string name="msg_users">Utilisateurs</string>
     <string name="msg_search_for_global_users">Rechercher des utilisateurs globaux</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">Si vous l'activez, vous pourrez chercher n\'importe quel utilisateur d'autres entreprises ou serveurs</string>
+    <string name="msg_search_for_global_users_description">Si vous l\'activez, vous pourrez chercher n\'importe quel utilisateur d'autres entreprises ou serveurs</string>
     <string name="header_private_groups">Groupes privés</string>
     <string name="header_direct_messages">Messages directs</string>
     <string name="header_live_chats">Chats en direct</string>
