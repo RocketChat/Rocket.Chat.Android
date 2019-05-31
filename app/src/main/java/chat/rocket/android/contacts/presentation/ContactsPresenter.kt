@@ -276,6 +276,8 @@ class ContactsPresenter @Inject constructor(
     }
 
     fun shareViaApp(context: Context){
+        // We can't know for sure at this point that they sent the invite since they will now be outside our app
+        analyticsManager.logInviteSent("viaApp", true)
         shareAppHelper.shareViaApp(context)
     }
 
