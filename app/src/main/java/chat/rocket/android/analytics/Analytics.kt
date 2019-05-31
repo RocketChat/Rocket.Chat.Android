@@ -81,6 +81,14 @@ interface Analytics {
     fun logVideoConference(event: SubscriptionTypeEvent, serverUrl: String) {}
 
     /**
+     * WIDECHAT
+     * Logs the invite sent event.
+     *
+     * @param inviteType The method of invite to log: sms, email or viaApp.
+     */
+    fun logInviteSent(inviteType: String, inviteSucceeded: Boolean) {}
+
+    /**
      * Logs the add reaction message action.
      */
     fun logMessageActionAddReaction() {}

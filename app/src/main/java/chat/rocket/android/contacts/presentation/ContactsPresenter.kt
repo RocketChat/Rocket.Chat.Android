@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
@@ -42,6 +43,7 @@ class ContactsPresenter @Inject constructor(
         private val strategy: CancelStrategy,
         private val navigator: MainNavigator,
         private val dbManager: DatabaseManager,
+        private val analyticsManager: AnalyticsManager,
         manager: ConnectionManager,
         private val serverInteractor: GetCurrentServerInteractor,
         private val getAccountInteractor: GetAccountInteractor,
@@ -218,11 +220,14 @@ class ContactsPresenter @Inject constructor(
             try {
                 val result:Boolean = retryIO("inviteViaEmail") { client.inviteViaEmail(email, Locale.getDefault().getLanguage(), realname) }
                 if (result) {
+                    analyticsManager.logInviteSent("email", true)
                     view.showMessage("Invitation Email Sent")
                 } else{
+                    analyticsManager.logInviteSent("email", false)
                     view.showMessage("Failed to send Invitation Email")
                 }
             } catch (ex: Exception) {
+                analyticsManager.logInviteSent("email", false)
                 when (ex) {
                     is RocketChatAuthException -> {
                         throw RocketChatAuthException("Not authenticated...")
@@ -245,11 +250,14 @@ class ContactsPresenter @Inject constructor(
             try {
                 val result:Boolean = retryIO("inviteViaSMS") { client.inviteViaSMS(phone, Locale.getDefault().getLanguage(), realname) }
                 if (result) {
+                    analyticsManager.logInviteSent("sms", true)
                     view.showMessage("Invitation SMS Sent")
                 } else{
+                    analyticsManager.logInviteSent("sms", false)
                     view.showMessage("Failed to send Invitation SMS")
                 }
             } catch (ex: Exception) {
+                analyticsManager.logInviteSent("sms", false)
                 when (ex) {
                     is RocketChatAuthException -> {
                         throw RocketChatAuthException("Not authenticated...")
@@ -268,6 +276,8 @@ class ContactsPresenter @Inject constructor(
     }
 
     fun shareViaApp(context: Context){
+        // We can't know for sure at this point that they sent the invite since they will now be outside our app
+        analyticsManager.logInviteSent("viaApp", true)
         shareAppHelper.shareViaApp(context)
     }
 
