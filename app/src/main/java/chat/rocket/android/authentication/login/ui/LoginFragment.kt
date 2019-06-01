@@ -20,6 +20,7 @@ import chat.rocket.android.helper.getCredentials
 import chat.rocket.android.helper.hasCredentialsSupport
 import chat.rocket.android.helper.requestStoredCredentials
 import chat.rocket.android.helper.saveCredentials
+import chat.rocket.android.util.espressoIdlingResource.EspressoIdlingResource
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.clearLightStatusBar
 import chat.rocket.android.util.extensions.inflate
@@ -148,11 +149,15 @@ class LoginFragment : Fragment(), LoginView {
 
     private fun setupOnClickListener() =
         ui {
+            EspressoIdlingResource.increment()
             button_log_in.setOnClickListener {
                 presenter.authenticateWithUserAndPassword(
                     text_username_or_email.textContent,
                     text_password.textContent
                 )
+            }
+           if (!EspressoIdlingResource.getIdlingResource().isIdleNow) {
+               EspressoIdlingResource.decrement()
             }
         }
 

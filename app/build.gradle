@@ -189,7 +189,7 @@ dependencies {
     testImplementation libraries.truth
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoIntents
-    androidTestImplementation libraries.espressoIdling
+    implementation libraries.espressoIdling
     testImplementation libraries.mockito
     testImplementation libraries.mockitoInline
     androidTestImplementation libraries.mockitoAndroid

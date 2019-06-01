@@ -5,6 +5,7 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
@@ -14,13 +15,15 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@LargeTest
+class SignupFragmentTest {
 
-class AuthenticationSignupUITest {
+    private val NAME: String = "user"
+    private val USERNAME: String = "user1"
+    private val PASSWORD: String = "ABC1234"
+    private val EMAIL: String = "abc@gmail.com"
+    private val title = "open.rocket.chat"
 
-    val NAME: String = "user"
-    val USERNAME: String = "user1"
-    val PASSWORD: String = "ABC1234"
-    val EMAIL: String = "abc@gmail.com"
 
     @JvmField
     var activityRule = ActivityTestRule(AuthenticationActivity::class.java, true, true)
@@ -35,6 +38,7 @@ class AuthenticationSignupUITest {
         }
     }
 
+
     @Test
     fun check_UI_elements(){
         onView(withId(R.id.text_sign_up)).check(matches(ViewMatchers.withText("Sign up")))
@@ -46,7 +50,7 @@ class AuthenticationSignupUITest {
     }
 
     @Test
-    fun check_complete_signUp() {
+    fun fill_details_and_click_register() {
         onView(withId(R.id.text_name)).perform(
             typeText(NAME), closeSoftKeyboard()
         )
