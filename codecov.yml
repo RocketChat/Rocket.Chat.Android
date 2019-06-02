@@ -1,5 +1,5 @@
 codecov:
-  branch: master
+  branch: authentication_tests
   notify:
     require_ci_to_pass: no
 
