@@ -536,7 +536,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 if (newMessageCount <= 99) {
                     text_count.text = newMessageCount.toString()
                 } else {
-                    text_count.text = "99+"
+                    text_count.text = getString(R.string.msg_more_than_ninety_nine_unread_messages)
                 }
                 text_count.isVisible = true
             } else if (!button_fab.isVisible) {
@@ -553,12 +553,22 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             // TODO - investigate WHY we get a empty list here
             if (message.isEmpty()) return@ui
 
-            if (chatRoomAdapter.updateItem(message.last())) {
-                if (message.size > 1) {
-                    chatRoomAdapter.prependData(listOf(message.first()))
+            when (chatRoomAdapter.updateItem(message.last())) {
+                // FIXME: What's 0,1 and 2 means for here?
+                0 -> {
+                    if (message.size > 1) {
+                        chatRoomAdapter.prependData(listOf(message.first()))
+                    }
                 }
-            } else {
-                showNewMessage(message, true)
+                1 -> showNewMessage(message, true)
+                2 -> {
+                    // Position of new sent message is wrong because of device local time is behind server time
+                    with(chatRoomAdapter) {
+                        removeItem(message.last().messageId)
+                        prependData(listOf(message.last()))
+                        notifyDataSetChanged()
+                    }
+                }
             }
             dismissEmojiKeyboard()
         }
