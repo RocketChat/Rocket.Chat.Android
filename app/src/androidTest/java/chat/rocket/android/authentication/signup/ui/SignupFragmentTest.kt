@@ -22,7 +22,6 @@ class SignupFragmentTest {
     private val USERNAME: String = "user1"
     private val PASSWORD: String = "ABC1234"
     private val EMAIL: String = "abc@gmail.com"
-    private val title = "open.rocket.chat"
 
 
     @JvmField

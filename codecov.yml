@@ -1,0 +1,20 @@
+codecov:
+  branch: master
+  notify:
+    require_ci_to_pass: no
+
+coverage:
+  precision: 2
+  round: down
+  range: 40...100
+
+  status:
+    project:
+      enabled: yes
+      threshold: 0.5%
+    patch: no
+    changes: no
+
+comment:
+  layout: "header, diff, changes"
+  behavior: default

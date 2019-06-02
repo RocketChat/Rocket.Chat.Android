@@ -9,6 +9,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "com.github.ben-manes.versions"
+apply plugin: 'jacoco-android'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -45,8 +46,23 @@ android {
     }
 
     testOptions {
-        unitTests.includeAndroidResources = true
-        unitTests.returnDefaultValues = true
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+        unitTests{
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
+    }
+
+    tasks.withType(Test) {
+        testLogging {
+            exceptionFormat "full"
+            events "passed", "failed"
+            showStandardStreams true
+        }
     }
 
     signingConfigs {
@@ -79,6 +95,7 @@ android {
             buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.64.2"'
             signingConfig signingConfigs.debug
             applicationIdSuffix ".dev"
+            testCoverageEnabled true
         }
     }
 
@@ -194,14 +211,7 @@ dependencies {
     testImplementation libraries.mockitoInline
     androidTestImplementation libraries.mockitoAndroid
     testImplementation libraries.roboelectric
-}
-
-tasks.withType(Test) {
-    testLogging {
-        exceptionFormat "full"
-        events "passed", "failed"
-        showStandardStreams true
-    }
+    androidTestImplementation libraries.runner
 }
 
 androidExtensions {

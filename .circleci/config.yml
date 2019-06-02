@@ -64,8 +64,11 @@ jobs:
           name: Run Unit test
           command: ./gradlew --no-daemon test
       - run:
-          name: Compile Instrumentation test
-          command: ./gradlew --no-daemon assembleAndroidTest
+          name: Generate reports
+            command: ./gradlew jacocoTestReport
+      - run:
+          name: Send coverage
+            command: bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: app/build/reports/
           destination: reports

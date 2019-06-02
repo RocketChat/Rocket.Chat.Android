@@ -44,12 +44,10 @@ class ServerFragmentTest{
     }
 
     @Test
-    fun check_sign_in_to_server() {
+    fun fill_server_url_and_connect() {
         onView(withId(R.id.text_server_url)).perform(
             typeText(server), closeSoftKeyboard()
         )
         onView(withId(R.id.button_connect)).perform(click())
-        Thread.sleep(2000)
-        onView(withId(R.id.accounts_container)).check(matches(isDisplayed()))
     }
 }
