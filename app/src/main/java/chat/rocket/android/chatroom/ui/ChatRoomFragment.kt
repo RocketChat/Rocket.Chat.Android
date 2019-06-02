@@ -554,6 +554,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             if (message.isEmpty()) return@ui
 
             when (chatRoomAdapter.updateItem(message.last())) {
+                // FIXME: What's 0,1 and 2 means for here?
                 0 -> {
                     if (message.size > 1) {
                         chatRoomAdapter.prependData(listOf(message.first()))

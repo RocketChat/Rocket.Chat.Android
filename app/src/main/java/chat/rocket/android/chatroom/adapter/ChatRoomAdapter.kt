@@ -173,6 +173,7 @@ class ChatRoomAdapter(
         notifyDataSetChanged()
     }
 
+    // FIXME What's 0,1 and 2 means for here?
     fun updateItem(message: BaseUiModel<*>): Int {
         val index = dataSet.indexOfLast { it.messageId == message.messageId }
         val indexOfNext = dataSet.indexOfFirst { it.messageId == message.messageId }
