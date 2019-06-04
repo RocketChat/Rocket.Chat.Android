@@ -40,9 +40,7 @@ class LoginOptionsPresenterTest {
     private val token = tokenRepository.get(currentServer)
     private lateinit var client: RocketChatClient
 
-
     lateinit var loginOptionsPresenter: LoginOptionsPresenter
-
 
     @Before
     fun setUp() {
@@ -85,7 +83,8 @@ class LoginOptionsPresenterTest {
 
     @Test
     fun check_setup_connection_info() {
-
+        loginOptionsPresenter.setupConnectionInfo(currentServer)
+        verify(settingsInteractor).get(currentServer)
     }
 
     @Test

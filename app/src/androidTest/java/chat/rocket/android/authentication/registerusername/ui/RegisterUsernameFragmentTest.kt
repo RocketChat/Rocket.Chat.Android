@@ -37,7 +37,6 @@ class RegisterUsernameFragmentTest {
         }
     }
 
-
     @Test
     fun check_UI_elements(){
         onView(withId(R.id.text_sign_in_to_your_server)).check(matches(withText("Register username")))

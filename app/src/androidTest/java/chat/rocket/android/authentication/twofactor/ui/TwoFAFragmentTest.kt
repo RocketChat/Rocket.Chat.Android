@@ -22,7 +22,6 @@ class TwoFAFragmentTest {
     private val USERNAME: String = "user1234"
     private val PASSWORD: String = "ABC1234"
 
-
     @JvmField
     var activityRule = ActivityTestRule(AuthenticationActivity::class.java, true, true)
 
@@ -35,7 +34,6 @@ class TwoFAFragmentTest {
             newInstance(USERNAME, PASSWORD)
         }
     }
-
 
     @Test
     fun check_UI_elements() {
@@ -51,5 +49,4 @@ class TwoFAFragmentTest {
         )
         onView(withId(R.id.button_confirm)).perform(click())
     }
-
 }

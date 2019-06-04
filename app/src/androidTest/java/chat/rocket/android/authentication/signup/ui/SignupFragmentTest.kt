@@ -23,7 +23,6 @@ class SignupFragmentTest {
     private val PASSWORD: String = "ABC1234"
     private val EMAIL: String = "abc@gmail.com"
 
-
     @JvmField
     var activityRule = ActivityTestRule(AuthenticationActivity::class.java, true, true)
 

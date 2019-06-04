@@ -34,7 +34,6 @@ class ResetPasswordFragmentTest {
         }
     }
 
-
     @Test
     fun check_UI_elements() {
         onView(withId(R.id.text_reset_password)).check(matches(withText("Reset password")))

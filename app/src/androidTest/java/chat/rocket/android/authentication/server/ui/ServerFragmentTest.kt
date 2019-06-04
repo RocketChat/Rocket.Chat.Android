@@ -32,7 +32,6 @@ class ServerFragmentTest{
         }
     }
 
-
     @Test
     fun check_UI_elements(){
         onView(withId(R.id.image_server)).check(matches(isDisplayed()))

@@ -61,7 +61,4 @@ class OnBoardingPresenterTest {
         onBoardingPresenter.toCreateANewServer(communityServerUrl)
         verify(navigator).toWebPage(communityServerUrl)
     }
-
-
-
 }

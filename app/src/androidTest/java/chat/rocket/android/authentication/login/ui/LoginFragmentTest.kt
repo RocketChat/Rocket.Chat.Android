@@ -45,7 +45,6 @@ class LoginFragmentTest {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getIdlingResource())
     }
 
-
     @Test
     fun check_UI_elements(){
         onView(withId(R.id.text_login)).check(matches(withText("Login")))

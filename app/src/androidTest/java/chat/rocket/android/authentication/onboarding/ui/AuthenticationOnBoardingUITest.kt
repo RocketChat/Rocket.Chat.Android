@@ -14,11 +14,9 @@ import org.junit.Test
 @LargeTest
 class AuthenticationOnBoardingUITest {
 
-
     @Rule
     @JvmField
     var activityRule = ActivityTestRule<AuthenticationActivity>(AuthenticationActivity::class.java)
-
 
     @Test
     fun check_UI_elements(){
