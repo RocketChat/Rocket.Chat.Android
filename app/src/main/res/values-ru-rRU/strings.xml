@@ -70,6 +70,9 @@
     <string name="msg_app_version">Версия программы: %1$s (%2$d)</string>
     <string name="msg_server_version">Версия сервера: %1$s</string>
     <string name="msg_send_analytics">Отправка аналитики</string>
+    <string name="msg_send_analytics_tracking">Отправлять анонимную статистику для улучшения приложения.</string>
+    <string name="msg_do_not_send_analytics_tracking">Не отправлять анонимную статистику для улучшения приложения</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Не применимо, так как это FOSS версия</string>
     <string name="msg_logout_from_rocket_chat">Выйти из Rocket.Chat</string>
     <string name="msg_delete_account">Удалить аккаунт</string>
     <string name="msg_change_status">Изменить статус</string>
@@ -216,12 +219,6 @@
     <string name="msg_member_already_added">Вы уже выбрали этого пользователя</string>
     <string name="msg_member_not_found">Пользователь не найден</string>
     <string name="msg_channel_created_successfully">Канал создан успешно</string>
-
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Отслеживание аналитики</string>
-    <string name="msg_send_analytics_tracking">Отправлять анонимную статистику для улучшения приложения.</string>
-    <string name="msg_do_not_send_analytics_tracking">Не отправлять анонимную статистику для улучшения приложения</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Не применимо, так как это FOSS версия</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s изменил название канала на %1$s</string>

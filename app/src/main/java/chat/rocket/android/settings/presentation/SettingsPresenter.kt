@@ -1,11 +1,12 @@
 package chat.rocket.android.settings.presentation
 
+import android.content.Context
+import android.os.Build
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
-import chat.rocket.android.server.domain.GetCurrentLanguageInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.RemoveAccountInteractor
@@ -27,6 +28,7 @@ import chat.rocket.core.internal.rest.serverInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -40,11 +42,11 @@ class SettingsPresenter @Inject constructor(
     private val tokenRepository: TokenRepository,
     private val permissions: PermissionsInteractor,
     private val rocketChatClientFactory: RocketChatClientFactory,
+    private val saveLanguageInteractor: SaveCurrentLanguageInteractor,
     getCurrentServerInteractor: GetCurrentServerInteractor,
     removeAccountInteractor: RemoveAccountInteractor,
     databaseManagerFactory: DatabaseManagerFactory,
-    connectionManagerFactory: ConnectionManagerFactory,
-    private val saveLanguageInteractor: SaveCurrentLanguageInteractor
+    connectionManagerFactory: ConnectionManagerFactory
 ) : CheckServerPresenter(
     strategy = strategy,
     factory = rocketChatClientFactory,
@@ -93,7 +95,6 @@ class SettingsPresenter @Inject constructor(
 
     fun enableAnalyticsTracking(isEnabled: Boolean) {
         analyticsTrackingInteractor.save(isEnabled)
-
     }
 
     fun logout() {
@@ -127,6 +128,14 @@ class SettingsPresenter @Inject constructor(
         }
     }
 
+    fun getCurrentLocale(context: Context): Locale {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            context.resources.configuration.locales.get(0)
+        } else {
+            context.resources.configuration.locale
+        }
+    }
+
     fun saveLocale(language: String, country: String? = null) {
         saveLanguageInteractor.save(language, country)
     }
@@ -139,4 +148,6 @@ class SettingsPresenter @Inject constructor(
 
     fun toLicense(licenseUrl: String, licenseTitle: String) =
         navigator.toLicense(licenseUrl, licenseTitle)
+
+    fun recreateActivity() = navigator.recreateActivity()
 }

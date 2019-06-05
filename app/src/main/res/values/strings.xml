@@ -82,6 +82,9 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_app_version">Version: %1$s (%2$d)</string>
     <string name="msg_server_version">Server version: %1$s</string>
     <string name="msg_send_analytics">Send analytics</string>
+    <string name="msg_send_analytics_tracking">Send anonymous statistics to help improve this app</string>
+    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statistics to help improve this app</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string>
     <string name="msg_delete_account">Delete account</string>
     <string name="msg_change_status">Change status</string>
@@ -110,12 +113,15 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_no_data_to_display">No data to display</string>
     <string name="msg_check_this_out">Check this out</string>
     <string name="msg_share_using">Share using</string>
+    <string name="msg_username">Username</string>
+    <string name="msg_profile_username_hint" translatable="false">Please enter your username</string> <!-- TODO Make translatable and add translations -->
     <string name="msg_profile_updated_successfully">Profile updated successfully</string>
-    <string name="msg_username">username</string>
     <string name="msg_username_or_email">Username or email</string>
     <string name="msg_password">Password</string>
     <string name="msg_name">Name</string>
+    <string name="msg_profile_name_hint" translatable="false">Please enter your name…</string>
     <string name="msg_email">Email</string>
+    <string name="msg_profile_email_hint" translatable="false">Please enter your email address</string> <!-- TODO Make translatable and add translations -->
     <string name="msg_avatar_url">avatar URL</string>
     <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
     <string name="msg_new_user">New user? %1$s</string>
@@ -232,12 +238,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_view_more">view more</string>
     <string name="msg_view_less">view less</string>
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
-
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Analytics tracking</string>
-    <string name="msg_send_analytics_tracking">Send anonymous statistics to help improve this app</string>
-    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statistics to help improve this app</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>

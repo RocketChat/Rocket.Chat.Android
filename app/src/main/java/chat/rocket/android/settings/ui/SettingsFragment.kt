@@ -35,8 +35,28 @@ internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 fun newInstance(): Fragment = SettingsFragment()
 
 class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
-    @Inject lateinit var analyticsManager: AnalyticsManager
-    @Inject lateinit var presenter: SettingsPresenter
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
+    @Inject
+    lateinit var presenter: SettingsPresenter
+    private val locales = arrayListOf(
+        "en",
+        "ar",
+        "de",
+        "es",
+        "fa",
+        "fr",
+        "hi,IN",
+        "it",
+        "ja",
+        "pt,BR",
+        "pt,PT",
+        "ru,RU",
+        "tr",
+        "uk",
+        "zh,CN",
+        "zh,TW"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,7 +132,7 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
     override fun updateLanguage(language: String, country: String?) {
         presenter.saveLocale(language, country)
-        activity?.recreate()
+        presenter.recreateActivity()
     }
 
     override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
@@ -163,28 +183,33 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
     private fun changeLanguage() {
         context?.let {
+            val selectedLocale = presenter.getCurrentLocale(it)
+            var localeIndex = -1
+            locales.forEachIndexed { index, locale ->
+                val array = locale.split(",")
+                val language = array[0]
+                val country = if (array.size > 1) array[1] else ""
+                // If language and country are specified, return the respective locale, else return
+                // the first locale found if the language is as specified regardless of the country.
+                if (language == selectedLocale.language) {
+                    if (country == selectedLocale.country) {
+                        localeIndex = index
+                        return@forEachIndexed
+                    } else if (localeIndex == -1) {
+                        localeIndex = index
+                    }
+                }
+            }
             AlertDialog.Builder(it)
                 .setTitle(R.string.title_choose_language)
                 .setSingleChoiceItems(
-                    resources.getStringArray(R.array.languages), -1
+                    resources.getStringArray(R.array.languages), localeIndex
                 ) { dialog, option ->
-                    when (option) {
-                        0 -> updateLanguage("en")
-                        1 -> updateLanguage("ar")
-                        2 -> updateLanguage("de")
-                        3 -> updateLanguage("es")
-                        4 -> updateLanguage("fa")
-                        5 -> updateLanguage("fr")
-                        6 -> updateLanguage("hi", "IN")
-                        7 -> updateLanguage("it")
-                        8 -> updateLanguage("ja")
-                        9 -> updateLanguage("pt", "BR")
-                        10 -> updateLanguage("pt", "PT")
-                        11 -> updateLanguage("ru", "RU")
-                        12 -> updateLanguage("tr")
-                        13 -> updateLanguage("uk")
-                        14 -> updateLanguage("zh", "CN")
-                        15 -> updateLanguage("zh", "TW")
+                    val array = locales[option].split(",")
+                    if (array.size > 1) {
+                        updateLanguage(array[0], array[1])
+                    } else {
+                        updateLanguage(array[0])
                     }
                     dialog.dismiss()
                 }
