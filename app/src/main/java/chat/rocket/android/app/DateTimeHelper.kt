@@ -67,10 +67,11 @@ object DateTimeHelper {
      */
     fun getTime(localDateTime: LocalDateTime): String {
         val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
-        if(isSearching){
+        if (isSearching) {
             return formatSearchMessages(localDateTime)
+        } else {
+            return localDateTime.toLocalTime().format(formatter).toString()
         }
-        return localDateTime.toLocalTime().format(formatter).toString()
     }
 
     /**
