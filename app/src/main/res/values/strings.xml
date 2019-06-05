@@ -387,6 +387,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="log_in">Log In</string>
     <string name="edit_profile">Edit My Profile</string>
     <string name="delete_account">Delete My Account</string>
+    <string name="title_are_you_sure_delete">Are you sure? Enter username to confirm.</string>
     <string name="log_out">Log Out</string>
     <string name="widechat_new_channel">New Group Chat</string>
     <string name="share_via_another_app">Share via another App</string>
