@@ -1,1 +1,1 @@
-include ':app', ':player', ':emoji', ':draw', ':util', ':core', ':suggestions'
+include ':app', ':player', ':emoji', ':draw', ':util', ':core', ':suggestions', ':themelibrary'

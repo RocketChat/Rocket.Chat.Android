@@ -56,7 +56,7 @@ class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), Sorti
         setupListeners()
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         presenter.saveSortingAndGroupingPreferences(
             isSortByName,

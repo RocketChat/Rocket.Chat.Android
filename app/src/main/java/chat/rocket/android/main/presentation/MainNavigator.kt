@@ -11,10 +11,13 @@ import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.ui.TAG_PROFILE_FRAGMENT
 import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.settings.ui.TAG_SETTINGS_FRAGMENT
+import chat.rocket.android.thememanager.ui.TAG_THEME_FRAGMENT
+import chat.rocket.android.thememanager.ui.newInstance
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.webview.adminpanel.ui.TAG_ADMIN_PANEL_WEB_VIEW_FRAGMENT
 import chat.rocket.android.webview.ui.webViewIntent
+
 
 class MainNavigator(internal val activity: MainActivity) {
 
@@ -47,6 +50,13 @@ class MainNavigator(internal val activity: MainActivity) {
             chat.rocket.android.profile.ui.newInstance()
         }
     }
+    //----------------------------------------------------------------------------------
+    fun toChangeTheme() {
+        activity.addFragmentBackStack(TAG_THEME_FRAGMENT, R.id.fragment_container) {
+            newInstance()
+        }
+    }
+    //---------------------------------------------------------------------------------
 
     fun toAdminPanel(webPageUrl: String, userToken: String) {
         activity.addFragmentBackStack(TAG_ADMIN_PANEL_WEB_VIEW_FRAGMENT, R.id.fragment_container) {

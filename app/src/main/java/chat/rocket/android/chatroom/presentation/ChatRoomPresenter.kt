@@ -987,7 +987,6 @@ class ChatRoomPresenter @Inject constructor(
                     ChatRoom(
                         id = id,
                         subscriptionId = subscriptionId,
-                        parentId = parentId,
                         type = roomTypeOf(type),
                         unread = unread,
                         broadcast = broadcast ?: false,
