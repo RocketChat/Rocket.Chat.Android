@@ -49,10 +49,10 @@ class DirectoryFragment : Fragment(), DirectoryView {
             presenter.toChannel(channelId, channelName)
         }
         override fun onUserSelected(username: String, name: String) {
-            presenter.tiDirectMessage(username, name)
+            presenter.toDirectMessage(username, name)
         }
         override fun onGlobalUserSelected(username: String, name: String) {
-            presenter.tiDirectMessage(username, name)
+            presenter.toDirectMessage(username, name)
         }
     })
     private val hashtagDrawable by lazy {
