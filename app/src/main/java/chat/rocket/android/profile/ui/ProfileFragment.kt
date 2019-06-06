@@ -385,7 +385,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
         context?.let {
             val builder = AlertDialog.Builder(it)
-            builder.setTitle(R.string.title_are_you_sure)
+            builder.setTitle(R.string.title_are_you_sure_delete)
                 .setView(verificationStringEditText)
                 .setPositiveButton(R.string.action_delete_account) { _, _ ->
                     if (Constants.WIDECHAT) {
