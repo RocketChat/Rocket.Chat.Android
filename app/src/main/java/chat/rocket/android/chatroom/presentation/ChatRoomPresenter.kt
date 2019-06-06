@@ -359,11 +359,13 @@ class ChatRoomPresenter @Inject constructor(
                     val id = UUID.randomUUID().toString()
                     val username = userHelper.username()
                     val user = userHelper.user()
+                    val timestamp = maxOf(getTimeStampOfLastMessageInRoom() + 1,
+                        Instant.now().toEpochMilli())
                     val newMessage = Message(
                         id = id,
                         roomId = chatRoomId,
                         message = text,
-                        timestamp = Instant.now().toEpochMilli(),
+                        timestamp = timestamp,
                         sender = SimpleUser(user?.id, user?.username ?: username, user?.name),
                         attachments = null,
                         avatar = currentServer.avatarUrl(
@@ -1101,9 +1103,13 @@ class ChatRoomPresenter @Inject constructor(
                         }
                     }
                 }
-            } catch (ex: Exception) {
-                Timber.e(ex)
-                view.showMessage(ex.message!!)
+            } catch (exception: Exception) {
+                Timber.e(exception)
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
             }
         }
     }
@@ -1120,8 +1126,13 @@ class ChatRoomPresenter @Inject constructor(
                         }
                     }
                 }
-            } catch (ex: Exception) {
-                Timber.e(ex)
+            } catch (exception: Exception) {
+                Timber.e(exception)
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
             }
         }
     }
@@ -1136,8 +1147,13 @@ class ChatRoomPresenter @Inject constructor(
                     client.toggleReaction(messageId, emoji.removeSurrounding(":"))
                 }
                 logReactionEvent()
-            } catch (ex: RocketChatException) {
-                Timber.e(ex)
+            } catch (exception: RocketChatException) {
+                Timber.e(exception)
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
             }
         }
     }
@@ -1374,6 +1390,14 @@ class ChatRoomPresenter @Inject constructor(
      */
     fun getDraftUnfinishedMessage(): String? {
         return localRepository.get(draftKey)
+    }
+
+    private suspend fun getTimeStampOfLastMessageInRoom(): Long {
+        return withContext(Dispatchers.IO + strategy.jobs) {
+            chatRoomId?.let {
+                dbManager.messageDao().getRecentMessagesByRoomId(it, 1).first().message.message.timestamp
+            }
+        } ?: 0
     }
 
     fun openFullWebPage(roomId: String, url: String){

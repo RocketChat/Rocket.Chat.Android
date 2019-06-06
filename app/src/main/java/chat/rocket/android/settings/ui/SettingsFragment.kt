@@ -132,7 +132,7 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
     override fun updateLanguage(language: String, country: String?) {
         presenter.saveLocale(language, country)
-        activity?.recreate()
+        presenter.recreateActivity()
     }
 
     override fun invalidateToken(token: String) = invalidateFirebaseToken(token)

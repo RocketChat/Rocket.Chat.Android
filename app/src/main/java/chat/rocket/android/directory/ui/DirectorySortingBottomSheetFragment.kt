@@ -1,7 +1,6 @@
 package chat.rocket.android.directory.ui
 
 import DrawableHelper
-import android.content.DialogInterface
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import chat.rocket.android.R
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottom_sheet_fragment_directory_sorting.*
 
@@ -67,10 +68,6 @@ class DirectorySortingBottomSheetFragment : BottomSheetDialogFragment() {
         setupListeners()
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
-        super.onCancel(dialog)
-    }
-
     private fun setupView() {
         if (isSortByChannels) {
             checkSelection(text_channels, hashtagDrawable)
@@ -82,6 +79,15 @@ class DirectorySortingBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun setupListeners() {
+        dialog.setOnShowListener { dialog ->
+            val bottomSheet = (dialog as BottomSheetDialog).findViewById<View>(
+                com.google.android.material.R.id.design_bottom_sheet
+            )
+            bottomSheet?.let {
+                BottomSheetBehavior.from(bottomSheet).peekHeight = bottomSheet.height
+            }
+        }
+
         text_channels.setOnClickListener {
             checkSelection(text_channels, hashtagDrawable)
             uncheckSelection(text_users, userDrawable)
