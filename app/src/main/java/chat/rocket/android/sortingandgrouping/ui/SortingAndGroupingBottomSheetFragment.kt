@@ -13,6 +13,8 @@ import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
 import chat.rocket.android.sortingandgrouping.presentation.SortingAndGroupingPresenter
 import chat.rocket.android.sortingandgrouping.presentation.SortingAndGroupingView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.bottom_sheet_fragment_sort_by.*
@@ -89,6 +91,15 @@ class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), Sorti
     }
 
     private fun setupListeners() {
+        dialog.setOnShowListener { dialog ->
+            val bottomSheet = (dialog as BottomSheetDialog).findViewById<View>(
+                com.google.android.material.R.id.design_bottom_sheet
+            )
+            bottomSheet?.let {
+                BottomSheetBehavior.from(bottomSheet).peekHeight = bottomSheet.height
+            }
+        }
+
         text_name.setOnClickListener {
             changeSortByTitle(getString(R.string.msg_sort_by_name))
             checkSelection(text_name, filterDrawable)

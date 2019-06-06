@@ -31,6 +31,7 @@ import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.socket.model.StreamMessage
 import chat.rocket.core.internal.realtime.socket.model.Type
 import chat.rocket.core.model.ChatRoom
+import chat.rocket.core.model.LastMessage
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
@@ -400,8 +401,8 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
         }
     }
 
-    private fun mapLastMessageText(message: Message?): String? = message?.let { lastMessage ->
-        if (lastMessage.message.isEmpty() && lastMessage.attachments?.isNotEmpty() == true) {
+    private fun mapLastMessageText(message: LastMessage?): String? = message?.let { lastMessage ->
+        if (lastMessage.message?.isEmpty() == true && lastMessage.attachments?.isNotEmpty() == true) {
             context.getString(R.string.msg_sent_attachment)
         } else {
             lastMessage.message
