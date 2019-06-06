@@ -67,7 +67,7 @@ class DirectorySortingBottomSheetFragment : BottomSheetDialogFragment() {
         setupListeners()
     }
 
-    override fun onCancel(dialog: DialogInterface) {
+    override fun onCancel(dialog: DialogInterface?) {
         super.onCancel(dialog)
         directoryFragment.updateSorting(isSortByChannels, isSearchForGlobalUsers)
     }
