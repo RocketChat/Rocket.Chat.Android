@@ -173,8 +173,7 @@ class ChatRoomAdapter(
         notifyDataSetChanged()
     }
 
-    // FIXME What's 0,1 and 2 means for here?
-    fun updateItem(message: BaseUiModel<*>): Int {
+    fun updateItem(message: BaseUiModel<*>): Boolean {
         val index = dataSet.indexOfLast { it.messageId == message.messageId }
         val indexOfNext = dataSet.indexOfFirst { it.messageId == message.messageId }
         Timber.d("index: $index")
@@ -185,13 +184,7 @@ class ChatRoomAdapter(
                     if (viewModel.nextDownStreamMessage == null) {
                         viewModel.reactions = message.reactions
                     }
-
-                    if (ind > 0 &&
-                        dataSet[ind].message.timestamp > dataSet[ind - 1].message.timestamp) {
-                        return 2
-                    } else {
-                        notifyItemChanged(ind)
-                    }
+                    notifyItemChanged(ind)
                 }
             }
             // Delete message only if current is a system message update, i.e.: Message Removed
@@ -199,9 +192,9 @@ class ChatRoomAdapter(
                 dataSet.removeAt(indexOfNext)
                 notifyItemRemoved(indexOfNext)
             }
-            return 0
+            return true
         }
-        return 1
+        return false
     }
 
     fun removeItem(messageId: String) {

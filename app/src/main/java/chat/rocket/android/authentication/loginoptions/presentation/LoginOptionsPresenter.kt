@@ -147,7 +147,6 @@ class LoginOptionsPresenter @Inject constructor(
                     )
                     localRepository.saveCurrentUser(url = currentServer, user = user)
                     saveCurrentServer.save(currentServer)
-                    localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, username)
                     saveAccount(username)
                     saveToken(token)
                     analyticsManager.logLogin(loginMethod, true)

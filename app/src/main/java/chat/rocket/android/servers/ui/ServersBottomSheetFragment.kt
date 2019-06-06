@@ -12,8 +12,6 @@ import chat.rocket.android.servers.adapter.ServersAdapter
 import chat.rocket.android.servers.presentation.ServersPresenter
 import chat.rocket.android.servers.presentation.ServersView
 import chat.rocket.android.util.extensions.showToast
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.bottom_sheet_fragment_servers.*
@@ -40,18 +38,6 @@ class ServersBottomSheetFragment : BottomSheetDialogFragment(), ServersView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.getAllServers()
-        setupListeners()
-    }
-
-    private fun setupListeners() {
-        dialog.setOnShowListener { dialog ->
-            val bottomSheet = (dialog as BottomSheetDialog).findViewById<View>(
-                com.google.android.material.R.id.design_bottom_sheet
-            )
-            bottomSheet?.let {
-                BottomSheetBehavior.from(bottomSheet).peekHeight = bottomSheet.height
-            }
-        }
     }
 
     override fun showServerList(serverList: List<Account>, currentServerUrl: String) {

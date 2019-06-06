@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Titles -->
-    <string name="title_sign_in_your_server">Se connecter à votre serveur</string>
+    <string name="title_sign_in_your_server">Connectez-vous sur votre serveur</string>
     <string name="title_log_in">S\'identifier</string>
     <string name="title_register_username">Enregistrer le nom d\'utilisateur</string>
     <string name="title_reset_password">Réinitialiser mot de passe</string>
@@ -14,26 +14,26 @@
     <string name="title_counted_members">Membres (%d)</string>
     <string name="title_settings">Paramètres</string>
     <string name="title_preferences">Préférences</string>
-    <string name="title_choose_language">Langues</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_change_password">Changer le mot de passe</string>
-    <string name="title_rate_us">Evaluez nous</string>
-    <string name="title_admin_panel">Administration</string>
+    <string name="title_rate_us">évaluez nous</string>
+    <string name="title_admin_panel">l\' administration</string>
     <string name="title_password">Changer le mot de passe</string>
     <string name="title_update_profile">Mettre à jour le profil</string>
     <string name="title_create_channel">Créer salon</string>
-    <string name="title_license">Licence</string>
+    <string name="title_license">les permis</string>
     <string name="title_are_you_sure">Êtes-vous sûr?</string>
-    <string name="title_channel_details">Détails du salon</string>
+    <string name="title_channel_details">Détails de la chaîne</string>
     <string name="title_topic">Sujet</string>
     <string name="title_announcement">Annonce</string>
-    <string name="title_description">Description</string>
+    <string name="title_description">La description</string>
 
     <!-- Actions -->
     <string name="action_connect">Se connecter</string>
     <string name="action_use_this_username">Utilisez ce nom d\'utilisateur</string>
     <string name="action_terms_of_service">Conditions d\'utilisation</string>
     <string name="action_privacy_policy">Politique de confidentialité</string>
-    <string name="action_new_channel">Nouveau salon</string>
+    <string name="action_new_channel">New channel</string> <!-- TODO Translate -->
     <string name="action_search">Chercher</string>
     <string name="action_update">Mettre à jour</string>
     <string name="action_settings">Paramètres</string>
@@ -44,65 +44,65 @@
     <string name="action_confirm_password">Confirmer le mot de passe</string>
     <string name="action_join_chat">Rejoignez le chat</string>
     <string name="msg_online">En ligne</string>
-    <string name="msg_away">Absent</string>
+    <string name="msg_away">Loin</string>
     <string name="msg_busy">Occupé</string>
     <string name="msg_invisible">Invisible</string>
     <string name="action_drawing">Dessin</string>
-    <string name="action_save_to_gallery">Sauver dans la galerie</string>
-    <string name="action_select_photo_from_gallery">Choisir depuis la galerie</string>
+    <string name="action_save_to_gallery">Sauvegarder vers la gallerie</string>
+    <string name="action_select_photo_from_gallery">Sélectionner depuis la gallerie</string>
     <string name="action_take_a_photo">Prendre une photo</string>
     <string name="action_reset_avatar">Réinitialiser l\'avatar</string>
-    <string name="action_connect_server">Se connecter sur un serveur</string>
+    <string name="action_connect_server">Se connecter avec un serveur</string>
     <string name="action_join_community">Rejoignez la communauté</string>
     <string name="action_create_server">Créer un nouveau serveur</string>
-    <string name="action_register">Register</string> <!-- TOTO Add translation -->
+    <string name="action_register">registre</string>
     <string name="action_confirm">Confirmer</string>
-    <string name="action_favorite">Favoris</string>
-    <string name="action_remove_favorite">Supprimer des favoris</string>
+    <string name="action_favorite">Favorite</string> <!-- TODO Add translation -->
+    <string name="action_remove_favorite">Remove favorite</string> <!-- TODO Add translation -->
 
     <!-- Settings messages -->
-    <string name="msg_contact_us">Nous contacter</string>
-    <string name="msg_language">Langue</string>
-    <string name="msg_review_this_app">Notez cette application</string>
-    <string name="msg_share_this_app">Partagez cette application</string>
-    <string name="msg_administration">Administration</string>
-    <string name="msg_license">Licence</string>
-    <string name="msg_app_version">Version: %1$s (%2$d)</string>
-    <string name="msg_server_version">Version du serveur : %1$s</string>
-    <string name="msg_send_analytics">Envoyer des statistiques</string>
+    <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    <string name="msg_language">Language</string> <!-- TODO Translate -->
+    <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
+    <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
+    <string name="msg_administration">Administration</string> <!-- TODO Translate -->
+    <string name="msg_license">License</string> <!-- TODO Translate -->
+    <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
+    <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
     <string name="msg_send_analytics_tracking">Envoyer des statistiques anonymes pour aider à l\'amélioration de l\'application</string>
     <string name="msg_do_not_send_analytics_tracking">Ne pas envoyer des statistiques anonymes pour aider à l\'amélioration de l\'application</string>
     <string name="msg_not_applicable_since_it_is_a_foss_version">Ne s\'applique pas étant donné qu\'il s\'agit d\'une version FOSS</string>
-    <string name="msg_logout_from_rocket_chat">Se déconnecter de Rocket.chat</string>
-    <string name="msg_delete_account">Supprimer compte</string>
-    <string name="msg_change_status">Changer de statut</string>
+    <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
+    <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
+    <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
 
     <string-array name="languages"> <!-- TODO Add translations -->
-        <item>Anglais</item>
-        <item>Arabe</item>
-        <item>Allemand</item>
-        <item>Espagnol</item>
-        <item>Perse</item>
-        <item>Français</item>
+        <item>English</item>
+        <item>Arabic</item>
+        <item>German</item>
+        <item>Spanish</item>
+        <item>Persian</item>
+        <item>French</item>
         <item>Hindi (IN)</item>
-        <item>Italien</item>
-        <item>Japonais</item>
-        <item>Portugais (BR)</item>
-        <item>Portugais (PT)</item>
-        <item>Russe (RU)</item>
-        <item>Turc</item>
-        <item>Ukrainien</item>
-        <item>Chinois (CN)</item>
-        <item>Chinois (TW)</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Portuguese (BR)</item>
+        <item>Portuguese (PT)</item>
+        <item>Russian (RU)</item>
+        <item>Turkish</item>
+        <item>Ukrainian</item>
+        <item>Chinese (CN)</item>
+        <item>Chinese (TW)</item>
     </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Désolé, une erreur s\'est produite. Veuillez réessayer</string>
     <string name="msg_no_data_to_display">Aucune donnée à afficher</string>
-    <string name="msg_check_this_out">Regardez ça</string>
+    <string name="msg_check_this_out">regarde ça</string>
     <string name="msg_share_using">Partager en utilisant</string>
-    <string name="msg_profile_updated_successfully">Profil mis à jour avec succès</string>
-    <string name="msg_username">Nom d\'utilisateur</string>
+    <string name="msg_profile_updated_successfully">Mise à jour du profil avec succès</string>
+    <string name="msg_username">nom d\'utilisateur</string>
     <string name="msg_username_or_email">Nom d\'utilisateur ou email</string>
     <string name="msg_password">Mot de passe</string>
     <string name="msg_name">Prénom</string>
@@ -118,8 +118,8 @@
     <string name="msg_yesterday">Hier</string>
     <string name="msg_today">Aujourd\'hui</string>
     <string name="msg_message">Message</string>
-    <string name="msg_video_call">Appel vidéo</string> <!-- TODO Add translation -->
-    <string name="msg_join_video_call">Rejoindre un appel vidéo</string> <!-- TODO Add translation -->
+    <string name="msg_video_call">Video call</string> <!-- TODO Add translation -->
+    <string name="msg_join_video_call">Join video call</string> <!-- TODO Add translation -->
     <string name="msg_this_room_is_read_only">Ce salon est en lecture seule</string>
     <string name="msg_invalid_2fa_code">Code 2FA non valide</string>
     <string name="msg_invalid_file">Fichier non valide</string>
@@ -133,7 +133,7 @@
     <string name="msg_content_description_log_in_using_gitlab">Connectez-vous en utilisant GitLab</string>
     <string name="msg_content_description_log_in_using_wordpress">Connectez-vous en utilisant WordPress</string>
     <string name="msg_content_description_send_message">Envoyer message</string>
-    <string name="msg_content_description_show_more_login_options">Montrer plus d\'options de connexion</string>
+    <string name="msg_content_description_show_more_login_options">montrer plus d\'options le login</string>
     <string name="msg_content_description_show_attachment_options">Afficher les options de fichiers</string>
     <string name="msg_you">Vous</string>
     <string name="msg_unknown">Inconnu</string>
@@ -147,7 +147,7 @@
     <string name="msg_preview_photo">Photo</string>
     <string name="msg_preview_file">Fichier</string>
     <string name="msg_no_messages_yet">Aucun message pour le moment</string>
-    <string name="msg_build">build %1$d - %2$s - %3$s</string>
+    <string name="msg_build">bâtir %1$d - %2$s - %3$s</string>
     <string name="msg_update_app_version_in_order_to_continue">La version du serveur est trop ancienne. Veuillez contacter l\'administateur pour mettre à jour le serveur afin de pouvoir vous y connecter.</string>
     <string name="msg_ver_not_recommended">
         On dirait que la version de votre serveur est en dessous de la version recommandée %1$s.\nVous pouvez toujours vous connecter mais vous pouvez rencontrer des comportements inattendus.</string>
@@ -172,12 +172,12 @@
     <string name="msg_message_copied">Message copié</string>
     <string name="msg_upload_file">Téléverser un fichier</string>
     <string name="msg_file_description">Description du fichier</string>
-    <string name="msg_send">Envoyer</string>
+    <string name="msg_send">envoyer</string>
     <string name="msg_delete_message">Supprimer Message</string>
-    <string name="msg_delete_description">Êtes-vous sûr de vouloir supprimer ce message ?</string>
-    <string name="msg_welcome_to_rocket_chat">Bienvenue sur Rocket.Chat</string>
+    <string name="msg_delete_description">Êtes-vous sûr de vouloir supprimer ce message?</string>
+    <string name="msg_welcome_to_rocket_chat">Bienvenue à Rocket.Chat</string>
     <string name="msg_team_communication">Communication d\'équipe</string>
-    <string name="msg_login_with_email">Se connecter avec un <b>e-mail</b></string>
+    <string name="msg_login_with_email">le login avec <b>e-mail</b></string>
     <string name="msg_create_account">Créer un compte</string>
     <string name="msg_continue_with_facebook">Continuer avec <b>Facebook</b></string>
     <string name="msg_continue_with_github">Continuer avec <b>GitHub</b></string>
@@ -185,17 +185,17 @@
     <string name="msg_continue_with_linkedin">Continuer avec <b>LinkedIn</b></string>
     <string name="msg_continue_with_gitlab">Continuer avec <b>GitLab</b></string>
     <string name="msg_continue_with_wordpress">Continuer avec <b>WordPress</b></string>
-    <string name="msg_two_factor_authentication">Authentification à deux facteurs</string>
+    <string name="msg_two_factor_authentication">authentification à deux facteurs</string>
     <string name="msg_your_2fa_code">Quel est votre code 2FA?</string>
-    <string name="msg_view_more">voir plus</string>
-    <string name="msg_view_less">voir moins</string>
+    <string name="msg_view_more">voir de plus</string>
+    <string name="msg_view_less">voir de plus</string>
     <string name="msg_permalink_copied">Permalink copié</string>
     <string name="msg_send_email">Envoyer email</string>
-    <string name="msg_android_app_support">Support application Android</string>
-    <string name="msg_muted_on_this_channel">Vous êtes en sourdine sur ce salon</string>
-    <string name="msg_no_topic">Sujet non ajouté</string>
-    <string name="msg_no_announcement">Annonce non ajoutée</string>
-    <string name="msg_no_description">Description non ajoutée</string>
+    <string name="msg_android_app_support">Android app le support</string>
+    <string name="msg_muted_on_this_channel">Vous êtes en sourdine sur ce canal</string>
+    <string name="msg_no_topic">sujet non ajouté</string>
+    <string name="msg_no_announcement">annonce non ajoutée</string>
+    <string name="msg_no_description">description non ajoutée</string>
     <string name="msg_unable_to_update_password">Impossible de mettre à jour le mot de passe. Message d\'erreur: %1$s</string>
     <string name="msg_password_updated_successfully">Mot de passe mis à jour avec succès</string>
     <plurals name="msg_reacted_with_">
@@ -203,10 +203,10 @@
         <item quantity="other">%1$s a réagi avec %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Certificats sauvegardés</string>
-    <string name="msg_camera_permission_denied">Vous devez donner la permission d\'utiliser la caméra pour vous en servir</string>
-    <string name="msg_storage_permission_denied">Vous devez donner la permission d\'accéder au stockage pour ouvrir le Dessin</string>
-    <string name="msg_server">Serveur</string>
-    <string name="msg_add_new_server">Ajouter un Serveur</string>
+    <string name="msg_camera_permission_denied">Camera permission is needed to open camera.</string> <!-- TODO Add translation -->
+    <string name="msg_storage_permission_denied">Storage permission is needed to open Drawing.</string> <!-- TODO Add translation -->
+    <string name="msg_server">Server</string> <!-- TODO Translate -->
+    <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
     <string name="msg_directory">Directory</string> <!-- TODO Translate -->
 
     <!-- Create channel messages -->
@@ -217,7 +217,7 @@
     <string name="msg_ready_only_channel">Salon en lecture seule</string>
     <string name="msg_ready_only_channel_description">Seuls les administrateurs peuvent écrire de nouveaux messages</string>
     <string name="msg_invite_members">Inviter des membres à rejoindre le salon</string>
-    <string name="msg_member_already_added">Cet utilisateur est déjà dans le salon</string>
+    <string name="msg_member_already_added">Cet utilisateur est déjà sélectionné</string>
     <string name="msg_member_not_found">Membre non trouvé</string>
     <string name="msg_channel_created_successfully">Salon créé</string>
 
@@ -234,19 +234,19 @@
     <string name="message_unmuted">Utilisateur %1$s a retrouvé la parole grâce à %2$s</string>
     <string name="message_role_add">%1$s a été défini %2$s par %3$s</string>
     <string name="message_role_removed">%1$s n\'est plus %2$s par %3$s</string>
-    <string name="message_video_call_started">Appel vidéo lancé par %1$s</string> <!-- TODO Add translation -->
+    <string name="message_video_call_started">Video call started by %1$s</string> <!-- TODO Add translation -->
 
     <!-- Message actions -->
     <string name="action_msg_reply">Répondre</string>
-    <string name="action_info">Infos</string> 
+    <string name="action_info">Info</string> <!-- TODO Add translation -->
     <string name="action_msg_edit">Modifier</string>
     <string name="action_msg_copy">Copier</string>
     <string name="action_msg_quote">Citation</string>
     <string name="action_msg_delete">Effacer</string>
-    <string name="action_pin">Epingler</string>
-    <string name="action_unpin">Dépingler</string>
-    <string name="action_star">Favoris</string>
-    <string name="action_unstar">Retirer des Favoris</string>
+    <string name="action_pin">Pin</string> <!-- TODO Add translation -->
+    <string name="action_unpin">Unpin</string> <!-- TODO Add translation -->
+    <string name="action_star">Star</string> <!-- TODO Add translation -->
+    <string name="action_unstar">Unstar</string> <!-- TODO Add translation -->
     <string name="action_msg_share">Partager</string>
     <string name="action_title_editing">Modification du message</string>
     <string name="action_msg_add_reaction">Ajouter une réaction</string>
@@ -329,20 +329,20 @@
     <string name="alert_title_default_skin_tone">Tonalité de peau par défaut</string>
 
     <!-- Sort and group -->
-    <string name="msg_sort_by_placeholder">Trier par %1$s</string>
-    <string name="msg_sort_by">Trier par</string>
-    <string name="msg_sort_by_activity">Activité</string>
-    <string name="msg_sort_by_name">Nom</string>
-    <string name="msg_group_by_unread_on_top">Non lus d\'abord</string>
-    <string name="msg_group_by_type">Grouper par type</string>
-    <string name="msg_group_by_favorites">Grouper par favoris</string>
+    <string name="msg_sort_by_placeholder">Sort by %1$s</string> <!-- TODO Translate -->
+    <string name="msg_sort_by">Sort by</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_activity">Activity</string> <!-- TODO Translate -->
+    <string name="msg_sort_by_name">Name</string> <!-- TODO Translate -->
+    <string name="msg_group_by_unread_on_top">Unread on top</string> <!-- TODO Translate -->
+    <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
+    <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
     <!-- ChatRooms Headers -->
     <string name="header_favorite">Favoris</string>
     <string name="msg_channels">Salons</string>
-    <string name="msg_users">Utilisateurs</string>
-    <string name="msg_search_for_global_users">Rechercher des utilisateurs globaux</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">Si vous l\'activez, vous pourrez chercher n\'importe quel utilisateur d\'autres entreprises ou serveurs</string>
+    <string name="msg_users">Users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">Groupes privés</string>
     <string name="header_direct_messages">Messages directs</string>
     <string name="header_live_chats">Chats en direct</string>
@@ -357,12 +357,12 @@
     <string name="message_information_title">Informations sur le message</string>
     <string name="msg_log_out">Déconnecter…</string>
     <string name="msg_sent_attachment">Envoyé un fichier</string>
-    <string name="message_room_changed_privacy">Type de chambre changé : %1$s de %2$s</string>
+    <string name="message_room_changed_privacy">Changé de type de chambre : %1$s de %2$s</string>
 
     <!-- User Details -->
     <string name="timezone">Fuseau horaire</string>
-    <string name="status">Statut: %1$s</string>
-    <string name="user_detail_status">Statut</string>
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Soumettre</string>

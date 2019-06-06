@@ -103,10 +103,10 @@
     <string name="msg_share_using">نشر بواسطة</string>
     <string name="msg_profile_updated_successfully">تم تحديث الملف الشخصي بنجاح</string>
     <string name="msg_username">اسم المستخدم</string>
-    <string name="msg_username_or_email">اسم المستخدم أو عنوان البريد</string>
+    <string name="msg_username_or_email">اسم المستخدم أو عنوان بريد</string>
     <string name="msg_password">كلمة السر</string>
     <string name="msg_name">الاسم</string>
-    <string name="msg_email">عنوان البريد</string>
+    <string name="msg_email">عنوان بريد</string>
     <string name="msg_avatar_url">رابط الشخصية</string>
     <string name="msg_or_continue_using_social_accounts">استمرار باستخدام حساب التواصل الاجتماعي</string>
     <string name="msg_new_user">مستخدم جديد؟ %1$s</string>

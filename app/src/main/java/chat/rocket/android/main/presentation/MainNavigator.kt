@@ -1,6 +1,5 @@
 package chat.rocket.android.main.presentation
 
-import android.content.Intent
 import chat.rocket.android.R
 import chat.rocket.android.authentication.ui.newServerIntent
 import chat.rocket.android.chatroom.ui.chatRoomIntent
@@ -100,10 +99,5 @@ class MainNavigator(internal val activity: MainActivity) {
 
     fun toServerScreen() {
         activity.startActivity(activity.newServerIntent())
-    }
-
-    fun recreateActivity() {
-        activity.startActivity(Intent(activity, MainActivity::class.java))
-        activity.finish()
     }
 }
