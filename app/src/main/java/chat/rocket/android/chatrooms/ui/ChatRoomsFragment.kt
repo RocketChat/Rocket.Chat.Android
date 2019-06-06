@@ -274,14 +274,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private fun setupListeners() {
         text_server_name.setOnClickListener {
             ServersBottomSheetFragment().show(
-                activity?.supportFragmentManager,
+                activity!!.supportFragmentManager,
                 chat.rocket.android.servers.ui.TAG
             )
         }
 
         text_sort_by.setOnClickListener {
             SortingAndGroupingBottomSheetFragment().show(
-                activity?.supportFragmentManager,
+                activity!!.supportFragmentManager,
                 chat.rocket.android.sortingandgrouping.ui.TAG
             )
         }
