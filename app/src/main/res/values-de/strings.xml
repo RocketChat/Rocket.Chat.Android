@@ -9,7 +9,7 @@
     <string name="title_authentication">Login Daten prüfen</string>
     <string name="title_legal_terms">Legal Terms</string>
     <string name="title_chats">Chats</string>
-    <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
+    <string name="title_choose_language">Sprache wählen</string>
     <string name="title_profile">Profil</string>
     <string name="title_members">Benutzer</string>
     <string name="title_counted_members">Benutzer (%d)</string>
@@ -70,30 +70,33 @@
     <string name="msg_share_this_app">Teile diese App</string>
     <string name="msg_administration">Administration</string>
     <string name="msg_license">Lizenz</string>
-    <string name="msg_app_version">Version: %1$s (%2$d)</string> 
+    <string name="msg_app_version">Version: %1$s (%2$d)</string>
     <string name="msg_server_version">Serverversion: %1$s</string>
     <string name="msg_send_analytics">Analysesaten senden</string>
+    <string name="msg_send_analytics_tracking">Anonyme Statistiken senden um diese App weiter zu verbessern</string>
+    <string name="msg_do_not_send_analytics_tracking">KEINE anonymen Statistiken senden um diese App weiter zu verbessern</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Nicht anwendbar, da es sich um eine FOSS version handelt</string>
     <string name="msg_logout_from_rocket_chat">Logout von Rocket.Chat</string>
-    <string name="msg_delete_account">Konto löschen</string> 
+    <string name="msg_delete_account">Konto löschen</string>
     <string name="msg_change_status">Status ändern</string>
 
-    <string-array name="languages"> <!-- TODO Add translations -->
-        <item>English</item>
-        <item>Arabic</item>
-        <item>German</item>
-        <item>Spanish</item>
-        <item>Persian</item>
-        <item>French</item>
+    <string-array name="languages">
+        <item>Englisch</item>
+        <item>Arabisch</item>
+        <item>Deutsch</item>
+        <item>Spanisch</item>
+        <item>Persisch</item>
+        <item>Französisch</item>
         <item>Hindi (IN)</item>
-        <item>Italian</item>
-        <item>Japanese</item>
-        <item>Portuguese (BR)</item>
-        <item>Portuguese (PT)</item>
-        <item>Russian (RU)</item>
-        <item>Turkish</item>
-        <item>Ukrainian</item>
-        <item>Chinese (CN)</item>
-        <item>Chinese (TW)</item>
+        <item>Italienisch</item>
+        <item>Japanisch</item>
+        <item>Portugiesisch (BR)</item>
+        <item>Portugiesisch (PT)</item>
+        <item>Russisch (RU)</item>
+        <item>Türkisch</item>
+        <item>Ukrainisch</item>
+        <item>Chinesisch (CN)</item>
+        <item>Chinesisch (TW)</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -120,7 +123,7 @@
     <string name="msg_message">Nachricht</string>
     <string name="msg_video_call">Videoanruf</string>
     <string name="msg_join_video_call">Videoanruf beitreten</string>
-    <string name="msg_this_room_is_read_only">Dieser Raum ist nur lesen</string>
+    <string name="msg_this_room_is_read_only">Dieser Raum ist Read-Only</string>
     <string name="msg_invalid_2fa_code">Falscher 2FA Code</string>
     <string name="msg_invalid_file">Falsche Datei</string>
     <string name="msg_invalid_server_url">Falsche Server URL</string>
@@ -191,7 +194,7 @@
     <string name="msg_unable_to_update_password">Änderung des Passworts nicht möglich. Fehlermeldung: %1$s</string>
     <string name="msg_password_updated_successfully">Passwort erfolgreich geändert</string>
     <plurals name="msg_reacted_with_">
-        <item quantity="one">%1$ s reagierte mit %2$s</item>
+        <item quantity="one">%1$s reagierte mit %2$s</item>
         <item quantity="other">%1$s reagierte mit %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Login-Daten erfolgreich gespeichert</string>
@@ -222,13 +225,6 @@
     <string name="msg_send_email">E-Mail senden</string>
     <string name="msg_android_app_support">Android App-Unterstützung</string>
 
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Daten für Analysezwecke</string>
-    <string name="msg_send_analytics_tracking">Anonyme Statistiken senden um diese App weiter zu verbessern</string>
-    <string name="msg_do_not_send_analytics_tracking">KEINE anonymen Statistiken senden um diese App weiter zu verbessern</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Nicht anwendbar, da es sich um eine FOSS version handelt</string>
-
-
     <!-- System messages -->
     <string name="message_room_name_changed">Raum Namen geändert zu: %1$s von %2$s</string>
     <string name="message_user_added_by">Benutzer %1$s hinzugefügt von %2$s</string>
@@ -246,7 +242,7 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Antworten</string>
-    <string name="action_info">Info</string> 
+    <string name="action_info">Info</string>
     <string name="action_msg_edit">Bearbeiten</string>
     <string name="action_msg_copy">Kopieren</string>
     <string name="action_msg_quote">Zitieren</string>
@@ -305,7 +301,7 @@
     <string name="status_disconnecting">Trenne</string>
     <string name="status_waiting">Verbinde in %d Sekunden</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">Benachrichtige alle in diesem Raum</string>
     <string name="suggest_here_description">Benachrichtige aktive Benutzer in diesem Raum</string>
 
@@ -332,20 +328,20 @@
     <string name="Guggy_Command_Description">Erstelle ein Gif, basierend auf den eingegebenen Text</string>
     <string name="Slash_Topic_Description">Setze Topic</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">Keine letzten Emojis</string>
     <string name="alert_title_default_skin_tone">Standard Hautton</string>
 
     <!-- Sort and group -->
-    <string name="msg_sort_by_placeholder">Sortiere nach %1$s</string>
+    <string name="msg_sort_by_placeholder">Sortiert nach %1$s</string>
     <string name="msg_sort_by">Sortiert nach</string>
     <string name="msg_sort_by_activity">Aktivität</string>
     <string name="msg_sort_by_name">Name</string>
     <string name="msg_group_by_unread_on_top">Ungelesen oben</string>
     <string name="msg_group_by_type">Gruppieren nach Typ</string>
     <string name="msg_group_by_favorites">Gruppieren nach Favoriten</string>
-    
-    <!--ChatRooms Headers-->
+
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Favoriten</string>
     <string name="msg_channels">Räume</string>
     <string name="msg_users">Benutzer</string>
@@ -356,7 +352,7 @@
     <string name="header_live_chats">Live Chats</string>
     <string name="header_unknown">Unbekannt</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">Bearbeite geteilte Nachricht</string>
     <string name="notif_action_reply_hint">Antworten</string>
     <string name="notif_error_sending">Antworten fehlgeschlagen. Bitte versuchen Sie es noch einmal.</string>
@@ -367,7 +363,8 @@
 
     <!-- User Details -->
     <string name="timezone">Zeitzone</string>
-
+    <string name="status">Status: %1$s</string>
+    <string name="user_detail_status">Status</string>
     <!-- Report -->
     <string name="submit">Senden</string>
     <string name="required">*erforderlich</string>

@@ -23,6 +23,7 @@
     <string name="title_license">許可</string>
     <string name="title_are_you_sure">確定嗎?</string>
     <string name="title_channel_details">頻道訊息</string>
+    <string name="title_choose_language">Choose Language</string> <!-- TODO Translate -->
     <string name="title_topic">主題</string>
     <string name="title_announcement">公告</string>
     <string name="title_description">描述</string>
@@ -72,6 +73,9 @@
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics_tracking">發送匿名訊息來改善App</string>
+    <string name="msg_do_not_send_analytics_tracking">不要發送匿名訊息，我不想幫助這個App</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">不適用，因為這個軟體是Foss版本</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
@@ -200,12 +204,6 @@
     <string name="msg_view_less">顯示更少</string>
     <string name="msg_muted_on_this_channel">您被禁言了</string>
 
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">追蹤分析</string>
-    <string name="msg_send_analytics_tracking">發送匿名訊息來改善App</string>
-    <string name="msg_do_not_send_analytics_tracking">不要發送匿名訊息，我不想幫助這個App</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">不適用，因為這個軟體是Foss版本</string>
-
     <!-- System messages -->
     <string name="message_room_name_changed">頻道已經改名為: %1$s by %2$s</string>
     <string name="message_user_added_by">%2$s增加了新的成員%1$s </string>
@@ -282,7 +280,7 @@
     <string name="status_disconnecting">斷線中</string>
     <string name="status_waiting">連線持續了 %d 秒</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">提醒頻道內所有成員</string>
     <string name="suggest_here_description">提醒頻道內所有在線上的成員</string>
 
@@ -309,7 +307,7 @@
     <string name="Guggy_Command_Description">根據輸入訊息產生GIF</string>
     <string name="Slash_Topic_Description">設定主題</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">最近沒有使用emojis</string>
     <string name="alert_title_default_skin_tone">預設主題顏色</string>
 
@@ -322,18 +320,18 @@
     <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
     <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="msg_channels">頻道</string>
     <string name="msg_users">Users</string> <!-- TODO Translate -->
     <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">私人群組</string>
     <string name="header_direct_messages">直接對話</string>
     <string name="header_live_chats">Live 對話</string>
     <string name="header_unknown">未知</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">編輯分享的訊息</string>
     <string name="notif_action_reply_hint">回覆</string>
     <string name="notif_error_sending">回覆失敗，請重試.</string>
@@ -342,11 +340,10 @@
     <string name="message_information_title">消息訊息</string>
     <string name="message_room_changed_privacy">頻道類型更改為: %1$s by %2$s</string>
 
-    <string name="foss" translatable="false">(FOSS)</string>
-
     <!-- User Details -->
     <string name="timezone">時區</string>
-    <string name="status" translatable="false">狀態: %1$s</string>
+    <string name="status">狀態: %1$s</string>
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">提交</string>

@@ -76,7 +76,9 @@
         <activity
             android:name=".chatinformation.ui.MessageInfoActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" /> <!-- TODO: Change to fragment -->
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
+        <!-- TODO: Change to fragment -->
         <activity
             android:name=".settings.password.ui.PasswordActivity"
             android:theme="@style/AppTheme" />

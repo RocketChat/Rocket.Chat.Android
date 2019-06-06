@@ -1,7 +1,6 @@
 package chat.rocket.android.directory.ui
 
 import DrawableHelper
-import android.content.DialogInterface
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,8 +9,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import chat.rocket.android.R
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottom_seet_fragment_directory_sorting.*
+import kotlinx.android.synthetic.main.bottom_sheet_fragment_directory_sorting.*
 
 fun showDirectorySortingBottomSheetFragment(
     isSortByChannels: Boolean,
@@ -59,17 +60,12 @@ class DirectorySortingBottomSheetFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? =
-        inflater.inflate(R.layout.bottom_seet_fragment_directory_sorting, container, false)
+        inflater.inflate(R.layout.bottom_sheet_fragment_directory_sorting, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView()
         setupListeners()
-    }
-
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        directoryFragment.updateSorting(isSortByChannels, isSearchForGlobalUsers)
     }
 
     private fun setupView() {
@@ -83,38 +79,50 @@ class DirectorySortingBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun setupListeners() {
+        dialog.setOnShowListener { dialog ->
+            val bottomSheet = (dialog as BottomSheetDialog).findViewById<View>(
+                com.google.android.material.R.id.design_bottom_sheet
+            )
+            bottomSheet?.let {
+                BottomSheetBehavior.from(bottomSheet).peekHeight = bottomSheet.height
+            }
+        }
+
         text_channels.setOnClickListener {
             checkSelection(text_channels, hashtagDrawable)
             uncheckSelection(text_users, userDrawable)
             isSortByChannels = true
+            directoryFragment.updateSorting(isSortByChannels, isSearchForGlobalUsers)
         }
 
         text_users.setOnClickListener {
             checkSelection(text_users, userDrawable)
             uncheckSelection(text_channels, hashtagDrawable)
             isSortByChannels = false
+            directoryFragment.updateSorting(isSortByChannels, isSearchForGlobalUsers)
         }
 
         switch_global_users.setOnCheckedChangeListener { _, isChecked ->
             isSearchForGlobalUsers = isChecked
+            directoryFragment.updateSorting(isSortByChannels, isSearchForGlobalUsers)
         }
     }
 
-    private fun checkSelection(textView: TextView, leftDrawable: Drawable) {
+    private fun checkSelection(textView: TextView, startDrawable: Drawable) {
         context?.let {
-            DrawableHelper.compoundLeftAndRightDrawable(
+            DrawableHelper.compoundStartAndEndDrawable(
                 textView,
-                leftDrawable,
+                startDrawable,
                 checkDrawable
             )
         }
     }
 
-    private fun uncheckSelection(textView: TextView, leftDrawable: Drawable) {
+    private fun uncheckSelection(textView: TextView, startDrawable: Drawable) {
         context?.let {
-            DrawableHelper.compoundLeftDrawable(
+            DrawableHelper.compoundStartDrawable(
                 textView,
-                leftDrawable
+                startDrawable
             )
         }
     }

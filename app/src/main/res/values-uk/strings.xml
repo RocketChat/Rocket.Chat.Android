@@ -73,6 +73,9 @@
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics_tracking">Надсилати анонімну статистику для покращення роботи програми</string>
+    <string name="msg_do_not_send_analytics_tracking">Не надсилати анонімну статистику для покращення роботи програми</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Недоступно у FOSS версії</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
@@ -219,12 +222,6 @@
     <string name="msg_member_not_found">"Користувача не знайдено "</string>
     <string name="msg_channel_created_successfully">Канал був створений успішно</string>
 
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Збір аналітики</string>
-    <string name="msg_send_analytics_tracking">Надсилати анонімну статистику для покращення роботи програми</string>
-    <string name="msg_do_not_send_analytics_tracking">Не надсилати анонімну статистику для покращення роботи програми</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Недоступно у FOSS версії</string>
-
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s змінив назву каналу на %1$s</string>
     <string name="message_user_added_by">Користувач %2$s додав користувача %1$s</string>
@@ -301,7 +298,7 @@
     <string name="status_disconnecting">Відключаємося…</string>
     <string name="status_waiting">З\'єднання через %d секунд</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">Повідомити всіх у цьому чаті</string>
     <string name="suggest_here_description">Повідомити всіх активних користувачів у цьому чаті</string>
 
@@ -328,7 +325,7 @@
     <string name="Guggy_Command_Description">Створює gif використовуючи наданий текст</string>
     <string name="Slash_Topic_Description">Встановити тему</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">Пусто</string>
     <string name="alert_title_default_skin_tone">Тон шкіри за замовчуванням</string>
 
@@ -341,18 +338,18 @@
     <string name="msg_group_by_type">Group by type</string> <!-- TODO Translate -->
     <string name="msg_group_by_favorites">Group by favorites</string> <!-- TODO Translate -->
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Favorites</string><!-- TODO - Add proper translation -->
     <string name="msg_channels">Канали</string>
     <string name="msg_users">Users</string> <!-- TODO Translate -->
     <string name="msg_search_for_global_users">Search for global users</string> <!-- TODO Translate -->
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string> <!-- TODO Translate -->
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string> <!-- TODO Translate -->
     <string name="header_private_groups">Приватні канали</string>
     <string name="header_direct_messages">Особисті повідомлення</string>
     <string name="header_live_chats">Живі чати</string>
     <string name="header_unknown">Невідомі</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">Редагувати повідомлення</string>
     <string name="notif_action_reply_hint">ВІДПОВІСТИ</string>
     <string name="notif_error_sending">Не вдалося відповісти. Будь ласка, спробуйте ще раз.</string>
@@ -365,6 +362,8 @@
 
     <!-- User Details -->
     <string name="timezone">Timezone</string>
+    <string name="status">Status: %1$s</string> <!-- TODO Translate -->
+    <string name="user_detail_status">Status</string> <!-- TODO Translate -->
 
     <!-- Report -->
     <string name="submit">Submit</string> <!-- TODO - Add proper translation -->

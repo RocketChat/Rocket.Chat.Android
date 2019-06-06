@@ -10,5 +10,6 @@
         <item name="actionModeBackground">@color/colorPrimary</item>
         <item name="android:actionModeBackground">@color/colorPrimary</item>
         <item name="themeIconColor">@color/colorPrimaryDark</item>
+        <item name="android:textDirection">locale</item>
     </style>
 </resources>

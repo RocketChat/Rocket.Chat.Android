@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".sortingandgrouping.ui.SortingAndGroupingBottomSheetFragment">
+    tools:context=".directory.ui.DirectorySortingBottomSheetFragment">
 
     <TextView
         android:id="@+id/text_sort_by"
@@ -13,12 +14,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/msg_sort_by_placeholder"
+        android:text="@string/msg_sort_by"
         android:textColor="#9EA2A8"
         android:textSize="17sp"
         android:textStyle="normal" />
 
     <View
+        android:id="@+id/view_divider_one"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
@@ -28,95 +30,92 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/text_name"
+                android:id="@+id/text_channels"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_filter_20dp"
+                android:drawableStart="@drawable/ic_hashtag_16dp"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
-                android:text="@string/msg_sort_by_name"
+                android:text="@string/msg_channels"
                 android:textColor="#2F343D"
                 android:textSize="16sp"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/text_activity"
+                android:id="@+id/text_users"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_activity_20dp"
+                android:drawableStart="@drawable/ic_user_16dp"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
-                android:text="@string/msg_sort_by_activity"
+                android:text="@string/msg_users"
                 android:textColor="#2F343D"
                 android:textSize="16sp"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                app:layout_constraintTop_toBottomOf="@+id/text_channels" />
 
             <View
-                android:id="@+id/view_divider"
+                android:id="@+id/view_divider_two"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:background="#1F000000" />
+                android:background="#1F000000"
+                app:layout_constraintTop_toBottomOf="@+id/text_users" />
 
             <TextView
-                android:id="@+id/text_unread_on_top"
-                android:layout_width="match_parent"
+                android:id="@+id/text_search_for_global_users"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_unread_20dp"
-                android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
                 android:paddingEnd="16dp"
-                android:paddingBottom="16dp"
-                android:text="@string/msg_group_by_unread_on_top"
+                android:text="@string/msg_search_for_global_users"
                 android:textColor="#2F343D"
                 android:textSize="16sp"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_divider_two" />
+
+            <Switch
+                android:id="@+id/switch_global_users"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:checked="false"
+                app:layout_constraintBottom_toBottomOf="@+id/text_search_for_global_users"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_search_for_global_users" />
 
             <TextView
-                android:id="@+id/text_group_by_type"
-                android:layout_width="match_parent"
+                android:id="@+id/text_search_for_global_users_description"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_group_by_type_20dp"
-                android:drawablePadding="16dp"
                 android:paddingStart="16dp"
-                android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
-                android:text="@string/msg_group_by_type"
-                android:textColor="#2F343D"
-                android:textSize="16sp"
-                android:textStyle="normal" />
+                android:text="@string/msg_search_for_global_users_description"
+                android:textColor="#9EA2A8"
+                android:textSize="14sp"
+                android:textStyle="normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_search_for_global_users" />
 
-            <TextView
-                android:id="@+id/text_group_by_favorites"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_favorites_20dp"
-                android:drawablePadding="16dp"
-                android:paddingStart="16dp"
-                android:paddingTop="16dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="16dp"
-                android:text="@string/msg_group_by_favorites"
-                android:textColor="#2F343D"
-                android:textSize="16sp"
-                android:textStyle="normal" />
-
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
 

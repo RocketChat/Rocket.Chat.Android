@@ -401,7 +401,7 @@ class UiModelMapper @Inject constructor(
 
     private fun attachmentUrl(url: String?): String? {
         if (url.isNullOrEmpty()) return null
-        if (url!!.startsWith("http")) return url
+        if (url.startsWith("http")) return url
 
         val fullUrl = "$baseUrl$url"
         val httpUrl = HttpUrl.parse(fullUrl)
@@ -472,18 +472,20 @@ class UiModelMapper @Inject constructor(
             val list = mutableListOf<ReactionUiModel>()
             val customEmojis = EmojiRepository.getCustomEmojis()
             it.getShortNames().forEach { shortname ->
-                val usernames = it.getUsernames(shortname).orEmpty()
-                val count = usernames.size
-                val custom = customEmojis.firstOrNull { emoji -> emoji.shortname == shortname }
-                list.add(
-                    ReactionUiModel(messageId = message.id,
-                        shortname = shortname,
-                        unicode = EmojiParser.parse(context, shortname),
-                        count = count,
-                        usernames = usernames,
-                        url = custom?.url,
-                        isCustom = custom != null)
-                )
+                it.getUsernames(shortname)?.let { usernames ->
+                    val count = usernames.size
+                    val custom = customEmojis.firstOrNull { emoji -> emoji.shortname == shortname }
+                    list.add(
+                        ReactionUiModel(messageId = message.id,
+                            shortname = shortname,
+                            unicode = EmojiParser.parse(context, shortname),
+                            count = count,
+                            usernames = usernames,
+                            url = custom?.url,
+                            isCustom = custom != null)
+                    )
+
+                }
             }
             list
         }

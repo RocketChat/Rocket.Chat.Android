@@ -136,7 +136,7 @@ class DirectoryPresenter @Inject constructor(
         }
     }
 
-    fun tiDirectMessage(username: String, name: String) {
+    fun toDirectMessage(username: String, name: String) {
         launchUI(strategy) {
             try {
                 view.showLoading()
