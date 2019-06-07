@@ -6,6 +6,7 @@ import chat.rocket.android.R
 import chat.rocket.android.chatdetails.ui.TAG_CHAT_DETAILS_FRAGMENT
 import chat.rocket.android.chatinformation.ui.messageInformationIntent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
+import chat.rocket.android.chatroom.ui.bottomsheet.WebUrlBottomSheet
 import chat.rocket.android.chatroom.ui.chatRoomIntent
 import chat.rocket.android.favoritemessages.ui.TAG_FAVORITE_MESSAGES_FRAGMENT
 import chat.rocket.android.files.ui.TAG_FILES_FRAGMENT
@@ -16,6 +17,7 @@ import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.userdetails.ui.TAG_USER_DETAILS_FRAGMENT
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.videoconference.ui.videoConferenceIntent
+import chat.rocket.android.webview.ui.webViewIntent
 
 class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
 
@@ -152,5 +154,15 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
     fun toMessageInformation(messageId: String) {
         activity.startActivity(activity.messageInformationIntent(messageId = messageId))
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
+    }
+
+    fun toFullWebPage(roomId: String, url: String) {
+        activity.startActivity(activity.webViewIntent(url,null))
+        activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
+    }
+
+    fun toConfigurableWebPage(roomId: String, url: String, heightRatio: String) {
+        val weburlbottomsheet = WebUrlBottomSheet.newInstance(url, roomId, heightRatio)
+        weburlbottomsheet.show(activity.supportFragmentManager, null)
     }
 }

@@ -1402,4 +1402,12 @@ class ChatRoomPresenter @Inject constructor(
             }
         } ?: 0
     }
+
+    fun openFullWebPage(roomId: String, url: String){
+        navigator.toFullWebPage(roomId, url)
+    }
+
+    fun openConfigurableWebPage(roomId: String, url: String, heightRatio: String){
+        navigator.toConfigurableWebPage(roomId, url, heightRatio)
+    }
 }
