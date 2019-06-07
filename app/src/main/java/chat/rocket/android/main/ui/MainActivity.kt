@@ -81,7 +81,6 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     private var chatRoomId: String? = null
     private var deepLinkInfo: DeepLinkInfo? = null
     private var progressDialog: ProgressDialog? = null
-    private val PERMISSIONS_REQUEST_RW_CONTACTS = 2
 
     // WIDECHAT
     val contactsLoadingState = MutableLiveData<ContactsLoadingState>()
@@ -400,7 +399,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                                             permissions: Array<String>,
                                             grantResults: IntArray) {
         when (requestCode) {
-            PERMISSIONS_REQUEST_RW_CONTACTS -> {
+            AndroidPermissionsHelper.PERMISSIONS_REQUEST_RW_CONTACTS_CODE -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)) {
                     val showRationale: Boolean = shouldShowRequestPermissionRationale(permissions[0])
                     if (!showRationale) {
@@ -409,6 +408,17 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                     }
                 } else if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     runContactSync()
+                }
+            }
+            AndroidPermissionsHelper.ACCESS_FINE_LOCATION_CODE -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)) {
+                    val showRationale: Boolean = shouldShowRequestPermissionRationale(permissions[0])
+                    if (!showRationale) {
+                        // User selected 'Do not show again' when they were previously presented the permissions dialogue
+                        SharedPreferenceHelper.putString(Constants.LOCATION_PERMISSION, "do_not_show_again")
+                    } else {
+                        SharedPreferenceHelper.putString(Constants.LOCATION_PERMISSION, "denied")
+                    }
                 }
             }
         }

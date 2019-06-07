@@ -25,6 +25,7 @@ object Constants {
     const val WIDECHAT_REAL_USER_NAME = "real_user_name"
 
     const val CURRENT_BSSID = "current_bssid"
+    const val LOCATION_PERMISSION = "location_permission"
 
 }
 

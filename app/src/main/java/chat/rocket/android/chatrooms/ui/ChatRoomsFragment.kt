@@ -189,9 +189,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             recycler_view.layoutManager = LinearLayoutManager(it)
             recycler_view.addItemDecoration(
                 DividerItemDecoration(
-                        it,
-                        resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
-                        resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)
+                    it,
+                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
+                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)
                 )
             )
             recycler_view.itemAnimator = DefaultItemAnimator()
@@ -693,6 +693,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private fun tryToReadSSID() {
         with(activity as MainActivity) {
             if (AndroidPermissionsHelper.hasLocationPermission(this)) {
+                SharedPreferenceHelper.putString(Constants.LOCATION_PERMISSION, "granted")
                 val wifiManager = getApplicationContext().getSystemService(WIFI_SERVICE) as WifiManager
                 val wifiInfo = wifiManager.getConnectionInfo()
 
@@ -703,6 +704,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 } else {
                     SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, "NONE")
                 }
+            } else {
+                // Clear the value in case permissions revoked
+                SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, "NONE")
             }
         }
     }
