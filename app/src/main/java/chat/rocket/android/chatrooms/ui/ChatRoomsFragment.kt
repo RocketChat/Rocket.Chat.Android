@@ -50,7 +50,10 @@ import javax.inject.Inject
 
 // WIDECHAT
 import android.graphics.Color
+import android.net.wifi.SupplicantState
+import android.net.wifi.WifiManager
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity.WIFI_SERVICE
 import androidx.core.view.isGone
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
@@ -67,12 +70,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-
-// WIDECHAT
-// WIFI TEST
-import android.net.wifi.SupplicantState
-import android.net.wifi.WifiManager
-import androidx.appcompat.app.AppCompatActivity.WIFI_SERVICE
 
 internal const val TAG_CHAT_ROOMS_FRAGMENT = "ChatRoomsFragment"
 
@@ -112,8 +109,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var deepLinkInfo: DeepLinkInfo? = null
     // handles that recurring connection status bug in widechat
     private var currentlyConnected: Boolean? = false
-    // WIDECHAT WIFI TEST
-    private val LOCATION = 1
 
     companion object {
         private var isFABOpen: Boolean = false
@@ -166,9 +161,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? = container?.inflate(R.layout.fragment_chat_rooms)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -193,11 +188,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
             recycler_view.layoutManager = LinearLayoutManager(it)
             recycler_view.addItemDecoration(
-                    DividerItemDecoration(
-                            it,
-                            resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
-                            resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)
-                    )
+                DividerItemDecoration(
+                        it,
+                        resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
+                        resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)
+                )
             )
             recycler_view.itemAnimator = DefaultItemAnimator()
 
@@ -231,16 +226,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     if (status is State.Connected) {
                         // When connected, only show the connection status once
                         if (currentlyConnected == false) {
-                            // refresh BSSID if wifi
-                            Timber.d("######  EAR>> status is State.Connected")
+                            // Connection state changed - refresh BSSID
                             tryToReadSSID()
 
                             currentlyConnected = true
                             status?.let { showConnectionState(status) }
                         }
                     } else {
-                        // clear BSSID if not wifi
-                        Timber.d("######  EAR>> status is State.Disconnected")
+                        // connection state changed - clear BSSID if no wifi
                         tryToReadSSID()
 
                         currentlyConnected = false
@@ -300,26 +293,26 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             R.id.action_sort -> {
                 val dialogLayout = layoutInflater.inflate(R.layout.chatroom_sort_dialog, null)
                 val sortType = SharedPreferenceHelper.getInt(
-                        Constants.CHATROOM_SORT_TYPE_KEY,
-                        ChatRoomsSortOrder.ACTIVITY
+                    Constants.CHATROOM_SORT_TYPE_KEY,
+                    ChatRoomsSortOrder.ACTIVITY
                 )
                 val groupByType =
-                        SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
+                    SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
 
                 val radioGroup = dialogLayout.findViewById<RadioGroup>(R.id.radio_group_sort)
                 val groupByTypeCheckBox =
-                        dialogLayout.findViewById<CheckBox>(R.id.checkbox_group_by_type)
+                    dialogLayout.findViewById<CheckBox>(R.id.checkbox_group_by_type)
 
                 radioGroup.check(
-                        when (sortType) {
-                            0 -> R.id.radio_sort_alphabetical
-                            else -> R.id.radio_sort_activity
-                        }
+                    when (sortType) {
+                        0 -> R.id.radio_sort_alphabetical
+                        else -> R.id.radio_sort_activity
+                    }
                 )
                 radioGroup.setOnCheckedChangeListener { _, checkedId ->
                     run {
                         SharedPreferenceHelper.putInt(
-                                Constants.CHATROOM_SORT_TYPE_KEY, when (checkedId) {
+                            Constants.CHATROOM_SORT_TYPE_KEY, when (checkedId) {
                             R.id.radio_sort_alphabetical -> 0
                             R.id.radio_sort_activity -> 1
                             else -> 1
@@ -331,20 +324,20 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 groupByTypeCheckBox.isChecked = groupByType
                 groupByTypeCheckBox.setOnCheckedChangeListener { _, isChecked ->
                     SharedPreferenceHelper.putBoolean(
-                            Constants.CHATROOM_GROUP_BY_TYPE_KEY,
-                            isChecked
+                        Constants.CHATROOM_GROUP_BY_TYPE_KEY,
+                        isChecked
                     )
                 }
 
                 context?.let {
                     AlertDialog.Builder(it)
-                            .setTitle(R.string.dialog_sort_title)
-                            .setView(dialogLayout)
-                            .setPositiveButton(R.string.msg_sort) { dialog, _ ->
-                                invalidateQueryOnSearch()
-                                updateSort()
-                                dialog.dismiss()
-                            }.show()
+                        .setTitle(R.string.dialog_sort_title)
+                        .setView(dialogLayout)
+                        .setPositiveButton(R.string.msg_sort) { dialog, _ ->
+                            invalidateQueryOnSearch()
+                            updateSort()
+                            dialog.dismiss()
+                        }.show()
                 }
             }
         }
@@ -433,9 +426,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private fun showNoChatRoomsToDisplay(show: Boolean) {
         hideLoading()
         if (Constants.WIDECHAT) {
-            ui {
-                widechat_welcome_to_app.isVisible = show
-                widechat_text_no_data_to_display.isVisible = show
+            ui { widechat_welcome_to_app.isVisible = show
+                 widechat_text_no_data_to_display.isVisible = show
             }
         } else {
             ui { text_no_data_to_display.isVisible = show }
@@ -707,7 +699,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
                     var ssid = wifiInfo.getBSSID()
                     SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, ssid)
-                    Timber.d("##########  EAR>> this is the BSSID: ${ssid}")
+                    Timber.d("Current bssid is: ${ssid}")
                 } else {
                     SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, "NONE")
                 }

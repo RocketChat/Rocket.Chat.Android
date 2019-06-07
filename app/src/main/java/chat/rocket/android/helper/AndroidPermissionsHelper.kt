@@ -6,10 +6,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-
-//DEBUG
-import timber.log.Timber
 
 object AndroidPermissionsHelper {
 
@@ -40,7 +36,6 @@ object AndroidPermissionsHelper {
     }
 
     fun hasLocationPermission(context: Context): Boolean {
-        Timber.d("##########  EAR>> inside hasLocationPermissionNow")
         return checkPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
     }
 
@@ -50,8 +45,4 @@ object AndroidPermissionsHelper {
                 ACCESS_FINE_LOCATION_CODE
         )
     }
-
-
-
-
 }
