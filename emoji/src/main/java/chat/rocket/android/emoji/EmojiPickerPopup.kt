@@ -7,9 +7,6 @@ import android.view.LayoutInflater
 import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
-import androidx.annotation.ColorInt
-import androidx.core.content.ContextCompat
-import androidx.core.content.edit
 import chat.rocket.android.emoji.internal.EmojiCategory
 import chat.rocket.android.emoji.internal.EmojiPagerAdapter
 import chat.rocket.android.emoji.internal.PREF_EMOJI_SKIN_TONE
@@ -17,7 +14,6 @@ import kotlinx.android.synthetic.main.emoji_picker.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-
 
 class EmojiPickerPopup(context: Context) : Dialog(context) {
 
@@ -60,15 +56,15 @@ class EmojiPickerPopup(context: Context) : Dialog(context) {
             changeSkinTone(Fitzpatrick.valueOf(it))
         }
 
-        pager_categories.adapter = adapter
         pager_categories.offscreenPageLimit = EmojiCategory.values().size
+        pager_categories.adapter = adapter
 
         for (category in EmojiCategory.values()) {
             val tab = tabs.getTabAt(category.ordinal)
             val tabView = LayoutInflater.from(context).inflate(R.layout.emoji_picker_tab, null)
             tab?.customView = tabView
-            val textView = tabView.findViewById(R.id.image_category) as ImageView
-            textView.setImageResource(category.resourceIcon())
+            val imageView = tabView.findViewById(R.id.image_category) as ImageView
+            imageView.setImageResource(category.resourceIcon())
         }
 
         val currentTab = if (EmojiRepository.getRecents().isEmpty()) {

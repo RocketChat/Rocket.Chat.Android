@@ -17,6 +17,7 @@ import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.core.behaviours.AppLanguageView
 import chat.rocket.android.helper.TextHelper.getDeviceAndAppInformation
 import chat.rocket.android.settings.presentation.SettingsPresenter
 import chat.rocket.android.settings.presentation.SettingsView
@@ -33,9 +34,29 @@ internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
 fun newInstance(): Fragment = SettingsFragment()
 
-class SettingsFragment : Fragment(), SettingsView {
-    @Inject lateinit var analyticsManager: AnalyticsManager
-    @Inject lateinit var presenter: SettingsPresenter
+class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
+    @Inject
+    lateinit var presenter: SettingsPresenter
+    private val locales = arrayListOf(
+        "en",
+        "ar",
+        "de",
+        "es",
+        "fa",
+        "fr",
+        "hi,IN",
+        "it",
+        "ja",
+        "pt,BR",
+        "pt,PT",
+        "ru,RU",
+        "tr",
+        "uk",
+        "zh,CN",
+        "zh,TW"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +95,7 @@ class SettingsFragment : Fragment(), SettingsView {
 
         text_contact_us.setOnClickListener { contactSupport() }
 
-        text_language.setOnClickListener {}
+        text_language.setOnClickListener { changeLanguage() }
 
         text_review_this_app.setOnClickListener { showAppOnStore() }
 
@@ -107,6 +128,11 @@ class SettingsFragment : Fragment(), SettingsView {
             isVisible = isDeleteAccountEnabled
             setOnClickListener { showDeleteAccountDialog() }
         }
+    }
+
+    override fun updateLanguage(language: String, country: String?) {
+        presenter.saveLocale(language, country)
+        presenter.recreateActivity()
     }
 
     override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
@@ -152,6 +178,43 @@ class SettingsFragment : Fragment(), SettingsView {
             } catch (ex: ActivityNotFoundException) {
                 Timber.e(ex)
             }
+        }
+    }
+
+    private fun changeLanguage() {
+        context?.let {
+            val selectedLocale = presenter.getCurrentLocale(it)
+            var localeIndex = -1
+            locales.forEachIndexed { index, locale ->
+                val array = locale.split(",")
+                val language = array[0]
+                val country = if (array.size > 1) array[1] else ""
+                // If language and country are specified, return the respective locale, else return
+                // the first locale found if the language is as specified regardless of the country.
+                if (language == selectedLocale.language) {
+                    if (country == selectedLocale.country) {
+                        localeIndex = index
+                        return@forEachIndexed
+                    } else if (localeIndex == -1) {
+                        localeIndex = index
+                    }
+                }
+            }
+            AlertDialog.Builder(it)
+                .setTitle(R.string.title_choose_language)
+                .setSingleChoiceItems(
+                    resources.getStringArray(R.array.languages), localeIndex
+                ) { dialog, option ->
+                    val array = locales[option].split(",")
+                    if (array.size > 1) {
+                        updateLanguage(array[0], array[1])
+                    } else {
+                        updateLanguage(array[0])
+                    }
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
         }
     }
 

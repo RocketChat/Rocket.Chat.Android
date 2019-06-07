@@ -49,10 +49,10 @@ class DirectoryFragment : Fragment(), DirectoryView {
             presenter.toChannel(channelId, channelName)
         }
         override fun onUserSelected(username: String, name: String) {
-            presenter.tiDirectMessage(username, name)
+            presenter.toDirectMessage(username, name)
         }
         override fun onGlobalUserSelected(username: String, name: String) {
-            presenter.tiDirectMessage(username, name)
+            presenter.toDirectMessage(username, name)
         }
     })
     private val hashtagDrawable by lazy {
@@ -233,14 +233,14 @@ class DirectoryFragment : Fragment(), DirectoryView {
     private fun updateSortByTitle() {
         if (isSortByChannels) {
             text_sort_by.text = getString(R.string.msg_channels)
-            DrawableHelper.compoundLeftAndRightDrawable(
+            DrawableHelper.compoundStartAndEndDrawable(
                 text_sort_by,
                 hashtagDrawable,
                 arrowDownDrawable
             )
         } else {
             text_sort_by.text = getString(R.string.msg_users)
-            DrawableHelper.compoundLeftAndRightDrawable(
+            DrawableHelper.compoundStartAndEndDrawable(
                 text_sort_by,
                 userDrawable,
                 arrowDownDrawable

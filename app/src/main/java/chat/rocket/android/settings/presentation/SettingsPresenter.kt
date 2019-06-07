@@ -1,5 +1,7 @@
 package chat.rocket.android.settings.presentation
 
+import android.content.Context
+import android.os.Build
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.helper.UserHelper
@@ -8,9 +10,10 @@ import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.RemoveAccountInteractor
+import chat.rocket.android.server.domain.SaveCurrentLanguageInteractor
 import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extension.gethash
 import chat.rocket.android.util.extension.launchUI
@@ -25,6 +28,7 @@ import chat.rocket.core.internal.rest.serverInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -38,6 +42,7 @@ class SettingsPresenter @Inject constructor(
     private val tokenRepository: TokenRepository,
     private val permissions: PermissionsInteractor,
     private val rocketChatClientFactory: RocketChatClientFactory,
+    private val saveLanguageInteractor: SaveCurrentLanguageInteractor,
     getCurrentServerInteractor: GetCurrentServerInteractor,
     removeAccountInteractor: RemoveAccountInteractor,
     databaseManagerFactory: DatabaseManagerFactory,
@@ -53,6 +58,7 @@ class SettingsPresenter @Inject constructor(
     tokenView = view,
     navigator = navigator
 ) {
+    private val token = tokenRepository.get(currentServer)
 
     fun setupView() {
         launchUI(strategy) {
@@ -67,7 +73,7 @@ class SettingsPresenter @Inject constructor(
 
                 userHelper.user()?.let { user ->
                     view.setupSettingsView(
-                        currentServer.avatarUrl(me.username ?: ""),
+                        currentServer.avatarUrl(me.username!!, token?.userId, token?.authToken),
                         userHelper.displayName(user) ?: me.username ?: "",
                         me.status.toString(),
                         permissions.isAdministrationEnabled(),
@@ -89,7 +95,6 @@ class SettingsPresenter @Inject constructor(
 
     fun enableAnalyticsTracking(isEnabled: Boolean) {
         analyticsTrackingInteractor.save(isEnabled)
-
     }
 
     fun logout() {
@@ -123,6 +128,18 @@ class SettingsPresenter @Inject constructor(
         }
     }
 
+    fun getCurrentLocale(context: Context): Locale {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            context.resources.configuration.locales.get(0)
+        } else {
+            context.resources.configuration.locale
+        }
+    }
+
+    fun saveLocale(language: String, country: String? = null) {
+        saveLanguageInteractor.save(language, country)
+    }
+
     fun toProfile() = navigator.toProfile()
 
     fun toAdmin() = tokenRepository.get(currentServer)?.let {
@@ -131,4 +148,6 @@ class SettingsPresenter @Inject constructor(
 
     fun toLicense(licenseUrl: String, licenseTitle: String) =
         navigator.toLicense(licenseUrl, licenseTitle)
+
+    fun recreateActivity() = navigator.recreateActivity()
 }

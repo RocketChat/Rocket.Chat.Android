@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawablePadding="20dp"
-        android:drawableStart="@drawable/ic_camera"
+        android:drawableStart="@drawable/ic_camera_24dp"
         android:gravity="start|center"
         android:text="@string/action_take_a_photo" />
 

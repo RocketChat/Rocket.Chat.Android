@@ -7,7 +7,7 @@ import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.directory.uimodel.DirectoryUiModelMapper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.main.presentation.MainNavigator
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
@@ -136,7 +136,7 @@ class DirectoryPresenter @Inject constructor(
         }
     }
 
-    fun tiDirectMessage(username: String, name: String) {
+    fun toDirectMessage(username: String, name: String) {
         launchUI(strategy) {
             try {
                 view.showLoading()
@@ -146,6 +146,7 @@ class DirectoryPresenter @Inject constructor(
 
                     val chatRoomEntity = ChatRoomEntity(
                         id = directMessage.id,
+                        parentId = null,
                         name = username,
                         description = null,
                         type = RoomType.DIRECT_MESSAGE,

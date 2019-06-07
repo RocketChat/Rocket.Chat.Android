@@ -4,7 +4,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.common.model.UserStatus
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

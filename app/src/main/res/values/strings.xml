@@ -34,6 +34,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_create_channel">Create Channel</string>
     <string name="title_license">License</string>
     <string name="title_are_you_sure">Are you sure?</string>
+    <string name="title_choose_language">Choose Language</string>
     <string name="title_channel_details">Channel Details</string>
     <string name="title_topic">Topic</string>
     <string name="title_announcement">Announcement</string>
@@ -81,21 +82,46 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_app_version">Version: %1$s (%2$d)</string>
     <string name="msg_server_version">Server version: %1$s</string>
     <string name="msg_send_analytics">Send analytics</string>
+    <string name="msg_send_analytics_tracking">Send anonymous statistics to help improve this app</string>
+    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statistics to help improve this app</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string>
     <string name="msg_delete_account">Delete account</string>
     <string name="msg_change_status">Change status</string>
+
+    <string-array name="languages">
+        <item>English</item>
+        <item>Arabic</item>
+        <item>German</item>
+        <item>Spanish</item>
+        <item>Persian</item>
+        <item>French</item>
+        <item>Hindi (IN)</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Portuguese (BR)</item>
+        <item>Portuguese (PT)</item>
+        <item>Russian (RU)</item>
+        <item>Turkish</item>
+        <item>Ukrainian</item>
+        <item>Chinese (CN)</item>
+        <item>Chinese (TW)</item>
+    </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
     <string name="msg_no_data_to_display">No data to display</string>
     <string name="msg_check_this_out">Check this out</string>
     <string name="msg_share_using">Share using</string>
+    <string name="msg_username">Username</string>
+    <string name="msg_profile_username_hint" translatable="false">Please enter your username</string> <!-- TODO Make translatable and add translations -->
     <string name="msg_profile_updated_successfully">Profile updated successfully</string>
-    <string name="msg_username">username</string>
     <string name="msg_username_or_email">Username or email</string>
     <string name="msg_password">Password</string>
     <string name="msg_name">Name</string>
+    <string name="msg_profile_name_hint" translatable="false">Please enter your name…</string>
     <string name="msg_email">Email</string>
+    <string name="msg_profile_email_hint" translatable="false">Please enter your email address</string> <!-- TODO Make translatable and add translations -->
     <string name="msg_avatar_url">avatar URL</string>
     <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
     <string name="msg_new_user">New user? %1$s</string>
@@ -213,12 +239,6 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_view_less">view less</string>
     <string name="msg_muted_on_this_channel">You are muted on this channel</string>
 
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Analytics tracking</string>
-    <string name="msg_send_analytics_tracking">Send anonymous statistics to help improve this app</string>
-    <string name="msg_do_not_send_analytics_tracking">Do not send anonymous statistics to help improve this app</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Not applicable since it is a FOSS version</string>
-
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
     <string name="message_user_added_by">User %1$s added by %2$s</string>
@@ -295,7 +315,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="status_disconnecting">Disconnecting</string>
     <string name="status_waiting">Connecting in %d seconds</string>
 
-    <!--Suggestions-->
+    <!-- Suggestions -->
     <string name="suggest_all_description">Notify all in this room</string>
     <string name="suggest_here_description">Notify active users in this room</string>
 
@@ -322,7 +342,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="Guggy_Command_Description">Generates a gif based upon the provided text</string>
     <string name="Slash_Topic_Description">Set topic</string>
 
-    <!-- Emoji message-->
+    <!-- Emoji messages -->
     <string name="msg_no_recent_emoji">No recent emojis</string>
     <string name="alert_title_default_skin_tone">Default skin tone</string>
 
@@ -335,18 +355,18 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_group_by_type">Group by type</string>
     <string name="msg_group_by_favorites">Group by favorites</string>
 
-    <!--ChatRooms Headers-->
+    <!-- ChatRooms Headers -->
     <string name="header_favorite">Favorites</string>
     <string name="msg_channels">Channels</string>
     <string name="msg_users">Users</string>
     <string name="msg_search_for_global_users">Search for global users</string>
-    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from others companies or servers.</string>
+    <string name="msg_search_for_global_users_description">If you turn on, you can search for any user from other companies or servers.</string>
     <string name="header_private_groups">Private Groups</string>
     <string name="header_direct_messages">Direct Messages</string>
     <string name="header_live_chats">Live Chats</string>
     <string name="header_unknown">Unknown</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="share_label">Edit shared message</string>
     <string name="notif_action_reply_hint">REPLY</string>
     <string name="notif_error_sending">Reply has failed. Please try again.</string>
@@ -359,7 +379,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
 
     <!-- User Details -->
     <string name="timezone">Timezone</string>
-    <string name="status" translatable="false">Status: %1$s</string>
+    <string name="status">Status: %1$s</string>
+    <string name="user_detail_status">Status</string>
 
     <!-- Report -->
     <string name="submit">Submit</string>
