@@ -129,12 +129,23 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
             name.text = text
             bindImage(chatRoomType)
             content_topic.text =
-                    if (room.topic.isNullOrEmpty()) getString(R.string.msg_no_topic) else room.topic
+                if (room.topic.isNullOrEmpty()) {
+                    getString(R.string.msg_no_topic)
+                } else {
+                    room.topic
+                }
             content_announcement.text =
-                    if (room.announcement.isNullOrEmpty()) getString(R.string.msg_no_announcement) else room.announcement
+                if (room.announcement.isNullOrEmpty()) {
+                    getString(R.string.msg_no_announcement)
+                } else {
+                    room.announcement
+                }
             content_description.text =
-                    if (room.description.isNullOrEmpty()) getString(R.string.msg_no_description)
-                    else getClickableSpan(room.description)
+                if (room.description.isNullOrEmpty()) {
+                    getString(R.string.msg_no_description)
+                } else {
+                    getClickableSpan(room.description)
+                }
         }
     }
 
@@ -247,19 +258,19 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
 
     private fun getClickableSpan(description: String): CharSequence {
         val spannableContent = SpannableStringBuilder(description)
-        val clickablePartList = getUrlList(description)
-        if (clickablePartList != null) {
-            for (clickablePart in clickablePartList) {
+        val clickableUrlList = getUrlList(description)
+        if (clickableUrlList != null) {
+            for (clickableUrl in clickableUrlList) {
                 val clickableSpan = object : ClickableSpan() {
                     override fun onClick(widget: View) {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(clickablePart))
+                        Intent(Intent.ACTION_VIEW, Uri.parse(clickableUrl))
                     }
                 }
-                val clickablePartStart = description.indexOf(clickablePart)
+                val clickableUrlStart = description.indexOf(clickableUrl)
                 spannableContent.setSpan(
                         clickableSpan,
-                        clickablePartStart,
-                        clickablePartStart + clickablePart.length,
+                        clickableUrlStart,
+                        clickableUrlStart + clickableUrl.length,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
         }
@@ -267,7 +278,7 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
     }
 
     private fun getUrlList(description: String): List<String>? {
-        // Extract all urls from the room description and put them in a list.
+        // Extract all urls from the room description and return a list with them.
         val urlRegex = Patterns.WEB_URL.toRegex()
         return urlRegex.findAll(description).map { it.value }.toList()
     }
