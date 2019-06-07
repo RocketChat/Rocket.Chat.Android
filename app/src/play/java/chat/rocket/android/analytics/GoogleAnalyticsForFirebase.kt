@@ -5,8 +5,13 @@ import android.os.Bundle
 import chat.rocket.android.analytics.event.AuthenticationEvent
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.analytics.event.SubscriptionTypeEvent
+import chat.rocket.android.helper.Constants
+import chat.rocket.android.helper.SharedPreferenceHelper
 import com.google.firebase.analytics.FirebaseAnalytics
 import javax.inject.Inject
+
+// TEST
+import timber.log.Timber
 
 class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
     Analytics {
@@ -32,10 +37,13 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
         })
     }
 
+    // WIDECHAT tracking BSSID
     override fun logMessageSent(event: SubscriptionTypeEvent, serverUrl: String) {
-        firebaseAnalytics.logEvent("message_sent", Bundle(2).apply {
+        val bssid = SharedPreferenceHelper.getString(Constants.CURRENT_BSSID, "NONE")
+        firebaseAnalytics.logEvent("message_sent", Bundle(3).apply {
             putString("subscription_type", event.subscriptionTypeName)
             putString("server", serverUrl)
+            putString("wifi_bssid", bssid)
         })
     }
 
@@ -67,9 +75,9 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
         })
 
     override fun logVideoConference(event: SubscriptionTypeEvent, serverUrl: String) {
-        firebaseAnalytics.logEvent("video_conference", Bundle(2).apply {
+        firebaseAnalytics.logEvent("video_conference", Bundle(1).apply {
             putString("subscription_type", event.subscriptionTypeName)
-            putString("server", serverUrl)
+//            putString("server", serverUrl)
         })
     }
 

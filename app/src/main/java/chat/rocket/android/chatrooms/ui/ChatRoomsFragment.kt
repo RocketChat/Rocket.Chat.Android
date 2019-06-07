@@ -54,6 +54,7 @@ import android.widget.*
 import androidx.core.view.isGone
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
+import chat.rocket.android.helper.AndroidPermissionsHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.profile.ui.ProfileFragment
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -66,6 +67,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+
+// WIDECHAT
+// WIFI TEST
+import android.net.wifi.SupplicantState
+import android.net.wifi.WifiManager
+import androidx.appcompat.app.AppCompatActivity.WIFI_SERVICE
 
 internal const val TAG_CHAT_ROOMS_FRAGMENT = "ChatRoomsFragment"
 
@@ -97,7 +104,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     // WIDECHAT
     private var settingsView: MenuItem? = null
     private var searchIcon: ImageView? = null
-    private var searchText:  TextView? = null
+    private var searchText: TextView? = null
     private var searchCloseButton: ImageView? = null
     private var profileButton: SimpleDraweeView? = null
     private var currentUserStatusIcon: ImageView? = null
@@ -105,6 +112,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var deepLinkInfo: DeepLinkInfo? = null
     // handles that recurring connection status bug in widechat
     private var currentlyConnected: Boolean? = false
+    // WIDECHAT WIFI TEST
+    private val LOCATION = 1
 
     companion object {
         private var isFABOpen: Boolean = false
@@ -157,9 +166,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = container?.inflate(R.layout.fragment_chat_rooms)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -184,11 +193,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
             recycler_view.layoutManager = LinearLayoutManager(it)
             recycler_view.addItemDecoration(
-                DividerItemDecoration(
-                    it,
-                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
-                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)
-                )
+                    DividerItemDecoration(
+                            it,
+                            resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
+                            resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)
+                    )
             )
             recycler_view.itemAnimator = DefaultItemAnimator()
 
@@ -222,12 +231,20 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     if (status is State.Connected) {
                         // When connected, only show the connection status once
                         if (currentlyConnected == false) {
+                            // refresh BSSID if wifi
+                            Timber.d("######  EAR>> status is State.Connected")
+                            tryToReadSSID()
+
                             currentlyConnected = true
-                            status?.let {showConnectionState(status)}
+                            status?.let { showConnectionState(status) }
                         }
                     } else {
+                        // clear BSSID if not wifi
+                        Timber.d("######  EAR>> status is State.Disconnected")
+                        tryToReadSSID()
+
                         currentlyConnected = false
-                        status?.let {showConnectionState(status)}
+                        status?.let { showConnectionState(status) }
                     }
                 } else {
                     status?.let { showConnectionState(status) }
@@ -283,30 +300,30 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             R.id.action_sort -> {
                 val dialogLayout = layoutInflater.inflate(R.layout.chatroom_sort_dialog, null)
                 val sortType = SharedPreferenceHelper.getInt(
-                    Constants.CHATROOM_SORT_TYPE_KEY,
-                    ChatRoomsSortOrder.ACTIVITY
+                        Constants.CHATROOM_SORT_TYPE_KEY,
+                        ChatRoomsSortOrder.ACTIVITY
                 )
                 val groupByType =
-                    SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
+                        SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
 
                 val radioGroup = dialogLayout.findViewById<RadioGroup>(R.id.radio_group_sort)
                 val groupByTypeCheckBox =
-                    dialogLayout.findViewById<CheckBox>(R.id.checkbox_group_by_type)
+                        dialogLayout.findViewById<CheckBox>(R.id.checkbox_group_by_type)
 
                 radioGroup.check(
-                    when (sortType) {
-                        0 -> R.id.radio_sort_alphabetical
-                        else -> R.id.radio_sort_activity
-                    }
+                        when (sortType) {
+                            0 -> R.id.radio_sort_alphabetical
+                            else -> R.id.radio_sort_activity
+                        }
                 )
                 radioGroup.setOnCheckedChangeListener { _, checkedId ->
                     run {
                         SharedPreferenceHelper.putInt(
-                            Constants.CHATROOM_SORT_TYPE_KEY, when (checkedId) {
-                                R.id.radio_sort_alphabetical -> 0
-                                R.id.radio_sort_activity -> 1
-                                else -> 1
-                            }
+                                Constants.CHATROOM_SORT_TYPE_KEY, when (checkedId) {
+                            R.id.radio_sort_alphabetical -> 0
+                            R.id.radio_sort_activity -> 1
+                            else -> 1
+                        }
                         )
                     }
                 }
@@ -314,24 +331,24 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 groupByTypeCheckBox.isChecked = groupByType
                 groupByTypeCheckBox.setOnCheckedChangeListener { _, isChecked ->
                     SharedPreferenceHelper.putBoolean(
-                        Constants.CHATROOM_GROUP_BY_TYPE_KEY,
-                        isChecked
+                            Constants.CHATROOM_GROUP_BY_TYPE_KEY,
+                            isChecked
                     )
                 }
 
                 context?.let {
                     AlertDialog.Builder(it)
-                        .setTitle(R.string.dialog_sort_title)
-                        .setView(dialogLayout)
-                        .setPositiveButton(R.string.msg_sort) { dialog, _ ->
-                            invalidateQueryOnSearch()
-                            updateSort()
-                            dialog.dismiss()
-                        }.show()
+                            .setTitle(R.string.dialog_sort_title)
+                            .setView(dialogLayout)
+                            .setPositiveButton(R.string.msg_sort) { dialog, _ ->
+                                invalidateQueryOnSearch()
+                                updateSort()
+                                dialog.dismiss()
+                            }.show()
                 }
             }
         }
-        
+
         if (Constants.WIDECHAT) {
             when (item.itemId) {
                 R.id.action_settings -> {
@@ -351,8 +368,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun updateSort() {
         val sortType = SharedPreferenceHelper.getInt(
-            Constants.CHATROOM_SORT_TYPE_KEY,
-            ChatRoomsSortOrder.ACTIVITY
+                Constants.CHATROOM_SORT_TYPE_KEY,
+                ChatRoomsSortOrder.ACTIVITY
         )
         val grouped = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
 
@@ -392,11 +409,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         searchText?.setHintTextColor(Color.GRAY)
 
         searchCloseButton = searchView?.findViewById(R.id.search_close_btn)
-        
+
         searchText?.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus)
                 searchCloseButton?.setImageResource(R.drawable.ic_close_gray_24dp)
-                viewModel.showLastMessage = false
+            viewModel.showLastMessage = false
         }
 
         searchCloseButton?.setOnClickListener { v ->
@@ -416,8 +433,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private fun showNoChatRoomsToDisplay(show: Boolean) {
         hideLoading()
         if (Constants.WIDECHAT) {
-            ui { widechat_welcome_to_app.isVisible = show
-                 widechat_text_no_data_to_display.isVisible = show
+            ui {
+                widechat_welcome_to_app.isVisible = show
+                widechat_text_no_data_to_display.isVisible = show
             }
         } else {
             ui { text_no_data_to_display.isVisible = show }
@@ -505,7 +523,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
                 val serverUrl = serverInteractor.get()
                 val user = userHelper.user()
-                val myAvatarUrl: String? =  serverUrl?.avatarUrl(user?.username ?: "")
+                val myAvatarUrl: String? = serverUrl?.avatarUrl(user?.username ?: "")
 
                 profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
                 profileButton?.setImageURI(myAvatarUrl)
@@ -620,7 +638,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         override fun onAnimationRepeat(animator: Animator?) {}
 
         override fun onAnimationEnd(animator: Animator?) {
-            if(!ChatRoomsFragment.isFABOpen){
+            if (!ChatRoomsFragment.isFABOpen) {
                 views.forEach {
                     it.visibility = View.GONE
                 }
@@ -676,6 +694,24 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             "channel" -> roomUiModel.name.toString()
             "group" -> roomUiModel.name.toString()
             else -> ""
+        }
+    }
+
+    // WIDECHAT
+    private fun tryToReadSSID() {
+        with(activity as MainActivity) {
+            if (AndroidPermissionsHelper.hasLocationPermission(this)) {
+                val wifiManager = getApplicationContext().getSystemService(WIFI_SERVICE) as WifiManager
+                val wifiInfo = wifiManager.getConnectionInfo()
+
+                if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
+                    var ssid = wifiInfo.getBSSID()
+                    SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, ssid)
+                    Timber.d("##########  EAR>> this is the BSSID: ${ssid}")
+                } else {
+                    SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, "NONE")
+                }
+            }
         }
     }
 }

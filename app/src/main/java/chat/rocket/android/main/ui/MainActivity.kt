@@ -1,7 +1,6 @@
 package chat.rocket.android.main.ui
 
 import DrawableHelper
-import android.Manifest
 import android.app.Activity
 import androidx.appcompat.app.AlertDialog
 import android.app.ProgressDialog
@@ -10,8 +9,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -61,6 +58,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.work.*
 import chat.rocket.android.contacts.models.ContactsLoadingState
+import chat.rocket.android.helper.AndroidPermissionsHelper
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
 import timber.log.Timber
@@ -83,7 +81,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
     private var chatRoomId: String? = null
     private var deepLinkInfo: DeepLinkInfo? = null
     private var progressDialog: ProgressDialog? = null
-    private val PERMISSIONS_REQUEST_RW_CONTACTS = 0
+    private val PERMISSIONS_REQUEST_RW_CONTACTS = 2
 
     // WIDECHAT
     val contactsLoadingState = MutableLiveData<ContactsLoadingState>()
@@ -97,6 +95,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             setContentView(R.layout.widechat_activity_main)
             // Loads new avatar when changed on server side
             presenter.clearAvatarUrlFromCache()
+            requestLocationPermissions()
         } else {
             setContentView(R.layout.activity_main)
         }
@@ -353,99 +352,116 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         progressDialog = null
     }
 
-    fun syncContacts(fromRefreshButton: Boolean, userRequestsPermissions: Boolean = false) {
-        if (ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
+    // WIDECHAT
+    private fun requestLocationPermissions() {
+        if (!AndroidPermissionsHelper.hasLocationPermission(this)) {
+            AndroidPermissionsHelper.getLocationPermission(this)
+        }
+    }
 
-            val request = {
-                ActivityCompat.requestPermissions(this,
-                        arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS),
-                        PERMISSIONS_REQUEST_RW_CONTACTS)
-            }
+    // WIDECHAT
+    fun syncContacts(fromRefreshButton: Boolean, userRequestsPermissions: Boolean = false) {
+        if (AndroidPermissionsHelper.hasContactsPermission(this)) {
+            runContactSync(fromRefreshButton)
+        } else {
             // Ask at initial installation only, or upon user request
             if (!SharedPreferenceHelper.getBoolean(
                             Constants.CONTACTS_ACCESS_PERMISSION_REQUESTED, false) or userRequestsPermissions) {
                 SharedPreferenceHelper.putBoolean(Constants.CONTACTS_ACCESS_PERMISSION_REQUESTED, true)
-                contactsPermissionAlertDialog(request, false, userRequestsPermissions)
-            }
 
-        } else {
-            // Permission has already been granted
-            val contactsSyncWork = OneTimeWorkRequestBuilder<ContactsSyncWorker>().build()
-            val workManager = WorkManager.getInstance()
-            workManager.beginUniqueWork("contactsSync", ExistingWorkPolicy.KEEP, contactsSyncWork).enqueue()
-            contactsLoadingState.postValue(ContactsLoadingState.Loading(fromRefreshButton))
-            workManager.getStatusById(contactsSyncWork.getId()).observe(this, Observer { info ->
-                if (info != null) {
-                    if (info.state.name == "RUNNING") {
-                        contactsLoadingState.postValue(ContactsLoadingState.Loading(fromRefreshButton))
-                        Timber.d("Contact sync running")
-                    } else if (info.state.isFinished || info.state.name == "FAILED") {
-                        contactsLoadingState.postValue(ContactsLoadingState.Loaded(fromRefreshButton))
-                        Timber.d("Contact sync ${info.state.name}")
-                    }
-                }
-            })
+                // callback
+                val request = { AndroidPermissionsHelper.getContactsPermissions(this) }
+                contactsPermissionAlertDialog(request, userRequestsPermissions)
+            }
         }
     }
 
+    // WIDECHAT
+    private fun runContactSync(fromRefreshButton: Boolean = false) {
+        val contactsSyncWork = OneTimeWorkRequestBuilder<ContactsSyncWorker>().build()
+        val workManager = WorkManager.getInstance()
+        workManager.beginUniqueWork("contactsSync", ExistingWorkPolicy.KEEP, contactsSyncWork).enqueue()
+        contactsLoadingState.postValue(ContactsLoadingState.Loading(fromRefreshButton))
+        workManager.getStatusById(contactsSyncWork.getId()).observe(this, Observer { info ->
+            if (info != null) {
+                if (info.state.name == "RUNNING") {
+                    contactsLoadingState.postValue(ContactsLoadingState.Loading(fromRefreshButton))
+                    Timber.d("Contact sync running")
+                } else if (info.state.isFinished || info.state.name == "FAILED") {
+                    contactsLoadingState.postValue(ContactsLoadingState.Loaded(fromRefreshButton))
+                    Timber.d("Contact sync ${info.state.name}")
+                }
+            }
+        })
+    }
+
+    // WIDECHAT
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>,
                                             grantResults: IntArray) {
         when (requestCode) {
             PERMISSIONS_REQUEST_RW_CONTACTS -> {
-                // If request is cancelled, the result arrays are empty.
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    syncContacts(false)
-                } else if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)) {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)) {
                     val showRationale: Boolean = shouldShowRequestPermissionRationale(permissions[0])
                     if (!showRationale) {
                         // User selected 'Do not show again' when they were previously presented the permissions dialogue
-                        contactsPermissionAlertDialog(willNotShowPermissions = true)
+                        contactsUseSystemSettingsAlertDialog()
                     }
+                } else if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    runContactSync()
                 }
-                return
-            }
-            else -> {
-                // Ignore
             }
         }
     }
 
-    private fun contactsPermissionAlertDialog(callback: () -> Unit? = {}, willNotShowPermissions: Boolean = false, userRequestsPermissions: Boolean = false) {
-
+    // WIDECHAT
+    private fun contactsPermissionAlertDialog(callback: () -> Unit = {}, userRequestsPermissions: Boolean = false) {
+        if (userRequestsPermissions) {
+            // Go directly to system dialog
+            callback()
+            this.supportFragmentManager.popBackStack()
+            return
+        }
         val view = layoutInflater.inflate(R.layout.widechat_contact_permissions_dialog, null)
         val dialog = AlertDialog.Builder(this)
                 .setView(view)
-                .setPositiveButton(null,null)
-                .setNegativeButton(null,null)
+                .setPositiveButton(null, null)
+                .setNegativeButton(null, null)
                 .create()
 
         val positiveButton = view?.findViewById(R.id.positive_button) as Button
         val negativeButton = view?.findViewById(R.id.negative_button) as Button
 
-        if (willNotShowPermissions == false) {
-            positiveButton.setOnClickListener(View.OnClickListener {
-                callback()
-                dialog.dismiss()
-                if (userRequestsPermissions)
-                    this.supportFragmentManager.popBackStack()
-            })
-            negativeButton.setOnClickListener(View.OnClickListener {
-                dialog.dismiss()
-            })
-        } else {
-            // Message the user how to use system settings to undo the 'Do not show again'
-            val messageText = view?.findViewById(R.id.permission_request) as TextView
-            messageText.setText(R.string.set_permissions_through_settings)
-            positiveButton.setText(R.string.dismiss_button)
-            negativeButton.visibility = GONE
-            positiveButton.setOnClickListener(View.OnClickListener {
-                dialog.dismiss()
-            })
-        }
+        positiveButton.setOnClickListener(View.OnClickListener {
+            callback()
+            dialog.dismiss()
+        })
+        negativeButton.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+        })
+        dialog.show()
+    }
+
+    // WIDECHAT
+    private fun contactsUseSystemSettingsAlertDialog() {
+        // Message the user how to use system settings to undo the 'Do not show again'
+        val view = layoutInflater.inflate(R.layout.widechat_contact_permissions_dialog, null)
+        val dialog = AlertDialog.Builder(this)
+                .setView(view)
+                .setPositiveButton(null, null)
+                .setNegativeButton(null, null)
+                .create()
+
+        val positiveButton = view?.findViewById(R.id.positive_button) as Button
+        val negativeButton = view?.findViewById(R.id.negative_button) as Button
+
+        val messageText = view?.findViewById(R.id.permission_request) as TextView
+        messageText.setText(R.string.set_permissions_through_settings)
+        positiveButton.setText(R.string.dismiss_button)
+        negativeButton.visibility = GONE
+        positiveButton.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+        })
         dialog.show()
     }
 }
