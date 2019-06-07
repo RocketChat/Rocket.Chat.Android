@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
+import chat.rocket.android.chatroom.ui.bottomsheet.COMPACT_CONFIGURATION
+import chat.rocket.android.chatroom.ui.bottomsheet.FULL_CONFIGURATION
+import chat.rocket.android.chatroom.ui.bottomsheet.TALL_CONFIGURATION
 import chat.rocket.android.chatroom.uimodel.AttachmentUiModel
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.chatroom.uimodel.MessageReplyUiModel
@@ -217,11 +220,18 @@ class ChatRoomAdapter(
     }
 
     private val actionAttachmentOnClickListener = object : ActionAttachmentOnClickListener {
+
         override fun onActionClicked(view: View, action: Action) {
             val temp = action as ButtonAction
             if (temp.url != null && temp.isWebView != null) {
                 if (temp.isWebView == true) {
-                    //TODO: Open in a configurable sizable webview
+                    //Open in a configurable sizable WebView
+                    when(temp.webViewHeightRatio){
+                        FULL_CONFIGURATION -> openFullWebPage(temp, roomId)
+                        COMPACT_CONFIGURATION -> openConfigurableWebPage(temp, roomId, FULL_CONFIGURATION)
+                        TALL_CONFIGURATION -> openConfigurableWebPage(temp, roomId, TALL_CONFIGURATION)
+                        else -> Unit
+                    }
                     Timber.d("Open in a configurable sizable webview")
                 } else {
                     //Open in chrome custom tab
@@ -238,6 +248,22 @@ class ChatRoomAdapter(
                 } else {
                     //TODO: Send to bot but not in chat window
                     Timber.d("Send to bot but not in chat window")
+                }
+            }
+        }
+
+        private fun openConfigurableWebPage(temp: ButtonAction, roomId: String?, heightRatio: String) {
+            temp.url?.let {
+                if(roomId != null){
+                    actionSelectListener?.openConfigurableWebPage(roomId, it, heightRatio)
+                }
+            }
+        }
+
+        private fun openFullWebPage(temp: ButtonAction, roomId: String?) {
+            temp.url?.let {
+                if(roomId != null){
+                    actionSelectListener?.openFullWebPage(roomId, it)
                 }
             }
         }
@@ -341,5 +367,9 @@ class ChatRoomAdapter(
         fun copyPermalink(id: String)
 
         fun reportMessage(id: String)
+
+        fun openFullWebPage(roomId: String, url: String)
+
+        fun openConfigurableWebPage(roomId: String, url: String, heightRatio: String)
     }
 }
