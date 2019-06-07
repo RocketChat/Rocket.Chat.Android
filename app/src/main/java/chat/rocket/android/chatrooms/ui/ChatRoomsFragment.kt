@@ -702,11 +702,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, ssid)
                     Timber.d("Current bssid is: ${ssid}")
                 } else {
-                    SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, "NONE")
+                    SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, "none")
                 }
             } else {
                 // Clear the value in case permissions revoked
-                SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, "NONE")
+                SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, "none")
             }
         }
     }
