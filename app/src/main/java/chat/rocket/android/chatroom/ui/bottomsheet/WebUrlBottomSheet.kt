@@ -14,6 +14,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.webview_bottomsheet.*
 
+const val FULL_CONFIGURATION = "full"
+const val COMPACT_CONFIGURATION = "compact"
+const val TALL_CONFIGURATION = "tall"
+
 private const val BUNDLE_WEB_PAGE_URL = "web_page_url"
 private const val BUNDLE_CHATROOM_ID = "chatroom_id"
 private const val BUNDLE_HEIGHT_RATIO = "height_ratio"
@@ -58,9 +62,10 @@ class WebUrlBottomSheet : BottomSheetDialogFragment() {
             }
 
         })
+
         when(heightRatio){
-            "compact" -> setupCompactWebPage(behaviour)
-            "tall" -> setupTallWebPage(bottomsheet, behaviour)
+            COMPACT_CONFIGURATION -> setupCompactWebPage(behaviour)
+            TALL_CONFIGURATION -> setupTallWebPage(bottomsheet, behaviour)
         }
     }
 
