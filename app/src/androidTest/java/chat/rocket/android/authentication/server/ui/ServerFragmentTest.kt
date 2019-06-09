@@ -6,6 +6,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
+import chat.rocket.android.Config.Companion.SERVER
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
@@ -17,7 +18,6 @@ import org.junit.Test
 @LargeTest
 class ServerFragmentTest{
 
-    private val server = "open.rocket.chat"
 
     @JvmField
     var activityRule = ActivityTestRule<AuthenticationActivity>(AuthenticationActivity::class.java)
@@ -45,7 +45,7 @@ class ServerFragmentTest{
     @Test
     fun fill_server_url_and_connect() {
         onView(withId(R.id.text_server_url)).perform(
-            typeText(server), closeSoftKeyboard()
+            typeText(SERVER), closeSoftKeyboard()
         )
         onView(withId(R.id.button_connect)).perform(click())
     }

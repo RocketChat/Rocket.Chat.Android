@@ -7,6 +7,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
+import chat.rocket.android.Config.Companion.AUTH_TOKEN
+import chat.rocket.android.Config.Companion.USERNAME
+import chat.rocket.android.Config.Companion.USER_ID
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.matchers.withHint
@@ -18,10 +21,6 @@ import org.junit.Test
 
 @LargeTest
 class RegisterUsernameFragmentTest {
-
-    private val USER_ID = "user_id"
-    private val AUTH_TOKEN = "auth_token"
-    private val USERNAME: String = "testuser"
 
 
     @JvmField

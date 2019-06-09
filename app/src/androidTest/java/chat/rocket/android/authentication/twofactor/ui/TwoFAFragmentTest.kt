@@ -7,6 +7,9 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.rule.ActivityTestRule
+import chat.rocket.android.Config.Companion.CODE
+import chat.rocket.android.Config.Companion.PASSWORD
+import chat.rocket.android.Config.Companion.USERNAME
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
@@ -18,9 +21,6 @@ import org.junit.Test
 
 class TwoFAFragmentTest {
 
-    private val CODE = "1234"
-    private val USERNAME: String = "user1234"
-    private val PASSWORD: String = "ABC1234"
 
     @JvmField
     var activityRule = ActivityTestRule(AuthenticationActivity::class.java, true, true)

@@ -6,6 +6,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
+import chat.rocket.android.Config.Companion.EMAIL
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.matchers.withHint
@@ -17,8 +18,6 @@ import org.junit.Test
 
 @LargeTest
 class ResetPasswordFragmentTest {
-
-    private val EMAIL: String = "abc@gmail.com"
 
 
     @JvmField
