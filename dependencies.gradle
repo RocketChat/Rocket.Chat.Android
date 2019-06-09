@@ -145,8 +145,6 @@ ext {
             mockito               : "org.mockito:mockito-core:${versions.mockito}",
             mockitoAndroid        : "org.mockito:mockito-android:${versions.mockito}",
             mockitoInline         : "org.mockito:mockito-inline:${versions.mockito}",
-            runner                : "androidx.test:runner:${versions.runner}",
-            dexmaker              : "com.linkedin.dexmaker:dexmaker-mockito:${versions.mockito}"
-
+            runner                : "androidx.test:runner:${versions.runner}"
     ]
 }
