@@ -46,7 +46,7 @@ class ResetPasswordFragmentTest {
             typeText(EMAIL), closeSoftKeyboard()
         )
         onView(withId(R.id.button_reset_password)).perform(click())
-        Thread.sleep(3000)
+        Thread.sleep(5000)
         onView(withId(R.id.image_on_boarding)).check(matches(isDisplayed()))
     }
 }
