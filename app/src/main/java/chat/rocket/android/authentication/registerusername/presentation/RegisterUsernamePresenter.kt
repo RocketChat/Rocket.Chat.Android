@@ -74,7 +74,7 @@ class RegisterUsernamePresenter @Inject constructor(
         }
     }
 
-    private fun saveAccount(username: String) {
+    fun saveAccount(username: String) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }

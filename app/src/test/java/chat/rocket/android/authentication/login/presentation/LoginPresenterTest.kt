@@ -1,6 +1,7 @@
 package chat.rocket.android.authentication.login.presentation
 
 import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.authentication.Config.Companion.currentServer
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
@@ -10,16 +11,11 @@ import chat.rocket.common.model.Token
 import junit.framework.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 
 class LoginPresenterTest {
 
-    private val EMAIL: String = "abc@gmail.com"
-    private val USERNAME: String = "user"
-    private val PASSWORD: String = "abc12345"
-    private val currentServer = "https://open.rocket.chat"
     lateinit var loginPresenter: LoginPresenter
 
     private val view = mock(LoginView::class.java)
@@ -34,11 +30,11 @@ class LoginPresenterTest {
     private val factory = mock(RocketChatClientFactory::class.java)
     private val serverInteractor = mock(GetConnectingServerInteractor::class.java)
     private val token = mock(Token::class.java)
-    private lateinit var settings: PublicSettings
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
+        `when`(serverInteractor.get()).thenReturn(currentServer)
         loginPresenter = LoginPresenter(
             view, strategy, navigator, tokenRepository, localRepository, settingsInteractor,
             analyticsManager, saveCurrentServer, saveAccountInteractor, factory, serverInteractor

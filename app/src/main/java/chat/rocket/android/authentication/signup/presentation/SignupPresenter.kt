@@ -95,7 +95,7 @@ class SignupPresenter @Inject constructor(
         }
     }
 
-    private suspend fun saveAccount(me: Myself) {
+    fun saveAccount(me: Myself) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }

@@ -62,7 +62,7 @@ ext {
             junit                 : '4.12',
             truth                 : '0.42',
             espresso              : '3.1.0-alpha4',
-            mockito               : '2.24.5',
+            mockito               : '2.25.0',
             roboelectric          : '1.0.0',
             runner                : '1.1.0'
     ]
@@ -145,7 +145,8 @@ ext {
             mockito               : "org.mockito:mockito-core:${versions.mockito}",
             mockitoAndroid        : "org.mockito:mockito-android:${versions.mockito}",
             mockitoInline         : "org.mockito:mockito-inline:${versions.mockito}",
-            runner                : "androidx.test:runner:${versions.runner}"
+            runner                : "androidx.test:runner:${versions.runner}",
+            dexmaker              : "com.linkedin.dexmaker:dexmaker-mockito:${versions.mockito}"
 
     ]
 }
