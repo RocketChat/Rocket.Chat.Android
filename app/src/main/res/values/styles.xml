@@ -271,7 +271,7 @@
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:layout_marginTop">24dp</item>
-        <item name="android:layout_gravity">left</item>
+        <item name="android:layout_gravity">start</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:maxLines">1</item>
     </style>
