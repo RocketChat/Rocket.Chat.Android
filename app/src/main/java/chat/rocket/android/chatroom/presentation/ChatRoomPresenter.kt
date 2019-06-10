@@ -2,8 +2,6 @@ package chat.rocket.android.chatroom.presentation
 
 import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
-import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.SubscriptionTypeEvent
@@ -25,7 +23,17 @@ import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.JobSchedulerInteractor
+import chat.rocket.android.server.domain.MessagesRepository
+import chat.rocket.android.server.domain.PermissionsInteractor
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.TokenRepository
+import chat.rocket.android.server.domain.UsersRepository
+import chat.rocket.android.server.domain.uploadMaxFileSize
+import chat.rocket.android.server.domain.uploadMimeTypeFilter
+import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.server.infrastructure.state
 import chat.rocket.android.util.extension.getByteArray
@@ -171,12 +179,6 @@ class ChatRoomPresenter @Inject constructor(
                       done to either fix the load in speed of moderator roles or store the
                       information locally*/
             if (getChatRole()) {
-
-                val canRemove = permissions.hasPermission(REMOVE_USER, chatRoomId!!)
-
-                Log.d("PERM", chatRoles.toString())
-                Log.d("PERM", canRemove.toString())
-
                 canModerate = isOwnerOrMod()
                 if (canModerate) {
                     //FIXME: add this in when moderator page is actually created
