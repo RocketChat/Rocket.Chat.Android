@@ -14,11 +14,10 @@
 
 Note:
 1. Before running UI tests on the emulator device uninstall the existing version of RC app from it.
-2. It is advised to turn off all the animation of device, tests may fail if animations are on
+2. It is advised to turn off all the animation of device, tests may fail if animations are on.
 
 
 ###  Any organization that forks RC can run tests against their own server
-1. For UI tests to pass organisations must create a user before hand using details mentioned in Config file
-2. Also they need to customise the links according to their server requirements
-3. For unit tests there will be no problem if the organisation is in sync with RC
+1. For tests to pass, Organisations must create a user before hand using details mentioned in UITestConfig file.
+2. Also they need to customise the links according to their server requirements.
 

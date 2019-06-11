@@ -12,7 +12,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @LargeTest
-class AuthenticationOnBoardingUITest {
+class OnBoardingFragmentTest {
 
     @Rule
     @JvmField

@@ -1,10 +1,10 @@
 package chat.rocket.android.authentication.presentation
 
-import chat.rocket.android.authentication.Config
-import chat.rocket.android.authentication.Config.Companion.PRIVACY_POLICY
-import chat.rocket.android.authentication.Config.Companion.TERMS_OF_SERVICE
-import chat.rocket.android.authentication.Config.Companion.privacyPolicyUrl
-import chat.rocket.android.authentication.Config.Companion.termsOfServiceUrl
+import chat.rocket.android.UnitTestConfig.Companion.PRIVACY_POLICY
+import chat.rocket.android.UnitTestConfig.Companion.TERMS_OF_SERVICE
+import chat.rocket.android.UnitTestConfig.Companion.currentServer
+import chat.rocket.android.UnitTestConfig.Companion.privacyPolicyUrl
+import chat.rocket.android.UnitTestConfig.Companion.termsOfServiceUrl
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
@@ -32,7 +32,7 @@ class AuthenticationPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        Mockito.`when`(serverInteractor.get()).thenReturn(Config.currentServer)
+        Mockito.`when`(serverInteractor.get()).thenReturn(currentServer)
         authenticationPresenter = AuthenticationPresenter(
             strategy, navigator, getCurrentServer, getAccountInteractor, settingsRepository,
             localRepository, tokenRepository, serverInteractor

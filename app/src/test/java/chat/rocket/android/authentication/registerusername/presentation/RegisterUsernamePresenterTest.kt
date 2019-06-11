@@ -1,9 +1,9 @@
 package chat.rocket.android.authentication.registerusername.presentation
 
 import chat.rocket.android.analytics.AnalyticsManager
-import chat.rocket.android.authentication.Config.Companion.currentServer
-import chat.rocket.android.authentication.Config.Companion.userAvatar
-import chat.rocket.android.authentication.Config.Companion.userName
+import chat.rocket.android.UnitTestConfig.Companion.currentServer
+import chat.rocket.android.UnitTestConfig.Companion.userAvatar
+import chat.rocket.android.UnitTestConfig.Companion.userName
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.*

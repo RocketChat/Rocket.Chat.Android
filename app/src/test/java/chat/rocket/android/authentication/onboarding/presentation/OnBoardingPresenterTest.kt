@@ -1,6 +1,6 @@
 package chat.rocket.android.authentication.onboarding.presentation
 
-import chat.rocket.android.authentication.Config.Companion.communityServerUrl
+import chat.rocket.android.UnitTestConfig.Companion.communityServerUrl
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetAccountsInteractor

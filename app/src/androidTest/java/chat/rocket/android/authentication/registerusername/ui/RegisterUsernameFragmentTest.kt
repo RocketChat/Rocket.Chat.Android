@@ -7,9 +7,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import chat.rocket.android.Config.Companion.AUTH_TOKEN
-import chat.rocket.android.Config.Companion.USERNAME
-import chat.rocket.android.Config.Companion.USER_ID
+import chat.rocket.android.UITestConfig.Companion.AUTH_TOKEN
+import chat.rocket.android.UITestConfig.Companion.USERNAME
+import chat.rocket.android.UITestConfig.Companion.USER_ID
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.matchers.withHint
