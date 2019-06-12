@@ -22,7 +22,6 @@ import org.junit.Test
 @LargeTest
 class RegisterUsernameFragmentTest {
 
-
     @JvmField
     var activityRule = ActivityTestRule(AuthenticationActivity::class.java, true, true)
 
@@ -44,7 +43,7 @@ class RegisterUsernameFragmentTest {
     }
 
     @Test
-    fun click_register_username(){
+    fun check_register_username_click(){
         onView(withId(R.id.text_username)).perform(typeText(USERNAME), closeSoftKeyboard())
         onView(withId(R.id.button_use_this_username)).perform(click())
     }

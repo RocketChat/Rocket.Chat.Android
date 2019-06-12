@@ -21,7 +21,6 @@ import org.junit.Test
 
 class TwoFAFragmentTest {
 
-
     @JvmField
     var activityRule = ActivityTestRule(AuthenticationActivity::class.java, true, true)
 

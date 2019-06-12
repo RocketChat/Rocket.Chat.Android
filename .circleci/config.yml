@@ -15,7 +15,7 @@ jobs:
           command: git clone https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK.git ../Rocket.Chat.Kotlin.SDK
       - run:
           name: ANDROID_HOME
-          command: echo "sdk.dir="$ANDROID_HOME > local.properties 
+          command: echo "sdk.dir="$ANDROID_HOME > local.properties
       - run:
           name: Build Kotlin.SDK
           command: pushd app/ ; ./build-sdk.sh ; popd
@@ -62,10 +62,10 @@ jobs:
           command: ./gradlew --no-daemon lint
       - run:
           name: Run Unit test
-          command: ./gradlew --no-daemon test
+          command: ./gradlew --no-daemon testPlayDebugUnitTest
       - run:
           name: Generate reports
-          command: ./gradlew jacocoTestReport
+          command: ./gradlew jacocoTestPlayDebugUnitTestReport
       - run:
           name: Send coverage
           command: bash <(curl -s https://codecov.io/bash)
@@ -150,8 +150,7 @@ jobs:
     docker:
       - image: circleci/android@sha256:5cdc8626cc6f13efe5ed982cdcdb432b0472f8740fed8743a6461e025ad6cdfc
     environment:
-      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
-      TEST_FLAGS: "--configure-on-demand -PdisablePreDex"
+      JAVA_TOOL_OPTIONS: -Xms512m
     steps:
       - checkout
       - run:
@@ -164,11 +163,11 @@ jobs:
             echo $ROCKET_PLAY_JSON | base64 --decode > app/rocket-chat.json
       - run:
           name: checkout Rocket.Chat.Kotlin.SDK
-          command: git clone https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK.git ../Rocket.Chat.Kotlin.SDK
-      - restore_cache:
-          key: kotlin-sdk-{{ .Revision }}
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+          command: git clone https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK.git
+            ../Rocket.Chat.Kotlin.SDK
+      - run:
+          name: Clear Cache
+          command: ./gradlew cleanBuildCache
       - run:
           name: Accept licenses
           command: yes | sdkmanager --licenses || true
@@ -181,10 +180,13 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
           name: Setup emulator
-          command: sdkmanager "system-images;android-22;default;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-22;default;armeabi-v7a"
+          command: sdkmanager "system-images;android-22;default;armeabi-v7a" && echo
+            "no" | avdmanager create avd -n test -k "system-images;android-22;default;armeabi-v7a"
       - run:
           name: Launch emulator
-          command: export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib && emulator64-arm -avd test -noaudio -no-boot-anim -no-window -accel auto -verbose
+          command: export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
+            && emulator64-arm -avd test -noaudio -no-boot-anim -no-window -accel auto
+            -verbose
           background: true
       - run:
           name: Wait emulator
@@ -202,7 +204,6 @@ jobs:
           destination: reports
       - store_test_results:
           path: app/build/test-results
-
 workflows:
   version: 2
   build-deploy:

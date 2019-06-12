@@ -45,6 +45,15 @@ android {
         }
     }
 
+    kapt {
+        useBuildCache true
+    }
+
+    dexOptions {
+        preDexLibraries true
+        jumboMode false
+    }
+
     testOptions {
         unitTests.all {
             jacoco {
@@ -206,7 +215,6 @@ dependencies {
     testImplementation libraries.truth
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoIntents
-    implementation libraries.espressoIdling
     testImplementation libraries.mockito
     testImplementation libraries.mockitoInline
     androidTestImplementation libraries.mockitoAndroid

@@ -18,7 +18,6 @@ import org.junit.Test
 @LargeTest
 class ServerFragmentTest{
 
-
     @JvmField
     var activityRule = ActivityTestRule<AuthenticationActivity>(AuthenticationActivity::class.java)
 

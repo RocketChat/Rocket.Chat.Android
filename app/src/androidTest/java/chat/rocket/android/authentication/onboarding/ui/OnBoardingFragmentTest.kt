@@ -34,18 +34,19 @@ class OnBoardingFragmentTest {
         onView(withId(R.id.text_server_url)).perform(
             typeText("open.rocket.chat"), closeSoftKeyboard()
         )
-        onView(withId(R.id.button_connect)).perform(click())
+        onView(withId(R.id.button_connect)).perform(scrollTo(), click())
+
     }
 
     @Test
     fun check_join_in_the_community_click() {
-        onView(withId(R.id.join_community_container)).check(matches(isDisplayed()))
-            .perform(click())
+        onView(withId(R.id.join_community_container))
+            .perform(scrollTo(), click())
     }
 
     @Test
     fun check_create_new_server_click() {
-        onView(withId(R.id.create_server_container)).check(matches(isDisplayed()))
-            .perform(click())
+        onView(withId(R.id.create_server_container))
+            .perform(scrollTo(), click())
     }
 }

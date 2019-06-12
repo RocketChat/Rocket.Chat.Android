@@ -138,7 +138,6 @@ ext {
             junit                 : "junit:junit:${versions.junit}",
             espressoCore          : "androidx.test.espresso:espresso-core:${versions.espresso}",
             espressoIntents       : "androidx.test.espresso:espresso-intents:${versions.espresso}",
-            espressoIdling        : "androidx.test.espresso:espresso-idling-resource:${versions.espresso}",
             roomTest              : "android.arch.persistence.room:testing:${versions.room}",
             roboelectric          : "androidx.test:core:${versions.roboelectric}",
             truth                 : "com.google.truth:truth:${versions.truth}",

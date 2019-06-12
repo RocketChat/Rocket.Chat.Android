@@ -19,7 +19,6 @@ import org.junit.Test
 @LargeTest
 class ResetPasswordFragmentTest {
 
-
     @JvmField
     var activityRule = ActivityTestRule(AuthenticationActivity::class.java, true, true)
 
