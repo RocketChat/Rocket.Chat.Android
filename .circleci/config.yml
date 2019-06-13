@@ -149,7 +149,7 @@ jobs:
     environment:
       # kotlin.incremental=false and kotlin.compiler.execution.strategy=in-process are required due to an issue with the Kotlin compiler in
       # memory constrained environments: https://youtrack.jetbrains.com/issue/KT-15562
-      GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
+      GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.daemon=false -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
     steps:
       - checkout
       - run:
