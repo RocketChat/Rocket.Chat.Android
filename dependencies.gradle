@@ -2,7 +2,7 @@ ext {
     versions = [
             // For project configuration
             java                  : JavaVersion.VERSION_1_8,
-            minSdk                : 21,
+            minSdk                : 23,
             compileSdk            : 28,
             targetSdk             : 28,
             buildTools            : '28.0.3',

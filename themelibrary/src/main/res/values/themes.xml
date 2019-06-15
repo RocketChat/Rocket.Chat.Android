@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DarkTheme" parent="AppTheme">
+        <!-- Customize your theme here. Edit all -->
+        <item name="colorPrimary">@color/colorPrimary2</item>
+        <item name="colorPrimaryDark">@color/blackColorPrimaryDark</item>
+        <item name="titleTextColor">@color/blackColorTitleText</item>
+        <item name="colorAccent">@color/colorAccent2</item>
+        <item name="android:colorBackground">@color/colorPrimary2</item>
+        <item name="toolbarStyle">@style/DarkToolBarStyle</item>
+        <item name="actionBarStyle">@style/DarkActionBarStyle</item>
+        <item name="actionBarTitleStyle">@style/Dark.ChatRoom.ChatName.TextView</item>
+        <item name="changePasswordTitleStyle">@style/Dark.Password.Title.TextView</item>
+        <item name="colorDivider">@color/blackColorDivider</item>
+        <item name="colorBottomSheetFragmentHeading">@color/blackColorBottomSheetFragmentHeading</item>
+        <item name="authenticationEditTextStyle">@style/Dark.Authentication.EditText.Border</item>
+        <item name="colorAuthenticationButtonBorderAndDivider">@color/blackColorDivider</item>
+        <item name="radioButtonStyle">@style/DarkRadioButtonStyle</item>
+        <item name="android:textColorHint">@color/colorPrimary2</item>
+
+    </style>
+
+    <style name="BlackTheme" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/blackColorPrimary</item>
+        <item name="colorPrimaryDark">@color/blackColorPrimaryDark</item>
+        <item name="titleTextColor">@color/blackColorTitleText</item>
+        <item name="colorAccent">@color/blackColorAccent</item>
+        <item name="android:colorBackground">@color/blackColorBackground</item>
+        <item name="toolbarStyle">@style/BlackToolBarStyle</item>
+        <item name="actionBarStyle">@style/BlackActionBarStyle</item>
+        <item name="subHeaderStyle">@style/BlackSubHeaderStyle</item>
+        <item name="actionBarTitleStyle">@style/Black.ChatRoom.ChatName.TextView</item>
+        <item name="changePasswordTitleStyle">@style/Black.Password.Title.TextView</item>
+        <item name="colorDivider">@color/blackColorDivider</item>
+        <item name="colorBottomSheetFragmentText">@color/blackColorBottomSheetFragmentText</item>
+        <item name="colorBottomSheetFragmentHeading">@color/blackColorBottomSheetFragmentHeading</item>
+        <item name="authenticationEditTextStyle">@style/Black.Authentication.EditText.Border</item>
+        <item name="colorAuthenticationButtonBorderAndDivider">@color/blackColorDivider</item>
+        <item name="radioButtonStyle">@style/BlackRadioButtonStyle</item>
+        <item name="android:textColorHint">@color/blackColorTextHint</item>
+        <item name="colorButtonDisabled">@color/blackColorAuthenticationButtonDisabled</item>
+        <item name="colorControlText">@color/blackColorControlText</item>
+        <item name="colorChatComponentBackground">@color/blackColorChatComponentBackground</item>
+        <item name="descriptiveTextStyle">@style/Black.ChatDetails.Content.TextView</item>
+        <item name="colorDescriptiveText">@color/blackColorDescriptiveText</item>
+    </style>
+
+</resources>

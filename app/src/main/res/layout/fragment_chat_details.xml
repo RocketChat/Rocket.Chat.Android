@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/whitesmoke">
+    android:background="?attr/colorChatComponentBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/colorWhite"
+            android:background="?android:colorBackground"
             android:padding="16dp">
 
             <TextView
@@ -36,7 +36,7 @@
 
             <TextView
                 android:id="@+id/content_description"
-                style="@style/ChatDetails.Content.TextView"
+                style="?attr/descriptiveTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/title_description"
@@ -53,7 +53,7 @@
 
             <TextView
                 android:id="@+id/content_topic"
-                style="@style/ChatDetails.Content.TextView"
+                style="?attr/descriptiveTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/title_topic"
@@ -70,7 +70,7 @@
 
             <TextView
                 android:id="@+id/content_announcement"
-                style="@style/ChatDetails.Content.TextView"
+                style="?attr/descriptiveTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/title_announcement"

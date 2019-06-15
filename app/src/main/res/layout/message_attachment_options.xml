@@ -8,6 +8,7 @@
     <android.widget.Button
         android:id="@+id/button_take_a_photo"
         style="?android:attr/borderlessButtonStyle"
+        android:textColor="?titleTextColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawablePadding="20dp"
@@ -18,6 +19,7 @@
     <android.widget.Button
         android:id="@+id/button_attach_a_file"
         style="?android:attr/borderlessButtonStyle"
+        android:textColor="?titleTextColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawablePadding="20dp"
@@ -28,6 +30,7 @@
     <android.widget.Button
         android:id="@+id/button_drawing"
         style="?android:attr/borderlessButtonStyle"
+        android:textColor="?titleTextColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawablePadding="20dp"
