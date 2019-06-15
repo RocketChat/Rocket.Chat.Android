@@ -82,7 +82,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = container?.inflate(R.layout.fragment_chat_rooms)
+    ): View? {
+        return container?.inflate(R.layout.fragment_chat_rooms)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

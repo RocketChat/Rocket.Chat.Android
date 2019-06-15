@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#224717</color>
-    <color name="colorPrimaryDark">#00BFA5</color>
-    <color name="colorAccent3">#F51D36</color>
+    <color name="blackColorPrimary">@color/blackColorBodyText</color>
+    <color name="blackColorPrimaryDark">@color/blackColorBodyText</color>
+    <color name="blackColorBackground">#000000</color>
+    <color name="blackColorFocusedBackground">#FF0e0d0d</color>
+    <color name="blackColorActionBar">@color/blackColorFocusedBackground</color>
+    <color name="blackColorTitleText">#fafafa</color>
+    <color name="blackColorBodyText">#e8ebed</color>
+    <color name="blackColorMutedAccent">#2b2b29</color>
+    <color name="blackColorAccent">#1d74f5</color>
+    <color name="blackColorTextHint">#9297a3</color> <!--self-created-from-mocks-->
+    <color name="blackColorDescriptiveText">#9297a3</color> <!--self-created-from-mocks-->
+    <color name="blackColorDivider">@color/blackColorMutedAccent</color>
+    <color name="blackColorBottomSheetFragmentText">@color/blackColorTextHint</color>
+    <color name="blackColorBottomSheetFragmentHeading">@color/blackColorTitleText</color>
+    <color name="blackColorAuxiliaryText">#b2b8c6</color>
+    <color name="blackColorAuthenticationSecondaryText">@color/blackColorTextHint</color>
+    <color name="blackColorAuthenticationButtonBorderAndDivider">@color/blackColorMutedAccent</color>
+    <color name="blackColorAuthenticationButtonDisabled">@color/blackColorMutedAccent</color>
+    <color name="blackColorControlText">#dadee6</color>
+    <color name="blackColorChatComponentBackground">#17181a</color>
+    <color name="blackColorSubHeaderText">#9297a3</color>
+    <color name="blackColorSubHeaderBackground">#FF0e0d0d</color>
+
+    <color name="auxiliaryBackground">#090909</color>
+    <color name="bannerBackground">#1f2329</color>
+    <color name="auxiliaryTintColor">#cdcdcd</color>
+    <!--.........................................................................................-->
+    <color name="colorPrimary2">#F33E5B</color>
+    <color name="colorAccent2">#CD1DF5</color>
 </resources>
