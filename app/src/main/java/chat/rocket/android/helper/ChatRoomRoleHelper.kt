@@ -3,7 +3,7 @@ package chat.rocket.android.helper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.server.domain.CurrentServerRepository
-import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
+import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.rest.chatRoomRoles
