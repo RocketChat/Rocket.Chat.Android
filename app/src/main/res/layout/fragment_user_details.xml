@@ -145,23 +145,37 @@
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="image_blur, image_avatar, text_name, text_username, text_message, text_title_status, text_description_status, text_title_timezone, text_description_timezone" />
 
-        <TextView
+        <FrameLayout
             android:id="@+id/button_remove_user"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:backgroundTint="@color/color_red"
-            android:drawableStart="@drawable/ic_action_remove_user"
-            android:drawablePadding="8dp"
-            android:text="@string/action_remove_user"
+            android:background="@color/color_red"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_description_timezone" />
+            app:layout_constraintTop_toBottomOf="@+id/text_description_timezone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="#1d74f5"
+                android:drawableStart="@drawable/ic_action_remove_user"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/action_remove_user"
+                android:textAllCaps="true"
+                android:textColor="@color/color_white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </FrameLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

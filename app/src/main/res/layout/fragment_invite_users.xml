@@ -140,7 +140,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:alpha="0.4"
-            android:background="@color/colorAccent"
+            android:background="@color/widechatGreenGradientLight"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="8dp">

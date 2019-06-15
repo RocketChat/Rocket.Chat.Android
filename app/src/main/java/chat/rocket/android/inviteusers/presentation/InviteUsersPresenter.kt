@@ -3,7 +3,7 @@ package chat.rocket.android.inviteusers.presentation
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.members.uimodel.MemberUiModelMapper
-import chat.rocket.android.server.infrastructure.RocketChatClientFactory
+import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.roomTypeOf
@@ -24,7 +24,7 @@ class InviteUsersPresenter @Inject constructor(
 	private val mapper: MemberUiModelMapper,
 	val factory: RocketChatClientFactory
 ) {
-	private val client: RocketChatClient = factory.get(currentServer)
+	private val client: RocketChatClient = factory.create(currentServer)
 
 	fun inviteUsers(chatRoomId: String, usersList: List<Pair<String, String>>) {
 		launchUI(strategy) {
