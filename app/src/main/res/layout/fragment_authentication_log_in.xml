@@ -17,7 +17,7 @@
 
     <EditText
         android:id="@+id/text_username_or_email"
-        style="?attr/authenticationEditTextStyle"
+        style="@style/Authentication.EditText.Border"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_at_black_20dp"
         android:hint="@string/msg_username_or_email"
@@ -29,7 +29,7 @@
 
     <EditText
         android:id="@+id/text_password"
-        style="?attr/authenticationEditTextStyle"
+        style="@style/Authentication.EditText.Border"
         android:layout_marginTop="10dp"
         android:drawableStart="@drawable/ic_key_black_20dp"
         android:hint="@string/msg_password"
@@ -43,12 +43,12 @@
         android:id="@+id/button_log_in"
         style="@style/Authentication.Button"
         android:layout_marginTop="20dp"
+        android:backgroundTint="@color/colorAuthenticationButtonDisabled"
         android:enabled="false"
         android:text="@string/title_log_in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_password" />
-    <!--android:backgroundTint="@color/colorAuthenticationButtonDisabled"-->
 
     <android.widget.Button
         android:id="@+id/button_forgot_your_password"

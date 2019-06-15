@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-        <attr name="colorDivider" format="color|reference"/>
-        <attr name="colorBottomSheetFragmentHeading" format="color|reference"/>
-        <attr name="colorBottomSheetFragmentText" format="color|reference"/>
-        <attr name="colorAuthenticationButtonBorderAndDivider" format="color|reference"/>
-        <attr name="colorButtonDisabled" format="color|reference"/>
-        <attr name="colorControlText" format="color|reference"/>
-        <attr name="colorChatComponentBackground" format="color|reference"/>
-        <attr name="colorDescriptiveText" format="color|reference"/>
-        <attr name="subHeaderStyle" format="color|reference"/>
-        <attr name="actionBarTitleStyle" format="color|reference"/>
-        <attr name="changePasswordTitleStyle" format="color|reference"/>
-        <attr name="authenticationEditTextStyle" format="color|reference"/>
-        <attr name="descriptiveTextStyle" format="color|reference"/>
+        <attr name="themeIconColor" format="color|reference"/>
 </resources>

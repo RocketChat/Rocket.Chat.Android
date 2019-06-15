@@ -1,74 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="DarkToolBarStyle" parent="ToolBarStyle">
-        <item name="android:background">@color/colorPrimary2</item>
-    </style>
-
-    <style name="DarkActionBarStyle" parent="ActionBarStyle">
-        <item name="android:background">@color/colorPrimary2</item>
-    </style>
-
-    <!--<style name="DarkSubtitleStyle" parent="SubtitleStyle">-->
-        <!--<item name="android:textColor">@color/colorPrimary2</item>-->
-    <!--</style>-->
-
-    <style name="Dark.ChatRoom.ChatName.TextView" parent="ChatRoom.ChatName.TextView">
-        <item name="android:textColor">@color/blackColorTitleText</item>
-    </style>
-
-    <style name="Dark.Password.Title.TextView" parent="Password.Title.TextView">
-        <item name="android:textColor">@color/blackColorTitleText</item>
-    </style>
-
-    <style name="Dark.Authentication.EditText.Border" parent="Authentication.EditText.Border">
-        <item name="android:textColor">@color/colorPrimary2</item>
-        <item name="android:textColorHint">@color/colorPrimary2</item>
-        <item name="android:drawableTint">@color/blackColorTitleText</item>
-    </style>
-
-    <style name="DarkRadioButtonStyle" parent="RadioButtonStyle">
-        <item name="android:textColor">@color/blackColorBodyText</item>
-        <item name="android:buttonTint">@color/blackColorBodyText</item>
-    </style>
-    ....................................................................................-->
-
-    <style name="BlackToolBarStyle" parent="ToolBarStyle">
-        <item name="android:background">@color/blackColorActionBar</item>
-    </style>
-
-    <style name="BlackActionBarStyle" parent="ActionBarStyle">
-        <item name="android:background">@color/blackColorActionBar</item>
-    </style>
-
-    <!--<style name="BlackSubtitleStyle" parent="SubtitleStyle">-->
-        <!--<item name="android:textColor">@color/blackTextColorHint</item>-->
-    <!--</style>-->
-
-    <style name="Black.ChatRoom.ChatName.TextView" parent="ChatRoom.ChatName.TextView">
-        <item name="android:textColor">@color/blackColorTitleText</item>
-    </style>
-
-    <style name="Black.Password.Title.TextView" parent="Password.Title.TextView">
-        <item name="android:textColor">@color/blackColorTitleText</item>
-    </style>
-
-    <style name="Black.Authentication.EditText.Border" parent="Authentication.EditText.Border">
-        <item name="android:textColor">@color/blackColorTitleText</item>
-        <item name="android:drawableTint">@color/blackColorTitleText</item>
-    </style>
-
-    <style name="BlackRadioButtonStyle" parent="RadioButtonStyle">
-        <item name="android:textColor">@color/blackColorPrimary</item>
-        <item name="android:buttonTint">@color/blackColorPrimary</item>
-    </style>
-
-    <style name="Black.ChatDetails.Content.TextView" parent="ChatDetails.Content.TextView">
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/blackColorDescriptiveText</item>
-    </style>
-
-    <style name="BlackSubHeaderStyle" parent="SubHeaderStyle">
-        <item name="android:background">@color/blackColorSubHeaderBackground</item>
-        <item name="android:textColor">@color/blackColorSubHeaderText</item>
+    <!-- Base application theme. -->
+    <style name="LibraryTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent3</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeBackground">@color/colorPrimary</item>
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
+        <item name="themeIconColor">@color/colorPrimaryDark</item>
+        <item name="android:textDirection">locale</item>
     </style>
 </resources>

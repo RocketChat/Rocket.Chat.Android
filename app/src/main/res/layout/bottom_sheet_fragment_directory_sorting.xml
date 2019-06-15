@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context=".directory.ui.DirectorySortingBottomSheetFragment">
-    <!--android:background="?pageLayoutBackground"-->
 
     <TextView
         android:id="@+id/text_sort_by"
@@ -16,17 +15,17 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/msg_sort_by"
-        android:textColor="?attr/colorBottomSheetFragmentText" />
+        android:textColor="#9EA2A8"
+        android:textSize="17sp"
+        android:textStyle="normal" />
 
     <View
         android:id="@+id/view_divider_one"
-        android:background="?attr/colorDivider"
-        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        />
+        android:layout_marginTop="16dp"
+        android:background="#1F000000" />
 
-    <!--android:background="#1F000000"-->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -40,14 +39,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_hashtag_16dp"
-                android:drawableTint="?attr/colorBottomSheetFragmentText"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:text="@string/msg_channels"
-                android:textColor="?attr/colorBottomSheetFragmentHeading"
+                android:textColor="#2F343D"
                 android:textSize="16sp"
                 android:textStyle="normal"
                 app:layout_constraintStart_toStartOf="parent"
@@ -58,14 +56,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_user_16dp"
-                android:drawableTint="?attr/colorBottomSheetFragmentText"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:text="@string/msg_users"
-                android:textColor="?attr/colorBottomSheetFragmentHeading"
+                android:textColor="#2F343D"
                 android:textSize="16sp"
                 android:textStyle="normal"
                 app:layout_constraintTop_toBottomOf="@+id/text_channels" />
@@ -76,7 +73,7 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:background="?attr/colorDivider"
+                android:background="#1F000000"
                 app:layout_constraintTop_toBottomOf="@+id/text_users" />
 
             <TextView
@@ -87,7 +84,7 @@
                 android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:text="@string/msg_search_for_global_users"
-                android:textColor="?attr/colorBottomSheetFragmentHeading"
+                android:textColor="#2F343D"
                 android:textSize="16sp"
                 android:textStyle="normal"
                 app:layout_constraintStart_toStartOf="parent"
@@ -112,7 +109,7 @@
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:text="@string/msg_search_for_global_users_description"
-                android:textColor="?attr/colorBottomSheetFragmentText"
+                android:textColor="#9EA2A8"
                 android:textSize="14sp"
                 android:textStyle="normal"
                 app:layout_constraintStart_toStartOf="parent"

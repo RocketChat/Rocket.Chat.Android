@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     android:padding="@dimen/screen_edge_left_and_right_margins"
     tools:context="authentication.onboarding.ui.OnBoardingFragment">
 
@@ -58,7 +59,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="20dp"
                 android:src="@drawable/ic_connect_with_a_server_black_30dp"
-                android:tint="?colorAccent"
+                android:tint="@color/colorAccent"
                 tools:ignore="ContentDescription" />
 
             <TextView

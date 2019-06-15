@@ -142,7 +142,9 @@ class SettingsPresenter @Inject constructor(
 
     fun toProfile() = navigator.toProfile()
 
+    //-------------------------------------------------------------
     fun toChangeTheme() = navigator.toChangeTheme()
+    //--------------------------------------------------------------
 
     fun toAdmin() = tokenRepository.get(currentServer)?.let {
         navigator.toAdminPanel(currentServer.adminPanelUrl(), it.authToken)

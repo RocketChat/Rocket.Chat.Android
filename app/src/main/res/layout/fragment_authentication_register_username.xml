@@ -30,6 +30,7 @@
         android:id="@+id/button_use_this_username"
         style="@style/Authentication.Button"
         android:layout_marginTop="20dp"
+        android:backgroundTint="@color/colorAuthenticationButtonDisabled"
         android:enabled="false"
         android:text="@string/action_use_this_username"
         app:layout_constraintEnd_toEndOf="parent"

@@ -4,6 +4,7 @@
     android:id="@+id/scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     android:padding="@dimen/screen_edge_left_and_right_margins"
     tools:context=".authentication.server.ui.ServerFragment">
 
@@ -45,7 +46,7 @@
                 android:id="@+id/spinner_server_protocol"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
-                android:popupBackground="?background" />
+                android:popupBackground="@color/colorWhite" />
 
             <EditText
                 android:id="@+id/text_server_url"
@@ -56,7 +57,7 @@
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="16dp"
                 android:layout_toEndOf="@+id/spinner_server_protocol"
-                android:background="?background"
+                android:background="@color/colorWhite"
                 android:cursorVisible="false"
                 android:hint="@string/server_hint_url"
                 android:imeOptions="actionDone"
@@ -67,6 +68,7 @@
             android:id="@+id/button_connect"
             style="@style/Authentication.Button"
             android:layout_marginTop="20dp"
+            android:backgroundTint="@color/colorAuthenticationButtonDisabled"
             android:enabled="false"
             android:text="@string/action_connect"
             app:layout_constraintEnd_toEndOf="parent"
