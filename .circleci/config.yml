@@ -166,9 +166,6 @@ jobs:
           command: git clone https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK.git
             ../Rocket.Chat.Kotlin.SDK
       - run:
-          name: Clear Cache
-          command: ./gradlew cleanBuildCache
-      - run:
           name: Accept licenses
           command: yes | sdkmanager --licenses || true
       - run:
@@ -198,12 +195,12 @@ jobs:
             adb shell input keyevent 82
       - run:
           name: Run EspressoTests
-          command: ./gradlew connectedAndroidTest
+          command: ./gradlew connectedPlayDebugAndroidTest
       - store_artifacts:
-          path: app/build/reports
+          path: app/build/reports/coverage/play/debug
           destination: reports
       - store_test_results:
-          path: app/build/test-results
+          path: app/build/outputs/androidTest-results/connected/flavors/PLAY
 workflows:
   version: 2
   build-deploy:

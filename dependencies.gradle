@@ -139,7 +139,6 @@ ext {
             espressoCore          : "androidx.test.espresso:espresso-core:${versions.espresso}",
             espressoIntents       : "androidx.test.espresso:espresso-intents:${versions.espresso}",
             roomTest              : "android.arch.persistence.room:testing:${versions.room}",
-            roboelectric          : "androidx.test:core:${versions.roboelectric}",
             truth                 : "com.google.truth:truth:${versions.truth}",
             mockito               : "org.mockito:mockito-core:${versions.mockito}",
             mockitoAndroid        : "org.mockito:mockito-android:${versions.mockito}",

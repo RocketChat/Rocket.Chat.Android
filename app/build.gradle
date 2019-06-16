@@ -218,7 +218,6 @@ dependencies {
     testImplementation libraries.mockito
     testImplementation libraries.mockitoInline
     androidTestImplementation libraries.mockitoAndroid
-    testImplementation libraries.roboelectric
     androidTestImplementation libraries.runner
 }
 

@@ -170,13 +170,13 @@ class LoginOptionsPresenter @Inject constructor(
         }
     }
 
-    fun setupConnectionInfo(serverUrl: String) {
+    private fun setupConnectionInfo(serverUrl: String) {
         currentServer = serverUrl
         client = factory.get(currentServer)
         settings = settingsInteractor.get(currentServer)
     }
 
-    fun saveAccount(username: String) {
+    private fun saveAccount(username: String) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }

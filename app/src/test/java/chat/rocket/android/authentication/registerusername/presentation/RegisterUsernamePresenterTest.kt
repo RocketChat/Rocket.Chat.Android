@@ -26,8 +26,6 @@ class RegisterUsernamePresenterTest {
     private val saveAccountInteractor = mock(SaveAccountInteractor::class.java)
     private val factory = mock(RocketChatClientFactory::class.java)
     private val serverInteractor = mock(GetConnectingServerInteractor::class.java)
-    private var settings: PublicSettings = settingsInteractor.get(currentServer)
-    private val token = tokenRepository.get(currentServer)
 
     private lateinit var registerUsernamePresenter: RegisterUsernamePresenter
 

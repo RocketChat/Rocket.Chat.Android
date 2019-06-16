@@ -11,7 +11,7 @@ import chat.rocket.android.UITestConfig.Companion.USERNAME
 import chat.rocket.android.UITestConfig.Companion.serverUrl
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.authentication.matchers.withHint
+import chat.rocket.android.matchers.withHint
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import org.hamcrest.Matchers.not
@@ -63,7 +63,7 @@ class LoginFragmentTest {
         onView(withId(R.id.button_log_in)).check(matches(not(isEnabled())))
     }
 
-    //@Test
+    @Test
     fun check_login_with_email_and_logout(){
         onView(withId(R.id.text_username_or_email)).perform(
             typeText(USERNAME), closeSoftKeyboard()
@@ -79,5 +79,6 @@ class LoginFragmentTest {
         onView(withId(R.id.text_logout)).check(matches(isDisplayed()))
             .perform(click())
         onView(withText("LOGOUT")).perform(click())
+        Thread.sleep(2000)
     }
 }

@@ -16,5 +16,4 @@ class UnitTestConfig {
         const val termsOfServiceUrl: String = "$currentServer/terms-of-service"
         const val privacyPolicyUrl: String = "$currentServer/privacy-policy"
     }
-
 }

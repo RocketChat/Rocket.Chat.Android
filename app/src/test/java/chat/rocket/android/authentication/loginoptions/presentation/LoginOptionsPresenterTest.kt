@@ -1,15 +1,11 @@
 package chat.rocket.android.authentication.loginoptions.presentation
 
-import chat.rocket.android.analytics.AnalyticsManager
-import chat.rocket.android.UnitTestConfig.Companion.avatar
 import chat.rocket.android.UnitTestConfig.Companion.currentServer
-import chat.rocket.android.UnitTestConfig.Companion.serverUrl
-import chat.rocket.android.UnitTestConfig.Companion.userName
+import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
-import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import org.junit.Before
 import org.junit.Test
@@ -20,11 +16,6 @@ import org.mockito.MockitoAnnotations
 
 
 class LoginOptionsPresenterTest {
-
-    private val account = Account(
-        serverUrl, serverUrl, null,
-        null, userName, avatar
-    )
 
     private val view = Mockito.mock(LoginOptionsView::class.java)
     private val strategy = Mockito.mock(CancelStrategy::class.java)
@@ -60,18 +51,5 @@ class LoginOptionsPresenterTest {
     fun check_login_with_email() {
         loginOptionsPresenter.toLoginWithEmail()
         verify(navigator).toLogin(currentServer)
-    }
-
-    @Test
-    fun check_setup_connection_info() {
-        loginOptionsPresenter.setupConnectionInfo(currentServer)
-        verify(settingsInteractor).get(currentServer)
-    }
-
-    @Test
-    fun check_account_is_saved() {
-        loginOptionsPresenter.setupConnectionInfo(serverUrl)
-        loginOptionsPresenter.saveAccount(userName)
-        verify(saveAccountInteractor).save(account)
     }
 }

@@ -1,6 +1,5 @@
 package chat.rocket.android.authentication.signup.presentation
 
-
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.UnitTestConfig.Companion.currentServer
 import chat.rocket.android.UnitTestConfig.Companion.privacyPolicyUrl
