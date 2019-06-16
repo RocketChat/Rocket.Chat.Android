@@ -71,4 +71,12 @@
         <item name="android:background">@color/blackColorSubHeaderBackground</item>
         <item name="android:textColor">@color/blackColorSubHeaderText</item>
     </style>
+
+    <style name="BlackCustomBottomSheetDialogStyle" parent="CustomBottomSheetDialogStyle">
+        <item name="android:theme">@style/BlackTheme</item>
+    </style>
+
+    <style name="BlackCustomAlertDialogTheme" parent="CustomAlertDialogTheme">
+        <item name="android:theme">@style/BlackTheme</item>
+    </style>
 </resources>

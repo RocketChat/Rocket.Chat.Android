@@ -13,7 +13,7 @@
 
     <TextView
         android:id="@+id/text_sort_by"
-        style="?attr/subHeaderStyle"
+        style="?subHeaderStyle"
         android:drawableStart="@drawable/ic_hashtag_16dp"
         android:drawableEnd="@drawable/ic_arrow_down"
         android:drawablePadding="10dp"

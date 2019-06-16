@@ -16,7 +16,7 @@
             android:id="@+id/text_server_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="?attr/actionBarTitleStyle"
+            style="?actionBarTitleStyle"
             tools:text="Server Name" />
         <!--android:drawablePadding="10dp"-->
         <!--android:fontFamily="sans-serif-medium"-->

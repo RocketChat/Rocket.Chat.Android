@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:theme="@style/BlackTheme"
     tools:context=".sortingandgrouping.ui.SortingAndGroupingBottomSheetFragment">
 
     <TextView
@@ -14,7 +15,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/msg_sort_by_placeholder"
-        android:textColor="?attr/colorBottomSheetFragmentText"
+        android:textColor="?colorBottomSheetFragmentText"
         android:textSize="17sp"
         android:textStyle="normal" />
 
@@ -22,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
-        android:background="?attr/colorDivider" />
+        android:background="?colorDivider" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -38,14 +39,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_filter_20dp"
-                android:drawableTint="?attr/colorBottomSheetFragmentText"
+                android:drawableTint="?colorBottomSheetFragmentText"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:text="@string/msg_sort_by_name"
-                android:textColor="?attr/colorBottomSheetFragmentHeading"
+                android:textColor="?colorBottomSheetFragmentHeading"
                 android:textSize="16sp"
                 android:textStyle="normal" />
 
@@ -54,14 +55,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_activity_20dp"
-                android:drawableTint="?attr/colorBottomSheetFragmentText"
+                android:drawableTint="?colorBottomSheetFragmentText"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:text="@string/msg_sort_by_activity"
-                android:textColor="?attr/colorBottomSheetFragmentHeading"
+                android:textColor="?colorBottomSheetFragmentHeading"
                 android:textSize="16sp"
                 android:textStyle="normal" />
 
@@ -71,21 +72,21 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:background="?attr/colorDivider" />
+                android:background="?colorDivider" />
 
             <TextView
                 android:id="@+id/text_unread_on_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_unread_20dp"
-                android:drawableTint="?attr/colorBottomSheetFragmentText"
+                android:drawableTint="?colorBottomSheetFragmentText"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:text="@string/msg_group_by_unread_on_top"
-                android:textColor="?attr/colorBottomSheetFragmentHeading"
+                android:textColor="?colorBottomSheetFragmentHeading"
                 android:textSize="16sp"
                 android:textStyle="normal" />
 
@@ -94,14 +95,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_group_by_type_20dp"
-                android:drawableTint="?attr/colorBottomSheetFragmentText"
+                android:drawableTint="?colorBottomSheetFragmentText"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:text="@string/msg_group_by_type"
-                android:textColor="?attr/colorBottomSheetFragmentHeading"
+                android:textColor="?colorBottomSheetFragmentHeading"
                 android:textSize="16sp"
                 android:textStyle="normal" />
 
@@ -110,14 +111,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_favorites_20dp"
-                android:drawableTint="?attr/colorBottomSheetFragmentText"
+                android:drawableTint="?colorBottomSheetFragmentText"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:text="@string/msg_group_by_favorites"
-                android:textColor="?attr/colorBottomSheetFragmentHeading"
+                android:textColor="?colorBottomSheetFragmentHeading"
                 android:textSize="16sp"
                 android:textStyle="normal" />
 

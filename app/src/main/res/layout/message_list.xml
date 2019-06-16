@@ -17,9 +17,10 @@
         android:layout_height="wrap_content"
         android:visibility="invisible"
         android:layout_margin="16dp"
+        app:backgroundTint="?colorFloatingActionButtonBorder"
         android:src="@drawable/ic_arrow_downward_24dp"
-        android:tint="@color/actionMenuColor"
-        app:backgroundTint="?android:colorBackground"
+        android:tint="?colorAccent"
+        android:backgroundTint="?colorFloatingActionButtonBackground"
         tools:visibility="visible"
         android:layout_gravity="end|bottom" />
 
@@ -29,7 +30,7 @@
         android:layout_height="wrap_content"
         android:elevation="6dp"
         android:gravity="center"
-        android:textColor="?android:colorBackground"
+        android:textColor="@color/colorWhite"
         android:visibility="invisible"
         android:textSize="@dimen/message_time_text_size"
         android:background="@drawable/round_textview"

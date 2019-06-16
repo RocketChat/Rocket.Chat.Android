@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:theme="@style/BlackTheme"
     tools:context=".servers.ui.ServersBottomSheetFragment">
 
     <TextView
@@ -26,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
-        android:background="?attr/colorDivider"
+        android:background="?colorDivider"
         app:layout_constraintTop_toBottomOf="@+id/text_server" />
 
     <androidx.recyclerview.widget.RecyclerView

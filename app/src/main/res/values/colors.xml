@@ -32,6 +32,7 @@
     <color name="colorTimestampTextUnread">#FF5699FF</color>
     <color name="colorLastMessageText">#99000000</color>
     <color name="colorUserDetailsNameText">#FF0C0D0F</color>
+    <color name="colorChannelTitle">#FF0C0D0F</color>
     <color name="colorUserDetailsUsernameText">#8B000000</color>
     <color name="colorControlText">#54585e</color>
     <color name="reaction_text">#868585</color>
@@ -59,6 +60,7 @@
     <color name="colorAuthenticationSecondaryText">#FF9EA2A8</color>
     <color name="colorTextHint">#FF9EA2A8</color>
     <color name="colorAuxiliaryText">#FF9CA2A8</color>
+    <color name="colorStatusInvisible">#FFCBCED1</color>
 
     <!-- Suggestions -->
     <color name="suggestion_background_color">@color/colorWhite</color>
@@ -67,5 +69,9 @@
     <!-- Default Background Color -->
     <color name="colorBackground">@color/colorWhite</color>
     <color name="colorSettingsSecondaryBackground">#f1f2f4</color>
+    <color name="colorReactionBackground">#ffffff</color>
+    <color name="colorReactionBorder">#e1e5e8</color>
+    <color name="colorFloatingActionButtonBackground">#261d74f5</color>
+    <color name="colorFloatingActionButtonBorder">#4c1d74f5</color>
 
 </resources>

@@ -44,5 +44,16 @@
         <item name="colorDim">@color/blackColorDim</item>
         <item name="colorIcon">@color/blackColorPrimary</item>
         <item name="colorSettingsSecondaryBackground">@color/blackColorSettingsSecondaryBackground</item>
+        <item name="colorChannelTitle">@color/blackColorChannelTitle</item>
+        <item name="colorTimestampText">@color/blackColorTimestampText</item>
+        <item name="colorStatusInvisible">@color/blackColorStatusInvisible</item>
+        <item name="colorPrimaryText">@color/blackColorPrimaryText</item>
+        <item name="colorReactionBackground">@color/blackColorReactionBackground</item>
+        <item name="colorReactionBorder">@color/blackColorReactionBorder</item>
+        <item name="colorFloatingActionButtonBackground">@color/blackColorFloatingActionButtonBackground</item>
+        <item name="colorFloatingActionButtonBorder">@color/blackColorFloatingActionButtonBorder</item>
+        <item name="bottomSheetDialogTheme">@style/BlackCustomBottomSheetDialogStyle</item>
+        <item name="android:navigationBarColor">@color/blackColorPrimaryDark</item>
+        <item name="alertDialogTheme">@style/BlackCustomAlertDialogTheme</item>
     </style>
 </resources>

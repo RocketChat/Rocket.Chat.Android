@@ -1,33 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="blackColorPrimary">@color/blackColorBodyText</color>
-    <color name="blackColorPrimaryDark">@color/blackColorBodyText</color>
-    <color name="blackColorBackground">#000000</color>
+    <color name="blackColorBodyText">#FFe8ebed</color>
+    <color name="blackColorPrimary">#FFe8ebed</color>
+
+    <color name="blackColorPrimaryDark">#FF0e0d0d</color>
     <color name="blackColorFocusedBackground">#FF0e0d0d</color>
-    <color name="blackColorActionBar">@color/blackColorFocusedBackground</color>
-    <color name="blackColorTitleText">#fafafa</color>
-    <color name="blackColorBodyText">#e8ebed</color>
-    <color name="blackColorMutedAccent">#2b2b29</color>
+    <color name="blackColorActionBar">#FF0e0d0d</color>
+    <color name="blackColorSubHeaderBackground">#FF0e0d0d</color>
+    <color name="blackColorSettingsSecondaryBackground">#FF0e0d0d</color>
+
+    <color name="blackColorTextHint">#FF9297a3</color> <!--self-created-from-mocks-->
+    <color name="blackColorDescriptiveText">#FF9297a3</color> <!--self-created-from-mocks-->
+    <color name="blackColorBottomSheetFragmentText">#FF9297a3</color>
+    <color name="blackColorAuthenticationSecondaryText">#9FF297a3</color>
+    <color name="blackColorSubHeaderText">#FF9297a3</color>
+
+    <color name="blackColorMutedAccent">#FF2b2b29</color>
+    <color name="blackColorDivider">#FF2b2b29</color>
+    <color name="blackColorAuthenticationButtonDisabled">#FF2b2b29</color>
+    <color name="blackColorAuthenticationButtonBorderAndDivider">#FF2b2b29</color>
+    <color name="blackColorStatusInvisible">#FF2b2b29</color>
+
+    <color name="blackColorTitleText">#FFFAFAFA</color>
+    <color name="blackColorBottomSheetFragmentHeading">#FFFAFAFA</color>
+    <color name="blackColorChannelTitle">#FFFAFAFA</color>
+
     <color name="blackColorAccent">#1d74f5</color>
-    <color name="blackColorTextHint">#9297a3</color> <!--self-created-from-mocks-->
-    <color name="blackColorDescriptiveText">#9297a3</color> <!--self-created-from-mocks-->
-    <color name="blackColorDivider">@color/blackColorMutedAccent</color>
-    <color name="blackColorBottomSheetFragmentText">@color/blackColorTextHint</color>
-    <color name="blackColorBottomSheetFragmentHeading">@color/blackColorTitleText</color>
     <color name="blackColorAuxiliaryText">#b2b8c6</color>
-    <color name="blackColorAuthenticationSecondaryText">@color/blackColorTextHint</color>
-    <color name="blackColorAuthenticationButtonBorderAndDivider">@color/blackColorMutedAccent</color>
-    <color name="blackColorAuthenticationButtonDisabled">@color/blackColorMutedAccent</color>
     <color name="blackColorControlText">#dadee6</color>
     <color name="blackColorChatComponentBackground">#17181a</color>
-    <color name="blackColorSubHeaderText">#9297a3</color>
-    <color name="blackColorSubHeaderBackground">@color/blackColorFocusedBackground</color>
+    <color name="blackColorReactionBackground">#17181a</color>
     <color name="blackColorDim">#99ffffff</color>
-    <color name="blackColorSettingsSecondaryBackground">@color/blackColorFocusedBackground</color>
+    <color name="blackColorBackground">#000000</color>
+    <color name="blackColorTimestampText">#FFb2b8c6</color>
+    <color name="blackColorPrimaryText">#DEFFFFFF</color>
 
+    <color name="blackBannerBackground">#1f2329</color>
+    <color name="blackColorReactionBorder">#1f2329</color>
+
+    <color name="blackColorFloatingActionButtonBackground">#261d74f5</color>
+    <color name="blackColorFloatingActionButtonBorder">#4c1d74f5</color>
 
     <color name="auxiliaryBackground">#090909</color>
-    <color name="bannerBackground">#1f2329</color>
     <color name="auxiliaryTintColor">#cdcdcd</color>
     <!--.........................................................................................-->
     <color name="colorPrimary2">#F33E5B</color>

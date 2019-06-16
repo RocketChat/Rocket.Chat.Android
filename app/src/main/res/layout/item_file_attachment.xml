@@ -18,7 +18,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="56dp"
-        android:textColor="@color/colorAccent"
+        android:textColor="?colorAccent"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:drawableStart="@drawable/ic_files_24dp"
         android:drawablePadding="6dp"

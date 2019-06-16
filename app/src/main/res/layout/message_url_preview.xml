@@ -33,7 +33,7 @@
         android:id="@+id/text_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorAccent"
+        android:textColor="?colorAccent"
         android:textDirection="locale"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/text_host"
@@ -42,6 +42,7 @@
 
     <TextView
         android:id="@+id/text_description"
+        android:textColor="@color/colorSecondaryText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textDirection="locale"

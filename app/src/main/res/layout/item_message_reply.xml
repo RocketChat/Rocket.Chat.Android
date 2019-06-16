@@ -22,7 +22,7 @@
         android:background="@drawable/message_reply_button_bg"
         android:text="@string/action_msg_reply"
         android:textAllCaps="false"
-        android:textColor="#1D74F5"
+        android:textColor="?colorAccent"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

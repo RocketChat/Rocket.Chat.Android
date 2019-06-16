@@ -17,7 +17,7 @@
 
     <EditText
         android:id="@+id/text_username_or_email"
-        style="?attr/authenticationEditTextStyle"
+        style="?authenticationEditTextStyle"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_at_black_20dp"
         android:hint="@string/msg_username_or_email"
@@ -29,7 +29,7 @@
 
     <EditText
         android:id="@+id/text_password"
-        style="?attr/authenticationEditTextStyle"
+        style="?authenticationEditTextStyle"
         android:layout_marginTop="10dp"
         android:drawableStart="@drawable/ic_key_black_20dp"
         android:hint="@string/msg_password"

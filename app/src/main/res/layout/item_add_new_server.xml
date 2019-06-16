@@ -15,7 +15,7 @@
         android:fontFamily="sans-serif"
         android:gravity="center"
         android:text="@string/msg_add_new_server"
-        android:textColor="?attr/colorDescriptiveText"
+        android:textColor="?colorDescriptiveText"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"

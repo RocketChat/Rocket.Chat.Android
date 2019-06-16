@@ -15,7 +15,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textColor">?attr/colorControlText</item>
+        <item name="android:textColor">?colorControlText</item>
         <item name="android:textStyle">normal</item>
     </style>
     <!--<item name="android:textColor">#FF54585E</item>-->
@@ -37,7 +37,7 @@
         <item name="android:textSize">15sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">?attr/colorDescriptiveText</item>
+        <item name="android:textColor">?colorDescriptiveText</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
@@ -46,7 +46,7 @@
         <item name="android:textSize">17sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColorHint">?attr/colorDescriptiveText</item>
+        <item name="android:textColorHint">?colorDescriptiveText</item>
     </style>
 
     <style name="Authentication.EditText.Border" parent="Widget.AppCompat.EditText">
@@ -71,7 +71,7 @@
         <item name="android:textColor">?android:colorBackground</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:background">@drawable/rounded_color_accent</item>
-        <item name="android:backgroundTint">?attr/colorButtonDisabled</item>
+        <item name="android:backgroundTint">?colorButtonDisabled</item>
     </style>
     <!--<item name="android:textColor">@color/colorWhite</item>-->
 
@@ -113,7 +113,7 @@
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/colorLastMessageText</item>
+        <item name="android:textColor">?attr/colorDim</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">2</item>
     </style>
@@ -126,7 +126,7 @@
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">?colorDescriptiveText</item>
+        <item name="android:textColor">?colorTimestampText</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
     </style>
@@ -213,6 +213,7 @@
 
     <style name="ChatRoom.Timestamp.TextView" parent="TextAppearance.AppCompat.Caption">
         <item name="android:textSize">10sp</item>
+        <item name="android:textColor">?colorTimestampText</item>
     </style>
 
     <style name="ChatRooms.Header" parent="TextAppearance.AppCompat.Headline">
@@ -234,6 +235,7 @@
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?colorPrimary</item>
     </style>
 
     <style name="Message.TextView" parent="android:TextAppearance">
@@ -243,12 +245,12 @@
 
     <style name="Message.DayMarker" parent="TextAppearance.AppCompat">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textColor">?colorPrimaryText</item>
         <item name="android:fontFamily">@string/font_fontFamily_medium</item>
     </style>
 
     <style name="Message.Quote.TextView" parent="Message.TextView">
-        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textColor">?colorPrimaryText</item>
     </style>
 
     // REMARK: To be removed.
@@ -306,5 +308,15 @@
     <style name="RadioButtonStyle" parent="Widget.AppCompat.CompoundButton.RadioButton">
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:buttonTint">@color/colorPrimary</item>
+    </style>
+
+    <style name="CustomBottomSheetDialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:theme">@style/AppTheme</item>
+    </style>
+
+    <style name="CustomAlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:theme">@style/AppTheme</item>
     </style>
 </resources>

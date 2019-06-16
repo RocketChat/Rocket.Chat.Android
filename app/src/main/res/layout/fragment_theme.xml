@@ -28,7 +28,6 @@
         android:textSize="20sp"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:style="@style/Profile.EditText"
         android:hint="Accent Color Indicator"
         app:layout_constraintStart_toStartOf="@id/toggleButton"
         app:layout_constraintTop_toBottomOf="@id/toggleButton"

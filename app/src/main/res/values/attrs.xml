@@ -16,4 +16,13 @@
         <attr name="colorDim" format="color|reference"/>
         <attr name="colorIcon" format="color|reference"/>
         <attr name="colorSettingsSecondaryBackground" format="color|reference"/>
+        <attr name="colorChannelTitle" format="color|reference"/>
+        <attr name="colorTimestampText" format="color|reference"/>
+        <attr name="colorStatusInvisible" format="color|reference"/>
+        <attr name="colorPrimaryText" format="color|reference"/>
+        <attr name="colorReactionBackground" format="color|reference"/>
+        <attr name="colorReactionBorder" format="color|reference"/>
+        <attr name="colorFloatingActionButtonBackground" format="color|reference"/>
+        <attr name="colorFloatingActionButtonBorder" format="color|reference"/>
+
 </resources>
