@@ -29,5 +29,8 @@
         <item name="colorChatComponentBackground">@color/colorChatComponentBackground</item>
         <item name="descriptiveTextStyle">@style/ChatDetails.Content.TextView</item>
         <item name="colorDescriptiveText">@color/colorDescriptiveText</item>
+        <item name="colorDim">@color/colorDim</item>
+        <item name="colorIcon">@color/colorPrimary</item>
+        <item name="colorSettingsSecondaryBackground">@color/colorSettingsSecondaryBackground</item>
     </style>
 </resources>

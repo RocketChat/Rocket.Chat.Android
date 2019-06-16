@@ -13,4 +13,7 @@
     <attr name="changePasswordTitleStyle" format="color|reference"/>
     <attr name="authenticationEditTextStyle" format="color|reference"/>
     <attr name="descriptiveTextStyle" format="color|reference"/>
+    <attr name="colorDim" format="color|reference"/>
+    <attr name="colorIcon" format="color|reference"/>
+    <attr name="colorSettingsSecondaryBackground" format="color|reference"/>
 </resources>

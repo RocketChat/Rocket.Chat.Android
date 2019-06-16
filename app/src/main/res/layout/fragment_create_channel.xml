@@ -26,24 +26,22 @@
 
     <TextView
         android:id="@+id/text_channel_type"
+        style="@style/ChatDetails.Title.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/msg_public_channel"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_app_bar" />
 
     <TextView
         android:id="@+id/text_channel_type_description"
+        style="?attr/descriptiveTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="@string/msg_public_channel_description"
-        android:textColor="@color/colorSecondaryText"
-        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_channel_type" />
 
@@ -58,26 +56,22 @@
 
     <TextView
         android:id="@+id/text_read_only"
+        style="@style/ChatDetails.Title.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-
         android:layout_marginTop="16dp"
         android:text="@string/msg_ready_only_channel"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_channel_type_description" />
 
     <TextView
         android:id="@+id/text_read_only_description"
+        style="?attr/descriptiveTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_marginStart="16dp"
         android:text="@string/msg_ready_only_channel_description"
-        android:textColor="@color/colorSecondaryText"
-        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_read_only" />
 
@@ -108,7 +102,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/colorDim"
+        android:backgroundTint="?attr/colorDim"
         android:hint="@string/msg_channel_name"
         android:inputType="text"
         android:maxLines="1"
@@ -136,7 +130,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/colorDim"
+        android:backgroundTint="?attr/colorDim"
         android:hint="@string/msg_invite_members"
         android:inputType="text"
         android:maxLines="1"

@@ -21,7 +21,10 @@
     <color name="blackColorControlText">#dadee6</color>
     <color name="blackColorChatComponentBackground">#17181a</color>
     <color name="blackColorSubHeaderText">#9297a3</color>
-    <color name="blackColorSubHeaderBackground">#FF0e0d0d</color>
+    <color name="blackColorSubHeaderBackground">@color/blackColorFocusedBackground</color>
+    <color name="blackColorDim">#99ffffff</color>
+    <color name="blackColorSettingsSecondaryBackground">@color/blackColorFocusedBackground</color>
+
 
     <color name="auxiliaryBackground">#090909</color>
     <color name="bannerBackground">#1f2329</color>

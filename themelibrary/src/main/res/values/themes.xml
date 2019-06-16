@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="DarkTheme" parent="AppTheme">
-        <!-- Customize your theme here. Edit all -->
         <item name="colorPrimary">@color/colorPrimary2</item>
         <item name="colorPrimaryDark">@color/blackColorPrimaryDark</item>
         <item name="titleTextColor">@color/blackColorTitleText</item>
@@ -17,11 +16,9 @@
         <item name="colorAuthenticationButtonBorderAndDivider">@color/blackColorDivider</item>
         <item name="radioButtonStyle">@style/DarkRadioButtonStyle</item>
         <item name="android:textColorHint">@color/colorPrimary2</item>
-
     </style>
 
     <style name="BlackTheme" parent="AppTheme">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/blackColorPrimary</item>
         <item name="colorPrimaryDark">@color/blackColorPrimaryDark</item>
         <item name="titleTextColor">@color/blackColorTitleText</item>
@@ -44,6 +41,8 @@
         <item name="colorChatComponentBackground">@color/blackColorChatComponentBackground</item>
         <item name="descriptiveTextStyle">@style/Black.ChatDetails.Content.TextView</item>
         <item name="colorDescriptiveText">@color/blackColorDescriptiveText</item>
+        <item name="colorDim">@color/blackColorDim</item>
+        <item name="colorIcon">@color/blackColorPrimary</item>
+        <item name="colorSettingsSecondaryBackground">@color/blackColorSettingsSecondaryBackground</item>
     </style>
-
 </resources>

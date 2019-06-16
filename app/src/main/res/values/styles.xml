@@ -59,7 +59,7 @@
         <item name="android:textColor">@color/colorPrimaryText</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:background">@drawable/rounded_border</item>
-    </style>?background
+    </style>
 
     <style name="Authentication.Button" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:layout_width">match_parent</item>
@@ -99,7 +99,7 @@
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">?colorPrimary</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
     </style>
@@ -126,7 +126,7 @@
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/colorTimestampText</item>
+        <item name="android:textColor">?colorDescriptiveText</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
     </style>
@@ -162,15 +162,17 @@
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/colorUserDetailsNameText</item>
+        <item name="android:textColor">?titleTextColor</item>
     </style>
+    <!--<item name="android:textColor">@color/colorUserDetailsNameText</item>-->
 
     <style name="UserDetails.TextView.Username" parent="TextAppearance.AppCompat">
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/colorUserDetailsUsernameText</item>
+        <item name="android:textColor">?colorDim</item>
     </style>
+    <!--<item name="android:textColor">@color/colorUserDetailsUsernameText</item>-->
 
     <style name="UserDetails.TextView.Actions" parent="TextAppearance.AppCompat">
         <item name="android:textSize">16sp</item>
@@ -183,23 +185,23 @@
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/colorAuthenticationSecondaryText</item>
+        <item name="android:textColor">?colorDescriptiveText</item>
     </style>
 
     <style name="UserDetails.TextView.Description" parent="TextAppearance.AppCompat">
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">?colorPrimary</item>
     </style>
     <!-- End user details-->
 
     <style name="EditText.Password" parent="TextAppearance.AppCompat">
         <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimaryDark</item>
-        <item name="colorControlNormal">@color/colorPrimaryDark</item>
-        <item name="colorControlActivated">@color/colorPrimaryDark</item>
+        <item name="android:textColorHint">?colorPrimaryDark</item>
+        <item name="colorAccent">?colorPrimaryDark</item>
+        <item name="colorControlNormal">?colorPrimaryDark</item>
+        <item name="colorControlActivated">?colorPrimaryDark</item>
     </style>
 
     <style name="ChatRoom.SearchView" parent="Widget.AppCompat.SearchView">
@@ -236,7 +238,7 @@
 
     <style name="Message.TextView" parent="android:TextAppearance">
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textColor">?titleTextColor</item>
     </style>
 
     <style name="Message.DayMarker" parent="TextAppearance.AppCompat">
@@ -261,7 +263,7 @@
         <item name="android:textStyle">normal</item>
         <item name="android:layout_marginTop">24dp</item>
         <item name="android:layout_gravity">start</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">?colorPrimary</item>
         <item name="android:maxLines">1</item>
     </style>
 

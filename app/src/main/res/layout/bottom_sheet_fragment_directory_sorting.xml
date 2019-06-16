@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context=".directory.ui.DirectorySortingBottomSheetFragment">
-    <!--android:background="?pageLayoutBackground"-->
 
     <TextView
         android:id="@+id/text_sort_by"
