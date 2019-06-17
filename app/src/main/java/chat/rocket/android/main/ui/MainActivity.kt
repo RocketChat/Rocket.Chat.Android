@@ -50,6 +50,7 @@ import android.content.Context
 
 
 // WIDECHAT
+import android.os.Build
 import android.view.View
 import android.view.View.GONE
 import android.widget.Button
@@ -94,7 +95,11 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             setContentView(R.layout.widechat_activity_main)
             // Loads new avatar when changed on server side
             presenter.clearAvatarUrlFromCache()
-            requestLocationPermissions()
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                requestLocationPermissions()
+            }
+
         } else {
             setContentView(R.layout.activity_main)
         }

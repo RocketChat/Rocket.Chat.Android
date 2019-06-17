@@ -31,6 +31,16 @@ import javax.inject.Named
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+// WIDECHAT
+import android.net.wifi.SupplicantState
+import android.net.wifi.WifiManager
+import androidx.appcompat.app.AppCompatActivity.WIFI_SERVICE
+import androidx.fragment.app.FragmentActivity
+import chat.rocket.android.helper.AndroidPermissionsHelper
+import chat.rocket.android.helper.Constants
+import chat.rocket.android.helper.SharedPreferenceHelper
+import chat.rocket.android.main.ui.MainActivity
+
 class ChatRoomsPresenter @Inject constructor(
     private val view: ChatRoomsView,
     private val strategy: CancelStrategy,
@@ -183,6 +193,28 @@ class ChatRoomsPresenter @Inject constructor(
     private suspend fun createDirectMessage(name: String): Boolean = suspendCoroutine { cont ->
         client.createDirectMessage(name) { success, _ ->
             cont.resume(success)
+        }
+    }
+
+    // WIDECHAT
+    fun tryToReadSSID(activity: FragmentActivity?) {
+        with(activity as MainActivity) {
+            if (AndroidPermissionsHelper.hasLocationPermission(this)) {
+                SharedPreferenceHelper.putString(Constants.LOCATION_PERMISSION, "granted")
+                val wifiManager = getApplicationContext().getSystemService(WIFI_SERVICE) as WifiManager
+                val wifiInfo = wifiManager.getConnectionInfo()
+
+                if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
+                    var ssid = wifiInfo.getBSSID()
+                    SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, ssid)
+                    Timber.d("Current bssid is: ${ssid}")
+                } else {
+                    SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, "none")
+                }
+            } else {
+                // Clear the value in case permissions revoked
+                SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, "none")
+            }
         }
     }
 }

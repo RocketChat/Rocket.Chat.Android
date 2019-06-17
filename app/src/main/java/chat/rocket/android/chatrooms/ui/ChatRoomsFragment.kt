@@ -50,14 +50,10 @@ import javax.inject.Inject
 
 // WIDECHAT
 import android.graphics.Color
-import android.net.wifi.SupplicantState
-import android.net.wifi.WifiManager
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity.WIFI_SERVICE
 import androidx.core.view.isGone
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
-import chat.rocket.android.helper.AndroidPermissionsHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.profile.ui.ProfileFragment
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -227,14 +223,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                         // When connected, only show the connection status once
                         if (currentlyConnected == false) {
                             // Connection state changed - refresh BSSID
-                            tryToReadSSID()
+                            presenter.tryToReadSSID(activity)
 
                             currentlyConnected = true
                             status?.let { showConnectionState(status) }
                         }
                     } else {
                         // connection state changed - clear BSSID if no wifi
-                        tryToReadSSID()
+                        presenter.tryToReadSSID(activity)
 
                         currentlyConnected = false
                         status?.let { showConnectionState(status) }
@@ -686,28 +682,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             "channel" -> roomUiModel.name.toString()
             "group" -> roomUiModel.name.toString()
             else -> ""
-        }
-    }
-
-    // WIDECHAT
-    private fun tryToReadSSID() {
-        with(activity as MainActivity) {
-            if (AndroidPermissionsHelper.hasLocationPermission(this)) {
-                SharedPreferenceHelper.putString(Constants.LOCATION_PERMISSION, "granted")
-                val wifiManager = getApplicationContext().getSystemService(WIFI_SERVICE) as WifiManager
-                val wifiInfo = wifiManager.getConnectionInfo()
-
-                if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
-                    var ssid = wifiInfo.getBSSID()
-                    SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, ssid)
-                    Timber.d("Current bssid is: ${ssid}")
-                } else {
-                    SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, "none")
-                }
-            } else {
-                // Clear the value in case permissions revoked
-                SharedPreferenceHelper.putString(Constants.CURRENT_BSSID, "none")
-            }
         }
     }
 }
