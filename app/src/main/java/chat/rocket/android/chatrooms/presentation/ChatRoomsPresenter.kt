@@ -34,6 +34,7 @@ import kotlin.coroutines.suspendCoroutine
 // WIDECHAT
 import android.net.wifi.SupplicantState
 import android.net.wifi.WifiManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity.WIFI_SERVICE
 import androidx.fragment.app.FragmentActivity
 import chat.rocket.android.helper.AndroidPermissionsHelper
@@ -199,8 +200,8 @@ class ChatRoomsPresenter @Inject constructor(
     // WIDECHAT
     fun tryToReadSSID(activity: FragmentActivity?) {
         with(activity as MainActivity) {
-            if (AndroidPermissionsHelper.hasLocationPermission(this)) {
-                SharedPreferenceHelper.putString(Constants.LOCATION_PERMISSION, "granted")
+            if ((AndroidPermissionsHelper.hasLocationPermission(this)) or
+                            (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1)) {
                 val wifiManager = getApplicationContext().getSystemService(WIFI_SERVICE) as WifiManager
                 val wifiInfo = wifiManager.getConnectionInfo()
 
