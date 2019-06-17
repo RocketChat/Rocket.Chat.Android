@@ -155,7 +155,7 @@
     <string name="msg_ver_not_minimum">Die Server-Version scheint älter als die minimale Version %1$s zu sein.\nBitte updaten Sie Ihren Server, um sich einloggen zu können!</string>
     <string name="msg_no_chat_title">Keine Chat-Nachrichten</string>
     <string name="msg_no_chat_description">Starte die Konversation, um Ihre \nNachrichten hier zu sehen.</string>
-    <string name="msg_http_insecure">Bei HTTP verbinden Sie sich sicher zu einem Server. Wir empfehlen, HTTPS zu benutzen.</string>
+    <string name="msg_http_insecure">Bei HTTP verbinden Sie sich unsicher zu einem Server. Wir empfehlen, HTTPS zu benutzen.</string>
     <string name="msg_error_checking_server_version">Ein Fehler ist aufgetreten beim Prüfen der Server-Version, bitte versuchen Sie es noch einmal</string>
     <string name="msg_invalid_server_protocol">Das ausgewählte Protokoll wird vom Server nicht akzeptiert, versuchen Sie HTTPS</string>
     <string name="msg_image_saved_successfully">Bild wurde in der Galerie gespeichert</string>
