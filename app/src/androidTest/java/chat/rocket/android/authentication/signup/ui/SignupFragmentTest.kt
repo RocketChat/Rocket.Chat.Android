@@ -46,7 +46,7 @@ class SignupFragmentTest {
     }
 
     @Test
-    fun fill_details_and_click_register() {
+    fun fill_details_and_signup() {
         onView(withId(R.id.text_name)).perform(
             typeText(NAME), closeSoftKeyboard()
         )

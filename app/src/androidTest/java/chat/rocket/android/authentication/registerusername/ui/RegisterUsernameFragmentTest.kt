@@ -43,7 +43,7 @@ class RegisterUsernameFragmentTest {
     }
 
     @Test
-    fun check_register_username_click(){
+    fun fill_username_and_register(){
         onView(withId(R.id.text_username)).perform(typeText(USERNAME), closeSoftKeyboard())
         onView(withId(R.id.button_use_this_username)).perform(click())
     }

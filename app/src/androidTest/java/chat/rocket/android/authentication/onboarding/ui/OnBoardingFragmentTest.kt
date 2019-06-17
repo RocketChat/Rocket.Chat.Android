@@ -29,24 +29,26 @@ class OnBoardingFragmentTest {
     }
 
     @Test
-    fun check_connect_with_server() {
+    fun fill_detail_and_connect_with_server() {
         onView(withId(R.id.connect_with_a_server_container)).perform(click())
         onView(withId(R.id.text_server_url)).perform(
             typeText("open.rocket.chat"), closeSoftKeyboard()
         )
         onView(withId(R.id.button_connect)).perform(scrollTo(), click())
-
     }
 
     @Test
     fun check_join_in_the_community_click() {
         onView(withId(R.id.join_community_container))
             .perform(scrollTo(), click())
+        Thread.sleep(3000)
+        onView(withId(R.id.button_login_with_email)).check(matches(isDisplayed()))
     }
 
     @Test
     fun check_create_new_server_click() {
         onView(withId(R.id.create_server_container))
             .perform(scrollTo(), click())
+        onView(withId(R.id.web_view)).check(matches(isDisplayed()))
     }
 }
