@@ -3,6 +3,7 @@ package chat.rocket.android.authentication.registerusername.presentation
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.AuthenticationEvent
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
+import chat.rocket.android.authentication.presentation.AuthenticationPresenter.Companion.defaultServer
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetConnectingServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
@@ -38,7 +39,7 @@ class RegisterUsernamePresenter @Inject constructor(
     val factory: RocketChatClientFactory,
     val settingsInteractor: GetSettingsInteractor
 ) {
-    private val currentServer = serverInteractor.get()!!
+    private val currentServer = serverInteractor.get()?: defaultServer
     private val client: RocketChatClient = factory.get(currentServer)
     private var settings: PublicSettings = settingsInteractor.get(currentServer)
     private val token = tokenRepository.get(currentServer)

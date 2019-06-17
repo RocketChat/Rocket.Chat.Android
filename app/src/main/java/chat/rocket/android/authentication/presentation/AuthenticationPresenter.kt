@@ -23,6 +23,10 @@ class AuthenticationPresenter @Inject constructor(
     private val serverInteractor: GetConnectingServerInteractor
 ) {
 
+    companion object {
+       val defaultServer = "https://open.rocket.chat"
+    }
+
     fun loadCredentials(newServer: Boolean, callback: (isAuthenticated: Boolean) -> Unit) {
         launchUI(strategy) {
             val currentServer = getCurrentServerInteractor.get()
