@@ -4,7 +4,6 @@ import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.AuthenticationEvent
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
-import chat.rocket.android.authentication.presentation.AuthenticationPresenter.Companion.defaultServer
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetConnectingServerInteractor
@@ -34,6 +33,7 @@ import chat.rocket.core.internal.rest.loginWithOauth
 import chat.rocket.core.internal.rest.loginWithSaml
 import chat.rocket.core.internal.rest.me
 import kotlinx.coroutines.delay
+import testConfig.Config.Companion.defaultTestServer
 import javax.inject.Inject
 
 private const val TYPE_LOGIN_OAUTH = 1
@@ -55,7 +55,7 @@ class LoginOptionsPresenter @Inject constructor(
     serverInteractor: GetConnectingServerInteractor
 ) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
-    private var currentServer = serverInteractor.get()?: defaultServer
+    private var currentServer = serverInteractor.get() ?: defaultTestServer
     private val token = tokenRepository.get(currentServer)
     private lateinit var client: RocketChatClient
     private lateinit var settings: PublicSettings

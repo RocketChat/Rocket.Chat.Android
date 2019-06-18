@@ -1,9 +1,6 @@
 package chat.rocket.android.authentication.registerusername.presentation
 
 import chat.rocket.android.analytics.AnalyticsManager
-import chat.rocket.android.UnitTestConfig.Companion.currentServer
-import chat.rocket.android.UnitTestConfig.Companion.userAvatar
-import chat.rocket.android.UnitTestConfig.Companion.userName
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.*
@@ -13,6 +10,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
+import testConfig.Config.Companion.currentServer
+import testConfig.Config.Companion.userAvatar
+import testConfig.Config.Companion.userName
 
 class RegisterUsernamePresenterTest {
 

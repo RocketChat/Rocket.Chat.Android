@@ -3,7 +3,6 @@ package chat.rocket.android.authentication.twofactor.presentation
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.AuthenticationEvent
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
-import chat.rocket.android.authentication.presentation.AuthenticationPresenter.Companion.defaultServer
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetConnectingServerInteractor
@@ -29,6 +28,7 @@ import chat.rocket.core.internal.rest.login
 import chat.rocket.core.internal.rest.loginWithEmail
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.model.Myself
+import testConfig.Config.Companion.defaultTestServer
 import javax.inject.Inject
 
 class TwoFAPresenter @Inject constructor(
@@ -44,7 +44,7 @@ class TwoFAPresenter @Inject constructor(
     val serverInteractor: GetConnectingServerInteractor,
     val settingsInteractor: GetSettingsInteractor
 ) {
-    private val currentServer = serverInteractor.get()?: defaultServer
+    private val currentServer = serverInteractor.get()?: defaultTestServer
     private var settings: PublicSettings = settingsInteractor.get(currentServer)
     private val token = tokenRepository.get(currentServer)
 

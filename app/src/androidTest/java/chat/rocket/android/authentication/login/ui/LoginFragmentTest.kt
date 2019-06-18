@@ -6,9 +6,9 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import chat.rocket.android.UITestConfig.Companion.PASSWORD
-import chat.rocket.android.UITestConfig.Companion.USERNAME
-import chat.rocket.android.UITestConfig.Companion.serverUrl
+import testConfig.Config.Companion.PASSWORD
+import testConfig.Config.Companion.USERNAME
+import testConfig.Config.Companion.serverUrl
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.matchers.withHint

@@ -8,9 +8,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import chat.rocket.android.UITestConfig.Companion.CODE
-import chat.rocket.android.UITestConfig.Companion.PASSWORD
-import chat.rocket.android.UITestConfig.Companion.USERNAME
+import testConfig.Config.Companion.CODE
+import testConfig.Config.Companion.PASSWORD
+import testConfig.Config.Companion.USERNAME
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity

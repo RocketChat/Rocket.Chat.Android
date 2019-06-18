@@ -1,9 +1,6 @@
 package chat.rocket.android.authentication.signup.presentation
 
 import chat.rocket.android.analytics.AnalyticsManager
-import chat.rocket.android.UnitTestConfig.Companion.currentServer
-import chat.rocket.android.UnitTestConfig.Companion.privacyPolicyUrl
-import chat.rocket.android.UnitTestConfig.Companion.termsOfServiceUrl
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
@@ -13,6 +10,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
+import testConfig.Config.Companion.currentServer
+import testConfig.Config.Companion.privacyPolicyUrl
+import testConfig.Config.Companion.termsOfServiceUrl
 
 
 class SignupPresenterTest {
