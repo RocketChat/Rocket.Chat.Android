@@ -8,11 +8,9 @@
     <attr name="colorControlText" format="color|reference"/>
     <attr name="colorChatComponentBackground" format="color|reference"/>
     <attr name="colorDescriptiveText" format="color|reference"/>
-    <attr name="subHeaderStyle" format="color|reference"/>
-    <attr name="actionBarTitleStyle" format="color|reference"/>
-    <attr name="changePasswordTitleStyle" format="color|reference"/>
-    <attr name="authenticationEditTextStyle" format="color|reference"/>
-    <attr name="descriptiveTextStyle" format="color|reference"/>
+    <attr name="colorSubHeaderBackground" format="color|reference"/>
+    <attr name="colorSubHeaderText" format="color|reference"/>
+    <attr name="colorRadioButton" format="color|reference"/>
     <attr name="colorDim" format="color|reference"/>
     <attr name="colorIcon" format="color|reference"/>
     <attr name="colorSettingsSecondaryBackground" format="color|reference"/>
@@ -24,4 +22,5 @@
     <attr name="colorReactionBorder" format="color|reference"/>
     <attr name="colorFloatingActionButtonBackground" format="color|reference"/>
     <attr name="colorFloatingActionButtonBorder" format="color|reference"/>
+    <attr name="colorLoading" format="color|reference"/>
 </resources>

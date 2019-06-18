@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import chat.rocket.android.thememanager.model.Theme
 import javax.inject.Inject
 
-private const val SELECTED_THEME = "selected_theme1111"
-private const val DARK_THEME= "dark_theme1111"
-private const val BLACK_THEME = "black_theme1111"
+const val SELECTED_THEME = "selected_theme"
+const val DARK_THEME= "dark_theme"
+const val BLACK_THEME = "black_theme"
 
 class ThemesRepository @Inject constructor(private val preferences: SharedPreferences){
 

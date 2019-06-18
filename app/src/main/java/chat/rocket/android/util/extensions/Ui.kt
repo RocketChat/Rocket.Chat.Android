@@ -38,7 +38,7 @@ fun FragmentActivity.setLightStatusBar(view: View, @ColorInt color: Int = 0) {
 
 fun FragmentActivity.clearLightStatusBar() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+//        window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
     }
 }
 

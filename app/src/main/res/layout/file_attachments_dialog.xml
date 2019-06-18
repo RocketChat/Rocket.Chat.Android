@@ -72,7 +72,7 @@
 
         <EditText
             android:id="@+id/text_file_description"
-            android:textColor="?colorPrimary"
+            android:textColor="?colorPrimaryText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
@@ -100,7 +100,7 @@
             app:layout_constraintEnd_toStartOf="@id/button_send"
             android:layout_margin="16dp"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:textColor="?colorPrimary"
+            android:textColor="?colorPrimaryText"
             android:text="@android:string/cancel" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

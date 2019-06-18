@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:theme="@style/BlackTheme"
     tools:context=".sortingandgrouping.ui.SortingAndGroupingBottomSheetFragment">
 
     <TextView
@@ -39,7 +38,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_filter_20dp"
-                android:drawableTint="?colorBottomSheetFragmentText"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
@@ -55,7 +53,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_activity_20dp"
-                android:drawableTint="?colorBottomSheetFragmentText"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
@@ -79,7 +76,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_unread_20dp"
-                android:drawableTint="?colorBottomSheetFragmentText"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
@@ -95,7 +91,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_group_by_type_20dp"
-                android:drawableTint="?colorBottomSheetFragmentText"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
@@ -111,7 +106,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_favorites_20dp"
-                android:drawableTint="?colorBottomSheetFragmentText"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"

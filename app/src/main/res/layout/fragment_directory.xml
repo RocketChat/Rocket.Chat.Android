@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     tools:context=".directory.ui.DirectoryFragment">
 
     <include
@@ -13,7 +14,7 @@
 
     <TextView
         android:id="@+id/text_sort_by"
-        style="?subHeaderStyle"
+        style="@style/SubHeaderStyle"
         android:drawableStart="@drawable/ic_hashtag_16dp"
         android:drawableEnd="@drawable/ic_arrow_down"
         android:drawablePadding="10dp"
@@ -37,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:indicatorColor="@color/colorBlack"
+        app:indicatorColor="?colorLoading"
         app:indicatorName="BallPulseIndicator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

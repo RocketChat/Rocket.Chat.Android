@@ -15,7 +15,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textColor">?colorControlText</item>
+        <item name="android:textColor">?colorDescriptiveText</item>
         <item name="android:textStyle">normal</item>
     </style>
     <!--<item name="android:textColor">#FF54585E</item>-->
@@ -24,7 +24,7 @@
         <item name="android:textSize">17sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">?colorAccent</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
@@ -56,7 +56,7 @@
         <item name="android:paddingEnd">@dimen/edit_text_margin</item>
         <item name="android:maxLines">1</item>
         <item name="android:drawablePadding">@dimen/edit_text_drawable_padding</item>
-        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textColor">?colorPrimaryText</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:background">@drawable/rounded_border</item>
     </style>
@@ -73,13 +73,12 @@
         <item name="android:background">@drawable/rounded_color_accent</item>
         <item name="android:backgroundTint">?colorButtonDisabled</item>
     </style>
-    <!--<item name="android:textColor">@color/colorWhite</item>-->
 
     <style name="Authentication.Button.Borderless" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">48dp</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">?colorAccent</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">sans-serif</item>
@@ -89,7 +88,7 @@
     <style name="Authentication.AVLoadingIndicatorView" parent="AVLoadingIndicatorView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="indicatorColor">@color/colorPrimary</item>
+        <item name="indicatorColor">?colorLoading</item>
         <item name="indicatorName">BallPulseIndicator</item>
     </style>
     <!-- End Authentication -->
@@ -99,7 +98,7 @@
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:textColor">?colorPrimaryText</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
     </style>
@@ -107,19 +106,21 @@
     <style name="ChatList.ChatName.Unread.TextView" parent="ChatList.ChatName.TextView">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?colorPrimaryText</item>
     </style>
 
     <style name="ChatList.LastMessage.TextView" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">?attr/colorDim</item>
+        <item name="android:textColor">?colorDescriptiveText</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">2</item>
     </style>
 
     <style name="ChatList.LastMessage.Unread.TextView" parent="ChatList.LastMessage.TextView">
         <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">?colorDescriptiveText</item>
     </style>
 
     <style name="ChatList.Timestamp.TextView" parent="TextAppearance.AppCompat.Title">
@@ -170,7 +171,7 @@
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">?colorDim</item>
+        <item name="android:textColor">?colorDescriptiveText</item>
     </style>
     <!--<item name="android:textColor">@color/colorUserDetailsUsernameText</item>-->
 
@@ -178,7 +179,7 @@
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">?colorAccent</item>
     </style>
 
     <style name="UserDetails.TextView.Title" parent="TextAppearance.AppCompat">
@@ -192,14 +193,14 @@
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:textColor">?colorPrimaryText</item>
     </style>
     <!-- End user details-->
 
     <style name="EditText.Password" parent="TextAppearance.AppCompat">
         <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">?colorPrimaryDark</item>
-        <item name="colorAccent">?colorPrimaryDark</item>
+        <item name="android:textColor">?colorPrimaryText</item>
+        <item name="colorAccent">?colorAccent</item>
         <item name="colorControlNormal">?colorPrimaryDark</item>
         <item name="colorControlActivated">?colorPrimaryDark</item>
     </style>
@@ -218,24 +219,24 @@
 
     <style name="ChatRooms.Header" parent="TextAppearance.AppCompat.Headline">
         <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?titleTextColor</item>
     </style>
 
     <style name="ChatDetails.Title.TextView" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">?titleTextColor</item>
-        <item name="android:drawableTint">?titleTextColor</item>
     </style>
 
     <style name="ChatDetails.Content.TextView" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/colorAuxiliaryText</item>
+        <item name="android:textColor">?colorDescriptiveText</item>
     </style>
 
     <style name="Sender.Name.TextView" parent="TextAppearance.AppCompat.Title">
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:textColor">?colorPrimaryText</item>
     </style>
 
     <style name="Message.TextView" parent="android:TextAppearance">
@@ -265,7 +266,7 @@
         <item name="android:textStyle">normal</item>
         <item name="android:layout_marginTop">24dp</item>
         <item name="android:layout_gravity">start</item>
-        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:textColor">?colorPrimaryText</item>
         <item name="android:maxLines">1</item>
     </style>
 
@@ -278,23 +279,23 @@
 
     <style name="ToolBarStyle" parent="Widget.AppCompat.Toolbar">
         <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">?colorPrimaryDark</item>
     </style>
 
     <style name="ActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:theme">@style/Theme.AppCompat.Light.NoActionBar</item>
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">?colorPrimaryDark</item>
     </style>
 
     <style name="SubHeaderStyle" parent="TextAppearance.AppCompat">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">42dp</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:background">@color/colorSubHeaderBackground</item>
+        <item name="android:background">?colorSubHeaderBackground</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/colorSubHeaderText</item>
+        <item name="android:textColor">?colorSubHeaderText</item>
     </style>
 
     <style name="Password.Title.TextView" parent="TextAppearance.AppCompat">
@@ -306,8 +307,8 @@
     </style>
 
     <style name="RadioButtonStyle" parent="Widget.AppCompat.CompoundButton.RadioButton">
-        <item name="android:textColor">@color/colorPrimary</item>
-        <item name="android:buttonTint">@color/colorPrimary</item>
+        <item name="android:textColor">?colorRadioButton</item>
+        <item name="android:buttonTint">?colorRadioButton</item>
     </style>
 
     <style name="CustomBottomSheetDialogStyle" parent="Theme.Design.Light.BottomSheetDialog">

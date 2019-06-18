@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/screen_edge_left_and_right_margins"
+    android:padding="@dimen/screen_edge_left_and_right_margins"
+    android:background="?android:colorBackground"
     tools:context=".thememanager.ui.ThemesFragment">
 
     <Switch
@@ -39,7 +40,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="20dp"
         android:textSize="20sp"
-        android:textColor="?colorPrimary"
+        android:textColor="?colorPrimaryText"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="@id/editTextTest"
         app:layout_constraintTop_toBottomOf="@id/editTextTest"/>

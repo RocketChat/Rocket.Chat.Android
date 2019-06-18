@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/screen_edge_left_and_right_margins"
+    android:background="?android:colorBackground"
     tools:context="authentication.loginoptions.ui.LoginOptionsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -152,7 +153,7 @@
                 android:background="@drawable/circle_background_grey"
                 android:contentDescription="@string/msg_content_description_show_more_login_options"
                 android:src="@drawable/ic_expand_more_black_24dp"
-                android:tint="?background"
+                android:tint="?android:colorBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

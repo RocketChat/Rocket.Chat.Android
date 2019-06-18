@@ -12,6 +12,7 @@ import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
+import chat.rocket.android.thememanager.BaseActivity
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.common.util.ifNull
 import dagger.android.AndroidInjection
@@ -21,7 +22,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.app_bar.*
 import javax.inject.Inject
 
-class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class AuthenticationActivity : BaseActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject

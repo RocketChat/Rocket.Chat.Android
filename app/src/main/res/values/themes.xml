@@ -14,20 +14,17 @@
         <item name="android:textDirection">locale</item>
         <item name="toolbarStyle">@style/ToolBarStyle</item>
         <item name="actionBarStyle">@style/ActionBarStyle</item>
-        <item name="subHeaderStyle">@style/SubHeaderStyle</item>
-        <item name="actionBarTitleStyle">@style/ChatRoom.ChatName.TextView</item>
-        <item name="changePasswordTitleStyle">@style/Password.Title.TextView</item>
+        <item name="colorSubHeaderBackground">@color/colorSubHeaderBackground</item>
+        <item name="colorSubHeaderText">@color/colorSubHeaderText</item>
         <item name="colorDivider">@color/colorDivider</item>
         <item name="colorBottomSheetFragmentText">@color/colorBottomSheetFragmentText</item>
         <item name="colorBottomSheetFragmentHeading">@color/colorBottomSheetFragmentHeading</item>
-        <item name="authenticationEditTextStyle">@style/Authentication.EditText.Border</item>
         <item name="colorAuthenticationButtonBorderAndDivider">@color/colorAuthenticationButtonBorderAndDivider</item>
-        <item name="radioButtonStyle">@style/RadioButtonStyle</item>
+        <item name="colorRadioButton">@color/colorPrimary</item>
         <item name="android:textColorHint">@color/colorTextHint</item>
         <item name="colorButtonDisabled">@color/colorAuthenticationButtonDisabled</item>
         <item name="colorControlText">@color/colorControlText</item>
         <item name="colorChatComponentBackground">@color/colorChatComponentBackground</item>
-        <item name="descriptiveTextStyle">@style/ChatDetails.Content.TextView</item>
         <item name="colorDescriptiveText">@color/colorDescriptiveText</item>
         <item name="colorDim">@color/colorDim</item>
         <item name="colorIcon">@color/colorPrimary</item>
@@ -42,5 +39,7 @@
         <item name="colorFloatingActionButtonBorder">@color/colorFloatingActionButtonBorder</item>
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialogStyle</item>
         <item name="alertDialogTheme">@style/CustomAlertDialogTheme</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="colorLoading">@color/colorAuxiliaryTint</item>
     </style>
 </resources>

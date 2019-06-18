@@ -14,7 +14,7 @@
 
     <EditText
         android:id="@+id/text_delete_account_password"
-        style="?authenticationEditTextStyle"
+        style="@style/Authentication.EditText.Border"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_key_black_20dp"
         android:hint="@string/msg_password"

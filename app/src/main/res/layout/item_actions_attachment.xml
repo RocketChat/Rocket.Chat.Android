@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
+    android:background="?android:colorBackground"
     android:paddingBottom="@dimen/message_item_top_and_bottom_padding"
     android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
     android:paddingStart="@dimen/screen_edge_left_and_right_padding">

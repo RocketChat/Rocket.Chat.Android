@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/screen_edge_left_and_right_margins"
+    android:background="?android:colorBackground"
     tools:context=".authentication.login.ui.LoginFragment">
 
     <TextView
@@ -17,7 +18,7 @@
 
     <EditText
         android:id="@+id/text_username_or_email"
-        style="?authenticationEditTextStyle"
+        style="@style/Authentication.EditText.Border"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_at_black_20dp"
         android:hint="@string/msg_username_or_email"
@@ -29,7 +30,7 @@
 
     <EditText
         android:id="@+id/text_password"
-        style="?authenticationEditTextStyle"
+        style="@style/Authentication.EditText.Border"
         android:layout_marginTop="10dp"
         android:drawableStart="@drawable/ic_key_black_20dp"
         android:hint="@string/msg_password"
@@ -48,7 +49,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_password" />
-    <!--android:backgroundTint="@color/colorAuthenticationButtonDisabled"-->
 
     <android.widget.Button
         android:id="@+id/button_forgot_your_password"

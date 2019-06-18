@@ -16,15 +16,8 @@
             android:id="@+id/text_server_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="?actionBarTitleStyle"
+            style="@style/ChatRoom.ChatName.TextView"
             tools:text="Server Name" />
-        <!--android:drawablePadding="10dp"-->
-        <!--android:fontFamily="sans-serif-medium"-->
-        <!--android:maxLines="1"-->
-        <!--android:textColor="#FFFFFF"-->
-        <!--android:textSize="20sp"-->
-        <!--android:textStyle="normal"-->
-        <!--android:drawableEnd="@drawable/ic_arrow_expand_20dp"-->
 
     </androidx.appcompat.widget.Toolbar>
 </com.google.android.material.appbar.AppBarLayout>

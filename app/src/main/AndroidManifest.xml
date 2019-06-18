@@ -18,13 +18,13 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/BlackTheme"
+        android:theme="@style/AppTheme"
         tools:replace="android:name">
+        <!--android:theme="@style/BlackTheme" Placed above-->
         <activity
             android:name=".authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/BlackTheme"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,42 +47,48 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+        <!--android:theme="@style/BlackTheme"-->
         <activity
             android:name=".server.ui.ChangeServerActivity"
-            android:theme="@style/BlackTheme" />
+            />
+        <!--android:theme="@style/BlackTheme"-->
+
         <activity
             android:name=".main.ui.MainActivity"
-            android:theme="@style/BlackTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+        <!--android:theme="@style/BlackTheme"-->
         <activity
             android:name=".webview.ui.WebViewActivity"
-            android:theme="@style/BlackTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+        <!--android:theme="@style/BlackTheme"-->
+
         <activity
             android:name=".webview.sso.ui.SsoWebViewActivity"
-            android:theme="@style/BlackTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+        <!--android:theme="@style/BlackTheme"-->
+
         <activity
             android:name=".webview.oauth.ui.OauthWebViewActivity"
-            android:theme="@style/BlackTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+        <!--android:theme="@style/BlackTheme"-->
         <activity
             android:name=".videoconference.ui.VideoConferenceActivity"
-            android:theme="@style/BlackTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+        <!--android:theme="@style/BlackTheme"-->
+
         <activity
             android:name=".chatroom.ui.ChatRoomActivity"
-            android:theme="@style/BlackTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+        <!--android:theme="@style/BlackTheme"-->
         <activity
             android:name=".chatinformation.ui.MessageInfoActivity"
-            android:theme="@style/BlackTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <!-- TODO: Change to fragment -->
+        <!--android:theme="@style/BlackTheme"-->
         <activity
             android:name=".settings.password.ui.PasswordActivity"
-            android:theme="@style/BlackTheme" />
+             />
 
         <receiver
             android:name=".push.DirectReplyReceiver"

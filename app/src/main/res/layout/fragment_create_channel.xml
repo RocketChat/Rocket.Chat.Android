@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     tools:context="createchannel.ui.CreateChannelFragment">
 
     <include
@@ -16,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:indicatorColor="@color/colorBlack"
+        app:indicatorColor="?colorLoading"
         app:indicatorName="BallPulseIndicator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +38,7 @@
 
     <TextView
         android:id="@+id/text_channel_type_description"
-        style="?attr/descriptiveTextStyle"
+        style="@style/ChatDetails.Content.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -67,7 +68,7 @@
 
     <TextView
         android:id="@+id/text_read_only_description"
-        style="?attr/descriptiveTextStyle"
+        style="@style/ChatDetails.Content.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

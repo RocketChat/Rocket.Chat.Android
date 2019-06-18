@@ -25,7 +25,6 @@
         android:layout_height="1dp"
         />
 
-    <!--android:background="#1F000000"-->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -39,7 +38,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_hashtag_16dp"
-                android:drawableTint="?colorBottomSheetFragmentText"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
@@ -57,7 +55,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_user_16dp"
-                android:drawableTint="?colorBottomSheetFragmentText"
                 android:drawablePadding="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"

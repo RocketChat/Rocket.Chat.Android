@@ -16,12 +16,8 @@
     <color name="actionMenuColor">#FF727272</color>
     <color name="ic_launcher_background">@color/colorWhite</color>
     <color name="colorDrawableTintGrey">#9FA2A8</color>
-    <color name="colorDividerMessageComposer">#D8D8D8</color>
     <color name="colorLightTheme">#FBFBFB</color>
     <color name="colorDim">#99000000</color>
-    <color name="colorBackgroundMemberContainer">#4D000000</color>
-    <color name="translucent_white">#70F1F1F1</color>
-    <color name="colorEmojiIcon">#FF767676</color>
     <color name="quoteBar">#A0A0A0</color>
 
     <!-- Text colors -->
@@ -30,7 +26,6 @@
     <color name="colorSecondaryTextLight">#FFC1C1C1</color>
     <color name="colorTimestampText">#FF9DA2A9</color>
     <color name="colorTimestampTextUnread">#FF5699FF</color>
-    <color name="colorLastMessageText">#99000000</color>
     <color name="colorUserDetailsNameText">#FF0C0D0F</color>
     <color name="colorChannelTitle">#FF0C0D0F</color>
     <color name="colorUserDetailsUsernameText">#8B000000</color>
@@ -58,7 +53,7 @@
     <color name="colorAuthenticationButtonDisabled">#FFE1E5E8</color>
     <color name="colorAuthenticationChevronAndExpandIcon">#FFCBCED1</color>
     <color name="colorAuthenticationSecondaryText">#FF9EA2A8</color>
-    <color name="colorTextHint">#FF9EA2A8</color>
+    <color name="colorTextHint">#FF9CA2A8</color> <!-- colorAuxiliaryText -->
     <color name="colorAuxiliaryText">#FF9CA2A8</color>
     <color name="colorStatusInvisible">#FFCBCED1</color>
 
@@ -74,4 +69,5 @@
     <color name="colorFloatingActionButtonBackground">#261d74f5</color>
     <color name="colorFloatingActionButtonBorder">#4c1d74f5</color>
 
+    <color name="colorAuxiliaryTint">#0a4469</color>
 </resources>

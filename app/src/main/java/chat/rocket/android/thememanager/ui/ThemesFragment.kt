@@ -34,6 +34,7 @@ class ThemesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+
     }
 
     override fun onCreateView(
@@ -42,6 +43,7 @@ class ThemesFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProviders.of(this, factory).get(ThemesViewModel::class.java)
+        currentTheme=viewModel.getCurrentTheme()!!
         applyTheme(activity)
         return container?.inflate(R.layout.fragment_theme)
     }
@@ -64,7 +66,6 @@ class ThemesFragment : Fragment() {
     }
 
     private fun applyTheme(activity: FragmentActivity?){
-        currentTheme=viewModel.getCurrentTheme()!!
         println("Applying"+viewModel.getCurrentTheme()!!)
         if (currentTheme == "AppTheme"){
             activity?.setTheme(R.style.AppTheme)
