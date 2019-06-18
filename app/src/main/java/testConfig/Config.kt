@@ -15,9 +15,9 @@ class Config {
         const val USER_ID = "user_id"
         const val AUTH_TOKEN = "auth_token"
 
-        const val communityServerUrl: String = "https://open.rocket.chat"
-        const val currentServer: String = "https://open.rocket.chat"
-        const val defaultTestServer: String = "https://open.rocket.chat"
+        const val currentServer: String = "https://$SERVER"
+        const val communityServerUrl: String = currentServer
+        const val defaultTestServer: String = currentServer
         const val userName: String = "userName"
         const val avatar: String = "serverUrl/avatar/userName?format=jpeg&rc_uid=null&rc_token=null"
         const val userAvatar: String = "$currentServer/avatar/userName?format=jpeg&rc_uid=null&rc_token=null"
