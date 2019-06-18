@@ -10,8 +10,6 @@ import chat.rocket.android.helper.SharedPreferenceHelper
 import com.google.firebase.analytics.FirebaseAnalytics
 import javax.inject.Inject
 
-import timber.log.Timber
-
 class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
     Analytics {
     private val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
@@ -39,10 +37,8 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
     // WIDECHAT tracking BSSID
     override fun logMessageSent(event: SubscriptionTypeEvent, serverUrl: String) {
         var bssid = SharedPreferenceHelper.getString(Constants.CURRENT_BSSID, "none")
-        Timber.d("#########  EAR>> inside log message sent; bssid is: ${bssid}")
         if (bssid == "none") {
             bssid = SharedPreferenceHelper.getString(Constants.LOCATION_PERMISSION, "none")
-            Timber.d("#########  EAR>> inside if bssid == none and now bssid is: ${bssid}")
 
         }
         firebaseAnalytics.logEvent("message_sent", Bundle(2).apply {
