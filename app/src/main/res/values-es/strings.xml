@@ -390,13 +390,14 @@
 
     <!--WIDECHAT PERMISSIONS-->
     <string name="contact_permissions_request">Para conectarse fácilmente con amigos y familiares, permita que Viasat Connect acceda a sus contactos.</string>
-    <string name="location_permissions_request">Para poder brindar un mejor soporte a nuestro programa Beta, Viasat Connect desea permisos para acceder a su ubicación.</string>
+    <string name="location_permissions_request">Viasat Connect desea utilizar su ubicación actual.</string>
+    <string name="location_permissions_reason">Toca "CONTINUAR" y ayuda a Viasat Connect para que sea más compatible con nuestro programa Beta.</string>
     <string name="negative_buttton">AHORA NO</string>
     <string name="positive_button">CONTINUAR</string>
     <string name="never_button">NUNCA</string>
 
     <string name="permissions_item">¿Desea permitir que Viasat Connect acceda a sus contactos?</string>
-    <string name="set_permissions_through_settings">Para permitir que Viasat Connect acceda a sus contactos, habilite Contactos en Sistema / Configuración / Aplicaciones / Viasat Connect / Permisos en su dispositivo</string>
+    <string name="set_permissions_through_settings">Para permitir que Viasat Connect acceda a sus contactos, cambie los permisos en la configuración de la aplicación de su dispositivo</string>
     <string name="dismiss_button">DESPEDIR</string>
 
 

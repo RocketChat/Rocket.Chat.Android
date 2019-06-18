@@ -408,12 +408,13 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
 
     <!--WIDECHAT PERMISSIONS-->
     <string name="contact_permissions_request">To easily connect with friends and family, allow Viasat Connect access to your contacts.</string>
-    <string name="location_permissions_request">In order to better support our Beta program Viasat Connect would like permissions to access your location.</string>
+    <string name="location_permissions_request">Viasat Connect would like to use your current location.</string>
+    <string name="location_permissions_reason">Tap \"CONTINUE\" and help Viasat Connect to better support our Beta program.</string>
     <string name="negative_buttton">NOT NOW</string>
     <string name="positive_button">CONTINUE</string>
     <string name="never_button">NEVER</string>
     <string name="permissions_item">Would you like to allow Viasat Connect to access your contacts?</string>
-    <string name="set_permissions_through_settings">To allow Viasat Connect to access your contacts enable Contacts at System / Settings / Apps / Viasat Connect / Permissions on your device</string>
+    <string name="set_permissions_through_settings">To allow Viasat Connect to access your contacts change permissions in your device\'s app settings.</string>
     <string name="dismiss_button">DISMISS</string>
 
 
