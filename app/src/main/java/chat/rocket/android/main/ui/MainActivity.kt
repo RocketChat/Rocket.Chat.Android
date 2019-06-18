@@ -358,8 +358,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     // WIDECHAT
     private fun requestLocationPermissions() {
-        if (!AndroidPermissionsHelper.hasLocationPermission(this)) {
-            AndroidPermissionsHelper.getLocationPermission(this)
+        if ((!AndroidPermissionsHelper.hasLocationPermission(this)) && !(SharedPreferenceHelper.getString(Constants.LOCATION_PERMISSION, "none") == "never")) {
+            val request = { AndroidPermissionsHelper.getLocationPermission(this) }
+            locationPermissionsAlertDialog(request)
         }
     }
 
@@ -475,6 +476,28 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         positiveButton.setText(R.string.dismiss_button)
         negativeButton.visibility = GONE
         positiveButton.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+        })
+        dialog.show()
+    }
+
+    private fun locationPermissionsAlertDialog(callback: () -> Unit = {}) {
+        val view = layoutInflater.inflate(R.layout.widechat_location_permissions_dialog, null)
+        val dialog = AlertDialog.Builder(this)
+                .setView(view)
+                .setPositiveButton(null, null)
+                .setNegativeButton(null, null)
+                .create()
+
+        val positiveButton = view?.findViewById(R.id.positive_button) as Button
+        val negativeButton = view?.findViewById(R.id.negative_button) as Button
+
+        positiveButton.setOnClickListener(View.OnClickListener {
+            callback()
+            dialog.dismiss()
+        })
+        negativeButton.setOnClickListener(View.OnClickListener {
+            SharedPreferenceHelper.putString(Constants.LOCATION_PERMISSION, "never")
             dialog.dismiss()
         })
         dialog.show()
