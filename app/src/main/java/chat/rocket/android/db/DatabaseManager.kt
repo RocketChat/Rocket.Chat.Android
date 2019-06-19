@@ -31,7 +31,7 @@ import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.socket.model.StreamMessage
 import chat.rocket.core.internal.realtime.socket.model.Type
 import chat.rocket.core.model.ChatRoom
-import chat.rocket.core.model.LastMessage
+//import chat.rocket.core.model.LastMessage
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
@@ -193,7 +193,7 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
                 status = myself.status?.toString() ?: user.status
             ) ?: myself.asUser().toEntity()
 
-            if (myself.avatarOrigin != null && myself.active == null &&
+            if (/*myself.avatarOrigin != null &&*/ myself.active == null &&
                 myself.name == null && myself.username == null
             ) {
                 user?.username?.let {
@@ -254,8 +254,8 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
                                 reaction,
                                 message.id,
                                 size,
-                                reactionValue.first.joinToString(),
-                                reactionValue.second.joinToString()
+                                reactionValue.joinToString(),
+                                reactionValue.joinToString()
                             )
                         )
                     }
@@ -392,7 +392,7 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
                     topic = topic,
                     announcement = announcement,
                     description = description,
-                    lastMessageText = mapLastMessageText(lastMessage),
+                    lastMessageText = "",//mapLastMessageText(lastMessage),
                     lastMessageUserId = lastMessage?.sender?.id,
                     lastMessageTimestamp = lastMessage?.timestamp,
                     muted = muted ?: chatRoom.muted
@@ -401,13 +401,13 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
         }
     }
 
-    private fun mapLastMessageText(message: LastMessage?): String? = message?.let { lastMessage ->
-        if (lastMessage.message?.isEmpty() == true && lastMessage.attachments?.isNotEmpty() == true) {
-            context.getString(R.string.msg_sent_attachment)
-        } else {
-            lastMessage.message
-        }
-    }
+//    private fun mapLastMessageText(message: LastMessage?): String? = message?.let { lastMessage ->
+//        if (lastMessage.message?.isEmpty() == true && lastMessage.attachments?.isNotEmpty() == true) {
+//            context.getString(R.string.msg_sent_attachment)
+//        } else {
+//            lastMessage.message
+//        }
+//    }
 
     private suspend fun updateSubscription(data: Subscription): ChatRoomEntity? {
         return retryDB("getRoom(${data.roomId}") { chatRoomDao().getSync(data.roomId) }?.let { current ->
@@ -511,7 +511,7 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
             updatedAt = subscription.updatedAt,
             timestamp = subscription.timestamp,
             lastSeen = subscription.lastSeen,
-            lastMessageText = mapLastMessageText(room.lastMessage),
+            lastMessageText = "",//mapLastMessageText(room.lastMessage),
             lastMessageUserId = room.lastMessage?.sender?.id,
             lastMessageTimestamp = room.lastMessage?.timestamp,
             broadcast = room.broadcast
@@ -552,7 +552,7 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
                 updatedAt = updatedAt,
                 timestamp = timestamp,
                 lastSeen = lastSeen,
-                lastMessageText = mapLastMessageText(lastMessage),
+                lastMessageText = "",//mapLastMessageText(lastMessage),
                 lastMessageUserId = lastMessage?.sender?.id,
                 lastMessageTimestamp = lastMessage?.timestamp,
                 broadcast = broadcast,
