@@ -4,24 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:windowBackground"
-    android:layout_margin="@dimen/screen_edge_left_and_right_margins"
+    android:padding="@dimen/screen_edge_left_and_right_margins"
+    android:background="?android:colorBackground"
     tools:context=".thememanager.ui.ThemesFragment">
 
-    <ToggleButton
+    <Switch
         android:id="@+id/toggleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textOff="Default"
-        android:textOn="Theme2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <ToggleButton
+    <Switch
         android:id="@+id/toggleButtonLibrary"
-        android:text="LibraryTheme"
-        android:textOff="Default"
-        android:textOn="Library Theme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintRight_toRightOf="parent"
@@ -34,7 +29,7 @@
         android:textSize="20sp"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Accent Color Indicator"
+        android:hint="Accent Color Indicator"
         app:layout_constraintStart_toStartOf="@id/toggleButton"
         app:layout_constraintTop_toBottomOf="@id/toggleButton"
         />
@@ -45,6 +40,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="20dp"
         android:textSize="20sp"
+        android:textColor="?colorPrimaryText"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="@id/editTextTest"
         app:layout_constraintTop_toBottomOf="@id/editTextTest"/>
@@ -55,16 +51,5 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/textView_themes"
         app:layout_constraintTop_toBottomOf="@id/textView_themes"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:tint="?attr/themeIconColor"
-        android:clickable="true"
-        android:src="@drawable/ic_action_message_copy_24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

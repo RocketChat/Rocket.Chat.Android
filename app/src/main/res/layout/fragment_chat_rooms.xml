@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     tools:context=".chatrooms.ui.ChatRoomsFragment">
 
     <include
@@ -11,6 +12,7 @@
         layout="@layout/app_bar_chat_rooms"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!--review-->
     <TextView
         android:id="@+id/text_directory"
         android:layout_width="match_parent"
@@ -34,18 +36,11 @@
 
     <TextView
         android:id="@+id/text_sort_by"
-        android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:background="#54585E"
+        style="@style/SubHeaderStyle"
         android:drawableEnd="@drawable/ic_group_by_type_20dp"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center_vertical"
         android:paddingStart="@dimen/screen_edge_left_and_right_margins"
         android:paddingEnd="@dimen/screen_edge_left_and_right_margins"
         android:text="@string/msg_sort_by_placeholder"
-        android:textColor="#CBCED1"
-        android:textSize="14sp"
-        android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_directory" />
@@ -62,7 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:indicatorColor="@color/colorBlack"
+        app:indicatorColor="?colorLoading"
         app:indicatorName="BallPulseIndicator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

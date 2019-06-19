@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="?android:colorBackground"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -17,10 +18,10 @@
         android:layout_height="wrap_content"
         android:visibility="invisible"
         android:layout_margin="16dp"
+        app:backgroundTint="?colorFloatingActionButtonBorder"
         android:src="@drawable/ic_arrow_downward_24dp"
-        android:theme="@style/Theme.AppCompat"
-        android:tint="@color/actionMenuColor"
-        app:backgroundTint="@color/colorWhite"
+        android:tint="?colorAccent"
+        android:backgroundTint="?colorFloatingActionButtonBackground"
         tools:visibility="visible"
         android:layout_gravity="end|bottom" />
 

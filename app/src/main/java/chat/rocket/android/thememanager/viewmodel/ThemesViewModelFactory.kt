@@ -2,9 +2,8 @@ package chat.rocket.android.thememanager.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import chat.rocket.android.thememanager.model.ThemesRepository
+import chat.rocket.android.thememanager.infrastructure.ThemesRepository
 import javax.inject.Inject
-
 
 class ThemesViewModelFactory @Inject constructor(
         private val repository: ThemesRepository

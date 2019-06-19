@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     tools:context=".favoritemessages.ui.FavoriteMessagesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -22,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        app:indicatorColor="@color/colorBlack"
+        app:indicatorColor="?colorLoading"
         app:indicatorName="BallPulseIndicator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,25 +31,26 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
+    <!--review tint-->
     <ImageView
         android:id="@+id/image_star"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/ic_action_message_star_24dp"
-        android:tint="@color/icon_grey"
         app:layout_constraintBottom_toTopOf="@+id/text_no_favorite_messages"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
+    <!--review-->
     <TextView
         android:id="@+id/text_no_favorite_messages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/no_favorite_messages"
-        android:textColor="@color/colorSecondaryText"
+        android:textColor="?colorDescriptiveText"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/text_no_favorite_messages_description"
@@ -56,6 +58,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_star" />
 
+    <!--review-->
     <TextView
         android:id="@+id/text_no_favorite_messages_description"
         android:layout_width="wrap_content"
@@ -63,7 +66,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/no_favorite_description"
         android:textAlignment="center"
-        android:textColor="@color/colorSecondaryTextLight"
+        android:textColor="?colorDescriptiveText"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

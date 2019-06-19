@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="titleTextColor">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="searchViewStyle">@style/ChatRoom.SearchView</item>
+        <item name="actionModeBackground">@color/colorPrimary</item>
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="android:textDirection">locale</item>
+        <item name="toolbarStyle">@style/ToolBarStyle</item>
+        <item name="actionBarStyle">@style/ActionBarStyle</item>
+        <item name="colorSubHeaderBackground">@color/colorSubHeaderBackground</item>
+        <item name="colorSubHeaderText">@color/colorSubHeaderText</item>
+        <item name="colorDivider">@color/colorDivider</item>
+        <item name="colorBottomSheetFragmentText">@color/colorBottomSheetFragmentText</item>
+        <item name="colorBottomSheetFragmentHeading">@color/colorBottomSheetFragmentHeading</item>
+        <item name="colorAuthenticationButtonBorderAndDivider">@color/colorAuthenticationButtonBorderAndDivider</item>
+        <item name="colorRadioButton">@color/colorPrimary</item>
+        <item name="android:textColorHint">@color/colorTextHint</item>
+        <item name="colorButtonDisabled">@color/colorAuthenticationButtonDisabled</item>
+        <item name="colorControlText">@color/colorControlText</item>
+        <item name="colorChatComponentBackground">@color/colorChatComponentBackground</item>
+        <item name="colorDescriptiveText">@color/colorDescriptiveText</item>
+        <item name="colorDim">@color/colorDim</item>
+        <item name="colorIcon">@color/colorPrimary</item>
+        <item name="colorSettingsSecondaryBackground">@color/colorSettingsSecondaryBackground</item>
+        <item name="colorChannelTitle">@color/colorChannelTitle</item>
+        <item name="colorTimestampText">@color/colorTimestampText</item>
+        <item name="colorStatusInvisible">@color/colorStatusInvisible</item>
+        <item name="colorPrimaryText">@color/colorPrimaryText</item>
+        <item name="colorReactionBackground">@color/colorReactionBackground</item>
+        <item name="colorReactionBorder">@color/colorReactionBorder</item>
+        <item name="colorFloatingActionButtonBackground">@color/colorFloatingActionButtonBackground</item>
+        <item name="colorFloatingActionButtonBorder">@color/colorFloatingActionButtonBorder</item>
+        <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialogStyle</item>
+        <item name="alertDialogTheme">@style/CustomAlertDialogTheme</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="colorLoading">@color/colorAuxiliaryTint</item>
+    </style>
+</resources>
