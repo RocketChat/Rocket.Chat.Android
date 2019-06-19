@@ -14,6 +14,7 @@ import chat.rocket.android.core.behaviours.AppLanguageView
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.push.refreshPushToken
 import chat.rocket.android.server.ui.INTENT_CHAT_ROOM_ID
+import chat.rocket.android.thememanager.BaseActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -22,7 +23,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import java.util.*
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), HasActivityInjector,
+class MainActivity : BaseActivity(), HasActivityInjector,
     HasSupportFragmentInjector, AppLanguageView {
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>

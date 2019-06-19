@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/screen_edge_left_and_right_margins"
+    android:background="?android:colorBackground"
     tools:context=".authentication.login.ui.LoginFragment">
 
     <TextView
@@ -43,7 +44,6 @@
         android:id="@+id/button_log_in"
         style="@style/Authentication.Button"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/colorAuthenticationButtonDisabled"
         android:enabled="false"
         android:text="@string/title_log_in"
         app:layout_constraintEnd_toEndOf="parent"

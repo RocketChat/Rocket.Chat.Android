@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:text="@string/msg_upload_file"
             style="@style/Base.DialogWindowTitle.AppCompat"
+            android:textColor="?titleTextColor"
             android:layout_margin="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -25,7 +26,7 @@
             android:id="@+id/text_file_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
+            android:textColor="?colorAccent"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:drawableStart="@drawable/ic_files_24dp"
             android:drawablePadding="6dp"
@@ -71,6 +72,7 @@
 
         <EditText
             android:id="@+id/text_file_description"
+            android:textColor="?colorPrimaryText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
@@ -98,6 +100,7 @@
             app:layout_constraintEnd_toStartOf="@id/button_send"
             android:layout_margin="16dp"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:textColor="?colorPrimaryText"
             android:text="@android:string/cancel" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

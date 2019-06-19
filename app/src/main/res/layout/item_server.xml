@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?selectableItemBackground"
+    android:background="?android:colorBackground"
     android:paddingStart="16dp"
     android:paddingTop="16dp"
     android:paddingEnd="16dp">
+    <!--android:background="?selectableItemBackground"-->
 
     <ImageView
         android:id="@+id/image_server"
@@ -25,7 +26,7 @@
         android:layout_marginEnd="12dp"
         android:fontFamily="sans-serif-medium"
         android:maxLines="1"
-        android:textColor="#DE000000"
+        android:textColor="?titleTextColor"
         android:textSize="16sp"
         android:textStyle="normal"
         app:layout_constraintStart_toEndOf="@+id/image_server"
@@ -40,7 +41,7 @@
         android:layout_marginEnd="12dp"
         android:fontFamily="sans-serif"
         android:maxLines="1"
-        android:textColor="#99000000"
+        android:textColor="?colorDim"
         android:textSize="14sp"
         android:textStyle="normal"
         app:layout_constraintStart_toEndOf="@+id/image_server"

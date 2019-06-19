@@ -4,13 +4,14 @@
     android:id="@+id/message_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="?android:colorBackground"
     android:clickable="true"
     android:focusable="true"
     android:paddingStart="@dimen/screen_edge_left_and_right_padding"
     android:paddingTop="@dimen/message_item_top_and_bottom_padding"
     android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
     android:paddingBottom="@dimen/message_item_top_and_bottom_padding">
+    <!--android:background="?android:attr/selectableItemBackground"-->
 
     <android.widget.Button
         android:id="@+id/button_message_reply"
@@ -22,7 +23,7 @@
         android:background="@drawable/message_reply_button_bg"
         android:text="@string/action_msg_reply"
         android:textAllCaps="false"
-        android:textColor="#1D74F5"
+        android:textColor="?colorAccent"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

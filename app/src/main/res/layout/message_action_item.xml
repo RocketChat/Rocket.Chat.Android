@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:background="?android:colorBackground"
     android:paddingStart="16dp"
     android:paddingTop="8dp"
     android:paddingEnd="16dp"
     android:paddingBottom="8dp">
+    <!--android:background="?attr/selectableItemBackground"-->
 
     <ImageView
         android:id="@+id/message_action_icon"
@@ -27,6 +28,7 @@
 
     <TextView
         android:id="@+id/message_action_title"
+        android:textColor="?colorDescriptiveText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

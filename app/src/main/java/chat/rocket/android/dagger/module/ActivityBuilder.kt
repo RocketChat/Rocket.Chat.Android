@@ -37,6 +37,7 @@ import chat.rocket.android.settings.di.SettingsFragmentProvider
 import chat.rocket.android.settings.password.di.PasswordFragmentProvider
 import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.sortingandgrouping.di.SortingAndGroupingBottomSheetFragmentProvider
+import chat.rocket.android.thememanager.di.ThemesFragmentProvider
 import chat.rocket.android.userdetails.di.UserDetailsFragmentProvider
 import chat.rocket.android.videoconference.di.VideoConferenceModule
 import chat.rocket.android.videoconference.ui.VideoConferenceActivity
@@ -65,6 +66,7 @@ abstract class ActivityBuilder {
     @PerActivity
     @ContributesAndroidInjector(
         modules = [MainModule::class,
+            ThemesFragmentProvider::class,
             ChatRoomsFragmentProvider::class,
             ServersBottomSheetFragmentProvider::class,
             SortingAndGroupingBottomSheetFragmentProvider::class,

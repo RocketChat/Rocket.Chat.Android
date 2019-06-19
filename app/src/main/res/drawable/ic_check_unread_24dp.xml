@@ -4,6 +4,8 @@
     android:viewportHeight="24.0"
     android:viewportWidth="24.0">
     <path
-        android:fillColor="#FF999999"
+        android:fillColor="?colorTimestampText"
         android:pathData="M9,16.17L4.83,12l-1.42,1.41L9,19 21,7l-1.41,-1.41z" />
+    <!--android:fillColor="#FF999999"-->
+
 </vector>

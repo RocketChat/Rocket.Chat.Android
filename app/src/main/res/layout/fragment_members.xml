@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     tools:context=".members.ui.MembersFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -18,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
-        app:indicatorColor="@color/colorBlack"
+        app:indicatorColor="?colorLoading"
         app:indicatorName="BallPulseIndicator" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

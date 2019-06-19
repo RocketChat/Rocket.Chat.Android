@@ -5,6 +5,7 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     tools:context=".chatinformation.ui.MessageInfoFragment">
 
     <com.wang.avi.AVLoadingIndicatorView
@@ -12,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:indicatorColor="@color/colorBlack"
+        app:indicatorColor="?colorLoading"
         app:indicatorName="BallPulseIndicator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,6 +23,7 @@
 
     <TextView
         android:id="@+id/text_read_by"
+        android:textColor="?colorDescriptiveText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

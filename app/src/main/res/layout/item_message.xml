@@ -5,13 +5,14 @@
     android:id="@+id/message_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="?android:colorBackground"
     android:clickable="true"
     android:focusable="true"
     android:paddingStart="@dimen/screen_edge_left_and_right_padding"
     android:paddingTop="@dimen/message_item_top_and_bottom_padding"
     android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
     android:paddingBottom="@dimen/message_item_top_and_bottom_padding">
+    <!--android:background="?android:attr/selectableItemBackground"-->
 
     <LinearLayout
         android:id="@+id/day_marker_layout"
@@ -28,7 +29,7 @@
             android:layout_width="0px"
             android:layout_height="1dp"
             android:layout_weight="1"
-            android:background="@color/colorDivider" />
+            android:background="?colorDivider" />
 
         <TextView
             android:id="@+id/day"
@@ -43,7 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1"
-            android:background="@color/colorDivider" />
+            android:background="?colorDivider" />
     </LinearLayout>
 
     <include
@@ -122,6 +123,7 @@
             android:layout_marginStart="4dp"
             android:text="@string/msg_edited"
             android:textStyle="italic"
+            android:textColor="?colorTimestampText"
             android:visibility="invisible"
             tools:visibility="visible" />
 
@@ -162,7 +164,7 @@
         android:id="@+id/button_join_video_call"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
+        android:background="?colorAccent"
         android:text="@string/msg_join_video_call"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/text_content"

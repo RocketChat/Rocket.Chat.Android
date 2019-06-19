@@ -6,8 +6,19 @@
     <color name="colorPrimaryDark">#FF2F343D</color>
     <color name="colorAccent">#FF1D74F5</color>
 
-    <color name="colorPrimary2">#F33E5B</color>
-    <color name="colorAccent2">#CD1DF5</color>
+    <!-- Misc colors -->
+    <color name="colorDivider">#1F000000</color>
+    <color name="colorBottomSheetFragmentHeading">@color/colorPrimary</color>
+    <color name="colorBottomSheetFragmentText">#FF9EA2A8</color>
+    <color name="colorChatComponentBackground">#f3f4f5</color>
+    <color name="colorSubHeaderBackground">#54585e</color>
+
+    <color name="actionMenuColor">#FF727272</color>
+    <color name="ic_launcher_background">@color/colorWhite</color>
+    <color name="colorDrawableTintGrey">#9FA2A8</color>
+    <color name="colorLightTheme">#FBFBFB</color>
+    <color name="colorDim">#99000000</color>
+    <color name="quoteBar">#A0A0A0</color>
 
     <!-- Text colors -->
     <color name="colorPrimaryText">#DE000000</color>
@@ -15,9 +26,13 @@
     <color name="colorSecondaryTextLight">#FFC1C1C1</color>
     <color name="colorTimestampText">#FF9DA2A9</color>
     <color name="colorTimestampTextUnread">#FF5699FF</color>
-    <color name="colorLastMessageText">#99000000</color>
     <color name="colorUserDetailsNameText">#FF0C0D0F</color>
+    <color name="colorChannelTitle">#FF0C0D0F</color>
     <color name="colorUserDetailsUsernameText">#8B000000</color>
+    <color name="colorControlText">#54585e</color>
+    <color name="reaction_text">#868585</color>
+    <color name="colorSubHeaderText">#FFCBCED1</color>
+    <color name="colorDescriptiveText">#FF9EA2A8</color>
 
     <!-- User status colors -->
     <color name="colorUserStatusOnline">#2FE1A8</color>
@@ -29,46 +44,30 @@
     <color name="colorWhite">#FFFFFFFF</color>
     <color name="colorBlack">#FF000000</color>
     <color name="colorRed">#FFFF0000</color>
+    <color name="darkGray">#FFa0a0a0</color>
+    <color name="whitesmoke">#FFf1f1f1</color>
+    <color name="colorLightGrey">#F4F5F7</color>
 
     <!-- Authentication colors -->
     <color name="colorAuthenticationButtonBorderAndDivider">#FFE1E5E8</color>
     <color name="colorAuthenticationButtonDisabled">#FFE1E5E8</color>
     <color name="colorAuthenticationChevronAndExpandIcon">#FFCBCED1</color>
     <color name="colorAuthenticationSecondaryText">#FF9EA2A8</color>
-
-    <color name="darkGray">#FFa0a0a0</color>
-    <color name="actionMenuColor">#FF727272</color>
-    <color name="whitesmoke">#FFf1f1f1</color>
-
-    <color name="ic_launcher_background">@color/colorWhite</color>
-
-    <color name="colorDrawableTintGrey">#9FA2A8</color>
-
-    <color name="colorDividerMessageComposer">#D8D8D8</color>
-
-    <color name="colorLightTheme">#FBFBFB</color>
-
-    <color name="colorDim">#99000000</color>
-
-    <color name="colorBackgroundMemberContainer">#4D000000</color>
-
-    <color name="translucent_white">#70F1F1F1</color>
-
-    <color name="colorEmojiIcon">#FF767676</color>
-
-    <color name="quoteBar">#A0A0A0</color>
-
-    <color name="colorDivider">#1F000000</color>
-
-    <color name="colorLightGrey">#F4F5F7</color>
+    <color name="colorTextHint">#FF9CA2A8</color> <!-- colorAuxiliaryText -->
+    <color name="colorAuxiliaryText">#FF9CA2A8</color>
+    <color name="colorStatusInvisible">#FFCBCED1</color>
 
     <!-- Suggestions -->
     <color name="suggestion_background_color">@color/colorWhite</color>
-
     <color name="icon_grey">#AFADAF</color>
 
     <!-- Default Background Color -->
-    <color name="default_background">#FAFAFA</color>
+    <color name="colorBackground">@color/colorWhite</color>
+    <color name="colorSettingsSecondaryBackground">#f1f2f4</color>
+    <color name="colorReactionBackground">#ffffff</color>
+    <color name="colorReactionBorder">#e1e5e8</color>
+    <color name="colorFloatingActionButtonBackground">#261d74f5</color>
+    <color name="colorFloatingActionButtonBorder">#4c1d74f5</color>
 
-    <color name="reaction_text">#868585</color>
+    <color name="colorAuxiliaryTint">#0a4469</color>
 </resources>

@@ -15,16 +15,15 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/msg_sort_by"
-        android:textColor="#9EA2A8"
-        android:textSize="17sp"
-        android:textStyle="normal" />
+        android:textColor="?colorBottomSheetFragmentText" />
 
     <View
         android:id="@+id/view_divider_one"
+        android:background="?colorDivider"
+        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="16dp"
-        android:background="#1F000000" />
+        />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -45,7 +44,7 @@
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:text="@string/msg_channels"
-                android:textColor="#2F343D"
+                android:textColor="?colorBottomSheetFragmentHeading"
                 android:textSize="16sp"
                 android:textStyle="normal"
                 app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +61,7 @@
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:text="@string/msg_users"
-                android:textColor="#2F343D"
+                android:textColor="?colorBottomSheetFragmentHeading"
                 android:textSize="16sp"
                 android:textStyle="normal"
                 app:layout_constraintTop_toBottomOf="@+id/text_channels" />
@@ -73,7 +72,7 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:background="#1F000000"
+                android:background="?colorDivider"
                 app:layout_constraintTop_toBottomOf="@+id/text_users" />
 
             <TextView
@@ -84,7 +83,7 @@
                 android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:text="@string/msg_search_for_global_users"
-                android:textColor="#2F343D"
+                android:textColor="?colorBottomSheetFragmentHeading"
                 android:textSize="16sp"
                 android:textStyle="normal"
                 app:layout_constraintStart_toStartOf="parent"
@@ -109,7 +108,7 @@
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:text="@string/msg_search_for_global_users_description"
-                android:textColor="#9EA2A8"
+                android:textColor="?colorBottomSheetFragmentText"
                 android:textSize="14sp"
                 android:textStyle="normal"
                 app:layout_constraintStart_toStartOf="parent"

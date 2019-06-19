@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="?android:colorBackground"
     android:layout_height="wrap_content"
-    android:background="@color/colorWhite"
     android:padding="16dp">
 
     <ViewFlipper
@@ -25,7 +25,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
-        android:textColor="@color/darkGray"
+        android:textColor="?colorDescriptiveText"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/view_flipper"
         app:layout_constraintEnd_toEndOf="parent"
