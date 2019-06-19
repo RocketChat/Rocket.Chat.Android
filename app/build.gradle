@@ -62,6 +62,7 @@ android {
 
     buildTypes {
         release {
+            buildConfigField "String", "RC_SERVER_URL", '"nlynk.net"'
             buildConfigField "String", "REQUIRED_SERVER_VERSION", '"0.62.0"'
             buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.64.2"'
             signingConfig signingConfigs.release
@@ -70,6 +71,7 @@ android {
         }
 
         debug {
+            buildConfigField "String", "RC_SERVER_URL", '"nlynk.net"'
             buildConfigField "String", "REQUIRED_SERVER_VERSION", '"0.62.0"'
             buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.64.2"'
             signingConfig signingConfigs.debug

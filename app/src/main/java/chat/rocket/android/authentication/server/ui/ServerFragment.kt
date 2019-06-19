@@ -86,6 +86,11 @@ class ServerFragment : Fragment(), ServerView {
         deepLinkInfo?.let {
             it.url.toUri().host?.let { host -> text_server_url.hintContent = host }
             presenter.deepLink(it)
+        }.ifNull {
+            if (BuildConfig.RC_SERVER_URL != "") {
+                text_server_url.textContent = BuildConfig.RC_SERVER_URL
+                button_connect.performClick()
+            }
         }
 
         analyticsManager.logScreenView(ScreenViewEvent.Server)
