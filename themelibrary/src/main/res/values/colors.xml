@@ -1,6 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#224717</color>
-    <color name="colorPrimaryDark">#00BFA5</color>
-    <color name="colorAccent3">#F51D36</color>
+    <!--DARK THEME-->
+    <color name="darkColorBodyText">#FFe8ebed</color> <!--used for radioButtons and chat messages-->
+
+    <color name="darkColorPrimary">#0b182c</color> <!--action bar color-->
+    <color name="darkColorPrimaryDark">#0b182c</color> <!--status and navigation bar color-->
+    <color name="darkColorFocusedBackground">#0b182c</color> <!--defined in stylesheet but unused directly-->
+    <color name="darkColorSubHeaderBackground">#0b182c</color> <!--used for channel and directory subHeader-->
+    <color name="darkColorSettingsSecondaryBackground">#0b182c</color> <!--used in settings fragment-->
+
+    <color name="darkColorTextHint">#9297a3</color> <!-- colorAuxiliaryText -->
+    <color name="darkColorDescriptiveText">#FF9297a3</color> <!-- colorAuxiliaryText -->
+    <color name="darkColorBottomSheetFragmentText">#FF9297a3</color> <!-- darker text -->
+    <color name="darkColorAuthenticationSecondaryText">#FF9297a3</color> <!-- darker text -->
+    <color name="darkColorSubHeaderText">#FF9297a3</color> <!-- used for channel and directory subHeader -->
+
+    <color name="darkColorMutedAccent">#2b2b2d</color> <!--defined in stylesheet-->
+    <color name="darkColorDivider">#2b2b2d</color> <!--defined in stylesheet-->
+    <color name="darkColorAuthenticationButtonDisabled">#0b182c</color> <!--defined in stylesheet-->
+    <color name="darkColorAuthenticationButtonBorderAndDivider">#2b2b2d</color> <!--defined in stylesheet-->
+    <color name="darkColorStatusInvisible">#2b2b2d</color> <!--self assigned-->
+
+    <color name="darkColorTitleText">#ffffff</color> <!--defined in stylesheet, used for headings-->
+    <color name="darkColorPrimaryText">#ffffff</color> <!--used for text items, not headings-->
+    <color name="darkColorBottomSheetFragmentHeading">#ffffff</color> <!--defined in stylesheet-->
+    <color name="darkColorChannelTitle">#ffffff</color> <!--defined in stylesheet-->
+
+    <color name="darkColorTimestampText">#FFb2b8c6</color> <!-- Picked from layouts -->
+
+    <color name="darkColorChatComponentBackground">#1a2232</color> <!--defined in stylesheet-->
+    <color name="darkColorReactionBackground">#1a2232</color> <!--defined in stylesheet-->
+
+    <color name="darkColorBannerBackground">#0e1f38</color> <!--defined in stylesheet but unused directly-->
+    <color name="darkColorReactionBorder">#0e1f38</color> <!-- Picked from layouts -->
+
+    <color name="darkColorFloatingActionButtonBackground">#261d74f5</color> <!-- Picked from layouts -->
+
+    <color name="darkColorFloatingActionButtonBorder">#4c1d74f5</color> <!-- Picked from layouts -->
+
+    <color name="darkColorAccent">#1d74f5</color> <!--defined in stylesheet-->
+    <color name="darkColorBackground">#030c1b</color> <!--defined in stylesheet-->
+    <color name="darkColorDim">#99ffffff</color> <!--review-->
+    <color name="darkColorControlText">#dadee6</color> <!--defined in stylesheet-->
+
+    <color name="darkColorAuxiliaryBackground">#07101e</color> <!--defined in stylesheet, unused-->
+    <color name="darkColorAuxiliaryTint">#cdcdcd</color> <!--used for loading-->
+
+    <!--BLACK THEME-->
+    <color name="blackColorBodyText">#FFe8ebed</color> <!--used for radioButtons and chat messages-->
+    <!--<color name="blackColorPrimary">#FFe8ebed</color>-->
+
+    <color name="blackColorPrimary">#FF0e0d0d</color> <!--action bar color-->
+    <color name="blackColorPrimaryDark">#FF0e0d0d</color> <!--status and navigation bar color-->
+    <color name="blackColorFocusedBackground">#FF0e0d0d</color> <!--defined in stylesheet but unused directly-->
+    <color name="blackColorSubHeaderBackground">#FF0e0d0d</color> <!--used for channel and directory subHeader-->
+    <color name="blackColorSettingsSecondaryBackground">#FF0e0d0d</color> <!--used in settings fragment-->
+
+    <color name="blackColorTextHint">#9297a3</color> <!-- Picked from layouts -->
+    <color name="blackColorDescriptiveText">#FF9297a3</color> <!-- Picked from layouts -->
+    <color name="blackColorBottomSheetFragmentText">#FF9297a3</color> <!-- darker text -->
+    <color name="blackColorAuthenticationSecondaryText">#FF9297a3</color> <!-- darker text -->
+    <color name="blackColorSubHeaderText">#FF9297a3</color> <!-- used for channel and directory subHeader -->
+
+    <color name="blackColorMutedAccent">#FF2b2b29</color> <!--defined in stylesheet-->
+    <color name="blackColorDivider">#FF2b2b29</color> <!--defined in stylesheet-->
+    <color name="blackColorAuthenticationButtonDisabled">#FF2b2b29</color> <!--defined in stylesheet-->
+    <color name="blackColorAuthenticationButtonBorderAndDivider">#FF2b2b29</color> <!--defined in stylesheet-->
+    <color name="blackColorStatusInvisible">#FF2b2b29</color> <!--self assigned-->
+
+    <color name="blackColorTitleText">#FFFAFAFA</color> <!--defined in stylesheet, used for headings-->
+    <color name="blackColorPrimaryText">#FFFAFAFA</color>  <!--used for text items, not headings-->
+    <color name="blackColorBottomSheetFragmentHeading">#FFFAFAFA</color> <!--defined in stylesheet-->
+    <color name="blackColorChannelTitle">#FFFAFAFA</color> <!--defined in stylesheet-->
+
+    <color name="blackColorTimestampText">#9297a3</color> <!-- Picked from layouts -->
+
+    <color name="blackColorChatComponentBackground">#17181a</color> <!--defined in stylesheet-->
+    <color name="blackColorReactionBackground">#17181a</color> <!--defined in stylesheet-->
+
+    <color name="blackColorBannerBackground">#1f2329</color> <!--defined in stylesheet but unused directly-->
+    <color name="blackColorReactionBorder">#1f2329</color> <!-- Picked from layouts -->
+
+    <color name="blackColorFloatingActionButtonBackground">#261d74f5</color> <!-- Picked from layouts -->
+
+    <color name="blackColorFloatingActionButtonBorder">#4c1d74f5</color> <!-- Picked from layouts -->
+
+    <color name="blackColorAccent">#1d74f5</color> <!--defined in stylesheet-->
+    <color name="blackColorBackground">#000000</color> <!--defined in stylesheet-->
+    <color name="blackColorDim">#99ffffff</color> <!--review-->
+    <color name="blackColorControlText">#dadee6</color> <!--defined in stylesheet-->
+
+    <color name="blackColorAuxiliaryBackground">#090909</color> <!--defined in stylesheet, unused-->
+    <color name="blackColorAuxiliaryTint">#cdcdcd</color> <!--used for loading-->
 </resources>
