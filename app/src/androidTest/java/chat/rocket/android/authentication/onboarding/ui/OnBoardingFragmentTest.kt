@@ -10,6 +10,7 @@ import chat.rocket.android.R
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import org.junit.Rule
 import org.junit.Test
+import testConfig.Config.Companion.SERVER
 
 @LargeTest
 class OnBoardingFragmentTest {
@@ -32,7 +33,7 @@ class OnBoardingFragmentTest {
     fun fill_detail_and_connect_with_server() {
         onView(withId(R.id.connect_with_a_server_container)).perform(click())
         onView(withId(R.id.text_server_url)).perform(
-            typeText("open.rocket.chat"), closeSoftKeyboard()
+            typeText(SERVER), closeSoftKeyboard()
         )
         onView(withId(R.id.button_connect)).perform(scrollTo(), click())
     }
