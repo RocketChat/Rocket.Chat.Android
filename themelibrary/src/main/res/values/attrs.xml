@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="themeIconColor" format="color|reference"/>
+    <attr name="colorDivider" format="color|reference"/>
+    <attr name="colorBottomSheetFragmentHeading" format="color|reference"/>
+    <attr name="colorBottomSheetFragmentText" format="color|reference"/>
+    <attr name="colorAuthenticationButtonBorderAndDivider" format="color|reference"/>
+    <attr name="colorButtonDisabled" format="color|reference"/>
+    <attr name="colorControlText" format="color|reference"/>
+    <attr name="colorChatComponentBackground" format="color|reference"/>
+    <attr name="colorDescriptiveText" format="color|reference"/>
+    <attr name="colorSubHeaderBackground" format="color|reference"/>
+    <attr name="colorSubHeaderText" format="color|reference"/>
+    <attr name="colorRadioButton" format="color|reference"/>
+    <attr name="colorDim" format="color|reference"/>
+    <attr name="colorIcon" format="color|reference"/>
+    <attr name="colorSettingsSecondaryBackground" format="color|reference"/>
+    <attr name="colorChannelTitle" format="color|reference"/>
+    <attr name="colorTimestampText" format="color|reference"/>
+    <attr name="colorStatusInvisible" format="color|reference"/>
+    <attr name="colorPrimaryText" format="color|reference"/>
+    <attr name="colorReactionBackground" format="color|reference"/>
+    <attr name="colorReactionBorder" format="color|reference"/>
+    <attr name="colorFloatingActionButtonBackground" format="color|reference"/>
+    <attr name="colorFloatingActionButtonBorder" format="color|reference"/>
+    <attr name="colorLoading" format="color|reference"/>
 </resources>

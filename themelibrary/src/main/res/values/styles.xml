@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base application theme. -->
-    <style name="LibraryTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent3</item>
-        <item name="windowActionModeOverlay">true</item>
-        <item name="actionModeBackground">@color/colorPrimary</item>
-        <item name="android:actionModeBackground">@color/colorPrimary</item>
-        <item name="themeIconColor">@color/colorPrimaryDark</item>
+    <!--DARK THEME-->
+    <style name="DarkCustomBottomSheetDialogStyle" parent="CustomBottomSheetDialogStyle">
+        <item name="android:theme">@style/BlackTheme</item>
+    </style>
+
+    <style name="DarkCustomAlertDialogTheme" parent="CustomAlertDialogTheme">
+        <item name="android:theme">@style/BlackTheme</item>
+    </style>
+
+    <!--BLACK THEME-->
+    <style name="BlackCustomBottomSheetDialogStyle" parent="CustomBottomSheetDialogStyle">
+        <item name="android:theme">@style/BlackTheme</item>
+    </style>
+
+    <style name="BlackCustomAlertDialogTheme" parent="CustomAlertDialogTheme">
+        <item name="android:theme">@style/BlackTheme</item>
     </style>
 </resources>
