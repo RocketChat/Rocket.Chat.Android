@@ -97,7 +97,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     // WIDECHAT
     private var settingsView: MenuItem? = null
     private var searchIcon: ImageView? = null
-    private var searchText:  TextView? = null
+    private var searchText: TextView? = null
     private var searchCloseButton: ImageView? = null
     private var profileButton: SimpleDraweeView? = null
     private var currentUserStatusIcon: ImageView? = null
@@ -222,12 +222,18 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     if (status is State.Connected) {
                         // When connected, only show the connection status once
                         if (currentlyConnected == false) {
+                            // Connection state changed - refresh BSSID
+                            presenter.tryToReadSSID(activity)
+
                             currentlyConnected = true
-                            status?.let {showConnectionState(status)}
+                            status?.let { showConnectionState(status) }
                         }
                     } else {
+                        // connection state changed - clear BSSID if no wifi
+                        presenter.tryToReadSSID(activity)
+
                         currentlyConnected = false
-                        status?.let {showConnectionState(status)}
+                        status?.let { showConnectionState(status) }
                     }
                 } else {
                     status?.let { showConnectionState(status) }
@@ -303,10 +309,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     run {
                         SharedPreferenceHelper.putInt(
                             Constants.CHATROOM_SORT_TYPE_KEY, when (checkedId) {
-                                R.id.radio_sort_alphabetical -> 0
-                                R.id.radio_sort_activity -> 1
-                                else -> 1
-                            }
+                            R.id.radio_sort_alphabetical -> 0
+                            R.id.radio_sort_activity -> 1
+                            else -> 1
+                        }
                         )
                     }
                 }
@@ -331,7 +337,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 }
             }
         }
-        
+
         if (Constants.WIDECHAT) {
             when (item.itemId) {
                 R.id.action_settings -> {
@@ -351,8 +357,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun updateSort() {
         val sortType = SharedPreferenceHelper.getInt(
-            Constants.CHATROOM_SORT_TYPE_KEY,
-            ChatRoomsSortOrder.ACTIVITY
+                Constants.CHATROOM_SORT_TYPE_KEY,
+                ChatRoomsSortOrder.ACTIVITY
         )
         val grouped = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
 
@@ -392,11 +398,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         searchText?.setHintTextColor(Color.GRAY)
 
         searchCloseButton = searchView?.findViewById(R.id.search_close_btn)
-        
+
         searchText?.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus)
                 searchCloseButton?.setImageResource(R.drawable.ic_close_gray_24dp)
-                viewModel.showLastMessage = false
+            viewModel.showLastMessage = false
         }
 
         searchCloseButton?.setOnClickListener { v ->
@@ -505,7 +511,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
                 val serverUrl = serverInteractor.get()
                 val user = userHelper.user()
-                val myAvatarUrl: String? =  serverUrl?.avatarUrl(user?.username ?: "")
+                val myAvatarUrl: String? = serverUrl?.avatarUrl(user?.username ?: "")
 
                 profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
                 profileButton?.setImageURI(myAvatarUrl)
@@ -620,7 +626,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         override fun onAnimationRepeat(animator: Animator?) {}
 
         override fun onAnimationEnd(animator: Animator?) {
-            if(!ChatRoomsFragment.isFABOpen){
+            if (!ChatRoomsFragment.isFABOpen) {
                 views.forEach {
                     it.visibility = View.GONE
                 }

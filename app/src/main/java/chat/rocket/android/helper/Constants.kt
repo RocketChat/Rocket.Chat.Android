@@ -11,6 +11,8 @@ object Constants {
     const val CHATROOM_DM = 2
     const val CHATROOM_LIVE_CHAT = 3
 
+    // All const below belong to WIDECHAT
+
     // Enables/disables WIDECHAT specific features, functionality and views
     // Use both WIDECHAT and WIDECHAT_DEV switches == true to allow for normal RC login sequence including login to any server
     const val WIDECHAT = true
@@ -21,6 +23,10 @@ object Constants {
 
     const val CONTACTS_ACCESS_PERMISSION_REQUESTED = "contacts_access_permission_requested"
     const val WIDECHAT_REAL_USER_NAME = "real_user_name"
+
+    const val CURRENT_BSSID = "current_bssid"
+    const val LOCATION_PERMISSION = "location_permission"
+
 }
 
 object ChatRoomsSortOrder {
