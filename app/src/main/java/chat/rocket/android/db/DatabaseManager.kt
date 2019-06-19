@@ -490,7 +490,7 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
         return ChatRoomEntity(
             id = room.id,
             subscriptionId = subscription.id,
-            parentId = subscription.parentId,
+            parentId = subscription.id,
             type = room.type.toString(),
             name = room.name ?: subscription.name
             ?: throw NullPointerException(), // this should be filtered on the SDK
@@ -532,7 +532,7 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
             return ChatRoomEntity(
                 id = id,
                 subscriptionId = subscriptionId,
-                parentId = parentId,
+                parentId = id,
                 type = type.toString(),
                 name = name,
                 fullname = fullName,
