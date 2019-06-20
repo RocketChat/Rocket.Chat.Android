@@ -90,14 +90,14 @@ class ChatRoomsViewModel(
         }
     }
 
-    fun getChatRoomOfUsernameDB(string: String): List<ItemHolder<*>> {
+    fun getUsersRoomListLocal(string: String): List<ItemHolder<*>> {
         val rooms = GlobalScope.async(Dispatchers.IO) {
             return@async repository.search(string).let { mapper.map(it, showLastMessage = showLastMessage) }
         }
         return runBlocking { rooms.await() }
     }
 
-    fun getChatRoomOfUsernameSpotlight(string: String): List<ItemHolder<*>>? {
+    fun getUsersRoomListSpotlight(string: String): List<ItemHolder<*>>? {
         val rooms = GlobalScope.async(Dispatchers.IO) {
             return@async spotlight(string)?.let { mapper.map(it, showLastMessage = showLastMessage) }
         }

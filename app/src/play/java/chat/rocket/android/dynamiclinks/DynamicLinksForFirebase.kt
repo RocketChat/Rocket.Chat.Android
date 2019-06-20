@@ -3,24 +3,21 @@ package chat.rocket.android.dynamiclinks
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.core.net.toUri
 import chat.rocket.android.util.TimberLogger
 import chat.rocket.android.R
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.dynamiclinks.ShortDynamicLink
 import javax.inject.Inject
-
-// DEBUG
-import android.widget.Toast
+import timber.log.Timber
 
 class DynamicLinksForFirebase @Inject constructor(private var context: Context) :
         DynamicLinks {
-
     private var deepLink: Uri? = null
     private var newDeepLink: String? = null
 
     override fun getDynamicLink(intent: Intent, deepLinkCallback: (Uri?) -> Unit?) {
-
         FirebaseDynamicLinks.getInstance()
                 .getDynamicLink(intent)
                 .addOnSuccessListener { pendingDynamicLinkData ->
@@ -33,26 +30,25 @@ class DynamicLinksForFirebase @Inject constructor(private var context: Context) 
     }
 
     override fun createDynamicLink(username: String, server: String, deepLinkCallback: (String?) -> Unit? ) {
-
         FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLink(Uri.parse("$server/direct/$username"))
+                .setLink("$server/direct/$username".toUri())
                 .setDomainUriPrefix("https://" + context.getString(R.string.dynamiclink_host))
                 .setAndroidParameters(
                         DynamicLink.AndroidParameters.Builder(context.getString(R.string.app_package_name)).build())
                 .setSocialMetaTagParameters(
                         DynamicLink.SocialMetaTagParameters.Builder()
                                 .setTitle(username)
-                                .setDescription("Chat with $username on " + server)
+                                .setDescription(context.getString(R.string.msg_dynamiclink_description, username, server))
                                 .build())
                 .buildShortDynamicLink(ShortDynamicLink.Suffix.SHORT)
                 .addOnSuccessListener { result ->
                     newDeepLink = result.shortLink.toString()
-                    Toast.makeText(context, newDeepLink, Toast.LENGTH_SHORT).show()
+                    Timber.d("DynamicLink created: " + newDeepLink)
                     deepLinkCallback(newDeepLink)
-
                 }.addOnFailureListener {
                     // Error
-                    Toast.makeText(context, "Error dynamic link", Toast.LENGTH_SHORT).show()
+                    Timber.d("Error creating dynamicLink.")
+                    deepLinkCallback(null)
                 }
     }
 }

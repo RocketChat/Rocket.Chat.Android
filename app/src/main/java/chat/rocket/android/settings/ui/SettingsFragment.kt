@@ -165,7 +165,7 @@ class SettingsFragment : Fragment(), SettingsView {
     }
 
     private fun shareApp() {
-        presenter.shareViaApp(context!!)
+        presenter.shareViaApp(context)
     }
 
     private fun showLogoutDialog() {

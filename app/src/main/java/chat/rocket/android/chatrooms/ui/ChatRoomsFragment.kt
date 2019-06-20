@@ -333,7 +333,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     fun processDeepLink(deepLinkInfo: DeepLinkInfo) {
         val username = deepLinkInfo.roomName
         username.ifNotNullNotEmpty {
-            val localRooms = viewModel.getChatRoomOfUsernameDB(username!!)
+            val localRooms = viewModel.getUsersRoomListLocal(username!!)
             val filteredLocalRooms = localRooms.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
 
             if (filteredLocalRooms.isNotEmpty()) {
@@ -344,7 +344,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 statusLiveData.observe(viewLifecycleOwner, object: Observer<State>{
                     override fun onChanged(status: State?) {
                         if (status is State.Connected) {
-                            val rooms = viewModel.getChatRoomOfUsernameSpotlight(username)
+                            val rooms = viewModel.getUsersRoomListSpotlight(username)
                             val filteredRooms = rooms?.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
 
                             filteredRooms?.let {
@@ -352,7 +352,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                                     presenter.loadChatRoom(filteredRooms.first().data as RoomUiModel)
                                 }
                             }
-
                             statusLiveData.removeObserver(this)
                         }
                     }
