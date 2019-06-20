@@ -12,8 +12,8 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.AnswersAnalytics
 import chat.rocket.android.analytics.GoogleAnalyticsForFirebase
-import chat.rocket.android.authentication.infraestructure.SharedPreferencesMultiServerTokenRepository
-import chat.rocket.android.authentication.infraestructure.SharedPreferencesTokenRepository
+import chat.rocket.android.authentication.infrastructure.SharedPreferencesMultiServerTokenRepository
+import chat.rocket.android.authentication.infrastructure.SharedPreferencesTokenRepository
 import chat.rocket.android.chatroom.service.MessageService
 import chat.rocket.android.dagger.qualifier.ForAuthentication
 import chat.rocket.android.dagger.qualifier.ForMessages
@@ -45,19 +45,21 @@ import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.SortingAndGroupingRepository
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.UsersRepository
-import chat.rocket.android.server.infraestructure.DatabaseMessageMapper
-import chat.rocket.android.server.infraestructure.DatabaseMessagesRepository
-import chat.rocket.android.server.infraestructure.JobSchedulerInteractorImpl
-import chat.rocket.android.server.infraestructure.MemoryChatRoomsRepository
-import chat.rocket.android.server.infraestructure.MemoryUsersRepository
-import chat.rocket.android.server.infraestructure.SharedPreferencesAccountsRepository
-import chat.rocket.android.server.infraestructure.SharedPreferencesPermissionsRepository
-import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsAnalyticsTrackingRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsBasicAuthRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsConnectingServerRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsSortingAndGroupingRepository
+import chat.rocket.android.server.infrastructure.CurrentLanguageRepository
+import chat.rocket.android.server.infrastructure.SharedPrefsCurrentLanguageRepository
+import chat.rocket.android.server.infrastructure.DatabaseMessageMapper
+import chat.rocket.android.server.infrastructure.DatabaseMessagesRepository
+import chat.rocket.android.server.infrastructure.JobSchedulerInteractorImpl
+import chat.rocket.android.server.infrastructure.MemoryChatRoomsRepository
+import chat.rocket.android.server.infrastructure.MemoryUsersRepository
+import chat.rocket.android.server.infrastructure.SharedPreferencesAccountsRepository
+import chat.rocket.android.server.infrastructure.SharedPreferencesPermissionsRepository
+import chat.rocket.android.server.infrastructure.SharedPreferencesSettingsRepository
+import chat.rocket.android.server.infrastructure.SharedPrefsAnalyticsTrackingRepository
+import chat.rocket.android.server.infrastructure.SharedPrefsBasicAuthRepository
+import chat.rocket.android.server.infrastructure.SharedPrefsConnectingServerRepository
+import chat.rocket.android.server.infrastructure.SharedPrefsCurrentServerRepository
+import chat.rocket.android.server.infrastructure.SharedPrefsSortingAndGroupingRepository
 import chat.rocket.android.util.AppJsonAdapterFactory
 import chat.rocket.android.util.BasicAuthenticatorInterceptor
 import chat.rocket.android.util.HttpLoggingInterceptor
@@ -176,7 +178,6 @@ class AppModule {
     fun provideSharedPreferences(context: Application) =
         context.getSharedPreferences("rocket.chat", Context.MODE_PRIVATE)
 
-
     @Provides
     @ForMessages
     fun provideMessagesSharedPreferences(context: Application) =
@@ -210,6 +211,12 @@ class AppModule {
     @ForAuthentication
     fun provideConnectingServerRepository(prefs: SharedPreferences): CurrentServerRepository {
         return SharedPrefsConnectingServerRepository(prefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCurrentLanguageRepository(prefs: SharedPreferences): CurrentLanguageRepository {
+        return SharedPrefsCurrentLanguageRepository(prefs)
     }
 
     @Provides

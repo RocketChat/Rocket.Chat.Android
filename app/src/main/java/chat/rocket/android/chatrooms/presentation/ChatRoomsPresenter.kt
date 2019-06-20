@@ -11,9 +11,10 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.SortingAndGroupingInteractor
+import chat.rocket.android.server.domain.siteName
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
-import chat.rocket.android.server.infraestructure.ConnectionManager
+import chat.rocket.android.server.infrastructure.ConnectionManager
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryDB
 import chat.rocket.android.util.retryIO
@@ -50,7 +51,9 @@ class ChatRoomsPresenter @Inject constructor(
 
     fun toSettings() = navigator.toSettings()
 
-    fun getCurrentServerName() = view.setupToolbar(currentServer)
+    fun toDirectory() = navigator.toDirectory()
+
+    fun getCurrentServerName() = view.setupToolbar(settings.siteName() ?: currentServer)
 
     fun getSortingAndGroupingPreferences() {
         with(sortingAndGroupingInteractor) {
@@ -91,6 +94,7 @@ class ChatRoomsPresenter @Inject constructor(
                         val entity = ChatRoomEntity(
                             id = id,
                             subscriptionId = "",
+                            parentId = null,
                             type = type.toString(),
                             name = username ?: name.toString(),
                             fullname = name.toString(),

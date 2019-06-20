@@ -7,15 +7,11 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ImageSpan
-import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.RequestOptions
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import timber.log.Timber
 
 class EmojiParser {
 
@@ -31,7 +27,11 @@ class EmojiParser {
          * @param factory Optional. A [Spannable.Factory] instance to reuse when creating [Spannable].
          * @return A rendered Spannable containing any supported emoji.
          */
-        fun parse(context: Context, text: CharSequence, factory: Spannable.Factory? = null): CharSequence {
+        fun parse(
+            context: Context,
+            text: CharSequence,
+            factory: Spannable.Factory? = null
+        ): CharSequence {
             val unicodedText = EmojiRepository.shortnameToUnicode(text)
             val spannable = factory?.newSpannable(unicodedText)
                 ?: SpannableString.valueOf(unicodedText)
@@ -64,16 +64,20 @@ class EmojiParser {
                     inEmoji = true
                 } else {
                     if (inEmoji) {
-                        spannable.setSpan(EmojiTypefaceSpan("sans-serif", typeface),
-                            emojiStart, offset, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        spannable.setSpan(
+                            EmojiTypefaceSpan("sans-serif", typeface),
+                            emojiStart, offset, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
                     }
                     inEmoji = false
                 }
 
                 offset += count
                 if (offset >= length && inEmoji) {
-                    spannable.setSpan(EmojiTypefaceSpan("sans-serif", typeface),
-                        emojiStart, offset, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    spannable.setSpan(
+                        EmojiTypefaceSpan("sans-serif", typeface),
+                        emojiStart, offset, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                 }
             }
 
@@ -83,7 +87,7 @@ class EmojiParser {
 
             return spannable.also { sp ->
                 regex.findAll(spannable).iterator().forEach { match ->
-                    customEmojis.find { it.shortname.toLowerCase() == match.value.toLowerCase() }?.let { emoji ->
+                    customEmojis.find { matchEmoji(it, match.value) }?.let { emoji ->
                         emoji.url?.let { url ->
                             try {
                                 val glideRequest = if (url.endsWith("gif", true)) {
@@ -100,16 +104,25 @@ class EmojiParser {
                                 val range = match.range
                                 futureTarget.get()?.let { image ->
                                     if (image is Bitmap) {
-                                        spannable.setSpan(ImageSpan(context, image), range.start,
-                                            range.endInclusive + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                        spannable.setSpan(
+                                            ImageSpan(context, image), range.start,
+                                            range.endInclusive + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                                        )
                                     } else if (image is GifDrawable) {
-                                        image.setBounds(0, 0, image.intrinsicWidth, image.intrinsicHeight)
-                                        spannable.setSpan(ImageSpan(image), range.start,
-                                            range.endInclusive + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                        image.setBounds(
+                                            0,
+                                            0,
+                                            image.intrinsicWidth,
+                                            image.intrinsicHeight
+                                        )
+                                        spannable.setSpan(
+                                            ImageSpan(image), range.start,
+                                            range.endInclusive + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                                        )
                                     }
                                 }
                             } catch (ex: Throwable) {
-                                Log.e("EmojiParser", "", ex)
+                                Timber.e(ex)
                             }
                         }
                     }
@@ -117,12 +130,17 @@ class EmojiParser {
             }
         }
 
-        fun parseAsync(
-            context: Context,
-            text: CharSequence,
-            factory: Spannable.Factory? = null
-        ): Deferred<CharSequence> {
-            return GlobalScope.async(Dispatchers.IO) { parse(context, text, factory) }
+        private fun matchEmoji(it: Emoji, text: String): Boolean {
+            if (it.shortname == text) {
+                return true
+            } else {
+                it.shortnameAlternates.forEach {
+                    if (":$it:" == text) {
+                        return true
+                    }
+                }
+                return false
+            }
         }
     }
 }

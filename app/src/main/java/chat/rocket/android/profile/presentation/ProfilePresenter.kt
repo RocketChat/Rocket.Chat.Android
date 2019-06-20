@@ -11,8 +11,8 @@ import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.RemoveAccountInteractor
 import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extension.compressImageAndGetByteArray
 import chat.rocket.android.util.extension.launchUI
@@ -57,6 +57,7 @@ class ProfilePresenter @Inject constructor(
     private val serverUrl = serverInteractor.get()!!
     private val client: RocketChatClient = factory.get(serverUrl)
     private val user = userHelper.user()
+    private val token = tokenRepository.get(serverUrl)
 
     fun loadUserProfile() {
         launchUI(strategy) {
@@ -68,7 +69,7 @@ class ProfilePresenter @Inject constructor(
 
                 view.showProfile(
                     me.status.toString(),
-                    serverUrl.avatarUrl(me.username ?: ""),
+                    serverUrl.avatarUrl(me.username!!, token?.userId, token?.authToken),
                     me.name ?: "",
                     me.username ?: "",
                     me.emails?.getOrNull(0)?.address ?: ""
@@ -97,7 +98,7 @@ class ProfilePresenter @Inject constructor(
                     view.showProfileUpdateSuccessfullyMessage()
                     view.showProfile(
                         user.status.toString(),
-                        serverUrl.avatarUrl(user.username ?: ""),
+                        serverUrl.avatarUrl(user.username!!, token?.userId, token?.authToken),
                         name,
                         username,
                         email
@@ -127,7 +128,15 @@ class ProfilePresenter @Inject constructor(
                         uriInteractor.getInputStream(uri)
                     }
                 }
-                user?.username?.let { view.reloadUserAvatar(serverUrl.avatarUrl(it)) }
+                user?.username?.let {
+                    view.reloadUserAvatar(
+                        serverUrl.avatarUrl(
+                            it,
+                            token?.userId,
+                            token?.authToken
+                        )
+                    )
+                }
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
@@ -155,7 +164,15 @@ class ProfilePresenter @Inject constructor(
                     }
                 }
 
-                user?.username?.let { view.reloadUserAvatar(serverUrl.avatarUrl(it)) }
+                user?.username?.let {
+                    view.reloadUserAvatar(
+                        serverUrl.avatarUrl(
+                            it,
+                            token?.userId,
+                            token?.authToken
+                        )
+                    )
+                }
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
@@ -175,7 +192,15 @@ class ProfilePresenter @Inject constructor(
                 user?.id?.let { id ->
                     retryIO { client.resetAvatar(id) }
                 }
-                user?.username?.let { view.reloadUserAvatar(serverUrl.avatarUrl(it)) }
+                user?.username?.let {
+                    view.reloadUserAvatar(
+                        serverUrl.avatarUrl(
+                            it,
+                            token?.userId,
+                            token?.authToken
+                        )
+                    )
+                }
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)

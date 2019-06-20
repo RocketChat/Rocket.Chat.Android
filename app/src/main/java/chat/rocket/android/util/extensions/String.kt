@@ -21,13 +21,15 @@ fun String.sanitize(): String {
 
 fun String.avatarUrl(
     avatar: String,
+    userId: String?,
+    token: String?,
     isGroupOrChannel: Boolean = false,
     format: String = "jpeg"
 ): String {
     return if (isGroupOrChannel) {
-        "${removeTrailingSlash()}/avatar/%23${avatar.removeTrailingSlash()}?format=$format"
+        "${removeTrailingSlash()}/avatar/%23${avatar.removeTrailingSlash()}?format=$format&rc_uid=$userId&rc_token=$token"
     } else {
-        "${removeTrailingSlash()}/avatar/${avatar.removeTrailingSlash()}?format=$format"
+        "${removeTrailingSlash()}/avatar/${avatar.removeTrailingSlash()}?format=$format&rc_uid=$userId&rc_token=$token"
     }
 }
 
@@ -74,6 +76,8 @@ fun String.lowercaseUrl(): String? = HttpUrl.parse(this)?.run {
 }
 
 fun String?.isNotNullNorEmpty(): Boolean = this != null && this.isNotEmpty()
+
+fun String?.isNotNullNorBlank(): Boolean = this != null && this.isNotBlank()
 
 inline fun String?.ifNotNullNotEmpty(block: (String) -> Unit) {
     if (this != null && this.isNotEmpty()) {

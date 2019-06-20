@@ -15,10 +15,10 @@ class MembersAdapter(
 ) : RecyclerView.Adapter<MembersAdapter.ViewHolder>() {
     private var dataSet: List<MemberUiModel> = ArrayList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MembersAdapter.ViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(parent.inflate(R.layout.item_member))
 
-    override fun onBindViewHolder(holder: MembersAdapter.ViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(dataSet[position], listener)
 
     override fun getItemCount(): Int = dataSet.size

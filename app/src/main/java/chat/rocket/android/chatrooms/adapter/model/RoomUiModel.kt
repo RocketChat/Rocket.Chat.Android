@@ -5,6 +5,7 @@ import chat.rocket.common.model.UserStatus
 
 data class RoomUiModel(
     val id: String,
+    val isDiscussion: Boolean = false,
     val type: RoomType,
     val name: CharSequence,
     val avatar: String,
