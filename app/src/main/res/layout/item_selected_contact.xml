@@ -11,7 +11,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="60dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:paddingStart="4dp"
@@ -44,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:singleLine="true"
+            android:textAlignment="center"
             android:textColor="@color/colorBlack"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"

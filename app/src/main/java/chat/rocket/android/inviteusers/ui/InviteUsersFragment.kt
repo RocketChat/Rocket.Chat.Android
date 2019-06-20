@@ -13,6 +13,7 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
+import chat.rocket.android.inviteusers.adapter.SelectedUsersAdapter
 import chat.rocket.android.inviteusers.presentation.InviteUsersPresenter
 import chat.rocket.android.inviteusers.presentation.InviteUsersView
 import chat.rocket.android.members.adapter.MembersAdapter
@@ -21,7 +22,6 @@ import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
-import com.google.android.material.chip.Chip
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -45,13 +45,20 @@ class InviteUsersFragment : Fragment(), InviteUsersView {
 	@Inject
 	lateinit var analyticsManager: AnalyticsManager
 	private val compositeDisposable = CompositeDisposable()
+	private var memberList = arrayListOf<MemberUiModel>()
+
 	private val adapter: MembersAdapter = MembersAdapter {
-		it.username?.run { processSelectedMember(Pair(it.userId, it.username)) }
+		it.username?.run { processSelectedMember(it) }
+	}
+
+	private val selectedUsersAdapter = SelectedUsersAdapter(memberList, true) { user ->
+		user.username?.let { removeMember(it) }
+		// whenever we remove a user we should process the recycler view visibility.
+		processRecyclerViewVisibility()
+		processBackgroundOfInviteUsersButton()
 	}
 
 	private lateinit var chatRoomId: String
-	// Pair of userId and userName
-	private var memberList = arrayListOf<Pair<String, String>>()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -118,6 +125,7 @@ class InviteUsersFragment : Fragment(), InviteUsersView {
 		text_member_not_found.isVisible = false
 		recycler_view.isVisible = true
 		view_member_suggestion.isVisible = true
+		showLoading()
 	}
 
 	override fun showNoUserSuggestion() {
@@ -129,12 +137,12 @@ class InviteUsersFragment : Fragment(), InviteUsersView {
 	override fun showSuggestionViewInProgress() {
 		recycler_view.isVisible = false
 		text_member_not_found.isVisible = false
-		view_member_suggestion_loading.isVisible = true
 		view_member_suggestion.isVisible = true
+		showLoading()
 	}
 
 	override fun hideSuggestionViewInProgress() {
-		view_member_suggestion_loading.isVisible = false
+		hideLoading()
 	}
 
 	override fun usersInvitedSuccessfully() {
@@ -162,13 +170,20 @@ class InviteUsersFragment : Fragment(), InviteUsersView {
 				DividerItemDecoration(it, DividerItemDecoration.HORIZONTAL)
 			)
 			recycler_view.adapter = adapter
+
+			selected_users_recycler_view.apply {
+				setHasFixedSize(true)
+				layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+				adapter = selectedUsersAdapter
+			}
 		}
 	}
 
 	private fun setupViewListeners() {
-		text_cancel.setOnClickListener { activity?.onBackPressed() }
-		text_invite_users.setOnClickListener {
-			if (memberList.isNotEmpty()) {
+		invite_users_fab?.setOnClickListener {
+			if (memberList.isEmpty()) {
+				showToast("Select at least one user")
+			} else {
 				presenter.inviteUsers(chatRoomId, memberList)
 			}
 		}
@@ -194,59 +209,38 @@ class InviteUsersFragment : Fragment(), InviteUsersView {
 		compositeDisposable.dispose()
 	}
 
-	private fun processSelectedMember(member: Pair<String, String>) {
-		if (memberList.any { it.second == member.second }) {
+	private fun processSelectedMember(member: MemberUiModel) {
+		if (memberList.any { it.username == member.username }) {
 			showMessage(getString(R.string.msg_member_already_added))
 		} else {
 			view_member_suggestion.isVisible = false
 			edit_text_invite_users.setText("")
 			addMember(member)
-			addChip(member.second)
-			chip_group_member.isVisible = true
+			processRecyclerViewVisibility()
 			processBackgroundOfInviteUsersButton()
 		}
 	}
 
-	private fun addMember(member: Pair<String, String>) {
+	private fun addMember(member: MemberUiModel) {
 		memberList.add(member)
+		selectedUsersAdapter.notifyDataSetChanged()
 	}
 
 	private fun removeMember(username: String) {
-		memberList.remove(memberList.find { it.second == username })
+		memberList.remove(memberList.find { it.username == username })
+		selectedUsersAdapter.notifyDataSetChanged()
 	}
 
-	private fun addChip(chipText: String) {
-		val chip = Chip(context)
-		chip.text = chipText
-		chip.isCloseIconVisible = true
-		chip.setChipBackgroundColorResource(R.color.icon_grey)
-		setupChipOnCloseIconClickListener(chip)
-		chip_group_member.addView(chip)
-	}
-
-	private fun setupChipOnCloseIconClickListener(chip: Chip) {
-		chip.setOnCloseIconClickListener {
-			removeChip(it)
-			removeMember((it as Chip).text.toString())
-			// whenever we remove a chip we should process the chip group visibility.
-			processChipGroupVisibility()
-			processBackgroundOfInviteUsersButton()
-		}
-	}
-
-	private fun removeChip(chip: View) {
-		chip_group_member.removeView(chip)
-	}
-
-	private fun processChipGroupVisibility() {
-		chip_group_member.isVisible = memberList.isNotEmpty()
+	private fun processRecyclerViewVisibility() {
+		selected_users_recycler_view.isVisible = memberList.isNotEmpty()
+		selected_users_divider.isVisible = memberList.isNotEmpty()
 	}
 
 	private fun processBackgroundOfInviteUsersButton() {
 		if (memberList.isEmpty()) {
-			text_invite_users.alpha = 0.4F
+			invite_users_fab.alpha = 0.4F
 		} else {
-			text_invite_users.alpha = 1F
+			invite_users_fab.alpha = 1F
 		}
 	}
 }

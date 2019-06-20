@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:backgroundTint="@color/colorDim"
+            android:background="@color/default_background"
             android:hint="@string/msg_invite_members"
             android:inputType="text"
             android:maxLines="1"
@@ -35,48 +35,56 @@
 
     </LinearLayout>
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chip_group_member"
-        style="@style/Widget.MaterialComponents.Chip.Entry"
-        android:layout_width="0dp"
+    <View
+        android:id="@+id/layout_search_user_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="8dp"
+        android:background="?android:attr/listDivider"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_search_user" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/selected_users_recycler_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingTop="16dp"
+        android:paddingRight="8dp"
         android:visibility="gone"
-        app:chipSpacing="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_search_user" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_search_user_divider"
+        tools:listitem="@layout/item_selected_contact" />
+
+    <View
+        android:id="@+id/selected_users_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="8dp"
+        android:background="?android:attr/listDivider"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/selected_users_recycler_view" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/view_member_suggestion"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chip_group_member">
+        app:layout_constraintTop_toBottomOf="@+id/selected_users_divider">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/view_member_suggestion_loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:indicatorColor="@color/colorBlack"
-            app:indicatorName="BallPulseIndicator"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -107,61 +115,17 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/invite_users_fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:orientation="horizontal"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:alpha="0.4"
+        android:src="@drawable/ic_check_white_24dp"
+        android:visibility="visible"
+        app:backgroundTint="@color/widechatFab"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:id="@+id/text_cancel"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:background="@color/icon_grey"
-            android:gravity="center"
-            android:text="@string/text_cancel"
-            android:textAllCaps="true"
-            android:textColor="@color/color_white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-
-        <LinearLayout
-            android:id="@+id/text_invite_users"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:alpha="0.4"
-            android:background="@color/widechatGreenGradientLight"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_add_white_24dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:gravity="center"
-                android:text="@string/text_invite_users"
-                android:textAllCaps="true"
-                android:textColor="@color/color_white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

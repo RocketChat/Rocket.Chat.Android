@@ -31,34 +31,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/text_invite_users"
-        android:layout_width="match_parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/invite_users_fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@color/widechatGreenGradientLight"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/ic_add_white_24dp"
         android:visibility="gone"
+        app:backgroundTint="@color/widechatFab"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:backgroundTint="@color/widechatGreenGradientLight"
-            android:drawableStart="@drawable/ic_add_white_24dp"
-            android:drawablePadding="4dp"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/action_invite_users"
-            android:textAllCaps="true"
-            android:textColor="@color/color_white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-    </FrameLayout>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

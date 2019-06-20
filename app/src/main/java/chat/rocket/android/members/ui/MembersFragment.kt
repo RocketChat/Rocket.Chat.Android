@@ -116,11 +116,11 @@ class MembersFragment : Fragment(), MembersView {
     }
 
     override fun showInviteUsersButton() {
-        ui { text_invite_users.isVisible = true }
+        ui { invite_users_fab.isVisible = true }
     }
 
     override fun hideInviteUserButton() {
-        ui { text_invite_users.isVisible = false }
+        ui { invite_users_fab.isVisible = false }
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
@@ -151,6 +151,6 @@ class MembersFragment : Fragment(), MembersView {
     }
 
 	private fun setupListeners(){
-		text_invite_users.setOnClickListener { presenter.toInviteUsers(chatRoomId) }
+        invite_users_fab.setOnClickListener { presenter.toInviteUsers(chatRoomId) }
 	}
 }
