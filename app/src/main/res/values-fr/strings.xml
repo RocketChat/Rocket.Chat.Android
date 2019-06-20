@@ -16,6 +16,7 @@
     <string name="title_preferences">Préférences</string>
     <string name="title_choose_language">Langues</string>
     <string name="title_change_password">Changer le mot de passe</string>
+    <string name="title_change_theme">Change Theme</string> <!-- TODO Translate -->
     <string name="title_rate_us">Evaluez nous</string>
     <string name="title_admin_panel">Administration</string>
     <string name="title_password">Changer le mot de passe</string>

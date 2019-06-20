@@ -15,6 +15,7 @@
     <string name="title_settings">Настройки</string>
     <string name="title_preferences">Персональные</string>
     <string name="title_change_password">Изменить пароль</string>
+    <string name="title_change_theme">Change Theme</string> <!-- TODO Translate -->
     <string name="title_rate_us">оцените нас</string>
     <string name="title_admin_panel">Панель админа</string>
     <string name="title_password">Изменить пароль</string>

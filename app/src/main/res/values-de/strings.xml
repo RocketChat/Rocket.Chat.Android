@@ -16,6 +16,7 @@
     <string name="title_settings">Einstellungen</string>
     <string name="title_preferences">Eigenschaften</string>
     <string name="title_change_password">Ändere Passwort</string>
+    <string name="title_change_theme">Change Theme</string> <!-- TODO Translate -->
     <string name="title_rate_us">Bewerten Sie uns</string>
     <string name="title_admin_panel">Administrationsmenü</string>
     <string name="title_password">Ändere Passwort</string>

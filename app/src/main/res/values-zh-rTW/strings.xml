@@ -15,6 +15,7 @@
     <string name="title_settings">設定</string>
     <string name="title_preferences">選項</string>
     <string name="title_change_password">修改密碼</string>
+    <string name="title_change_theme">Change Theme</string> <!-- TODO Translate -->
     <string name="title_rate_us">給我們評價</string>
     <string name="title_admin_panel">管理面板</string>
     <string name="title_password">修改密碼</string>

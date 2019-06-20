@@ -15,6 +15,7 @@
     <string name="title_settings">設定</string>
     <string name="title_preferences">環境設定</string>
     <string name="title_change_password">パスワードの変更</string>
+    <string name="title_change_theme">Change Theme</string> <!-- TODO Translate -->
     <string name="title_rate_us">私たちを評価してください</string>
     <string name="title_admin_panel">管理パネル</string>
     <string name="title_password">パスワードの変更</string>

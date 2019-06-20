@@ -15,6 +15,7 @@
     <string name="title_settings">الإعدادات</string>
     <string name="title_preferences">تفضيلات</string>
     <string name="title_change_password">تغيير كلمة السر</string>
+    <string name="title_change_theme">Change Theme</string> <!-- TODO Translate -->
     <string name="title_rate_us">قيمنا</string>
     <string name="title_admin_panel">لوحة الإدارة</string>
     <string name="title_password">تغيير كلمة السر</string>

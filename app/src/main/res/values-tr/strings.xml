@@ -15,6 +15,7 @@
     <string name="title_settings">Ayarlar</string>
     <string name="title_preferences">Tercihler</string>
     <string name="title_change_password">Şifre Değişikliği</string>
+    <string name="title_change_theme">Change Theme</string> <!-- TODO Translate -->
     <string name="title_rate_us">Bizi değerlendirin</string>
     <string name="title_admin_panel">Yönetici Paneli</string>
     <string name="title_password">Şifrenizi Değiştirin</string>
