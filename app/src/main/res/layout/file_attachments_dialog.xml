@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:text="@string/msg_upload_file"
             style="@style/Base.DialogWindowTitle.AppCompat"
-            android:textColor="?titleTextColor"
+            android:textColor="?colorHeadings"
             android:layout_margin="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

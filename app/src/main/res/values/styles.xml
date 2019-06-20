@@ -6,7 +6,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textColor">?titleTextColor</item>
+        <item name="android:textColor">?colorHeadings</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -163,7 +163,7 @@
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?titleTextColor</item>
+        <item name="android:textColor">?colorHeadings</item>
     </style>
     <!--<item name="android:textColor">@color/colorUserDetailsNameText</item>-->
 
@@ -219,15 +219,20 @@
 
     <style name="ChatRooms.Header" parent="TextAppearance.AppCompat.Headline">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">?titleTextColor</item>
+        <item name="android:textColor">?colorHeadings</item>
     </style>
 
     <style name="ChatDetails.Title.TextView" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">?titleTextColor</item>
+        <item name="android:textColor">?colorHeadings</item>
     </style>
 
     <style name="ChatDetails.Content.TextView" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">?colorDescriptiveText</item>
+    </style>
+
+    <style name="ChangeTheme.Content.TextView" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">?colorDescriptiveText</item>
     </style>
@@ -241,7 +246,7 @@
 
     <style name="Message.TextView" parent="android:TextAppearance">
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">?titleTextColor</item>
+        <item name="android:textColor">?colorHeadings</item>
     </style>
 
     <style name="Message.DayMarker" parent="TextAppearance.AppCompat">
@@ -299,6 +304,14 @@
     </style>
 
     <style name="Password.Title.TextView" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ChangeTheme.Title.TextView" parent="TextAppearance.AppCompat">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorWhite</item>

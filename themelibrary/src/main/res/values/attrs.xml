@@ -23,4 +23,5 @@
     <attr name="colorFloatingActionButtonBackground" format="color|reference"/>
     <attr name="colorFloatingActionButtonBorder" format="color|reference"/>
     <attr name="colorLoading" format="color|reference"/>
+    <attr name="colorHeadings" format="color|reference"/>
 </resources>

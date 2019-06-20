@@ -4,6 +4,7 @@
         <item name="colorPrimary">@color/darkColorPrimary</item>
         <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
         <item name="titleTextColor">@color/darkColorTitleText</item>
+        <item name="colorHeadings">@color/darkColorTitleText</item>
         <item name="colorAccent">@color/darkColorAccent</item>
         <item name="android:colorBackground">@color/darkColorBackground</item>
         <item name="colorSubHeaderBackground">@color/darkColorSubHeaderBackground</item>
@@ -40,6 +41,7 @@
         <item name="colorPrimary">@color/blackColorPrimary</item>
         <item name="colorPrimaryDark">@color/blackColorPrimaryDark</item>
         <item name="titleTextColor">@color/blackColorTitleText</item>
+        <item name="colorHeadings">@color/blackColorTitleText</item>
         <item name="colorAccent">@color/blackColorAccent</item>
         <item name="android:colorBackground">@color/blackColorBackground</item>
         <item name="colorSubHeaderBackground">@color/blackColorSubHeaderBackground</item>

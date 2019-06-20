@@ -7,6 +7,6 @@
     android:foreground="?selectableItemBackground"
     android:layout_gravity="center"
     android:gravity="center"
-    android:textColor="?titleTextColor"
+    android:textColor="?colorPrimaryText"
     android:textSize="24sp"
     tools:text="😀" />

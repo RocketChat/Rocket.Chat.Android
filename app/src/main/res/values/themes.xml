@@ -4,7 +4,8 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="titleTextColor">@color/colorPrimary</item>
+        <item name="colorHeadings">@color/colorPrimary</item>
+        <item name="titleTextColor">@color/colorWhite</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="searchViewStyle">@style/ChatRoom.SearchView</item>

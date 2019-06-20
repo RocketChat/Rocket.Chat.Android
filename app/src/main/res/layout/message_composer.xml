@@ -28,7 +28,7 @@
             android:background="?android:colorBackground"
             android:gravity="center"
             android:text="@string/msg_this_room_is_read_only"
-            android:textColor="?titleTextColor"
+            android:textColor="?colorHeadings"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +70,7 @@
 
             <chat.rocket.android.emoji.ComposerEditText
                 android:id="@+id/text_message"
-                android:textColor="?titleTextColor"
+                android:textColor="?colorHeadings"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
