@@ -60,7 +60,6 @@
         android:id="@+id/floatingActionButton2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:tint="?attr/themeIconColor"
         android:clickable="true"
         android:src="@drawable/ic_action_message_copy_24dp"
         app:layout_constraintBottom_toBottomOf="parent"

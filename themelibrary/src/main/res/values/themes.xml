@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DarkTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/darkColorPrimary</item>
+        <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
+        <item name="titleTextColor">@color/darkColorTitleText</item>
+        <item name="colorAccent">@color/darkColorAccent</item>
+        <item name="android:colorBackground">@color/darkColorBackground</item>
+        <item name="colorSubHeaderBackground">@color/darkColorSubHeaderBackground</item>
+        <item name="colorSubHeaderText">@color/darkColorSubHeaderText</item>
+        <item name="colorDivider">@color/darkColorDivider</item>
+        <item name="colorBottomSheetFragmentText">@color/darkColorBottomSheetFragmentText</item>
+        <item name="colorBottomSheetFragmentHeading">@color/darkColorBottomSheetFragmentHeading</item>
+        <item name="colorAuthenticationButtonBorderAndDivider">@color/darkColorDivider</item>
+        <item name="colorRadioButton">@color/darkColorBodyText</item>
+        <item name="android:textColorHint">@color/darkColorTextHint</item>
+        <item name="colorButtonDisabled">@color/darkColorAuthenticationButtonDisabled</item>
+        <item name="colorControlText">@color/darkColorControlText</item>
+        <item name="colorChatComponentBackground">@color/darkColorChatComponentBackground</item>
+        <item name="colorDescriptiveText">@color/darkColorDescriptiveText</item>
+        <item name="colorDim">@color/darkColorDim</item>
+        <item name="colorIcon">@color/darkColorPrimary</item>
+        <item name="colorSettingsSecondaryBackground">@color/darkColorSettingsSecondaryBackground</item>
+        <item name="colorChannelTitle">@color/darkColorChannelTitle</item>
+        <item name="colorTimestampText">@color/darkColorTimestampText</item>
+        <item name="colorStatusInvisible">@color/darkColorStatusInvisible</item>
+        <item name="colorPrimaryText">@color/darkColorPrimaryText</item>
+        <item name="colorReactionBackground">@color/darkColorReactionBackground</item>
+        <item name="colorReactionBorder">@color/darkColorReactionBorder</item>
+        <item name="colorFloatingActionButtonBackground">@color/darkColorFloatingActionButtonBackground</item>
+        <item name="colorFloatingActionButtonBorder">@color/darkColorFloatingActionButtonBorder</item>
+        <item name="bottomSheetDialogTheme">@style/DarkCustomBottomSheetDialogStyle</item>
+        <item name="android:navigationBarColor">@color/darkColorPrimaryDark</item>
+        <item name="alertDialogTheme">@style/DarkCustomAlertDialogTheme</item>
+        <item name="android:statusBarColor">@color/darkColorPrimaryDark</item>
+        <item name="colorLoading">@color/darkColorAuxiliaryTint</item>
+    </style>
+
+    <style name="BlackTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/blackColorPrimary</item>
+        <item name="colorPrimaryDark">@color/blackColorPrimaryDark</item>
+        <item name="titleTextColor">@color/blackColorTitleText</item>
+        <item name="colorAccent">@color/blackColorAccent</item>
+        <item name="android:colorBackground">@color/blackColorBackground</item>
+        <item name="colorSubHeaderBackground">@color/blackColorSubHeaderBackground</item>
+        <item name="colorSubHeaderText">@color/blackColorSubHeaderText</item>
+        <item name="colorDivider">@color/blackColorDivider</item>
+        <item name="colorBottomSheetFragmentText">@color/blackColorBottomSheetFragmentText</item>
+        <item name="colorBottomSheetFragmentHeading">@color/blackColorBottomSheetFragmentHeading</item>
+        <item name="colorAuthenticationButtonBorderAndDivider">@color/blackColorDivider</item>
+        <item name="colorRadioButton">@color/blackColorBodyText</item>
+        <item name="android:textColorHint">@color/blackColorTextHint</item>
+        <item name="colorButtonDisabled">@color/blackColorAuthenticationButtonDisabled</item>
+        <item name="colorControlText">@color/blackColorControlText</item>
+        <item name="colorChatComponentBackground">@color/blackColorChatComponentBackground</item>
+        <item name="colorDescriptiveText">@color/blackColorDescriptiveText</item>
+        <item name="colorDim">@color/blackColorDim</item>
+        <item name="colorIcon">@color/blackColorPrimary</item>
+        <item name="colorSettingsSecondaryBackground">@color/blackColorSettingsSecondaryBackground</item>
+        <item name="colorChannelTitle">@color/blackColorChannelTitle</item>
+        <item name="colorTimestampText">@color/blackColorTimestampText</item>
+        <item name="colorStatusInvisible">@color/blackColorStatusInvisible</item>
+        <item name="colorPrimaryText">@color/blackColorPrimaryText</item>
+        <item name="colorReactionBackground">@color/blackColorReactionBackground</item>
+        <item name="colorReactionBorder">@color/blackColorReactionBorder</item>
+        <item name="colorFloatingActionButtonBackground">@color/blackColorFloatingActionButtonBackground</item>
+        <item name="colorFloatingActionButtonBorder">@color/blackColorFloatingActionButtonBorder</item>
+        <item name="bottomSheetDialogTheme">@style/BlackCustomBottomSheetDialogStyle</item>
+        <item name="android:navigationBarColor">@color/blackColorPrimaryDark</item>
+        <item name="alertDialogTheme">@style/BlackCustomAlertDialogTheme</item>
+        <item name="android:statusBarColor">@color/blackColorPrimaryDark</item>
+        <item name="colorLoading">@color/blackColorAuxiliaryTint</item>
+    </style>
+</resources>
