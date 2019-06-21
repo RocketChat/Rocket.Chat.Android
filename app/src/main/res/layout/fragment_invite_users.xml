@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:backgroundTint="@color/colorDim"
+            android:backgroundTint="@color/default_background"
             android:hint="@string/msg_invite_members"
             android:inputType="text"
             android:maxLines="1"
@@ -34,6 +34,16 @@
             android:textSize="16sp" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/layout_search_user_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="8dp"
+        android:background="?android:attr/listDivider"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_search_user" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chip_group_member"
@@ -47,7 +57,7 @@
         app:chipSpacing="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_search_user" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_search_user_divider" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/view_member_suggestion"
@@ -65,18 +75,6 @@
             android:id="@+id/recycler_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/view_member_suggestion_loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:indicatorColor="@color/colorBlack"
-            app:indicatorName="BallPulseIndicator"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

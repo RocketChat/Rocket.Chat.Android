@@ -2,6 +2,7 @@ package chat.rocket.android.inviteusers.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.members.uimodel.MemberUiModel
 import chat.rocket.android.members.uimodel.MemberUiModelMapper
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
@@ -26,7 +27,7 @@ class InviteUsersPresenter @Inject constructor(
 ) {
 	private val client: RocketChatClient = factory.get(currentServer)
 
-	fun inviteUsers(chatRoomId: String, usersList: List<Pair<String, String>>) {
+	fun inviteUsers(chatRoomId: String, usersList: List<MemberUiModel>) {
 		launchUI(strategy) {
 			view.disableUserInput()
 			view.showLoading()
@@ -36,13 +37,13 @@ class InviteUsersPresenter @Inject constructor(
 			try {
 				for (user in usersList) {
 					try {
-						client.invite(chatRoomId, roomTypeOf(getChatRoomType(chatRoomId)), user.first)
-						stringBuilder.append("Invited : ${user.second}\n")
+						client.invite(chatRoomId, roomTypeOf(getChatRoomType(chatRoomId)), user.userId)
+						stringBuilder.append("Invited : ${user.username}\n")
 					} catch (exception: RocketChatException) {
 						exception.message?.let {
-							stringBuilder.append("Exception : ${user.second} : $it\n")
+							stringBuilder.append("Exception : ${user.username} : $it\n")
 						}.ifNull {
-							stringBuilder.append("Error : ${user.second} : Try again later\n")
+							stringBuilder.append("Error : ${user.username} : Try again later\n")
 						}
 					}
 				}

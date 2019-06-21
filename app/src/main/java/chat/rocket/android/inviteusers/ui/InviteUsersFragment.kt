@@ -46,12 +46,11 @@ class InviteUsersFragment : Fragment(), InviteUsersView {
 	lateinit var analyticsManager: AnalyticsManager
 	private val compositeDisposable = CompositeDisposable()
 	private val adapter: MembersAdapter = MembersAdapter {
-		it.username?.run { processSelectedMember(Pair(it.userId, it.username)) }
+		it.username?.run { processSelectedMember(it) }
 	}
 
 	private lateinit var chatRoomId: String
-	// Pair of userId and userName
-	private var memberList = arrayListOf<Pair<String, String>>()
+	private var memberList = arrayListOf<MemberUiModel>()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -129,12 +128,12 @@ class InviteUsersFragment : Fragment(), InviteUsersView {
 	override fun showSuggestionViewInProgress() {
 		recycler_view.isVisible = false
 		text_member_not_found.isVisible = false
-		view_member_suggestion_loading.isVisible = true
 		view_member_suggestion.isVisible = true
+		showLoading()
 	}
 
 	override fun hideSuggestionViewInProgress() {
-		view_member_suggestion_loading.isVisible = false
+		hideLoading()
 	}
 
 	override fun usersInvitedSuccessfully() {
@@ -194,30 +193,30 @@ class InviteUsersFragment : Fragment(), InviteUsersView {
 		compositeDisposable.dispose()
 	}
 
-	private fun processSelectedMember(member: Pair<String, String>) {
-		if (memberList.any { it.second == member.second }) {
+	private fun processSelectedMember(member: MemberUiModel) {
+		if (memberList.any { it.username == member.username }) {
 			showMessage(getString(R.string.msg_member_already_added))
 		} else {
 			view_member_suggestion.isVisible = false
 			edit_text_invite_users.setText("")
 			addMember(member)
-			addChip(member.second)
+			addChip(member)
 			chip_group_member.isVisible = true
 			processBackgroundOfInviteUsersButton()
 		}
 	}
 
-	private fun addMember(member: Pair<String, String>) {
+	private fun addMember(member: MemberUiModel) {
 		memberList.add(member)
 	}
 
 	private fun removeMember(username: String) {
-		memberList.remove(memberList.find { it.second == username })
+		memberList.remove(memberList.find { it.username == username })
 	}
 
-	private fun addChip(chipText: String) {
+	private fun addChip(member: MemberUiModel) {
 		val chip = Chip(context)
-		chip.text = chipText
+		chip.text = member.username
 		chip.isCloseIconVisible = true
 		chip.setChipBackgroundColorResource(R.color.icon_grey)
 		setupChipOnCloseIconClickListener(chip)
