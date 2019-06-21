@@ -31,14 +31,13 @@ class MembersPresenter @Inject constructor(
     private val userHelper: UserHelper
 ) {
     private val client: RocketChatClient = factory.create(currentServer)
-    private var offset: Long = 0
 
     /**
      * Loads all the chat room members for the given room id.
      *
      * @param roomId The id of the room to get chat room members from.
      */
-    fun loadChatRoomsMembers(roomId: String) {
+    fun loadChatRoomsMembers(roomId: String, offset: Long = 0, clearDataset: Boolean = false) {
         launchUI(strategy) {
             try {
                 view.showLoading()
@@ -46,8 +45,7 @@ class MembersPresenter @Inject constructor(
                     val members =
                         client.getMembers(roomId, roomTypeOf(it.chatRoom.type), offset, 60)
                     val memberUiModels = mapper.mapToUiModelList(members.result)
-                    view.showMembers(memberUiModels, members.total)
-                    offset += 1 * 60L
+                    view.showMembers(memberUiModels, members.total, clearDataset)
                 }.ifNull {
                     Timber.e("Couldn't find a room with id: $roomId at current server.")
                 }
