@@ -49,7 +49,7 @@ ext {
             threeTenABP           : '1.1.0',
             rxBinding             : '2.1.1',
 
-            fresco                : '1.10.0',
+            fresco                : '1.12.0',
 
             kotshi                : '1.0.6',
 
