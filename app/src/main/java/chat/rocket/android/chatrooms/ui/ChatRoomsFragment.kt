@@ -344,25 +344,29 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             if (filteredLocalRooms.isNotEmpty()) {
                 presenter.loadChatRoom(filteredLocalRooms.first().data as RoomUiModel)
             } else {
-                //check from spotlight when connected
-                val statusLiveData = viewModel.getStatus()
-                statusLiveData.observe(viewLifecycleOwner, object: Observer<State>{
-                    override fun onChanged(status: State?) {
-                        if (status is State.Connected) {
-                            val rooms = viewModel.getUsersRoomListSpotlight(username)
-                            val filteredRooms = rooms?.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
-
-                            filteredRooms?.let {
-                                if (filteredRooms.isNotEmpty()) {
-                                    presenter.loadChatRoom(filteredRooms.first().data as RoomUiModel)
-                                }
-                            }
-                            statusLiveData.removeObserver(this)
-                        }
-                    }
-                })
+                loadRoomFromSpotlight(username)
             }
         }
+    }
+
+    private fun loadRoomFromSpotlight(username: String) {
+        //check from spotlight when connected
+        val statusLiveData = viewModel.getStatus()
+        statusLiveData.observe(viewLifecycleOwner, object: Observer<State>{
+            override fun onChanged(status: State?) {
+                if (status is State.Connected) {
+                    val rooms = viewModel.getUsersRoomListSpotlight(username)
+                    val filteredRooms = rooms?.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+
+                    filteredRooms?.let {
+                        if (filteredRooms.isNotEmpty()) {
+                            presenter.loadChatRoom(filteredRooms.first().data as RoomUiModel)
+                        }
+                    }
+                    statusLiveData.removeObserver(this)
+                }
+            }
+        })
     }
 
     private fun showAllChats() {

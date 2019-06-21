@@ -63,7 +63,6 @@ class MainActivity : AppCompatActivity(), HasActivityInjector,
                 chatRoomsFragment?.let {
                     it.processDeepLink(deepLinkInfo)
                 }
-
             }
         }
     }
