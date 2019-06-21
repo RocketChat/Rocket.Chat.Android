@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="45sp"
+    android:layout_height="5sp"
+    android:background="@drawable/theme_preview_small"
+    android:orientation="vertical">
+
+</LinearLayout>

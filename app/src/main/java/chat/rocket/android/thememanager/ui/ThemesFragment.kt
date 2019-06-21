@@ -1,25 +1,27 @@
 package chat.rocket.android.thememanager.ui
 
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.R
+import chat.rocket.android.thememanager.adapter.ThemesAdapter
 import chat.rocket.android.thememanager.viewmodel.ThemesViewModel
 import chat.rocket.android.thememanager.viewmodel.ThemesViewModelFactory
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_theme.*
 import javax.inject.Inject
-
+import chat.rocket.android.thememanager.model.Theme
 
 internal const val TAG_THEME_FRAGMENT = "ThemesFragment"
 
@@ -29,12 +31,12 @@ class ThemesFragment : Fragment() {
     @Inject
     lateinit var factory: ThemesViewModelFactory
     private lateinit var viewModel: ThemesViewModel
-    var currentTheme:String = "AppTheme"
+    private lateinit var adapter: ThemesAdapter
+    var currentTheme: String = "AppTheme"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-
     }
 
     override fun onCreateView(
@@ -43,30 +45,24 @@ class ThemesFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProviders.of(this, factory).get(ThemesViewModel::class.java)
-        currentTheme=viewModel.getCurrentTheme()!!
+        currentTheme = viewModel.getCurrentTheme()!!
         applyTheme(activity)
         return container?.inflate(R.layout.fragment_theme)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
         subscribeUi()
-        setSavedTheme()
-        setupListeners()
     }
 
     private fun subscribeUi() {
         viewModel.getThemes().observe(this, Observer { themes ->
-            val stringBuilder = StringBuilder()
-            themes.forEach { theme ->
-                stringBuilder.append("$theme\n\n")
-            }
-            textView_themes.text = stringBuilder.toString()
+            setupRecyclerView(themes)
         })
     }
 
     private fun applyTheme(activity: FragmentActivity?){
-        println("Applying"+viewModel.getCurrentTheme()!!)
         if (currentTheme == "AppTheme"){
             activity?.setTheme(R.style.AppTheme)
         }
@@ -78,52 +74,33 @@ class ThemesFragment : Fragment() {
         }
     }
 
-    private fun setSavedTheme() {
-        if(toggleButton!=null){
-            if(viewModel.getLeftToggle()!!){
-                toggleButton.isChecked=true
-            }
-        }
-        if(toggleButtonLibrary!=null){
-            if(viewModel.getRightToggle()!!){
-                toggleButtonLibrary.isChecked=true
-            }
-        }
-    }
-
-    private fun setupListeners(){
-        println("SetupListeners!")
-        toggleButton.setOnCheckedChangeListener { buttonView, isChecked ->
-            if(buttonView.isPressed){
-                if (isChecked) {
-                    println("Left Checked" + toggleButton.isChecked+viewModel.getLeftToggle()+isChecked)
-                    println("Right" + toggleButtonLibrary.isChecked+viewModel.getRightToggle()+isChecked)
-                    toggleButtonLibrary.isChecked=false
-                    viewModel.saveTheme("DarkTheme")
-                } else {
-                    viewModel.saveTheme("AppTheme")
-                }
-                reloadFragment()
-            }
-        }
-
-        toggleButtonLibrary.setOnCheckedChangeListener { buttonView, isChecked ->
-            if(buttonView.isPressed){
-                if (isChecked) {
-                    println("Right Checked" + toggleButtonLibrary.isChecked+viewModel.getRightToggle()+isChecked)
-                    println("Left" + toggleButton.isChecked+viewModel.getLeftToggle()+isChecked)
-                    toggleButton.isChecked=false
-                    viewModel.saveTheme("BlackTheme")
-                } else {
-                    viewModel.saveTheme("AppTheme")
-                }
-                reloadFragment()
-            }
-        }
+    private fun saveTheme(theme:Theme){
+        viewModel.saveTheme(theme.toString())
+        reloadFragment()
     }
 
     private fun reloadFragment() {
-        println("Reload Fragment!")
         fragmentManager?.beginTransaction()?.detach(this)?.attach(this)?.commit()
     }
+
+    private fun setupToolbar() {
+        with((activity as AppCompatActivity)) {
+            with(toolbar) {
+                setSupportActionBar(this)
+                title = getString(R.string.title_change_theme)
+                setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+                setNavigationOnClickListener { activity?.onBackPressed() }
+            }
+        }
+    }
+
+    private fun setupRecyclerView(themes : List<Theme>) {
+        ui {
+            adapter = ThemesAdapter(themes, listener = {theme:Theme -> saveTheme(theme)})
+            recycler_view.layoutManager = LinearLayoutManager(context)
+            recycler_view.addItemDecoration(DividerItemDecoration(it, DividerItemDecoration.HORIZONTAL))
+            recycler_view.adapter = adapter
+        }
+    }
+
 }

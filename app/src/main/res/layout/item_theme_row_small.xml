@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:colorBackground"
+    android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+    android:paddingStart="@dimen/screen_edge_left_and_right_margins"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_margins">
+
+    <include
+        android:id="@+id/item_theme_preview_small"
+        layout="@layout/item_theme_preview_small"
+        android:layout_width="45sp"
+        android:layout_height="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

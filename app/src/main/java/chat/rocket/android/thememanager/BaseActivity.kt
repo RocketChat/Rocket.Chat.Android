@@ -13,13 +13,12 @@ open class BaseActivity : AppCompatActivity() {
     @Inject
     lateinit var factory: ThemesViewModelFactory
     private lateinit var viewModel: ThemesViewModel
-    private var currentTheme:String = "AppTheme"
-//    private lateinit var TEMP_ARRAY : IntArray
+    private var currentTheme: String = "AppTheme"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, factory).get(ThemesViewModel::class.java)
-        currentTheme=viewModel.getCurrentTheme()!!
+        currentTheme = viewModel.getCurrentTheme()!!
         applyTheme(currentTheme)
     }
 
@@ -41,10 +40,4 @@ open class BaseActivity : AppCompatActivity() {
             setTheme(R.style.BlackTheme)
         }
     }
-
-//    fun getThemeAttributeColor(attr : Int){
-//        TEMP_ARRAY[0] = attr
-//        val color = getThemeAttributeColor(attr)
-//        return color
-//    }
 }

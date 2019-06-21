@@ -233,8 +233,19 @@
     </style>
 
     <style name="ChangeTheme.Content.TextView" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">?colorDescriptiveText</item>
+        <item name="android:fontFamily">"sans-serif"</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ChangeTheme.TextView.Headline" parent="TextAppearance.AppCompat">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">?colorHeadings</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Sender.Name.TextView" parent="TextAppearance.AppCompat.Title">

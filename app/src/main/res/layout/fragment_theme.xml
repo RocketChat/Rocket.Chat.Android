@@ -4,52 +4,98 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/screen_edge_left_and_right_margins"
     android:background="?android:colorBackground"
     tools:context=".thememanager.ui.ThemesFragment">
 
-    <Switch
-        android:id="@+id/toggleButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <Switch
-        android:id="@+id/toggleButtonLibrary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <EditText
-        android:id="@+id/editTextTest"
-        android:layout_width="match_parent"
-        android:padding="10dp"
-        android:textSize="20sp"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:hint="Accent Color Indicator"
-        app:layout_constraintStart_toStartOf="@id/toggleButton"
-        app:layout_constraintTop_toBottomOf="@id/toggleButton"
-        />
+    <include
+        android:id="@+id/layout_app_bar"
+        layout="@layout/app_bar"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView_themes"
-        android:layout_width="match_parent"
+        android:id="@+id/current_theme"
+        style="@style/ChangeTheme.Content.TextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:textSize="20sp"
-        android:textColor="?colorPrimaryText"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="@id/editTextTest"
-        app:layout_constraintTop_toBottomOf="@id/editTextTest"/>
+        android:paddingStart="@dimen/screen_edge_left_and_right_margins"
+        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+        android:text="Current Theme"
+        app:layout_constraintStart_toStartOf="@+id/layout_app_bar"
+        app:layout_constraintTop_toBottomOf="@+id/layout_app_bar" />
+
+    <TextView
+        android:id="@+id/divider"
+        style="@style/ChangeTheme.Content.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+        android:text="   |   "
+        app:layout_constraintLeft_toRightOf="@+id/current_theme"
+        app:layout_constraintTop_toBottomOf="@+id/layout_app_bar" />
+
+    <TextView
+        android:id="@+id/theme_last_changed"
+        style="@style/ChangeTheme.Content.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+        android:text="Last Changed"
+        app:layout_constraintLeft_toRightOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/layout_app_bar" />
+
+    <include
+        android:id="@+id/item_theme_row_small"
+        layout="@layout/item_theme_row_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/current_theme" />
+
+    <TextView
+        android:id="@+id/revert_to_default"
+        style="@style/ChangeTheme.Content.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/screen_edge_left_and_right_margins"
+        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+        android:text="Revert to Default"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_theme_row_small" />
+
+    <TextView
+        android:id="@+id/divider2"
+        style="@style/ChangeTheme.Content.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+        android:text="   |   "
+        app:layout_constraintLeft_toRightOf="@+id/revert_to_default"
+        app:layout_constraintTop_toBottomOf="@+id/item_theme_row_small" />
+
+    <TextView
+        android:id="@+id/create_personal_theme"
+        style="@style/ChangeTheme.Content.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+        android:text="Create Personal Theme"
+        app:layout_constraintLeft_toRightOf="@+id/divider2"
+        app:layout_constraintTop_toBottomOf="@+id/item_theme_row_small" />
+
+    <TextView
+        android:id="@+id/text_other_themes"
+        style="@style/ChangeTheme.TextView.Headline"
+        android:paddingStart="@dimen/screen_edge_left_and_right_margins"
+        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+        android:text="Other Themes"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/create_personal_theme" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/themerecycler"
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/textView_themes"
-        app:layout_constraintTop_toBottomOf="@id/textView_themes"/>
-
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_other_themes"
+        tools:listitem="@layout/item_theme_row" />
 </androidx.constraintlayout.widget.ConstraintLayout>
