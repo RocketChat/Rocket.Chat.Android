@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
+import chat.rocket.android.thememanager.BaseActivity
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
 import dagger.android.AndroidInjection
@@ -23,7 +24,7 @@ fun Context.messageInformationIntent(messageId: String): Intent {
 
 private const val INTENT_MESSAGE_ID = "message_id"
 
-class MessageInfoActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class MessageInfoActivity : BaseActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 

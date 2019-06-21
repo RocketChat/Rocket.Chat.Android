@@ -93,7 +93,9 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
         profile_container.setOnClickListener { presenter.toProfile() }
 
+        //----------------------------------------------------------------
         text_change_theme.setOnClickListener { presenter.toChangeTheme() }
+        //----------------------------------------------------------------
 
         text_contact_us.setOnClickListener { contactSupport() }
 
