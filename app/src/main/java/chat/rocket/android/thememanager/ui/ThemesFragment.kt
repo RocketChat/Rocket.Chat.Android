@@ -63,14 +63,10 @@ class ThemesFragment : Fragment() {
     }
 
     private fun applyTheme(activity: FragmentActivity?){
-        if (currentTheme == "AppTheme"){
-            activity?.setTheme(R.style.AppTheme)
-        }
-        else if(currentTheme == "DarkTheme"){
-            activity?.setTheme(R.style.DarkTheme)
-        }
-        else if(currentTheme == "BlackTheme") {
-            activity?.setTheme(R.style.BlackTheme)
+        when(currentTheme){
+            "AppTheme" -> activity?.setTheme(R.style.AppTheme)
+            "DarkTheme" -> activity?.setTheme(R.style.DarkTheme)
+            "BlackTheme" -> activity?.setTheme(R.style.BlackTheme)
         }
     }
 
