@@ -7,6 +7,8 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import timber.log.Timber
 
+private const val DEFAULT_SERVER_HOST = "open.rocket.chat"
+
 // see https://rocket.chat/docs/developer-guides/deeplink/ for documentation
 
 @SuppressLint("ParcelCreator")
@@ -74,7 +76,7 @@ fun Uri.isDynamicLink(): Boolean {
 private inline fun Uri.isAuthenticationDeepLink(): Boolean {
     if (host == "auth")
         return true
-    else if (host == "go.rocket.chat" && path == "/auth")
+    else if (host == DEFAULT_SERVER_HOST && path == "/auth")
         return true
     return false
 }

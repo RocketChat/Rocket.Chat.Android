@@ -7,5 +7,5 @@ interface DynamicLinks {
 
     fun getDynamicLink(intent: Intent, deepLinkCallback: (Uri?) -> Unit? )
 
-    fun createDynamicLink(username: String, server: String, deepLinkCallback: (String?) -> Unit?)
+    fun createDynamicLink(username: String?, server: String, deepLinkCallback: (String?) -> Unit?)
 }

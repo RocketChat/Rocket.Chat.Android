@@ -166,7 +166,7 @@ class SettingsPresenter @Inject constructor(
                     context?.startActivity(Intent.createChooser(this, context.getString(R.string.msg_share_using)))
                 }
             }
-            dynamicLinksManager.createDynamicLink(user?.username!!, currentServer, deepLinkCallback)
+            dynamicLinksManager.createDynamicLink(user?.username, currentServer, deepLinkCallback)
         }
     }
 

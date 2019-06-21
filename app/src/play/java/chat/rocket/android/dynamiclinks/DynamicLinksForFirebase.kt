@@ -29,7 +29,7 @@ class DynamicLinksForFirebase @Inject constructor(private var context: Context) 
                 .addOnFailureListener { e -> TimberLogger.debug("getDynamicLink:onFailure : $e") }
     }
 
-    override fun createDynamicLink(username: String, server: String, deepLinkCallback: (String?) -> Unit? ) {
+    override fun createDynamicLink(username: String?, server: String, deepLinkCallback: (String?) -> Unit? ) {
         FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLink("$server/direct/$username".toUri())
                 .setDomainUriPrefix("https://" + context.getString(R.string.dynamiclink_host))

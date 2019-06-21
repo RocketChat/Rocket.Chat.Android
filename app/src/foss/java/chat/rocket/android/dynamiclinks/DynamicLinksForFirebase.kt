@@ -11,7 +11,7 @@ class DynamicLinksForFirebase @Inject constructor(private val context: Context) 
         deepLinkCallback(null)
     }
 
-    override fun createDynamicLink(username: String, server: String, deepLinkCallback: (String?) -> Unit?) {
+    override fun createDynamicLink(username: String?, server: String, deepLinkCallback: (String?) -> Unit?) {
         deepLinkCallback(null)
     }
 }
