@@ -62,6 +62,7 @@
 
     <!-- Settings messages -->
     <string name="msg_contact_us">Nous contacter</string>
+    <string name="msg_change_theme">Change Theme</string> <!-- TODO Translate -->
     <string name="msg_language">Langue</string>
     <string name="msg_review_this_app">Notez cette application</string>
     <string name="msg_share_this_app">Partagez cette application</string>

@@ -11,7 +11,22 @@
         <item name="actionModeBackground">@color/colorPrimary</item>
         <item name="android:actionModeBackground">@color/colorPrimary</item>
         <item name="android:textDirection">locale</item>
+        <item name="themeIconColor">@color/color_white</item>
     </style>
+    <!--......................................................................................-->
+    <!-- Dark theme. -->
+    <style name="AppDarkTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary2</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent2</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="searchViewStyle">@style/ChatRoom.SearchView</item>
+        <item name="actionModeBackground">@color/colorPrimary</item>
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
+        <item name="themeIconColor">@color/colorPrimary2</item>
+    </style>
+    <!---......................................................................................-->
 
     <!-- Widget styles. -->
     <!-- Authentication -->
@@ -280,5 +295,10 @@
         <item name="android:actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
         <item name="actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
     </style>
+<!--...............................................................................................-->
+    <!--<style name="Theme.App"-->
+        <!--parent="Theme.MaterialComponents.Light.NoActionBar">-->
+    <!--</style>-->
+<!---...............................................................................................-->
 
 </resources>
