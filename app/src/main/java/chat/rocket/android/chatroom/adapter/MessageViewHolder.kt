@@ -60,7 +60,8 @@ class MessageViewHolder(
             if (data.isTemporary){
                 text_content.setTextColor(Color.GRAY)
             }
-//            text_content.setTextColor(if (data.isTemporary) Color.GRAY else Color.BLACK)
+//          text_content.setTextColor(if (data.isTemporary) Color.GRAY else Color.BLACK)
+            text_content.setTextColor(if (data.isTemporary) activity.getThemeAttribute(R.attr.colorControlText) else activity.getThemeAttribute(R.attr.colorPrimaryText))
 
             data.message.let {
                 text_edit_indicator.isVisible = !it.isSystemMessage() && it.editedBy != null

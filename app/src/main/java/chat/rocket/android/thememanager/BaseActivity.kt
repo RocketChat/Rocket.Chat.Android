@@ -1,6 +1,9 @@
 package chat.rocket.android.thememanager
 
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.TypedValue
+import androidx.annotation.AttrRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import chat.rocket.android.R
@@ -35,5 +38,10 @@ open class BaseActivity : AppCompatActivity() {
             "DarkTheme" -> setTheme(R.style.DarkTheme)
             "BlackTheme" -> setTheme(R.style.BlackTheme)
         }
+    }
+
+    private fun getThemeAttribute( @AttrRes attrColor: Int, typedValue: TypedValue = TypedValue(), resolveRefs: Boolean = true) : Int{
+        theme.resolveAttribute(attrColor, typedValue, resolveRefs)
+        return typedValue.data
     }
 }
