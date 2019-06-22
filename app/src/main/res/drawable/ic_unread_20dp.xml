@@ -8,18 +8,18 @@
         android:strokeWidth="1.5"
         android:fillColor="#00000000"
         android:fillType="evenOdd"
-        android:strokeColor="#9EA2A8" />
+        android:strokeColor="?colorBottomSheetFragmentText" />
     <path
         android:pathData="M7.965,11.783a2.75,2.75 0,0 0,3.915 -3.661l-3.915,3.66z"
         android:strokeWidth="1.5"
         android:fillColor="#00000000"
         android:fillType="evenOdd"
-        android:strokeColor="#9EA2A8" />
+        android:strokeColor="?colorBottomSheetFragmentText" />
     <path
         android:pathData="M3.025,15.047L16.105,3.14"
         android:strokeWidth="1.5"
         android:fillColor="#00000000"
         android:fillType="evenOdd"
-        android:strokeColor="#9EA2A8"
+        android:strokeColor="?colorBottomSheetFragmentText"
         android:strokeLineCap="round" />
 </vector>

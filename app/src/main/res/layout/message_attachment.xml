@@ -5,10 +5,11 @@
     android:id="@+id/attachment_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="?android:colorBackground"
     android:orientation="vertical"
     android:paddingEnd="@dimen/screen_edge_left_and_right_margins"
     android:paddingStart="72dp">
+    <!--android:background="?android:attr/selectableItemBackground"-->
 
 
     <TextView
@@ -20,6 +21,7 @@
 
     <TextView
         android:id="@+id/file_description"
+        android:textColor="?colorDim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="Some description" />
@@ -36,7 +38,7 @@
         android:id="@+id/audio_video_attachment"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:background="@color/colorBlack"
+        android:background="?android:colorBackground"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -49,6 +51,7 @@
 
     <TextView
         android:id="@+id/file_text"
+        android:textColor="?colorDim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="Some text" />

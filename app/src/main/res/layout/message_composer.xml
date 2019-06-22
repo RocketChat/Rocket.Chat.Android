@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="?android:colorBackground"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -14,19 +15,20 @@
             android:id="@+id/divider"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:background="@color/colorDividerMessageComposer"
+            android:background="?colorDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        <!--android:background="@color/colorDividerMessageComposer"-->
 
         <TextView
             android:id="@+id/text_room_is_read_only"
             android:layout_width="0dp"
             android:layout_height="45dp"
-            android:background="@color/colorWhite"
+            android:background="?android:colorBackground"
             android:gravity="center"
             android:text="@string/msg_this_room_is_read_only"
-            android:textColor="@color/colorBlack"
+            android:textColor="?titleTextColor"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,9 +38,9 @@
             android:id="@+id/button_join_chat"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@color/colorWhite"
+            android:background="?android:colorBackground"
             android:text="@string/action_join_chat"
-            android:textColor="@color/colorAccent"
+            android:textColor="?colorAccent"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -68,6 +70,7 @@
 
             <chat.rocket.android.emoji.ComposerEditText
                 android:id="@+id/text_message"
+                android:textColor="?titleTextColor"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

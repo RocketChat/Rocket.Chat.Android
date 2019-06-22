@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/color_attachment_container"
     android:layout_width="match_parent"
+    android:background="?android:colorBackground"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
     android:paddingStart="@dimen/screen_edge_left_and_right_padding"
     android:paddingTop="@dimen/message_item_top_and_bottom_padding"
     android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
     android:paddingBottom="@dimen/message_item_top_and_bottom_padding">
+    <!--android:background="?android:attr/selectableItemBackground"-->
 
     <ImageView
         android:id="@+id/quote_bar"
@@ -30,6 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:autoLink="web"
+        android:textColor="?colorAccent"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/quote_bar"
