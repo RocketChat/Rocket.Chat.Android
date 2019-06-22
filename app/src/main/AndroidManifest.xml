@@ -18,22 +18,19 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:theme="@style/AppTheme"
         tools:replace="android:name">
-
         <activity
             android:name=".authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -43,57 +40,49 @@
                 <data
                     android:host="auth"
                     android:scheme="rocketchat" />
-
                 <data
                     android:host="go.rocket.chat"
                     android:path="/auth"
                     android:scheme="https" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".server.ui.ChangeServerActivity"
-            android:theme="@style/AppTheme" />
+            />
 
         <activity
             android:name=".main.ui.MainActivity"
-            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".webview.ui.WebViewActivity"
-            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".webview.sso.ui.SsoWebViewActivity"
-            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".webview.oauth.ui.OauthWebViewActivity"
-            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".videoconference.ui.VideoConferenceActivity"
-            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".chatroom.ui.ChatRoomActivity"
-            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".chatinformation.ui.MessageInfoActivity"
-            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <!-- TODO: Change to fragment -->
+
         <activity
             android:name=".settings.password.ui.PasswordActivity"
-            android:theme="@style/AppTheme" />
+             />
 
         <receiver
             android:name=".push.DirectReplyReceiver"
@@ -123,4 +112,5 @@
                 android:resource="@xml/file_paths" />
         </provider>
     </application>
+
 </manifest>
