@@ -92,4 +92,20 @@
 
     <color name="blackColorAuxiliaryBackground">#090909</color> <!--defined in stylesheet, unused-->
     <color name="blackColorAuxiliaryTint">#cdcdcd</color> <!--used for loading-->
+
+    <integer-array name="DarkThemePreview">
+        <item>@color/darkColorAccent</item>
+        <item>@color/darkColorPrimaryText</item>
+        <item>@color/darkColorPrimary</item>
+        <item>@color/darkColorDescriptiveText</item>
+        <item>@color/darkColorBackground</item>
+    </integer-array>
+
+    <integer-array name="BlackThemePreview">
+        <item>@color/blackColorAccent</item>
+        <item>@color/blackColorPrimaryText</item>
+        <item>@color/blackColorPrimary</item>
+        <item>@color/blackColorDescriptiveText</item>
+        <item>@color/blackColorBackground</item>
+    </integer-array>
 </resources>

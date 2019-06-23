@@ -37,6 +37,7 @@
         <item name="colorLoading">@color/darkColorAuxiliaryTint</item>
     </style>
 
+
     <style name="BlackTheme" parent="AppTheme">
         <item name="colorPrimary">@color/blackColorPrimary</item>
         <item name="colorPrimaryDark">@color/blackColorPrimaryDark</item>
@@ -72,6 +73,7 @@
         <item name="alertDialogTheme">@style/BlackCustomAlertDialogTheme</item>
         <item name="android:statusBarColor">@color/blackColorPrimaryDark</item>
         <item name="colorLoading">@color/blackColorAuxiliaryTint</item>
-
     </style>
+
+
 </resources>
