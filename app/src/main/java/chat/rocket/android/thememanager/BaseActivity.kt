@@ -1,9 +1,13 @@
 package chat.rocket.android.thememanager
 
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.TypedValue
+import androidx.annotation.AttrRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import chat.rocket.android.R
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.thememanager.viewmodel.ThemesViewModel
 import chat.rocket.android.thememanager.viewmodel.ThemesViewModelFactory
 import dagger.android.AndroidInjection
@@ -21,6 +25,7 @@ open class BaseActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, factory).get(ThemesViewModel::class.java)
         currentTheme = viewModel.getCurrentTheme()!!
         applyTheme(currentTheme)
+        ThemeUtil.setTheme(theme)
     }
 
     override fun onResume() {
