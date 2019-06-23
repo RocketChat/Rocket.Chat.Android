@@ -1,5 +1,7 @@
 package chat.rocket.android.thememanager.ui
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -36,7 +38,13 @@ class ThemesActivity : BaseActivity() {
     }
 
     private fun reloadFragment() {
-        recreate()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startActivity(Intent(this, ThemesActivity::class.java))
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+            finish()
+        } else {
+            recreate()
+        }
     }
 
     private fun setupToolbar() {
