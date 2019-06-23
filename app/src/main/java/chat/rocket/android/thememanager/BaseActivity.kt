@@ -6,16 +6,17 @@ import androidx.lifecycle.ViewModelProviders
 import chat.rocket.android.R
 import chat.rocket.android.thememanager.viewmodel.ThemesViewModel
 import chat.rocket.android.thememanager.viewmodel.ThemesViewModelFactory
+import dagger.android.AndroidInjection
 import javax.inject.Inject
 
 open class BaseActivity : AppCompatActivity() {
-
     @Inject
     lateinit var factory: ThemesViewModelFactory
     private lateinit var viewModel: ThemesViewModel
     private var currentTheme: String = "AppTheme"
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, factory).get(ThemesViewModel::class.java)
         currentTheme = viewModel.getCurrentTheme()!!
