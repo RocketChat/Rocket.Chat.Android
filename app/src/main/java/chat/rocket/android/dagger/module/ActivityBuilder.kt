@@ -37,11 +37,14 @@ import chat.rocket.android.settings.di.SettingsFragmentProvider
 import chat.rocket.android.settings.password.di.PasswordFragmentProvider
 import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.sortingandgrouping.di.SortingAndGroupingBottomSheetFragmentProvider
-import chat.rocket.android.thememanager.di.ThemesFragmentProvider
+import chat.rocket.android.thememanager.BaseActivity
+import chat.rocket.android.thememanager.di.BaseActivityModule
+import chat.rocket.android.thememanager.di.ThemesFragmentModule
 import chat.rocket.android.userdetails.di.UserDetailsFragmentProvider
 import chat.rocket.android.videoconference.di.VideoConferenceModule
 import chat.rocket.android.videoconference.ui.VideoConferenceActivity
 import chat.rocket.android.webview.adminpanel.di.AdminPanelWebViewFragmentProvider
+import chat.rocket.android.webview.oauth.ui.OauthWebViewActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -50,7 +53,8 @@ abstract class ActivityBuilder {
 
     @PerActivity
     @ContributesAndroidInjector(
-        modules = [AuthenticationModule::class,
+        modules = [BaseActivityModule::class,
+            AuthenticationModule::class,
             OnBoardingFragmentProvider::class,
             ServerFragmentProvider::class,
             LoginOptionsFragmentProvider::class,
@@ -65,8 +69,9 @@ abstract class ActivityBuilder {
 
     @PerActivity
     @ContributesAndroidInjector(
-        modules = [MainModule::class,
-            ThemesFragmentProvider::class,
+        modules = [BaseActivityModule::class,
+            MainModule::class,
+            ThemesFragmentModule::class,
             ChatRoomsFragmentProvider::class,
             ServersBottomSheetFragmentProvider::class,
             SortingAndGroupingBottomSheetFragmentProvider::class,
@@ -81,7 +86,8 @@ abstract class ActivityBuilder {
 
     @PerActivity
     @ContributesAndroidInjector(
-        modules = [ChatRoomModule::class,
+        modules = [ BaseActivityModule::class,
+            ChatRoomModule::class,
             ChatRoomFragmentProvider::class,
             UserDetailsFragmentProvider::class,
             ChatDetailsFragmentProvider::class,
@@ -95,22 +101,30 @@ abstract class ActivityBuilder {
     abstract fun bindChatRoomActivity(): ChatRoomActivity
 
     @PerActivity
-    @ContributesAndroidInjector(modules = [PasswordFragmentProvider::class])
+    @ContributesAndroidInjector(modules = [(BaseActivityModule::class)])
+    abstract fun bindBaseActivity(): BaseActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = [(BaseActivityModule::class)])
+    abstract fun OauthWebViewActivity(): OauthWebViewActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = [PasswordFragmentProvider::class, BaseActivityModule::class])
     abstract fun bindPasswordActivity(): PasswordActivity
 
     @PerActivity
-    @ContributesAndroidInjector(modules = [ChangeServerModule::class])
+    @ContributesAndroidInjector(modules = [ChangeServerModule::class, BaseActivityModule::class])
     abstract fun bindChangeServerActivity(): ChangeServerActivity
 
     @PerActivity
-    @ContributesAndroidInjector(modules = [MessageInfoFragmentProvider::class])
+    @ContributesAndroidInjector(modules = [MessageInfoFragmentProvider::class, BaseActivityModule::class])
     abstract fun bindMessageInfoActiviy(): MessageInfoActivity
 
     @PerActivity
-    @ContributesAndroidInjector(modules = [DrawModule::class])
+    @ContributesAndroidInjector(modules = [DrawModule::class, BaseActivityModule::class])
     abstract fun bindDrawingActivity(): DrawingActivity
 
     @PerActivity
-    @ContributesAndroidInjector(modules = [VideoConferenceModule::class])
+    @ContributesAndroidInjector(modules = [VideoConferenceModule::class, BaseActivityModule::class])
     abstract fun bindVideoConferenceActivity(): VideoConferenceActivity
 }
