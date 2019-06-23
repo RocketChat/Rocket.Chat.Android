@@ -18,13 +18,12 @@ import chat.rocket.android.util.extensions.toList
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
 import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 
 abstract class BaseViewHolder<T : BaseUiModel<*>>(
     itemView: View,
-    private val listener: ActionsListener,
+    private val listener: ActionsListener? = null,
     var reactionListener: EmojiReactionListener? = null
 ) : RecyclerView.ViewHolder(itemView),
     MenuItem.OnMenuItemClickListener {
@@ -63,7 +62,7 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
                     }
 
                     override fun onReactionLongClicked(shortname: String, isCustom: Boolean, url: String?, usernames: List<String>) {
-                        reactionListener?.onReactionLongClicked(shortname, isCustom,url, usernames)
+                        reactionListener?.onReactionLongClicked(shortname, isCustom, url, usernames)
                     }
                 }
 
@@ -119,7 +118,7 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
     }
 
     internal fun setupActionMenu(view: View) {
-        if (listener.isActionsEnabled()) {
+        if (listener?.isActionsEnabled() == true) {
             view.setOnClickListener(onClickListener)
             if (view is ViewGroup) {
                 for (child in view.children) {
@@ -133,7 +132,7 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         data?.let {
-            listener.onActionSelected(item, it.message)
+            listener?.onActionSelected(item, it.message)
         }
         return true
     }

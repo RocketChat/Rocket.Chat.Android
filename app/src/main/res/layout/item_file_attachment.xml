@@ -12,7 +12,6 @@
     android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
     android:paddingStart="@dimen/screen_edge_left_and_right_padding">
 
-
     <TextView
         android:id="@+id/text_file_name"
         android:layout_width="0dp"

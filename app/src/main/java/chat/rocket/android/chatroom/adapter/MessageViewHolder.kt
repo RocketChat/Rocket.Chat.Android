@@ -10,7 +10,6 @@ import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.emoji.EmojiReactionListener
-import chat.rocket.core.model.MessageType
 import chat.rocket.core.model.isSystemMessage
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import kotlinx.android.synthetic.main.avatar.view.*
@@ -20,8 +19,7 @@ class MessageViewHolder(
     itemView: View,
     listener: ActionsListener,
     reactionListener: EmojiReactionListener? = null,
-    private val avatarListener: (String) -> Unit,
-    private val joinVideoCallListener: (View) -> Unit
+    private val avatarListener: (String) -> Unit
 ) : BaseViewHolder<MessageUiModel>(itemView, listener, reactionListener), Drawable.Callback {
 
     init {
@@ -52,9 +50,6 @@ class MessageViewHolder(
             }
 
             text_content.text_content.text = data.content
-
-            button_join_video_call.isVisible = data.message.type is MessageType.JitsiCallStarted
-            button_join_video_call.setOnClickListener { joinVideoCallListener(it) }
 
             image_avatar.setImageURI(data.avatar)
             text_content.setTextColor(if (data.isTemporary) Color.GRAY else Color.BLACK)
