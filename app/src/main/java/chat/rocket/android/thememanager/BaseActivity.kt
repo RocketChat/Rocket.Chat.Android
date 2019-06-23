@@ -16,7 +16,7 @@ import javax.inject.Inject
 open class BaseActivity : AppCompatActivity() {
     @Inject
     lateinit var factory: ThemesViewModelFactory
-    private lateinit var viewModel: ThemesViewModel
+    lateinit var viewModel: ThemesViewModel
     private var currentTheme: String = "AppTheme"
 
     override fun onCreate(savedInstanceState: Bundle?) {

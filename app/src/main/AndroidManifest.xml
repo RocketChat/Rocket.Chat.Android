@@ -78,6 +78,10 @@
             android:name=".chatinformation.ui.MessageInfoActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
+        <activity
+            android:name=".thememanager.ui.ThemesActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
         <!-- TODO: Change to fragment -->
 
         <activity
