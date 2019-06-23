@@ -17,8 +17,8 @@
         style="@style/ChangeTheme.Content.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/screen_edge_left_and_right_margins"
-        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+        android:paddingStart="20dp"
+        android:paddingTop="25dp"
         android:text="Current Theme"
         app:layout_constraintStart_toStartOf="@+id/layout_app_bar"
         app:layout_constraintTop_toBottomOf="@+id/layout_app_bar" />
@@ -28,7 +28,7 @@
         style="@style/ChangeTheme.Content.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+        android:paddingTop="25dp"
         android:text="   |   "
         app:layout_constraintLeft_toRightOf="@+id/current_theme"
         app:layout_constraintTop_toBottomOf="@+id/layout_app_bar" />
@@ -38,8 +38,8 @@
         style="@style/ChangeTheme.Content.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
-        android:text="Last Changed"
+        android:paddingTop="25dp"
+        android:text="Last Changed 20.03.2019"
         app:layout_constraintLeft_toRightOf="@+id/divider"
         app:layout_constraintTop_toBottomOf="@+id/layout_app_bar" />
 
@@ -56,8 +56,8 @@
         style="@style/ChangeTheme.Content.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/screen_edge_left_and_right_margins"
-        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+        android:paddingStart="20dp"
+        android:paddingTop="25dp"
         android:text="Revert to Default"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_theme_row_small" />
@@ -67,7 +67,7 @@
         style="@style/ChangeTheme.Content.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+        android:paddingTop="25dp"
         android:text="   |   "
         app:layout_constraintLeft_toRightOf="@+id/revert_to_default"
         app:layout_constraintTop_toBottomOf="@+id/item_theme_row_small" />
@@ -77,7 +77,7 @@
         style="@style/ChangeTheme.Content.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+        android:paddingTop="25dp"
         android:text="Create Personal Theme"
         app:layout_constraintLeft_toRightOf="@+id/divider2"
         app:layout_constraintTop_toBottomOf="@+id/item_theme_row_small" />
@@ -85,8 +85,8 @@
     <TextView
         android:id="@+id/text_other_themes"
         style="@style/ChangeTheme.TextView.Headline"
-        android:paddingStart="@dimen/screen_edge_left_and_right_margins"
-        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+        android:paddingStart="20dp"
+        android:paddingTop="25dp"
         android:text="Other Themes"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/create_personal_theme" />

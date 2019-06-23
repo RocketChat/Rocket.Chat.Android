@@ -3,6 +3,7 @@ package chat.rocket.android.thememanager.infrastructure
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import chat.rocket.android.R
 import chat.rocket.android.thememanager.model.Theme
 import javax.inject.Inject
 
@@ -14,9 +15,9 @@ class ThemesRepository @Inject constructor(private val preferences: SharedPrefer
     private val themes = MutableLiveData<List<Theme>>()
 
     init {
-        val theme1 = Theme("AppTheme")
-        val theme2 = Theme("DarkTheme")
-        val theme3 = Theme("BlackTheme")
+        val theme1 = Theme("AppTheme", R.array.AppThemePreview)
+        val theme2 = Theme("DarkTheme", R.array.DarkThemePreview)
+        val theme3 = Theme("BlackTheme", R.array.BlackThemePreview)
         themeList.add(theme1)
         themeList.add(theme2)
         themeList.add(theme3)

@@ -5,28 +5,113 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:colorBackground"
-    android:paddingTop="@dimen/screen_edge_left_and_right_margins"
-    android:paddingStart="@dimen/screen_edge_left_and_right_margins"
-    android:paddingEnd="@dimen/screen_edge_left_and_right_margins">
+    android:paddingStart="20dp"
+    android:paddingTop="20dp"
+    android:paddingEnd="20dp">
 
     <TextView
         android:id="@+id/text_theme_name"
+        style="@style/ThemeName.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="?colorPrimaryText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Theme" />
+        tools:text="Eeerie Black" />
 
-    <include
-        android:id="@+id/item_theme_preview"
-        layout="@layout/item_theme_preview"
-        android:layout_width="70dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="@dimen/screen_edge_left_and_right_margins"
+    <ImageView
+        android:id="@+id/item_theme_preview_color_accent"
+        android:layout_width="65dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/theme_preview"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_theme_name" />
 
+    <TextView
+        android:id="@+id/tag_color_accent"
+        style="@style/ThemeTag.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Accent"
+        app:layout_constraintStart_toStartOf="@+id/item_theme_preview_color_accent"
+        app:layout_constraintTop_toBottomOf="@+id/item_theme_preview_color_accent" />
+
+    <ImageView
+        android:id="@+id/item_theme_preview_primary_text"
+        android:layout_width="65dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/theme_preview"
+        app:layout_constraintLeft_toRightOf="@+id/item_theme_preview_color_accent"
+        app:layout_constraintTop_toBottomOf="@+id/text_theme_name" />
+
+    <TextView
+        android:id="@+id/tag_color_primary_text"
+        style="@style/ThemeTag.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Primary Text"
+        app:layout_constraintStart_toStartOf="@+id/item_theme_preview_primary_text"
+        app:layout_constraintTop_toBottomOf="@+id/item_theme_preview_primary_text" />
+
+    <ImageView
+        android:id="@+id/item_theme_preview_color_primary"
+        android:layout_width="65dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/theme_preview"
+        app:layout_constraintLeft_toRightOf="@+id/item_theme_preview_primary_text"
+        app:layout_constraintTop_toBottomOf="@+id/text_theme_name" />
+
+    <TextView
+        android:id="@+id/tag_color_primary"
+        style="@style/ThemeTag.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ToolBar"
+        app:layout_constraintStart_toStartOf="@+id/item_theme_preview_color_primary"
+        app:layout_constraintTop_toBottomOf="@+id/item_theme_preview_color_primary" />
+
+    <ImageView
+        android:id="@+id/item_theme_preview_color_descriptive_text"
+        android:layout_width="65dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/theme_preview"
+        app:layout_constraintLeft_toRightOf="@+id/item_theme_preview_color_primary"
+        app:layout_constraintTop_toBottomOf="@+id/text_theme_name" />
+
+    <TextView
+        android:id="@+id/tag_color_descriptive"
+        style="@style/ThemeTag.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Subtext"
+        app:layout_constraintStart_toStartOf="@+id/item_theme_preview_color_descriptive_text"
+        app:layout_constraintTop_toBottomOf="@+id/item_theme_preview_color_descriptive_text" />
+
+    <ImageView
+        android:id="@+id/item_theme_preview_color_background"
+        android:layout_width="65dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/theme_preview"
+        app:layout_constraintLeft_toRightOf="@+id/item_theme_preview_color_descriptive_text"
+        app:layout_constraintTop_toBottomOf="@+id/text_theme_name" />
+
+    <TextView
+        android:id="@+id/tag_color_background"
+        style="@style/ThemeTag.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Background"
+        app:layout_constraintStart_toStartOf="@+id/item_theme_preview_color_background"
+        app:layout_constraintTop_toBottomOf="@+id/item_theme_preview_color_background" />
 </androidx.constraintlayout.widget.ConstraintLayout>

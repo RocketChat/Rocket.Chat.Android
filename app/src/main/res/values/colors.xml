@@ -70,4 +70,12 @@
     <color name="colorFloatingActionButtonBorder">#4c1d74f5</color>
 
     <color name="colorAuxiliaryTint">#0a4469</color>
+
+    <integer-array name="AppThemePreview">
+        <item>@color/colorAccent</item>
+        <item>@color/colorPrimaryText</item>
+        <item>@color/colorPrimary</item>
+        <item>@color/colorDescriptiveText</item>
+        <item>@color/colorBackground</item>
+    </integer-array>
 </resources>
