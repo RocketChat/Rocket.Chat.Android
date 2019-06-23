@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:colorBackground"
-    tools:context=".thememanager.ui.ThemesFragment">
+    tools:context=".thememanager.ui.ThemesActivity">
 
     <include
         android:id="@+id/layout_app_bar"
