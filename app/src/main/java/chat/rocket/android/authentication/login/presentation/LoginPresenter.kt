@@ -35,6 +35,8 @@ import chat.rocket.core.internal.rest.loginWithEmail
 import chat.rocket.core.internal.rest.loginWithLdap
 import chat.rocket.core.internal.rest.me
 import javax.inject.Inject
+import testConfig.Config.Companion.defaultTestServer
+
 
 class LoginPresenter @Inject constructor(
     private val view: LoginView,
@@ -50,7 +52,7 @@ class LoginPresenter @Inject constructor(
     val serverInteractor: GetConnectingServerInteractor
 ) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
-    private var currentServer = serverInteractor.get()!!
+    private var currentServer = serverInteractor.get() ?: defaultTestServer
     private val token = tokenRepository.get(currentServer)
     private lateinit var client: RocketChatClient
     private lateinit var settings: PublicSettings

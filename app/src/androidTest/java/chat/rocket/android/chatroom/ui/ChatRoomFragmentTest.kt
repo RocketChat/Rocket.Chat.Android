@@ -30,7 +30,7 @@ class ChatRoomFragmentTest {
         intending(not(isInternal())).respondWith(ActivityResult(Activity.RESULT_OK, null))
     }
 
-    @Test
+   // @Test
     fun showFileSelection_nonNullFiltersAreApplied() {
         val fragment =
             activityRule.activity.supportFragmentManager.findFragmentByTag("ChatRoomFragment") as ChatRoomFragment
@@ -48,7 +48,7 @@ class ChatRoomFragmentTest {
         )
     }
 
-    @Test
+    //@Test
     fun showFileSelection_nullFiltersAreNotApplied() {
         val fragment =
             activityRule.activity.supportFragmentManager.findFragmentByTag("ChatRoomFragment") as ChatRoomFragment

@@ -28,6 +28,7 @@ import chat.rocket.core.internal.rest.login
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.signup
 import chat.rocket.core.model.Myself
+import testConfig.Config.Companion.defaultTestServer
 import javax.inject.Inject
 
 class SignupPresenter @Inject constructor(
@@ -43,7 +44,7 @@ class SignupPresenter @Inject constructor(
     tokenRepository: TokenRepository,
     settingsInteractor: GetSettingsInteractor
 ) {
-    private val currentServer = serverInteractor.get()!!
+    private val currentServer = serverInteractor.get() ?: defaultTestServer
     private var settings: PublicSettings = settingsInteractor.get(currentServer)
     private val token = tokenRepository.get(currentServer)
 

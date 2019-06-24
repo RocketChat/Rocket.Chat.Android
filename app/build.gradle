@@ -9,6 +9,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "com.github.ben-manes.versions"
+apply plugin: 'jacoco-android'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -44,6 +45,35 @@ android {
         }
     }
 
+    kapt {
+        useBuildCache true
+    }
+
+    dexOptions {
+        preDexLibraries true
+        jumboMode false
+    }
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+        unitTests{
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
+    }
+
+    tasks.withType(Test) {
+        testLogging {
+            exceptionFormat "full"
+            events "passed", "failed"
+            showStandardStreams true
+        }
+    }
+
     signingConfigs {
         release {
             storeFile project.rootProject.file('Rocket.jks').getCanonicalFile()
@@ -74,6 +104,7 @@ android {
             buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.64.2"'
             signingConfig signingConfigs.debug
             applicationIdSuffix ".dev"
+            testCoverageEnabled true
         }
     }
 
@@ -184,6 +215,10 @@ dependencies {
     testImplementation libraries.truth
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoIntents
+    testImplementation libraries.mockito
+    testImplementation libraries.mockitoInline
+    androidTestImplementation libraries.mockitoAndroid
+    androidTestImplementation libraries.runner
 }
 
 androidExtensions {
