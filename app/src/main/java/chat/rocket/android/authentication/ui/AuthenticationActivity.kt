@@ -75,7 +75,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
             presenter.loadCredentials(newServer) { isAuthenticated ->
                 if (isAuthenticated) {
                     showChatList()
-                } else if (BuildConfig.RC_SERVER_URL == "") {
+                } else if (BuildConfig.RC_SERVER_URL.isEmpty()) {
                     showOnBoardingFragment()
                 } else {
                     showServerFragment()

@@ -87,7 +87,7 @@ class ServerFragment : Fragment(), ServerView {
             it.url.toUri().host?.let { host -> text_server_url.hintContent = host }
             presenter.deepLink(it)
         }.ifNull {
-            if (BuildConfig.RC_SERVER_URL != "") {
+            if (BuildConfig.RC_SERVER_URL.isNotEmpty()) {
                 text_server_url.textContent = BuildConfig.RC_SERVER_URL
                 button_connect.performClick()
             }
