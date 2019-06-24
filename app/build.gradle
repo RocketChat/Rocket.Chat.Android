@@ -215,6 +215,7 @@ dependencies {
     testImplementation libraries.truth
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoIntents
+    androidTestImplementation libraries.espressoContrib
     testImplementation libraries.mockito
     testImplementation libraries.mockitoInline
     androidTestImplementation libraries.mockitoAndroid
