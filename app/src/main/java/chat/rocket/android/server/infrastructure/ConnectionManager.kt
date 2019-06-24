@@ -2,6 +2,7 @@ package chat.rocket.android.server.infrastructure
 
 import androidx.lifecycle.MutableLiveData
 import chat.rocket.android.db.DatabaseManager
+import chat.rocket.common.model.BaseMessage
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.User
 import chat.rocket.common.model.UserStatus
@@ -169,7 +170,8 @@ class ConnectionManager(
                 roomsActor.send(room)
                 if (room.type != Type.Removed) {
                     room.data.lastMessage?.let {
-                        messagesActor.send(it)
+                        // FIXME Do we really need to send it to messagesActor?
+//                        messagesActor.send(it as Message)
                     }
                 }
             }
