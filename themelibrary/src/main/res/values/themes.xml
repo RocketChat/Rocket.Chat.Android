@@ -35,6 +35,7 @@
         <item name="alertDialogTheme">@style/DarkCustomAlertDialogTheme</item>
         <item name="android:statusBarColor">@color/darkColorPrimaryDark</item>
         <item name="colorLoading">@color/darkColorAuxiliaryTint</item>
+        <item name="appTheme">@style/DarkTheme</item>
     </style>
 
 
@@ -73,6 +74,7 @@
         <item name="alertDialogTheme">@style/BlackCustomAlertDialogTheme</item>
         <item name="android:statusBarColor">@color/blackColorPrimaryDark</item>
         <item name="colorLoading">@color/blackColorAuxiliaryTint</item>
+        <item name="appTheme">@style/BlackTheme</item>
     </style>
 
 

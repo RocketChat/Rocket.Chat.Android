@@ -24,4 +24,5 @@
         <attr name="colorFloatingActionButtonBorder" format="color|reference"/>
         <attr name="colorLoading" format="color|reference"/>
         <attr name="colorHeadings" format="color|reference"/>
+        <attr name="appTheme" format="color|reference"/>
 </resources>
