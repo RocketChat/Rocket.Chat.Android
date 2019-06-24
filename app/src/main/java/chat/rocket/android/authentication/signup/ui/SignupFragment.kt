@@ -16,6 +16,7 @@ import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.signup.presentation.SignupPresenter
 import chat.rocket.android.authentication.signup.presentation.SignupView
 import chat.rocket.android.helper.saveCredentials
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.isEmail
@@ -89,7 +90,7 @@ class SignupFragment : Fragment(), SignupView {
     override fun enableButtonRegister() {
         context?.let {
             ViewCompat.setBackgroundTintList(
-                button_register, ContextCompat.getColorStateList(it, R.color.colorAccent)
+                button_register, ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorAccent))
             )
             button_register.isEnabled = true
         }

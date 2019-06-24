@@ -15,6 +15,7 @@ import chat.rocket.android.chatroom.uimodel.AttachmentUiModel
 import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.player.PlayerActivity
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.isVisible
 import chat.rocket.android.util.extensions.openTabbedUrl
@@ -42,7 +43,7 @@ class AttachmentViewHolder(
         itemView.play_button
     )
 
-    private val quoteBarColor = ContextCompat.getColor(itemView.context, R.color.quoteBar)
+    private val quoteBarColor = ThemeUtil.getThemeColor(R.attr.colorQuoteBar)
 
     init {
         with(itemView) {

@@ -20,6 +20,7 @@ import chat.rocket.android.helper.getCredentials
 import chat.rocket.android.helper.hasCredentialsSupport
 import chat.rocket.android.helper.requestStoredCredentials
 import chat.rocket.android.helper.saveCredentials
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.clearLightStatusBar
 import chat.rocket.android.util.extensions.inflate
@@ -167,7 +168,7 @@ class LoginFragment : Fragment(), LoginView {
     override fun enableButtonLogin() {
         context?.let {
             ViewCompat.setBackgroundTintList(
-                button_log_in, ContextCompat.getColorStateList(it, R.color.colorAccent)
+                button_log_in, ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorAccent))
             )
             button_log_in.isEnabled = true
         }
@@ -187,9 +188,7 @@ class LoginFragment : Fragment(), LoginView {
     override fun enableButtonForgetPassword() {
         context?.let {
             button_forgot_your_password.isEnabled = true
-            button_forgot_your_password.setTextColor(
-                ContextCompat.getColorStateList(it, R.color.colorAccent)
-            )
+            button_forgot_your_password.setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
         }
     }
 

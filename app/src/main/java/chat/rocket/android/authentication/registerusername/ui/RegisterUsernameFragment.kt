@@ -15,6 +15,7 @@ import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.registerusername.presentation.RegisterUsernamePresenter
 import chat.rocket.android.authentication.registerusername.presentation.RegisterUsernameView
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showKeyboard
@@ -89,7 +90,7 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
     override fun enableButtonUseThisUsername() {
         context?.let {
             ViewCompat.setBackgroundTintList(
-                button_use_this_username, ContextCompat.getColorStateList(it, R.color.colorAccent)
+                button_use_this_username, ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorAccent))
             )
             button_use_this_username.isEnabled = true
         }
@@ -139,7 +140,7 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
         ui {
             val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_20dp, it)
             DrawableHelper.wrapDrawable(atDrawable)
-            DrawableHelper.tintDrawable(atDrawable, it, R.color.colorDrawableTintGrey)
+            DrawableHelper.tintDrawable(atDrawable, it, ThemeUtil.getThemeColorResource(R.attr.colorDrawableTintEditText))
             DrawableHelper.compoundStartDrawable(text_username, atDrawable)
         }
     }

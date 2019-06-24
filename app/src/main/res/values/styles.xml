@@ -85,6 +85,7 @@
     </style>
 
     // REMARK: To be removed as soon as we have our loading view.
+
     <style name="Authentication.AVLoadingIndicatorView" parent="AVLoadingIndicatorView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -286,6 +287,7 @@
     </style>
 
     // REMARK: To be removed.
+
     <style name="Profile.EditText" parent="Authentication.EditText.Border">
         <item name="android:layout_height">48dp</item>
         <item name="android:layout_marginTop">8dp</item>

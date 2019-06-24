@@ -52,7 +52,6 @@ class MainNavigator(internal val activity: MainActivity) {
 
     fun toChangeTheme() {
         activity.startActivity(Intent(activity, ThemesActivity::class.java))
-        activity.finish()
     }
 
     fun toAdminPanel(webPageUrl: String, userToken: String) {

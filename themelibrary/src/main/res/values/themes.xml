@@ -36,6 +36,8 @@
         <item name="android:statusBarColor">@color/darkColorPrimaryDark</item>
         <item name="colorLoading">@color/darkColorAuxiliaryTint</item>
         <item name="appTheme">@style/DarkTheme</item>
+        <item name="colorDrawableTintEditText">@color/darkColorDrawableTintEditText</item>
+        <item name="colorQuoteBar">@color/darkColorQuoteBar</item>
     </style>
 
 
@@ -75,6 +77,8 @@
         <item name="android:statusBarColor">@color/blackColorPrimaryDark</item>
         <item name="colorLoading">@color/blackColorAuxiliaryTint</item>
         <item name="appTheme">@style/BlackTheme</item>
+        <item name="colorDrawableTintEditText">@color/blackColorDrawableTintEditText</item>
+        <item name="colorQuoteBar">@color/blackColorQuoteBar</item>
     </style>
 
 

@@ -8,16 +8,22 @@ class ThemeUtil{
 
     companion object {
         @JvmStatic
-        private lateinit var theme :  Resources.Theme
+        private lateinit var theme: Resources.Theme
         private val typedValue: TypedValue = TypedValue()
         private val resolveRefs: Boolean = true
 
-        fun setTheme(theme : Resources.Theme){
+        fun setTheme(theme: Resources.Theme) {
             this.theme = theme
         }
 
-        fun getThemeAttribute( @AttrRes attrColor: Int) : Int{
+        fun getThemeColor(@AttrRes attrColor: Int): Int {
             theme.resolveAttribute(attrColor, typedValue, resolveRefs)
             return typedValue.data
-        }}
+        }
+
+        fun getThemeColorResource(@AttrRes attrColor: Int): Int {
+            theme.resolveAttribute(attrColor, typedValue, resolveRefs)
+            return typedValue.resourceId
+        }
+    }
 }

@@ -25,6 +25,7 @@ import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.helper.KeyboardHelper
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.hintContent
 import chat.rocket.android.util.extensions.inflate
@@ -147,7 +148,7 @@ class ServerFragment : Fragment(), ServerView {
     override fun enableButtonConnect() {
         context?.let {
             ViewCompat.setBackgroundTintList(
-                button_connect, ContextCompat.getColorStateList(it, R.color.colorAccent)
+                button_connect, ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorAccent))
             )
             button_connect.isEnabled = true
         }

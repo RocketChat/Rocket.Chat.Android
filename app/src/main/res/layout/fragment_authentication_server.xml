@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/screen_edge_left_and_right_margins"
-    android:background="?android:colorBackground"
     tools:context=".authentication.server.ui.ServerFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,8 +44,7 @@
             <Spinner
                 android:id="@+id/spinner_server_protocol"
                 android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:popupBackground="?background" />
+                android:layout_height="match_parent" />
 
             <EditText
                 android:id="@+id/text_server_url"
@@ -57,7 +55,6 @@
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="16dp"
                 android:layout_toEndOf="@+id/spinner_server_protocol"
-                android:background="?background"
                 android:cursorVisible="false"
                 android:hint="@string/server_hint_url"
                 android:imeOptions="actionDone"

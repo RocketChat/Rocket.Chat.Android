@@ -6,6 +6,7 @@ import androidx.core.content.res.ResourcesCompat
 import android.view.View
 import androidx.core.view.isVisible
 import chat.rocket.android.R
+import chat.rocket.android.thememanager.util.ThemeUtil
 import timber.log.Timber
 
 fun View.openTabbedUrl(url: String?) {
@@ -13,7 +14,7 @@ fun View.openTabbedUrl(url: String?) {
     with(this) {
         val uri = url.ensureScheme()
         val tabsbuilder = CustomTabsIntent.Builder()
-        tabsbuilder.setToolbarColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, context.theme))
+        tabsbuilder.setToolbarColor(ThemeUtil.getThemeColor(R.attr.colorPrimary))
         val customTabsIntent = tabsbuilder.build()
         try {
             customTabsIntent.launchUrl(context, uri)

@@ -19,5 +19,6 @@
             style="@style/ChatRoom.ChatName.TextView"
             tools:text="Server Name" />
 
+
     </androidx.appcompat.widget.Toolbar>
 </com.google.android.material.appbar.AppBarLayout>
