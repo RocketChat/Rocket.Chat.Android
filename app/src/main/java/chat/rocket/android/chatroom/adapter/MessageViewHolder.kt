@@ -58,6 +58,7 @@ class MessageViewHolder(
             button_join_video_call.isVisible = data.message.type is MessageType.JitsiCallStarted
             button_join_video_call.setOnClickListener { joinVideoCallListener(it) }
 
+            image_avatar.setImageURI(data.avatar)
             text_content.setTextColor(if (data.isTemporary) ThemeUtil.getThemeColor(R.attr.colorControlText) else ThemeUtil.getThemeColor(R.attr.colorPrimaryText))
 
             data.message.let {
