@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import chat.rocket.android.R
+import chat.rocket.android.thememanager.util.ThemeUtil
 
 fun FragmentActivity.setLightStatusBar(view: View, @ColorInt color: Int = 0) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -29,7 +30,7 @@ fun FragmentActivity.setLightStatusBar(view: View, @ColorInt color: Int = 0) {
         flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         view.systemUiVisibility = flags
         window.statusBarColor = if (color == 0) {
-            ContextCompat.getColor(this, R.color.colorWhite)
+            ThemeUtil.getThemeColor(android.R.attr.colorBackground)
         } else {
             color
         }
@@ -38,7 +39,7 @@ fun FragmentActivity.setLightStatusBar(view: View, @ColorInt color: Int = 0) {
 
 fun FragmentActivity.clearLightStatusBar() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//        window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+        window.statusBarColor = ThemeUtil.getThemeColor(R.attr.colorPrimaryDark)
     }
 }
 

@@ -34,7 +34,7 @@
                 android:paddingEnd="16dp"
                 android:text="@string/msg_continue_with_facebook"
                 android:textAllCaps="false"
-                android:textColor="?colorPrimary"
+                android:textColor="?colorHeadings"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -53,7 +53,7 @@
                 android:paddingEnd="16dp"
                 android:text="@string/msg_continue_with_github"
                 android:textAllCaps="false"
-                android:textColor="?colorPrimary"
+                android:textColor="?colorHeadings"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -72,7 +72,7 @@
                 android:paddingEnd="16dp"
                 android:text="@string/msg_continue_with_google"
                 android:textAllCaps="false"
-                android:textColor="?colorPrimary"
+                android:textColor="?colorHeadings"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -91,7 +91,7 @@
                 android:paddingEnd="16dp"
                 android:text="@string/msg_continue_with_linkedin"
                 android:textAllCaps="false"
-                android:textColor="?colorPrimary"
+                android:textColor="?colorHeadings"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -110,7 +110,7 @@
                 android:paddingEnd="16dp"
                 android:text="@string/msg_continue_with_gitlab"
                 android:textAllCaps="false"
-                android:textColor="?colorPrimary"
+                android:textColor="?colorHeadings"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -129,7 +129,7 @@
                 android:paddingEnd="16dp"
                 android:text="@string/msg_continue_with_wordpress"
                 android:textAllCaps="false"
-                android:textColor="?colorPrimary"
+                android:textColor="?colorHeadings"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />

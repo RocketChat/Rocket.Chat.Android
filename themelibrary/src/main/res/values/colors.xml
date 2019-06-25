@@ -12,12 +12,14 @@
     <color name="darkColorTextHint">#9297a3</color> <!-- colorAuxiliaryText -->
     <color name="darkColorDescriptiveText">#FF9297a3</color> <!-- colorAuxiliaryText -->
     <color name="darkColorBottomSheetFragmentText">#FF9297a3</color> <!-- darker text -->
+    <color name="darkColorDrawableSubtleTint">#FF9297a3</color>
+    <color name="darkColorQuoteBar">#FF9297a3</color> <!--self defined, not in stylesheet-->
     <color name="darkColorAuthenticationSecondaryText">#FF9297a3</color> <!-- darker text -->
     <color name="darkColorSubHeaderText">#FF9297a3</color> <!-- used for channel and directory subHeader -->
+    <color name="darkColorSecondaryText">#FF9297a3</color> <!--Self Defined-->
 
     <color name="darkColorMutedAccent">#2b2b2d</color> <!--defined in stylesheet-->
     <color name="darkColorDivider">#2b2b2d</color> <!--defined in stylesheet-->
-    <color name="darkColorAuthenticationButtonDisabled">#0b182c</color> <!--defined in stylesheet-->
     <color name="darkColorAuthenticationButtonBorderAndDivider">#2b2b2d</color> <!--defined in stylesheet-->
     <color name="darkColorStatusInvisible">#2b2b2d</color> <!--self assigned-->
 
@@ -27,6 +29,7 @@
     <color name="darkColorChannelTitle">#ffffff</color> <!--defined in stylesheet-->
 
     <color name="darkColorTimestampText">#FFb2b8c6</color> <!-- Picked from layouts -->
+    <color name="darkColorChatText">#FFb2b8c6</color>
 
     <color name="darkColorChatComponentBackground">#1a2232</color> <!--defined in stylesheet-->
     <color name="darkColorReactionBackground">#1a2232</color> <!--defined in stylesheet-->
@@ -37,6 +40,7 @@
     <color name="darkColorFloatingActionButtonBackground">#261d74f5</color> <!-- Picked from layouts -->
 
     <color name="darkColorFloatingActionButtonBorder">#4c1d74f5</color> <!-- Picked from layouts -->
+    <color name="darkColorAuthenticationButtonDisabled">#4c1d74f5</color> <!--self defined-->
 
     <color name="darkColorAccent">#1d74f5</color> <!--defined in stylesheet-->
     <color name="darkColorBackground">#030c1b</color> <!--defined in stylesheet-->
@@ -59,8 +63,11 @@
     <color name="blackColorTextHint">#9297a3</color> <!-- Picked from layouts -->
     <color name="blackColorDescriptiveText">#FF9297a3</color> <!-- Picked from layouts -->
     <color name="blackColorBottomSheetFragmentText">#FF9297a3</color> <!-- darker text -->
+    <color name="blackColorDrawableSubtleTint">#FF9297a3</color>
+    <color name="blackColorQuoteBar">#FF9297a3</color> <!--self defined, not in stylesheet-->
     <color name="blackColorAuthenticationSecondaryText">#FF9297a3</color> <!-- darker text -->
     <color name="blackColorSubHeaderText">#FF9297a3</color> <!-- used for channel and directory subHeader -->
+    <color name="blackColorSecondaryText">#FF9297a3</color> <!--Self Defined-->
 
     <color name="blackColorMutedAccent">#FF2b2b29</color> <!--defined in stylesheet-->
     <color name="blackColorDivider">#FF2b2b29</color> <!--defined in stylesheet-->
@@ -92,6 +99,8 @@
 
     <color name="blackColorAuxiliaryBackground">#090909</color> <!--defined in stylesheet, unused-->
     <color name="blackColorAuxiliaryTint">#cdcdcd</color> <!--used for loading-->
+
+    <color name="blackColorChatText">#FFb2b8c6</color>
 
     <integer-array name="DarkThemePreview">
         <item>@color/darkColorAccent</item>

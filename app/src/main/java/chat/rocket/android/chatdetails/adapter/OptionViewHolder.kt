@@ -7,6 +7,7 @@ import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.chatdetails.domain.Option
 import chat.rocket.android.chatrooms.adapter.ViewHolder
+import chat.rocket.android.thememanager.util.ThemeUtil
 import kotlinx.android.synthetic.main.item_detail_option.view.*
 
 class OptionViewHolder(
@@ -24,7 +25,7 @@ class OptionViewHolder(
         val drawable = DrawableHelper.getDrawableFromId(option.icon, itemView.context)
         drawable.let { image ->
             val mutateDrawable = DrawableHelper.wrapDrawable(image).mutate()
-            DrawableHelper.tintDrawable(mutateDrawable, itemView.context, R.color.colorPrimaryText)
+            DrawableHelper.tintDrawable(mutateDrawable, itemView.context, ThemeUtil.getThemeColorResource(R.attr.colorPrimaryText))
             view.setImageDrawable(mutateDrawable)
         }
     }

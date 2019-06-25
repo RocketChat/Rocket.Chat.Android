@@ -13,6 +13,7 @@ import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.resetpassword.presentation.ResetPasswordPresenter
 import chat.rocket.android.authentication.resetpassword.presentation.ResetPasswordView
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.isEmail
@@ -74,7 +75,7 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
     override fun enableButtonConnect() {
         context?.let {
             ViewCompat.setBackgroundTintList(
-                button_reset_password, ContextCompat.getColorStateList(it, R.color.colorAccent)
+                button_reset_password, ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorAccent))
             )
             button_reset_password.isEnabled = true
         }
@@ -84,7 +85,7 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
         context?.let {
             ViewCompat.setBackgroundTintList(
                 button_reset_password,
-                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+                ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorButtonDisabled))
             )
             button_reset_password.isEnabled = false
         }

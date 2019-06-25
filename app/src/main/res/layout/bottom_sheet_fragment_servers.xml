@@ -15,7 +15,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/msg_server"
-        android:textColor="?attr/colorBottomSheetFragmentText"
+        android:textColor="?colorBottomSheetFragmentText"
         android:textSize="17sp"
         android:textStyle="normal"
         app:layout_constraintStart_toStartOf="parent"

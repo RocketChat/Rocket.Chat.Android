@@ -26,6 +26,7 @@ import chat.rocket.android.server.domain.GetAccountInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.siteName
 import chat.rocket.android.server.ui.changeServerIntent
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import com.squareup.moshi.Json
@@ -367,7 +368,7 @@ class PushManager @Inject constructor(
         with(this) {
             setAutoCancel(true)
             setShowWhen(true)
-            color = ContextCompat.getColor(context, R.color.colorPrimary)
+            color = ThemeUtil.getThemeColor(R.attr.colorPrimary)
             setDefaults(Notification.DEFAULT_ALL)
             setSmallIcon(smallIcon)
             setSound(alarmSound)
