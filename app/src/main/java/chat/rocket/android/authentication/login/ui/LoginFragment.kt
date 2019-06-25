@@ -2,6 +2,7 @@ package chat.rocket.android.authentication.login.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +33,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
+import kotlinx.android.synthetic.main.fragment_authentication_log_in.view_loading
 import javax.inject.Inject
 
 private const val SERVER_NAME = "server_name"
@@ -74,6 +76,11 @@ class LoginFragment : Fragment(), LoginView {
         setupToolbar()
         presenter.setupView()
         subscribeEditTexts()
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            tintEditTextDrawableStart()
+        }
+
         setupOnClickListener()
         analyticsManager.logScreenView(ScreenViewEvent.Login)
     }
@@ -179,7 +186,7 @@ class LoginFragment : Fragment(), LoginView {
         context?.let {
             ViewCompat.setBackgroundTintList(
                 button_log_in,
-                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+                ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorButtonDisabled))
             )
             button_log_in.isEnabled = false
         }
@@ -196,7 +203,7 @@ class LoginFragment : Fragment(), LoginView {
         context?.let {
             button_forgot_your_password.isEnabled = false
             button_forgot_your_password.setTextColor(
-                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+                ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorButtonDisabled))
             )
         }
     }
@@ -250,6 +257,15 @@ class LoginFragment : Fragment(), LoginView {
             disableButtonForgetPassword()
             text_username_or_email.isEnabled = false
             text_password.isEnabled = false
+        }
+    }
+
+    private fun tintEditTextDrawableStart() {
+        ui {
+            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_20dp, it)
+            DrawableHelper.wrapDrawable(atDrawable)
+            DrawableHelper.tintDrawable(atDrawable, it, ThemeUtil.getThemeColorResource(R.attr.colorDrawableStrongTint))
+            DrawableHelper.compoundStartDrawable(text_username_or_email, atDrawable)
         }
     }
 }

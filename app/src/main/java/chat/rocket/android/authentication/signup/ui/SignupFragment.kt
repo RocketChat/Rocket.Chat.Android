@@ -101,7 +101,7 @@ class SignupFragment : Fragment(), SignupView {
         context?.let {
             ViewCompat.setBackgroundTintList(
                 button_register,
-                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+                ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorButtonDisabled))
             )
             button_register.isEnabled = false
         }

@@ -97,7 +97,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
         context?.let {
             ViewCompat.setBackgroundTintList(
                 button_confirm,
-                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+                ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorButtonDisabled))
             )
             button_confirm.isEnabled = false
         }

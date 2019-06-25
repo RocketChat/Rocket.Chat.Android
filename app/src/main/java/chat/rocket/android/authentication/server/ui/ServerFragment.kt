@@ -109,10 +109,12 @@ class ServerFragment : Fragment(), ServerView {
 
     private fun setupSpinner() {
         context?.let {
-            spinner_server_protocol.adapter = ArrayAdapter<String>(
-                it,
-                android.R.layout.simple_dropdown_item_1line, arrayOf("https://", "http://")
+            val adapter = ArrayAdapter<String>(
+                    it,
+                    android.R.layout.simple_dropdown_item_1line, arrayOf("https://", "http://")
             )
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+            spinner_server_protocol.adapter = adapter
 
             spinner_server_protocol.onItemSelectedListener =
                     object : AdapterView.OnItemSelectedListener {
@@ -158,7 +160,7 @@ class ServerFragment : Fragment(), ServerView {
         context?.let {
             ViewCompat.setBackgroundTintList(
                 button_connect,
-                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+                ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorButtonDisabled))
             )
             button_connect.isEnabled = false
         }
@@ -271,7 +273,7 @@ class ServerFragment : Fragment(), ServerView {
     private fun addDomain() {
         val cursorPosition = text_server_url.length()
         text_server_url.append(SpannableStringBuilder()
-            .color(R.color.colorAuthenticationSecondaryText) { append("rocket.chat") })
+            .color(ThemeUtil.getThemeColorResource(R.attr.colorDescriptiveText)) { append("rocket.chat") })
         text_server_url.setSelection(cursorPosition)
         appendedText = text_server_url.text.toString()
         isDomainAppended = true

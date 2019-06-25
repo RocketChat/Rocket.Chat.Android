@@ -149,7 +149,7 @@
         android:layout_height="100dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
-        android:background="@color/colorWhite"
+        android:background="?android:colorBackground"
         android:elevation="2dp"
         android:orientation="vertical"
         android:visibility="gone"
@@ -172,7 +172,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:indicatorColor="@color/colorBlack"
+            app:indicatorColor="?colorLoading"
             app:indicatorName="BallPulseIndicator"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -181,6 +181,7 @@
 
         <TextView
             android:id="@+id/text_member_not_found"
+            android:textColor="?colorPrimaryText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/msg_member_not_found"

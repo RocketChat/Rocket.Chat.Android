@@ -114,14 +114,14 @@
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">?colorDescriptiveText</item>
+        <item name="android:textColor">?colorChatText</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">2</item>
     </style>
 
     <style name="ChatList.LastMessage.Unread.TextView" parent="ChatList.LastMessage.TextView">
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textColor">?colorDescriptiveText</item>
+        <item name="android:textColor">?colorChatText</item>
     </style>
 
     <style name="ChatList.Timestamp.TextView" parent="TextAppearance.AppCompat.Title">
@@ -273,7 +273,7 @@
 
     <style name="Message.TextView" parent="android:TextAppearance">
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">?colorHeadings</item>
+        <item name="android:textColor">?colorMessageText</item>
     </style>
 
     <style name="Message.DayMarker" parent="TextAppearance.AppCompat">
@@ -357,8 +357,7 @@
         <item name="android:theme">@style/AppTheme</item>
     </style>
 
-    <style name="CustomAlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:theme">@style/AppTheme</item>
+    <style name="CustomAlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="android:background">?android:colorBackground</item>
     </style>
 </resources>

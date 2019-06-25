@@ -25,6 +25,10 @@
     <attr name="colorLoading" format="color|reference"/>
     <attr name="colorHeadings" format="color|reference"/>
     <attr name="appTheme" format="color|reference"/>
-    <attr name="colorDrawableTintEditText" format="color|reference"/>
+    <attr name="colorDrawableSubtleTint" format="color|reference"/>
+    <attr name="colorDrawableStrongTint" format="color|reference"/>
     <attr name="colorQuoteBar" format="color|reference"/>
+    <attr name="colorSecondaryText" format="color|reference"/>
+    <attr name="colorChatText" format="color|reference"/>
+    <attr name="colorMessageText" format="color|reference"/>
 </resources>

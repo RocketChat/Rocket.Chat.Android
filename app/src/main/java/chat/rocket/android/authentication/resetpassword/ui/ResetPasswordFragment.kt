@@ -85,7 +85,7 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
         context?.let {
             ViewCompat.setBackgroundTintList(
                 button_reset_password,
-                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+                ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorButtonDisabled))
             )
             button_reset_password.isEnabled = false
         }

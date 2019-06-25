@@ -4,9 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="?appTheme"
-    android:background="?android:colorBackground"
     tools:context=".chatroom.ui.ChatRoomActivity">
-.
+
     <include
         android:id="@+id/layout_app_bar"
         layout="@layout/app_bar_chat_room" />

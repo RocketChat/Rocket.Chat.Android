@@ -5,7 +5,6 @@
     android:id="@+id/message_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:colorBackground"
     android:clickable="true"
     android:focusable="true"
     android:paddingStart="@dimen/screen_edge_left_and_right_padding"

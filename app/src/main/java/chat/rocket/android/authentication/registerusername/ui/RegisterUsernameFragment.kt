@@ -100,7 +100,7 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
         context?.let {
             ViewCompat.setBackgroundTintList(
                 button_use_this_username,
-                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+                ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorButtonDisabled))
             )
             button_use_this_username.isEnabled = false
         }
@@ -140,7 +140,7 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
         ui {
             val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_20dp, it)
             DrawableHelper.wrapDrawable(atDrawable)
-            DrawableHelper.tintDrawable(atDrawable, it, ThemeUtil.getThemeColorResource(R.attr.colorDrawableTintEditText))
+            DrawableHelper.tintDrawable(atDrawable, it, ThemeUtil.getThemeColorResource(R.attr.colorDrawableSubtleTint))
             DrawableHelper.compoundStartDrawable(text_username, atDrawable)
         }
     }

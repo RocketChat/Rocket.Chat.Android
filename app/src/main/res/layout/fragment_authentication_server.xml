@@ -44,6 +44,7 @@
             <Spinner
                 android:id="@+id/spinner_server_protocol"
                 android:layout_width="120dp"
+                android:textColor="?colorPrimaryText"
                 android:layout_height="match_parent" />
 
             <EditText
@@ -54,6 +55,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="16dp"
+                android:textColor="?colorPrimaryText"
                 android:layout_toEndOf="@+id/spinner_server_protocol"
                 android:cursorVisible="false"
                 android:hint="@string/server_hint_url"
