@@ -11,7 +11,7 @@ import chat.rocket.android.R
 import chat.rocket.android.thememanager.BaseActivity
 import chat.rocket.android.thememanager.adapter.ThemesAdapter
 import kotlinx.android.synthetic.main.app_bar.*
-import kotlinx.android.synthetic.main.fragment_theme.*
+import kotlinx.android.synthetic.main.activity_themes.*
 import chat.rocket.android.thememanager.model.Theme
 
 fun newInstance() = ThemesActivity()
@@ -21,9 +21,15 @@ class ThemesActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_theme)
+        setContentView(R.layout.activity_themes)
         setupToolbar()
+        setDate()
         subscribeUi()
+        setupListeners()
+    }
+
+    private fun setDate(){
+        theme_last_changed.text = "Last Changed "+viewModel.getSavedDate()
     }
 
     private fun subscribeUi() {
@@ -34,10 +40,10 @@ class ThemesActivity : BaseActivity() {
 
     private fun saveTheme(theme:Theme){
         viewModel.saveTheme(theme.toString())
-        reloadFragment()
+        reloadActivity()
     }
 
-    private fun reloadFragment() {
+    private fun reloadActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             startActivity(Intent(this, ThemesActivity::class.java))
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
@@ -61,7 +67,13 @@ class ThemesActivity : BaseActivity() {
     private fun setupRecyclerView(themes : List<Theme>) {
         adapter = ThemesAdapter(themes, listener = {theme:Theme -> saveTheme(theme)})
         recycler_view.layoutManager = LinearLayoutManager(this)
-        recycler_view.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL))
         recycler_view.adapter = adapter
+    }
+
+    private fun setupListeners() {
+        revert_to_default.setOnClickListener {
+            viewModel.saveTheme("AppTheme")
+            reloadActivity()
+        }
     }
 }

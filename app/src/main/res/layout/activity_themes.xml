@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="25dp"
-        android:text="Last Changed 20.03.2019"
+        android:text="Last Changed"
         app:layout_constraintLeft_toRightOf="@+id/divider"
         app:layout_constraintTop_toBottomOf="@+id/layout_app_bar" />
 
