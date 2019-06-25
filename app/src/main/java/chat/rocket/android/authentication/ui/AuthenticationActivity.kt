@@ -12,7 +12,6 @@ import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
-import chat.rocket.android.BuildConfig
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.common.util.ifNull
 import dagger.android.AndroidInjection
@@ -75,7 +74,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
             presenter.loadCredentials(newServer) { isAuthenticated ->
                 if (isAuthenticated) {
                     showChatList()
-                } else if (BuildConfig.RC_SERVER_URL.isEmpty()) {
+                } else if (getString(R.string.server_url).isEmpty()) {
                     showOnBoardingFragment()
                 } else {
                     showServerFragment()

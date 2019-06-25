@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.BuildConfig
 import chat.rocket.android.chatrooms.adapter.RoomsAdapter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
@@ -273,11 +272,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     private fun setupListeners() {
-        if (BuildConfig.RC_SERVER_URL.isEmpty()) {
+        if (getString(R.string.server_url).isEmpty()) {
             text_server_name.setOnClickListener {
                 ServersBottomSheetFragment().show(
-                        activity?.supportFragmentManager,
-                        chat.rocket.android.servers.ui.TAG
+                    activity?.supportFragmentManager,
+                    chat.rocket.android.servers.ui.TAG
                 )
             }
         }
