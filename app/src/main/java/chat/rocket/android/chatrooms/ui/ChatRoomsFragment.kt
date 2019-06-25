@@ -273,7 +273,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     private fun setupListeners() {
-        if (BuildConfig.RC_SERVER_URL == "") {
+        if (BuildConfig.RC_SERVER_URL.isEmpty()) {
             text_server_name.setOnClickListener {
                 ServersBottomSheetFragment().show(
                         activity?.supportFragmentManager,
