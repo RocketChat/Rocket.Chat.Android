@@ -12,4 +12,5 @@ class ThemesViewModel @Inject constructor(private val themesRepository: ThemesRe
     fun addTheme(theme : Theme) = themesRepository.addTheme(theme)
     fun saveTheme(theme : String) = themesRepository.saveTheme(theme)
     fun getCurrentTheme() = themesRepository.getCurrentTheme()
+    fun getSavedDate() = themesRepository.getSavedDate()
 }
