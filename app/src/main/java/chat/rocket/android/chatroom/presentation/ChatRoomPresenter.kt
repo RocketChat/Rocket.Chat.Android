@@ -327,10 +327,13 @@ class ChatRoomPresenter @Inject constructor(
     fun searchMessages(chatRoomId: String, searchText: String) {
         launchUI(strategy) {
             try {
+                DateTimeHelper.isSearching = true
                 view.showLoading()
+
                 val messages = retryIO("searchMessages($chatRoomId, $searchText)") {
                     client.searchMessages(chatRoomId, searchText).result
                 }
+
                 view.showSearchedMessages(
                     mapper.map(
                         messages,
