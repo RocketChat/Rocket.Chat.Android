@@ -74,8 +74,10 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
             presenter.loadCredentials(newServer) { isAuthenticated ->
                 if (isAuthenticated) {
                     showChatList()
-                } else {
+                } else if (getString(R.string.server_url).isEmpty()) {
                     showOnBoardingFragment()
+                } else {
+                    showServerFragment()
                 }
             }
         }
@@ -91,7 +93,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
     }
 
-    private fun showServerFragment(deepLinkInfo: LoginDeepLinkInfo) {
+    private fun showServerFragment(deepLinkInfo: LoginDeepLinkInfo? = null) {
         addFragment(
             ScreenViewEvent.Server.screenName,
             R.id.fragment_container,
