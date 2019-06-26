@@ -6,6 +6,8 @@ import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.members.uimodel.MemberUiModel
 import chat.rocket.android.members.uimodel.MemberUiModelMapper
+import chat.rocket.android.server.domain.ADD_USER_TO_JOINED_ROOM
+import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.common.RocketChatException
@@ -21,6 +23,7 @@ class MembersPresenter @Inject constructor(
     private val view: MembersView,
     private val navigator: ChatRoomNavigator,
     private val dbManager: DatabaseManager,
+    private val permissionsInteractor: PermissionsInteractor,
     @Named("currentServer") private val currentServer: String,
     private val strategy: CancelStrategy,
     private val mapper: MemberUiModelMapper,
@@ -28,14 +31,13 @@ class MembersPresenter @Inject constructor(
     private val userHelper: UserHelper
 ) {
     private val client: RocketChatClient = factory.create(currentServer)
-    private var offset: Long = 0
 
     /**
      * Loads all the chat room members for the given room id.
      *
      * @param roomId The id of the room to get chat room members from.
      */
-    fun loadChatRoomsMembers(roomId: String) {
+    fun loadChatRoomsMembers(roomId: String, offset: Long = 0, clearDataset: Boolean = false) {
         launchUI(strategy) {
             try {
                 view.showLoading()
@@ -43,8 +45,7 @@ class MembersPresenter @Inject constructor(
                     val members =
                         client.getMembers(roomId, roomTypeOf(it.chatRoom.type), offset, 60)
                     val memberUiModels = mapper.mapToUiModelList(members.result)
-                    view.showMembers(memberUiModels, members.total)
-                    offset += 1 * 60L
+                    view.showMembers(memberUiModels, members.total, clearDataset)
                 }.ifNull {
                     Timber.e("Couldn't find a room with id: $roomId at current server.")
                 }
@@ -60,11 +61,29 @@ class MembersPresenter @Inject constructor(
         }
     }
 
-    fun toMemberDetails(memberUiModel: MemberUiModel) {
-        with(memberUiModel) {
-            if (userId != userHelper.user()?.id) {
-                navigator.toMemberDetails(userId)
+    fun checkInviteUserPermission(chatRoomId: String) {
+        launchUI(strategy) {
+            if (hasInviteUserPermission(chatRoomId)) {
+                view.showInviteUsersButton()
+            } else {
+                view.hideInviteUserButton()
             }
         }
+    }
+
+    private suspend fun hasInviteUserPermission(chatRoomId: String): Boolean {
+        return permissionsInteractor.hasPermission(ADD_USER_TO_JOINED_ROOM, chatRoomId)
+    }
+
+    fun toMemberDetails(memberUiModel: MemberUiModel, chatRoomId: String) {
+        with(memberUiModel) {
+            if (userId != userHelper.user()?.id) {
+                navigator.toMemberDetails(userId, chatRoomId)
+            }
+        }
+    }
+
+    fun toInviteUsers(chatRoomId: String){
+        navigator.toInviteUsers(chatRoomId)
     }
 }

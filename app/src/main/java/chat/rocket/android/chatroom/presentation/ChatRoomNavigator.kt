@@ -9,6 +9,7 @@ import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.ui.chatRoomIntent
 import chat.rocket.android.favoritemessages.ui.TAG_FAVORITE_MESSAGES_FRAGMENT
 import chat.rocket.android.files.ui.TAG_FILES_FRAGMENT
+import chat.rocket.android.inviteusers.ui.TAG_INVITE_USERS_FRAGMENT
 import chat.rocket.android.members.ui.TAG_MEMBERS_FRAGMENT
 import chat.rocket.android.mentions.ui.TAG_MENTIONS_FRAGMENT
 import chat.rocket.android.pinnedmessages.ui.TAG_PINNED_MESSAGES_FRAGMENT
@@ -19,9 +20,9 @@ import chat.rocket.android.videoconference.ui.videoConferenceIntent
 
 class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
 
-    fun toUserDetails(userId: String) {
+    fun toUserDetails(userId: String, chatRoomId: String) {
         activity.addFragmentBackStack(TAG_USER_DETAILS_FRAGMENT, R.id.fragment_container) {
-            chat.rocket.android.userdetails.ui.newInstance(userId)
+            chat.rocket.android.userdetails.ui.newInstance(userId, chatRoomId)
         }
     }
 
@@ -87,9 +88,15 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         }
     }
 
-    fun toMemberDetails(userId: String) {
+    fun toInviteUsers(chatRoomId: String) {
+        activity.addFragmentBackStack(TAG_INVITE_USERS_FRAGMENT, R.id.fragment_container) {
+            chat.rocket.android.inviteusers.ui.newInstance(chatRoomId)
+        }
+    }
+
+    fun toMemberDetails(userId: String, chatRoomId: String) {
         activity.addFragmentBackStack(TAG_USER_DETAILS_FRAGMENT, R.id.fragment_container) {
-            chat.rocket.android.userdetails.ui.newInstance(userId)
+            chat.rocket.android.userdetails.ui.newInstance(userId, chatRoomId)
         }
     }
 

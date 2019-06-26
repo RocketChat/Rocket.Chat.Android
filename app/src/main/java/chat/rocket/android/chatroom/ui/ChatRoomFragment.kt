@@ -442,7 +442,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun onRoomUpdated(roomUiModel: RoomUiModel) {
         // TODO: We should rely solely on the user being able to post, but we cannot guarantee
-        // that the "(channels|groups).roles" endpoint is supported by the server in use.
+        // that the "(channels|groups).getPermissionRoles" endpoint is supported by the server in use.
         ui {
             setupToolbar(roomUiModel.name.toString())
             setupMessageComposer(roomUiModel)

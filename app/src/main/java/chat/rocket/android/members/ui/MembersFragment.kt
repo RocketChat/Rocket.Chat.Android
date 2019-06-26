@@ -42,9 +42,9 @@ class MembersFragment : Fragment(), MembersView {
     @Inject
     lateinit var analyticsManager: AnalyticsManager
     private val adapter: MembersAdapter =
-        MembersAdapter { memberUiModel -> presenter.toMemberDetails(memberUiModel) }
-    private val linearLayoutManager = LinearLayoutManager(context)
+        MembersAdapter { memberUiModel -> presenter.toMemberDetails(memberUiModel, chatRoomId) }
     private lateinit var chatRoomId: String
+    private lateinit var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,28 +65,28 @@ class MembersFragment : Fragment(), MembersView {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupRecyclerView()
-        presenter.loadChatRoomsMembers(chatRoomId)
+		setupListeners()
+        presenter.checkInviteUserPermission(chatRoomId)
+        presenter.loadChatRoomsMembers(chatRoomId, clearDataset = true)
 
         analyticsManager.logScreenView(ScreenViewEvent.Members)
     }
 
-    override fun showMembers(dataSet: List<MemberUiModel>, total: Long) {
+    override fun onDestroyView() {
+        recycler_view.removeOnScrollListener(endlessRecyclerViewScrollListener)
+        super.onDestroyView()
+    }
+
+    override fun showMembers(dataSet: List<MemberUiModel>, total: Long, clearDataset: Boolean) {
         ui {
             setupToolbar(total)
+
+            if (clearDataset) {
+                adapter.clearData()
+            }
+
             if (adapter.itemCount == 0) {
                 adapter.prependData(dataSet)
-                if (dataSet.size >= 59) { // TODO Check why the API returns the specified count -1
-                    recycler_view.addOnScrollListener(object :
-                        EndlessRecyclerViewScrollListener(linearLayoutManager) {
-                        override fun onLoadMore(
-                            page: Int,
-                            totalItemsCount: Int,
-                            recyclerView: RecyclerView
-                        ) {
-                            presenter.loadChatRoomsMembers(chatRoomId)
-                        }
-                    })
-                }
             } else {
                 adapter.appendData(dataSet)
             }
@@ -113,18 +113,33 @@ class MembersFragment : Fragment(), MembersView {
         }
     }
 
+    override fun showInviteUsersButton() {
+        ui { invite_users_fab.isVisible = true }
+    }
+
+    override fun hideInviteUserButton() {
+        ui { invite_users_fab.isVisible = false }
+    }
+
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     private fun setupRecyclerView() {
         ui {
-            recycler_view.layoutManager = LinearLayoutManager(context)
+            val linearLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            recycler_view.layoutManager = linearLayoutManager
             recycler_view.addItemDecoration(
                 DividerItemDecoration(
                     it,
                     DividerItemDecoration.HORIZONTAL
                 )
             )
+            endlessRecyclerViewScrollListener = object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
+                override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView) {
+                    presenter.loadChatRoomsMembers(chatRoomId, page * 60L)
+                }
+            }
             recycler_view.adapter = adapter
+            recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
         }
     }
 
@@ -139,4 +154,8 @@ class MembersFragment : Fragment(), MembersView {
             toolbar.isVisible = true
         }
     }
+
+	private fun setupListeners(){
+        invite_users_fab.setOnClickListener { presenter.toInviteUsers(chatRoomId) }
+	}
 }
