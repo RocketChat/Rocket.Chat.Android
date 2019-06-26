@@ -64,6 +64,5 @@ private fun ChatRoomFragment.setupSearchViewTextListener(searchView: SearchView)
             presenter.searchMessages(chatRoomId, it)
             isSearchTermQueried = true
         }
-        DateTimeHelper.isSearching = false
     }
 }

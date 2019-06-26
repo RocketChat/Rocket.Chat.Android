@@ -15,8 +15,7 @@ object DateTimeHelper {
     private val today = LocalDate.now()
     private val yesterday = today.minusDays(1)
     private val lastWeek = today.minusWeeks(1)
-    var isSearching = false
-    
+
     /**
      * Returns a [LocalDateTime] from a [Long].
      *
@@ -36,8 +35,7 @@ object DateTimeHelper {
      * @return The date or the textual representation from a [LocalDateTime].
      */
     fun getDate(localDateTime: LocalDateTime, context: Context): String {
-        val localDate = localDateTime.toLocalDate()
-        return when (localDate) {
+        return when (val localDate = localDateTime.toLocalDate()) {
             today -> formatLocalTime(localDateTime.toLocalTime())
             yesterday -> context.getString(R.string.msg_yesterday)
             else -> {
@@ -51,8 +49,7 @@ object DateTimeHelper {
     }
 
     fun getFormattedDateForMessages(localDateTime: LocalDateTime, context: Context): String {
-        val localDate = localDateTime.toLocalDate()
-        return when (localDate) {
+        return when (val localDate = localDateTime.toLocalDate()) {
             today -> context.getString(R.string.msg_today)
             yesterday -> context.getString(R.string.msg_yesterday)
             else -> formatLocalDate(localDate)
@@ -65,12 +62,12 @@ object DateTimeHelper {
      * @param localDateTime The [LocalDateTime].
      * @return The time from a [LocalDateTime].
      */
-    fun getTime(localDateTime: LocalDateTime): String {
-        val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
-        if (isSearching) {
-            return formatSearchMessages(localDateTime)
+    fun getTime(localDateTime: LocalDateTime, showDateAndHour: Boolean = false): String {
+        return if (showDateAndHour) {
+            formatLocalDateTime(localDateTime)
         } else {
-            return localDateTime.toLocalTime().format(formatter).toString()
+            val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+            localDateTime.toLocalTime().format(formatter).toString()
         }
     }
 
@@ -97,11 +94,5 @@ object DateTimeHelper {
     private fun formatLocalTime(localTime: LocalTime): String {
         val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
         return localTime.format(formatter).toString()
-    }
-
-    private fun formatSearchMessages(localDateTime: LocalDateTime): String {
-        val localDate = localDateTime.toLocalDate()
-        val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-        return localDate.format(formatter).toString()
     }
 }
