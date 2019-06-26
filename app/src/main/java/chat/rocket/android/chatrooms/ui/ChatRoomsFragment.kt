@@ -285,11 +285,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     private fun setupListeners() {
-        text_server_name.setOnClickListener {
-            ServersBottomSheetFragment().show(
-                activity?.supportFragmentManager,
-                chat.rocket.android.servers.ui.TAG
-            )
+        if (getString(R.string.server_url).isEmpty()) {
+            text_server_name.setOnClickListener {
+                ServersBottomSheetFragment().show(
+                    activity?.supportFragmentManager,
+                    chat.rocket.android.servers.ui.TAG
+                )
+            }
         }
 
         text_sort_by.setOnClickListener {

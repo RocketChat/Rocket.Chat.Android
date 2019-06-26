@@ -55,18 +55,18 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 uri.getDeepLinkInfo()?.let{
                     routeDeepLink(it)
                 } .ifNull {
-                    routeNoLink()
+                    loadCredentials()
                 }
             }
         } else {
-            routeNoLink()
+            loadCredentials()
         }
     }
 
     private fun resolveDynamicLink(intent: Intent) {
         var deepLinkCallback =  { returnedUri: Uri? ->
             if (returnedUri == null) {
-                routeNoLink()
+                loadCredentials()
             } else {
                 returnedUri?.getDeepLinkInfo()?.let {
                     routeDeepLink(it)
@@ -109,24 +109,55 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     private fun routeDeepLink(deepLinkInfo: DeepLinkInfo) {
         presenter.loadCredentials(false) { isAuthenticated ->
             if (isAuthenticated) {
-                presenter.toChatList(deepLinkInfo)
+                showChatList(deepLinkInfo)
             } else {
                 presenter.saveDeepLinkInfo(deepLinkInfo)
-                presenter.toOnBoarding()
+                if (getString(R.string.server_url).isEmpty()) {
+                    showOnBoardingFragment()
+                } else {
+                    showServerFragment()
+                }
+
+    private fun loadCredentials() {
+        intent.getLoginDeepLinkInfo()?.let {
+            showServerFragment(it)
+        }.ifNull {
+            val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
+            presenter.loadCredentials(newServer) { isAuthenticated ->
+                if (isAuthenticated) {
+                    showChatList()
+                } else if (getString(R.string.server_url).isEmpty()) {
+                    showOnBoardingFragment()
+                } else {
+                    showServerFragment()
+                }
             }
         }
     }
 
-    private fun routeNoLink() {
-        val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
-        presenter.loadCredentials(newServer) { isAuthenticated ->
-            if (isAuthenticated) {
-                presenter.toChatList()
-            } else {
-                presenter.toOnBoarding()
-            }
+    private fun showOnBoardingFragment() {
+        addFragment(
+            ScreenViewEvent.OnBoarding.screenName,
+            R.id.fragment_container,
+            allowStateLoss = true
+        ) {
+            chat.rocket.android.authentication.onboarding.ui.newInstance()
         }
     }
+
+    private fun showServerFragment(deepLinkInfo: LoginDeepLinkInfo? = null) {
+        addFragment(
+            ScreenViewEvent.Server.screenName,
+            R.id.fragment_container,
+            allowStateLoss = true
+        ) {
+            chat.rocket.android.authentication.server.ui.newInstance()
+        }
+    }
+
+    private fun showChatList() = presenter.toChatList()
+
+    private fun showChatList(deepLinkInfo: DeepLinkInfo) = presenter.toChatlist(deepLinkInfo)
 }
 
 const val INTENT_ADD_NEW_SERVER = "INTENT_ADD_NEW_SERVER"

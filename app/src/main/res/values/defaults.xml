@@ -9,4 +9,5 @@
     <string name="license_url" translatable="false">https://github.com/RocketChat/Rocket.Chat.Android/blob/develop/LICENSE</string>
     <string name="dynamiclink_host" translatable="false">your_dynamiclink_host.page.link</string>
     <string name="app_package_name" translatable="false">chat.rocket.android</string>
+    <string name="server_url" translatable="false"></string>
 </resources>

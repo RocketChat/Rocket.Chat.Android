@@ -91,6 +91,12 @@ class ServerFragment : Fragment(), ServerView {
         deepLinkInfo?.let {
             it.url.toUri().host?.let { host -> text_server_url.hintContent = host }
             presenter.deepLink(it)
+        }.ifNull {
+            val serverUrl = getString(R.string.server_url)
+            if (serverUrl.isNotEmpty()) {
+                text_server_url.textContent = serverUrl
+                button_connect.performClick()
+            }
         }
 
         analyticsManager.logScreenView(ScreenViewEvent.Server)
