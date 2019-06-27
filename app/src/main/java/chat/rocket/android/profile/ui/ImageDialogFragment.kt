@@ -37,6 +37,14 @@ class ImageDialogFragment : DialogFragment() {
         context?.let {
             Glide.with(it)
                 .load(Uri.parse(avatarUrl))
+                .apply(
+                    RequestOptions()
+                        .placeholder(R.drawable.bg_empty_user_avatar)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .priority(Priority.IMMEDIATE)
+                        .error(R.drawable.bg_empty_user_avatar)
+                        .skipMemoryCache(false)
+                )
                 .into(detailImage)
         }
     }
