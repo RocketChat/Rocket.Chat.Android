@@ -30,9 +30,9 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 fun newInstance(chatRoomId: String): Fragment = InviteUsersFragment().apply {
-	arguments = Bundle(1).apply {
-		putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-	}
+    arguments = Bundle(1).apply {
+        putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
+    }
 }
 
 internal const val TAG_INVITE_USERS_FRAGMENT = "InviteUsersFragment"
@@ -40,212 +40,212 @@ private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class InviteUsersFragment : Fragment(), InviteUsersView {
 
-	@Inject
-	lateinit var presenter: InviteUsersPresenter
-	@Inject
-	lateinit var analyticsManager: AnalyticsManager
-	private val compositeDisposable = CompositeDisposable()
-	private val adapter: MembersAdapter = MembersAdapter {
-		it.username?.run { processSelectedMember(it) }
-	}
+    @Inject
+    lateinit var presenter: InviteUsersPresenter
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
+    private val compositeDisposable = CompositeDisposable()
+    private val adapter: MembersAdapter = MembersAdapter {
+        it.username?.run { processSelectedMember(it) }
+    }
 
-	private lateinit var chatRoomId: String
-	private var memberList = arrayListOf<MemberUiModel>()
+    private lateinit var chatRoomId: String
+    private var memberList = arrayListOf<MemberUiModel>()
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		AndroidSupportInjection.inject(this)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        AndroidSupportInjection.inject(this)
 
-		arguments?.run {
-			chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")
-		}
-			?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
-	}
+        arguments?.run {
+            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")
+        }
+            ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
+    }
 
-	override fun onCreateView(
-		inflater: LayoutInflater,
-		container: ViewGroup?,
-		savedInstanceState: Bundle?
-	): View? = container?.inflate(R.layout.fragment_invite_users)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = container?.inflate(R.layout.fragment_invite_users)
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		setupToolBar()
-		setupViewListeners()
-		setupRecyclerView()
-		subscribeEditTexts()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupToolBar()
+        setupViewListeners()
+        setupRecyclerView()
+        subscribeEditTexts()
 
-		analyticsManager.logScreenView(ScreenViewEvent.InviteUsers)
-	}
+        analyticsManager.logScreenView(ScreenViewEvent.InviteUsers)
+    }
 
-	override fun onDestroyView() {
-		super.onDestroyView()
-		unsubscribeEditTexts()
-	}
+    override fun onDestroyView() {
+        super.onDestroyView()
+        unsubscribeEditTexts()
+    }
 
-	override fun showLoading() {
-		ui {
-			view_loading.isVisible = true
-		}
-	}
+    override fun showLoading() {
+        ui {
+            view_loading.isVisible = true
+        }
+    }
 
-	override fun hideLoading() {
-		ui {
-			view_loading.isVisible = false
-		}
-	}
+    override fun hideLoading() {
+        ui {
+            view_loading.isVisible = false
+        }
+    }
 
-	override fun showMessage(resId: Int) {
-		ui {
-			showToast(resId)
-		}
-	}
+    override fun showMessage(resId: Int) {
+        ui {
+            showToast(resId)
+        }
+    }
 
-	override fun showMessage(message: String) {
-		ui {
-			showToast(message)
-		}
-	}
+    override fun showMessage(message: String) {
+        ui {
+            showToast(message)
+        }
+    }
 
-	override fun showGenericErrorMessage() {
-		showMessage(getString(R.string.msg_generic_error))
-	}
+    override fun showGenericErrorMessage() {
+        showMessage(getString(R.string.msg_generic_error))
+    }
 
-	override fun showUserSuggestion(dataSet: List<MemberUiModel>) {
-		adapter.clearData()
-		adapter.prependData(dataSet)
-		text_member_not_found.isVisible = false
-		recycler_view.isVisible = true
-		view_member_suggestion.isVisible = true
-	}
+    override fun showUserSuggestion(dataSet: List<MemberUiModel>) {
+        adapter.clearData()
+        adapter.prependData(dataSet)
+        text_member_not_found.isVisible = false
+        recycler_view.isVisible = true
+        view_member_suggestion.isVisible = true
+    }
 
-	override fun showNoUserSuggestion() {
-		recycler_view.isVisible = false
-		text_member_not_found.isVisible = true
-		view_member_suggestion.isVisible = true
-	}
+    override fun showNoUserSuggestion() {
+        recycler_view.isVisible = false
+        text_member_not_found.isVisible = true
+        view_member_suggestion.isVisible = true
+    }
 
-	override fun showSuggestionViewInProgress() {
-		recycler_view.isVisible = false
-		text_member_not_found.isVisible = false
-		view_member_suggestion.isVisible = true
-		showLoading()
-	}
+    override fun showSuggestionViewInProgress() {
+        recycler_view.isVisible = false
+        text_member_not_found.isVisible = false
+        view_member_suggestion.isVisible = true
+        showLoading()
+    }
 
-	override fun hideSuggestionViewInProgress() {
-		hideLoading()
-	}
+    override fun hideSuggestionViewInProgress() {
+        hideLoading()
+    }
 
-	override fun usersInvitedSuccessfully() {
-		memberList.clear()
-		activity?.onBackPressed()
-	}
+    override fun usersInvitedSuccessfully() {
+        memberList.clear()
+        activity?.onBackPressed()
+    }
 
-	override fun enableUserInput() {
-		edit_text_invite_users.isEnabled = true
-	}
+    override fun enableUserInput() {
+        edit_text_invite_users.isEnabled = true
+    }
 
-	override fun disableUserInput() {
-		edit_text_invite_users.isEnabled = false
-	}
+    override fun disableUserInput() {
+        edit_text_invite_users.isEnabled = false
+    }
 
-	private fun setupToolBar() {
-		(activity as ChatRoomActivity).setupToolbarTitle((getString(R.string.title_invite_users)))
-	}
+    private fun setupToolBar() {
+        (activity as ChatRoomActivity).setupToolbarTitle((getString(R.string.title_invite_users)))
+    }
 
-	private fun setupRecyclerView() {
-		ui {
-			recycler_view.layoutManager =
-				LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-			recycler_view.addItemDecoration(
-				DividerItemDecoration(it, DividerItemDecoration.HORIZONTAL)
-			)
-			recycler_view.adapter = adapter
-		}
-	}
+    private fun setupRecyclerView() {
+        ui {
+            recycler_view.layoutManager =
+                LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            recycler_view.addItemDecoration(
+                DividerItemDecoration(it, DividerItemDecoration.HORIZONTAL)
+            )
+            recycler_view.adapter = adapter
+        }
+    }
 
-	private fun setupViewListeners() {
-		text_cancel.setOnClickListener { activity?.onBackPressed() }
-		text_invite_users.setOnClickListener {
-			if (memberList.isNotEmpty()) {
-				presenter.inviteUsers(chatRoomId, memberList)
-			}
-		}
-	}
+    private fun setupViewListeners() {
+        text_cancel.setOnClickListener { activity?.onBackPressed() }
+        text_invite_users.setOnClickListener {
+            if (memberList.isNotEmpty()) {
+                presenter.inviteUsers(chatRoomId, memberList)
+            }
+        }
+    }
 
-	private fun subscribeEditTexts() {
+    private fun subscribeEditTexts() {
 
-		val inviteMembersDisposable = edit_text_invite_users.asObservable()
-			.debounce(500, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-			.filter { t -> t.isNotBlank() }
-			.subscribe {
-				if (it.length >= 3) {
-					presenter.searchUser(it.toString())
-				} else {
-					view_member_suggestion.isVisible = false
-				}
-			}
+        val inviteMembersDisposable = edit_text_invite_users.asObservable()
+            .debounce(500, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+            .filter { t -> t.isNotBlank() }
+            .subscribe {
+                if (it.length >= 3) {
+                    presenter.searchUser(it.toString())
+                } else {
+                    view_member_suggestion.isVisible = false
+                }
+            }
 
-		compositeDisposable.addAll(inviteMembersDisposable)
-	}
+        compositeDisposable.addAll(inviteMembersDisposable)
+    }
 
-	private fun unsubscribeEditTexts() {
-		compositeDisposable.dispose()
-	}
+    private fun unsubscribeEditTexts() {
+        compositeDisposable.dispose()
+    }
 
-	private fun processSelectedMember(member: MemberUiModel) {
-		if (memberList.any { it.username == member.username }) {
-			showMessage(getString(R.string.msg_member_already_added))
-		} else {
-			view_member_suggestion.isVisible = false
-			edit_text_invite_users.setText("")
-			addMember(member)
-			addChip(member)
-			chip_group_member.isVisible = true
-			processBackgroundOfInviteUsersButton()
-		}
-	}
+    private fun processSelectedMember(member: MemberUiModel) {
+        if (memberList.any { it.username == member.username }) {
+            showMessage(getString(R.string.msg_member_already_added))
+        } else {
+            view_member_suggestion.isVisible = false
+            edit_text_invite_users.setText("")
+            addMember(member)
+            addChip(member)
+            chip_group_member.isVisible = true
+            processBackgroundOfInviteUsersButton()
+        }
+    }
 
-	private fun addMember(member: MemberUiModel) {
-		memberList.add(member)
-	}
+    private fun addMember(member: MemberUiModel) {
+        memberList.add(member)
+    }
 
-	private fun removeMember(username: String) {
-		memberList.remove(memberList.find { it.username == username })
-	}
+    private fun removeMember(username: String) {
+        memberList.remove(memberList.find { it.username == username })
+    }
 
-	private fun addChip(member: MemberUiModel) {
-		val chip = Chip(context)
-		chip.text = member.username
-		chip.isCloseIconVisible = true
-		chip.setChipBackgroundColorResource(R.color.icon_grey)
-		setupChipOnCloseIconClickListener(chip)
-		chip_group_member.addView(chip)
-	}
+    private fun addChip(member: MemberUiModel) {
+        val chip = Chip(context)
+        chip.text = member.username
+        chip.isCloseIconVisible = true
+        chip.setChipBackgroundColorResource(R.color.icon_grey)
+        setupChipOnCloseIconClickListener(chip)
+        chip_group_member.addView(chip)
+    }
 
-	private fun setupChipOnCloseIconClickListener(chip: Chip) {
-		chip.setOnCloseIconClickListener {
-			removeChip(it)
-			removeMember((it as Chip).text.toString())
-			// whenever we remove a chip we should process the chip group visibility.
-			processChipGroupVisibility()
-			processBackgroundOfInviteUsersButton()
-		}
-	}
+    private fun setupChipOnCloseIconClickListener(chip: Chip) {
+        chip.setOnCloseIconClickListener {
+            removeChip(it)
+            removeMember((it as Chip).text.toString())
+            // whenever we remove a chip we should process the chip group visibility.
+            processChipGroupVisibility()
+            processBackgroundOfInviteUsersButton()
+        }
+    }
 
-	private fun removeChip(chip: View) {
-		chip_group_member.removeView(chip)
-	}
+    private fun removeChip(chip: View) {
+        chip_group_member.removeView(chip)
+    }
 
-	private fun processChipGroupVisibility() {
-		chip_group_member.isVisible = memberList.isNotEmpty()
-	}
+    private fun processChipGroupVisibility() {
+        chip_group_member.isVisible = memberList.isNotEmpty()
+    }
 
-	private fun processBackgroundOfInviteUsersButton() {
-		if (memberList.isEmpty()) {
-			text_invite_users.alpha = 0.4F
-		} else {
-			text_invite_users.alpha = 1F
-		}
-	}
+    private fun processBackgroundOfInviteUsersButton() {
+        if (memberList.isEmpty()) {
+            text_invite_users.alpha = 0.4F
+        } else {
+            text_invite_users.alpha = 1F
+        }
+    }
 }

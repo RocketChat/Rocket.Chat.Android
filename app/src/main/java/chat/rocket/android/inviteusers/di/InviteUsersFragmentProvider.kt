@@ -8,7 +8,7 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class InviteUsersFragmentProvider {
 
-	@ContributesAndroidInjector(modules = [InviteUsersFragmentModule::class])
-	@PerFragment
-	abstract fun provideInviteUsersFragment(): InviteUsersFragment
+    @ContributesAndroidInjector(modules = [InviteUsersFragmentModule::class])
+    @PerFragment
+    abstract fun provideInviteUsersFragment(): InviteUsersFragment
 }

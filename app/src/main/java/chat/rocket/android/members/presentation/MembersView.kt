@@ -4,7 +4,7 @@ import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 import chat.rocket.android.members.uimodel.MemberUiModel
 
-interface MembersView: LoadingView, MessageView {
+interface MembersView : LoadingView, MessageView {
 
     /**
      * Shows a list of members of a room.

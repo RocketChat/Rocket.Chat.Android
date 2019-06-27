@@ -65,7 +65,7 @@ class MembersFragment : Fragment(), MembersView {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupRecyclerView()
-		setupListeners()
+        setupListeners()
         presenter.checkInviteUserPermission(chatRoomId)
         presenter.loadChatRoomsMembers(chatRoomId, clearDataset = true)
 
@@ -129,11 +129,16 @@ class MembersFragment : Fragment(), MembersView {
                     DividerItemDecoration.HORIZONTAL
                 )
             )
-            endlessRecyclerViewScrollListener = object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
-                override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView) {
-                    presenter.loadChatRoomsMembers(chatRoomId, page * 60L)
+            endlessRecyclerViewScrollListener =
+                object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
+                    override fun onLoadMore(
+                        page: Int,
+                        totalItemsCount: Int,
+                        recyclerView: RecyclerView
+                    ) {
+                        presenter.loadChatRoomsMembers(chatRoomId, page * 60L)
+                    }
                 }
-            }
             recycler_view.adapter = adapter
             recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
         }
@@ -151,7 +156,7 @@ class MembersFragment : Fragment(), MembersView {
         }
     }
 
-	private fun setupListeners(){
-		text_invite_users.setOnClickListener { presenter.toInviteUsers(chatRoomId) }
-	}
+    private fun setupListeners() {
+        text_invite_users.setOnClickListener { presenter.toInviteUsers(chatRoomId) }
+    }
 }

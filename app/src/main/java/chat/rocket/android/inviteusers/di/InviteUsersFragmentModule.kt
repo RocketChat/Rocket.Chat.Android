@@ -9,9 +9,9 @@ import dagger.Provides
 @Module
 class InviteUsersFragmentModule {
 
-	@Provides
-	@PerFragment
-	fun inviteUsersView(frag: InviteUsersFragment): InviteUsersView {
-		return frag
-	}
+    @Provides
+    @PerFragment
+    fun inviteUsersView(frag: InviteUsersFragment): InviteUsersView {
+        return frag
+    }
 }

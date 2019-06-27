@@ -83,7 +83,7 @@ class MembersPresenter @Inject constructor(
         }
     }
 
-    fun toInviteUsers(chatRoomId: String){
+    fun toInviteUsers(chatRoomId: String) {
         navigator.toInviteUsers(chatRoomId)
     }
 }

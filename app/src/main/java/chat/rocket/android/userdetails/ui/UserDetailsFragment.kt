@@ -33,7 +33,7 @@ import javax.inject.Inject
 fun newInstance(userId: String, chatRoomId: String): Fragment = UserDetailsFragment().apply {
     arguments = Bundle(2).apply {
         putString(BUNDLE_USER_ID, userId)
-        putString(BUNDLE_USER_CHATROOM_ID,chatRoomId)
+        putString(BUNDLE_USER_CHATROOM_ID, chatRoomId)
     }
 }
 
@@ -168,6 +168,6 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
     private fun setupListeners() {
         image_arrow_back.setOnClickListener { activity?.onBackPressed() }
-        layout_remove_user.setOnClickListener { presenter.removeUser(userId,chatRoomId) }
+        layout_remove_user.setOnClickListener { presenter.removeUser(userId, chatRoomId) }
     }
 }

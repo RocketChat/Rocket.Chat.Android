@@ -14,40 +14,40 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class ChatRoomRoleHelper @Inject constructor(
-	private val dbManager: DatabaseManager,
-	private val strategy: CancelStrategy,
-	serverInteractor: CurrentServerRepository,
-	factory: ConnectionManagerFactory
+    private val dbManager: DatabaseManager,
+    private val strategy: CancelStrategy,
+    serverInteractor: CurrentServerRepository,
+    factory: ConnectionManagerFactory
 ) {
-	private var currentServer = serverInteractor.get()!!
-	private val manager = factory.create(currentServer)
-	private val client = manager.client
+    private var currentServer = serverInteractor.get()!!
+    private val manager = factory.create(currentServer)
+    private val client = manager.client
 
-	suspend fun getChatRoles(chatRoomId: String): List<ChatRoomRole> {
-		val (chatRoomType, chatRoomName) = getChatRoomDetails(chatRoomId)
+    suspend fun getChatRoles(chatRoomId: String): List<ChatRoomRole> {
+        val (chatRoomType, chatRoomName) = getChatRoomDetails(chatRoomId)
 
-		return try {
-			if (roomTypeOf(chatRoomType) !is RoomType.DirectMessage) {
-				withContext(Dispatchers.IO + strategy.jobs) {
-					client.chatRoomRoles(
-						roomType = roomTypeOf(chatRoomType),
-						roomName = chatRoomName
-					)
-				}
-			} else {
-				emptyList()
-			}
-		} catch (ex: Exception) {
-			Timber.e(ex)
-			emptyList()
-		}
-	}
+        return try {
+            if (roomTypeOf(chatRoomType) !is RoomType.DirectMessage) {
+                withContext(Dispatchers.IO + strategy.jobs) {
+                    client.chatRoomRoles(
+                        roomType = roomTypeOf(chatRoomType),
+                        roomName = chatRoomName
+                    )
+                }
+            } else {
+                emptyList()
+            }
+        } catch (ex: Exception) {
+            Timber.e(ex)
+            emptyList()
+        }
+    }
 
-	private suspend fun getChatRoomDetails(chatRoomId: String): Pair<String, String> {
-		return withContext(Dispatchers.IO + strategy.jobs) {
-			return@withContext dbManager.getRoom(chatRoomId)?.chatRoom.let {
-				Pair(it?.type ?: "", it?.name ?: "")
-			}
-		}
-	}
+    private suspend fun getChatRoomDetails(chatRoomId: String): Pair<String, String> {
+        return withContext(Dispatchers.IO + strategy.jobs) {
+            return@withContext dbManager.getRoom(chatRoomId)?.chatRoom.let {
+                Pair(it?.type ?: "", it?.name ?: "")
+            }
+        }
+    }
 }

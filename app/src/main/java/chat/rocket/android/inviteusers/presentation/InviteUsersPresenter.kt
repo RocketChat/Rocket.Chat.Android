@@ -18,69 +18,73 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class InviteUsersPresenter @Inject constructor(
-	private val view: InviteUsersView,
-	private val dbManager: DatabaseManager,
-	@Named("currentServer") private val currentServer: String,
-	private val strategy: CancelStrategy,
-	private val mapper: MemberUiModelMapper,
-	val factory: RocketChatClientFactory
+    private val view: InviteUsersView,
+    private val dbManager: DatabaseManager,
+    @Named("currentServer") private val currentServer: String,
+    private val strategy: CancelStrategy,
+    private val mapper: MemberUiModelMapper,
+    val factory: RocketChatClientFactory
 ) {
-	private val client: RocketChatClient = factory.get(currentServer)
+    private val client: RocketChatClient = factory.get(currentServer)
 
-	fun inviteUsers(chatRoomId: String, usersList: List<MemberUiModel>) {
-		launchUI(strategy) {
-			view.disableUserInput()
-			view.showLoading()
+    fun inviteUsers(chatRoomId: String, usersList: List<MemberUiModel>) {
+        launchUI(strategy) {
+            view.disableUserInput()
+            view.showLoading()
 
-			val stringBuilder = StringBuilder()
+            val stringBuilder = StringBuilder()
 
-			try {
-				for (user in usersList) {
-					try {
-						client.invite(chatRoomId, roomTypeOf(getChatRoomType(chatRoomId)), user.userId)
-						stringBuilder.append("Invited : ${user.username}\n")
-					} catch (exception: RocketChatException) {
-						exception.message?.let {
-							stringBuilder.append("Exception : ${user.username} : $it\n")
-						}.ifNull {
-							stringBuilder.append("Error : ${user.username} : Try again later\n")
-						}
-					}
-				}
-			} finally {
-				view.showMessage(stringBuilder.toString())
-				view.hideLoading()
-				view.enableUserInput()
-				view.usersInvitedSuccessfully()
-			}
-		}
-	}
+            try {
+                for (user in usersList) {
+                    try {
+                        client.invite(
+                            chatRoomId,
+                            roomTypeOf(getChatRoomType(chatRoomId)),
+                            user.userId
+                        )
+                        stringBuilder.append("Invited : ${user.username}\n")
+                    } catch (exception: RocketChatException) {
+                        exception.message?.let {
+                            stringBuilder.append("Exception : ${user.username} : $it\n")
+                        }.ifNull {
+                            stringBuilder.append("Error : ${user.username} : Try again later\n")
+                        }
+                    }
+                }
+            } finally {
+                view.showMessage(stringBuilder.toString())
+                view.hideLoading()
+                view.enableUserInput()
+                view.usersInvitedSuccessfully()
+            }
+        }
+    }
 
-	fun searchUser(query: String) {
-		launchUI(strategy) {
-			view.showSuggestionViewInProgress()
-			try {
-				val users = client.spotlight(query).users
-				if (users.isEmpty()) {
-					view.showNoUserSuggestion()
-				} else {
-					view.showUserSuggestion(mapper.mapToUiModelList(users))
-				}
-			} catch (ex: RocketChatException) {
-				ex.message?.let {
-					view.showMessage(it)
-				}.ifNull {
-					view.showGenericErrorMessage()
-				}
-			} finally {
-				view.hideSuggestionViewInProgress()
-			}
-		}
-	}
+    fun searchUser(query: String) {
+        launchUI(strategy) {
+            view.showSuggestionViewInProgress()
+            try {
+                val users = client.spotlight(query).users
+                if (users.isEmpty()) {
+                    view.showNoUserSuggestion()
+                } else {
+                    view.showUserSuggestion(mapper.mapToUiModelList(users))
+                }
+            } catch (ex: RocketChatException) {
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideSuggestionViewInProgress()
+            }
+        }
+    }
 
-	private suspend fun getChatRoomType(chatRoomId: String): String {
-		return withContext(Dispatchers.IO + strategy.jobs) {
-			return@withContext dbManager.getRoom(chatRoomId)?.chatRoom.let { it?.type ?: "" }
-		}
-	}
+    private suspend fun getChatRoomType(chatRoomId: String): String {
+        return withContext(Dispatchers.IO + strategy.jobs) {
+            return@withContext dbManager.getRoom(chatRoomId)?.chatRoom.let { it?.type ?: "" }
+        }
+    }
 }

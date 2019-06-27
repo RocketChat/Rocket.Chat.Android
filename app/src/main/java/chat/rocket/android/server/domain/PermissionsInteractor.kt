@@ -1,6 +1,5 @@
 package chat.rocket.android.server.domain
 
-import android.util.Log
 import chat.rocket.android.helper.ChatRoomRoleHelper
 import chat.rocket.android.helper.UserHelper
 import javax.inject.Inject
@@ -102,8 +101,8 @@ class PermissionsInteractor @Inject constructor(
         val permissionRoles = getPermissionRoles(permissionType)
         val chatRoomRoles = chatRoomRoleHelper.getChatRoles(chatRoomId)
 
-        val currentUserRoles: List<String>? = chatRoomRoles.firstOrNull { it.user.username == userHelper.username() }?.roles
-        Log.d("PERM", permissionRoles.toString())
+        val currentUserRoles: List<String>? =
+            chatRoomRoles.firstOrNull { it.user.username == userHelper.username() }?.roles
         return if (currentUserRoles.isNullOrEmpty() || permissionRoles.isNullOrEmpty()) {
             false
         } else {
@@ -115,7 +114,6 @@ class PermissionsInteractor @Inject constructor(
         val url = getCurrentServerInteractor.get()!!
         var permissionRoles: List<String> = emptyList()
 
-        Log.d("PERM", permissionsRepository.get(url, permissionType).toString())
         permissionsRepository.get(url, permissionType)?.let { permission ->
             permissionRoles = permission.roles
         }

@@ -6,40 +6,40 @@ import chat.rocket.android.members.uimodel.MemberUiModel
 
 interface InviteUsersView : LoadingView, MessageView {
 
-	/**
-	 * Shows the server's users suggestion (on the basis of the user typing - the query).
-	 *
-	 * @param dataSet The list of server's users to show.
-	 */
-	fun showUserSuggestion(dataSet: List<MemberUiModel>)
+    /**
+     * Shows the server's users suggestion (on the basis of the user typing - the query).
+     *
+     * @param dataSet The list of server's users to show.
+     */
+    fun showUserSuggestion(dataSet: List<MemberUiModel>)
 
-	/**
-	 * Shows no server's users suggestion.
-	 */
-	fun showNoUserSuggestion()
+    /**
+     * Shows no server's users suggestion.
+     */
+    fun showNoUserSuggestion()
 
-	/**
-	 * Shows the SuggestionView in progress.
-	 */
-	fun showSuggestionViewInProgress()
+    /**
+     * Shows the SuggestionView in progress.
+     */
+    fun showSuggestionViewInProgress()
 
-	/**
-	 * Hides the progress shown in the SuggestionView.
-	 */
-	fun hideSuggestionViewInProgress()
+    /**
+     * Hides the progress shown in the SuggestionView.
+     */
+    fun hideSuggestionViewInProgress()
 
-	/**
-	 * Take actions after users are successfully invited.
-	 */
-	fun usersInvitedSuccessfully()
+    /**
+     * Take actions after users are successfully invited.
+     */
+    fun usersInvitedSuccessfully()
 
-	/**
-	 * Enables the user input.
-	 */
-	fun enableUserInput()
+    /**
+     * Enables the user input.
+     */
+    fun enableUserInput()
 
-	/**
-	 * Disables the user input.
-	 */
-	fun disableUserInput()
+    /**
+     * Disables the user input.
+     */
+    fun disableUserInput()
 }
