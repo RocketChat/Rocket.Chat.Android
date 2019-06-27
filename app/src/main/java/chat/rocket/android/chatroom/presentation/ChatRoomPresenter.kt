@@ -328,13 +328,16 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 view.showLoading()
+
                 val messages = retryIO("searchMessages($chatRoomId, $searchText)") {
                     client.searchMessages(chatRoomId, searchText).result
                 }
+
                 view.showSearchedMessages(
                     mapper.map(
-                        messages,
-                        RoomUiModel(chatRoles, isBroadcast, true)
+                        messages = messages,
+                        roomUiModel = RoomUiModel(chatRoles, isBroadcast, true),
+                        showDateAndHour = true
                     )
                 )
             } catch (ex: Exception) {

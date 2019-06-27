@@ -77,24 +77,26 @@ class UiModelMapper @Inject constructor(
 
     suspend fun map(
         message: Message,
-        roomUiModel: RoomUiModel = RoomUiModel(roles = emptyList(), isBroadcast = true)
+        roomUiModel: RoomUiModel = RoomUiModel(roles = emptyList(), isBroadcast = true),
+        showDateAndHour: Boolean = false
     ): List<BaseUiModel<*>> =
         withContext(Dispatchers.IO) {
-            return@withContext translate(message, roomUiModel)
+            return@withContext translate(message, roomUiModel, showDateAndHour)
         }
 
     suspend fun map(
         messages: List<Message>,
         roomUiModel: RoomUiModel = RoomUiModel(roles = emptyList(), isBroadcast = true),
-        asNotReversed: Boolean = false
+        asNotReversed: Boolean = false,
+        showDateAndHour: Boolean = false
     ): List<BaseUiModel<*>> =
         withContext(Dispatchers.IO) {
             val list = ArrayList<BaseUiModel<*>>(messages.size)
 
             messages.forEach {
                 list.addAll(
-                    if (asNotReversed) translateAsNotReversed(it, roomUiModel)
-                    else translate(it, roomUiModel)
+                    if (asNotReversed) translateAsNotReversed(it, roomUiModel, showDateAndHour)
+                    else translate(it, roomUiModel, showDateAndHour)
                 )
             }
             return@withContext list
@@ -119,7 +121,8 @@ class UiModelMapper @Inject constructor(
 
     private suspend fun translate(
         message: Message,
-        roomUiModel: RoomUiModel
+        roomUiModel: RoomUiModel,
+        showDateAndHour: Boolean = false
     ): List<BaseUiModel<*>> =
         withContext(Dispatchers.IO) {
             val list = ArrayList<BaseUiModel<*>>()
@@ -140,7 +143,7 @@ class UiModelMapper @Inject constructor(
                     list.addAll(it)
                 }
 
-                mapMessage(message, chatRoom).let {
+                mapMessage(message, chatRoom, showDateAndHour).let {
                     if (list.isNotEmpty()) {
                         it.preview = list.first().preview
                     }
@@ -211,13 +214,14 @@ class UiModelMapper @Inject constructor(
 
     private suspend fun translateAsNotReversed(
         message: Message,
-        roomUiModel: RoomUiModel
+        roomUiModel: RoomUiModel,
+        showDateAndHour: Boolean = false
     ): List<BaseUiModel<*>> =
         withContext(Dispatchers.IO) {
             val list = ArrayList<BaseUiModel<*>>()
 
             getChatRoomAsync(message.roomId)?.let { chatRoom ->
-                mapMessage(message, chatRoom).let {
+                mapMessage(message, chatRoom, showDateAndHour).let {
                     if (list.isNotEmpty()) {
                         it.preview = list.first().preview
                     }
@@ -309,7 +313,12 @@ class UiModelMapper @Inject constructor(
             showDayMarker = false, currentDayMarkerText = dayMarkerText, permalink = permalink)
     }
 
-    private fun mapAttachment(message: Message, attachment: Attachment, chatRoom: ChatRoom): BaseUiModel<*>? {
+    private fun mapAttachment(
+        message: Message,
+        attachment: Attachment,
+        chatRoom: ChatRoom,
+        showDateAndHour: Boolean = false
+    ): BaseUiModel<*>? {
         return with(attachment) {
             val content = stripMessageQuotes(message)
             val id = attachmentId(message, attachment)
@@ -320,7 +329,7 @@ class UiModelMapper @Inject constructor(
             val permalink = messageHelper.createPermalink(message, chatRoom, false)
 
             val attachmentAuthor = attachment.authorName
-            val time = attachment.timestamp?.let { getTime(it) }
+            val time = attachment.timestamp?.let { getTime(it, showDateAndHour) }
 
             val imageUrl = attachmentUrl(attachment.imageUrl)
             val videoUrl = attachmentUrl(attachment.videoUrl)
@@ -437,10 +446,11 @@ class UiModelMapper @Inject constructor(
 
     private suspend fun mapMessage(
         message: Message,
-        chatRoom: ChatRoom
+        chatRoom: ChatRoom,
+        showDateAndHour: Boolean = false
     ): MessageUiModel = withContext(Dispatchers.IO) {
         val sender = getSenderName(message)
-        val time = getTime(message.timestamp)
+        val time = getTime(message.timestamp, showDateAndHour)
         val avatar = getUserAvatar(message)
         val preview = mapMessagePreview(message)
         val synced = message.synced
@@ -532,7 +542,8 @@ class UiModelMapper @Inject constructor(
         }
     }
 
-    private fun getTime(timestamp: Long) = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(timestamp))
+    private fun getTime(timestamp: Long, showDateAndHour: Boolean = false) =
+        DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(timestamp), showDateAndHour)
 
     private fun getContent(message: Message): CharSequence = when (message.isSystemMessage()) {
         true -> getSystemMessage(message)
