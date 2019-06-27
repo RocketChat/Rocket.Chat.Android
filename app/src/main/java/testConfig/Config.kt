@@ -25,5 +25,10 @@ class Config {
         const val PRIVACY_POLICY: String = "Privacy Policy"
         const val termsOfServiceUrl: String = "$currentServer/terms-of-service"
         const val privacyPolicyUrl: String = "$currentServer/privacy-policy"
+        const val CHANGE_STATUS: String = "CHANGE STATUS"
+        const val ONLINE: String = "Online"
+        const val BUSY: String = "Busy"
+        const val AWAY: String = "Away"
+        const val INVISIBLE: String = "Invisible"
     }
 }
