@@ -74,8 +74,9 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         analyticsManager.logScreenView(ScreenViewEvent.UserDetails)
 
         user_image_avatar.setOnClickListener {
-            val avatarUrl = presenter.getImageUri()
-            presenter.toProfileImage(avatarUrl)
+            with(presenter) {
+                toProfileImage(getImageUri())
+            }
         }
     }
 

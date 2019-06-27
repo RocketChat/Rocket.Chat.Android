@@ -15,7 +15,6 @@ import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.model.RoomType
-import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.createDirectMessage
 import kotlinx.coroutines.Dispatchers
@@ -77,8 +76,10 @@ class UserDetailsPresenter @Inject constructor(
     }
 
     fun getImageUri(): String {
-        return userEntity.username?.let { currentServer.avatarUrl(avatar = it, userId = token?.userId,
-            token = token?.authToken) }!!
+        return userEntity.username?.let {
+            currentServer.avatarUrl(avatar = it, userId = token?.userId,
+            token = token?.authToken)
+        }!!
     }
 
     fun createDirectMessage(username: String) {
