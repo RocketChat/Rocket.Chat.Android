@@ -249,8 +249,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
         button_view_profile_image.setOnClickListener {
             hideUpdateAvatarOptions()
-            val avatarUrl = presenter.getImageUri()
-            presenter.toProfileImage(avatarUrl)
+            with(presenter) {
+                toProfileImage(getImageUri())
+            }
         }
     }
 

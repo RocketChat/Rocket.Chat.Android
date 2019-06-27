@@ -231,5 +231,5 @@ class ProfilePresenter @Inject constructor(
         }
     }
 
-    fun toProfileImage(avatarUrl: String) = navigator.toProfileImageDialog(avatarUrl)
+    fun toProfileImage(avatarUrl: String) = navigator.toProfileImage(avatarUrl)
 }

@@ -157,11 +157,12 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
     }
 
-    fun toProfileImageDialog(avatarUrl: String) {
+    fun toProfileImage(avatarUrl: String) {
         activity.addFragmentBackStack(TAG_IMAGE_DIALOG_FRAGMENT, R.id.fragment_container) {
             chat.rocket.android.profile.ui.newInstance(avatarUrl)
         }
-      
+    }
+
     fun toFullWebPage(roomId: String, url: String) {
         activity.startActivity(activity.webViewIntent(url,null))
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)

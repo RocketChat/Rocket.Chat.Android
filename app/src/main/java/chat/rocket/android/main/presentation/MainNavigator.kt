@@ -49,7 +49,7 @@ class MainNavigator(internal val activity: MainActivity) {
         }
     }
 
-    fun toProfileImageDialog(avatarUrl: String) {
+    fun toProfileImage(avatarUrl: String) {
         activity.addFragmentBackStack(TAG_IMAGE_DIALOG_FRAGMENT, R.id.fragment_container) {
             chat.rocket.android.profile.ui.newInstance(avatarUrl)
         }

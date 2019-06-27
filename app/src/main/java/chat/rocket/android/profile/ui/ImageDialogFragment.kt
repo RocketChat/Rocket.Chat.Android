@@ -1,5 +1,6 @@
 package chat.rocket.android.profile.ui
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.util.extensions.inflate
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.image_dialog_fragment.*
 
 private lateinit var avatarUrl: String
@@ -29,6 +34,10 @@ class ImageDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        detailImage.setImageURI(avatarUrl)
+        context?.let {
+            Glide.with(it)
+                .load(Uri.parse(avatarUrl))
+                .into(detailImage)
+        }
     }
 }
