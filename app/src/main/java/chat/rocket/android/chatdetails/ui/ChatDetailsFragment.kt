@@ -107,12 +107,8 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(this, factory).get(ChatDetailsViewModel::class.java)
         if (Constants.WIDECHAT) {
-            title_topic.visibility = GONE
             title_announcement.visibility = GONE
-            title_description.visibility = GONE
-            content_topic.visibility = GONE
             content_announcement.visibility = GONE
-            content_description.visibility = GONE
         }
         setupOptions()
         setupToolbar()
@@ -140,13 +136,13 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
             val text = room.name
             name.text = text
             bindImage(chatRoomType!!)
+            content_topic.text =
+                    if (room.topic.isNullOrEmpty()) getString(R.string.msg_no_topic) else room.topic
+            content_description.text =
+                    if (room.description.isNullOrEmpty()) getString(R.string.msg_no_description) else room.description
             if (!Constants.WIDECHAT) {
-                content_topic.text =
-                        if (room.topic.isNullOrEmpty()) getString(R.string.msg_no_topic) else room.topic
                 content_announcement.text =
-                        if (room.announcement.isNullOrEmpty()) getString(R.string.msg_no_announcement) else room.announcement
-                content_description.text =
-                        if (room.description.isNullOrEmpty()) getString(R.string.msg_no_description) else room.description
+                      if (room.announcement.isNullOrEmpty()) getString(R.string.msg_no_announcement) else room.announcement
             }
         }
     }

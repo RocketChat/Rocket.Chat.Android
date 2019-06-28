@@ -9,9 +9,7 @@ import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.dynamiclinks.ShortDynamicLink
 import javax.inject.Inject
-
-// DEBUG
-import android.widget.Toast
+import timber.log.Timber
 
 class DynamicLinksForFirebase @Inject constructor(private var context: Context) :
         DynamicLinks {
@@ -47,12 +45,12 @@ class DynamicLinksForFirebase @Inject constructor(private var context: Context) 
             .buildShortDynamicLink(ShortDynamicLink.Suffix.SHORT)
             .addOnSuccessListener { result ->
                 newDeepLink = result.shortLink.toString()
-                Toast.makeText(context, newDeepLink, Toast.LENGTH_SHORT).show()
+                Timber.d("New deeplink created: ${newDeepLink}")
                 deepLinkCallback(newDeepLink)
 
             }.addOnFailureListener {
                 // Error
-                Toast.makeText(context, "Error dynamic link", Toast.LENGTH_SHORT).show()
+                Timber.d("Error creating dynamic link.")
             }
     }
 }
