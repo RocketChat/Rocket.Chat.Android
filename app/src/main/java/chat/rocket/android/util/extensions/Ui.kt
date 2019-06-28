@@ -24,11 +24,13 @@ import androidx.fragment.app.FragmentActivity
 import chat.rocket.android.R
 import chat.rocket.android.thememanager.util.ThemeUtil
 
-fun FragmentActivity.setLightStatusBar(view: View, @ColorInt color: Int = 0) {
+fun FragmentActivity.setInvisibleStatusBar(view: View, @ColorInt color: Int = 0) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val isDark = ThemeUtil.getIsDark(applicationContext)
         var flags = view.systemUiVisibility
-        flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        view.systemUiVisibility = flags
+        window.decorView.systemUiVisibility = (if (isDark){
+            flags and (View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR).inv()}else{
+            flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR})
         window.statusBarColor = if (color == 0) {
             ThemeUtil.getThemeColor(android.R.attr.colorBackground)
         } else {
@@ -37,8 +39,11 @@ fun FragmentActivity.setLightStatusBar(view: View, @ColorInt color: Int = 0) {
     }
 }
 
-fun FragmentActivity.clearLightStatusBar() {
+fun FragmentActivity.clearInvisibleStatusBar(view: View) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val isDark = ThemeUtil.getIsDark(applicationContext)
+        var flags = view.systemUiVisibility
+        window.decorView.systemUiVisibility = flags and (View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR).inv()
         window.statusBarColor = ThemeUtil.getThemeColor(R.attr.colorPrimaryDark)
     }
 }

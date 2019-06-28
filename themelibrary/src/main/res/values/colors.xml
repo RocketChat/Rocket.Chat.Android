@@ -101,6 +101,8 @@
     <color name="blackColorAuxiliaryTint">#cdcdcd</color> <!--used for loading-->
 
     <color name="blackColorChatText">#FFb2b8c6</color>
+    <bool name="isDark">true</bool>
+
 
     <integer-array name="DarkThemePreview">
         <item>@color/darkColorAccent</item>

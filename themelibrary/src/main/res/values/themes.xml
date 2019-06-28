@@ -42,6 +42,7 @@
         <item name="colorDrawableStrongTint">@color/darkColorSecondaryText</item>
         <item name="colorChatText">@color/darkColorChatText</item>
         <item name="colorMessageText">@color/darkColorBodyText</item>
+        <item name="colorBackgroundIsDark">@bool/darkIsDark</item>
     </style>
 
 
@@ -87,5 +88,6 @@
         <item name="colorDrawableStrongTint">@color/blackColorSecondaryText</item>
         <item name="colorChatText">@color/blackColorChatText</item>
         <item name="colorMessageText">@color/blackColorBodyText</item>
+        <item name="colorBackgroundIsDark">@bool/blackIsDark</item>
     </style>
 </resources>

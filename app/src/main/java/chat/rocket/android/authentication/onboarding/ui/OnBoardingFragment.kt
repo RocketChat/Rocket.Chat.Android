@@ -12,10 +12,7 @@ import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.onboarding.presentation.OnBoardingPresenter
 import chat.rocket.android.authentication.onboarding.presentation.OnBoardingView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.setLightStatusBar
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_authentication_on_boarding.*
@@ -48,7 +45,7 @@ class OnBoardingFragment : Fragment(), OnBoardingView {
 
     private fun setupToolbar() {
         with(activity as AuthenticationActivity) {
-            view?.let { this.setLightStatusBar(it) }
+            view?.let { this.setInvisibleStatusBar(it) }
             toolbar.isVisible = false
         }
     }

@@ -2,7 +2,6 @@ package chat.rocket.android.authentication.login.ui
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,11 +22,7 @@ import chat.rocket.android.helper.requestStoredCredentials
 import chat.rocket.android.helper.saveCredentials
 import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
-import chat.rocket.android.util.extensions.clearLightStatusBar
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.textContent
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
@@ -77,9 +72,9 @@ class LoginFragment : Fragment(), LoginView {
         presenter.setupView()
         subscribeEditTexts()
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             tintEditTextDrawableStart()
-        }
+//        }
 
         setupOnClickListener()
         analyticsManager.logScreenView(ScreenViewEvent.Login)
@@ -119,7 +114,7 @@ class LoginFragment : Fragment(), LoginView {
 
     private fun setupToolbar() {
         with(activity as AuthenticationActivity) {
-            this.clearLightStatusBar()
+            view?.let {this.clearInvisibleStatusBar(it)}
             toolbar.isVisible = true
             toolbar.title = serverName?.replace(getString(R.string.default_protocol), "")
         }
