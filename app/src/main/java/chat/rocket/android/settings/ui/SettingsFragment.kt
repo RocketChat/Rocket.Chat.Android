@@ -227,6 +227,8 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
     }
 
     private fun shareApp() {
+        // We can't know for sure at this point that the invitation was sent successfully since they will now be outside our app
+        analyticsManager.logInviteSent("viaApp", true)
         presenter.shareViaApp(context)
     }
 

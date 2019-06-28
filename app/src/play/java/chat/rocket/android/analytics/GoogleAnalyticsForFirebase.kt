@@ -73,6 +73,13 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
         })
     }
 
+    override fun logInviteSent(inviteType: String, inviteSucceeded: Boolean) {
+        firebaseAnalytics.logEvent("invite_sent", Bundle(2).apply {
+            putString("invite_type", inviteType)
+            putBoolean("invite_succeeded", inviteSucceeded)
+        })
+    }
+
     override fun logMessageActionAddReaction() = firebaseAnalytics.logEvent("message_action_add_reaction", null)
 
     override fun logMessageActionReply() = firebaseAnalytics.logEvent("message_action_reply", null)

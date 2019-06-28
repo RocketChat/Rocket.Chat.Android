@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity(), HasActivityInjector,
             getAppLanguage()
             intent.getStringExtra(INTENT_CHAT_ROOM_ID).let {
                 clearNotificationsForChatRoom(it)
-                showChatList(it)
+                showChatList(it, deepLinkInfo)
             }
         }
     }
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), HasActivityInjector,
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.let {
-            var deepLinkInfo = it.getParcelableExtra<DeepLinkInfo>(Constants.DEEP_LINK_INFO)
+            val deepLinkInfo = it.getParcelableExtra<DeepLinkInfo>(Constants.DEEP_LINK_INFO)
             if (deepLinkInfo != null) {
                 val chatRoomsFragment = supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOMS_FRAGMENT) as ChatRoomsFragment
                 chatRoomsFragment?.let {

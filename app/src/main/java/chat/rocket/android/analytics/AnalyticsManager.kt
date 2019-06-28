@@ -83,6 +83,12 @@ class AnalyticsManager @Inject constructor(
         }
     }
 
+    fun logInviteSent(inviteType: String, inviteSucceeded: Boolean) {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logInviteSent(inviteType, inviteSucceeded)}
+        }
+    }
+
     fun logMessageActionAddReaction() {
         if (analyticsTrackingInteractor.get()) {
             analytics.forEach { it.logMessageActionAddReaction() }

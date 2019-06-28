@@ -9,12 +9,14 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
+import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
-import chat.rocket.android.authentication.domain.model.getDeepLinkInfo
-import chat.rocket.android.authentication.domain.model.isDynamicLink
-import chat.rocket.android.authentication.domain.model.isSupportedLink
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
 import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
+import chat.rocket.android.util.extensions.addFragment
+import chat.rocket.android.util.extensions.getDeepLinkInfo
+import chat.rocket.android.util.extensions.isDynamicLink
+import chat.rocket.android.util.extensions.isSupportedLink
 import chat.rocket.common.util.ifNull
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -47,9 +49,9 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun processIncomingIntent(intent: Intent) {
-        if (intent.isSupportedLink()) {
+        if (intent.isSupportedLink(this)) {
             val uri = intent.data
-            if (uri.isDynamicLink()) {
+            if (uri.isDynamicLink(this)) {
                 resolveDynamicLink(intent)
             } else {
                 uri.getDeepLinkInfo()?.let{
@@ -115,22 +117,21 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 if (getString(R.string.server_url).isEmpty()) {
                     showOnBoardingFragment()
                 } else {
-                    showServerFragment()
+                    showServerFragment(deepLinkInfo)
                 }
+            }
+        }
+    }
 
     private fun loadCredentials() {
-        intent.getLoginDeepLinkInfo()?.let {
-            showServerFragment(it)
-        }.ifNull {
-            val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
-            presenter.loadCredentials(newServer) { isAuthenticated ->
-                if (isAuthenticated) {
-                    showChatList()
-                } else if (getString(R.string.server_url).isEmpty()) {
-                    showOnBoardingFragment()
-                } else {
-                    showServerFragment()
-                }
+        val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
+        presenter.loadCredentials(newServer) { isAuthenticated ->
+            if (isAuthenticated) {
+                showChatList()
+            } else if (getString(R.string.server_url).isEmpty()) {
+                showOnBoardingFragment()
+            } else {
+                showServerFragment()
             }
         }
     }
@@ -145,19 +146,19 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
     }
 
-    private fun showServerFragment(deepLinkInfo: LoginDeepLinkInfo? = null) {
+    private fun showServerFragment(deepLinkInfo: DeepLinkInfo? = null) {
         addFragment(
             ScreenViewEvent.Server.screenName,
             R.id.fragment_container,
             allowStateLoss = true
         ) {
-            chat.rocket.android.authentication.server.ui.newInstance()
+            chat.rocket.android.authentication.server.ui.newInstance(deepLinkInfo)
         }
     }
 
     private fun showChatList() = presenter.toChatList()
 
-    private fun showChatList(deepLinkInfo: DeepLinkInfo) = presenter.toChatlist(deepLinkInfo)
+    private fun showChatList(deepLinkInfo: DeepLinkInfo) = presenter.toChatList(deepLinkInfo)
 }
 
 const val INTENT_ADD_NEW_SERVER = "INTENT_ADD_NEW_SERVER"

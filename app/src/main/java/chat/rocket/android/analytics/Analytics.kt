@@ -81,6 +81,13 @@ interface Analytics {
     fun logVideoConference(event: SubscriptionTypeEvent, serverUrl: String) {}
 
     /**
+     * Logs the invitation sent event.
+     *
+     * @param inviteType The method of invite to log, currently only 'share' using the share intent.
+     */
+    fun logInviteSent(inviteType: String, inviteSucceeded: Boolean) {}
+
+    /**
      * Logs the add reaction message action.
      */
     fun logMessageActionAddReaction() {}
