@@ -56,6 +56,10 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
             showKeyboard(text_email)
         }
 
+//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+        tintEditTextDrawableStart()
+//        }
+
         setupOnClickListener()
         subscribeEditText()
 
@@ -148,4 +152,13 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
     }
 
     private fun unsubscribeEditText() = emailAddressDisposable.dispose()
+
+    private fun tintEditTextDrawableStart() {
+        ui {
+            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_20dp, it)
+            DrawableHelper.wrapDrawable(atDrawable)
+            DrawableHelper.tintDrawable(atDrawable, it, ThemeUtil.getThemeColorResource(R.attr.colorDrawableSubtleTint))
+            DrawableHelper.compoundStartDrawable(text_email, atDrawable)
+        }
+    }
 }

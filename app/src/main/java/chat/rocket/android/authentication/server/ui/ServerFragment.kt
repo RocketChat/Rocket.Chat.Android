@@ -27,14 +27,7 @@ import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
-import chat.rocket.android.util.extensions.hintContent
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.isValidUrl
-import chat.rocket.android.util.extensions.sanitize
-import chat.rocket.android.util.extensions.setLightStatusBar
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.textContent
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
@@ -102,7 +95,7 @@ class ServerFragment : Fragment(), ServerView {
 
     private fun setupToolbar() {
         with(activity as AuthenticationActivity) {
-            view?.let { setLightStatusBar(it) }
+            view?.let { setInvisibleStatusBar(it) }
             toolbar.isVisible = false
         }
     }

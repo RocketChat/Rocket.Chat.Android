@@ -63,6 +63,7 @@
 
     <color name="colorAuxiliaryTint">#0a4469</color>
 
+
     <integer-array name="AppThemePreview">
         <item>@color/colorAccent</item>
         <item>@color/colorPrimaryText</item>

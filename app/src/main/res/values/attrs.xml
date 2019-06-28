@@ -31,4 +31,5 @@
         <attr name="colorSecondaryText" format="color|reference"/>
         <attr name="colorChatText" format="color|reference"/>
         <attr name="colorMessageText" format="color|reference"/>
+        <attr name="colorBackgroundIsDark" format="string|reference"/>
 </resources>

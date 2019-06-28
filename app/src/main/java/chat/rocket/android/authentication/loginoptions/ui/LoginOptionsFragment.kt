@@ -210,7 +210,7 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
 
     private fun setupToolbar() {
         with(activity as AuthenticationActivity) {
-            this.clearLightStatusBar()
+            view?.let {this.clearInvisibleStatusBar(it)}
             toolbar.isVisible = true
             toolbar.title = serverName?.replace(getString(R.string.default_protocol), "")
         }

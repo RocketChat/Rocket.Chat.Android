@@ -1,7 +1,6 @@
 package chat.rocket.android.authentication.registerusername.ui
 
 import DrawableHelper
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -72,9 +71,9 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
             showKeyboard(text_username)
         }
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             tintEditTextDrawableStart()
-        }
+//        }
 
         setupOnClickListener()
         subscribeEditText()
