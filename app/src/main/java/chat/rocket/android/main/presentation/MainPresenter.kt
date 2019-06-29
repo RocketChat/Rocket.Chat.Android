@@ -1,5 +1,6 @@
 package chat.rocket.android.main.presentation
 
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.core.behaviours.AppLanguageView
 import chat.rocket.android.push.GroupedPush
 import chat.rocket.android.server.domain.GetCurrentLanguageInteractor
@@ -19,7 +20,6 @@ class MainPresenter @Inject constructor(
     private var getLanguageInteractor: GetCurrentLanguageInteractor,
     private val groupedPush: GroupedPush
 ) {
-
     fun connect() {
         refreshSettingsInteractor.refreshAsync(currentServerUrl)
         refreshPermissionsInteractor.refreshAsync(currentServerUrl)
@@ -34,8 +34,7 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    fun showChatList(chatRoomId: String? = null) = mainNavigator.toChatList(chatRoomId)
-
+    fun showChatList(chatRoomId: String? = null, deepLinkInfo: DeepLinkInfo? = null) = mainNavigator.toChatList(chatRoomId, deepLinkInfo)
 
     fun getAppLanguage() {
         with(getLanguageInteractor) {

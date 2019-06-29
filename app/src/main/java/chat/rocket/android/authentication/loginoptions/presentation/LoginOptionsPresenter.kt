@@ -2,7 +2,7 @@ package chat.rocket.android.authentication.loginoptions.presentation
 
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.AuthenticationEvent
-import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
@@ -90,7 +90,7 @@ class LoginOptionsPresenter @Inject constructor(
         doAuthentication(TYPE_LOGIN_SAML)
     }
 
-    fun authenticateWithDeepLink(deepLinkInfo: LoginDeepLinkInfo) {
+    fun authenticateWithDeepLink(deepLinkInfo: DeepLinkInfo) {
         val serverUrl = deepLinkInfo.url
         setupConnectionInfo(serverUrl)
         if (deepLinkInfo.userId != null && deepLinkInfo.token != null) {
