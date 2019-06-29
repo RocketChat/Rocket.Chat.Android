@@ -1,9 +1,6 @@
 package chat.rocket.android.thememanager
 
-import android.content.res.Resources
 import android.os.Bundle
-import android.util.TypedValue
-import androidx.annotation.AttrRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import chat.rocket.android.R

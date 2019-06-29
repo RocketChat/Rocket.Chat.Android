@@ -50,5 +50,6 @@
         <item name="colorChatText">@color/colorChatText</item>
         <item name="colorMessageText">@color/colorPrimary</item>
         <item name="colorBackgroundIsDark">@bool/isDark</item>
+        <item name="android:dropDownItemStyle">@style/SpinnerItemStyle</item>
     </style>
 </resources>
