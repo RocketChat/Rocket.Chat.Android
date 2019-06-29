@@ -19,7 +19,7 @@
     <string name="title_admin_panel">管理パネル</string>
     <string name="title_password">パスワードの変更</string>
     <string name="title_update_profile">プロフィールの更新</string>
-    <string name="action_view_profile_photo">View Profile photo</string><!-- TODO Add translation -->
+    <string name="action_view_profile_photo">View profile photo</string> <!-- TODO Add translation -->
     <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_license">License</string> <!-- TODO Add translation -->
     <string name="title_create_channel">新しいチャネルを作成</string>

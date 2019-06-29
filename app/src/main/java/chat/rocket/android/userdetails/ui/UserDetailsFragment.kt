@@ -12,7 +12,6 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
-import chat.rocket.android.profile.ui.ImageDialogFragment
 import chat.rocket.android.userdetails.presentation.UserDetailsPresenter
 import chat.rocket.android.userdetails.presentation.UserDetailsView
 import chat.rocket.android.util.extensions.inflate

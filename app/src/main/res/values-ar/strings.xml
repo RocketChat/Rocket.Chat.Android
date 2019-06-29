@@ -57,7 +57,7 @@
     <string name="action_create_server">إنشاء خادم جديد</string>
     <string name="action_register">تسجيل</string>
     <string name="action_confirm">تأكيد</string>
-    <string name="action_view_profile_photo">View Profile photo</string><!-- TODO Translate -->
+    <string name="action_view_profile_photo">View profile photo</string> <!-- TODO Translate -->
     <string name="action_favorite">تفضيل</string>
     <string name="action_remove_favorite">إزالة التفضيل</string>
 

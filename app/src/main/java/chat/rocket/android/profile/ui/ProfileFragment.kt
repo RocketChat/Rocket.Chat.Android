@@ -247,11 +247,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             presenter.resetAvatar()
         }
 
-        button_view_profile_image.setOnClickListener {
+        button_view_profile_photo.setOnClickListener {
             hideUpdateAvatarOptions()
-            with(presenter) {
-                toProfileImage(getImageUri())
-            }
+            presenter.toProfileImage()
         }
     }
 

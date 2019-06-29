@@ -213,10 +213,6 @@ class ProfilePresenter @Inject constructor(
         }
     }
 
-    fun getImageUri(): String {
-        return serverUrl.avatarUrl(user?.username ?: "", token?.userId, token?.authToken)
-    }
-
     fun updateStatus(status: UserStatus) {
         launchUI(strategy) {
             try {
@@ -231,5 +227,7 @@ class ProfilePresenter @Inject constructor(
         }
     }
 
-    fun toProfileImage(avatarUrl: String) = navigator.toProfileImage(avatarUrl)
+    fun toProfileImage() = user?.username?.let { username ->
+        navigator.toProfileImage(serverUrl.avatarUrl(username, token?.userId, token?.authToken))
+    }
 }

@@ -48,7 +48,7 @@
     <string name="msg_busy">Occupé</string>
     <string name="msg_invisible">Invisible</string>
     <string name="action_drawing">Dessin</string>
-    <string name="action_view_profile_photo">View Profile photo</string>
+    <string name="action_view_profile_photo">View profile photo</string>
     <string name="action_save_to_gallery">Sauver dans la galerie</string>
     <string name="action_select_photo_from_gallery">Choisir depuis la galerie</string>
     <string name="action_take_a_photo">Prendre une photo</string>

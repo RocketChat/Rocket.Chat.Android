@@ -62,7 +62,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_drawing">Drawing</string>
     <string name="action_save_to_gallery">Save to gallery</string>
     <string name="action_select_photo_from_gallery">Select photo from gallery</string>
-    <string name="action_view_profile_photo">View Profile photo</string>
+    <string name="action_view_profile_photo">View profile photo</string>
     <string name="action_take_a_photo">Take a photo</string>
     <string name="action_reset_avatar">Reset avatar</string>
     <string name="action_connect_server">Connect with a server</string>

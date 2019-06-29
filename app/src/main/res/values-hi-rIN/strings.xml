@@ -43,7 +43,7 @@
     <string name="action_attach_a_files">एक फ़ाइल जोडो</string>
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
     <string name="action_join_chat">चैट में शामिल हों</string>
-    <string name="action_view_profile_photo">View Profile photo</string><!-- TODO Add translation -->
+    <string name="action_view_profile_photo">View profile photo</string> <!-- TODO Add translation -->
     <string name="msg_online">ऑनलाइन</string>
     <string name="msg_away">दूर</string>
     <string name="msg_busy">व्यस्त</string>
