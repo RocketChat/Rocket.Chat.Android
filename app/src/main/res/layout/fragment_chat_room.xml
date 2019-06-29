@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".chatroom.ui.ChatRoomFragment"
-    android:background="?android:colorBackground"
     >
 
     <FrameLayout
@@ -43,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/msg_no_chat_title"
-        android:textColor="?colorDescriptiveText"
+        android:textColor="?colorControlText"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/text_chat_description"
@@ -58,7 +57,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/msg_no_chat_description"
         android:textAlignment="center"
-        android:textColor="?colorDescriptiveText"
+        android:textColor="?colorTimestampText"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
         app:layout_constraintEnd_toEndOf="parent"
