@@ -23,6 +23,7 @@ ext {
             dagger                : '2.16',
             firebaseCloudMessage  : '17.3.4',
             firebaseAnalytics     : '16.0.6',
+            dynamiclinks          : '16.1.5',
             playServicesAuth      : '16.0.1',
             exoPlayer             : '2.8.2',
             flexbox               : '1.1.0',
@@ -130,6 +131,7 @@ ext {
             // Proprietary libraries
             fcm                   : "com.google.firebase:firebase-messaging:${versions.firebaseCloudMessage}",
             firebaseAnalytics     : "com.google.firebase:firebase-core:${versions.firebaseAnalytics}",
+            dynamiclinks          : "com.google.firebase:firebase-dynamic-links:${versions.dynamiclinks}",
             playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServicesAuth}",
 
             // For testing

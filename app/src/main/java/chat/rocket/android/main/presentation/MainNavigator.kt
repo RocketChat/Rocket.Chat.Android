@@ -2,6 +2,7 @@ package chat.rocket.android.main.presentation
 
 import android.content.Intent
 import chat.rocket.android.R
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.ui.newServerIntent
 import chat.rocket.android.chatroom.ui.chatRoomIntent
 import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
@@ -19,9 +20,9 @@ import chat.rocket.android.webview.ui.webViewIntent
 
 class MainNavigator(internal val activity: MainActivity) {
 
-    fun toChatList(chatRoomId: String? = null) {
+    fun toChatList(chatRoomId: String? = null, deepLinkInfo: DeepLinkInfo? = null) {
         activity.addFragment(TAG_CHAT_ROOMS_FRAGMENT, R.id.fragment_container) {
-            chat.rocket.android.chatrooms.ui.newInstance(chatRoomId)
+            chat.rocket.android.chatrooms.ui.newInstance(chatRoomId, deepLinkInfo)
         }
     }
 

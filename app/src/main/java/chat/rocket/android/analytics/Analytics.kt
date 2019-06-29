@@ -1,6 +1,7 @@
 package chat.rocket.android.analytics
 
 import chat.rocket.android.analytics.event.AuthenticationEvent
+import chat.rocket.android.analytics.event.InviteType
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.analytics.event.SubscriptionTypeEvent
 
@@ -79,6 +80,13 @@ interface Analytics {
      * @param serverUrl The server URL to log.
      */
     fun logVideoConference(event: SubscriptionTypeEvent, serverUrl: String) {}
+
+    /**
+     * Logs the invitation sent event.
+     *
+     * @param inviteType The method of invite to log, currently only 'share' using the share intent.
+     */
+    fun logInviteSent(inviteType: InviteType) {}
 
     /**
      * Logs the add reaction message action.
