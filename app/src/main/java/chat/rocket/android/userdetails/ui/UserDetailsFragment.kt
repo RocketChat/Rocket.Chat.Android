@@ -72,7 +72,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
         analyticsManager.logScreenView(ScreenViewEvent.UserDetails)
 
-        user_image_avatar.setOnClickListener {
+        image_avatar.setOnClickListener {
             with(presenter) {
                 toProfileImage(getImageUri())
             }
@@ -102,7 +102,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         ).into(image_blur)
 
         requestBuilder.apply(RequestOptions.bitmapTransform(RoundedCorners(14)))
-            .into(user_image_avatar)
+            .into(image_avatar)
 
         text_name.text = name ?: getString(R.string.msg_unknown)
         text_username.text = username ?: getString(R.string.msg_unknown)
