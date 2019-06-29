@@ -7,6 +7,7 @@ import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.server.ui.changeServerIntent
+import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.extensions.toPreviousView
 import chat.rocket.android.webview.ui.webViewIntent
@@ -19,17 +20,31 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
     }
 
     fun toOnBoarding() {
-        activity.addFragmentBackStack(
+        activity.addFragment(
             ScreenViewEvent.OnBoarding.screenName,
-            R.id.fragment_container
+            R.id.fragment_container,
+            allowStateLoss = true
         ) {
             chat.rocket.android.authentication.onboarding.ui.newInstance()
         }
     }
 
-    fun toSignInToYourServer(deepLinkInfo: DeepLinkInfo? = null) {
-        activity.addFragmentBackStack(ScreenViewEvent.Server.screenName, R.id.fragment_container) {
-            chat.rocket.android.authentication.server.ui.newInstance(deepLinkInfo)
+    fun toSignInToYourServer(deepLinkInfo: DeepLinkInfo? = null, addToBackStack: Boolean = true) {
+        if (addToBackStack) {
+            activity.addFragmentBackStack(
+                ScreenViewEvent.Server.screenName,
+                R.id.fragment_container
+            ) {
+                chat.rocket.android.authentication.server.ui.newInstance(deepLinkInfo)
+            }
+        } else {
+            activity.addFragment(
+                ScreenViewEvent.Server.screenName,
+                R.id.fragment_container,
+                allowStateLoss = true
+            ) {
+                chat.rocket.android.authentication.server.ui.newInstance(deepLinkInfo)
+            }
         }
     }
 

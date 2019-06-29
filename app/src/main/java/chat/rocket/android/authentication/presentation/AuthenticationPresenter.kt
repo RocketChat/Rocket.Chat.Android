@@ -53,6 +53,10 @@ class AuthenticationPresenter @Inject constructor(
     fun privacyPolicy(toolbarTitle: String) =
         serverInteractor.get()?.let { navigator.toWebPage(it.privacyPolicyUrl(), toolbarTitle) }
 
+    fun toOnBoarding() = navigator.toOnBoarding()
+
+    fun toSignInToYourServer() = navigator.toSignInToYourServer()
+
     fun saveDeepLinkInfo(deepLinkInfo: DeepLinkInfo) = navigator.saveDeepLinkInfo(deepLinkInfo)
 
     fun toChatList() = navigator.toChatList()

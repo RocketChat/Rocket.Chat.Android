@@ -9,11 +9,9 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
-import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
 import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
-import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.getDeepLinkInfo
 import chat.rocket.android.util.extensions.isDynamicLink
 import chat.rocket.android.util.extensions.isSupportedLink
@@ -117,9 +115,9 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
             } else {
                 presenter.saveDeepLinkInfo(deepLinkInfo)
                 if (getString(R.string.server_url).isEmpty()) {
-                    showOnBoardingFragment()
+                    presenter.toOnBoarding()
                 } else {
-                    showServerFragment(deepLinkInfo)
+                    presenter.toSignInToYourServer()
                 }
             }
         }
@@ -130,29 +128,9 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         presenter.loadCredentials(newServer) { isAuthenticated ->
             when {
                 isAuthenticated -> showChatList()
-                getString(R.string.server_url).isEmpty() -> showOnBoardingFragment()
-                else -> showServerFragment()
+                getString(R.string.server_url).isEmpty() -> presenter.toOnBoarding()
+                else -> presenter.toSignInToYourServer()
             }
-        }
-    }
-
-    private fun showOnBoardingFragment() {
-        addFragment(
-            ScreenViewEvent.OnBoarding.screenName,
-            R.id.fragment_container,
-            allowStateLoss = true
-        ) {
-            chat.rocket.android.authentication.onboarding.ui.newInstance()
-        }
-    }
-
-    private fun showServerFragment(deepLinkInfo: DeepLinkInfo? = null) {
-        addFragment(
-            ScreenViewEvent.Server.screenName,
-            R.id.fragment_container,
-            allowStateLoss = true
-        ) {
-            chat.rocket.android.authentication.server.ui.newInstance(deepLinkInfo)
         }
     }
 
