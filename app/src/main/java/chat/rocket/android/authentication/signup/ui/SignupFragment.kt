@@ -15,6 +15,7 @@ import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.signup.presentation.SignupPresenter
 import chat.rocket.android.authentication.signup.presentation.SignupView
+import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.helper.saveCredentials
 import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
@@ -55,6 +56,7 @@ class SignupFragment : Fragment(), SignupView {
         super.onViewCreated(view, savedInstanceState)
 
         subscribeEditTexts()
+        tintEditTextDrawableStart()
         setupOnClickListener()
 
         analyticsManager.logScreenView(ScreenViewEvent.SignUp)
@@ -180,5 +182,23 @@ class SignupFragment : Fragment(), SignupView {
         text_username.isEnabled = false
         text_password.isEnabled = false
         text_email.isEnabled = false
+    }
+
+    private fun tintEditTextDrawableStart() {
+        (activity as AuthenticationActivity).apply {
+            val personDrawable =
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_20dp, this)
+            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_20dp, this)
+            val keyDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_key_black_20dp, this)
+            val emailDrawable =
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_20dp, this)
+
+            val drawables = arrayOf(personDrawable, atDrawable, keyDrawable, emailDrawable)
+            DrawableHelper.wrapDrawables(drawables)
+            DrawableHelper.tintDrawables(drawables, this, ThemeUtil.getThemeColorResource(R.attr.colorDrawableSubtleTint))
+            DrawableHelper.compoundDrawables(
+                    arrayOf(text_name, text_username, text_password, text_email), drawables
+            )
+        }
     }
 }

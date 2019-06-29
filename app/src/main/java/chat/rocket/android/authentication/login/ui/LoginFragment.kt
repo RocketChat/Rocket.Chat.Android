@@ -258,9 +258,11 @@ class LoginFragment : Fragment(), LoginView {
     private fun tintEditTextDrawableStart() {
         ui {
             val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_20dp, it)
-            DrawableHelper.wrapDrawable(atDrawable)
-            DrawableHelper.tintDrawable(atDrawable, it, ThemeUtil.getThemeColorResource(R.attr.colorDrawableStrongTint))
-            DrawableHelper.compoundStartDrawable(text_username_or_email, atDrawable)
+            val keyDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_key_black_20dp, it)
+            val drawables = arrayOf(atDrawable, keyDrawable)
+            DrawableHelper.wrapDrawables(drawables)
+            DrawableHelper.tintDrawables(drawables, it, ThemeUtil.getThemeColorResource(R.attr.colorDrawableStrongTint))
+            DrawableHelper.compoundDrawables( arrayOf(text_username_or_email, text_password), drawables)
         }
     }
 }
