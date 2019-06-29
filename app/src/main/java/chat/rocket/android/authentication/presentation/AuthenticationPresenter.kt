@@ -55,7 +55,8 @@ class AuthenticationPresenter @Inject constructor(
 
     fun toOnBoarding() = navigator.toOnBoarding()
 
-    fun toSignInToYourServer() = navigator.toSignInToYourServer()
+    fun toSignInToYourServer(deepLinkInfo: DeepLinkInfo? = null) =
+        navigator.toSignInToYourServer(deepLinkInfo, false)
 
     fun saveDeepLinkInfo(deepLinkInfo: DeepLinkInfo) = navigator.saveDeepLinkInfo(deepLinkInfo)
 
