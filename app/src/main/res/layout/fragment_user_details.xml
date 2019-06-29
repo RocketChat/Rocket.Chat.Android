@@ -48,7 +48,7 @@
             android:layout_marginTop="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/image_avatar"
             tools:text="Karem Flusser" />
 
         <TextView

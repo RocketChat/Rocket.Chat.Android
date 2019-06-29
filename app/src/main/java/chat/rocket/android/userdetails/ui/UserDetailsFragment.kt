@@ -71,6 +71,12 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         presenter.loadUserDetails(userId)
 
         analyticsManager.logScreenView(ScreenViewEvent.UserDetails)
+
+        image_avatar.setOnClickListener {
+            with(presenter) {
+                toProfileImage(getImageUri())
+            }
+        }
     }
 
     override fun onDestroyView() {
