@@ -25,7 +25,6 @@ import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.loginoptions.presentation.LoginOptionsPresenter
 import chat.rocket.android.authentication.loginoptions.presentation.LoginOptionsView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.helper.Constants
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
@@ -124,7 +123,10 @@ fun newInstance(
         putInt(TOTAL_SOCIAL_ACCOUNTS, totalSocialAccountsEnabled)
         putBoolean(IS_LOGIN_FORM_ENABLED, isLoginFormEnabled)
         putBoolean(IS_NEW_ACCOUNT_CREATION_ENABLED, isNewAccountCreationEnabled)
-        putParcelable(Constants.DEEP_LINK_INFO, deepLinkInfo)
+        putParcelable(
+            chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY,
+            deepLinkInfo
+        )
     }
 }
 
@@ -190,7 +192,8 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
             totalSocialAccountsEnabled = getInt(TOTAL_SOCIAL_ACCOUNTS)
             isLoginFormEnabled = getBoolean(IS_LOGIN_FORM_ENABLED)
             isNewAccountCreationEnabled = getBoolean(IS_NEW_ACCOUNT_CREATION_ENABLED)
-            deepLinkInfo = getParcelable(Constants.DEEP_LINK_INFO)
+            deepLinkInfo =
+                getParcelable(chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY)
         }
     }
 

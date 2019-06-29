@@ -20,8 +20,6 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
 
-const val DEFAULT_SERVER_HOST = "open.rocket.chat"
-
 fun Uri.getFileName(context: Context): String? {
     val cursor = context.contentResolver.query(this, null, null, null, null, null)
 
@@ -119,61 +117,66 @@ fun Uri.getBitmpap(context: Context): Bitmap? {
     return MediaStore.Images.Media.getBitmap(context.contentResolver, this)
 }
 
-fun Uri.getDeepLinkInfo(): DeepLinkInfo? {
-    return if (isAuthenticationDeepLink()) {
-        val host = getQueryParameter("host")
-        val url = if (host.startsWith("http")) host else "https://$host"
-        val userId = getQueryParameter("userId")
-        val token = getQueryParameter("token")
-        try {
-            DeepLinkInfo(url, userId, token, null, null, null)
-        } catch (ex: Exception) {
-            Timber.d(ex, "Error parsing auth deeplink")
-            null
+fun Uri.getDeepLinkInfo(context: Context): DeepLinkInfo? {
+    return when {
+        isAuthenticationDeepLink(context) -> {
+            val host = getQueryParameter("host")
+            val url = if (host.startsWith("http")) host else "https://$host"
+            val userId = getQueryParameter("userId")
+            val token = getQueryParameter("token")
+            try {
+                DeepLinkInfo(url, userId, token, null, null, null)
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error parsing auth deeplink")
+                null
+            }
         }
-    } else if (isCustomSchemeRoomLink()) {
-        val hostValue = getQueryParameter("host")
-        val url = if (hostValue.startsWith("http")) hostValue else "https://$hostValue"
-        val rid = getQueryParameter("rid")
-        val pathValue = getQueryParameter("path")
-        val pathSplit = pathValue.split("/")
-        val roomType = pathSplit[0]
-        val roomName = pathSplit[1]
-        try {
-            DeepLinkInfo(url, null, null, rid, roomType, roomName)
-        } catch (ex: Exception) {
-            Timber.d(ex, "Error parsing custom scheme room link")
-            null
+        isCustomSchemeRoomLink() -> {
+            val hostValue = getQueryParameter("host")
+            val url = if (hostValue.startsWith("http")) hostValue else "https://$hostValue"
+            val rid = getQueryParameter("rid")
+            val pathValue = getQueryParameter("path")
+            val pathSplit = pathValue.split("/")
+            val roomType = pathSplit[0]
+            val roomName = pathSplit[1]
+            try {
+                DeepLinkInfo(url, null, null, rid, roomType, roomName)
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error parsing custom scheme room link")
+                null
+            }
         }
-    } else if (isWebSchemeRoomLink()) {
-        val url = "https://$host"
-        val pathSplit = path.split("/")
-        val roomType = pathSplit[1]
-        val roomName = pathSplit[2]
-        try {
-            DeepLinkInfo(url, null, null, null, roomType, roomName)
-        } catch (ex: Exception) {
-            Timber.d(ex, "Error parsing login deeplink")
-            null
+        isWebSchemeRoomLink() -> {
+            val url = "https://$host"
+            val pathSplit = path.split("/")
+            val roomType = pathSplit[1]
+            val roomName = pathSplit[2]
+            try {
+                DeepLinkInfo(url, null, null, null, roomType, roomName)
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error parsing login deeplink")
+                null
+            }
         }
-    } else null
+        else -> null
+    }
 }
 
 fun Uri.isDynamicLink(activity: Activity): Boolean {
-    return (host != null && host.contains(activity.getString(R.string.dynamiclink_host)))
+    return (host != null && host.contains(activity.getString(R.string.dynamic_link_host_url)))
 }
 
 // Authentication deep link defined here: https://rocket.chat/docs/developer-guides/deeplink/#authentication
-inline fun Uri.isAuthenticationDeepLink(): Boolean {
+fun Uri.isAuthenticationDeepLink(context: Context): Boolean {
     if (host == "auth")
         return true
-    else if (host == DEFAULT_SERVER_HOST && path == "/auth")
+    else if (host == context.getString(R.string.community_server_url) && path == "/auth")
         return true
     return false
 }
 
 // Custom scheme room deep link defined here: https://rocket.chat/docs/developer-guides/deeplink/#channel--group--dm
-inline fun Uri.isCustomSchemeRoomLink(): Boolean {
+fun Uri.isCustomSchemeRoomLink(): Boolean {
     if (scheme.startsWith("rocketchat") &&
             host == "room")
         return true
@@ -181,7 +184,7 @@ inline fun Uri.isCustomSchemeRoomLink(): Boolean {
 }
 
 // http(s) scheme deep link not yet documented. Ex: https://open.rocket.chat/direct/testuser1
-inline fun Uri.isWebSchemeRoomLink(): Boolean {
+fun Uri.isWebSchemeRoomLink(): Boolean {
     val roomType = path.split("/")[1]
     if (scheme.startsWith("http") &&
             (roomType == "channel" || roomType == "group" || roomType == "direct"))

@@ -24,7 +24,6 @@ import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.hintContent
@@ -43,12 +42,13 @@ import kotlinx.android.synthetic.main.fragment_authentication_server.*
 import okhttp3.HttpUrl
 import javax.inject.Inject
 
-fun newInstance(deepLinkInfo: DeepLinkInfo?): ServerFragment {
-    val fragment = ServerFragment()
-    val args = Bundle()
-    args.putParcelable(Constants.DEEP_LINK_INFO, deepLinkInfo)
-    fragment.setArguments(args)
-    return fragment
+fun newInstance(deepLinkInfo: DeepLinkInfo?): Fragment = ServerFragment().apply {
+    arguments = Bundle(1).apply {
+        putParcelable(
+            chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY,
+            deepLinkInfo
+        )
+    }
 }
 
 class ServerFragment : Fragment(), ServerView {
@@ -71,7 +71,8 @@ class ServerFragment : Fragment(), ServerView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        deepLinkInfo = arguments?.getParcelable(Constants.DEEP_LINK_INFO)
+        deepLinkInfo =
+            arguments?.getParcelable(chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY)
     }
 
     override fun onCreateView(

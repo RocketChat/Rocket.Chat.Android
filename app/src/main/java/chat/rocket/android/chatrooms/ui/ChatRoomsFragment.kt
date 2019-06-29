@@ -28,7 +28,6 @@ import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModel
 import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModelFactory
 import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.chatrooms.viewmodel.Query
-import chat.rocket.android.helper.Constants
 import chat.rocket.android.servers.ui.ServersBottomSheetFragment
 import chat.rocket.android.sortingandgrouping.ui.SortingAndGroupingBottomSheetFragment
 import chat.rocket.android.util.extension.onQueryTextListener
@@ -51,7 +50,10 @@ private const val BUNDLE_CHAT_ROOM_ID = "BUNDLE_CHAT_ROOM_ID"
 fun newInstance(chatRoomId: String?, deepLinkInfo: DeepLinkInfo?): Fragment = ChatRoomsFragment().apply {
     arguments = Bundle(1).apply {
         putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-        putParcelable(Constants.DEEP_LINK_INFO, deepLinkInfo)
+        putParcelable(
+            chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY,
+            deepLinkInfo
+        )
     }
 }
 
@@ -79,7 +81,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 presenter.loadChatRoom(it)
                 chatRoomId = null
             }
-            deepLinkInfo = getParcelable<DeepLinkInfo>(Constants.DEEP_LINK_INFO)
+            deepLinkInfo =
+                getParcelable(chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY)
         }
 
         setHasOptionsMenu(true)

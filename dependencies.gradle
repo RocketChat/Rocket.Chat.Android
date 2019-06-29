@@ -131,9 +131,9 @@ ext {
             // Proprietary libraries
             fcm                   : "com.google.firebase:firebase-messaging:${versions.firebaseCloudMessage}",
             firebaseAnalytics     : "com.google.firebase:firebase-core:${versions.firebaseAnalytics}",
-            playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServicesAuth}",
             dynamiclinks          : "com.google.firebase:firebase-dynamic-links:${versions.dynamiclinks}",
-            
+            playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServicesAuth}",
+
             // For testing
             junit                 : "junit:junit:${versions.junit}",
             espressoCore          : "androidx.test.espresso:espresso-core:${versions.espresso}",

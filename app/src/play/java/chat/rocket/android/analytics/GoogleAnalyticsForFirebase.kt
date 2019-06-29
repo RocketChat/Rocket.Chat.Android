@@ -3,6 +3,7 @@ package chat.rocket.android.analytics
 import android.content.Context
 import android.os.Bundle
 import chat.rocket.android.analytics.event.AuthenticationEvent
+import chat.rocket.android.analytics.event.InviteType
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.analytics.event.SubscriptionTypeEvent
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -73,10 +74,9 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
         })
     }
 
-    override fun logInviteSent(inviteType: String, inviteSucceeded: Boolean) {
-        firebaseAnalytics.logEvent("invite_sent", Bundle(2).apply {
-            putString("invite_type", inviteType)
-            putBoolean("invite_succeeded", inviteSucceeded)
+    override fun logInviteSent(inviteType: InviteType) {
+        firebaseAnalytics.logEvent("invite_sent", Bundle(1).apply {
+            putString("invite_type", inviteType.inviteTypeName)
         })
     }
 

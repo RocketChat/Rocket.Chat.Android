@@ -1,6 +1,7 @@
 package chat.rocket.android.analytics
 
 import chat.rocket.android.analytics.event.AuthenticationEvent
+import chat.rocket.android.analytics.event.InviteType
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.analytics.event.SubscriptionTypeEvent
 
@@ -85,7 +86,7 @@ interface Analytics {
      *
      * @param inviteType The method of invite to log, currently only 'share' using the share intent.
      */
-    fun logInviteSent(inviteType: String, inviteSucceeded: Boolean) {}
+    fun logInviteSent(inviteType: InviteType) {}
 
     /**
      * Logs the add reaction message action.

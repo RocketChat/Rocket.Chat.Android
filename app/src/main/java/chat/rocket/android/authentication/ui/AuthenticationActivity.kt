@@ -50,14 +50,15 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private fun processIncomingIntent(intent: Intent) {
         if (intent.isSupportedLink(this)) {
-            val uri = intent.data
-            if (uri.isDynamicLink(this)) {
-                resolveDynamicLink(intent)
-            } else {
-                uri.getDeepLinkInfo()?.let{
-                    routeDeepLink(it)
-                } .ifNull {
-                    loadCredentials()
+            intent.data?.let { uri ->
+                if (uri.isDynamicLink(this)) {
+                    resolveDynamicLink(intent)
+                } else {
+                    uri.getDeepLinkInfo(baseContext)?.let {
+                        routeDeepLink(it)
+                    }.ifNull {
+                        loadCredentials()
+                    }
                 }
             }
         } else {
@@ -66,13 +67,14 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun resolveDynamicLink(intent: Intent) {
-        var deepLinkCallback =  { returnedUri: Uri? ->
-            if (returnedUri == null) {
-                loadCredentials()
-            } else {
-                returnedUri?.getDeepLinkInfo()?.let {
+        val deepLinkCallback = { returnedUri: Uri? ->
+            returnedUri?.let {
+                returnedUri.getDeepLinkInfo(baseContext)?.let {
                     routeDeepLink(it)
-                } }
+                }
+            }.ifNull {
+                loadCredentials()
+            }
         }
         dynamicLinksManager.getDynamicLink(intent, deepLinkCallback)
     }
@@ -126,12 +128,10 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     private fun loadCredentials() {
         val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
         presenter.loadCredentials(newServer) { isAuthenticated ->
-            if (isAuthenticated) {
-                showChatList()
-            } else if (getString(R.string.server_url).isEmpty()) {
-                showOnBoardingFragment()
-            } else {
-                showServerFragment()
+            when {
+                isAuthenticated -> showChatList()
+                getString(R.string.server_url).isEmpty() -> showOnBoardingFragment()
+                else -> showServerFragment()
             }
         }
     }
