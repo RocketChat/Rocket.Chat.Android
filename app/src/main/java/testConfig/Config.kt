@@ -30,5 +30,6 @@ class Config {
         const val BUSY: String = "Busy"
         const val AWAY: String = "Away"
         const val INVISIBLE: String = "Invisible"
+        const val MEMBERS: String = "Members"
     }
 }

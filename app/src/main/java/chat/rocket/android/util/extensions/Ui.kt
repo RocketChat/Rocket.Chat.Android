@@ -72,7 +72,7 @@ fun AppCompatActivity.addFragmentBackStack(
         )
         .replace(layoutId, fragment, tag)
         .addToBackStack(tag)
-        .commit()
+        .commitAllowingStateLoss()
 }
 
 fun AppCompatActivity.toPreviousView() {
