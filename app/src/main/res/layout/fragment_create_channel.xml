@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:colorBackground"
     tools:context="createchannel.ui.CreateChannelFragment">
 
     <include
@@ -94,6 +93,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="22dp"
         android:src="@drawable/ic_hashtag_black_12dp"
+        android:tint="?colorHeadings"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_read_only_description" />
 
@@ -109,6 +109,7 @@
         android:maxLines="1"
         android:paddingStart="24dp"
         android:paddingEnd="10dp"
+        android:textColor="?colorPrimaryText"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/image_channel_icon"
         app:layout_constraintEnd_toEndOf="parent"
@@ -122,6 +123,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_at_black_20dp"
+        android:tint="?colorHeadings"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_channel_name" />
 
@@ -137,6 +139,7 @@
         android:maxLines="1"
         android:paddingStart="24dp"
         android:paddingEnd="10dp"
+        android:textColor="?colorPrimaryText"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/image_invite_member"
         app:layout_constraintEnd_toEndOf="parent"
@@ -181,10 +184,10 @@
 
         <TextView
             android:id="@+id/text_member_not_found"
-            android:textColor="?colorPrimaryText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/msg_member_not_found"
+            android:textColor="?colorPrimaryText"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
