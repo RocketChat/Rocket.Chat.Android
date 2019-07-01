@@ -43,6 +43,7 @@
         <item name="colorChatText">@color/darkColorChatText</item>
         <item name="colorMessageText">@color/darkColorBodyText</item>
         <item name="colorBackgroundIsDark">@bool/darkIsDark</item>
+        <item name="android:dropDownItemStyle">@style/SpinnerItemStyle</item>
     </style>
 
 
@@ -89,5 +90,6 @@
         <item name="colorChatText">@color/blackColorChatText</item>
         <item name="colorMessageText">@color/blackColorBodyText</item>
         <item name="colorBackgroundIsDark">@bool/blackIsDark</item>
+        <item name="android:dropDownItemStyle">@style/SpinnerItemStyle</item>
     </style>
 </resources>

@@ -360,4 +360,8 @@
     <style name="CustomAlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
         <item name="android:background">?android:colorBackground</item>
     </style>
+
+    <style name="SpinnerItemStyle" parent="Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:textColor">?colorPrimaryText</item>
+    </style>
 </resources>

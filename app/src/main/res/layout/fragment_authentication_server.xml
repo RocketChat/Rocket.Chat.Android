@@ -43,6 +43,7 @@
 
             <Spinner
                 android:id="@+id/spinner_server_protocol"
+                android:backgroundTint="?colorDescriptiveText"
                 android:layout_width="120dp"
                 android:textColor="?colorPrimaryText"
                 android:layout_height="match_parent" />

@@ -213,6 +213,11 @@ class LoginOptionsFragment : Fragment(), LoginOptionsView {
             view?.let {this.clearInvisibleStatusBar(it)}
             toolbar.isVisible = true
             toolbar.title = serverName?.replace(getString(R.string.default_protocol), "")
+            val overflowIcon = toolbar.overflowIcon
+            overflowIcon?.let{
+                val wrappedDrawable = DrawableHelper.wrapDrawable(it)
+                DrawableHelper.tintDrawable(wrappedDrawable, this, R.color.colorWhite)
+            }
         }
     }
 

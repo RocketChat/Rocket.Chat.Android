@@ -189,13 +189,13 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
             is RoomType.PrivateGroup -> {
                 DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_12_dp, context!!)
             }
-            else -> null
+            else -> DrawableHelper.getDrawableFromId(R.drawable.ic_hashtag_black_12dp, context!!)
         }
 
         drawable?.let {
             val wrappedDrawable = DrawableHelper.wrapDrawable(it)
             val mutableDrawable = wrappedDrawable.mutate()
-            DrawableHelper.tintDrawable(mutableDrawable, context!!, ThemeUtil.getThemeColorResource(R.attr.colorPrimary))
+            DrawableHelper.tintDrawable(mutableDrawable, context!!, ThemeUtil.getThemeColorResource(R.attr.colorMessageText))
             DrawableHelper.compoundStartDrawable(name, mutableDrawable)
         }
     }
