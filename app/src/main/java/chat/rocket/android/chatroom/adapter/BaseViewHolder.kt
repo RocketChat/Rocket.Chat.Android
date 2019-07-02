@@ -22,6 +22,9 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 
+// WIDECHAT
+import chat.rocket.android.helper.Constants
+
 abstract class BaseViewHolder<T : BaseUiModel<*>>(
     itemView: View,
     private val listener: ActionsListener,
@@ -91,7 +94,12 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
         if (data?.message?.isSystemMessage() == false) {
             data?.let { vm ->
                 vm.message.let {
-                    val menuItems = view.context.inflate(R.menu.message_actions).toList()
+                    val menuItems: List<MenuItem>
+                    if (Constants.WIDECHAT) {
+                        menuItems = view.context.inflate(R.menu.message_actions_widechat).toList()
+                    } else {
+                        menuItems = view.context.inflate(R.menu.message_actions).toList()
+                    }
                     menuItems.find { it.itemId == R.id.action_pin }?.apply {
                         setTitle(if (it.pinned) R.string.action_unpin else R.string.action_pin)
                         isChecked = it.pinned

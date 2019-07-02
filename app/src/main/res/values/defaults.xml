@@ -13,7 +13,7 @@
     <!--WIDECHAT deal with these strings??-->
     <string name="community_server_url" translatable="false">open.rocket.chat</string>
     <string name="create_server_url" translatable="false">cloud.rocket.chat/trial</string>
-    <string name="play_store_link" translatable="false">https://play.google.com/store/apps/details?id=chat.rocket.android</string>
+    <string name="play_store_link" translatable="false">https://play.google.com/store/apps/details?id=chat.veranda.android</string>
     <string name="market_link" translatable="false">market://details?id=chat.rocket.android</string>
     <string name="privacy_policy_url" translatable="false">https://viasatconnect.com/privacy-policy</string>
     <string name="terms_of_service_url" translatable="false">https://viasatconnect.com/terms-of-service</string>
