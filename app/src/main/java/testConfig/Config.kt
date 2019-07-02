@@ -4,12 +4,12 @@ class Config {
     companion object {
         const val SERVER: String = "open.rocket.chat"
         const val serverUrl: String = "serverUrl"
-        const val NAME: String = "user"
-        const val EMAIL: String = "abc@gmail.com"
 
         //Organisation using RC forks should create a user with below details before running tests
         const val USERNAME: String = "user121"
         const val PASSWORD: String = "123456"
+        const val NAME: String = "user121"
+        const val EMAIL: String = "qasdf@gmail.com"
 
         const val CODE = "1234"
         const val USER_ID = "user_id"
@@ -25,5 +25,10 @@ class Config {
         const val PRIVACY_POLICY: String = "Privacy Policy"
         const val termsOfServiceUrl: String = "$currentServer/terms-of-service"
         const val privacyPolicyUrl: String = "$currentServer/privacy-policy"
+        const val CHANGE_STATUS: String = "CHANGE STATUS"
+        const val ONLINE: String = "Online"
+        const val BUSY: String = "Busy"
+        const val AWAY: String = "Away"
+        const val INVISIBLE: String = "Invisible"
     }
 }
