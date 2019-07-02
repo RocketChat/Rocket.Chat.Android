@@ -62,6 +62,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="action_drawing">Drawing</string>
     <string name="action_save_to_gallery">Save to gallery</string>
     <string name="action_select_photo_from_gallery">Select photo from gallery</string>
+    <string name="action_view_profile_photo">View profile photo</string>
     <string name="action_take_a_photo">Take a photo</string>
     <string name="action_reset_avatar">Reset avatar</string>
     <string name="action_connect_server">Connect with a server</string>
@@ -113,9 +114,10 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_no_data_to_display">No data to display</string>
     <string name="msg_check_this_out">Check this out</string>
     <string name="msg_share_using">Share using</string>
+    <string name="msg_dynamic_link_description" translatable="false">Chat with %1$s on %2$s</string> <!-- TODO Make translatable and add translations -->
+    <string name="msg_profile_updated_successfully">Profile updated successfully</string>
     <string name="msg_username">Username</string>
     <string name="msg_profile_username_hint" translatable="false">Please enter your username</string> <!-- TODO Make translatable and add translations -->
-    <string name="msg_profile_updated_successfully">Profile updated successfully</string>
     <string name="msg_username_or_email">Username or email</string>
     <string name="msg_password">Password</string>
     <string name="msg_name">Name</string>

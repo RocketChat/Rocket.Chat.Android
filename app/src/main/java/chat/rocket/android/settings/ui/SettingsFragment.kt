@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
+import chat.rocket.android.analytics.event.InviteType
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.core.behaviours.AppLanguageView
 import chat.rocket.android.helper.TextHelper.getDeviceAndAppInformation
@@ -227,12 +228,9 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
     }
 
     private fun shareApp() {
-        with(Intent(Intent.ACTION_SEND)) {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_check_this_out))
-            putExtra(Intent.EXTRA_TEXT, getString(R.string.play_store_link))
-            startActivity(Intent.createChooser(this, getString(R.string.msg_share_using)))
-        }
+        // We can't know for sure at this point that the invitation was sent successfully since they will now be outside our app
+        analyticsManager.logInviteSent(InviteType.ViaApp)
+        presenter.shareViaApp(context)
     }
 
     private fun showLogoutDialog() {

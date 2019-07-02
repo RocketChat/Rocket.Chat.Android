@@ -207,6 +207,7 @@ dependencies {
     // Proprietary libraries
     playImplementation libraries.fcm
     playImplementation libraries.firebaseAnalytics
+    playImplementation libraries.dynamiclinks
     playImplementation libraries.playServicesAuth
     playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.8@aar') { transitive = true }
     playImplementation('com.crashlytics.sdk.android:answers:1.4.6@aar') { transitive = true }

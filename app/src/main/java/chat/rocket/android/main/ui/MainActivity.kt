@@ -3,6 +3,7 @@ package chat.rocket.android.main.ui
 import android.app.Activity
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -10,6 +11,9 @@ import android.os.LocaleList
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import chat.rocket.android.R
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
+import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
+import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
 import chat.rocket.android.core.behaviours.AppLanguageView
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.push.refreshPushToken
@@ -30,20 +34,33 @@ class MainActivity : AppCompatActivity(), HasActivityInjector,
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
     lateinit var presenter: MainPresenter
+    private var deepLinkInfo: DeepLinkInfo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         refreshPushToken()
+        deepLinkInfo =
+            intent.getParcelableExtra(chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY)
 
         with(presenter) {
             connect()
             getAppLanguage()
             intent.getStringExtra(INTENT_CHAT_ROOM_ID).let {
                 clearNotificationsForChatRoom(it)
-                showChatList(it)
+                showChatList(it, deepLinkInfo)
             }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.getParcelableExtra<DeepLinkInfo>(
+            chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY
+        )?.let { deepLinkInfo ->
+            (supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOMS_FRAGMENT) as? ChatRoomsFragment)
+                ?.processDeepLink(deepLinkInfo)
         }
     }
 
