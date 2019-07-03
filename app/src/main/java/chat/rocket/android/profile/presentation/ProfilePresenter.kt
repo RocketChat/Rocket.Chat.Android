@@ -33,6 +33,8 @@ import java.util.*
 import javax.inject.Inject
 
 // WIDECHAT
+import android.content.Context
+import android.provider.MediaStore
 import chat.rocket.core.internal.rest.getAccessToken
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
@@ -164,6 +166,12 @@ class ProfilePresenter @Inject constructor(
                 view.hideLoading()
             }
         }
+    }
+
+    // WIDECHAT
+    fun prepareFileAndUpdateAvatar(uri: Uri, context: Context?) {
+        val bitmap = MediaStore.Images.Media.getBitmap(context?.getContentResolver(), uri)
+        preparePhotoAndUpdateAvatar(bitmap)
     }
 
     fun preparePhotoAndUpdateAvatar(bitmap: Bitmap) {
