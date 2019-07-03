@@ -185,6 +185,8 @@
         <item quantity="other">%1$s reagiram com %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Credenciais salvas com sucesso</string>
+    <string name="msg_camera_permission_denied">A permissão da câmera é necessária</string>
+    <string name="msg_storage_permission_denied">A permissão de armazenamento é necessária</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privado</string>

@@ -183,6 +183,8 @@
         <item quantity="other">%1$s a réagi avec %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Certificats sauvegardés</string>
+    <string name="msg_camera_permission_denied">Vous devez donner la permission d\'utiliser la caméra pour vous en servir</string>
+    <string name="msg_storage_permission_denied">Vous devez donner la permission d\'accéder au stockage pour ouvrir le Dessin</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Privé</string>

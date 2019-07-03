@@ -182,6 +182,8 @@
         <item quantity="many">%1$s реагируют с %2$s</item>
     </plurals>
     <string name="msg_credentials_saved_successfully">Учетные данные успешно сохранены</string>
+    <string name="msg_camera_permission_denied">Необходимо разрешение на использование камеры</string>
+    <string name="msg_storage_permission_denied">Необходимо разрешение на использование хранилища</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>

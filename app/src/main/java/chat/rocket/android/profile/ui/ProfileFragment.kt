@@ -4,6 +4,7 @@ import DrawableHelper
 import android.app.Activity
 import androidx.appcompat.app.AlertDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -21,6 +22,7 @@ import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.helper.AndroidPermissionsHelper
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
@@ -39,6 +41,7 @@ import javax.inject.Inject
 
 // WIDECHAT
 import chat.rocket.android.helper.Constants
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_profile_widechat.*
 
@@ -291,13 +294,43 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
 
         button_take_a_photo.setOnClickListener {
-            dispatchTakePicture(REQUEST_CODE_FOR_PERFORM_CAMERA)
+            context?.let {
+                if (AndroidPermissionsHelper.hasCameraPermission(it)) {
+                    dispatchTakePicture(REQUEST_CODE_FOR_PERFORM_CAMERA)
+                } else {
+                    AndroidPermissionsHelper.getCameraPermission(this)
+                }
+            }
             hideUpdateAvatarOptions()
         }
 
         button_reset_avatar.setOnClickListener {
             hideUpdateAvatarOptions()
             presenter.resetAvatar()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            AndroidPermissionsHelper.CAMERA_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    dispatchTakePicture(REQUEST_CODE_FOR_PERFORM_CAMERA)
+                } else {
+                    // permission denied
+                    Snackbar.make(
+                        view!!,
+                        R.string.msg_camera_permission_denied,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+                return
+            }
         }
     }
 

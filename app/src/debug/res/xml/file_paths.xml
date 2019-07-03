@@ -2,5 +2,5 @@
 <paths>
     <external-path
         name="rocket_chat_images"
-        path="Android/data/chat.rocket.android.dev/files/Pictures" />
+        path="Android/data/chat.veranda.android.dev/files/Pictures" />
 </paths>
