@@ -374,4 +374,11 @@
     <string name="submit">जमा करें</string>
     <string name="required">* आवश्यक</string>
     <string name="report_sent">आपकी रिपोर्ट भेज दी गई है!</string>
+
+    <!-- Themes -->
+    <string name="last_changed">Last Changed %s</string><!-- TODO Translate -->
+    <string name="current_theme">Current Theme</string>
+    <string name="revert_to_default">Revert to Default</string>
+    <string name="create_personal_theme">Create Personal Theme</string>
+    <string name="other_themes">Other Themes</string><!-- TODO Translate -->
 </resources>

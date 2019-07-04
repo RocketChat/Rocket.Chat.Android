@@ -10,7 +10,7 @@ import chat.rocket.android.thememanager.viewmodel.ThemesViewModelFactory
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
-open class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
     @Inject
     lateinit var factory: ThemesViewModelFactory
     lateinit var viewModel: ThemesViewModel
