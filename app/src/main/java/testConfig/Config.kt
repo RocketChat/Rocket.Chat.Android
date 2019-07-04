@@ -1,5 +1,7 @@
 package testConfig
 
+import chat.rocket.android.BuildConfig
+
 class Config {
     companion object {
         const val SERVER: String = "open.rocket.chat"
@@ -25,11 +27,19 @@ class Config {
         const val PRIVACY_POLICY: String = "Privacy Policy"
         const val termsOfServiceUrl: String = "$currentServer/terms-of-service"
         const val privacyPolicyUrl: String = "$currentServer/privacy-policy"
+        const val ADMIN_PANEL_URL = "$currentServer/admin/info?layout=embedded"
+        const val LICENSE_URL = "https://github.com/RocketChat/Rocket.Chat.Android/blob/develop/LICENSE"
+        const val LICENSE = "LICENSE"
         const val CHANGE_STATUS: String = "CHANGE STATUS"
         const val ONLINE: String = "Online"
         const val BUSY: String = "Busy"
         const val AWAY: String = "Away"
         const val INVISIBLE: String = "Invisible"
         const val MEMBERS: String = "Members"
+        const val VERSION_NAME: String = BuildConfig.VERSION_NAME
+        const val VERSION_CODE: Int = BuildConfig.VERSION_CODE
+        const val APP_VERSION: String = "Version: $VERSION_NAME ($VERSION_CODE)"
+
+
     }
 }
