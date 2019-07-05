@@ -32,6 +32,11 @@ import kotlinx.android.synthetic.main.dialog_delete_account.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import timber.log.Timber
 import javax.inject.Inject
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.SpannableString
+import androidx.core.content.ContextCompat
+
 
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
@@ -244,8 +249,10 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
     private fun showLogoutDialog() {
         context?.let {
+            val title = SpannableString(getString(R.string.title_are_you_sure))
+            title.setSpan(ForegroundColorSpan(ContextCompat.getColor(it, ThemeUtil.getThemeColorResource(R.attr.colorHeadings))), 0, title.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             val builder = AlertDialog.Builder(it)
-            builder.setTitle(R.string.title_are_you_sure)
+            builder.setTitle(title)
                 .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout() }
                 .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
                 .create()
