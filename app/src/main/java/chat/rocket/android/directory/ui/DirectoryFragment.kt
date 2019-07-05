@@ -23,6 +23,7 @@ import chat.rocket.android.directory.presentation.DirectoryPresenter
 import chat.rocket.android.directory.presentation.DirectoryView
 import chat.rocket.android.directory.uimodel.DirectoryUiModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.isNotNullNorBlank
@@ -81,9 +82,23 @@ class DirectoryFragment : Fragment(), DirectoryView {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupRecyclerView()
+        tintSortByDrawables()
         setupListeners()
         presenter.loadAllDirectoryChannels()
         analyticsManager.logScreenView(ScreenViewEvent.Directory)
+    }
+
+    private fun tintSortByDrawables() {
+        ui{
+            val drawables = arrayOf(hashtagDrawable, userDrawable, arrowDownDrawable)
+            DrawableHelper.wrapDrawables(drawables)
+            DrawableHelper.tintDrawables(drawables, it, ThemeUtil.getThemeColorResource(R.attr.colorSubHeaderText))
+            DrawableHelper.compoundStartAndEndDrawable(
+                    text_sort_by,
+                    hashtagDrawable,
+                    arrowDownDrawable
+            )
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
