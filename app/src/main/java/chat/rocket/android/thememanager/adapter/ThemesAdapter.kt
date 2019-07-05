@@ -18,7 +18,7 @@ class ThemesAdapter(private val themes: List<Theme>, private val listener: (Them
     override fun onBindViewHolder(holder: ThemesAdapter.ViewHolder, position: Int){
         val theme = themes[position]
         holder.bind(theme)
-        holder.itemView.setOnClickListener { view ->
+        holder.itemView.setOnClickListener {
             listener.invoke(theme)
         }
     }

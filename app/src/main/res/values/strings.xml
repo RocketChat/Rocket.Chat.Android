@@ -393,4 +393,11 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Themes -->
+    <string name="last_changed">Last Changed %s</string>
+    <string name="current_theme">Current Theme</string>
+    <string name="revert_to_default">Revert to Default</string>
+    <string name="create_personal_theme">Create Personal Theme</string>
+    <string name="other_themes">Other Themes</string>
 </resources>

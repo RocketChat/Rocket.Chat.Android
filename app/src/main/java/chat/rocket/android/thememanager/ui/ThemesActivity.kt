@@ -29,7 +29,7 @@ class ThemesActivity : BaseActivity() {
     }
 
     private fun setDate(){
-        theme_last_changed.text = "Last Changed "+viewModel.getSavedDate()
+        theme_last_changed.text = getString(R.string.last_changed,viewModel.getSavedDate())
     }
 
     private fun subscribeUi() {

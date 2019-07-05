@@ -17,7 +17,7 @@ class ThemesRepository @Inject constructor(private val preferences: SharedPrefer
 
     private val themeList = mutableListOf<Theme>()
     private val themes = MutableLiveData<List<Theme>>()
-    private val simpleDateFormat = SimpleDateFormat("MMM dd, yyyy")
+    private val simpleDateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
     private lateinit var currentDate : Date
 
     init {

@@ -13,7 +13,7 @@ class ThemeUtil{
         @JvmStatic
         private lateinit var theme: Resources.Theme
         private val typedValue: TypedValue = TypedValue()
-        private val resolveRefs: Boolean = true
+        private const val resolveRefs: Boolean = true
 
         fun setTheme(theme: Resources.Theme) {
             this.theme = theme
