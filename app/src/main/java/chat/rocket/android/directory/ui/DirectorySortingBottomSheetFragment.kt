@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import chat.rocket.android.R
+import chat.rocket.android.thememanager.util.ThemeUtil
+import chat.rocket.android.util.extensions.ui
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -64,6 +66,7 @@ class DirectorySortingBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        tintTextViewStartDrawables()
         setupView()
         setupListeners()
     }
@@ -124,6 +127,14 @@ class DirectorySortingBottomSheetFragment : BottomSheetDialogFragment() {
                 textView,
                 startDrawable
             )
+        }
+    }
+
+    private fun tintTextViewStartDrawables(){
+        ui{
+            val drawables = arrayOf(hashtagDrawable, userDrawable)
+            DrawableHelper.wrapDrawables(drawables)
+            DrawableHelper.tintDrawables(drawables, it, ThemeUtil.getThemeColorResource(R.attr.colorBottomSheetFragmentText))
         }
     }
 }
