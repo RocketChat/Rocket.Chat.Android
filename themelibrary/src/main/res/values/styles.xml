@@ -2,11 +2,11 @@
 <resources>
     <!--DARK THEME-->
     <style name="DarkCustomBottomSheetDialogStyle" parent="CustomBottomSheetDialogStyle">
-        <item name="android:theme">@style/BlackTheme</item>
+        <item name="android:theme">@style/DarkTheme</item>
     </style>
 
     <style name="DarkCustomAlertDialogTheme" parent="CustomAlertDialogTheme">
-        <item name="android:theme">@style/BlackTheme</item>
+        <item name="android:theme">@style/DarkTheme</item>
     </style>
 
     <!--BLACK THEME-->

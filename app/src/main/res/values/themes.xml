@@ -51,5 +51,8 @@
         <item name="colorMessageText">@color/colorPrimary</item>
         <item name="colorBackgroundIsDark">@bool/isDark</item>
         <item name="android:dropDownItemStyle">@style/SpinnerItemStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Alert.Button</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Alert.Button</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Alert.Button</item>
     </style>
 </resources>
