@@ -57,6 +57,12 @@ class SettingsPresenterTest {
     }
 
     @Test
+    fun TrackingShouldBeDisable() {
+        settingsPresenter.enableAnalyticsTracking(false)
+        verify(analyticsTrackingInteractor).save(false)
+    }
+
+    @Test
     fun saveLocaleWithCountry() {
         settingsPresenter.saveLocale("hi", "rIN")
         verify(saveLanguageInteractor).save("hi", "rIN")
