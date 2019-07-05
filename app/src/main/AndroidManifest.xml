@@ -87,6 +87,7 @@
         <activity
             android:name=".settings.password.ui.PasswordActivity"
              />
+        <activity android:name=".thememanager.BaseActivity" />
 
         <receiver
             android:name=".push.DirectReplyReceiver"
