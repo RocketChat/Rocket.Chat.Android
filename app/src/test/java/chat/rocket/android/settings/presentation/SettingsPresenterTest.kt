@@ -84,6 +84,7 @@ class SettingsPresenterTest {
     @Test
     fun navigateToLicense() {
         settingsPresenter.toLicense(LICENSE_URL, LICENSE)
+        verify(navigator).toLicense(LICENSE_URL, LICENSE)
     }
 
     @Test

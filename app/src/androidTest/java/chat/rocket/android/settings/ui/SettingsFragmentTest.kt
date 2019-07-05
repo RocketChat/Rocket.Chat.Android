@@ -15,13 +15,16 @@ import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runners.MethodSorters
 import testConfig.Config.Companion.APP_VERSION
 import testConfig.Config.Companion.PASSWORD
 import testConfig.Config.Companion.USERNAME
 import testConfig.Config.Companion.serverUrl
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class SettingsFragmentTest {
 
     @JvmField
@@ -33,10 +36,10 @@ class SettingsFragmentTest {
     @Before
     fun setUp() {
         try {
-            login_if_user_is_logged_out()
-            navigate_to_settings()
+            loginIfUserIsLoggedOut()
+            navigateToSettings()
         } catch (e: NoMatchingViewException) {
-            navigate_to_settings()
+            navigateToSettings()
         }
     }
 
@@ -58,7 +61,6 @@ class SettingsFragmentTest {
         onView(withId(R.id.text_delete_account)).check(matches(isDisplayed()))
     }
 
-
     @Test
     fun check_review_the_app() {
         onView(withId(R.id.text_review_this_app)).perform(click())
@@ -74,7 +76,7 @@ class SettingsFragmentTest {
     fun check_contact_us_button() {
         onView(withId(R.id.text_contact_us)).perform(click())
         val mDevice: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        Thread.sleep(10000)
+        Thread.sleep(15000)
         val titleLabel: UiObject = mDevice.findObject(UiSelector().text("Android app support"))
         if (!titleLabel.exists()) {
             throw RuntimeException("wrong title!")
@@ -103,7 +105,19 @@ class SettingsFragmentTest {
         onView(withId(R.id.text_app_version)).check(matches(withText(APP_VERSION)))
     }
 
-    private fun login_if_user_is_logged_out() {
+    @Test
+    fun check_change_language_to_german_then_reset_to_english() {
+        onView(withId(R.id.text_language)).perform(click())
+        onView(withText("German")).perform(click())
+        Thread.sleep(2000)
+        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click())
+        Thread.sleep(3000)
+        onView(withText("Sprache")).check(matches(isDisplayed())).perform(click())
+        onView(withText("Deutsch")).perform(swipeDown()).perform(swipeDown()).perform(swipeDown())
+        onView(withText("Englisch")).check(matches(isDisplayed())).perform(click())
+    }
+
+    private fun loginIfUserIsLoggedOut() {
         rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
             chat.rocket.android.authentication.login.ui.newInstance(serverUrl)
         }
@@ -115,7 +129,7 @@ class SettingsFragmentTest {
         Thread.sleep(12000)
     }
 
-    private fun navigate_to_settings() {
+    private fun navigateToSettings() {
         onView(withId(R.id.toolbar)).check(matches(isDisplayed()))
         onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click())
         Thread.sleep(3000)
