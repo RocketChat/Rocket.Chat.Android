@@ -106,6 +106,10 @@ fun PublicSettings.allowedMessagePinning(): Boolean = this[ALLOW_MESSAGE_PINNING
 fun PublicSettings.allowedMessageStarring(): Boolean = this[ALLOW_MESSAGE_STARRING]?.value == true
 fun PublicSettings.allowedMessageEditing(): Boolean = this[ALLOW_MESSAGE_EDITING]?.value == true
 fun PublicSettings.allowedMessageDeleting(): Boolean = this[ALLOW_MESSAGE_DELETING]?.value == true
+fun PublicSettings.hideTypeUserJoined(): Boolean = this[HIDE_USER_JOIN]?.value == true
+fun PublicSettings.hideTypeUserLeft(): Boolean = this[HIDE_USER_LEAVE]?.value == true
+fun PublicSettings.hideTypeUserAdded(): Boolean = this[HIDE_TYPE_AU]?.value == true
+fun PublicSettings.hideTypeUserRemoved(): Boolean = this[HIDE_TYPE_RU]?.value == true
 
 fun PublicSettings.hasShowLastMessage(): Boolean = this[STORE_LAST_MESSAGE] != null
 fun PublicSettings.showLastMessage(): Boolean = this[STORE_LAST_MESSAGE]?.value == true

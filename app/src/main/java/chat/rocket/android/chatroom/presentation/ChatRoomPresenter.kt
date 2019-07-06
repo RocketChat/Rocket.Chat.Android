@@ -30,6 +30,10 @@ import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.UsersRepository
+import chat.rocket.android.server.domain.hideTypeUserAdded
+import chat.rocket.android.server.domain.hideTypeUserJoined
+import chat.rocket.android.server.domain.hideTypeUserLeft
+import chat.rocket.android.server.domain.hideTypeUserRemoved
 import chat.rocket.android.server.domain.uploadMaxFileSize
 import chat.rocket.android.server.domain.uploadMimeTypeFilter
 import chat.rocket.android.server.domain.useRealName
@@ -74,7 +78,9 @@ import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.ChatRoomRole
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
+import chat.rocket.core.model.MessageType
 import chat.rocket.core.model.Room
+import chat.rocket.core.model.asString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
@@ -239,8 +245,12 @@ class ChatRoomPresenter @Inject constructor(
                     // FIXME - load just 50 messages from DB to speed up. We will reload from Network after that
                     // FIXME - We need to handle the pagination, first fetch from DB, then from network
                     val localMessages = messagesRepository.getRecentMessages(chatRoomId, 50)
+
+                    //Hide User Joined, User Left, User Added, User Removed messages based on settings
+                    val filtered: List<Message> = getFilteredMessages(localMessages)
+
                     val oldMessages = mapper.map(
-                        localMessages, RoomUiModel(
+                        filtered, RoomUiModel(
                         roles = chatRoles,
                         // FIXME: Why are we fixing isRoom attribute to true here?
                         isBroadcast = chatIsBroadcast, isRoom = true
@@ -300,13 +310,35 @@ class ChatRoomPresenter @Inject constructor(
             }
         }
 
+        //Hide User Joined, User Left, User Added, User Removed messages based on settings
+        val filtered: List<Message> = getFilteredMessages(messages)
+
         view.showMessages(
             mapper.map(
-                messages,
+                filtered,
                 RoomUiModel(roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true)
             ),
             clearDataSet
         )
+    }
+
+    private fun getFilteredMessages(messages: List<Message>): List<Message> {
+        val listOfHideMessageTypes = arrayListOf<String>()
+
+        if (settings.hideTypeUserJoined()) {
+            listOfHideMessageTypes.add(MessageType.UserJoined().asString()!!)
+        }
+        if (settings.hideTypeUserLeft()) {
+            listOfHideMessageTypes.add(MessageType.UserLeft().asString()!!)
+        }
+        if (settings.hideTypeUserAdded()) {
+            listOfHideMessageTypes.add(MessageType.UserAdded().asString()!!)
+        }
+        if (settings.hideTypeUserRemoved()) {
+            listOfHideMessageTypes.add(MessageType.UserRemoved().asString()!!)
+        }
+
+        return messages.filter { it.type.asString() !in listOfHideMessageTypes }
     }
 
     fun searchMessages(chatRoomId: String, searchText: String) {
@@ -623,16 +655,20 @@ class ChatRoomPresenter @Inject constructor(
                     Timber.d("History: $messages")
 
                     if (messages.result.isNotEmpty()) {
-                        val models = mapper.map(messages.result, RoomUiModel(
+                        messagesRepository.saveAll(messages.result)
+                        //if success - saving last synced time
+                        //assume that BE returns ordered messages, the first message is the latest one
+                        messagesRepository.saveLastSyncDate(chatRoomId, messages.result.first().timestamp)
+
+                        //Hide User Joined, User Left, User Added, User Removed messages based on settings
+                        val filtered: List<Message> = getFilteredMessages(messages.result)
+
+                        val models = mapper.map(filtered, RoomUiModel(
                             roles = chatRoles,
                             isBroadcast = chatIsBroadcast,
                             // FIXME: Why are we fixing isRoom attribute to true here?
                             isRoom = true
                         ))
-                        messagesRepository.saveAll(messages.result)
-                        //if success - saving last synced time
-                        //assume that BE returns ordered messages, the first message is the latest one
-                        messagesRepository.saveLastSyncDate(chatRoomId, messages.result.first().timestamp)
 
                         launchUI(strategy) {
                             view.showNewMessage(models, true)
