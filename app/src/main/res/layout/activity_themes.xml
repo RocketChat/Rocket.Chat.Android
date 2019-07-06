@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:colorBackground"
     tools:context=".thememanager.ui.ThemesActivity">
 
     <include
@@ -73,12 +72,12 @@
         app:layout_constraintTop_toBottomOf="@+id/item_theme_row_small" />
 
     <TextView
-        android:id="@+id/create_personal_theme"
+        android:id="@+id/create_custom_theme"
         style="@style/ChangeTheme.Content.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/theme_screen_edge_top_padding"
-        android:text="@string/create_personal_theme"
+        android:text="@string/create_custom_theme"
         app:layout_constraintLeft_toRightOf="@+id/divider2"
         app:layout_constraintTop_toBottomOf="@+id/item_theme_row_small" />
 
@@ -89,7 +88,7 @@
         android:paddingTop="@dimen/theme_screen_edge_top_padding"
         android:text="@string/other_themes"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_personal_theme" />
+        app:layout_constraintTop_toBottomOf="@+id/create_custom_theme" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
