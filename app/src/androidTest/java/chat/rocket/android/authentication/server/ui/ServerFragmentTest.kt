@@ -27,7 +27,7 @@ class ServerFragmentTest{
     @Before
     fun setUp() {
         rule().activity.addFragmentBackStack(ScreenViewEvent.Server.screenName, R.id.fragment_container) {
-            newInstance()
+            newInstance(null)
         }
     }
 

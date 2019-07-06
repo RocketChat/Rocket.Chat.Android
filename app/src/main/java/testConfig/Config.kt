@@ -31,5 +31,7 @@ class Config {
         const val AWAY: String = "Away"
         const val INVISIBLE: String = "Invisible"
         const val MEMBERS: String = "Members"
+        const val FAVORITE_MESSAGES: String = "Favorite Messages"
+        const val MENTIONS: String = "Mentions"
     }
 }
