@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/theme_screen_edge_left_and_right_padding"
         android:paddingTop="@dimen/theme_screen_edge_top_padding"
-        android:text="@string/current_theme"
+        android:text="Current Theme"
         app:layout_constraintStart_toStartOf="@+id/layout_app_bar"
         app:layout_constraintTop_toBottomOf="@+id/layout_app_bar" />
 
