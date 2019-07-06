@@ -24,12 +24,17 @@ class ThemesActivity : BaseActivity() {
         setContentView(R.layout.activity_themes)
         setupToolbar()
         setDate()
+        setCurrentTheme()
         subscribeUi()
         setupListeners()
     }
 
     private fun setDate(){
         theme_last_changed.text = getString(R.string.last_changed,viewModel.getSavedDate())
+    }
+
+    private fun setCurrentTheme(){
+        current_theme.text = viewModel.getCurrentTheme()
     }
 
     private fun subscribeUi() {
