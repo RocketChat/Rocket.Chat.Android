@@ -23,7 +23,7 @@ class MainPresenter @Inject constructor(
     fun connect() = currentServer?.let {
         refreshSettingsInteractor.refreshAsync(it)
         refreshPermissionsInteractor.refreshAsync(it)
-        connectionManagerFactory.create(it).connect()
+        connectionManagerFactory.create(it)?.connect()
     }
 
     fun clearNotificationsForChatRoom(chatRoomId: String?) {

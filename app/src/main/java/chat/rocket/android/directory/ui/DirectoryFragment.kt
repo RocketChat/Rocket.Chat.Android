@@ -168,11 +168,11 @@ class DirectoryFragment : Fragment(), DirectoryView {
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun showLoading() {
-        view_loading.isVisible = true
+        ui { view_loading.isVisible = true }
     }
 
     override fun hideLoading() {
-        view_loading.isVisible = false
+        ui { view_loading.isVisible = false }
     }
 
     fun updateSorting(

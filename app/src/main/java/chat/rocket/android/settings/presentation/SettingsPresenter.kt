@@ -49,7 +49,7 @@ class SettingsPresenter @Inject constructor(
     private val saveLanguageInteractor: SaveCurrentLanguageInteractor,
     getCurrentServerInteractor: GetCurrentServerInteractor,
     removeAccountInteractor: RemoveAccountInteractor,
-    databaseManagerFactory: DatabaseManagerFactory,
+    databaseManagerFactory: DatabaseManagerFactory?,
     connectionManagerFactory: ConnectionManagerFactory
 ) : CheckServerPresenter(
     strategy = strategy,
