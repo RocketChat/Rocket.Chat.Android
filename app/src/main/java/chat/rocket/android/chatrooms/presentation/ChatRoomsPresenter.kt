@@ -36,7 +36,7 @@ class ChatRoomsPresenter @Inject constructor(
     private val view: ChatRoomsView,
     private val strategy: CancelStrategy,
     private val navigator: MainNavigator,
-    @Named("currentServer") private val currentServer: String,
+    @Named("currentServer") private val currentServer: String?,
     private val sortingAndGroupingInteractor: SortingAndGroupingInteractor,
     private val dbManager: DatabaseManager,
     manager: ConnectionManager,
@@ -45,7 +45,7 @@ class ChatRoomsPresenter @Inject constructor(
     settingsRepository: SettingsRepository
 ) {
     private val client = manager.client
-    private val settings = settingsRepository.get(currentServer)
+    private val settings = currentServer?.let { settingsRepository.get(it) }
 
     fun toCreateChannel() = navigator.toCreateChannel()
 
@@ -53,16 +53,20 @@ class ChatRoomsPresenter @Inject constructor(
 
     fun toDirectory() = navigator.toDirectory()
 
-    fun getCurrentServerName() = view.setupToolbar(settings.siteName() ?: currentServer)
+    fun getCurrentServerName() = currentServer?.let {
+        view.setupToolbar(settings?.siteName() ?: it)
+    }
 
     fun getSortingAndGroupingPreferences() {
         with(sortingAndGroupingInteractor) {
-            view.setupSortingAndGrouping(
-                getSortByName(currentServer),
-                getUnreadOnTop(currentServer),
-                getGroupByType(currentServer),
-                getGroupByFavorites(currentServer)
-            )
+            currentServer?.let {
+                view.setupSortingAndGrouping(
+                    getSortByName(it),
+                    getUnreadOnTop(it),
+                    getGroupByType(it),
+                    getGroupByFavorites(it)
+                )
+            }
         }
     }
 
@@ -115,7 +119,8 @@ class ChatRoomsPresenter @Inject constructor(
         with(chatRoom) {
             val isDirectMessage = roomTypeOf(type) is RoomType.DirectMessage
             val roomName =
-                if (settings.useSpecialCharsOnRoom() || (isDirectMessage && settings.useRealName())) {
+                if ((settings?.useSpecialCharsOnRoom() == true) ||
+                    (isDirectMessage && settings?.useRealName() == true)) {
                     fullname ?: name
                 } else {
                     name
@@ -177,7 +182,9 @@ class ChatRoomsPresenter @Inject constructor(
                 emails = null,
                 roles = myself.roles
             )
-            localRepository.saveCurrentUser(url = currentServer, user = user)
+            currentServer?.let {
+                localRepository.saveCurrentUser(url = it, user = user)
+            }
         } catch (ex: RocketChatException) {
             Timber.e(ex)
         }
