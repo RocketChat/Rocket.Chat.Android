@@ -72,6 +72,7 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupListeners()
         setupToolbar()
         presenter.setupView()
         analyticsManager.logScreenView(ScreenViewEvent.Settings)
@@ -92,43 +93,19 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
         text_status.text = status
 
-        profile_container.setOnClickListener { presenter.toProfile() }
-
-        text_contact_us.setOnClickListener { contactSupport() }
-
-        text_language.setOnClickListener { changeLanguage() }
-
-        text_review_this_app.setOnClickListener { showAppOnStore() }
-
-        text_share_this_app.setOnClickListener { shareApp() }
-
-        text_license.setOnClickListener {
-            presenter.toLicense(getString(R.string.license_url), getString(R.string.title_license))
-        }
-
-        text_app_version.text = getString(R.string.msg_app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+        text_app_version.text =
+            getString(R.string.msg_app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
 
         text_server_version.text = getString(R.string.msg_server_version, serverVersion)
 
-        text_logout.setOnClickListener { showLogoutDialog() }
-
-        with(text_administration) {
-            isVisible = isAdministrationEnabled
-            setOnClickListener { presenter.toAdmin() }
-        }
+        text_administration.isVisible = isAdministrationEnabled
 
         with(switch_crash_report) {
             isChecked = isAnalyticsTrackingEnabled
             isEnabled = BuildConfig.FLAVOR == "play"
-            setOnCheckedChangeListener { _, isChecked ->
-                presenter.enableAnalyticsTracking(isChecked)
-            }
         }
 
-        with(text_delete_account) {
-            isVisible = isDeleteAccountEnabled
-            setOnClickListener { showDeleteAccountDialog() }
-        }
+        text_delete_account.isVisible = isDeleteAccountEnabled
     }
 
     override fun updateLanguage(language: String, country: String?) {
@@ -156,6 +133,32 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
+    private fun setupListeners() {
+        profile_container.setOnClickListener { presenter.toProfile() }
+
+        text_contact_us.setOnClickListener { contactSupport() }
+
+        text_language.setOnClickListener { changeLanguage() }
+
+        text_review_this_app.setOnClickListener { showAppOnStore() }
+
+        text_share_this_app.setOnClickListener { shareApp() }
+
+        text_license.setOnClickListener {
+            presenter.toLicense(getString(R.string.license_url), getString(R.string.title_license))
+        }
+
+        text_administration.setOnClickListener { presenter.toAdmin() }
+
+        switch_crash_report.setOnCheckedChangeListener { _, isChecked ->
+            presenter.enableAnalyticsTracking(isChecked)
+        }
+
+        text_logout.setOnClickListener { showLogoutDialog() }
+
+        text_delete_account.setOnClickListener { showDeleteAccountDialog() }
+    }
+
     private fun setupToolbar() {
         with((activity as AppCompatActivity)) {
             with(toolbar) {
@@ -169,8 +172,8 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
     private fun contactSupport() {
         val uriText = "mailto:${"support@rocket.chat"}" +
-            "?subject=" + Uri.encode(getString(R.string.msg_android_app_support)) +
-            "&body=" + Uri.encode(getDeviceAndAppInformation())
+                "?subject=" + Uri.encode(getString(R.string.msg_android_app_support)) +
+                "&body=" + Uri.encode(getDeviceAndAppInformation())
 
         with(Intent(Intent.ACTION_SENDTO)) {
             data = uriText.toUri()

@@ -12,12 +12,12 @@ import javax.inject.Named
 class MemberUiModelMapper @Inject constructor(
     serverInteractor: GetCurrentServerInteractor,
     getSettingsInteractor: GetSettingsInteractor,
-    @Named("currentServer") private val currentServer: String,
+    @Named("currentServer") private val currentServer: String?,
     tokenRepository: TokenRepository
 ) {
     private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)
     private val baseUrl = settings.baseUrl()
-    private val token = tokenRepository.get(currentServer)
+    private val token = currentServer?.let { tokenRepository.get(it) }
 
     fun mapToUiModelList(memberList: List<User>): List<MemberUiModel> {
         return memberList.map { MemberUiModel(it, settings, baseUrl, token) }

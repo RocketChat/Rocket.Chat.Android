@@ -785,10 +785,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 is State.Authenticating -> getString(R.string.status_authenticating)
                 is State.Disconnecting -> getString(R.string.status_disconnecting)
                 is State.Waiting -> getString(R.string.status_waiting, state.seconds)
-                else -> {
-                    handler.postDelayed(dismissStatus, 500)
-                    ""
-                }
+                else -> "" // Show nothing
             }
         }
     }
