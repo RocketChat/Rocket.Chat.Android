@@ -45,7 +45,7 @@ class RegisterUsernamePresenterTest {
     }
 
     @Test
-    fun check_save_account() {
+    fun `save new user account`() {
         registerUsernamePresenter.saveAccount(userName)
         verify(saveAccountInteractor).save(account)
     }

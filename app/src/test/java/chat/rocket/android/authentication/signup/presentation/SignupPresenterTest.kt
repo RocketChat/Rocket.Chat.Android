@@ -40,13 +40,13 @@ class SignupPresenterTest {
     }
 
     @Test
-    fun navigate_to_terms_of_service() {
+    fun `navigate to tos web page`() {
         signUpPresenter.termsOfService()
         verify(navigator).toWebPage(termsOfServiceUrl)
     }
 
     @Test
-    fun navigate_to_privacy_policy() {
+    fun `navigate to privacy policy web page`() {
         signUpPresenter.privacyPolicy()
         verify(navigator).toWebPage(privacyPolicyUrl)
     }

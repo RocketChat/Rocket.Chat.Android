@@ -6,18 +6,18 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import testConfig.Config.Companion.PASSWORD
-import testConfig.Config.Companion.USERNAME
-import testConfig.Config.Companion.serverUrl
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.matchers.withHint
 import chat.rocket.android.authentication.ui.AuthenticationActivity
+import chat.rocket.android.matchers.withHint
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import testConfig.Config.Companion.PASSWORD
+import testConfig.Config.Companion.SERVER_URL
+import testConfig.Config.Companion.USERNAME
 
 @LargeTest
 class LoginFragmentTest {
@@ -31,7 +31,7 @@ class LoginFragmentTest {
     @Before
     fun setUp() {
         rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
-            newInstance(serverUrl)
+            newInstance(SERVER_URL)
         }
     }
 
