@@ -199,4 +199,20 @@ class ChatRoomsPresenter @Inject constructor(
             cont.resume(success)
         }
     }
+
+    fun canShareToRoom(room: RoomUiModel, onAllowed: () -> Unit, onDisallowed: () -> Unit) {
+        launchUI(strategy) {
+            dbManager.getRoom(room.id)?.apply {
+                val isReadonly = this.chatRoom.readonly
+
+                isReadonly?.let { isReadOnly ->
+                    if (isReadOnly) {
+                        onDisallowed()
+                    } else {
+                        onAllowed()
+                    }
+                }
+            }
+        }
+    }
 }

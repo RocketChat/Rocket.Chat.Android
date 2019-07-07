@@ -291,7 +291,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             isFavorite = getBoolean(BUNDLE_CHAT_ROOM_IS_FAVORITE)
             chatRoomMessage = getString(BUNDLE_CHAT_ROOM_MESSAGE)
         }
-                ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
+            ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
 
         chatRoomAdapter = ChatRoomAdapter(
             roomId = chatRoomId,
@@ -816,7 +816,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
         }
 
-        with (recycler_view) {
+        with(recycler_view) {
             adapter = chatRoomAdapter
             addOnScrollListener(endlessRecyclerViewScrollListener)
             addOnLayoutChangeListener(layoutChangeListener)
@@ -1299,19 +1299,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
 
             if (ShareHandler.hasSharedFile()) {
-                ShareHandler.files.filter { it.send }.forEach {
-                    if (it.mimeType.startsWith("image")) {
-                        presenter.uploadDrawingImage(
-                            chatRoomId,
-                            it.fis.readBytes(),
-                            it.name
-                        )
-                    } else {
-                        presenter.uploadSharedFile(
-                            chatRoomId,
-                            it
-                        )
-                    }
+                ShareHandler.files.forEach {
+                    presenter.uploadSharedFile(
+                        chatRoomId,
+                        it
+                    )
                 }
 
                 ShareHandler.files.clear()

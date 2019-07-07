@@ -244,9 +244,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         ui {
             val adapter = RoomsAdapter { room ->
                 if (ShareHandler.hasShare()) {
-                    confirmShare {
-                        presenter.loadChatRoom(room)
-                    }
+                    presenter.canShareToRoom(room, {
+                        confirmShare(room) {
+                            presenter.loadChatRoom(room)
+                        }
+                    }, {
+                        showMessage("You can't send here")
+                    })
                 } else {
                     presenter.loadChatRoom(room)
                 }
@@ -298,27 +302,19 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
     }
 
-    private fun confirmShare(callback: () -> Unit) {
+    private fun confirmShare(room: RoomUiModel, onConfirmed: () -> Unit) {
         ui {
             val builder = AlertDialog.Builder(it)
                 .setTitle("Do you confirm to send?")
                 .setPositiveButton("Send") { _, _ ->
-                    callback()
+                    onConfirmed()
                 }
                 .setNegativeButton("Cancel", null)
 
             if (ShareHandler.hasSharedText()) {
-                builder.setMessage(ShareHandler.sharedText)
+                builder.setMessage("Shared with ${room.name}: ${ShareHandler.sharedText}")
             } else if (ShareHandler.hasSharedFile()) {
-                val filesAdapter = ShareHandler.getFilesAsString()
-                val checks = BooleanArray(filesAdapter.size) {
-                    return@BooleanArray true
-                }
-
-                builder.setMultiChoiceItems(filesAdapter, checks) { _, pos, value ->
-                    checks[pos] = value
-                    ShareHandler.files[pos].send = value
-                }
+                builder.setItems(ShareHandler.getFilesAsString(), null)
             }
 
             builder.show()
@@ -395,7 +391,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private fun loadRoomFromSpotlight(username: String) {
         //check from spotlight when connected
         val statusLiveData = viewModel.getStatus()
-        statusLiveData.observe(viewLifecycleOwner, object: Observer<State>{
+        statusLiveData.observe(viewLifecycleOwner, object : Observer<State> {
             override fun onChanged(status: State?) {
                 if (status is State.Connected) {
                     val rooms = viewModel.getUsersRoomListSpotlight(username)

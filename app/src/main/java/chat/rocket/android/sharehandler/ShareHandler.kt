@@ -2,6 +2,7 @@ package chat.rocket.android.sharehandler
 
 import android.content.Context
 import android.content.Intent
+import androidx.core.net.toFile
 import chat.rocket.android.util.extensions.getFileName
 import chat.rocket.android.util.extensions.getFileSize
 import chat.rocket.android.util.extensions.getMimeType
@@ -34,6 +35,8 @@ object ShareHandler {
             if ("text/plain" == type) {
                 handleSendText(intent)
             } else {
+
+                // TODO request permission
                 intent.clipData?.let { data ->
                     if (data.itemCount > 0) {
                         loadFiles(intent, context)
@@ -61,7 +64,7 @@ object ShareHandler {
                     openInputStream(getItemAt(pos).uri)?.let {
                         files.add(SharedFile(
                             it,
-                            uri.getFileName(context) ?: uri.toString(),
+                            uri.toFile().name,
                             uri.getMimeType(context), // TODO some mime types missing and causing crash.
                             uri.getFileSize(context)
                         ))
@@ -86,6 +89,11 @@ object ShareHandler {
 
     fun getText(): String {
         return sharedText.orEmpty()
+    }
+
+    fun clear() {
+        files.clear()
+        sharedText = null
     }
 
     class SharedFile(var fis: InputStream, var name: String, val mimeType: String, val size: Int, var send: Boolean = true)
