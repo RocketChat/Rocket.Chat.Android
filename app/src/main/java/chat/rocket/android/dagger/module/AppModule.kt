@@ -385,10 +385,10 @@ class AppModule {
 
     @Provides
     fun provideDatabaseManager(
-        factory: DatabaseManagerFactory,
+        factory: DatabaseManagerFactory?,
         @Named("currentServer") currentServer: String?
     ): DatabaseManager {
-        return currentServer?.let { factory.create(it) }!!
+        return currentServer?.let { factory?.create(it) } !!
     }
 
     @Provides

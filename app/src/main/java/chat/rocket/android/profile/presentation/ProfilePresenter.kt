@@ -43,7 +43,7 @@ class ProfilePresenter @Inject constructor(
     factory: RocketChatClientFactory,
     removeAccountInteractor: RemoveAccountInteractor,
     tokenRepository: TokenRepository,
-    dbManagerFactory: DatabaseManagerFactory,
+    dbManagerFactory: DatabaseManagerFactory?,
     managerFactory: ConnectionManagerFactory
 ) : CheckServerPresenter(
     strategy = strategy,

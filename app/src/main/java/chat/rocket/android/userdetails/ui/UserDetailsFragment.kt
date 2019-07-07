@@ -40,10 +40,8 @@ internal const val TAG_USER_DETAILS_FRAGMENT = "UserDetailsFragment"
 private const val BUNDLE_USER_ID = "user_id"
 
 class UserDetailsFragment : Fragment(), UserDetailsView {
-    @Inject
-    lateinit var presenter: UserDetailsPresenter
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
+    @Inject lateinit var presenter: UserDetailsPresenter
+    @Inject lateinit var analyticsManager: AnalyticsManager
     private lateinit var userId: String
     private val handler = Handler()
 
@@ -123,13 +121,17 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     }
 
     override fun showLoading() {
-        group_user_details.isVisible = false
-        view_loading.isVisible = true
+        ui {
+            group_user_details.isVisible = false
+            view_loading.isVisible = true
+        }
     }
 
     override fun hideLoading() {
-        group_user_details.isVisible = true
-        view_loading.isVisible = false
+        ui {
+            group_user_details.isVisible = true
+            view_loading.isVisible = false
+        }
     }
 
     override fun showMessage(resId: Int) {

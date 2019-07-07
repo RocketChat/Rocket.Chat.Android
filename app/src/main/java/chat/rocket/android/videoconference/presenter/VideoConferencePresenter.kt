@@ -5,7 +5,13 @@ import chat.rocket.android.analytics.event.SubscriptionTypeEvent
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.JitsiHelper
 import chat.rocket.android.helper.UserHelper
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.CurrentServerRepository
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.isJitsiSSL
+import chat.rocket.android.server.domain.jitsiDomain
+import chat.rocket.android.server.domain.jitsiPrefix
+import chat.rocket.android.server.domain.uniqueIdentifier
 import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.common.model.RoomType
@@ -29,7 +35,7 @@ class VideoConferencePresenter @Inject constructor(
     private val userHelp: UserHelper,
     private val analyticsManager: AnalyticsManager
 ) {
-    private lateinit var client: RocketChatClient
+    private var client: RocketChatClient? = null
     private lateinit var publicSettings: PublicSettings
     private lateinit var chatRoomId: String
     private lateinit var chatRoomType: String
@@ -37,7 +43,7 @@ class VideoConferencePresenter @Inject constructor(
 
     fun setup(chatRoomId: String, chatRoomType: String) {
         currentServerRepository.get()?.let {
-            client = connectionManagerFactory.create(it).client
+            client = connectionManagerFactory.create(it)?.client
             publicSettings = settings.get(it)
         }
         this.chatRoomId = chatRoomId
@@ -75,7 +81,7 @@ class VideoConferencePresenter @Inject constructor(
     private fun updateJitsiTimeout() {
         timer = timer(daemon = false, initialDelay = 0L, period = 10000) {
             GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
-                client.updateJitsiTimeout(chatRoomId)
+                client?.updateJitsiTimeout(chatRoomId)
             }
         }
     }

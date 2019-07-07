@@ -21,8 +21,8 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
-import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.chatrooms.adapter.RoomsAdapter
+import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
 import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModel
@@ -146,7 +146,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         if (isSortByName) {
             text_sort_by.text =
-                getString(R.string.msg_sort_by_placeholder, getString(R.string.msg_sort_by_name).toLowerCase())
+                getString(
+                    R.string.msg_sort_by_placeholder,
+                    getString(R.string.msg_sort_by_name).toLowerCase()
+                )
         } else {
             text_sort_by.text = getString(
                 R.string.msg_sort_by_placeholder,
@@ -198,11 +201,15 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     override fun showLoading() {
-        view_loading.isVisible = true
+        ui {
+            view_loading.isVisible = true
+        }
     }
 
     override fun hideLoading() {
-        view_loading.isVisible = false
+        ui {
+            view_loading.isVisible = false
+        }
     }
 
     override fun showMessage(resId: Int) {
@@ -213,7 +220,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         ui { showToast(message) }
     }
 
-    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+    override fun showGenericErrorMessage() {
+        ui {
+            showMessage(getString(R.string.msg_generic_error))
+        }
+    }
 
     private fun showConnectionState(state: State) {
         ui {
@@ -350,7 +361,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         val username = deepLinkInfo.roomName
         username.ifNotNullNotEmpty {
             val localRooms = viewModel.getUsersRoomListLocal(username!!)
-            val filteredLocalRooms = localRooms.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+            val filteredLocalRooms =
+                localRooms.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
 
             if (filteredLocalRooms.isNotEmpty()) {
                 presenter.loadChatRoom(filteredLocalRooms.first().data as RoomUiModel)
@@ -363,11 +375,12 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private fun loadRoomFromSpotlight(username: String) {
         //check from spotlight when connected
         val statusLiveData = viewModel.getStatus()
-        statusLiveData.observe(viewLifecycleOwner, object: Observer<State>{
+        statusLiveData.observe(viewLifecycleOwner, object : Observer<State> {
             override fun onChanged(status: State?) {
                 if (status is State.Connected) {
                     val rooms = viewModel.getUsersRoomListSpotlight(username)
-                    val filteredRooms = rooms?.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+                    val filteredRooms =
+                        rooms?.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
 
                     filteredRooms?.let {
                         if (filteredRooms.isNotEmpty()) {

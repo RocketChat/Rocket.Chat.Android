@@ -20,7 +20,7 @@ class AppLifecycleObserver @Inject constructor(
     fun onEnterForeground() {
         changeTemporaryStatus(UserStatus.Online())
         currentServer?.let {
-            connectionManagerFactory.create(it).resetReconnectionTimer()
+            connectionManagerFactory.create(it)?.resetReconnectionTimer()
         }
     }
 

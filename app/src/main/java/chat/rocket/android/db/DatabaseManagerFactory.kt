@@ -13,16 +13,20 @@ class DatabaseManagerFactory @Inject constructor(
 ) {
     private val cache = HashMap<String, DatabaseManager>()
 
-    fun create(serverUrl: String): DatabaseManager {
+    fun create(serverUrl: String): DatabaseManager? {
         cache[serverUrl]?.let {
             Timber.d("Returning cached database for $serverUrl")
             return it
         }
 
-        Timber.d("Returning fresh database for $serverUrl")
-        with(DatabaseManager(context, serverUrl, tokenRepository.get(serverUrl)!!)) {
-            cache[serverUrl] = this
-            return this
+        tokenRepository.get(serverUrl)?.let { token ->
+            DatabaseManager(context, serverUrl, token).apply {
+                cache[serverUrl] = this
+                Timber.d("Returning fresh database for $serverUrl")
+                return this
+            }
         }
+
+        return null
     }
 }
