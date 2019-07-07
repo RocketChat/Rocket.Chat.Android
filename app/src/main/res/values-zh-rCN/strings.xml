@@ -50,6 +50,7 @@
     <string name="action_drawing">绘画</string>
     <string name="action_save_to_gallery">保存到图库</string>
     <string name="action_select_photo_from_gallery">从图库选照片</string>
+    <string name="action_view_profile_photo">View profile photo</string> <!-- TODO Add translation -->
     <string name="action_take_a_photo">拍照</string>
     <string name="action_reset_avatar">重置头像</string>
     <string name="action_connect_server">连接到服务器</string>
@@ -70,6 +71,9 @@
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics_tracking">发送匿名统计信息来帮助改善App</string>
+    <string name="msg_do_not_send_analytics_tracking">不要发送匿名统计信息，我不想帮组改善App</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">不适用，因为这事开源软件</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
@@ -216,12 +220,6 @@
     <string name="msg_view_more">显示更多</string>
     <string name="msg_view_less">显示更少</string>
     <string name="msg_muted_on_this_channel">您被禁言了</string>
-
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">跟踪分析</string>
-    <string name="msg_send_analytics_tracking">发送匿名统计信息来帮助改善App</string>
-    <string name="msg_do_not_send_analytics_tracking">不要发送匿名统计信息，我不想帮组改善App</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">不适用，因为这事开源软件</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">频道名改为: %1$s by %2$s</string>

@@ -48,6 +48,7 @@
     <string name="msg_busy">Occupato</string>
     <string name="msg_invisible">Invisibile</string>
     <string name="action_drawing">Disegno</string>
+    <string name="action_view_profile_photo">View profile photo</string> <!-- TODO Add translation -->
     <string name="action_save_to_gallery">Salva in galleria</string>
     <string name="action_select_photo_from_gallery">Seleziona foto dalla galleria</string>
     <string name="action_take_a_photo">Scatta una foto</string>
@@ -70,6 +71,9 @@
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics_tracking">Invia statistiche anonime per migliorare questa app</string>
+    <string name="msg_do_not_send_analytics_tracking">Non inviare statiche anonime per migliorare questa app</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Non applicabile poiché è una versione FOSS</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
@@ -216,12 +220,6 @@
     <string name="msg_view_more">vedere di più</string>
     <string name="msg_view_less">vedere di meno</string>
     <string name="msg_muted_on_this_channel">Sei disattivato su questo canale</string>
-
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Tracciamento Analitico</string>
-    <string name="msg_send_analytics_tracking">Invia statistiche anonime per migliorare questa app</string>
-    <string name="msg_do_not_send_analytics_tracking">Non inviare statiche anonime per migliorare questa app</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Non applicabile poiché è una versione FOSS</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome della camera cambiato in: %1$s da %2$s</string>

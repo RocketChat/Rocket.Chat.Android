@@ -52,6 +52,7 @@
     <string name="action_select_photo_from_gallery">Galeriden resim seç</string>
     <string name="action_take_a_photo">Fotoğraf çek</string>
     <string name="action_reset_avatar">Avatarı kaldır</string>
+    <string name="action_view_profile_photo">View profile photo</string> <!-- TODO Add translation -->
     <string name="action_connect_server">Connect with a server</string> <!-- TODO Add translation -->
     <string name="action_join_community">Join in the community</string> <!-- TODO Add translation -->
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->
@@ -70,6 +71,9 @@
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics_tracking">Uygulamanın gelişmesine katkıda bulunmak için anonim istatistik bilgisi gönder</string>
+    <string name="msg_do_not_send_analytics_tracking">Uygulamanın gelişmesine katkıda bulunmak için anonim istatistik bilgisi gönderme</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">FOSS sürümü olduğundan uygulanabilir değil</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
@@ -219,12 +223,6 @@
     <string name="msg_server">Server</string> <!-- TODO Translate -->
     <string name="msg_add_new_server">Add New Server</string>  <!-- TODO Translate -->
     <string name="msg_directory">Directory</string> <!-- TODO Translate -->
-
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">İstatistik takibi</string>
-    <string name="msg_send_analytics_tracking">Uygulamanın gelişmesine katkıda bulunmak için anonim istatistik bilgisi gönder</string>
-    <string name="msg_do_not_send_analytics_tracking">Uygulamanın gelişmesine katkıda bulunmak için anonim istatistik bilgisi gönderme</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">FOSS sürümü olduğundan uygulanabilir değil</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Oda ismi %2$s\'dan %1$s\'a değiştirildi</string>

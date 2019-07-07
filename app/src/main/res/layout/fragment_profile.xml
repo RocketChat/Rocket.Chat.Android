@@ -37,47 +37,55 @@
 
             <TextView
                 android:id="@+id/text_status"
+                style="@style/Profile.TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/status"
-                android:textColor="#DE000000"
-                android:textSize="18sp"
-                android:textStyle="normal" />
+                android:text="@string/status" />
+
+            <TextView
+                style="@style/Profile.TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/msg_name" />
 
             <EditText
                 android:id="@+id/text_name"
                 style="@style/Profile.EditText"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
                 android:drawableStart="@drawable/ic_person_black_20dp"
-                android:hint="@string/msg_name"
+                android:hint="@string/msg_profile_name_hint"
                 android:inputType="textCapWords" />
+
+            <TextView
+                style="@style/Profile.TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/msg_username" />
 
             <EditText
                 android:id="@+id/text_username"
                 style="@style/Profile.EditText"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
                 android:drawableStart="@drawable/ic_at_black_20dp"
-                android:hint="@string/msg_username"
+                android:hint="@string/msg_profile_username_hint"
                 android:inputType="text" />
+
+            <TextView
+                style="@style/Profile.TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/msg_email" />
 
             <EditText
                 android:id="@+id/text_email"
                 style="@style/Profile.EditText"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:drawableStart="@drawable/ic_email_black_20dp"
-                android:hint="@string/msg_email"
+                android:hint="@string/msg_profile_email_hint"
                 android:inputType="textEmailAddress" />
         </LinearLayout>
+
     </ScrollView>
 
     <com.wang.avi.AVLoadingIndicatorView

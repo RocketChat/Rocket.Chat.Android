@@ -20,12 +20,14 @@ import chat.rocket.core.model.SpotlightResult
 import com.shopify.livedataktx.distinct
 import com.shopify.livedataktx.map
 import com.shopify.livedataktx.nonNull
+import kotlinx.coroutines.async
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.lang.IllegalArgumentException
@@ -86,6 +88,20 @@ class ChatRoomsViewModel(
                         }
             }
         }
+    }
+
+    fun getUsersRoomListLocal(string: String): List<ItemHolder<*>> {
+        val rooms = GlobalScope.async(Dispatchers.IO) {
+            return@async repository.search(string).let { mapper.map(it, showLastMessage = showLastMessage) }
+        }
+        return runBlocking { rooms.await() }
+    }
+
+    fun getUsersRoomListSpotlight(string: String): List<ItemHolder<*>>? {
+        val rooms = GlobalScope.async(Dispatchers.IO) {
+            return@async spotlight(string)?.let { mapper.map(it, showLastMessage = showLastMessage) }
+        }
+        return runBlocking { rooms.await() }
     }
 
     private suspend fun spotlight(query: String): SpotlightResult? {

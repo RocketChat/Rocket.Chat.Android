@@ -15,7 +15,6 @@ import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.model.RoomType
-import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.createDirectMessage
 import kotlinx.coroutines.Dispatchers
@@ -47,31 +46,21 @@ class UserDetailsPresenter @Inject constructor(
                 view.showLoading()
                 dbManager.getUser(userId)?.let {
                     userEntity = it
-                    val avatarUrl =
-                        userEntity.username?.let { username ->
-                            currentServer.avatarUrl(
-                                username,
-                                token?.userId,
-                                token?.authToken
-                            )
-                        }
+                    val avatarUrl = userEntity.username?.let { username ->
+                        currentServer.avatarUrl(username, token?.userId, token?.authToken)
+                    }
                     val username = userEntity.username
                     val name = userEntity.name
-                    val utcOffset =
-                        userEntity.utcOffset // TODO Convert UTC and display like the mockup
+                    val utcOffset = userEntity.utcOffset // FIXME Convert UTC
 
-                    if (avatarUrl != null && username != null && name != null && utcOffset != null) {
-                        view.showUserDetailsAndActions(
-                            avatarUrl = avatarUrl,
-                            name = name,
-                            username = username,
-                            status = userEntity.status,
-                            utcOffset = utcOffset.toString(),
-                            isVideoCallAllowed = settings.isJitsiEnabled()
-                        )
-                    } else {
-                        throw Exception()
-                    }
+                    view.showUserDetailsAndActions(
+                        avatarUrl = avatarUrl,
+                        name = name,
+                        username = username,
+                        status = userEntity.status,
+                        utcOffset = utcOffset.toString(),
+                        isVideoCallAllowed = settings.isJitsiEnabled()
+                    )
                 }
             } catch (ex: Exception) {
                 Timber.e(ex)
@@ -84,6 +73,13 @@ class UserDetailsPresenter @Inject constructor(
                 view.hideLoading()
             }
         }
+    }
+
+    fun getImageUri(): String {
+        return userEntity.username?.let {
+            currentServer.avatarUrl(avatar = it, userId = token?.userId,
+            token = token?.authToken)
+        }!!
     }
 
     fun createDirectMessage(username: String) {
@@ -154,5 +150,7 @@ class UserDetailsPresenter @Inject constructor(
             }
         }
     }
+
+    fun toProfileImage(avatarUrl: String) = navigator.toProfileImage(avatarUrl)
 }
 
