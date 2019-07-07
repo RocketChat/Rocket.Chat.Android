@@ -68,14 +68,14 @@ class MentionsFragmentTest {
     }
 
     private fun navigateToSandboxChannelDetails() {
-        Thread.sleep(5000)
+        Thread.sleep(3000)
         onView(withText("sandbox")).perform(click())
         Thread.sleep(2000)
         onView(withId(R.id.text_toolbar_title)).perform(click())
     }
 
     private fun navigateToGeneralChannelDetails() {
-        Thread.sleep(5000)
+        Thread.sleep(3000)
         onView(withText("general")).perform(click())
         Thread.sleep(2000)
         onView(withId(R.id.text_toolbar_title)).perform(click())
