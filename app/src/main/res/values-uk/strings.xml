@@ -20,6 +20,7 @@
     <string name="title_password">Змінити пароль</string>
     <string name="title_update_profile">Оновити профіль</string>
     <string name="title_create_channel">Створити новий канал</string>
+    <string name="action_view_profile_photo">View profile photo</string> <!-- TODO Add translation -->
     <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_license">License</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->
@@ -70,6 +71,9 @@
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics_tracking">Надсилати анонімну статистику для покращення роботи програми</string>
+    <string name="msg_do_not_send_analytics_tracking">Не надсилати анонімну статистику для покращення роботи програми</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Недоступно у FOSS версії</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
@@ -215,12 +219,6 @@
     <string name="msg_member_already_added">Ви вже обрали цього користувача</string>
     <string name="msg_member_not_found">"Користувача не знайдено "</string>
     <string name="msg_channel_created_successfully">Канал був створений успішно</string>
-
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Збір аналітики</string>
-    <string name="msg_send_analytics_tracking">Надсилати анонімну статистику для покращення роботи програми</string>
-    <string name="msg_do_not_send_analytics_tracking">Не надсилати анонімну статистику для покращення роботи програми</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Недоступно у FOSS версії</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s змінив назву каналу на %1$s</string>

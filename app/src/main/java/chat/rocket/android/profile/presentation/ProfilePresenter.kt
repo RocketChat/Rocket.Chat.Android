@@ -34,9 +34,9 @@ import javax.inject.Inject
 class ProfilePresenter @Inject constructor(
     private val view: ProfileView,
     private val strategy: CancelStrategy,
+    private val navigator: MainNavigator,
     private val uriInteractor: UriInteractor,
     val userHelper: UserHelper,
-    navigator: MainNavigator,
     serverInteractor: GetCurrentServerInteractor,
     factory: RocketChatClientFactory,
     removeAccountInteractor: RemoveAccountInteractor,
@@ -225,5 +225,9 @@ class ProfilePresenter @Inject constructor(
                 }
             }
         }
+    }
+
+    fun toProfileImage() = user?.username?.let { username ->
+        navigator.toProfileImage(serverUrl.avatarUrl(username, token?.userId, token?.authToken))
     }
 }

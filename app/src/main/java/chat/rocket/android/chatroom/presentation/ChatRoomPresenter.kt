@@ -117,7 +117,8 @@ class ChatRoomPresenter @Inject constructor(
 
     private var chatRoomId: String? = null
     private lateinit var chatRoomType: String
-    private var chatIsBroadcast: Boolean = false
+    private lateinit var chatRoomName: String
+    private var isBroadcast: Boolean = false
     private var chatRoles = emptyList<ChatRoomRole>()
     private val stateChannel = Channel<State>()
     private var typingStatusSubscriptionId: String? = null
@@ -136,47 +137,77 @@ class ChatRoomPresenter @Inject constructor(
         draftKey = "${currentServer}_${LocalRepository.DRAFT_KEY}$roomId"
         chatRoomId = roomId
         chatRoomType = roomType
+        chatRoomName = roomName
+        chatRoles = emptyList()
+        var canModerate = isOwnerOrMod()
+
         GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
-            try {
-                chatRoles = if (roomTypeOf(roomType) !is RoomType.DirectMessage) {
-                    client.chatRoomRoles(roomType = roomTypeOf(roomType), roomName = roomName)
-                } else {
-                    emptyList()
-                }
-            } catch (ex: Exception) {
-                Timber.e(ex)
-                chatRoles = emptyList()
-            } finally {
-                // User has at least an 'owner' or 'moderator' role.
-                val canModerate = isOwnerOrMod()
-                // Can post anyway if has the 'post-readonly' permission on server.
-                val room = dbManager.getRoom(roomId)
-                room?.let {
-                    chatIsBroadcast = it.chatRoom.broadcast ?: false
-                    val roomUiModel = roomMapper.map(it, true)
-                    launchUI(strategy) {
-                        view.onRoomUpdated(roomUiModel = roomUiModel.copy(
-                            broadcast = chatIsBroadcast,
+            // Can post anyway if has the 'post-readonly' permission on server.
+            val room = dbManager.getRoom(roomId)
+            room?.let {
+                isBroadcast = it.chatRoom.broadcast ?: false
+                val roomUiModel = roomMapper.map(it, true)
+                launchUI(strategy) {
+                    view.onRoomUpdated(
+                        roomUiModel = roomUiModel.copy(
+                            broadcast = isBroadcast,
                             canModerate = canModerate,
                             writable = roomUiModel.writable || canModerate
-                        ))
-                    }
+                        )
+                    )
+                }
+            }
+
+            loadMessages(roomId, chatRoomType, clearDataSet = true)
+            loadActiveMembers(roomId, chatRoomType, filterSelfOut = true)
+
+            chatRoomMessage?.let { messageHelper.messageIdFromPermalink(it) }
+                ?.let { messageId ->
+                    val name = messageHelper.roomNameFromPermalink(chatRoomMessage)
+                    citeMessage(
+                        name!!,
+                        messageHelper.roomTypeFromPermalink(chatRoomMessage)!!,
+                        messageId,
+                        true
+                    )
                 }
 
-                loadMessages(roomId, roomType, clearDataSet = true)
-                chatRoomMessage?.let { messageHelper.messageIdFromPermalink(it) }
-                    ?.let { messageId ->
-                        val name = messageHelper.roomNameFromPermalink(chatRoomMessage)
-                        citeMessage(
-                            name!!,
-                            messageHelper.roomTypeFromPermalink(chatRoomMessage)!!,
-                            messageId,
-                            true
-                        )
-                    }
-                subscribeRoomChanges()
+
+            /*FIXME:  Get chat role can cause unresponsive problems especially on slower connections
+                      We are updating the room again after the first step so that initial messages
+                      get loaded in and the system appears more responsive.  Something should be
+                      done to either fix the load in speed of moderator roles or store the
+                      information locally*/
+            if (getChatRole()) {
+                canModerate = isOwnerOrMod()
+                if (canModerate) {
+                    //FIXME: add this in when moderator page is actually created
+                    //view.updateModeration()
+                }
             }
+
+            subscribeRoomChanges()
         }
+    }
+
+    private suspend fun getChatRole(): Boolean {
+        try {
+            if (roomTypeOf(chatRoomType) !is RoomType.DirectMessage) {
+                chatRoles = withContext(Dispatchers.IO + strategy.jobs) {
+                    client.chatRoomRoles(
+                        roomType = roomTypeOf(chatRoomType),
+                        roomName = chatRoomName
+                    )
+                }
+                return true
+            } else {
+                chatRoles = emptyList()
+            }
+        } catch (ex: Exception) {
+            Timber.e(ex)
+            chatRoles = emptyList()
+        }
+        return false
     }
 
     private suspend fun subscribeRoomChanges() {
@@ -185,7 +216,12 @@ class ChatRoomPresenter @Inject constructor(
                 manager.addRoomChannel(it, roomChangesChannel)
                 for (room in roomChangesChannel) {
                     dbManager.getRoom(room.id)?.let { chatRoom ->
-                        view.onRoomUpdated(roomMapper.map(chatRoom = chatRoom, showLastMessage = true))
+                        view.onRoomUpdated(
+                            roomMapper.map(
+                                chatRoom = chatRoom,
+                                showLastMessage = true
+                            )
+                        )
                     }
                 }
             }
@@ -210,8 +246,8 @@ class ChatRoomPresenter @Inject constructor(
     ) {
         this.chatRoomId = chatRoomId
         this.chatRoomType = chatRoomType
-        launchUI(strategy) {
-            view.showLoading()
+
+        GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
             try {
                 if (offset == 0L) {
                     // FIXME - load just 50 messages from DB to speed up. We will reload from Network after that
@@ -219,10 +255,10 @@ class ChatRoomPresenter @Inject constructor(
                     val localMessages = messagesRepository.getRecentMessages(chatRoomId, 50)
                     val oldMessages = mapper.map(
                         localMessages, RoomUiModel(
-                        roles = chatRoles,
-                        // FIXME: Why are we fixing isRoom attribute to true here?
-                        isBroadcast = chatIsBroadcast, isRoom = true
-                    )
+                            roles = chatRoles,
+                            // FIXME: Why are we fixing isRoom attribute to true here?
+                            isBroadcast = isBroadcast, isRoom = true
+                        )
                     )
                     lastMessageId = localMessages.firstOrNull()?.id
                     val lastSyncDate = messagesRepository.getLastSyncDate(chatRoomId)
@@ -248,8 +284,6 @@ class ChatRoomPresenter @Inject constructor(
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }
-            } finally {
-                view.hideLoading()
             }
 
             subscribeTypingStatus()
@@ -284,7 +318,7 @@ class ChatRoomPresenter @Inject constructor(
         view.showMessages(
             mapper.map(
                 messages,
-                RoomUiModel(roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true)
+                RoomUiModel(roles = chatRoles, isBroadcast = isBroadcast, isRoom = true)
             ),
             clearDataSet
         )
@@ -294,13 +328,16 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 view.showLoading()
+
                 val messages = retryIO("searchMessages($chatRoomId, $searchText)") {
                     client.searchMessages(chatRoomId, searchText).result
                 }
+
                 view.showSearchedMessages(
                     mapper.map(
-                        messages,
-                        RoomUiModel(chatRoles, chatIsBroadcast, true)
+                        messages = messages,
+                        roomUiModel = RoomUiModel(chatRoles, isBroadcast, true),
+                        showDateAndHour = true
                     )
                 )
             } catch (ex: Exception) {
@@ -325,14 +362,20 @@ class ChatRoomPresenter @Inject constructor(
                     val id = UUID.randomUUID().toString()
                     val username = userHelper.username()
                     val user = userHelper.user()
+                    val timestamp = maxOf(getTimeStampOfLastMessageInRoom() + 1,
+                        Instant.now().toEpochMilli())
                     val newMessage = Message(
                         id = id,
                         roomId = chatRoomId,
                         message = text,
-                        timestamp = Instant.now().toEpochMilli(),
+                        timestamp = timestamp,
                         sender = SimpleUser(user?.id, user?.username ?: username, user?.name),
                         attachments = null,
-                        avatar = currentServer.avatarUrl(username!!, token?.userId, token?.authToken),
+                        avatar = currentServer.avatarUrl(
+                            username!!,
+                            token?.userId,
+                            token?.authToken
+                        ),
                         channels = null,
                         editedAt = null,
                         editedBy = null,
@@ -354,7 +397,7 @@ class ChatRoomPresenter @Inject constructor(
                         view.showNewMessage(
                             mapper.map(
                                 newMessage,
-                                RoomUiModel(roles = chatRoles, isBroadcast = chatIsBroadcast)
+                                RoomUiModel(roles = chatRoles, isBroadcast = isBroadcast)
                             ), false
                         )
                         client.sendMessage(id, chatRoomId, text)
@@ -605,16 +648,21 @@ class ChatRoomPresenter @Inject constructor(
                     Timber.d("History: $messages")
 
                     if (messages.result.isNotEmpty()) {
-                        val models = mapper.map(messages.result, RoomUiModel(
-                            roles = chatRoles,
-                            isBroadcast = chatIsBroadcast,
-                            // FIXME: Why are we fixing isRoom attribute to true here?
-                            isRoom = true
-                        ))
+                        val models = mapper.map(
+                            messages.result, RoomUiModel(
+                                roles = chatRoles,
+                                isBroadcast = isBroadcast,
+                                // FIXME: Why are we fixing isRoom attribute to true here?
+                                isRoom = true
+                            )
+                        )
                         messagesRepository.saveAll(messages.result)
                         //if success - saving last synced time
                         //assume that BE returns ordered messages, the first message is the latest one
-                        messagesRepository.saveLastSyncDate(chatRoomId, messages.result.first().timestamp)
+                        messagesRepository.saveLastSyncDate(
+                            chatRoomId,
+                            messages.result.first().timestamp
+                        )
 
                         launchUI(strategy) {
                             view.showNewMessage(models, true)
@@ -691,9 +739,9 @@ class ChatRoomPresenter @Inject constructor(
                     replyMarkdown = "[ ]($currentServer/$chatRoomType/$room?msg=$id) $mention ",
                     quotedMessage = mapper.map(
                         message, RoomUiModel(
-                        roles = chatRoles,
-                        isBroadcast = chatIsBroadcast
-                    )
+                            roles = chatRoles,
+                            isBroadcast = isBroadcast
+                        )
                     ).last().preview?.message ?: ""
                 )
             }
@@ -796,13 +844,15 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    fun loadActiveMembers(
+    suspend fun loadActiveMembers(
         chatRoomId: String,
         chatRoomType: String,
         offset: Long = 0,
         filterSelfOut: Boolean = false
     ) {
-        launchUI(strategy) {
+        val activeUsers = mutableListOf<PeopleSuggestionUiModel>()
+
+        withContext(Dispatchers.IO + strategy.jobs) {
             try {
                 val members = retryIO("getMembers($chatRoomId, $chatRoomType, $offset)") {
                     client.getMembers(chatRoomId, roomTypeOf(chatRoomType), offset, 50).result
@@ -813,12 +863,12 @@ class ChatRoomPresenter @Inject constructor(
                 // Take at most the 100 most recent messages distinguished by user. Can return less.
                 val recentMessages = messagesRepository.getRecentMessages(chatRoomId, 100)
                     .filterNot { filterSelfOut && it.sender?.username == self }
-                val activeUsers = mutableListOf<PeopleSuggestionUiModel>()
                 recentMessages.forEach {
                     val sender = it.sender
                     val username = sender?.username ?: ""
                     val name = sender?.name ?: ""
-                    val avatarUrl = currentServer.avatarUrl(username, token?.userId, token?.authToken)
+                    val avatarUrl =
+                        currentServer.avatarUrl(username, token?.userId, token?.authToken)
                     val found = members.firstOrNull { member -> member.username == username }
                     val status = if (found != null) found.status else UserStatus.Offline()
                     val searchList = mutableListOf(username, name)
@@ -839,7 +889,8 @@ class ChatRoomPresenter @Inject constructor(
                 activeUsers.addAll(others.map {
                     val username = it.username ?: ""
                     val name = it.name ?: ""
-                    val avatarUrl = currentServer.avatarUrl(username, token?.userId, token?.authToken)
+                    val avatarUrl =
+                        currentServer.avatarUrl(username, token?.userId, token?.authToken)
                     val searchList = mutableListOf(username, name)
                     PeopleSuggestionUiModel(
                         avatarUrl,
@@ -852,10 +903,12 @@ class ChatRoomPresenter @Inject constructor(
                     )
                 })
 
-                view.populatePeopleSuggestions(activeUsers)
             } catch (e: RocketChatException) {
                 Timber.e(e)
             }
+        }
+        launchUI(strategy) {
+            view.populatePeopleSuggestions(activeUsers)
         }
     }
 
@@ -969,48 +1022,49 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     // TODO: move this to new interactor or FetchChatRoomsInteractor?
-    private suspend fun getChatRoomsAsync(name: String? = null): List<ChatRoom> = withContext(Dispatchers.IO) {
-        retryDB("getAllSync()") {
-            dbManager.chatRoomDao().getAllSync().filter {
-                if (name == null) {
-                    return@filter true
-                }
-                it.chatRoom.name == name || it.chatRoom.fullname == name
-            }.map {
-                with(it.chatRoom) {
-                    ChatRoom(
-                        id = id,
-                        subscriptionId = subscriptionId,
-                        parentId = parentId,
-                        type = roomTypeOf(type),
-                        unread = unread,
-                        broadcast = broadcast ?: false,
-                        alert = alert,
-                        fullName = fullname,
-                        name = name ?: "",
-                        favorite = favorite ?: false,
-                        default = isDefault ?: false,
-                        readonly = readonly,
-                        open = open,
-                        lastMessage = null,
-                        archived = false,
-                        status = null,
-                        user = null,
-                        userMentions = userMentions,
-                        client = client,
-                        announcement = null,
-                        description = null,
-                        groupMentions = groupMentions,
-                        roles = null,
-                        topic = null,
-                        lastSeen = this.lastSeen,
-                        timestamp = timestamp,
-                        updatedAt = updatedAt
-                    )
+    private suspend fun getChatRoomsAsync(name: String? = null): List<ChatRoom> =
+        withContext(Dispatchers.IO) {
+            retryDB("getAllSync()") {
+                dbManager.chatRoomDao().getAllSync().filter {
+                    if (name == null) {
+                        return@filter true
+                    }
+                    it.chatRoom.name == name || it.chatRoom.fullname == name
+                }.map {
+                    with(it.chatRoom) {
+                        ChatRoom(
+                            id = id,
+                            subscriptionId = subscriptionId,
+                            parentId = parentId,
+                            type = roomTypeOf(type),
+                            unread = unread,
+                            broadcast = broadcast ?: false,
+                            alert = alert,
+                            fullName = fullname,
+                            name = name ?: "",
+                            favorite = favorite ?: false,
+                            default = isDefault ?: false,
+                            readonly = readonly,
+                            open = open,
+                            lastMessage = null,
+                            archived = false,
+                            status = null,
+                            user = null,
+                            userMentions = userMentions,
+                            client = client,
+                            announcement = null,
+                            description = null,
+                            groupMentions = groupMentions,
+                            roles = null,
+                            topic = null,
+                            lastSeen = this.lastSeen,
+                            timestamp = timestamp,
+                            updatedAt = updatedAt
+                        )
+                    }
                 }
             }
         }
-    }
 
     fun joinChat(chatRoomId: String) {
         launchUI(strategy) {
@@ -1019,7 +1073,8 @@ class ChatRoomPresenter @Inject constructor(
                 val canPost = permissions.canPostToReadOnlyChannels()
                 dbManager.getRoom(chatRoomId)?.let {
                     val roomUiModel = roomMapper.map(it, true).copy(
-                        writable = canPost)
+                        writable = canPost
+                    )
                     view.onJoined(roomUiModel = roomUiModel)
                     view.onRoomUpdated(roomUiModel = roomUiModel)
                 }
@@ -1051,9 +1106,13 @@ class ChatRoomPresenter @Inject constructor(
                         }
                     }
                 }
-            } catch (ex: Exception) {
-                Timber.e(ex)
-                view.showMessage(ex.message!!)
+            } catch (exception: Exception) {
+                Timber.e(exception)
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
             }
         }
     }
@@ -1070,8 +1129,13 @@ class ChatRoomPresenter @Inject constructor(
                         }
                     }
                 }
-            } catch (ex: Exception) {
-                Timber.e(ex)
+            } catch (exception: Exception) {
+                Timber.e(exception)
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
             }
         }
     }
@@ -1086,8 +1150,13 @@ class ChatRoomPresenter @Inject constructor(
                     client.toggleReaction(messageId, emoji.removeSurrounding(":"))
                 }
                 logReactionEvent()
-            } catch (ex: RocketChatException) {
-                Timber.e(ex)
+            } catch (exception: RocketChatException) {
+                Timber.e(exception)
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
             }
         }
     }
@@ -1280,8 +1349,8 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             val viewModelStreamedMessage = mapper.map(
                 streamedMessage, RoomUiModel(
-                roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true
-            )
+                    roles = chatRoles, isBroadcast = isBroadcast, isRoom = true
+                )
             )
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
@@ -1324,5 +1393,21 @@ class ChatRoomPresenter @Inject constructor(
      */
     fun getDraftUnfinishedMessage(): String? {
         return localRepository.get(draftKey)
+    }
+
+    private suspend fun getTimeStampOfLastMessageInRoom(): Long {
+        return withContext(Dispatchers.IO + strategy.jobs) {
+            chatRoomId?.let {
+                dbManager.messageDao().getRecentMessagesByRoomId(it, 1).first().message.message.timestamp
+            }
+        } ?: 0
+    }
+
+    fun openFullWebPage(roomId: String, url: String){
+        navigator.toFullWebPage(roomId, url)
+    }
+
+    fun openConfigurableWebPage(roomId: String, url: String, heightRatio: String){
+        navigator.toConfigurableWebPage(roomId, url, heightRatio)
     }
 }

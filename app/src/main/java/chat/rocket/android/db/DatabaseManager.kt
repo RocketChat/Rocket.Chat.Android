@@ -1,6 +1,7 @@
 package chat.rocket.android.db
 
 import android.app.Application
+import androidx.core.net.toUri
 import chat.rocket.android.R
 import chat.rocket.android.db.model.BaseMessageEntity
 import chat.rocket.android.db.model.BaseUserEntity
@@ -15,6 +16,7 @@ import chat.rocket.android.db.model.UrlEntity
 import chat.rocket.android.db.model.UserEntity
 import chat.rocket.android.db.model.UserStatus
 import chat.rocket.android.db.model.asEntity
+import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.exhaustive
 import chat.rocket.android.util.extensions.removeTrailingSlash
 import chat.rocket.android.util.extensions.toEntity
@@ -23,15 +25,18 @@ import chat.rocket.android.util.retryDB
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.SimpleUser
+import chat.rocket.common.model.Token
 import chat.rocket.common.model.User
 import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.socket.model.StreamMessage
 import chat.rocket.core.internal.realtime.socket.model.Type
 import chat.rocket.core.model.ChatRoom
+import chat.rocket.core.model.LastMessage
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
 import chat.rocket.core.model.userId
+import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -48,8 +53,7 @@ import kotlin.collections.component2
 import kotlin.collections.set
 import kotlin.system.measureTimeMillis
 
-class DatabaseManager(val context: Application, val serverUrl: String) {
-
+class DatabaseManager(val context: Application, val serverUrl: String, val token: Token) {
     private val database: RCDatabase = androidx.room.Room.databaseBuilder(
         context,
         RCDatabase::class.java, serverUrl.databaseName()
@@ -58,22 +62,22 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         .build()
     private val dbContext = newSingleThreadContext("$serverUrl-db-context")
     private val dbManagerContext = newSingleThreadContext("$serverUrl-db-manager-context")
-
     private val writeChannel = Channel<Operation>(Channel.UNLIMITED)
     private var dbJob: Job? = null
-
     private val insertSubs = HashMap<String, Subscription>()
     private val insertRooms = HashMap<String, Room>()
     private val updateSubs = LinkedHashMap<String, Subscription>()
     private val updateRooms = LinkedHashMap<String, Room>()
 
-    fun chatRoomDao(): ChatRoomDao = database.chatRoomDao()
-    fun userDao(): UserDao = database.userDao()
-    fun messageDao(): MessageDao = database.messageDao()
-
     init {
         start()
     }
+
+    fun chatRoomDao(): ChatRoomDao = database.chatRoomDao()
+
+    fun userDao(): UserDao = database.userDao()
+
+    fun messageDao(): MessageDao = database.messageDao()
 
     fun start() {
         dbJob?.cancel()
@@ -188,6 +192,20 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
                 utcOffset = myself.utcOffset ?: user.utcOffset,
                 status = myself.status?.toString() ?: user.status
             ) ?: myself.asUser().toEntity()
+
+            if (myself.avatarOrigin != null && myself.active == null &&
+                myself.name == null && myself.username == null
+            ) {
+                user?.username?.let {
+                    Fresco.getImagePipeline().evictFromCache(
+                        serverUrl.avatarUrl(
+                            it,
+                            token.userId,
+                            token.authToken
+                        ).toUri()
+                    )
+                }
+            }
 
             Timber.d("UPDATING SELF: $entity")
             entity?.let { sendOperation(Operation.UpsertUser(it)) }
@@ -383,8 +401,8 @@ class DatabaseManager(val context: Application, val serverUrl: String) {
         }
     }
 
-    private fun mapLastMessageText(message: Message?): String? = message?.let { lastMessage ->
-        if (lastMessage.message.isEmpty() && lastMessage.attachments?.isNotEmpty() == true) {
+    private fun mapLastMessageText(message: LastMessage?): String? = message?.let { lastMessage ->
+        if (lastMessage.message?.isEmpty() == true && lastMessage.attachments?.isNotEmpty() == true) {
             context.getString(R.string.msg_sent_attachment)
         } else {
             lastMessage.message

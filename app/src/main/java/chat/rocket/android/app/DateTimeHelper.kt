@@ -35,8 +35,7 @@ object DateTimeHelper {
      * @return The date or the textual representation from a [LocalDateTime].
      */
     fun getDate(localDateTime: LocalDateTime, context: Context): String {
-        val localDate = localDateTime.toLocalDate()
-        return when (localDate) {
+        return when (val localDate = localDateTime.toLocalDate()) {
             today -> formatLocalTime(localDateTime.toLocalTime())
             yesterday -> context.getString(R.string.msg_yesterday)
             else -> {
@@ -50,8 +49,7 @@ object DateTimeHelper {
     }
 
     fun getFormattedDateForMessages(localDateTime: LocalDateTime, context: Context): String {
-        val localDate = localDateTime.toLocalDate()
-        return when (localDate) {
+        return when (val localDate = localDateTime.toLocalDate()) {
             today -> context.getString(R.string.msg_today)
             yesterday -> context.getString(R.string.msg_yesterday)
             else -> formatLocalDate(localDate)
@@ -64,9 +62,13 @@ object DateTimeHelper {
      * @param localDateTime The [LocalDateTime].
      * @return The time from a [LocalDateTime].
      */
-    fun getTime(localDateTime: LocalDateTime): String {
-        val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
-        return localDateTime.toLocalTime().format(formatter).toString()
+    fun getTime(localDateTime: LocalDateTime, showDateAndHour: Boolean = false): String {
+        return if (showDateAndHour) {
+            formatLocalDateTime(localDateTime)
+        } else {
+            val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+            localDateTime.toLocalTime().format(formatter).toString()
+        }
     }
 
     /**

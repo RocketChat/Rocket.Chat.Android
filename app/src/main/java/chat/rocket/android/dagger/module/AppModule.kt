@@ -19,6 +19,7 @@ import chat.rocket.android.dagger.qualifier.ForAuthentication
 import chat.rocket.android.dagger.qualifier.ForMessages
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.DatabaseManagerFactory
+import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPreferencesLocalRepository
@@ -394,6 +395,12 @@ class AppModule {
     @Singleton
     fun provideAnswersAnalytics(): AnswersAnalytics {
         return AnswersAnalytics()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDynamicLinkForFirebase(context: Application): DynamicLinksForFirebase {
+        return DynamicLinksForFirebase(context)
     }
 
     @Provides

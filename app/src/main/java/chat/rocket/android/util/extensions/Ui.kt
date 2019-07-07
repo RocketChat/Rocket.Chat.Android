@@ -46,7 +46,9 @@ fun ViewGroup.inflate(@LayoutRes resource: Int, attachToRoot: Boolean = false): 
     LayoutInflater.from(context).inflate(resource, this, attachToRoot)
 
 fun AppCompatActivity.addFragment(
-    tag: String, layoutId: Int, allowStateLoss: Boolean = false,
+    tag: String,
+    layoutId: Int,
+    allowStateLoss: Boolean = false,
     newInstance: () -> Fragment
 ) {
     val fragment = supportFragmentManager.findFragmentByTag(tag) ?: newInstance()

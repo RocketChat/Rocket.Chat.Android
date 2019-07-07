@@ -52,6 +52,7 @@
     <string name="action_select_photo_from_gallery">Escolher foto da galeria</string>
     <string name="action_take_a_photo">Tirar uma foto</string>
     <string name="action_reset_avatar">Resetar avatar</string>
+    <string name="action_view_profile_photo">View profile photo</string> <!-- TODO Add translation -->
     <string name="action_connect_server">Conectar com um servidor</string>
     <string name="action_join_community">Junte-se à comunidade</string>
     <string name="action_create_server">Criar um novo servidor</string>
@@ -70,6 +71,9 @@
     <string name="msg_app_version">Version: %1$s (%2$d)</string> <!-- TODO Translate -->
     <string name="msg_server_version">Server version: %1$s</string> <!-- TODO Translate -->
     <string name="msg_send_analytics">Send analytics</string> <!-- TODO Translate -->
+    <string name="msg_send_analytics_tracking">Envie estatísticas anônimas para ajudar a melhorar este app</string>
+    <string name="msg_do_not_send_analytics_tracking">Não envie estatísticas anônimas para ajudar a melhorar este app</string>
+    <string name="msg_not_applicable_since_it_is_a_foss_version">Não aplicável devido a versão do aplicativo ser FOSS</string>
     <string name="msg_logout_from_rocket_chat">Logout from Rocket.Chat</string> <!-- TODO Translate -->
     <string name="msg_delete_account">Delete account</string> <!-- TODO Translate -->
     <string name="msg_change_status">Change status</string> <!-- TODO Translate -->
@@ -218,12 +222,6 @@
     <string name="msg_member_already_added">Você já selecionou este usuário</string>
     <string name="msg_member_not_found">Membro não encontrado</string>
     <string name="msg_channel_created_successfully">Chat criado com sucesso</string>
-
-    <!-- Preferences messages -->
-    <string name="msg_analytics_tracking">Rastreamento de análises</string>
-    <string name="msg_send_analytics_tracking">Envie estatísticas anônimas para ajudar a melhorar este app</string>
-    <string name="msg_do_not_send_analytics_tracking">Não envie estatísticas anônimas para ajudar a melhorar este app</string>
-    <string name="msg_not_applicable_since_it_is_a_foss_version">Não aplicável devido a versão do aplicativo ser FOSS</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
