@@ -359,7 +359,9 @@
 
     <style name="CustomAlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
         <item name="android:background">?android:colorBackground</item>
-        <item name="android:theme">@style/AppTheme</item>\
+        <item name="android:textColor">?colorHeadings</item>
+        <item name="android:textColorPrimary">?colorPrimaryText</item>
+        <item name="android:theme">@style/AppTheme</item>
     </style>
 
     <style name="Alert.Button" parent="Widget.MaterialComponents.Button.TextButton">

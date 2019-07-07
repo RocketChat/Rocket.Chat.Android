@@ -32,10 +32,9 @@ import kotlinx.android.synthetic.main.dialog_delete_account.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import timber.log.Timber
 import javax.inject.Inject
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
-import android.text.SpannableString
-import androidx.core.content.ContextCompat
+import android.widget.ArrayAdapter
+
+
 
 
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
@@ -101,9 +100,7 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
         profile_container.setOnClickListener { presenter.toProfile() }
 
-        //----------------------------------------------------------------
         text_change_theme.setOnClickListener { presenter.toChangeTheme() }
-        //----------------------------------------------------------------
 
         text_contact_us.setOnClickListener { contactSupport() }
 
@@ -212,10 +209,12 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
                     }
                 }
             }
+            val adapter = ArrayAdapter<CharSequence>(
+                    activity, R.layout.item_alert_dialog_single_choice, resources.getStringArray(R.array.languages))
             AlertDialog.Builder(it)
                 .setTitle(R.string.title_choose_language)
                 .setSingleChoiceItems(
-                    resources.getStringArray(R.array.languages), localeIndex
+                        adapter, localeIndex
                 ) { dialog, option ->
                     val array = locales[option].split(",")
                     if (array.size > 1) {
@@ -249,10 +248,8 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
     private fun showLogoutDialog() {
         context?.let {
-            val title = SpannableString(getString(R.string.title_are_you_sure))
-            title.setSpan(ForegroundColorSpan(ContextCompat.getColor(it, ThemeUtil.getThemeColorResource(R.attr.colorHeadings))), 0, title.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             val builder = AlertDialog.Builder(it)
-            builder.setTitle(title)
+            builder.setTitle(R.string.title_are_you_sure)
                 .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout() }
                 .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
                 .create()
