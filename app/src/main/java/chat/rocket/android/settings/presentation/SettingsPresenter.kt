@@ -18,15 +18,14 @@ import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
-import chat.rocket.android.util.extension.gethash
+import chat.rocket.android.util.extension.HashType
+import chat.rocket.android.util.extension.hash
 import chat.rocket.android.util.extension.launchUI
-import chat.rocket.android.util.extension.toHex
 import chat.rocket.android.util.extensions.adminPanelUrl
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.deleteOwnAccount
-import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.serverInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -110,7 +109,7 @@ class SettingsPresenter @Inject constructor(
                         // https://github.com/RocketChat/Rocket.Chat/issues/12573
                         retryIO {
                             rocketChatClientFactory.get(it)
-                                .deleteOwnAccount(password.gethash().toHex().toLowerCase())
+                                .deleteOwnAccount(password.hash(HashType.Sha256).toLowerCase())
                         }
                         setupConnectionInfo(it)
                         logout()

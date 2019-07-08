@@ -27,6 +27,7 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.invalidateFirebaseToken
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
+import kotlinx.android.synthetic.main.dialog_delete_account.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -249,11 +250,15 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
     private fun showDeleteAccountDialog() {
         context?.let {
+            val dialogLayout = layoutInflater.inflate(R.layout.dialog_delete_account, null)
+            val editText = dialogLayout.findViewById<EditText>(R.id.text_password)
+
             AlertDialog.Builder(it)
-                .setView(LayoutInflater.from(it).inflate(R.layout.dialog_delete_account, null))
+                .setView(dialogLayout)
                 .setPositiveButton(R.string.msg_delete_account) { _, _ ->
-                    presenter.deleteAccount(EditText(context).text.toString())
-                }.setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }.create()
+                    presenter.deleteAccount(editText.text.toString())
+                }.setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
+                .create()
                 .show()
         }
     }
