@@ -42,7 +42,6 @@ class MembersFragment : Fragment(), MembersView {
     private val adapter: MembersAdapter =
         MembersAdapter { memberUiModel -> presenter.toMemberDetails(memberUiModel, chatRoomId) }
     private lateinit var chatRoomId: String
-    private lateinit var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,12 +63,17 @@ class MembersFragment : Fragment(), MembersView {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupListeners()
+        analyticsManager.logScreenView(ScreenViewEvent.Members)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adapter.clearData()
         with(presenter) {
+            offset = 0
             loadChatRoomsMembers(chatRoomId)
             checkInviteUserPermission(chatRoomId)
         }
-
-        analyticsManager.logScreenView(ScreenViewEvent.Members)
     }
 
     override fun showMembers(dataSet: List<MemberUiModel>, total: Long) {

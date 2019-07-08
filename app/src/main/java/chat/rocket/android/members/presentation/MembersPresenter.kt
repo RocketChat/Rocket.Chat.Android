@@ -31,7 +31,7 @@ class MembersPresenter @Inject constructor(
     private val userHelper: UserHelper
 ) {
     private val client: RocketChatClient? = currentServer?.let { factory.get(it) }
-    private var offset: Long = 0
+    var offset: Long = 0
 
     /**
      * Loads all the chat room members for the given room id.
