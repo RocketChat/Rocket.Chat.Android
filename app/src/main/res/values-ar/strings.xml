@@ -370,4 +370,11 @@
     <string name="submit">تأكيد</string>
     <string name="required">*مطلوب</string>
     <string name="report_sent">تم إرسال تقريرك!</string>
+
+
+    <!-- Share -->
+    <string name="confirm_to_send">Do you confirm to send?</string><!-- TODO Translate -->
+    <string name="cancel">Cancel</string><!-- TODO Translate -->
+    <string name="share_with">Share with %1$s: %2$s</string><!-- TODO Translate -->
+    <string name="you_cant_send_here_readonly">You can\'t send here, readonly channel</string><!-- TODO Translate -->
 </resources>

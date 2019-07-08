@@ -371,4 +371,10 @@
     <string name="submit">जमा करें</string>
     <string name="required">* आवश्यक</string>
     <string name="report_sent">आपकी रिपोर्ट भेज दी गई है!</string>
+
+    <!-- Share -->
+    <string name="confirm_to_send">Do you confirm to send?</string><!-- TODO Translate -->
+    <string name="cancel">Cancel</string><!-- TODO Translate -->
+    <string name="share_with">Share with %1$s: %2$s</string><!-- TODO Translate -->
+    <string name="you_cant_send_here_readonly">You can\'t send here, readonly channel</string><!-- TODO Translate -->
 </resources>

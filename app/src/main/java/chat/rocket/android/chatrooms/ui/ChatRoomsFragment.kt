@@ -249,7 +249,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                             presenter.loadChatRoom(room)
                         }
                     }, {
-                        showMessage("You can't send here")
+                        showMessage(R.string.you_cant_send_here_readonly)
                     })
                 } else {
                     presenter.loadChatRoom(room)
@@ -305,14 +305,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private fun confirmShare(room: RoomUiModel, onConfirmed: () -> Unit) {
         ui {
             val builder = AlertDialog.Builder(it)
-                .setTitle("Do you confirm to send?")
-                .setPositiveButton("Send") { _, _ ->
+                .setTitle(R.string.confirm_to_send)
+                .setPositiveButton(R.string.msg_send) { _, _ ->
                     onConfirmed()
                 }
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(R.string.cancel, null)
 
             if (ShareHandler.hasSharedText()) {
-                builder.setMessage("Shared with ${room.name}: ${ShareHandler.sharedText}")
+                builder.setMessage(getString(R.string.share_with, room.name, ShareHandler.sharedText))
             } else if (ShareHandler.hasSharedFile()) {
                 builder.setItems(ShareHandler.getFilesAsString(), null)
             }

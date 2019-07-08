@@ -36,6 +36,7 @@ object ShareHandler {
                 handleSendText(intent)
             } else {
 
+                // TODO can't share if user were in fragment rather than ChatRoomsFragment
                 // TODO request permission
                 intent.clipData?.let { data ->
                     if (data.itemCount > 0) {
