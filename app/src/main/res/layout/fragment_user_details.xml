@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="userdetails.ui.UserDetailsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -130,6 +131,28 @@
             app:layout_constraintTop_toBottomOf="@+id/text_title_timezone"
             tools:text="(UTC-2) 11:08 AM" />
 
+        <android.widget.Button
+            android:id="@+id/button_remove_user"
+            style="?borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_margin="@dimen/screen_edge_left_and_right_margins"
+            android:background="@color/color_red"
+            android:drawableStart="@drawable/ic_leave"
+            android:foreground="?selectableItemBackground"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/msg_remove_user"
+            android:textColor="@color/color_white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_description_timezone"
+            tools:visibility="visible" />
+
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/view_loading"
             style="@style/Authentication.AVLoadingIndicatorView"
@@ -143,6 +166,6 @@
             android:id="@+id/group_user_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="image_blur, image_avatar, text_name, text_username, text_message, text_title_status, text_description_status, text_title_timezone, text_description_timezone, text_video_call" />
+            app:constraint_referenced_ids="image_blur, image_avatar, text_name, text_username, text_message, text_video_call, text_title_status, text_description_status, text_title_timezone, text_description_timezone, button_remove_user" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

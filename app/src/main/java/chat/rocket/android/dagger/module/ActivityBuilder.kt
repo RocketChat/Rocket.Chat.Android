@@ -24,6 +24,7 @@ import chat.rocket.android.draw.main.di.DrawModule
 import chat.rocket.android.draw.main.ui.DrawingActivity
 import chat.rocket.android.favoritemessages.di.FavoriteMessagesFragmentProvider
 import chat.rocket.android.files.di.FilesFragmentProvider
+import chat.rocket.android.inviteusers.di.InviteUsersFragmentProvider
 import chat.rocket.android.main.di.MainModule
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.members.di.MembersFragmentProvider
@@ -84,6 +85,7 @@ abstract class ActivityBuilder {
             UserDetailsFragmentProvider::class,
             ChatDetailsFragmentProvider::class,
             MembersFragmentProvider::class,
+            InviteUsersFragmentProvider::class,
             MentionsFragmentProvider::class,
             PinnedMessagesFragmentProvider::class,
             FavoriteMessagesFragmentProvider::class,
