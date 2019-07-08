@@ -111,7 +111,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         resultData?.run {
             if (resultCode == Activity.RESULT_OK) {
                 if (requestCode == REQUEST_CODE_FOR_PERFORM_SAF) {
-                    data?.let { presenter.updateAvatar(it) }
+                    if (Constants.WIDECHAT){
+                        data.let { presenter.prepareFileAndUpdateAvatar(it, context) }
+                    } else {
+                        data?.let { presenter.updateAvatar(it) }
+                    }
                 } else if (requestCode == REQUEST_CODE_FOR_PERFORM_CAMERA) {
                     extras?.get("data")?.let { presenter.preparePhotoAndUpdateAvatar(it as Bitmap) }
                 }
