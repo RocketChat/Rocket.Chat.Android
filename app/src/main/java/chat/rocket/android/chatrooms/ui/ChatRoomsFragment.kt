@@ -464,6 +464,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun showConnectionState(state: State) {
         Timber.d("Got new state: $state")
+        ui {
+            when (state) {
+                is State.Connected -> {
+                    setCurrentUserStatusIcon()
+                }
+            }
+        }
 //        ui {
 //            text_connection_status.fadeIn()
 //            handler.removeCallbacks(dismissStatus)
@@ -516,7 +523,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 profileButton = this?.getCustomView()?.findViewById(R.id.profile_image_avatar)
                 profileButton?.setImageURI(myAvatarUrl)
                 profileButton?.setOnClickListener { v ->
-
                     searchView?.clearFocus()
                     val newFragment = ProfileFragment()
                     val fragmentManager = fragmentManager

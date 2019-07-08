@@ -759,25 +759,26 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun showConnectionState(state: State) {
-        ui {
-            text_connection_status.fadeIn()
-            handler.removeCallbacks(dismissStatus)
-            text_connection_status.text = when (state) {
-                is State.Connected -> {
-                    handler.postDelayed(dismissStatus, 2000)
-                    getString(R.string.status_connected)
-                }
-                is State.Disconnected -> getString(R.string.status_disconnected)
-                is State.Connecting -> getString(R.string.status_connecting)
-                is State.Authenticating -> getString(R.string.status_authenticating)
-                is State.Disconnecting -> getString(R.string.status_disconnecting)
-                is State.Waiting -> getString(R.string.status_waiting, state.seconds)
-                else -> {
-                    handler.postDelayed(dismissStatus, 500)
-                    ""
-                }
-            }
-        }
+        Timber.d("Got new state: $state")
+//        ui {
+//            text_connection_status.fadeIn()
+//            handler.removeCallbacks(dismissStatus)
+//            text_connection_status.text = when (state) {
+//                is State.Connected -> {
+//                    handler.postDelayed(dismissStatus, 2000)
+//                    getString(R.string.status_connected)
+//                }
+//                is State.Disconnected -> getString(R.string.status_disconnected)
+//                is State.Connecting -> getString(R.string.status_connecting)
+//                is State.Authenticating -> getString(R.string.status_authenticating)
+//                is State.Disconnecting -> getString(R.string.status_disconnecting)
+//                is State.Waiting -> getString(R.string.status_waiting, state.seconds)
+//                else -> {
+//                    handler.postDelayed(dismissStatus, 500)
+//                    ""
+//                }
+//            }
+//        }
     }
 
     override fun onJoined(roomUiModel: RoomUiModel) {
