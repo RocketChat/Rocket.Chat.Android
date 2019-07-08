@@ -39,8 +39,7 @@ class UserDetailsPresenter @Inject constructor(
 ) {
     private var currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
-    private val client = manager.client
-    private val interactor = FetchChatRoomsInteractor(client, dbManager)
+    private val client = manager?.client
     private val settings = settingsInteractor.get(currentServer)
     private val token = tokenRepository.get(currentServer)
     private lateinit var userEntity: UserEntity
@@ -80,41 +79,50 @@ class UserDetailsPresenter @Inject constructor(
         }
     }
 
+    fun getImageUri(): String {
+        return userEntity.username?.let {
+            currentServer.avatarUrl(
+                avatar = it, userId = token?.userId,
+                token = token?.authToken
+            )
+        }!!
+    }
+
     fun createDirectMessage(username: String) {
         launchUI(strategy) {
             try {
                 view.showLoading()
 
                 withContext(Dispatchers.Default) {
-                    val directMessage = retryIO("createDirectMessage($username") {
-                        client.createDirectMessage(username)
+                    retryIO("createDirectMessage($username") {
+                        client?.createDirectMessage(username)?.let { directMessage ->
+                            val chatRoomEntity = ChatRoomEntity(
+                                id = directMessage.id,
+                                name = userEntity.username ?: userEntity.name.orEmpty(),
+                                parentId = null,
+                                description = null,
+                                type = RoomType.DIRECT_MESSAGE,
+                                fullname = userEntity.name,
+                                subscriptionId = "",
+                                updatedAt = directMessage.updatedAt
+                            )
+
+                            dbManager.insertOrReplaceRoom(chatRoomEntity)
+
+                            FetchChatRoomsInteractor(client, dbManager).refreshChatRooms()
+
+                            navigator.toChatRoom(
+                                chatRoomId = chatRoomEntity.id,
+                                chatRoomName = chatRoomEntity.name,
+                                chatRoomType = chatRoomEntity.type,
+                                isReadOnly = false,
+                                chatRoomLastSeen = -1,
+                                isSubscribed = chatRoomEntity.open,
+                                isCreator = true,
+                                isFavorite = false
+                            )
+                        }
                     }
-
-                    val chatRoomEntity = ChatRoomEntity(
-                        id = directMessage.id,
-                        name = userEntity.username ?: userEntity.name.orEmpty(),
-                        parentId = null,
-                        description = null,
-                        type = RoomType.DIRECT_MESSAGE,
-                        fullname = userEntity.name,
-                        subscriptionId = "",
-                        updatedAt = directMessage.updatedAt
-                    )
-
-                    dbManager.insertOrReplaceRoom(chatRoomEntity)
-
-                    interactor.refreshChatRooms()
-
-                    navigator.toChatRoom(
-                        chatRoomId = chatRoomEntity.id,
-                        chatRoomName = chatRoomEntity.name,
-                        chatRoomType = chatRoomEntity.type,
-                        isReadOnly = false,
-                        chatRoomLastSeen = -1,
-                        isSubscribed = chatRoomEntity.open,
-                        isCreator = true,
-                        isFavorite = false
-                    )
                 }
             } catch (ex: Exception) {
                 Timber.e(ex)
@@ -133,10 +141,11 @@ class UserDetailsPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 withContext(Dispatchers.Default) {
-                    val directMessage = retryIO("createDirectMessage($username") {
-                        client.createDirectMessage(username)
+                    retryIO("createDirectMessage($username") {
+                        client?.createDirectMessage(username)?.let { directMessage ->
+                            navigator.toVideoConference(directMessage.id, RoomType.DIRECT_MESSAGE)
+                        }
                     }
-                    navigator.toVideoConference(directMessage.id, RoomType.DIRECT_MESSAGE)
                 }
             } catch (ex: Exception) {
                 Timber.e(ex)
@@ -153,12 +162,13 @@ class UserDetailsPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 dbManager.getRoom(chatRoomId)?.let {
-                    val result =
-                        retryIO("kick($chatRoomId,${roomTypeOf(it.chatRoom.type)},$userId)") {
-                            client.kick(chatRoomId, roomTypeOf(it.chatRoom.type), userId)
-                        }
-                    if (result) {
-                        view.showUserRemovedMessage()
+                    retryIO("kick($chatRoomId,${roomTypeOf(it.chatRoom.type)},$userId)") {
+                        client?.kick(chatRoomId, roomTypeOf(it.chatRoom.type), userId)
+                            ?.let { isUsersRemoved ->
+                                if (isUsersRemoved) {
+                                    view.showUserRemovedMessage()
+                                }
+                            }
                     }
                 }.ifNull {
                     Timber.e("Couldn't find a room with id: $chatRoomId at current server.")
@@ -187,5 +197,7 @@ class UserDetailsPresenter @Inject constructor(
     private suspend fun hasRemoveUserPermission(chatRoomId: String): Boolean {
         return permissionsInteractor.hasPermission(REMOVE_USER, chatRoomId)
     }
+
+    fun toProfileImage(avatarUrl: String) = navigator.toProfileImage(avatarUrl)
 }
 

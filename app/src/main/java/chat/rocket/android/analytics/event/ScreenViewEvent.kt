@@ -12,7 +12,6 @@ sealed class ScreenViewEvent(val screenName: String) {
     object RegisterUsername : ScreenViewEvent("RegisterUsernameFragment")
     object ResetPassword : ScreenViewEvent("ResetPasswordFragment")
 
-    object About : ScreenViewEvent("AboutFragment")
     object ChatRoom : ScreenViewEvent("ChatRoomFragment")
     object ChatRooms : ScreenViewEvent("ChatRoomsFragment")
     object CreateChannel : ScreenViewEvent("CreateChannelFragment")
@@ -25,7 +24,6 @@ sealed class ScreenViewEvent(val screenName: String) {
     object MessageInfo : ScreenViewEvent("MessageInfoFragment")
     object Password : ScreenViewEvent("PasswordFragment")
     object PinnedMessages : ScreenViewEvent("PinnedMessagesFragment")
-    object Preferences : ScreenViewEvent("PreferencesFragment")
     object Profile : ScreenViewEvent("ProfileFragment")
     object Settings : ScreenViewEvent("SettingsFragment")
     object Directory : ScreenViewEvent("DirectoryFragment")

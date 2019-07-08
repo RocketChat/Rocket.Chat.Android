@@ -5,7 +5,6 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.util.extension.launchUI
-import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.core.internal.rest.getMessageReadReceipts
 import timber.log.Timber
@@ -18,19 +17,17 @@ class MessageInfoPresenter @Inject constructor(
     serverInteractor: GetCurrentServerInteractor,
     factory: ConnectionManagerFactory
 ) {
-
     private val currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
-    private val client = manager.client
+    private val client = manager?.client
 
     fun loadReadReceipts(messageId: String) {
         launchUI(strategy) {
             try {
                 view.showLoading()
-                val readReceipts = retryIO(description = "getMessageReadReceipts") {
-                    client.getMessageReadReceipts(messageId = messageId).result
+                client?.getMessageReadReceipts(messageId = messageId)?.result?.let { readReceipts ->
+                    view.showReadReceipts(mapper.map(readReceipts))
                 }
-                view.showReadReceipts(mapper.map(readReceipts))
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
                 view.showGenericErrorMessage()

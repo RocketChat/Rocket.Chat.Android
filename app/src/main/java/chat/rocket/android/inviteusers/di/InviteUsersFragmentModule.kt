@@ -11,7 +11,5 @@ class InviteUsersFragmentModule {
 
     @Provides
     @PerFragment
-    fun inviteUsersView(frag: InviteUsersFragment): InviteUsersView {
-        return frag
-    }
+    fun inviteUsersView(frag: InviteUsersFragment): InviteUsersView = frag
 }

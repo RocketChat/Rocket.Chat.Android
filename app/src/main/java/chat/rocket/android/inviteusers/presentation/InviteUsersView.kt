@@ -7,14 +7,14 @@ import chat.rocket.android.members.uimodel.MemberUiModel
 interface InviteUsersView : LoadingView, MessageView {
 
     /**
-     * Shows the server's users suggestion (on the basis of the user typing - the query).
+     * Shows the server users suggestion (on the basis of the user typing - the query).
      *
      * @param dataSet The list of server's users to show.
      */
     fun showUserSuggestion(dataSet: List<MemberUiModel>)
 
     /**
-     * Shows no server's users suggestion.
+     * Shows no servers users suggestion.
      */
     fun showNoUserSuggestion()
 

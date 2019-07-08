@@ -39,16 +39,10 @@ internal const val TAG_INVITE_USERS_FRAGMENT = "InviteUsersFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class InviteUsersFragment : Fragment(), InviteUsersView {
-
-    @Inject
-    lateinit var presenter: InviteUsersPresenter
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
+    @Inject lateinit var presenter: InviteUsersPresenter
+    @Inject lateinit var analyticsManager: AnalyticsManager
     private val compositeDisposable = CompositeDisposable()
-    private val adapter: MembersAdapter = MembersAdapter {
-        it.username?.run { processSelectedMember(it) }
-    }
-
+    private val adapter: MembersAdapter = MembersAdapter { processSelectedMember(it) }
     private lateinit var chatRoomId: String
     private var memberList = arrayListOf<MemberUiModel>()
 
@@ -71,7 +65,7 @@ class InviteUsersFragment : Fragment(), InviteUsersView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolBar()
-        setupViewListeners()
+        setupListeners()
         setupRecyclerView()
         subscribeEditTexts()
 
@@ -84,27 +78,19 @@ class InviteUsersFragment : Fragment(), InviteUsersView {
     }
 
     override fun showLoading() {
-        ui {
-            view_loading.isVisible = true
-        }
+        view_loading?.isVisible = true
     }
 
     override fun hideLoading() {
-        ui {
-            view_loading.isVisible = false
-        }
+        view_loading?.isVisible = false
     }
 
     override fun showMessage(resId: Int) {
-        ui {
-            showToast(resId)
-        }
+        ui { showToast(resId) }
     }
 
     override fun showMessage(message: String) {
-        ui {
-            showToast(message)
-        }
+        ui { showToast(message) }
     }
 
     override fun showGenericErrorMessage() {
@@ -114,21 +100,18 @@ class InviteUsersFragment : Fragment(), InviteUsersView {
     override fun showUserSuggestion(dataSet: List<MemberUiModel>) {
         adapter.clearData()
         adapter.prependData(dataSet)
-        text_member_not_found.isVisible = false
-        recycler_view.isVisible = true
-        view_member_suggestion.isVisible = true
+        text_member_not_found?.isVisible = false
+        recycler_view?.isVisible = true
     }
 
     override fun showNoUserSuggestion() {
-        recycler_view.isVisible = false
-        text_member_not_found.isVisible = true
-        view_member_suggestion.isVisible = true
+        recycler_view?.isVisible = false
+        text_member_not_found?.isVisible = true
     }
 
     override fun showSuggestionViewInProgress() {
-        recycler_view.isVisible = false
-        text_member_not_found.isVisible = false
-        view_member_suggestion.isVisible = true
+        recycler_view?.isVisible = false
+        text_member_not_found?.isVisible = false
         showLoading()
     }
 
@@ -139,18 +122,19 @@ class InviteUsersFragment : Fragment(), InviteUsersView {
     override fun usersInvitedSuccessfully() {
         memberList.clear()
         activity?.onBackPressed()
+        showMessage(getString(R.string.mgs_users_invited_successfully))
     }
 
     override fun enableUserInput() {
-        edit_text_invite_users.isEnabled = true
+        text_invite_users.isEnabled = true
     }
 
     override fun disableUserInput() {
-        edit_text_invite_users.isEnabled = false
+        text_invite_users.isEnabled = false
     }
 
     private fun setupToolBar() {
-        (activity as ChatRoomActivity).setupToolbarTitle((getString(R.string.title_invite_users)))
+        (activity as ChatRoomActivity).setupToolbarTitle((getString(R.string.msg_invite_users)))
     }
 
     private fun setupRecyclerView() {
@@ -164,41 +148,35 @@ class InviteUsersFragment : Fragment(), InviteUsersView {
         }
     }
 
-    private fun setupViewListeners() {
-        text_cancel.setOnClickListener { activity?.onBackPressed() }
-        text_invite_users.setOnClickListener {
+    private fun setupListeners() {
+        button_invite_user.setOnClickListener {
             if (memberList.isNotEmpty()) {
                 presenter.inviteUsers(chatRoomId, memberList)
+            } else {
+                showMessage(R.string.mgs_choose_at_least_one_user)
             }
         }
     }
 
     private fun subscribeEditTexts() {
-
-        val inviteMembersDisposable = edit_text_invite_users.asObservable()
-            .debounce(500, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+        val inviteMembersDisposable = text_invite_users.asObservable()
+            .debounce(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
             .filter { t -> t.isNotBlank() }
             .subscribe {
                 if (it.length >= 3) {
                     presenter.searchUser(it.toString())
-                } else {
-                    view_member_suggestion.isVisible = false
                 }
             }
-
         compositeDisposable.addAll(inviteMembersDisposable)
     }
 
-    private fun unsubscribeEditTexts() {
-        compositeDisposable.dispose()
-    }
+    private fun unsubscribeEditTexts() = compositeDisposable.dispose()
 
     private fun processSelectedMember(member: MemberUiModel) {
         if (memberList.any { it.username == member.username }) {
             showMessage(getString(R.string.msg_member_already_added))
         } else {
-            view_member_suggestion.isVisible = false
-            edit_text_invite_users.setText("")
+            text_invite_users.setText("")
             addMember(member)
             addChip(member)
             chip_group_member.isVisible = true

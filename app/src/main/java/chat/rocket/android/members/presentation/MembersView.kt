@@ -11,9 +11,8 @@ interface MembersView : LoadingView, MessageView {
      *
      * @param dataSet The data set to show.
      * @param total The total number of members.
-     * @param clearDataSet If true it will clear the previous data set.
      */
-    fun showMembers(dataSet: List<MemberUiModel>, total: Long, clearDataset: Boolean)
+    fun showMembers(dataSet: List<MemberUiModel>, total: Long)
 
     /**
      * Show Invite Users Button

@@ -20,39 +20,35 @@ import javax.inject.Named
 class InviteUsersPresenter @Inject constructor(
     private val view: InviteUsersView,
     private val dbManager: DatabaseManager,
-    @Named("currentServer") private val currentServer: String,
+    @Named("currentServer") private val currentServer: String?,
     private val strategy: CancelStrategy,
     private val mapper: MemberUiModelMapper,
     val factory: RocketChatClientFactory
 ) {
-    private val client: RocketChatClient = factory.get(currentServer)
+    private val client: RocketChatClient? = currentServer?.let { factory.get(it) }
 
     fun inviteUsers(chatRoomId: String, usersList: List<MemberUiModel>) {
         launchUI(strategy) {
             view.disableUserInput()
             view.showLoading()
 
-            val stringBuilder = StringBuilder()
-
             try {
-                for (user in usersList) {
+                usersList.forEach { user ->
                     try {
-                        client.invite(
+                        client?.invite(
                             chatRoomId,
                             roomTypeOf(getChatRoomType(chatRoomId)),
                             user.userId
                         )
-                        stringBuilder.append("Invited : ${user.username}\n")
                     } catch (exception: RocketChatException) {
                         exception.message?.let {
-                            stringBuilder.append("Exception : ${user.username} : $it\n")
+                            view.showMessage(it)
                         }.ifNull {
-                            stringBuilder.append("Error : ${user.username} : Try again later\n")
+                            view.showGenericErrorMessage()
                         }
                     }
                 }
             } finally {
-                view.showMessage(stringBuilder.toString())
                 view.hideLoading()
                 view.enableUserInput()
                 view.usersInvitedSuccessfully()
@@ -64,11 +60,12 @@ class InviteUsersPresenter @Inject constructor(
         launchUI(strategy) {
             view.showSuggestionViewInProgress()
             try {
-                val users = client.spotlight(query).users
-                if (users.isEmpty()) {
-                    view.showNoUserSuggestion()
-                } else {
-                    view.showUserSuggestion(mapper.mapToUiModelList(users))
+                client?.spotlight(query)?.users?.let { users ->
+                    if (users.isEmpty()) {
+                        view.showNoUserSuggestion()
+                    } else {
+                        view.showUserSuggestion(mapper.mapToUiModelList(users))
+                    }
                 }
             } catch (ex: RocketChatException) {
                 ex.message?.let {

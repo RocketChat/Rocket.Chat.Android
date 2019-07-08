@@ -1,9 +1,12 @@
 package chat.rocket.android.settings.presentation
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
+import chat.rocket.android.R
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
+import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
@@ -36,20 +39,22 @@ class SettingsPresenter @Inject constructor(
     private val view: SettingsView,
     private val strategy: CancelStrategy,
     private val navigator: MainNavigator,
-    @Named("currentServer") private val currentServer: String,
+    @Named("currentServer") private val currentServer: String?,
     private val userHelper: UserHelper,
     private val analyticsTrackingInteractor: AnalyticsTrackingInteractor,
     private val tokenRepository: TokenRepository,
     private val permissions: PermissionsInteractor,
     private val rocketChatClientFactory: RocketChatClientFactory,
+    private val dynamicLinksManager: DynamicLinksForFirebase,
     private val saveLanguageInteractor: SaveCurrentLanguageInteractor,
     getCurrentServerInteractor: GetCurrentServerInteractor,
     removeAccountInteractor: RemoveAccountInteractor,
-    databaseManagerFactory: DatabaseManagerFactory,
+    databaseManagerFactory: DatabaseManagerFactory?,
     connectionManagerFactory: ConnectionManagerFactory
 ) : CheckServerPresenter(
     strategy = strategy,
     factory = rocketChatClientFactory,
+    currentSavedServer = currentServer,
     serverInteractor = getCurrentServerInteractor,
     removeAccountInteractor = removeAccountInteractor,
     tokenRepository = tokenRepository,
@@ -58,29 +63,27 @@ class SettingsPresenter @Inject constructor(
     tokenView = view,
     navigator = navigator
 ) {
-    private val token = tokenRepository.get(currentServer)
+    private val token = currentServer?.let { tokenRepository.get(it) }
 
     fun setupView() {
         launchUI(strategy) {
             try {
-                val serverInfo = retryIO(description = "serverInfo", times = 5) {
-                    rocketChatClientFactory.get(currentServer).serverInfo()
-                }
+                currentServer?.let {
+                    val serverInfo = retryIO(description = "serverInfo", times = 5) {
+                        rocketChatClientFactory.get(it).serverInfo()
+                    }
 
-                val me = retryIO(description = "serverInfo", times = 5) {
-                    rocketChatClientFactory.get(currentServer).me()
-                }
-
-                userHelper.user()?.let { user ->
-                    view.setupSettingsView(
-                        currentServer.avatarUrl(me.username!!, token?.userId, token?.authToken),
-                        userHelper.displayName(user) ?: me.username ?: "",
-                        me.status.toString(),
-                        permissions.isAdministrationEnabled(),
-                        analyticsTrackingInteractor.get(),
-                        true,
-                        serverInfo.version
-                    )
+                    userHelper.user()?.let { user ->
+                        view.setupSettingsView(
+                            it.avatarUrl(user.username!!, token?.userId, token?.authToken),
+                            userHelper.displayName(user) ?: user.username ?: "",
+                            user.status.toString(),
+                            permissions.isAdministrationEnabled(),
+                            analyticsTrackingInteractor.get(),
+                            true,
+                            serverInfo.version
+                        )
+                    }
                 }
             } catch (exception: Exception) {
                 Timber.d(exception, "Error getting server info")
@@ -97,24 +100,21 @@ class SettingsPresenter @Inject constructor(
         analyticsTrackingInteractor.save(isEnabled)
     }
 
-    fun logout() {
-        setupConnectionInfo(currentServer)
-        super.logout(null) // TODO null?
-    }
-
     fun deleteAccount(password: String) {
         launchUI(strategy) {
             view.showLoading()
             try {
-                withContext(Dispatchers.Default) {
-                    // REMARK: Backend API is only working with a lowercase hash.
-                    // https://github.com/RocketChat/Rocket.Chat/issues/12573
-                    retryIO {
-                        rocketChatClientFactory.get(currentServer)
-                            .deleteOwnAccount(password.gethash().toHex().toLowerCase())
+                currentServer?.let {
+                    withContext(Dispatchers.Default) {
+                        // REMARK: Backend API is only working with a lowercase hash.
+                        // https://github.com/RocketChat/Rocket.Chat/issues/12573
+                        retryIO {
+                            rocketChatClientFactory.get(it)
+                                .deleteOwnAccount(password.gethash().toHex().toLowerCase())
+                        }
+                        setupConnectionInfo(it)
+                        logout()
                     }
-                    setupConnectionInfo(currentServer)
-                    logout(null)
                 }
             } catch (exception: Exception) {
                 exception.message?.let {
@@ -142,12 +142,38 @@ class SettingsPresenter @Inject constructor(
 
     fun toProfile() = navigator.toProfile()
 
-    fun toAdmin() = tokenRepository.get(currentServer)?.let {
-        navigator.toAdminPanel(currentServer.adminPanelUrl(), it.authToken)
+    fun toAdmin() = currentServer?.let { currentServer ->
+        tokenRepository.get(currentServer)?.let {
+            navigator.toAdminPanel(currentServer.adminPanelUrl(), it.authToken)
+        }
     }
 
     fun toLicense(licenseUrl: String, licenseTitle: String) =
         navigator.toLicense(licenseUrl, licenseTitle)
+
+    fun shareViaApp(context: Context?) {
+        launchUI(strategy) {
+            val user = userHelper.user()
+
+            val deepLinkCallback = { returnedString: String? ->
+                val link = returnedString ?: context?.getString(R.string.play_store_link)
+                with(Intent(Intent.ACTION_SEND)) {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_SUBJECT, context?.getString(R.string.msg_check_this_out))
+                    putExtra(Intent.EXTRA_TEXT, link)
+                    context?.startActivity(
+                        Intent.createChooser(
+                            this,
+                            context.getString(R.string.msg_share_using)
+                        )
+                    )
+                }
+            }
+            currentServer?.let {
+                dynamicLinksManager.createDynamicLink(user?.username, it, deepLinkCallback)
+            }
+        }
+    }
 
     fun recreateActivity() = navigator.recreateActivity()
 }

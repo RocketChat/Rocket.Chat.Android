@@ -12,11 +12,32 @@
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/text_invite_users"
+        app:layout_constraintBottom_toTopOf="@+id/button_invite_user"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_goneMarginBottom="0dp" />
+
+    <android.widget.Button
+        android:id="@+id/button_invite_user"
+        style="?borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_margin="@dimen/screen_edge_left_and_right_margins"
+        android:background="@color/colorAccent"
+        android:drawableStart="@drawable/ic_add_white_24dp"
+        android:foreground="?selectableItemBackground"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/msg_invite_users"
+        android:textColor="@color/color_white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"
@@ -26,39 +47,9 @@
         android:layout_gravity="center"
         app:indicatorColor="@color/colorBlack"
         app:indicatorName="BallPulseIndicator"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button_invite_user"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <FrameLayout
-        android:id="@+id/text_invite_users"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="#1d74f5"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:backgroundTint="#1d74f5"
-            android:drawableStart="@drawable/ic_add_white_24dp"
-            android:drawablePadding="4dp"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/action_invite_users"
-            android:textAllCaps="true"
-            android:textColor="@color/color_white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -50,12 +50,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_directory" />
 
+    <TextView
+        android:id="@+id/text_connection_status"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:alpha="0"
+        android:background="#54585E"
+        android:gravity="center"
+        android:textColor="#CBCED1"
+        android:textSize="14sp"
+        android:textStyle="normal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_sort_by"
+        tools:alpha="1"
+        tools:text="connected"
+        tools:visibility="visible" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_sort_by" />
+        app:layout_constraintTop_toBottomOf="@+id/text_connection_status" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"

@@ -1,5 +1,6 @@
 package chat.rocket.android.main.presentation
 
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.core.behaviours.AppLanguageView
 import chat.rocket.android.push.GroupedPush
 import chat.rocket.android.server.domain.GetCurrentLanguageInteractor
@@ -10,7 +11,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class MainPresenter @Inject constructor(
-    @Named("currentServer") private val currentServerUrl: String,
+    @Named("currentServer") private val currentServer: String?,
     private val mainNavigator: MainNavigator,
     private val appLanguageView: AppLanguageView,
     private val refreshSettingsInteractor: RefreshSettingsInteractor,
@@ -19,23 +20,22 @@ class MainPresenter @Inject constructor(
     private var getLanguageInteractor: GetCurrentLanguageInteractor,
     private val groupedPush: GroupedPush
 ) {
-
-    fun connect() {
-        refreshSettingsInteractor.refreshAsync(currentServerUrl)
-        refreshPermissionsInteractor.refreshAsync(currentServerUrl)
-        connectionManagerFactory.create(currentServerUrl).connect()
+    fun connect() = currentServer?.let {
+        refreshSettingsInteractor.refreshAsync(it)
+        refreshPermissionsInteractor.refreshAsync(it)
+        connectionManagerFactory.create(it)?.connect()
     }
 
     fun clearNotificationsForChatRoom(chatRoomId: String?) {
         if (chatRoomId == null) return
 
-        groupedPush.hostToPushMessageList[currentServerUrl].let { list ->
+        groupedPush.hostToPushMessageList[currentServer].let { list ->
             list?.removeAll { it.info.roomId == chatRoomId }
         }
     }
 
-    fun showChatList(chatRoomId: String? = null) = mainNavigator.toChatList(chatRoomId)
-
+    fun showChatList(chatRoomId: String? = null, deepLinkInfo: DeepLinkInfo? = null) =
+        mainNavigator.toChatList(chatRoomId, deepLinkInfo)
 
     fun getAppLanguage() {
         with(getLanguageInteractor) {

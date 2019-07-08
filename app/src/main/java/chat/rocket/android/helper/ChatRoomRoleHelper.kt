@@ -2,7 +2,6 @@ package chat.rocket.android.helper
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
-import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
@@ -12,16 +11,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Named
 
 class ChatRoomRoleHelper @Inject constructor(
     private val dbManager: DatabaseManager,
     private val strategy: CancelStrategy,
-    serverInteractor: CurrentServerRepository,
+    @Named("currentServer") private val currentServer: String?,
     factory: ConnectionManagerFactory
 ) {
-    private var currentServer = serverInteractor.get()!!
-    private val manager = factory.create(currentServer)
-    private val client = manager.client
+    private val manager = currentServer?.let { factory.create(it) }
+    private val client = manager?.client
 
     suspend fun getChatRoles(chatRoomId: String): List<ChatRoomRole> {
         val (chatRoomType, chatRoomName) = getChatRoomDetails(chatRoomId)
@@ -29,10 +28,10 @@ class ChatRoomRoleHelper @Inject constructor(
         return try {
             if (roomTypeOf(chatRoomType) !is RoomType.DirectMessage) {
                 withContext(Dispatchers.IO + strategy.jobs) {
-                    client.chatRoomRoles(
+                    client?.chatRoomRoles(
                         roomType = roomTypeOf(chatRoomType),
                         roomName = chatRoomName
-                    )
+                    ) ?: emptyList()
                 }
             } else {
                 emptyList()

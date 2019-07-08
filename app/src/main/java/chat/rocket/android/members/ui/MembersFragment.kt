@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
@@ -37,10 +37,8 @@ internal const val TAG_MEMBERS_FRAGMENT = "MembersFragment"
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 
 class MembersFragment : Fragment(), MembersView {
-    @Inject
-    lateinit var presenter: MembersPresenter
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
+    @Inject lateinit var presenter: MembersPresenter
+    @Inject lateinit var analyticsManager: AnalyticsManager
     private val adapter: MembersAdapter =
         MembersAdapter { memberUiModel -> presenter.toMemberDetails(memberUiModel, chatRoomId) }
     private lateinit var chatRoomId: String
@@ -52,7 +50,8 @@ class MembersFragment : Fragment(), MembersView {
 
         arguments?.run {
             chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")
-        } ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
+        }
+            ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
 
     override fun onCreateView(
@@ -64,32 +63,39 @@ class MembersFragment : Fragment(), MembersView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
-        setupRecyclerView()
         setupListeners()
-        presenter.checkInviteUserPermission(chatRoomId)
-        presenter.loadChatRoomsMembers(chatRoomId, clearDataset = true)
+        with(presenter) {
+            loadChatRoomsMembers(chatRoomId)
+            checkInviteUserPermission(chatRoomId)
+        }
 
         analyticsManager.logScreenView(ScreenViewEvent.Members)
     }
 
-    override fun onDestroyView() {
-        recycler_view.removeOnScrollListener(endlessRecyclerViewScrollListener)
-        super.onDestroyView()
-    }
-
-    override fun showMembers(dataSet: List<MemberUiModel>, total: Long, clearDataset: Boolean) {
+    override fun showMembers(dataSet: List<MemberUiModel>, total: Long) {
         ui {
+            if (recycler_view.adapter == null) {
+                recycler_view.adapter = adapter
+
+                val linearLayoutManager = LinearLayoutManager(context)
+                recycler_view.layoutManager = linearLayoutManager
+                recycler_view.itemAnimator = DefaultItemAnimator()
+                if (dataSet.size >= 30) {
+                    recycler_view.addOnScrollListener(object :
+                        EndlessRecyclerViewScrollListener(linearLayoutManager) {
+                        override fun onLoadMore(
+                            page: Int,
+                            totalItemsCount: Int,
+                            recyclerView: RecyclerView
+                        ) {
+                            presenter.loadChatRoomsMembers(chatRoomId)
+                        }
+
+                    })
+                }
+            }
             setupToolbar(total)
-
-            if (clearDataset) {
-                adapter.clearData()
-            }
-
-            if (adapter.itemCount == 0) {
-                adapter.prependData(dataSet)
-            } else {
-                adapter.appendData(dataSet)
-            }
+            adapter.appendData(dataSet)
         }
     }
 
@@ -110,39 +116,14 @@ class MembersFragment : Fragment(), MembersView {
     }
 
     override fun showInviteUsersButton() {
-        ui { text_invite_users.isVisible = true }
+        ui { button_invite_user.isVisible = true }
     }
 
     override fun hideInviteUserButton() {
-        ui { text_invite_users.isVisible = false }
+        ui { button_invite_user.isVisible = false }
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
-
-    private fun setupRecyclerView() {
-        ui {
-            val linearLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            recycler_view.layoutManager = linearLayoutManager
-            recycler_view.addItemDecoration(
-                DividerItemDecoration(
-                    it,
-                    DividerItemDecoration.HORIZONTAL
-                )
-            )
-            endlessRecyclerViewScrollListener =
-                object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
-                    override fun onLoadMore(
-                        page: Int,
-                        totalItemsCount: Int,
-                        recyclerView: RecyclerView
-                    ) {
-                        presenter.loadChatRoomsMembers(chatRoomId, page * 60L)
-                    }
-                }
-            recycler_view.adapter = adapter
-            recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
-        }
-    }
 
     private fun setupToolbar(totalMembers: Long? = null) {
         with((activity as ChatRoomActivity)) {
@@ -157,6 +138,6 @@ class MembersFragment : Fragment(), MembersView {
     }
 
     private fun setupListeners() {
-        text_invite_users.setOnClickListener { presenter.toInviteUsers(chatRoomId) }
+        button_invite_user.setOnClickListener { presenter.toInviteUsers(chatRoomId) }
     }
 }

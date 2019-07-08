@@ -30,22 +30,25 @@ import chat.rocket.core.internal.rest.setAvatar
 import chat.rocket.core.internal.rest.updateProfile
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Named
 
 class ProfilePresenter @Inject constructor(
     private val view: ProfileView,
     private val strategy: CancelStrategy,
+    private val navigator: MainNavigator,
     private val uriInteractor: UriInteractor,
     val userHelper: UserHelper,
-    navigator: MainNavigator,
+    @Named("currentServer") private val currentServer: String?,
     serverInteractor: GetCurrentServerInteractor,
     factory: RocketChatClientFactory,
     removeAccountInteractor: RemoveAccountInteractor,
     tokenRepository: TokenRepository,
-    dbManagerFactory: DatabaseManagerFactory,
+    dbManagerFactory: DatabaseManagerFactory?,
     managerFactory: ConnectionManagerFactory
 ) : CheckServerPresenter(
     strategy = strategy,
     factory = factory,
+    currentSavedServer = currentServer,
     serverInteractor = serverInteractor,
     removeAccountInteractor = removeAccountInteractor,
     tokenRepository = tokenRepository,
@@ -225,5 +228,9 @@ class ProfilePresenter @Inject constructor(
                 }
             }
         }
+    }
+
+    fun toProfileImage() = user?.username?.let { username ->
+        navigator.toProfileImage(serverUrl.avatarUrl(username, token?.userId, token?.authToken))
     }
 }

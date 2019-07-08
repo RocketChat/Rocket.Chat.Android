@@ -2,12 +2,14 @@ package chat.rocket.android.main.presentation
 
 import android.content.Intent
 import chat.rocket.android.R
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.ui.newServerIntent
 import chat.rocket.android.chatroom.ui.chatRoomIntent
 import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
 import chat.rocket.android.createchannel.ui.TAG_CREATE_CHANNEL_FRAGMENT
 import chat.rocket.android.directory.ui.TAG_DIRECTORY_FRAGMENT
 import chat.rocket.android.main.ui.MainActivity
+import chat.rocket.android.profile.ui.TAG_IMAGE_DIALOG_FRAGMENT
 import chat.rocket.android.profile.ui.TAG_PROFILE_FRAGMENT
 import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.settings.ui.TAG_SETTINGS_FRAGMENT
@@ -18,9 +20,9 @@ import chat.rocket.android.webview.ui.webViewIntent
 
 class MainNavigator(internal val activity: MainActivity) {
 
-    fun toChatList(chatRoomId: String? = null) {
+    fun toChatList(chatRoomId: String? = null, deepLinkInfo: DeepLinkInfo? = null) {
         activity.addFragment(TAG_CHAT_ROOMS_FRAGMENT, R.id.fragment_container) {
-            chat.rocket.android.chatrooms.ui.newInstance(chatRoomId)
+            chat.rocket.android.chatrooms.ui.newInstance(chatRoomId, deepLinkInfo)
         }
     }
 
@@ -45,6 +47,12 @@ class MainNavigator(internal val activity: MainActivity) {
     fun toProfile() {
         activity.addFragmentBackStack(TAG_PROFILE_FRAGMENT, R.id.fragment_container) {
             chat.rocket.android.profile.ui.newInstance()
+        }
+    }
+
+    fun toProfileImage(avatarUrl: String) {
+        activity.addFragmentBackStack(TAG_IMAGE_DIALOG_FRAGMENT, R.id.fragment_container) {
+            chat.rocket.android.profile.ui.newInstance(avatarUrl)
         }
     }
 

@@ -42,10 +42,8 @@ private const val BUNDLE_USER_ID = "user_id"
 private const val BUNDLE_USER_CHATROOM_ID = "user_chatroom_id"
 
 class UserDetailsFragment : Fragment(), UserDetailsView {
-    @Inject
-    lateinit var presenter: UserDetailsPresenter
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
+    @Inject lateinit var presenter: UserDetailsPresenter
+    @Inject lateinit var analyticsManager: AnalyticsManager
     private lateinit var userId: String
     private lateinit var chatRoomId: String
     private val handler = Handler()
@@ -122,24 +120,25 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
     }
 
     override fun showRemoveUserButton() {
-        layout_remove_user?.isVisible = true
+        button_remove_user?.isVisible = true
     }
 
     override fun hideRemoveUserButton() {
-        layout_remove_user?.isVisible = false
+        button_remove_user?.isVisible = false
     }
 
     override fun showUserRemovedMessage() {
-        showMessage(R.string.msg_removed_user_successfully)
         activity?.onBackPressed()
+        showMessage(R.string.msg_user_removed_successfully)
     }
 
     override fun showLoading() {
-        view_loading.isVisible = true
+        view_loading?.isVisible = true
     }
 
     override fun hideLoading() {
-        view_loading.isVisible = false
+        view_loading?.isVisible = false
+        group_user_details?.isVisible = true
     }
 
     override fun showMessage(resId: Int) {
@@ -168,6 +167,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
     private fun setupListeners() {
         image_arrow_back.setOnClickListener { activity?.onBackPressed() }
-        layout_remove_user.setOnClickListener { presenter.removeUser(userId, chatRoomId) }
+        image_avatar.setOnClickListener { with(presenter) { toProfileImage(getImageUri()) } }
+        button_remove_user.setOnClickListener { presenter.removeUser(userId, chatRoomId) }
     }
 }
