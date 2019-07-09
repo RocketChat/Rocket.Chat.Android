@@ -212,7 +212,7 @@ workflows:
                 - develop
                 - develop-2.x
                 - master
-      - ui-tests:
+      - ui-tests
       - build-play-apk:
           requires:
             - build-kotlin-sdk
