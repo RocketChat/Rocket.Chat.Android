@@ -74,7 +74,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var isGroupByFavorites = false
 
     private val handler = Handler()
-    private val dismissConnectionState = { text_connection_status.fadeOut() }
+    private val dismissConnectionState by lazy { text_connection_status.fadeOut() }
     private var lastConnectionState: State? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -230,10 +230,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         ui {
             if (state != lastConnectionState) {
                 text_connection_status.fadeIn()
-                handler.removeCallbacks(dismissConnectionState)
+                handler.removeCallbacks { dismissConnectionState }
                 text_connection_status.text = when (state) {
                     is State.Connected -> {
-                        handler.postDelayed(dismissConnectionState, 2000)
+                        handler.postDelayed({ dismissConnectionState }, 2000)
                         getString(R.string.status_connected)
                     }
                     is State.Disconnected -> getString(R.string.status_disconnected)
