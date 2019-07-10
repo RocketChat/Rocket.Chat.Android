@@ -181,8 +181,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private var playComposeMessageButtonsAnimation = true
 
     internal var isSearchTermQueried = false
-
-    private val dismissStatus = { text_connection_status.fadeOut() }
+    private val dismissConnectionState by lazy { text_connection_status.fadeOut() }
 
     // For reveal and unreveal anim.
     private val hypotenuse by lazy {
@@ -774,10 +773,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showConnectionState(state: State) {
         ui {
             text_connection_status.fadeIn()
-            handler.removeCallbacks(dismissStatus)
+            handler.removeCallbacks { dismissConnectionState }
             text_connection_status.text = when (state) {
                 is State.Connected -> {
-                    handler.postDelayed(dismissStatus, 2000)
+                    handler.postDelayed({ dismissConnectionState }, 2000)
                     getString(R.string.status_connected)
                 }
                 is State.Disconnected -> getString(R.string.status_disconnected)
