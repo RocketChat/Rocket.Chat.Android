@@ -34,10 +34,10 @@ class MembersFragmentTest {
     @Before
     fun setUp() {
         try {
-            login_if_user_is_logged_out()
-            navigate_to_channel_details()
+            loginIfUserIsLoggedOut()
+            navigateToChannelDetails()
         } catch (e: NoMatchingViewException) {
-            navigate_to_channel_details()
+            navigateToChannelDetails()
         }
     }
 
@@ -49,7 +49,7 @@ class MembersFragmentTest {
     }
 
 
-    private fun login_if_user_is_logged_out(){
+    private fun loginIfUserIsLoggedOut(){
         rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
             chat.rocket.android.authentication.login.ui.newInstance(serverUrl)
         }
@@ -62,7 +62,7 @@ class MembersFragmentTest {
         Thread.sleep(12000)
     }
 
-    private fun navigate_to_channel_details() {
+    private fun navigateToChannelDetails() {
         Thread.sleep(5000)
         onView(withId(R.id.recycler_view))
             .perform(

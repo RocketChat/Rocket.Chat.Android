@@ -28,13 +28,7 @@ class CreateChannelFragmentTest {
     @Before
     fun setUp() {
         try {
-            rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
-                chat.rocket.android.authentication.login.ui.newInstance(serverUrl)
-            }
-            onView(withId(R.id.text_username_or_email)).perform(typeText(USERNAME), closeSoftKeyboard())
-            onView(withId(R.id.text_password)).perform(typeText(PASSWORD), closeSoftKeyboard())
-            onView(withId(R.id.button_log_in)).perform(click())
-            Thread.sleep(12000)
+            loginIfUserIsLoggedOut()
             onView(withId(R.id.action_new_channel)).perform(click())
         } catch (e: NoMatchingViewException) {
             onView(withId(R.id.action_new_channel)).perform(click())
@@ -73,5 +67,17 @@ class CreateChannelFragmentTest {
         onView(withId(R.id.switch_channel_type)).perform(click())
         onView(withId(R.id.text_channel_type_description)).check(matches(withText(R.string.msg_private_channel_description)))
         onView(withId(R.id.switch_channel_type)).perform(click())
+    }
+
+    private fun loginIfUserIsLoggedOut() {
+        rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
+            chat.rocket.android.authentication.login.ui.newInstance(serverUrl)
+        }
+        onView(withId(R.id.text_username_or_email)).perform(
+            typeText(USERNAME), closeSoftKeyboard()
+        )
+        onView(withId(R.id.text_password)).perform(typeText(PASSWORD), closeSoftKeyboard())
+        onView(withId(R.id.button_log_in)).perform(click())
+        Thread.sleep(12000)
     }
 }
