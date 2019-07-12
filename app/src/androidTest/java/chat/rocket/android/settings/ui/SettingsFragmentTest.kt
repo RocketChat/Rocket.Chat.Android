@@ -15,16 +15,13 @@ import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import org.junit.Before
-import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runners.MethodSorters
 import testConfig.Config.Companion.APP_VERSION
 import testConfig.Config.Companion.PASSWORD
 import testConfig.Config.Companion.USERNAME
 import testConfig.Config.Companion.serverUrl
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class SettingsFragmentTest {
 
     @JvmField
@@ -65,33 +62,38 @@ class SettingsFragmentTest {
     fun check_review_the_app() {
         onView(withId(R.id.text_review_this_app)).perform(click())
         val mDevice: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        Thread.sleep(6000)
+        Thread.sleep(15000)
         val titleLabel: UiObject = mDevice.findObject(UiSelector().text("Rocket.Chat"))
         if (!titleLabel.exists()) {
             throw RuntimeException("wrong title!")
         }
+        mDevice.pressBack()
+        mDevice.pressBack()
     }
 
     @Test
     fun check_contact_us_button() {
         onView(withId(R.id.text_contact_us)).perform(click())
         val mDevice: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        Thread.sleep(15000)
+        Thread.sleep(20000)
         val titleLabel: UiObject = mDevice.findObject(UiSelector().text("Android app support"))
         if (!titleLabel.exists()) {
             throw RuntimeException("wrong title!")
         }
+        mDevice.pressBack()
+        mDevice.pressBack()
     }
 
     @Test
     fun check_share_the_app() {
         onView(withId(R.id.text_share_this_app)).perform(click())
         val mDevice: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        Thread.sleep(6000)
+        Thread.sleep(5000)
         val titleLabel: UiObject = mDevice.findObject(UiSelector().text("Share using"))
         if (!titleLabel.exists()) {
             throw RuntimeException("wrong title!")
         }
+        mDevice.pressBack()
     }
 
     @Test
@@ -113,7 +115,7 @@ class SettingsFragmentTest {
         onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click())
         Thread.sleep(3000)
         onView(withText("Sprache")).check(matches(isDisplayed())).perform(click())
-        onView(withText("Deutsch")).perform(swipeDown()).perform(swipeDown()).perform(swipeDown())
+        onView(withText("Deutsch")).perform(swipeDown()).perform(swipeDown()).perform(swipeDown()).perform(swipeDown())
         onView(withText("Englisch")).check(matches(isDisplayed())).perform(click())
     }
 
