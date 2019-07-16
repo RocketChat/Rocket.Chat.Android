@@ -71,7 +71,7 @@ class CreateChannelFragmentTest {
 
     private fun loginIfUserIsLoggedOut() {
         rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
-            chat.rocket.android.authentication.login.ui.newInstance(serverUrl)
+            chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
         }
         onView(withId(R.id.text_username_or_email)).perform(
             typeText(USERNAME), closeSoftKeyboard()

@@ -11,7 +11,9 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.util.extensions.addFragmentBackStack
-import org.junit.*
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import testConfig.Config.Companion.AWAY
 import testConfig.Config.Companion.BUSY
 import testConfig.Config.Companion.CHANGE_STATUS
@@ -103,7 +105,7 @@ class ProfileFragmentTest {
 
     private fun loginIfUserIsLoggedOut() {
         rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
-            chat.rocket.android.authentication.login.ui.newInstance(serverUrl)
+            chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
         }
         onView(withId(R.id.text_username_or_email)).perform(
             typeText(USERNAME), closeSoftKeyboard()

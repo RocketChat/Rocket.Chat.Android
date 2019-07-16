@@ -24,9 +24,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import testConfig.Config.Companion.PASSWORD
+import testConfig.Config.Companion.SERVER_URL
 import testConfig.Config.Companion.USERNAME
-import testConfig.Config.Companion.serverUrl
-
 
 class SettingsFragmentIntentTest {
 
@@ -77,7 +76,7 @@ class SettingsFragmentIntentTest {
 
     private fun loginIfUserIsLoggedOut() {
         rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
-            chat.rocket.android.authentication.login.ui.newInstance(serverUrl)
+            chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
         }
         onView(withId(R.id.text_username_or_email)).perform(
             typeText(USERNAME), closeSoftKeyboard()
