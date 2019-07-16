@@ -41,7 +41,7 @@ class SettingsFragmentTest {
     }
 
     @Test
-    fun check_UI_element() {
+    fun check_UI_elements() {
         onView(withId(R.id.text_display_name)).check(matches(isDisplayed()))
         onView(withId(R.id.text_status)).check(matches(isDisplayed()))
         onView(withId(R.id.image_avatar)).check(matches(isDisplayed()))
@@ -56,32 +56,6 @@ class SettingsFragmentTest {
         onView(withId(R.id.text_send_crash_report_description)).check(matches(isDisplayed()))
         onView(withId(R.id.text_logout)).check(matches(isDisplayed()))
         onView(withId(R.id.text_delete_account)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun check_review_the_app() {
-        onView(withId(R.id.text_review_this_app)).perform(click())
-        val mDevice: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        Thread.sleep(15000)
-        val titleLabel: UiObject = mDevice.findObject(UiSelector().text("Rocket.Chat"))
-        if (!titleLabel.exists()) {
-            throw RuntimeException("wrong title!")
-        }
-        mDevice.pressBack()
-        mDevice.pressBack()
-    }
-
-    @Test
-    fun check_contact_us_button() {
-        onView(withId(R.id.text_contact_us)).perform(click())
-        val mDevice: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        Thread.sleep(20000)
-        val titleLabel: UiObject = mDevice.findObject(UiSelector().text("Android app support"))
-        if (!titleLabel.exists()) {
-            throw RuntimeException("wrong title!")
-        }
-        mDevice.pressBack()
-        mDevice.pressBack()
     }
 
     @Test
@@ -108,7 +82,7 @@ class SettingsFragmentTest {
     }
 
     @Test
-    fun check_change_language_to_german_then_reset_to_english() {
+    fun change_language_to_german_then_reset_to_english() {
         onView(withId(R.id.text_language)).perform(click())
         onView(withText("German")).perform(click())
         Thread.sleep(2000)
