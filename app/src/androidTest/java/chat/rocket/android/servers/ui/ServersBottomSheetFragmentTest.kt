@@ -1,29 +1,28 @@
-package chat.rocket.android.members.ui
+package chat.rocket.android.servers.ui
 
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.matchers.RecyclerViewItemCountAssertion.Companion.withItemCount
+import chat.rocket.android.matchers.RecyclerViewItemCountAssertion
 import chat.rocket.android.util.extensions.addFragmentBackStack
-import org.hamcrest.Matchers.greaterThan
+import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import testConfig.Config.Companion.MEMBERS
+import testConfig.Config.Companion.ORG_NAME
 import testConfig.Config.Companion.PASSWORD
 import testConfig.Config.Companion.SERVER_URL
 import testConfig.Config.Companion.USERNAME
 
-
-class MembersFragmentTest {
+class ServersBottomSheetFragmentTest {
 
     @JvmField
     var activityRule = ActivityTestRule(AuthenticationActivity::class.java, true, true)
@@ -34,21 +33,14 @@ class MembersFragmentTest {
     @Before
     fun setUp() {
         try {
-            login_if_user_is_logged_out()
-            navigate_to_channel_details()
+            loginIfUserIsLoggedOut()
+            onView(withText(ORG_NAME)).perform(click())
         } catch (e: NoMatchingViewException) {
-            navigate_to_channel_details()
+            onView(withText(ORG_NAME)).perform(click())
         }
     }
 
-    @Test
-    fun members_should_be_greater_than_zero(){
-        onView(withText(MEMBERS)).perform(click())
-        Thread.sleep(6000)
-        onView(withId(R.id.recycler_view)).check(withItemCount(greaterThan(0)))
-    }
-
-    private fun login_if_user_is_logged_out(){
+    private fun loginIfUserIsLoggedOut(){
         rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
             chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
         }
@@ -61,15 +53,19 @@ class MembersFragmentTest {
         Thread.sleep(12000)
     }
 
-    private fun navigate_to_channel_details() {
-        Thread.sleep(5000)
-        onView(withId(R.id.recycler_view))
-            .perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0, click()
-                )
+    @Test
+    fun check_UI_elements() {
+        onView(withId(R.id.text_server)).check(matches(withText("Server")))
+        onView(withId(R.id.view_divider)).check(matches(isDisplayed()))
+        onView(withId(R.id.recycler_view)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun no_of_available_server_should_be_greater_than_zero() {
+        onView(withId(R.id.recycler_view)).check(
+            RecyclerViewItemCountAssertion.withItemCount(
+                Matchers.greaterThan(0)
             )
-        Thread.sleep(2000)
-        onView(withId(R.id.text_toolbar_title)).perform(click())
+        )
     }
 }

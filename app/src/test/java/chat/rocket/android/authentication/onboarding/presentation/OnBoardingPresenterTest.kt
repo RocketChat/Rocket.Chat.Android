@@ -38,13 +38,13 @@ class OnBoardingPresenterTest {
     }
 
     @Test
-    fun check_navigate_to_signIn_to_server() {
+    fun `navigate to sign in to your server`() {
         onBoardingPresenter.toSignInToYourServer()
         verify(navigator).toSignInToYourServer()
     }
 
     @Test
-    fun check_navigate_to_create_server() {
+    fun `navigate to web page if new server is created`() {
         onBoardingPresenter.toCreateANewServer(communityServerUrl)
         verify(navigator).toWebPage(communityServerUrl)
     }

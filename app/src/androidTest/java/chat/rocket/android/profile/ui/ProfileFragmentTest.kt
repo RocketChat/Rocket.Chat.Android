@@ -20,8 +20,8 @@ import testConfig.Config.Companion.INVISIBLE
 import testConfig.Config.Companion.NAME
 import testConfig.Config.Companion.ONLINE
 import testConfig.Config.Companion.PASSWORD
+import testConfig.Config.Companion.SERVER_URL
 import testConfig.Config.Companion.USERNAME
-import testConfig.Config.Companion.serverUrl
 
 @LargeTest
 class ProfileFragmentTest {
@@ -36,7 +36,7 @@ class ProfileFragmentTest {
     fun setUp() {
         try {
             rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
-                chat.rocket.android.authentication.login.ui.newInstance(serverUrl)
+                chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
             }
             onView(withId(R.id.text_username_or_email)).perform(
                 typeText(USERNAME),
