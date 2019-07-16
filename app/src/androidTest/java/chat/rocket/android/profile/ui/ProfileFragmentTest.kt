@@ -20,8 +20,8 @@ import testConfig.Config.Companion.INVISIBLE
 import testConfig.Config.Companion.NAME
 import testConfig.Config.Companion.ONLINE
 import testConfig.Config.Companion.PASSWORD
+import testConfig.Config.Companion.SERVER_URL
 import testConfig.Config.Companion.USERNAME
-import testConfig.Config.Companion.serverUrl
 
 @LargeTest
 class ProfileFragmentTest {

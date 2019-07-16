@@ -4,8 +4,9 @@ import chat.rocket.android.BuildConfig
 
 class Config {
     companion object {
+        const val ORG_NAME: String = "Rocket.Chat"
         const val SERVER: String = "open.rocket.chat"
-        const val serverUrl: String = "serverUrl"
+        const val SERVER_URL: String = "serverUrl"
 
         //Organisation using RC forks should create a user with below details before running tests
         const val USERNAME: String = "user121"
@@ -41,7 +42,7 @@ class Config {
         const val VERSION_NAME: String = BuildConfig.VERSION_NAME
         const val VERSION_CODE: Int = BuildConfig.VERSION_CODE
         const val APP_VERSION: String = "Version: $VERSION_NAME ($VERSION_CODE)"
-
-
+        const val FAVORITE_MESSAGES: String = "Favorite Messages"
+        const val MENTIONS: String = "Mentions"
     }
 }

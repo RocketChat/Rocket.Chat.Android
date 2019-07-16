@@ -42,13 +42,13 @@ class LoginOptionsPresenterTest {
     }
 
     @Test
-    fun check_create_account() {
+    fun `navigate to create account`() {
         loginOptionsPresenter.toCreateAccount()
         verify(navigator).toCreateAccount()
     }
 
     @Test
-    fun check_login_with_email() {
+    fun `navigate to login with email`() {
         loginOptionsPresenter.toLoginWithEmail()
         verify(navigator).toLogin(currentServer)
     }

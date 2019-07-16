@@ -42,13 +42,13 @@ class LoginPresenterTest {
     }
 
     @Test
-    fun testAttach() {
+    fun `view should not be null`() {
         loginPresenter.setupView()
         assertNotNull(view)
     }
 
     @Test
-    fun checkTestToken() {
+    fun `save token to repository`() {
         saveToken(token)
         verify(tokenRepository).save(currentServer, token)
     }
