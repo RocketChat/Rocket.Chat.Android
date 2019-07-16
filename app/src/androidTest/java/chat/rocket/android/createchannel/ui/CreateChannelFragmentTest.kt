@@ -14,8 +14,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import testConfig.Config.Companion.PASSWORD
+import testConfig.Config.Companion.SERVER_URL
 import testConfig.Config.Companion.USERNAME
-import testConfig.Config.Companion.serverUrl
 
 
 class CreateChannelFragmentTest {

@@ -1,10 +1,8 @@
-package chat.rocket.android.members.ui
+package chat.rocket.android.mentions.ui
 
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.rule.ActivityTestRule
@@ -14,16 +12,17 @@ import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.matchers.RecyclerViewItemCountAssertion.Companion.withItemCount
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import org.hamcrest.Matchers.greaterThan
+import org.hamcrest.Matchers.equalTo
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import testConfig.Config.Companion.MEMBERS
+import testConfig.Config.Companion.MENTIONS
 import testConfig.Config.Companion.PASSWORD
 import testConfig.Config.Companion.SERVER_URL
 import testConfig.Config.Companion.USERNAME
 
 
-class MembersFragmentTest {
+class MentionsFragmentTest {
 
     @JvmField
     var activityRule = ActivityTestRule(AuthenticationActivity::class.java, true, true)
@@ -35,17 +34,24 @@ class MembersFragmentTest {
     fun setUp() {
         try {
             loginIfUserIsLoggedOut()
-            navigateToChannelDetails()
         } catch (e: NoMatchingViewException) {
-            navigateToChannelDetails()
         }
     }
 
     @Test
-    fun members_should_be_greater_than_zero(){
-        onView(withText(MEMBERS)).perform(click())
+    fun mentions_should_be_greater_than_zero(){
+        navigateToSandboxChannelDetails()
+        onView(withText(MENTIONS)).perform(click())
         Thread.sleep(6000)
         onView(withId(R.id.recycler_view)).check(withItemCount(greaterThan(0)))
+    }
+
+    @Test
+    fun mentions_should_be_zero(){
+        navigateToGeneralChannelDetails()
+        onView(withText(MENTIONS)).perform(click())
+        Thread.sleep(6000)
+        onView(withId(R.id.recycler_view)).check(withItemCount(equalTo(0)))
     }
 
     private fun loginIfUserIsLoggedOut(){
@@ -61,14 +67,16 @@ class MembersFragmentTest {
         Thread.sleep(12000)
     }
 
-    private fun navigateToChannelDetails() {
-        Thread.sleep(5000)
-        onView(withId(R.id.recycler_view))
-            .perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0, click()
-                )
-            )
+    private fun navigateToSandboxChannelDetails() {
+        Thread.sleep(3000)
+        onView(withText("sandbox")).perform(click())
+        Thread.sleep(2000)
+        onView(withId(R.id.text_toolbar_title)).perform(click())
+    }
+
+    private fun navigateToGeneralChannelDetails() {
+        Thread.sleep(3000)
+        onView(withText("general")).perform(click())
         Thread.sleep(2000)
         onView(withId(R.id.text_toolbar_title)).perform(click())
     }

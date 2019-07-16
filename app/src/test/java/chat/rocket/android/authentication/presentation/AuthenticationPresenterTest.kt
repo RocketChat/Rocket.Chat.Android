@@ -17,6 +17,8 @@ import testConfig.Config.Companion.termsOfServiceUrl
 
 class AuthenticationPresenterTest {
 
+    private lateinit var authenticationPresenter: AuthenticationPresenter
+
     private val strategy = Mockito.mock(CancelStrategy::class.java)
     private val navigator = Mockito.mock(AuthenticationNavigator::class.java)
     private val tokenRepository = Mockito.mock(TokenRepository::class.java)
@@ -25,9 +27,6 @@ class AuthenticationPresenterTest {
     private val getCurrentServer = Mockito.mock(GetCurrentServerInteractor::class.java)
     private val getAccountInteractor = Mockito.mock(GetAccountInteractor::class.java)
     private val serverInteractor = Mockito.mock(GetConnectingServerInteractor::class.java)
-
-    private lateinit var authenticationPresenter: AuthenticationPresenter
-
 
     @Before
     fun setUp() {
@@ -40,19 +39,19 @@ class AuthenticationPresenterTest {
     }
 
     @Test
-    fun check_terms_of_service() {
+    fun `navigate to tos web page`() {
         authenticationPresenter.termsOfService(TERMS_OF_SERVICE)
         verify(navigator).toWebPage(termsOfServiceUrl, TERMS_OF_SERVICE)
     }
 
     @Test
-    fun check_privacy_policy() {
+    fun `navigate to privacy policy web page`() {
         authenticationPresenter.privacyPolicy(PRIVACY_POLICY)
         verify(navigator).toWebPage(privacyPolicyUrl, PRIVACY_POLICY)
     }
 
     @Test
-    fun check_navigator_to_chatlist() {
+    fun `navigate to chat list`() {
         authenticationPresenter.toChatList()
         verify(navigator).toChatList()
     }
