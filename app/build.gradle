@@ -37,11 +37,6 @@ android {
             sourceCompatibility JavaVersion.VERSION_1_8
             targetCompatibility JavaVersion.VERSION_1_8
         }
-
-        // For Jitsi
-        ndk {
-            abiFilters "armeabi-v7a", "x86"
-        }
     }
 
     signingConfigs {

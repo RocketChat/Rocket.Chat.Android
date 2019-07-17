@@ -3,12 +3,13 @@ package chat.rocket.android.videoconference.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import chat.rocket.android.videoconference.presenter.JitsiVideoConferenceView
 import chat.rocket.android.videoconference.presenter.VideoConferencePresenter
 import dagger.android.AndroidInjection
+import org.jitsi.meet.sdk.JitsiMeet
 import org.jitsi.meet.sdk.JitsiMeetActivity
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
-import org.jitsi.meet.sdk.JitsiMeetView
 import org.jitsi.meet.sdk.JitsiMeetViewListener
 import timber.log.Timber
 import java.net.URL
@@ -22,12 +23,11 @@ fun Context.videoConferenceIntent(chatRoomId: String, chatRoomType: String): Int
 private const val INTENT_CHAT_ROOM_ID = "chat_room_id"
 private const val INTENT_CHAT_ROOM_TYPE = "chat_room_type"
 
-class VideoConferenceActivity : JitsiMeetActivity(), JitsiVideoConferenceView,
+class VideoConferenceActivity : AppCompatActivity(), JitsiVideoConferenceView,
     JitsiMeetViewListener {
     @Inject lateinit var presenter: VideoConferencePresenter
     private lateinit var chatRoomId: String
     private lateinit var chatRoomType: String
-    private var view: JitsiMeetView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -36,12 +36,15 @@ class VideoConferenceActivity : JitsiMeetActivity(), JitsiVideoConferenceView,
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
         chatRoomType = intent.getStringExtra(INTENT_CHAT_ROOM_TYPE)
 
-        view = JitsiMeetView(this)
-        view?.listener = this
-        setContentView(view)
+        with(presenter) {
+            setup(chatRoomId, chatRoomType)
+            initVideoConference()
+        }
+    }
 
-        presenter.setup(chatRoomId, chatRoomType)
-        presenter.initVideoConference()
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishVideoConference()
     }
 
     override fun onConferenceWillJoin(map: MutableMap<String, Any>?) =
@@ -58,22 +61,26 @@ class VideoConferenceActivity : JitsiMeetActivity(), JitsiVideoConferenceView,
                 logJitsiMeetViewState("Terminated video conferencing", map)
             }
         }
-        finishJitsiVideoConference()
+        finishVideoConference()
     }
 
-    override fun startJitsiVideoConference(url: String, name: String?) {
-        JitsiMeetConferenceOptions.Builder()
-            .setAudioMuted(true)
-            .setVideoMuted(true)
-            .setServerURL(URL(url))
-            .setAudioOnly(false)
-            .build().let { view?.join(it) }
-    }
+    override fun setupVideoConference(serverURL: URL) =
+        JitsiMeet.setDefaultConferenceOptions(
+            JitsiMeetConferenceOptions.Builder()
+                .setServerURL(serverURL)
+                .setWelcomePageEnabled(false)
+                .build()
+        )
 
-    override fun finishJitsiVideoConference() {
+    override fun startVideoConference(room: String) =
+        JitsiMeetActivity.launch(
+            this, JitsiMeetConferenceOptions.Builder()
+                .setRoom(room)
+                .build()
+        )
+
+    override fun finishVideoConference() {
         presenter.invalidateTimer()
-        view?.dispose()
-        view = null
         finish()
     }
 
