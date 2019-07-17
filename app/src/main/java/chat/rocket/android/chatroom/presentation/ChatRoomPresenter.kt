@@ -1392,7 +1392,11 @@ class ChatRoomPresenter @Inject constructor(
     private suspend fun getTimeStampOfLastMessageInRoom(): Long {
         return withContext(Dispatchers.IO + strategy.jobs) {
             chatRoomId?.let {
-                dbManager.messageDao().getRecentMessagesByRoomId(it, 1).first().message.message.timestamp
+                dbManager
+                    .messageDao()
+                    .getRecentMessagesByRoomId(it, 1)
+                    .firstOrNull()
+                    ?.message?.message?.timestamp
             }
         } ?: 0
     }
