@@ -18,7 +18,7 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 2071
+        versionCode 2072
         versionName "3.5.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -36,11 +36,6 @@ android {
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
             targetCompatibility JavaVersion.VERSION_1_8
-        }
-
-        // For Jitsi
-        ndk {
-            abiFilters "armeabi-v7a", "x86"
         }
     }
 

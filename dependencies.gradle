@@ -53,7 +53,7 @@ ext {
             glide                 : '4.8.0',
             glideTransformations  : '4.0.0',
 
-            jitsi                 : '2.1.0',
+            jitsi                 : '2.2.2',
 
             // Proprietary libraries
             firebaseCloudMessage  : '19.0.1',

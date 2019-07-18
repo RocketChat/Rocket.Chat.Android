@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.net.URL
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.timer
@@ -32,7 +33,6 @@ class VideoConferencePresenter @Inject constructor(
     private val currentServerRepository: CurrentServerRepository,
     private val connectionManagerFactory: ConnectionManagerFactory,
     private val settings: GetSettingsInteractor,
-    private val userHelp: UserHelper,
     private val analyticsManager: AnalyticsManager
 ) {
     private var client: RocketChatClient? = null
@@ -54,15 +54,11 @@ class VideoConferencePresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 with(publicSettings) {
-                    view.startJitsiVideoConference(
-                        JitsiHelper.getJitsiUrl(
-                            isJitsiSSL(),
-                            jitsiDomain(),
-                            jitsiPrefix(),
-                            uniqueIdentifier(),
-                            chatRoomId
-                        ),
-                        userHelp.user()?.username
+                    view.setupVideoConference(
+                        URL(JitsiHelper.getJitsiServerUrl(isJitsiSSL(), jitsiDomain()))
+                    )
+                    view.startVideoConference(
+                        JitsiHelper.getJitsiRoom(jitsiPrefix(), uniqueIdentifier(), chatRoomId)
                     )
 
                     updateJitsiTimeout()
@@ -70,7 +66,7 @@ class VideoConferencePresenter @Inject constructor(
                 }
             } catch (ex: Exception) {
                 Timber.e(ex)
-                view.finishJitsiVideoConference()
+                view.finishVideoConference()
             }
         }
     }
