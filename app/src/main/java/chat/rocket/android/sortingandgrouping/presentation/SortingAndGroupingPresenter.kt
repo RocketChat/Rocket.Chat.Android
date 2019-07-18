@@ -7,17 +7,19 @@ import javax.inject.Named
 class SortingAndGroupingPresenter @Inject constructor(
     private val view: SortingAndGroupingView,
     private val sortingAndGroupingInteractor: SortingAndGroupingInteractor,
-    @Named("currentServer") private val currentServerUrl: String
+    @Named("currentServer") private val currentServerUrl: String?
 ) {
 
     fun getSortingAndGroupingPreferences() {
-        with(sortingAndGroupingInteractor) {
-            view.showSortingAndGroupingPreferences(
-                getSortByName(currentServerUrl),
-                getUnreadOnTop(currentServerUrl),
-                getGroupByType(currentServerUrl),
-                getGroupByFavorites(currentServerUrl)
-            )
+        currentServerUrl?.let {
+            with(sortingAndGroupingInteractor) {
+                view.showSortingAndGroupingPreferences(
+                    getSortByName(it),
+                    getUnreadOnTop(it),
+                    getGroupByType(it),
+                    getGroupByFavorites(it)
+                )
+            }
         }
     }
 
@@ -27,12 +29,14 @@ class SortingAndGroupingPresenter @Inject constructor(
         isGroupByType: Boolean,
         isGroupByFavorites: Boolean
     ) {
-        sortingAndGroupingInteractor.save(
-            currentServerUrl,
-            isSortByName,
-            isUnreadOnTop,
-            isGroupByType,
-            isGroupByFavorites
-        )
+        currentServerUrl?.let {
+            sortingAndGroupingInteractor.save(
+                it,
+                isSortByName,
+                isUnreadOnTop,
+                isGroupByType,
+                isGroupByFavorites
+            )
+        }
     }
 }

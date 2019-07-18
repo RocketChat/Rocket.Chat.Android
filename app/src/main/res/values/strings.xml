@@ -111,6 +111,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
 
     <!-- Regular information messages -->
     <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
+    <string name="msg_invalid_session" translatable="false">Your session is invalid. Please sign in again.</string> <!-- TODO Make translatable and add translations -->
     <string name="msg_no_data_to_display">No data to display</string>
     <string name="msg_check_this_out">Check this out</string>
     <string name="msg_share_using">Share using</string>
@@ -284,6 +285,13 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
 
     <!-- Members List -->
     <string name="title_members_list">Members</string>
+
+    <!-- Invite/Remove users -->
+    <string name="mgs_choose_at_least_one_user" translatable="false">Choose at least one user</string> <!-- TODO Make translatable and add translations -->
+    <string name="mgs_users_invited_successfully" translatable="false">Users invited successfully</string> <!-- TODO Make translatable and add translations -->
+    <string name="msg_user_removed_successfully" translatable="false">User removed successfully</string> <!-- TODO Make translatable and add translations -->
+    <string name="msg_invite_users" translatable="false">Invite Users</string> <!-- TODO Make translatable and add translations -->
+    <string name="msg_remove_user" translatable="false">Remove user from room</string> <!-- TODO Make translatable and add translations -->
 
     <!-- Mentions -->
     <string name="msg_mentions">Mentions</string>

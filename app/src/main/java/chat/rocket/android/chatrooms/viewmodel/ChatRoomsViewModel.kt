@@ -13,6 +13,7 @@ import chat.rocket.android.server.infrastructure.ConnectionManager
 import chat.rocket.android.util.livedata.transform
 import chat.rocket.android.util.livedata.wrap
 import chat.rocket.android.util.retryIO
+import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.rest.spotlight
@@ -114,10 +115,8 @@ class ChatRoomsViewModel(
     }
 
     fun getStatus(): MutableLiveData<State> {
-        return connectionManager.statusLiveData.nonNull().distinct().map { state ->
-            if (state is State.Connected) {
-                fetchRooms()
-            }
+        return connectionManager.stateLiveData.nonNull().distinct().map { state ->
+            if (state is State.Connected) fetchRooms()
             state
         }
     }
@@ -131,7 +130,12 @@ class ChatRoomsViewModel(
                 loaded = true
             } catch (ex: Exception) {
                 Timber.d(ex, "Error refreshing chatrooms")
-                setLoadingState(LoadingState.Error(repository.count()))
+                Timber.d(ex, "Message: $ex")
+                if (ex is RocketChatAuthException) {
+                    setLoadingState(LoadingState.AuthError)
+                } else {
+                    setLoadingState(LoadingState.Error(repository.count()))
+                }
             }
         }
     }
@@ -153,6 +157,7 @@ sealed class LoadingState {
     data class Loading(val count: Long) : LoadingState()
     data class Loaded(val count: Long) : LoadingState()
     data class Error(val count: Long) : LoadingState()
+    object AuthError : LoadingState()
 }
 
 sealed class Query {

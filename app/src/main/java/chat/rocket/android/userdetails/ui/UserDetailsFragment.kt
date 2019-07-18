@@ -30,21 +30,22 @@ import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_user_details.*
 import javax.inject.Inject
 
-fun newInstance(userId: String): Fragment = UserDetailsFragment().apply {
-    arguments = Bundle(1).apply {
+fun newInstance(userId: String, chatRoomId: String): Fragment = UserDetailsFragment().apply {
+    arguments = Bundle(2).apply {
         putString(BUNDLE_USER_ID, userId)
+        putString(BUNDLE_USER_CHATROOM_ID, chatRoomId)
     }
 }
 
 internal const val TAG_USER_DETAILS_FRAGMENT = "UserDetailsFragment"
 private const val BUNDLE_USER_ID = "user_id"
+private const val BUNDLE_USER_CHATROOM_ID = "user_chatroom_id"
 
 class UserDetailsFragment : Fragment(), UserDetailsView {
-    @Inject
-    lateinit var presenter: UserDetailsPresenter
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
+    @Inject lateinit var presenter: UserDetailsPresenter
+    @Inject lateinit var analyticsManager: AnalyticsManager
     private lateinit var userId: String
+    private lateinit var chatRoomId: String
     private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +54,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
         arguments?.run {
             userId = getString(BUNDLE_USER_ID, "")
+            chatRoomId = getString(BUNDLE_USER_CHATROOM_ID, "")
         }
             ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
@@ -68,15 +70,10 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
         setupToolbar()
         setupListeners()
+        presenter.checkRemoveUserPermission(chatRoomId)
         presenter.loadUserDetails(userId)
 
         analyticsManager.logScreenView(ScreenViewEvent.UserDetails)
-
-        image_avatar.setOnClickListener {
-            with(presenter) {
-                toProfileImage(getImageUri())
-            }
-        }
     }
 
     override fun onDestroyView() {
@@ -122,14 +119,26 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         }
     }
 
+    override fun showRemoveUserButton() {
+        button_remove_user?.isVisible = true
+    }
+
+    override fun hideRemoveUserButton() {
+        button_remove_user?.isVisible = false
+    }
+
+    override fun showUserRemovedMessage() {
+        activity?.onBackPressed()
+        showMessage(R.string.msg_user_removed_successfully)
+    }
+
     override fun showLoading() {
-        group_user_details.isVisible = false
-        view_loading.isVisible = true
+        view_loading?.isVisible = true
     }
 
     override fun hideLoading() {
-        group_user_details.isVisible = true
-        view_loading.isVisible = false
+        view_loading?.isVisible = false
+        group_user_details?.isVisible = true
     }
 
     override fun showMessage(resId: Int) {
@@ -158,5 +167,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
     private fun setupListeners() {
         image_arrow_back.setOnClickListener { activity?.onBackPressed() }
+        image_avatar.setOnClickListener { with(presenter) { toProfileImage(getImageUri()) } }
+        button_remove_user.setOnClickListener { presenter.removeUser(userId, chatRoomId) }
     }
 }

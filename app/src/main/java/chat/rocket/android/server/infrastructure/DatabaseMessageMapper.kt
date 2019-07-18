@@ -18,6 +18,8 @@ import chat.rocket.core.model.url.ParsedUrl
 import chat.rocket.core.model.url.Url
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
+import java.lang.Exception
 
 class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
     suspend fun map(message: FullMessage): Message? = map(listOf(message)).firstOrNull()
@@ -135,59 +137,63 @@ class DatabaseMessageMapper(private val dbManager: DatabaseManager) {
 
     private suspend fun mapAttachments(attachments: List<AttachmentEntity>): List<Attachment> {
         val list = mutableListOf<Attachment>()
-        attachments.forEach { attachment ->
-            with(attachment) {
-                val fields = if (hasFields) {
-                    withContext(Dispatchers.IO) {
-                        retryDB("getAttachmentFields(${attachment._id})") {
-                            dbManager.messageDao().getAttachmentFields(attachment._id)
-                        }
-                    }.map { Field(it.title, it.value) }
-                } else {
-                    null
-                }
-                val actions = if (hasActions) {
-                    withContext(Dispatchers.IO) {
-                        retryDB("getAttachmentActions(${attachment._id})") {
-                            dbManager.messageDao().getAttachmentActions(attachment._id)
-                        }
-                    }.mapNotNull { mapAction(it) }
-                } else {
-                    null
-                }
-                list.add(
-                    Attachment(
-                        title = title,
-                        type = type,
-                        description = description,
-                        authorName = authorName,
-                        text = text,
-                        thumbUrl = thumbUrl,
-                        color = color?.let { Color.Custom(color) },
-                        titleLink = titleLink,
-                        titleLinkDownload = titleLinkDownload,
-                        imageUrl = imageUrl,
-                        imageType = imageType,
-                        imageSize = imageSize,
-                        videoUrl = videoUrl,
-                        videoType = videoType,
-                        videoSize = videoSize,
-                        audioUrl = audioUrl,
-                        audioType = audioType,
-                        audioSize = audioSize,
-                        messageLink = messageLink,
-                        attachments = null, // HOW TO MAP THIS
-                        timestamp = timestamp,
-                        authorIcon = authorIcon,
-                        authorLink = authorLink,
-                        fields = fields,
-                        fallback = fallback,
-                        buttonAlignment = if (actions != null && actions.isNotEmpty()) buttonAlignment
-                            ?: "vertical" else null,
-                        actions = actions
+        try {
+            attachments.forEach { attachment ->
+                with(attachment) {
+                    val fields = if (hasFields) {
+                        withContext(Dispatchers.IO) {
+                            retryDB("getAttachmentFields(${attachment._id})") {
+                                dbManager.messageDao().getAttachmentFields(attachment._id)
+                            }
+                        }.map { Field(it.title, it.value) }
+                    } else {
+                        null
+                    }
+                    val actions = if (hasActions) {
+                        withContext(Dispatchers.IO) {
+                            retryDB("getAttachmentActions(${attachment._id})") {
+                                dbManager.messageDao().getAttachmentActions(attachment._id)
+                            }
+                        }.mapNotNull { mapAction(it) }
+                    } else {
+                        null
+                    }
+                    list.add(
+                        Attachment(
+                            title = title,
+                            type = type,
+                            description = description,
+                            authorName = authorName,
+                            text = text,
+                            thumbUrl = thumbUrl,
+                            color = color?.let { Color.Custom(color) },
+                            titleLink = titleLink,
+                            titleLinkDownload = titleLinkDownload,
+                            imageUrl = imageUrl,
+                            imageType = imageType,
+                            imageSize = imageSize,
+                            videoUrl = videoUrl,
+                            videoType = videoType,
+                            videoSize = videoSize,
+                            audioUrl = audioUrl,
+                            audioType = audioType,
+                            audioSize = audioSize,
+                            messageLink = messageLink,
+                            attachments = null, // HOW TO MAP THIS
+                            timestamp = timestamp,
+                            authorIcon = authorIcon,
+                            authorLink = authorLink,
+                            fields = fields,
+                            fallback = fallback,
+                            buttonAlignment = if (actions != null && actions.isNotEmpty()) buttonAlignment
+                                ?: "vertical" else null,
+                            actions = actions
+                        )
                     )
-                )
+                }
             }
+        } catch (ex: Exception) {
+            Timber.e(ex)
         }
         return list
     }

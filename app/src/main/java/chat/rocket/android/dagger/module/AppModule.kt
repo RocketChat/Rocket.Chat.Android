@@ -379,16 +379,16 @@ class AppModule {
 
     @Provides
     @Named("currentServer")
-    fun provideCurrentServer(currentServerInteractor: GetCurrentServerInteractor): String {
-        return currentServerInteractor.get()!!
+    fun provideCurrentServer(currentServerInteractor: GetCurrentServerInteractor): String? {
+        return currentServerInteractor.get()
     }
 
     @Provides
     fun provideDatabaseManager(
-        factory: DatabaseManagerFactory,
-        @Named("currentServer") currentServer: String
+        factory: DatabaseManagerFactory?,
+        @Named("currentServer") currentServer: String?
     ): DatabaseManager {
-        return factory.create(currentServer)
+        return currentServer?.let { factory?.create(it) } !!
     }
 
     @Provides

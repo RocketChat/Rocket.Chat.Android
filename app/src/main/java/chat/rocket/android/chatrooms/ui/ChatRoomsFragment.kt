@@ -1,6 +1,7 @@
 package chat.rocket.android.chatrooms.ui
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -20,8 +21,8 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
-import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.chatrooms.adapter.RoomsAdapter
+import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
 import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModel
@@ -31,6 +32,8 @@ import chat.rocket.android.chatrooms.viewmodel.Query
 import chat.rocket.android.servers.ui.ServersBottomSheetFragment
 import chat.rocket.android.sortingandgrouping.ui.SortingAndGroupingBottomSheetFragment
 import chat.rocket.android.util.extension.onQueryTextListener
+import chat.rocket.android.util.extensions.fadeIn
+import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.ifNotNullNotEmpty
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
@@ -40,22 +43,22 @@ import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar_chat_rooms.*
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
-import timber.log.Timber
 import javax.inject.Inject
 
 internal const val TAG_CHAT_ROOMS_FRAGMENT = "ChatRoomsFragment"
 
 private const val BUNDLE_CHAT_ROOM_ID = "BUNDLE_CHAT_ROOM_ID"
 
-fun newInstance(chatRoomId: String?, deepLinkInfo: DeepLinkInfo?): Fragment = ChatRoomsFragment().apply {
-    arguments = Bundle(1).apply {
-        putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-        putParcelable(
-            chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY,
-            deepLinkInfo
-        )
+fun newInstance(chatRoomId: String?, deepLinkInfo: DeepLinkInfo?): Fragment =
+    ChatRoomsFragment().apply {
+        arguments = Bundle(1).apply {
+            putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
+            putParcelable(
+                chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY,
+                deepLinkInfo
+            )
+        }
     }
-}
 
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
     @Inject lateinit var presenter: ChatRoomsPresenter
@@ -69,6 +72,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var isUnreadOnTop = false
     private var isGroupByType = false
     private var isGroupByFavorites = false
+
+    private val handler = Handler()
+    private val dismissConnectionState by lazy { text_connection_status.fadeOut() }
+    private var lastConnectionState: State? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,7 +146,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         if (isSortByName) {
             text_sort_by.text =
-                getString(R.string.msg_sort_by_placeholder, getString(R.string.msg_sort_by_name).toLowerCase())
+                getString(
+                    R.string.msg_sort_by_placeholder,
+                    getString(R.string.msg_sort_by_name).toLowerCase()
+                )
         } else {
             text_sort_by.text = getString(
                 R.string.msg_sort_by_placeholder,
@@ -191,48 +201,51 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     override fun showLoading() {
-        view_loading.isVisible = true
+        ui {
+            view_loading.isVisible = true
+        }
     }
 
     override fun hideLoading() {
-        view_loading.isVisible = false
+        ui {
+            view_loading.isVisible = false
+        }
     }
 
     override fun showMessage(resId: Int) {
-        ui {
-            showToast(resId)
-        }
+        ui { showToast(resId) }
     }
 
     override fun showMessage(message: String) {
+        ui { showToast(message) }
+    }
+
+    override fun showGenericErrorMessage() {
         ui {
-            showToast(message)
+            showMessage(getString(R.string.msg_generic_error))
         }
     }
 
-    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
-
     private fun showConnectionState(state: State) {
-        Timber.d("Got new state: $state")
-//        ui {
-//            text_connection_status.fadeIn()
-//            handler.removeCallbacks(dismissStatus)
-//            text_connection_status.text = when (state) {
-//                is State.Connected -> {
-//                    handler.postDelayed(dismissStatus, 2000)
-//                    getString(R.string.status_connected)
-//                }
-//                is State.Disconnected -> getString(R.string.status_disconnected)
-//                is State.Connecting -> getString(R.string.status_connecting)
-//                is State.Authenticating -> getString(R.string.status_authenticating)
-//                is State.Disconnecting -> getString(R.string.status_disconnecting)
-//                is State.Waiting -> getString(R.string.status_waiting, state.seconds)
-//                else -> {
-//                    handler.postDelayed(dismissStatus, 500)
-//                    ""
-//                }
-//            }
-//        }
+        ui {
+            if (state != lastConnectionState) {
+                text_connection_status.fadeIn()
+                handler.removeCallbacks { dismissConnectionState }
+                text_connection_status.text = when (state) {
+                    is State.Connected -> {
+                        handler.postDelayed({ dismissConnectionState }, 2000)
+                        getString(R.string.status_connected)
+                    }
+                    is State.Disconnected -> getString(R.string.status_disconnected)
+                    is State.Connecting -> getString(R.string.status_connecting)
+                    is State.Authenticating -> getString(R.string.status_authenticating)
+                    is State.Disconnecting -> getString(R.string.status_disconnecting)
+                    is State.Waiting -> getString(R.string.status_waiting, state.seconds)
+                    is State.Created -> "" // Show nothing
+                }
+                lastConnectionState = state
+            }
+        }
     }
 
     private fun subscribeUi() {
@@ -276,11 +289,15 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                         hideLoading()
                         showGenericErrorMessage()
                     }
+                    is LoadingState.AuthError -> {
+                        hideLoading()
+                        showMessage(R.string.msg_invalid_session)
+                    }
                 }
             })
 
-            viewModel.getStatus().observe(viewLifecycleOwner, Observer { status ->
-                status?.let { showConnectionState(status) }
+            viewModel.getStatus().observe(viewLifecycleOwner, Observer {
+                showConnectionState(it)
             })
 
             showAllChats()
@@ -344,7 +361,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         val username = deepLinkInfo.roomName
         username.ifNotNullNotEmpty {
             val localRooms = viewModel.getUsersRoomListLocal(username!!)
-            val filteredLocalRooms = localRooms.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+            val filteredLocalRooms =
+                localRooms.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
 
             if (filteredLocalRooms.isNotEmpty()) {
                 presenter.loadChatRoom(filteredLocalRooms.first().data as RoomUiModel)
@@ -357,11 +375,12 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private fun loadRoomFromSpotlight(username: String) {
         //check from spotlight when connected
         val statusLiveData = viewModel.getStatus()
-        statusLiveData.observe(viewLifecycleOwner, object: Observer<State>{
+        statusLiveData.observe(viewLifecycleOwner, object : Observer<State> {
             override fun onChanged(status: State?) {
                 if (status is State.Connected) {
                     val rooms = viewModel.getUsersRoomListSpotlight(username)
-                    val filteredRooms = rooms?.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
+                    val filteredRooms =
+                        rooms?.filter { itemHolder -> itemHolder.data is RoomUiModel && (itemHolder.data as RoomUiModel).username == username }
 
                     filteredRooms?.let {
                         if (filteredRooms.isNotEmpty()) {
