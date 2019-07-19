@@ -13,6 +13,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import testConfig.Config.Companion.communityServerUrl
+import testConfig.Config.Companion.currentServer
 
 
 class OnBoardingPresenterTest {
@@ -33,7 +34,7 @@ class OnBoardingPresenterTest {
         MockitoAnnotations.initMocks(this)
         onBoardingPresenter = OnBoardingPresenter(
             view, strategy, navigator, serverInteractor, refreshSettingsInteractor,
-            getAccountsInteractor, settingsInteractor, factory
+            getAccountsInteractor, settingsInteractor, factory, currentServer
         )
     }
 
