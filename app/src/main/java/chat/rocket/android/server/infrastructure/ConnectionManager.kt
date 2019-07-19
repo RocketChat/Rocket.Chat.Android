@@ -47,9 +47,7 @@ class ConnectionManager(
     private val stateChannel = Channel<State>()
     private val stateChannelList = CopyOnWriteArrayList<Channel<State>>()
 
-    private val subscriptionIdMap = HashMap<String, String>()
     private val roomsChannels = LinkedHashMap<String, Channel<Room>>()
-    private val roomMessagesChannels = LinkedHashMap<String, Channel<Message>>()
 
     fun connect() {
         if (connectJob?.isActive == true && client.state !is State.Disconnected) {
@@ -154,29 +152,6 @@ class ConnectionManager(
     }
 
     fun removeRoomChannel(roomId: String) = roomsChannels.remove(roomId)
-
-    fun subscribeRoomMessages(roomId: String, channel: Channel<Message>) {
-        val oldSub = roomMessagesChannels.put(roomId, channel)
-        if (oldSub != null) {
-            Timber.d("Room $roomId already subscribed...")
-            return
-        }
-
-        if (client.state is State.Connected) {
-            client.subscribeRoomMessages(roomId) { _, id ->
-                Timber.d("Subscribed to $roomId: $id")
-                subscriptionIdMap[roomId] = id
-            }
-        }
-    }
-
-    fun unsubscribeRoomMessages(roomId: String) {
-        val sub = roomMessagesChannels.remove(roomId)
-        if (sub != null) {
-            val id = subscriptionIdMap.remove(roomId)
-            id?.let { client.unsubscribe(it) }
-        }
-    }
 
     private inline fun <T> createBatchActor(
         context: CoroutineContext = Dispatchers.IO,

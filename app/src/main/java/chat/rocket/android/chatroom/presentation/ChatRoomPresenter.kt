@@ -48,6 +48,7 @@ import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.setTypingStatus
 import chat.rocket.core.internal.realtime.socket.model.State
+import chat.rocket.core.internal.realtime.subscribeRoomMessages
 import chat.rocket.core.internal.realtime.subscribeTypingStatus
 import chat.rocket.core.internal.realtime.unsubscribe
 import chat.rocket.core.internal.rest.chatRoomRoles
@@ -112,7 +113,6 @@ class ChatRoomPresenter @Inject constructor(
     private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
     private val token = tokenRepository.get(currentServer)
     private val currentLoggedUsername = userHelper.username()
-    private val messagesChannel = Channel<Message>()
 
     private var chatRoomId: String? = null
     private lateinit var chatRoomType: String
@@ -120,6 +120,7 @@ class ChatRoomPresenter @Inject constructor(
     private var isBroadcast: Boolean = false
     private var chatRoles = emptyList<ChatRoomRole>()
     private val stateChannel = Channel<State>()
+    private var roomMessagesSubscriptionId: String? = null
     private var typingStatusSubscriptionId: String? = null
     private var lastState = client.state
     private var typingStatusList = arrayListOf<String>()
@@ -273,9 +274,9 @@ class ChatRoomPresenter @Inject constructor(
 
                 // TODO: For now we are marking the room as read if we can get the messages (I mean, no exception occurs)
                 // but should mark only when the user sees the first unread message.
-                markRoomAsRead(chatRoomId)
+                markRoomAsRead()
 
-                subscribeMessages(chatRoomId)
+                subscribeRoomMessages()
                 subscribeTypingStatus()
                 subscribeConnectionState()
             } catch (ex: Exception) {
@@ -582,13 +583,15 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    private fun markRoomAsRead(roomId: String) {
-        launchUI(strategy) {
-            try {
-                retryIO(description = "markAsRead($roomId)") { client.markAsRead(roomId) }
-            } catch (ex: RocketChatException) {
-                view.showMessage(ex.message!!) // TODO Remove.
-                Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
+    private fun markRoomAsRead() {
+        chatRoomId?.let { chatRoomId ->
+            launchUI(strategy) {
+                try {
+                    retryIO(description = "markAsRead($chatRoomId)") { client.markAsRead(chatRoomId) }
+                } catch (ex: RocketChatException) {
+                    view.showMessage(ex.message!!) // TODO Remove.
+                    Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
+                }
             }
         }
     }
@@ -612,17 +615,6 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     private fun unsubscribeConnectionState() = manager?.removeStateChannel(stateChannel)
-
-    private fun subscribeMessages(roomId: String) {
-        manager?.subscribeRoomMessages(roomId, messagesChannel)
-
-        GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
-            for (message in messagesChannel) {
-                Timber.d("New message for room ${message.roomId}")
-                updateMessage(message)
-            }
-        }
-    }
 
     private fun loadMissingMessages() {
         GlobalScope.launch(strategy.jobs) {
@@ -1182,36 +1174,6 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    private fun logReactionEvent() {
-        when {
-            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
-                analyticsManager.logReaction(SubscriptionTypeEvent.DirectMessage)
-            roomTypeOf(chatRoomType) is RoomType.Channel ->
-                analyticsManager.logReaction(SubscriptionTypeEvent.Channel)
-            else -> analyticsManager.logReaction(SubscriptionTypeEvent.Group)
-        }
-    }
-
-    private fun logMediaUploaded(mimeType: String) {
-        when {
-            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
-                analyticsManager.logMediaUploaded(SubscriptionTypeEvent.DirectMessage, mimeType)
-            roomTypeOf(chatRoomType) is RoomType.Channel ->
-                analyticsManager.logMediaUploaded(SubscriptionTypeEvent.Channel, mimeType)
-            else -> analyticsManager.logMediaUploaded(SubscriptionTypeEvent.Group, mimeType)
-        }
-    }
-
-    private fun logMessageSent() {
-        when {
-            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
-                analyticsManager.logMessageSent(SubscriptionTypeEvent.DirectMessage)
-            roomTypeOf(chatRoomType) is RoomType.Channel ->
-                analyticsManager.logMessageSent(SubscriptionTypeEvent.Channel)
-            else -> analyticsManager.logMessageSent(SubscriptionTypeEvent.Group)
-        }
-    }
-
     fun showReactions(messageId: String) {
         view.showReactionsPopup(messageId)
     }
@@ -1283,11 +1245,30 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     fun disconnect() {
-        unsubscribeRoomChanges()
+        unsubscribeRoomMessages()
         unsubscribeTypingStatus()
+        unsubscribeRoomChanges()
         unsubscribeConnectionState()
-        chatRoomId?.let { unsubscribeMessages(it) }
+
+        // All messages during the subscribed period are assumed to be read,
+        // and lastSeen is updated as the time when the user leaves the room
+        markRoomAsRead()
     }
+
+    private fun subscribeRoomMessages() {
+        GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
+            client.subscribeRoomMessages(chatRoomId.toString()) { _, id ->
+                roomMessagesSubscriptionId = id
+            }
+
+            for (message in client.messagesChannel) {
+                updateMessage(message)
+            }
+        }
+    }
+
+    private fun unsubscribeRoomMessages() =
+        roomMessagesSubscriptionId?.let { client.unsubscribe(it) }
 
     private fun subscribeTypingStatus() {
         GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
@@ -1300,6 +1281,9 @@ class ChatRoomPresenter @Inject constructor(
             }
         }
     }
+
+    private fun unsubscribeTypingStatus() =
+        typingStatusSubscriptionId?.let { client.unsubscribe(it) }
 
     private fun processTypingStatus(typingStatus: Pair<String, Boolean>) {
         synchronized(typingStatusList) {
@@ -1324,19 +1308,6 @@ class ChatRoomPresenter @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun unsubscribeTypingStatus() {
-        typingStatusSubscriptionId?.let {
-            client.unsubscribe(it)
-        }
-    }
-
-    private fun unsubscribeMessages(chatRoomId: String) {
-        manager?.unsubscribeRoomMessages(chatRoomId)
-        // All messages during the subscribed period are assumed to be read,
-        // and lastSeen is updated as the time when the user leaves the room
-        markRoomAsRead(chatRoomId)
     }
 
     private fun updateMessage(streamedMessage: Message) {
@@ -1407,5 +1378,36 @@ class ChatRoomPresenter @Inject constructor(
 
     fun openConfigurableWebPage(roomId: String, url: String, heightRatio: String){
         navigator.toConfigurableWebPage(roomId, url, heightRatio)
+    }
+
+
+    private fun logReactionEvent() {
+        when {
+            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
+                analyticsManager.logReaction(SubscriptionTypeEvent.DirectMessage)
+            roomTypeOf(chatRoomType) is RoomType.Channel ->
+                analyticsManager.logReaction(SubscriptionTypeEvent.Channel)
+            else -> analyticsManager.logReaction(SubscriptionTypeEvent.Group)
+        }
+    }
+
+    private fun logMediaUploaded(mimeType: String) {
+        when {
+            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
+                analyticsManager.logMediaUploaded(SubscriptionTypeEvent.DirectMessage, mimeType)
+            roomTypeOf(chatRoomType) is RoomType.Channel ->
+                analyticsManager.logMediaUploaded(SubscriptionTypeEvent.Channel, mimeType)
+            else -> analyticsManager.logMediaUploaded(SubscriptionTypeEvent.Group, mimeType)
+        }
+    }
+
+    private fun logMessageSent() {
+        when {
+            roomTypeOf(chatRoomType) is RoomType.DirectMessage ->
+                analyticsManager.logMessageSent(SubscriptionTypeEvent.DirectMessage)
+            roomTypeOf(chatRoomType) is RoomType.Channel ->
+                analyticsManager.logMessageSent(SubscriptionTypeEvent.Channel)
+            else -> analyticsManager.logMessageSent(SubscriptionTypeEvent.Group)
+        }
     }
 }
