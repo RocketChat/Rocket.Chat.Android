@@ -43,6 +43,7 @@ class DirectoryFragmentTest {
             loginIfUserIsLoggedOut()
             navigateToDirectory()
         } catch (e: NoMatchingViewException) {
+            Thread.sleep(3000)
             navigateToDirectory()
         }
     }

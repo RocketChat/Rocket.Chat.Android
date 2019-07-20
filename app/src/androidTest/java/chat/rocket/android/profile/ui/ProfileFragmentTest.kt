@@ -51,6 +51,7 @@ class ProfileFragmentTest {
             onView(withId(R.id.image_avatar)).perform(click())
             Thread.sleep(2000)
         } catch (e: NoMatchingViewException) {
+            Thread.sleep(3000)
             onView(withId(R.id.toolbar)).check(matches(isDisplayed()))
             onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click())
             Thread.sleep(1000)

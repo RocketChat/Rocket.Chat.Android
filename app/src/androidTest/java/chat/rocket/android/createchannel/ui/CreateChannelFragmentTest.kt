@@ -37,6 +37,7 @@ class CreateChannelFragmentTest {
             Thread.sleep(12000)
             onView(withId(R.id.action_new_channel)).perform(click())
         } catch (e: NoMatchingViewException) {
+            Thread.sleep(3000)
             onView(withId(R.id.action_new_channel)).perform(click())
         }
     }
