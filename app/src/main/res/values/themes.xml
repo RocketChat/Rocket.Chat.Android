@@ -41,7 +41,7 @@
         <item name="colorFloatingActionButtonBorder">@color/colorFloatingActionButtonBorder</item>
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialogStyle</item>
         <item name="alertDialogTheme">@style/CustomAlertDialogTheme</item>
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor">?colorPrimaryDark</item>
         <item name="colorLoading">@color/colorAuxiliaryTint</item>
         <item name="appTheme">@style/AppTheme</item>
         <item name="colorDrawableSubtleTint">@color/colorDrawableSubtleTint</item>
@@ -56,5 +56,32 @@
         <item name="buttonBarNegativeButtonStyle">@style/Alert.Button</item>
         <item name="buttonBarNeutralButtonStyle">@style/Alert.Button</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
+        <item name="android:editTextColor">@color/colorWhite</item>
+    </style>
+
+    <style name="SnowAppTheme" parent="AppTheme">
+        <item name="appTheme">@style/SnowAppTheme</item>
+        <item name="android:colorBackground">@color/Snow</item>
+        <item name="colorSettingsSecondaryBackground">@color/colorSettingsSecondaryBackground</item>
+        <item name="colorSubHeaderBackground">@color/colorSettingsSecondaryBackground</item>
+        <item name="colorSubHeaderText">@color/colorControlText</item>
+    </style>
+
+    <style name="LightPeachAppTheme" parent="AppTheme">
+        <item name="appTheme">@style/LightPeachAppTheme</item>
+        <item name="android:colorBackground">@color/LightPeach</item>
+        <item name="colorSettingsSecondaryBackground">@color/SpanishPink</item>
+        <item name="colorSubHeaderBackground">@color/PeachOrange</item>
+        <item name="colorSubHeaderText">@color/Smoke</item>
+        <item name="android:navigationBarColor">@color/Linen</item>
+    </style>
+
+    <style name="AlmondAppTheme" parent="AppTheme">
+        <item name="appTheme">@style/AlmondAppTheme</item>
+        <item name="android:colorBackground">@color/Almond</item>
+        <item name="colorSettingsSecondaryBackground">@color/PastelGray</item>
+        <item name="colorSubHeaderBackground">@color/Taupe</item>
+        <item name="colorSubHeaderText">@color/colorWhite</item>
+        <item name="android:navigationBarColor">@color/Linen</item>
     </style>
 </resources>

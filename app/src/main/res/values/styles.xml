@@ -312,7 +312,7 @@
 
     <style name="ToolBarStyle" parent="Widget.AppCompat.Toolbar">
         <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="android:background">?colorPrimaryDark</item>
+        <item name="android:background">?colorPrimary</item>
     </style>
 
     <style name="ActionBarStyle" parent="Widget.AppCompat.ActionBar">
@@ -354,13 +354,12 @@
 
     <style name="CustomBottomSheetDialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:theme">@style/AppTheme</item>
+        <item name="android:theme">?appTheme</item>
     </style>
 
     <style name="CustomAlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
         <item name="android:background">?android:colorBackground</item>
         <item name="android:textColor">?colorHeadings</item>
-        <item name="android:textColorPrimary">?colorPrimaryText</item>
         <item name="android:theme">@style/AppTheme</item>
     </style>
 
@@ -370,5 +369,140 @@
 
     <style name="SpinnerItemStyle" parent="Widget.AppCompat.DropDownItem.Spinner">
         <item name="android:textColor">?colorPrimaryText</item>
+    </style>
+
+    <style name="RedColorAccent">
+        <item name="colorAccent">@color/Red</item>
+    </style>
+
+    <style name="LightPinkColorAccent">
+        <item name="colorAccent">@color/LightPink</item>
+    </style>
+
+    <style name="LightPurpleColorAccent">
+        <item name="colorAccent">@color/LightPurple</item>
+    </style>
+
+    <style name="LightDeepPurpleColorAccent">
+        <item name="colorAccent">@color/LightDeepPurple</item>
+    </style>
+
+    <style name="BlueColorAccent">
+        <item name="colorAccent">@color/Blue</item>
+    </style>
+
+    <style name="VermilionColorAccent">
+        <item name="colorAccent">@color/Vermilion</item>
+    </style>
+
+    <style name="TealColorAccent">
+        <item name="colorAccent">@color/Teal</item>
+    </style>
+
+    <style name="GreenColorAccent">
+        <item name="colorAccent">@color/GrassGreen</item>
+    </style>
+
+    <style name="LimeColorAccent">
+        <item name="colorAccent">@color/Lime</item>
+    </style>
+
+    <style name="AmberColorAccent">
+        <item name="colorAccent">@color/Amber</item>
+    </style>
+
+    <style name="OrangeColorAccent">
+        <item name="colorAccent">@color/Orange</item>
+    </style>
+
+    <style name="BrownColorAccent">
+        <item name="colorAccent">@color/Brown</item>
+    </style>
+
+    <style name="BlueGreyColorAccent">
+        <item name="colorAccent">@color/BlueGrey</item>
+    </style>
+
+    <style name="GreyColorAccent">
+        <item name="colorAccent">@color/Grey</item>
+    </style>
+
+    <style name="CoralColorAccent">
+        <item name="colorAccent">@color/Coral</item>
+    </style>
+
+    <style name="CoconutColorAccent">
+        <item name="colorAccent">@color/Coconut</item>
+    </style>
+
+    <style name="BurntUmberColorAccent">
+        <item name="colorAccent">@color/BurntUmber</item>
+    </style>
+
+    <style name="TeaPinkColorAccent">
+        <item name="colorAccent">@color/TeaPink</item>
+    </style>
+
+    <style name="BronzeColorAccent">
+        <item name="colorAccent">@color/Bronze</item>
+    </style>
+
+    <style name="TurtleGreenColorAccent">
+        <item name="colorAccent">@color/TurtleGreen</item>
+    </style>
+
+    <style name="BlueColorToolbar">
+        <item name="colorPrimary">@color/SkyBlue</item>
+        <item name="colorPrimaryDark">@color/SteelBlue</item>
+    </style>
+
+    <style name="ChocolateColorToolbar">
+        <item name="colorPrimary">@color/Chocolate</item>
+        <item name="colorPrimaryDark">@color/DarkChocolate</item>
+    </style>
+
+    <style name="FreshGreenColorToolbar">
+        <item name="colorPrimary">@color/FreshGreen</item>
+        <item name="colorPrimaryDark">@color/Green</item>
+    </style>
+
+    <style name="BlackColorToolbar">
+        <item name="colorPrimary">@color/blackColorPrimary</item>
+        <item name="colorPrimaryDark">@color/blackColorPrimaryDark</item>
+    </style>
+
+    <style name="GoldColorToolbar">
+        <item name="colorPrimary">@color/Gold</item>
+        <item name="colorPrimaryDark">@color/Harvest</item>
+    </style>
+
+    <style name="GunMetalColorToolbar">
+        <item name="colorPrimary">@color/GunMetal</item>
+        <item name="colorPrimaryDark">@color/GunMetalGreen</item>
+    </style>
+
+    <style name="CobaltBlueColorToolbar">
+        <item name="colorPrimary">@color/CobaltBlue</item>
+        <item name="colorPrimaryDark">@color/ElectricBlue</item>
+    </style>
+
+    <style name="TaupeColorToolbar">
+        <item name="colorPrimary">@color/MediumTaupe</item>
+        <item name="colorPrimaryDark">@color/DarkTaupe</item>
+    </style>
+
+    <style name="FadedTealColorToolbar">
+        <item name="colorPrimary">@color/FadedTeal</item>
+        <item name="colorPrimaryDark">@color/SteelTeal</item>
+    </style>
+
+    <style name="BottleGreenColorToolbar">
+        <item name="colorPrimary">@color/BottleGreen</item>
+        <item name="colorPrimaryDark">@color/StateGreen</item>
+    </style>
+
+    <style name="ForestGreenColorToolbar">
+        <item name="colorPrimary">@color/ForestGreen</item>
+        <item name="colorPrimaryDark">@color/DarkGreen</item>
     </style>
 </resources>

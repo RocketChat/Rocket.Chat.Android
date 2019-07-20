@@ -30,10 +30,8 @@
         <item name="colorReactionBorder">@color/darkColorReactionBorder</item>
         <item name="colorFloatingActionButtonBackground">@color/darkColorFloatingActionButtonBackground</item>
         <item name="colorFloatingActionButtonBorder">@color/darkColorFloatingActionButtonBorder</item>
-        <item name="bottomSheetDialogTheme">@style/DarkCustomBottomSheetDialogStyle</item>
         <item name="android:navigationBarColor">@color/darkColorPrimaryDark</item>
         <item name="alertDialogTheme">@style/DarkCustomAlertDialogTheme</item>
-        <item name="android:statusBarColor">@color/darkColorPrimaryDark</item>
         <item name="colorLoading">@color/darkColorAuxiliaryTint</item>
         <item name="appTheme">@style/DarkTheme</item>
         <item name="colorDrawableSubtleTint">@color/darkColorDrawableSubtleTint</item>
@@ -76,10 +74,8 @@
         <item name="colorReactionBorder">@color/blackColorReactionBorder</item>
         <item name="colorFloatingActionButtonBackground">@color/blackColorFloatingActionButtonBackground</item>
         <item name="colorFloatingActionButtonBorder">@color/blackColorFloatingActionButtonBorder</item>
-        <item name="bottomSheetDialogTheme">@style/BlackCustomBottomSheetDialogStyle</item>
         <item name="android:navigationBarColor">@color/blackColorPrimaryDark</item>
         <item name="alertDialogTheme">@style/BlackCustomAlertDialogTheme</item>
-        <item name="android:statusBarColor">@color/blackColorPrimaryDark</item>
         <item name="colorLoading">@color/blackColorAuxiliaryTint</item>
         <item name="appTheme">@style/BlackTheme</item>
         <item name="colorDrawableSubtleTint">@color/blackColorDrawableSubtleTint</item>
@@ -89,5 +85,75 @@
         <item name="colorChatText">@color/blackColorChatText</item>
         <item name="colorMessageText">@color/blackColorBodyText</item>
         <item name="colorBackgroundIsDark">@bool/blackIsDark</item>
+    </style>
+
+    <style name="CharcoalBlackTheme" parent="BlackTheme">
+        <item name="appTheme">@style/CharcoalBlackTheme</item>
+        <item name="android:colorBackground">@color/Charcoal</item>
+        <item name="colorSettingsSecondaryBackground">@color/blackColorSettingsSecondaryBackground</item>
+        <item name="colorSubHeaderBackground">@color/Charcoal</item>
+    </style>
+
+    <style name="JetBlackTheme" parent="BlackTheme">
+        <item name="appTheme">@style/JetBlackTheme</item>
+        <item name="android:colorBackground">@color/Jet</item>
+        <item name="colorSettingsSecondaryBackground">@color/BlackOlive</item>
+        <item name="colorSubHeaderBackground">@color/BlackOlive</item>
+    </style>
+
+    <style name="DarkJungleBlackTheme" parent="BlackTheme">
+        <item name="appTheme">@style/DarkJungleBlackTheme</item>
+        <item name="android:colorBackground">@color/DarkJungle</item>
+        <item name="colorSettingsSecondaryBackground">@color/DarkGunMetal</item>
+        <item name="colorSubHeaderBackground">@color/DarkGunMetal</item>
+    </style>
+
+    <style name="EerieGreenBlackTheme" parent="BlackTheme">
+        <item name="appTheme">@style/EerieGreenBlackTheme</item>
+        <item name="android:colorBackground">@color/EerieGreen</item>
+        <item name="colorSettingsSecondaryBackground">@color/RaisinBlack</item>
+        <item name="colorSubHeaderBackground">@color/RaisinBlack</item>
+    </style>
+
+    <style name="BlueBlackTheme" parent="BlackTheme">
+        <item name="appTheme">@style/BlueBlackTheme</item>
+        <item name="android:colorBackground">@color/darkColorBackground</item>
+        <item name="colorSettingsSecondaryBackground">@color/darkColorSettingsSecondaryBackground</item>
+        <item name="colorSubHeaderBackground">@color/darkColorSettingsSecondaryBackground</item>
+    </style>
+
+    <style name="CharcoalDarkTheme" parent="DarkTheme">
+        <item name="appTheme">@style/CharcoalDarkTheme</item>
+        <item name="android:colorBackground">@color/Charcoal</item>
+        <item name="colorSettingsSecondaryBackground">@color/blackColorSettingsSecondaryBackground</item>
+        <item name="colorSubHeaderBackground">@color/Charcoal</item>
+    </style>
+
+    <style name="JetDarkTheme" parent="DarkTheme">
+        <item name="appTheme">@style/JetDarkTheme</item>
+        <item name="android:colorBackground">@color/Jet</item>
+        <item name="colorSettingsSecondaryBackground">@color/BlackOlive</item>
+        <item name="colorSubHeaderBackground">@color/BlackOlive</item>
+    </style>
+
+    <style name="DarkJungleDarkTheme" parent="DarkTheme">
+        <item name="appTheme">@style/DarkJungleDarkTheme</item>
+        <item name="android:colorBackground">@color/DarkJungle</item>
+        <item name="colorSettingsSecondaryBackground">@color/DarkGunMetal</item>
+        <item name="colorSubHeaderBackground">@color/DarkGunMetal</item>
+    </style>
+
+    <style name="EerieGreenDarkTheme" parent="DarkTheme">
+        <item name="appTheme">@style/EerieGreenDarkTheme</item>
+        <item name="android:colorBackground">@color/EerieGreen</item>
+        <item name="colorSettingsSecondaryBackground">@color/RaisinBlack</item>
+        <item name="colorSubHeaderBackground">@color/RaisinBlack</item>
+    </style>
+
+    <style name="BlueDarkTheme" parent="DarkTheme">
+        <item name="appTheme">@style/BlueDarkTheme</item>
+        <item name="android:colorBackground">@color/darkColorBackground</item>
+        <item name="colorSettingsSecondaryBackground">@color/darkColorSettingsSecondaryBackground</item>
+        <item name="colorSubHeaderBackground">@color/darkColorSettingsSecondaryBackground</item>
     </style>
 </resources>

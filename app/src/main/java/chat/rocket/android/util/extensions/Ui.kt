@@ -41,7 +41,6 @@ fun FragmentActivity.setInvisibleStatusBar(view: View, @ColorInt color: Int = 0)
 
 fun FragmentActivity.clearInvisibleStatusBar(view: View) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        val isDark = ThemeUtil.getIsDark(applicationContext)
         var flags = view.systemUiVisibility
         window.decorView.systemUiVisibility = flags and (View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR).inv()
         window.statusBarColor = ThemeUtil.getThemeColor(R.attr.colorPrimaryDark)

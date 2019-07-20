@@ -8,5 +8,5 @@ import dagger.Provides
 class BaseActivityModule {
 
     @Provides
-    fun provideBaseActivity(activity: BaseActivity) = BaseActivity()
+    fun provideBaseActivity() = BaseActivity()
 }

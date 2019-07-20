@@ -119,4 +119,24 @@
         <item>@color/blackColorDescriptiveText</item>
         <item>@color/blackColorBackground</item>
     </integer-array>
+
+    <!--Dark Background Colors-->
+    <color name="Charcoal">#000000</color>
+
+    <color name="Jet">#1A1A1A</color>
+    <color name="BlackOlive">#1E1E1E</color>
+
+    <color name="DarkJungle">#142022</color>
+    <color name="DarkGunMetal">#182628</color>
+
+    <color name="EerieGreen">#131901</color>
+    <color name="RaisinBlack">#21231A</color>
+
+    <string-array name="DarkCustomBackground">
+        <item>Charcoal</item>
+        <item>Jet</item>
+        <item>DarkJungle</item>
+        <item>EerieGreen</item>
+        <item>Blue</item>
+    </string-array>
 </resources>

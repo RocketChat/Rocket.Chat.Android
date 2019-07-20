@@ -63,7 +63,6 @@
 
     <color name="colorAuxiliaryTint">#0a4469</color>
 
-
     <integer-array name="AppThemePreview">
         <item>@color/colorAccent</item>
         <item>@color/colorPrimaryText</item>
@@ -71,4 +70,122 @@
         <item>@color/colorDescriptiveText</item>
         <item>@color/colorBackground</item>
     </integer-array>
+
+    <color name="Red">#f44336</color>
+    <color name="LightPink">#f43688</color>
+    <color name="LightPurple">#E040FB</color>
+    <color name="LightDeepPurple">#7c4dff</color>
+    <color name="Blue">#4d77ff</color>
+    <color name="Teal">#FF009688</color>
+    <color name="GrassGreen">#FF4CAF50</color>
+    <color name="Lime">#FFCDDC39</color>
+    <color name="Amber">#FFFFC107</color>
+    <color name="Orange">#FC8A10</color>
+    <color name="DeepOrange">#FF5722</color>
+    <color name="Vermilion">#d41900</color>
+    <color name="Brown">#FF795548</color>
+    <color name="BlueGrey">#607D8B</color>
+    <color name="Grey">#FF9E9E9E</color>
+    <color name="Coral">#D75344</color>
+    <color name="Coconut">#A45838</color>
+    <color name="BurntUmber">#8B2D2D</color>
+    <color name="TeaPink">#B56969</color>
+    <color name="Bronze">#A98740</color>
+    <color name="TurtleGreen">#909F4A</color>
+
+    <!--Accent Colors-->
+    <string-array name="CustomAccent">
+        <item>Red</item>
+        <item>LightPink</item>
+        <item>LightPurple</item>
+        <item>LightDeepPurple</item>
+        <item>Blue</item>
+        <item>Teal</item>
+        <item>Green</item>
+        <item>Lime</item>
+        <item>Amber</item>
+        <item>DeepOrange</item>
+        <item>Orange</item>
+        <item>Vermilion</item>
+        <item>Brown</item>
+        <item>BlueGrey</item>
+        <item>Grey</item>
+        <item>Coral</item>
+        <item>Coconut</item>
+        <item>BurntUmber</item>
+        <item>DarkCyan</item>
+        <item>TeaPink</item>
+        <item>Bronze</item>
+        <item>TurtleGreen</item>
+    </string-array>
+
+    <!--Light Toolbar Colors-->
+    <color name="SteelBlue">#368CA7</color>
+    <color name="SkyBlue">#40A4C4</color>
+    <color name="Chocolate">#562B22</color>
+    <color name="DarkChocolate">#4A251C</color>
+    <color name="FreshGreen">#0AC775</color>
+    <color name="Green">#08A963</color>
+    <color name="Gold">#FFB901</color>
+    <color name="Harvest">#D89D01</color>
+    <color name="GunMetal">#273238</color>
+    <color name="GunMetalGreen">#212A2F</color>
+    <color name="CobaltBlue">#0359AE</color>
+    <color name="ElectricBlue">#024A92</color>
+    <color name="MediumTaupe">#6D4D42</color>
+    <color name="DarkTaupe">#5C3F37</color>
+    <color name="FadedTeal">#729F98</color>
+    <color name="SteelTeal">#608782</color>
+    <color name="BottleGreen">#00704A</color>
+    <color name="StateGreen">#005F3F</color>
+    <color name="ForestGreen">#003E19</color>
+    <color name="DarkGreen">#013415</color>
+
+    <string-array name="LightCustomToolbar">
+        <item>Blue</item>
+        <item>Chocolate</item>
+        <item>FreshGreen</item>
+        <item>Black</item>
+        <item>Gold</item>
+        <item>GunMetal</item>
+        <item>CobaltBlue</item>
+        <item>Taupe</item>
+        <item>FadedTeal</item>
+        <item>BottleGreen</item>
+        <item>ForestGreen</item>
+    </string-array>
+
+    <!--Dark Toolbar Colors-->
+    <string-array name="DarkCustomToolbar">
+        <item>Blue</item>
+        <item>Chocolate</item>
+        <item>FreshGreen</item>
+        <item>Black</item>
+        <item>Gold</item>
+        <item>GunMetal</item>
+        <item>CobaltBlue</item>
+        <item>Taupe</item>
+        <item>FadedTeal</item>
+        <item>BottleGreen</item>
+        <item>ForestGreen</item>
+    </string-array>
+
+    <!--Light Background Colors-->
+    <color name="Snow">#FAFAFA</color>
+
+    <color name="LightPeach">#FDE5D7</color>
+    <color name="SpanishPink">#FDDCC9</color>
+    <color name="Linen">#F9EFE9</color>
+    <color name="Smoke">#41464E</color>
+    <color name="PeachOrange">#F8BE9C</color>
+
+    <color name="Almond">#EEDFD8</color>
+    <color name="PastelGray">#D9CBC5</color>
+    <color name="Taupe">#A89790</color>
+
+    <string-array name="LightCustomBackground">
+        <item>Snow</item>
+        <item>LightPeach</item>
+        <item>Almond</item>
+    </string-array>
 </resources>

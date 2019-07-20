@@ -39,6 +39,7 @@ import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.sortingandgrouping.di.SortingAndGroupingBottomSheetFragmentProvider
 import chat.rocket.android.thememanager.BaseActivity
 import chat.rocket.android.thememanager.di.BaseActivityModule
+import chat.rocket.android.thememanager.ui.CreateThemesActivity
 import chat.rocket.android.thememanager.ui.ThemesActivity
 import chat.rocket.android.userdetails.di.UserDetailsFragmentProvider
 import chat.rocket.android.videoconference.di.VideoConferenceModule
@@ -106,6 +107,10 @@ abstract class ActivityBuilder {
     @PerActivity
     @ContributesAndroidInjector(modules = [(BaseActivityModule::class)])
     abstract fun bindThemesActivity(): ThemesActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = [(BaseActivityModule::class)])
+    abstract fun bindCreateThemesActivity(): CreateThemesActivity
 
     @PerActivity
     @ContributesAndroidInjector(modules = [(BaseActivityModule::class)])
