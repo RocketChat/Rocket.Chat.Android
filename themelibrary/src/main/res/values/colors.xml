@@ -9,7 +9,7 @@
     <color name="darkColorSubHeaderBackground">#0b182c</color> <!--used for channel and directory subHeader-->
     <color name="darkColorSettingsSecondaryBackground">#0b182c</color> <!--used in settings fragment-->
 
-    <color name="darkColorTextHint">#9297a3</color> <!-- colorAuxiliaryText -->
+    <color name="darkColorTextHint">#77ffffff</color> <!-- colorAuxiliaryText -->
     <color name="darkColorDescriptiveText">#FF9297a3</color> <!-- colorAuxiliaryText -->
     <color name="darkColorBottomSheetFragmentText">#FF9297a3</color> <!-- darker text -->
     <color name="darkColorDrawableSubtleTint">#FF9297a3</color>
@@ -60,7 +60,7 @@
     <color name="blackColorSubHeaderBackground">#FF0e0d0d</color> <!--used for channel and directory subHeader-->
     <color name="blackColorSettingsSecondaryBackground">#FF0e0d0d</color> <!--used in settings fragment-->
 
-    <color name="blackColorTextHint">#9297a3</color> <!-- Picked from layouts -->
+    <color name="blackColorTextHint">#77ffffff</color> <!-- Picked from layouts -->
     <color name="blackColorDescriptiveText">#FF9297a3</color> <!-- Picked from layouts -->
     <color name="blackColorBottomSheetFragmentText">#FF9297a3</color> <!-- darker text -->
     <color name="blackColorDrawableSubtleTint">#FF9297a3</color>

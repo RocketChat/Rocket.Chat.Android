@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="25dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="25dp">
 
     <TextView
         android:id="@+id/text_enter_name"
-        android:text="Enter a name for your custom theme:"
-        android:textColor="?colorPrimaryText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content" />
+        android:text="Enter a name for your custom theme:"
+        android:textColor="?colorPrimaryText" />
 
     <EditText
         android:id="@+id/edit_text_theme_name"
@@ -20,15 +20,16 @@
         android:layout_marginTop="16dp"
         android:hint="Theme Name"
         android:imeOptions="actionDone"
-        android:inputType="text" />
+        android:inputType="text"
+        android:textColorHint="?colorTextHintEditText" />
 
     <TextView
         android:id="@+id/text_select_base_theme"
-        android:text="Select your base theme:"
-        android:textColor="?colorPrimaryText"
-        android:paddingTop="16dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content" />
+        android:paddingTop="16dp"
+        android:text="Select your base theme:"
+        android:textColor="?colorPrimaryText" />
 
     <ListView
         android:id="@+id/lv_items"

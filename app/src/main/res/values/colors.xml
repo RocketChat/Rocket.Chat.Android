@@ -46,7 +46,8 @@
     <color name="colorAuthenticationButtonBorderAndDivider">#FFE1E5E8</color>
     <color name="colorAuthenticationButtonDisabled">#FFE1E5E8</color>
     <color name="colorAuthenticationChevronAndExpandIcon">#FFCBCED1</color> <!--review-->
-    <color name="colorTextHint">#FF9CA2A8</color> <!-- colorAuxiliaryText from stylesheet-->
+    <color name="colorTextHintEditText">#66000000</color> <!-- colorAuxiliaryText from stylesheet-->
+    <color name="colorTextHintToolbar">#88ffffff</color> <!-- colorAuxiliaryText from stylesheet-->
     <color name="colorAuxiliaryText">#FF9CA2A8</color>
     <color name="colorStatusInvisible">#FFCBCED1</color>
 

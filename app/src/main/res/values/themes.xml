@@ -22,7 +22,8 @@
         <item name="colorBottomSheetFragmentHeading">@color/colorBottomSheetFragmentHeading</item>
         <item name="colorAuthenticationButtonBorderAndDivider">@color/colorAuthenticationButtonBorderAndDivider</item>
         <item name="colorRadioButton">@color/colorPrimary</item>
-        <item name="android:textColorHint">@color/colorTextHint</item>
+        <item name="android:textColorHint">@color/colorTextHintToolbar</item>
+        <item name="colorTextHintEditText">@color/colorTextHintEditText</item>
         <item name="colorButtonDisabled">@color/colorAuthenticationButtonDisabled</item>
         <item name="colorControlText">@color/colorControlText</item>
         <item name="colorControlNormal">@color/colorControlText</item>

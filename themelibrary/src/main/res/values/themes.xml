@@ -14,7 +14,7 @@
         <item name="colorBottomSheetFragmentHeading">@color/darkColorBottomSheetFragmentHeading</item>
         <item name="colorAuthenticationButtonBorderAndDivider">@color/darkColorDivider</item>
         <item name="colorRadioButton">@color/darkColorBodyText</item>
-        <item name="android:textColorHint">@color/darkColorTextHint</item>
+        <item name="colorTextHintEditText">@color/darkColorTextHint</item>
         <item name="colorButtonDisabled">@color/darkColorAuthenticationButtonDisabled</item>
         <item name="colorControlText">@color/darkColorControlText</item>
         <item name="colorChatComponentBackground">@color/darkColorChatComponentBackground</item>
@@ -58,7 +58,7 @@
         <item name="colorBottomSheetFragmentHeading">@color/blackColorBottomSheetFragmentHeading</item>
         <item name="colorAuthenticationButtonBorderAndDivider">@color/blackColorDivider</item>
         <item name="colorRadioButton">@color/blackColorBodyText</item>
-        <item name="android:textColorHint">@color/blackColorTextHint</item>
+        <item name="colorTextHintEditText">@color/blackColorTextHint</item>
         <item name="colorButtonDisabled">@color/blackColorAuthenticationButtonDisabled</item>
         <item name="colorControlText">@color/blackColorControlText</item>
         <item name="colorChatComponentBackground">@color/blackColorChatComponentBackground</item>
