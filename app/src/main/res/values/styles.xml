@@ -134,7 +134,7 @@
     </style>
 
     <style name="ChatList.Timestamp.Unread.TextView" parent="ChatList.Timestamp.TextView">
-        <item name="android:textColor">@color/colorTimestampTextUnread</item>
+        <item name="android:textColor">?colorAccent</item>
     </style>
 
     <style name="ChatList.Badge.TextView" parent="TextAppearance.AppCompat.Title">
