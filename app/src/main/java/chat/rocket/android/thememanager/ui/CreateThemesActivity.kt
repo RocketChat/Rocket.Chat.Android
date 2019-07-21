@@ -124,7 +124,7 @@ class CreateThemesActivity : BaseActivity() {
             AlertDialog.Builder(it)
                     .setTitle(title)
                     .setSingleChoiceItems(
-                            adapter, -1
+                            adapter, 0
                     ) { dialog, option ->
                         editCustomTheme(themeIndex, option, title, customColorsArray)
                         dialog.dismiss()

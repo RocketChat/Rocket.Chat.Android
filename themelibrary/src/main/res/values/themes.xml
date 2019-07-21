@@ -115,8 +115,8 @@
         <item name="colorSubHeaderBackground">@color/RaisinBlack</item>
     </style>
 
-    <style name="BlueBlackTheme" parent="BlackTheme">
-        <item name="appTheme">@style/BlueBlackTheme</item>
+    <style name="DarkBlueBlackTheme" parent="BlackTheme">
+        <item name="appTheme">@style/DarkBlueBlackTheme</item>
         <item name="android:colorBackground">@color/darkColorBackground</item>
         <item name="colorSettingsSecondaryBackground">@color/darkColorSettingsSecondaryBackground</item>
         <item name="colorSubHeaderBackground">@color/darkColorSettingsSecondaryBackground</item>
@@ -150,8 +150,8 @@
         <item name="colorSubHeaderBackground">@color/RaisinBlack</item>
     </style>
 
-    <style name="BlueDarkTheme" parent="DarkTheme">
-        <item name="appTheme">@style/BlueDarkTheme</item>
+    <style name="DarkBlueDarkTheme" parent="DarkTheme">
+        <item name="appTheme">@style/DarkBlueDarkTheme</item>
         <item name="android:colorBackground">@color/darkColorBackground</item>
         <item name="colorSettingsSecondaryBackground">@color/darkColorSettingsSecondaryBackground</item>
         <item name="colorSubHeaderBackground">@color/darkColorSettingsSecondaryBackground</item>

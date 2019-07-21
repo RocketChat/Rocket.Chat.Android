@@ -371,6 +371,10 @@
         <item name="android:textColor">?colorPrimaryText</item>
     </style>
 
+    <style name="DefaultAppThemeColorAccent">
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <style name="RedColorAccent">
         <item name="colorAccent">@color/Red</item>
     </style>
@@ -451,6 +455,21 @@
         <item name="colorAccent">@color/TurtleGreen</item>
     </style>
 
+    <style name="DefaultAppThemeColorToolbar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="DarkBlueColorToolbar">
+        <item name="colorPrimary">@color/darkColorPrimary</item>
+        <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
+    </style>
+
+    <style name="BlackColorToolbar">
+        <item name="colorPrimary">@color/blackColorPrimary</item>
+        <item name="colorPrimaryDark">@color/blackColorPrimaryDark</item>
+    </style>
+
     <style name="BlueColorToolbar">
         <item name="colorPrimary">@color/SkyBlue</item>
         <item name="colorPrimaryDark">@color/SteelBlue</item>
@@ -464,11 +483,6 @@
     <style name="FreshGreenColorToolbar">
         <item name="colorPrimary">@color/FreshGreen</item>
         <item name="colorPrimaryDark">@color/Green</item>
-    </style>
-
-    <style name="BlackColorToolbar">
-        <item name="colorPrimary">@color/blackColorPrimary</item>
-        <item name="colorPrimaryDark">@color/blackColorPrimaryDark</item>
     </style>
 
     <style name="GoldColorToolbar">

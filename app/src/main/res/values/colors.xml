@@ -95,6 +95,7 @@
 
     <!--Accent Colors-->
     <string-array name="CustomAccent">
+        <item>Default</item>
         <item>Red</item>
         <item>LightPink</item>
         <item>LightPurple</item>
@@ -113,7 +114,6 @@
         <item>Coral</item>
         <item>Coconut</item>
         <item>BurntUmber</item>
-        <item>DarkCyan</item>
         <item>TeaPink</item>
         <item>Bronze</item>
         <item>TurtleGreen</item>
@@ -140,12 +140,16 @@
     <color name="StateGreen">#005F3F</color>
     <color name="ForestGreen">#003E19</color>
     <color name="DarkGreen">#013415</color>
+    <color name="Black">#000000</color>
+    <color name="DarkBlue">@color/darkColorPrimary</color>
 
     <string-array name="LightCustomToolbar">
+        <item>Default</item>
+        <item>Black</item>
+        <item>DarkBlue</item>
         <item>Blue</item>
         <item>Chocolate</item>
         <item>FreshGreen</item>
-        <item>Black</item>
         <item>Gold</item>
         <item>GunMetal</item>
         <item>CobaltBlue</item>
@@ -157,10 +161,12 @@
 
     <!--Dark Toolbar Colors-->
     <string-array name="DarkCustomToolbar">
+        <item>Default</item>
+        <item>Black</item>
+        <item>DarkBlue</item>
         <item>Blue</item>
         <item>Chocolate</item>
         <item>FreshGreen</item>
-        <item>Black</item>
         <item>Gold</item>
         <item>GunMetal</item>
         <item>CobaltBlue</item>

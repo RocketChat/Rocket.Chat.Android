@@ -9,4 +9,22 @@
     <style name="BlackCustomAlertDialogTheme" parent="CustomAlertDialogTheme">
         <item name="android:theme">@style/BlackTheme</item>
     </style>
+
+    <style name="DefaultDarkThemeColorToolbar">
+        <item name="colorPrimary">@color/darkColorPrimary</item>
+        <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
+    </style>
+
+    <style name="DefaultBlackThemeColorToolbar">
+        <item name="colorPrimary">@color/blackColorPrimary</item>
+        <item name="colorPrimaryDark">@color/blackColorPrimaryDark</item>
+    </style>
+
+    <style name="DefaultDarkThemeColorAccent">
+        <item name="colorAccent">@color/darkColorAccent</item>
+    </style>
+
+    <style name="DefaultBlackThemeColorAccent">
+        <item name="colorAccent">@color/blackColorAccent</item>
+    </style>
 </resources>
