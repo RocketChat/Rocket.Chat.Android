@@ -190,6 +190,7 @@
     <color name="Taupe">#A89790</color>
 
     <string-array name="LightCustomBackground">
+        <item>Default</item>
         <item>Snow</item>
         <item>LightPeach</item>
         <item>Almond</item>

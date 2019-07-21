@@ -133,6 +133,7 @@
     <color name="RaisinBlack">#21231A</color>
 
     <string-array name="DarkCustomBackground">
+        <item>Default</item>
         <item>Charcoal</item>
         <item>Jet</item>
         <item>DarkJungle</item>
