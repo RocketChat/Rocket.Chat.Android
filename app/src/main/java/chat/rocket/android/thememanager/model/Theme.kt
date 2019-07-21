@@ -47,11 +47,7 @@ data class Theme(val name: String, val colorArray: Int, val isDark: Boolean) {
         var style = 0
         if (customAccent != 0) {
             val color = resources.getResourceEntryName(customAccent)
-            if(color==""){
-                style = resources.getIdentifier("Default" + name +"ColorAccent", "style", packageName)
-            }else{
                 style = resources.getIdentifier(color + "ColorAccent", "style", packageName)
-            }
         }
         return style
     }
@@ -60,11 +56,7 @@ data class Theme(val name: String, val colorArray: Int, val isDark: Boolean) {
         var style = 0
         if (customToolbar != 0) {
             val color = resources.getResourceEntryName(customToolbar)
-            if(color==""){
-                style = resources.getIdentifier("Default" + name +"ColorToolbar", "style", packageName)
-            }else{
                 style = resources.getIdentifier(color + "ColorToolbar", "style", packageName)
-            }
         }
         return style
     }
