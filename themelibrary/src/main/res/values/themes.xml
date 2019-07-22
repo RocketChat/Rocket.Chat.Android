@@ -31,7 +31,6 @@
         <item name="colorFloatingActionButtonBackground">@color/darkColorFloatingActionButtonBackground</item>
         <item name="colorFloatingActionButtonBorder">@color/darkColorFloatingActionButtonBorder</item>
         <item name="android:navigationBarColor">@color/darkColorPrimaryDark</item>
-        <item name="alertDialogTheme">@style/DarkCustomAlertDialogTheme</item>
         <item name="colorLoading">@color/darkColorAuxiliaryTint</item>
         <item name="appTheme">@style/DarkTheme</item>
         <item name="colorDrawableSubtleTint">@color/darkColorDrawableSubtleTint</item>
@@ -75,7 +74,6 @@
         <item name="colorFloatingActionButtonBackground">@color/blackColorFloatingActionButtonBackground</item>
         <item name="colorFloatingActionButtonBorder">@color/blackColorFloatingActionButtonBorder</item>
         <item name="android:navigationBarColor">@color/blackColorPrimaryDark</item>
-        <item name="alertDialogTheme">@style/BlackCustomAlertDialogTheme</item>
         <item name="colorLoading">@color/blackColorAuxiliaryTint</item>
         <item name="appTheme">@style/BlackTheme</item>
         <item name="colorDrawableSubtleTint">@color/blackColorDrawableSubtleTint</item>

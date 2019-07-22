@@ -248,12 +248,14 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
     private fun showLogoutDialog() {
         context?.let {
-            val builder = AlertDialog.Builder(it)
-            builder.setTitle(R.string.title_are_you_sure)
+            val dialog = AlertDialog.Builder(it)
+                .setTitle(R.string.title_are_you_sure)
                 .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout() }
                 .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
                 .create()
-                .show()
+            dialog.show()
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
         }
     }
 
@@ -265,6 +267,8 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
                     presenter.deleteAccount(EditText(context).text.toString())
                 }.setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }.create()
             dialog.show()
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
             val keyDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_key_black_20dp, it)
             DrawableHelper.wrapDrawable(keyDrawable)
             DrawableHelper.tintDrawable(keyDrawable, it, ThemeUtil.getThemeColorResource(R.attr.colorDrawableStrongTint))

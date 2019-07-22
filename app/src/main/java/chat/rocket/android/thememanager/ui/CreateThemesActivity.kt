@@ -51,13 +51,15 @@ class CreateThemesActivity : BaseActivity() {
                     baseThemeIndex = position
                 }
                 val editText = view.findViewById<EditText>(R.id.edit_text_theme_name)
-                AlertDialog.Builder(it)
+                val dialog = AlertDialog.Builder(it)
                         .setTitle("Add Theme")
                         .setView(view)
                         .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
                         .setPositiveButton(android.R.string.yes) { _, _ -> addCustomTheme(baseThemeIndex, editText.text.toString()) }
                         .create()
-                        .show()
+                dialog.show()
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
             }
         }
     }

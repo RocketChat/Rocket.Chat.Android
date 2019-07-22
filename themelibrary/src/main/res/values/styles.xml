@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--DARK THEME-->
-    <style name="DarkCustomAlertDialogTheme" parent="CustomAlertDialogTheme">
-        <item name="android:theme">@style/DarkTheme</item>
-    </style>
-
-    <!--BLACK THEME-->
-    <style name="BlackCustomAlertDialogTheme" parent="CustomAlertDialogTheme">
-        <item name="android:theme">@style/BlackTheme</item>
-    </style>
-
     <style name="DefaultDarkThemeColorToolbar">
         <item name="colorPrimary">@color/darkColorPrimary</item>
         <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>

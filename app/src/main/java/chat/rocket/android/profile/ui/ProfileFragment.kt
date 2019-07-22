@@ -337,14 +337,16 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
 
         context?.let {
-            AlertDialog.Builder(it)
+            val dialog = AlertDialog.Builder(it)
                 .setView(dialogLayout)
                 .setPositiveButton(R.string.msg_change_status) { dialog, _ ->
                     presenter.updateStatus(newStatus)
                     text_status.text = getString(R.string.status, newStatus.toString().capitalize())
                     this.currentStatus = newStatus.toString()
                     dialog.dismiss()
-                }.show()
+                }.create()
+            dialog.show()
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
         }
     }
 
