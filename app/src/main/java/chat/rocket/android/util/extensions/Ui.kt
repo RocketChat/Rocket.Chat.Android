@@ -3,6 +3,7 @@ package chat.rocket.android.util.extensions
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.Menu
@@ -41,7 +42,7 @@ fun FragmentActivity.setInvisibleStatusBar(view: View, @ColorInt color: Int = 0)
 
 fun FragmentActivity.clearInvisibleStatusBar(view: View) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        var flags = view.systemUiVisibility
+        val flags = view.systemUiVisibility
         window.decorView.systemUiVisibility = flags and (View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR).inv()
         window.statusBarColor = ThemeUtil.getThemeColor(R.attr.colorPrimaryDark)
     }
