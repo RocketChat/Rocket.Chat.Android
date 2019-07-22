@@ -32,14 +32,22 @@ class AnswersAnalytics : Analytics {
             .logCustom(CustomEvent("screen_view").putCustomAttribute("screen", event.screenName))
 
 
-    override fun logMessageSent(event: SubscriptionTypeEvent, serverUrl: String) =
+    override fun logMessageSent(messageType: String, serverUrl: String) =
         Answers.getInstance()
             .logCustom(
                 CustomEvent("message_actionsent")
-                    .putCustomAttribute("subscription_type", event.subscriptionTypeName)
+                    .putCustomAttribute("message_type", messageType)
                     .putCustomAttribute("server", serverUrl)
             )
 
+    override fun logSendMessageException(countToSend: Int, exceptionDescription: String, serverUrl: String) =
+        Answers.getInstance()
+            .logCustom(
+                    CustomEvent("send_message_exception")
+                            .putCustomAttribute("description", exceptionDescription)
+                            .putCustomAttribute("count_to_send", countToSend)
+                            .putCustomAttribute("server", serverUrl)
+            )
 
     override fun logMediaUploaded(event: SubscriptionTypeEvent, mimeType: String) =
         Answers.getInstance()

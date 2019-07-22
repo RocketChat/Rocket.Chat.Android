@@ -35,15 +35,26 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
     }
 
     // WIDECHAT tracking BSSID
-    override fun logMessageSent(event: SubscriptionTypeEvent, serverUrl: String) {
+    override fun logMessageSent(messageType: String, serverUrl: String) {
         var bssid = SharedPreferenceHelper.getString(Constants.CURRENT_BSSID, "none")
         if (bssid == "none") {
             bssid = SharedPreferenceHelper.getString(Constants.LOCATION_PERMISSION, "none")
 
         }
         firebaseAnalytics.logEvent("message_sent", Bundle(2).apply {
-            putString("subscription_type", event.subscriptionTypeName)
-//            putString("server", serverUrl)
+            putString("message_type", messageType)
+            putString("wifi_bssid", bssid)
+        })
+    }
+
+    override fun logSendMessageException(countToSend: Int, exceptionDescription: String, serverUrl: String) {
+        var bssid = SharedPreferenceHelper.getString(Constants.CURRENT_BSSID, "none")
+        if (bssid == "none") {
+            bssid = SharedPreferenceHelper.getString(Constants.LOCATION_PERMISSION, "none")
+        }
+        firebaseAnalytics.logEvent("send_message_exception", Bundle(2).apply {
+            putString("description", exceptionDescription)
+            putString("count_to_send", countToSend)
             putString("wifi_bssid", bssid)
         })
     }

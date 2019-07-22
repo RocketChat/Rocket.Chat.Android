@@ -2,6 +2,7 @@ package chat.rocket.android.chatroom.service
 
 import android.app.job.JobParameters
 import android.app.job.JobService
+import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
@@ -23,6 +24,8 @@ class MessageService : JobService() {
     lateinit var dbFactory: DatabaseManagerFactory
     @Inject
     lateinit var getAccountsInteractor: GetAccountsInteractor
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreate() {
         super.onCreate()
@@ -62,10 +65,13 @@ class MessageService : JobService() {
                         alias = message.senderAlias
                     )
                     messageRepository.save(message.copy(synced = true))
+                    analyticsManager.logMessageSent(message.type.toString(), serverUrl)
                     Timber.d("Sent scheduled message given by id: ${message.id}")
                 } catch (ex: Exception) {
+                    analyticsManager.logSendMessageException(temporaryMessages.size, ex.toString(), serverUrl)
                     Timber.e(ex)
                     // TODO - remove the generic message when we implement :userId:/message subscription
+
                     if (ex is IllegalStateException) {
                         Timber.e(ex, "Probably a read-only problem...")
                         // TODO: For now we are only going to reschedule when api is fixed.
