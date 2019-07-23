@@ -1175,15 +1175,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun unscheduleDrawable(who: Drawable?, what: Runnable?) {
+    override fun unscheduleDrawable(who: Drawable, what: Runnable) {
         text_message?.removeCallbacks(what)
     }
 
-    override fun invalidateDrawable(who: Drawable?) {
+    override fun invalidateDrawable(who: Drawable) {
         text_message?.invalidate()
     }
 
-    override fun scheduleDrawable(who: Drawable?, what: Runnable?, `when`: Long) {
+    override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
         text_message?.postDelayed(what, `when`)
     }
 

@@ -74,7 +74,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var isGroupByFavorites = false
 
     private val handler = Handler()
-    private val dismissConnectionState by lazy { text_connection_status.fadeOut() }
+    private val dismissConnectionState by lazy { text_connection_status?.fadeOut() }
     private var lastConnectionState: State? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
