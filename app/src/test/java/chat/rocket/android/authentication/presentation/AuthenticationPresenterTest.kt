@@ -7,6 +7,7 @@ import chat.rocket.android.server.domain.*
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import testConfig.Config.Companion.PRIVACY_POLICY
@@ -37,7 +38,8 @@ class AuthenticationPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        Mockito.`when`(serverInteractor.get()).thenReturn(currentServer)
+        `when`(strategy.isTest).thenReturn(true)
+        `when`(serverInteractor.get()).thenReturn(currentServer)
         authenticationPresenter = AuthenticationPresenter(
             strategy, navigator, getCurrentServer, getAccountInteractor, settingsRepository,
             localRepository, tokenRepository, serverInteractor
