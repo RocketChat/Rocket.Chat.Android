@@ -3,6 +3,15 @@ codecov:
   notify:
     require_ci_to_pass: no
 
+ignore:
+  - "app/src/play/.*"
+  - "app/src/main/java/testConfig/.*"
+  - "app/src/main/java/chat/rocket/android/db/.*"
+  - "app/src/main/java/chat/rocket/android/authentication/login/ui/LoginFragment.kt"
+  - "app/src/main/java/chat/rocket/android/authentication/loginoptions/ui/LoginOptionsFragment.kt"
+  - "app/src/main/java/chat/rocket/android/authentication/onboarding/ui/OnBoardingFragment.kt"
+  - "app/src/main/java/chat/rocket/android/authentication/registerusername/ui/RegisterUsernameFragment.kt"
+
 coverage:
   precision: 2
   round: down
