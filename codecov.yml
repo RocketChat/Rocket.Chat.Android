@@ -2,6 +2,8 @@ codecov:
   branch: authentication_tests
   notify:
     require_ci_to_pass: no
+  ignore:
+    - "app/src/play/.*"
 
 coverage:
   precision: 2
@@ -14,6 +16,8 @@ coverage:
       threshold: 0.5%
     patch: no
     changes: no
+
+
 
 comment:
   layout: "header, diff, changes"
