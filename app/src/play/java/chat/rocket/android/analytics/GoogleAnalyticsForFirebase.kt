@@ -52,11 +52,12 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
         if (bssid == "none") {
             bssid = SharedPreferenceHelper.getString(Constants.LOCATION_PERMISSION, "none")
         }
-        firebaseAnalytics.logEvent("send_message_exception", Bundle(3).apply {
-            putString("exception_description", exceptionDescription)
-            putString("count_to_send", countToSend.toString())
-            putString("wifi_bssid", bssid)
-        })
+        val params = Bundle()
+        params.putString("wifi_bssid", bssid)
+        params.putString("exception_description", exceptionDescription.take(100))
+        params.putInt("count_to_send", countToSend)
+
+        firebaseAnalytics.logEvent("send_message_exception", params)
     }
 
     override fun logMediaUploaded(event: SubscriptionTypeEvent, mimeType: String) {
