@@ -13,6 +13,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import testConfig.Config.Companion.communityServerUrl
+import testConfig.Config.Companion.currentServer
 
 
 class OnBoardingPresenterTest {
@@ -31,9 +32,10 @@ class OnBoardingPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
+        Mockito.`when`(strategy.isTest).thenReturn(true)
         onBoardingPresenter = OnBoardingPresenter(
             view, strategy, navigator, serverInteractor, refreshSettingsInteractor,
-            getAccountsInteractor, settingsInteractor, factory
+            getAccountsInteractor, settingsInteractor, factory, currentServer
         )
     }
 
