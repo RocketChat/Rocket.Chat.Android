@@ -32,7 +32,6 @@ class OnBoardingPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        Mockito.`when`(strategy.isTest).thenReturn(true)
         onBoardingPresenter = OnBoardingPresenter(
             view, strategy, navigator, serverInteractor, refreshSettingsInteractor,
             getAccountsInteractor, settingsInteractor, factory, currentServer
