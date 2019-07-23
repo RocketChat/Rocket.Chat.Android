@@ -1,5 +1,6 @@
 package chat.rocket.android.authentication.presentation
 
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
@@ -28,6 +29,11 @@ class AuthenticationPresenterTest {
     private val getAccountInteractor = Mockito.mock(GetAccountInteractor::class.java)
     private val serverInteractor = Mockito.mock(GetConnectingServerInteractor::class.java)
 
+    private val deepLinkInfo = DeepLinkInfo(
+        "www.abc.com", "UserId", "token",
+        "rId", "public", "abc"
+    )
+
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
@@ -51,8 +57,32 @@ class AuthenticationPresenterTest {
     }
 
     @Test
+    fun `navigate to Onboarding`() {
+        authenticationPresenter.toOnBoarding()
+        verify(navigator).toOnBoarding()
+    }
+
+    @Test
+    fun `navigate to sign in to your server`() {
+        authenticationPresenter.toSignInToYourServer(deepLinkInfo)
+        verify(navigator).toSignInToYourServer(deepLinkInfo, false)
+    }
+
+    @Test
+    fun `save deep link info`() {
+        authenticationPresenter.saveDeepLinkInfo(deepLinkInfo)
+        verify(navigator).saveDeepLinkInfo(deepLinkInfo)
+    }
+
+    @Test
     fun `navigate to chat list`() {
         authenticationPresenter.toChatList()
         verify(navigator).toChatList()
+    }
+
+    @Test
+    fun `navigate to chat list with deeplink`() {
+        authenticationPresenter.toChatList(deepLinkInfo)
+        verify(navigator).toChatList(deepLinkInfo)
     }
 }

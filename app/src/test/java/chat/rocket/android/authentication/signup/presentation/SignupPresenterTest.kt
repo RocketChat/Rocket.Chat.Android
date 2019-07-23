@@ -6,10 +6,15 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
+import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
+import testConfig.Config.Companion.EMAIL
+import testConfig.Config.Companion.NAME
+import testConfig.Config.Companion.PASSWORD
+import testConfig.Config.Companion.USERNAME
 import testConfig.Config.Companion.currentServer
 import testConfig.Config.Companion.privacyPolicyUrl
 import testConfig.Config.Companion.termsOfServiceUrl
@@ -34,6 +39,7 @@ class SignupPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
+        `when`(strategy.isTest).thenReturn(true)
         `when`(serverInteractor.get()).thenReturn(currentServer)
         signUpPresenter = SignupPresenter(view, strategy, navigator, localRepository, serverInteractor, saveCurrentServerInteractor,
             analyticsManager, factory, saveAccountInteractor, tokenRepository, settingsInteractor)
@@ -49,5 +55,11 @@ class SignupPresenterTest {
     fun `navigate to privacy policy web page`() {
         signUpPresenter.privacyPolicy()
         verify(navigator).toWebPage(privacyPolicyUrl)
+    }
+
+    @Test
+    fun `check signup`() {
+        val result = signUpPresenter.signup(NAME, USERNAME, EMAIL, PASSWORD)
+        assertEquals(result, Unit)
     }
 }

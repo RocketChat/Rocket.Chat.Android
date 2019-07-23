@@ -6,10 +6,14 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
+import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
+import testConfig.Config.Companion.OAUTH_TOKEN
+import testConfig.Config.Companion.USERNAME
+import testConfig.Config.Companion.USER_ID
 import testConfig.Config.Companion.currentServer
 import testConfig.Config.Companion.userAvatar
 import testConfig.Config.Companion.userName
@@ -48,5 +52,11 @@ class RegisterUsernamePresenterTest {
     fun `save new user account`() {
         registerUsernamePresenter.saveAccount(userName)
         verify(saveAccountInteractor).save(account)
+    }
+
+    @Test
+    fun `register username`() {
+        val result = registerUsernamePresenter.registerUsername(USERNAME, USER_ID, OAUTH_TOKEN)
+        assertEquals(result, Unit)
     }
 }

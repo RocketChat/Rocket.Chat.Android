@@ -7,12 +7,14 @@ import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
 import chat.rocket.android.server.domain.SaveConnectingServerInteractor
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
+import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import testConfig.Config.Companion.communityServerUrl
+import testConfig.Config.Companion.currentServer
 
 
 class OnBoardingPresenterTest {
@@ -31,9 +33,10 @@ class OnBoardingPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
+        Mockito.`when`(strategy.isTest).thenReturn(true)
         onBoardingPresenter = OnBoardingPresenter(
             view, strategy, navigator, serverInteractor, refreshSettingsInteractor,
-            getAccountsInteractor, settingsInteractor, factory
+            getAccountsInteractor, settingsInteractor, factory, currentServer
         )
     }
 
@@ -47,5 +50,11 @@ class OnBoardingPresenterTest {
     fun `navigate to web page if new server is created`() {
         onBoardingPresenter.toCreateANewServer(communityServerUrl)
         verify(navigator).toWebPage(communityServerUrl)
+    }
+
+    @Test
+    fun `connect to community server`() {
+        val result = onBoardingPresenter.connectToCommunityServer(communityServerUrl)
+        assertEquals(result, Unit)
     }
 }
