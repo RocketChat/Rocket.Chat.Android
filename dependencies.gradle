@@ -67,7 +67,8 @@ ext {
             espresso              : '3.1.0-alpha4',
             mockito               : '2.25.0',
             roboelectric          : '1.0.0',
-            runner                : '1.1.0'
+            runner                : '1.1.0',
+            uiAutomator           : '2.2.0'
     ]
     libraries = [
             kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
@@ -148,6 +149,7 @@ ext {
             mockito               : "org.mockito:mockito-core:${versions.mockito}",
             mockitoAndroid        : "org.mockito:mockito-android:${versions.mockito}",
             mockitoInline         : "org.mockito:mockito-inline:${versions.mockito}",
-            runner                : "androidx.test:runner:${versions.runner}"
+            runner                : "androidx.test:runner:${versions.runner}",
+            uiAutomator           : "androidx.test.uiautomator:uiautomator:${versions.uiAutomator}"
     ]
 }

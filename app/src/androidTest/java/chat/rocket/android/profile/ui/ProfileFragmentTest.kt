@@ -11,7 +11,9 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.util.extensions.addFragmentBackStack
-import org.junit.*
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import testConfig.Config.Companion.AWAY
 import testConfig.Config.Companion.BUSY
 import testConfig.Config.Companion.CHANGE_STATUS
@@ -35,27 +37,10 @@ class ProfileFragmentTest {
     @Before
     fun setUp() {
         try {
-            rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
-                chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
-            }
-            onView(withId(R.id.text_username_or_email)).perform(
-                typeText(USERNAME),
-                closeSoftKeyboard()
-            )
-            onView(withId(R.id.text_password)).perform(typeText(PASSWORD), closeSoftKeyboard())
-            onView(withId(R.id.button_log_in)).perform(click())
-            Thread.sleep(12000)
-            onView(withId(R.id.toolbar)).check(matches(isDisplayed()))
-            onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click())
-            Thread.sleep(1000)
-            onView(withId(R.id.image_avatar)).perform(click())
-            Thread.sleep(2000)
+            loginIfUserIsLoggedOut()
+            navigateToProfileFragment()
         } catch (e: NoMatchingViewException) {
-            onView(withId(R.id.toolbar)).check(matches(isDisplayed()))
-            onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click())
-            Thread.sleep(1000)
-            onView(withId(R.id.image_avatar)).perform(click())
-            Thread.sleep(2000)
+            navigateToProfileFragment()
         }
     }
 
@@ -116,5 +101,25 @@ class ProfileFragmentTest {
         onView(withText(INVISIBLE)).perform(click())
         onView(withText(CHANGE_STATUS)).perform(click())
         onView(withId(R.id.text_status)).check(matches(withText("Status: Offline")))
+    }
+
+    private fun loginIfUserIsLoggedOut() {
+        rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
+            chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
+        }
+        onView(withId(R.id.text_username_or_email)).perform(
+            typeText(USERNAME), closeSoftKeyboard()
+        )
+        onView(withId(R.id.text_password)).perform(typeText(PASSWORD), closeSoftKeyboard())
+        onView(withId(R.id.button_log_in)).perform(click())
+        Thread.sleep(12000)
+    }
+
+    private fun navigateToProfileFragment() {
+        onView(withId(R.id.toolbar)).check(matches(isDisplayed()))
+        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click())
+        Thread.sleep(1000)
+        onView(withId(R.id.image_avatar)).perform(click())
+        Thread.sleep(2000)
     }
 }
