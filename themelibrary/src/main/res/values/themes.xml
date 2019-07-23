@@ -42,7 +42,6 @@
         <item name="colorBackgroundIsDark">@bool/darkIsDark</item>
     </style>
 
-
     <style name="BlackTheme" parent="AppTheme">
         <item name="colorPrimary">@color/blackColorPrimary</item>
         <item name="colorPrimaryDark">@color/blackColorPrimaryDark</item>
@@ -90,6 +89,7 @@
         <item name="android:colorBackground">@color/Charcoal</item>
         <item name="colorSettingsSecondaryBackground">@color/blackColorSettingsSecondaryBackground</item>
         <item name="colorSubHeaderBackground">@color/Charcoal</item>
+        <item name="android:navigationBarColor">@color/blackColorPrimaryDark</item>
     </style>
 
     <style name="JetBlackTheme" parent="BlackTheme">
@@ -97,6 +97,7 @@
         <item name="android:colorBackground">@color/Jet</item>
         <item name="colorSettingsSecondaryBackground">@color/BlackOlive</item>
         <item name="colorSubHeaderBackground">@color/BlackOlive</item>
+        <item name="android:navigationBarColor">@color/BlackOlive</item>
     </style>
 
     <style name="DarkJungleBlackTheme" parent="BlackTheme">
@@ -104,6 +105,7 @@
         <item name="android:colorBackground">@color/DarkJungle</item>
         <item name="colorSettingsSecondaryBackground">@color/DarkGunMetal</item>
         <item name="colorSubHeaderBackground">@color/DarkGunMetal</item>
+        <item name="android:navigationBarColor">@color/DarkGunMetal</item>
     </style>
 
     <style name="EerieGreenBlackTheme" parent="BlackTheme">
@@ -111,6 +113,7 @@
         <item name="android:colorBackground">@color/EerieGreen</item>
         <item name="colorSettingsSecondaryBackground">@color/RaisinBlack</item>
         <item name="colorSubHeaderBackground">@color/RaisinBlack</item>
+        <item name="android:navigationBarColor">@color/RaisinBlack</item>
     </style>
 
     <style name="DarkBlueBlackTheme" parent="BlackTheme">
@@ -118,6 +121,7 @@
         <item name="android:colorBackground">@color/darkColorBackground</item>
         <item name="colorSettingsSecondaryBackground">@color/darkColorSettingsSecondaryBackground</item>
         <item name="colorSubHeaderBackground">@color/darkColorSettingsSecondaryBackground</item>
+        <item name="android:navigationBarColor">@color/darkColorPrimaryDark</item>
     </style>
 
     <style name="CharcoalDarkTheme" parent="DarkTheme">
@@ -125,6 +129,7 @@
         <item name="android:colorBackground">@color/Charcoal</item>
         <item name="colorSettingsSecondaryBackground">@color/blackColorSettingsSecondaryBackground</item>
         <item name="colorSubHeaderBackground">@color/Charcoal</item>
+        <item name="android:navigationBarColor">@color/blackColorPrimaryDark</item>
     </style>
 
     <style name="JetDarkTheme" parent="DarkTheme">
@@ -132,6 +137,7 @@
         <item name="android:colorBackground">@color/Jet</item>
         <item name="colorSettingsSecondaryBackground">@color/BlackOlive</item>
         <item name="colorSubHeaderBackground">@color/BlackOlive</item>
+        <item name="android:navigationBarColor">@color/BlackOlive</item>
     </style>
 
     <style name="DarkJungleDarkTheme" parent="DarkTheme">
@@ -139,6 +145,7 @@
         <item name="android:colorBackground">@color/DarkJungle</item>
         <item name="colorSettingsSecondaryBackground">@color/DarkGunMetal</item>
         <item name="colorSubHeaderBackground">@color/DarkGunMetal</item>
+        <item name="android:navigationBarColor">@color/DarkGunMetal</item>
     </style>
 
     <style name="EerieGreenDarkTheme" parent="DarkTheme">
@@ -146,6 +153,7 @@
         <item name="android:colorBackground">@color/EerieGreen</item>
         <item name="colorSettingsSecondaryBackground">@color/RaisinBlack</item>
         <item name="colorSubHeaderBackground">@color/RaisinBlack</item>
+        <item name="android:navigationBarColor">@color/RaisinBlack</item>
     </style>
 
     <style name="DarkBlueDarkTheme" parent="DarkTheme">
@@ -153,5 +161,6 @@
         <item name="android:colorBackground">@color/darkColorBackground</item>
         <item name="colorSettingsSecondaryBackground">@color/darkColorSettingsSecondaryBackground</item>
         <item name="colorSubHeaderBackground">@color/darkColorSettingsSecondaryBackground</item>
+        <item name="android:navigationBarColor">@color/darkColorPrimaryDark</item>
     </style>
 </resources>
