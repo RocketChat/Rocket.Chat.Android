@@ -52,8 +52,8 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
         if (bssid == "none") {
             bssid = SharedPreferenceHelper.getString(Constants.LOCATION_PERMISSION, "none")
         }
-        firebaseAnalytics.logEvent("send_message_exception", Bundle(2).apply {
-            putString("description", exceptionDescription)
+        firebaseAnalytics.logEvent("send_message_exception", Bundle(3).apply {
+            putString("exception_description", exceptionDescription)
             putString("count_to_send", countToSend.toString())
             putString("wifi_bssid", bssid)
         })
