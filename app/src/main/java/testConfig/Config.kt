@@ -50,5 +50,6 @@ class Config {
         const val CAS_TOKEN: String = "abcd1234ABCD"
         const val SAML_TOKEN: String = "abcd1234ABCD"
         const val OAUTH_SECRET: String = "abcd1234ABCD"
+        const val AUTHENTICATION_CODE: String = "abcd1234ABCD"
     }
 }
