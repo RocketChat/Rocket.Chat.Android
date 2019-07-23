@@ -54,7 +54,7 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
         }
         firebaseAnalytics.logEvent("send_message_exception", Bundle(2).apply {
             putString("description", exceptionDescription)
-            putString("count_to_send", countToSend)
+            putString("count_to_send", countToSend.toString())
             putString("wifi_bssid", bssid)
         })
     }
