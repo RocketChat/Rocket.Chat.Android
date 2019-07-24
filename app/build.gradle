@@ -212,6 +212,7 @@ dependencies {
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoIntents
     androidTestImplementation libraries.espressoContrib
+    androidTestImplementation libraries.uiAutomator
     testImplementation libraries.mockito
     testImplementation libraries.mockitoInline
     androidTestImplementation libraries.mockitoAndroid
