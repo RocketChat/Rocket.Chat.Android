@@ -51,7 +51,7 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}-{{ checksum "core/build.gradle" }}-{{ checksum "util/build.gradle" }}-{{ checksum "draw/build.gradle" }}-{{ checksum "emoji/build.gradle" }}-{{ checksum "suggestions/build.gradle" }}
       - run:
           name: Download Dependencies
-          command: ./gradlew --no-daemon androidDependencies --quiet --console=plain
+          command: ./gradlew androidDependencies
       - save_cache:
           paths:
             - ~/.gradle/caches
@@ -93,7 +93,7 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}-{{ checksum "core/build.gradle" }}-{{ checksum "util/build.gradle" }}-{{ checksum "draw/build.gradle" }}-{{ checksum "emoji/build.gradle" }}-{{ checksum "suggestions/build.gradle" }}
       - run:
           name: Download Dependencies
-          command: ./gradlew --no-daemon androidDependencies --quiet --console=plain
+          command: ./gradlew androidDependencies
       - save_cache:
           paths:
             - ~/.gradle/caches
@@ -130,7 +130,7 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}-{{ checksum "core/build.gradle" }}-{{ checksum "util/build.gradle" }}-{{ checksum "draw/build.gradle" }}-{{ checksum "emoji/build.gradle" }}-{{ checksum "suggestions/build.gradle" }}
       - run:
           name: Download Dependencies
-          command: ./gradlew --no-daemon androidDependencies --quiet --console=plain
+          command: ./gradlew androidDependencies
       - save_cache:
           paths:
             - ~/.gradle/caches
