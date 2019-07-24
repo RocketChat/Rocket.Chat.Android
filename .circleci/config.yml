@@ -5,7 +5,7 @@ build:
 jobs:
   build-kotlin-sdk:
     docker:
-      - image: circleci/android:api-29
+      - image: circleci/android:api-28-node
     environment:
       JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
