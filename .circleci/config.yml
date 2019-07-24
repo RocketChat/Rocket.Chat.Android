@@ -5,7 +5,7 @@ build:
 jobs:
   build-kotlin-sdk:
     docker:
-      - image: circleci/android:api-29
+      - image: circleci/android:api-28
     environment:
       JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
@@ -34,7 +34,7 @@ jobs:
           destination: libs
   code-analysis:
     docker:
-      - image: circleci/android:api-29
+      - image: circleci/android:api-28
     environment:
       JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
@@ -71,7 +71,7 @@ jobs:
           destination: reports
   build-play-apk:
     docker:
-      - image: circleci/android:api-29
+      - image: circleci/android:api-28
     environment:
       JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
@@ -108,7 +108,7 @@ jobs:
           destination: apks
   build-foss-apk:
     docker:
-      - image: circleci/android:api-29
+      - image: circleci/android:api-28
     environment:
       JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
