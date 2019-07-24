@@ -5,7 +5,7 @@ build:
 jobs:
   build-kotlin-sdk:
     docker:
-      - image: circleci/android:api-28-alpha
+      - image: circleci/android:api-29
     environment:
       JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
@@ -15,7 +15,7 @@ jobs:
           command: git clone https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK.git ../Rocket.Chat.Kotlin.SDK
       - run:
           name: ANDROID_HOME
-          command: echo "sdk.dir="$ANDROID_HOME > local.properties 
+          command: echo "sdk.dir="$ANDROID_HOME > local.properties
       - run:
           name: Build Kotlin.SDK
           command: pushd app/ ; ./build-sdk.sh ; popd
@@ -34,7 +34,7 @@ jobs:
           destination: libs
   code-analysis:
     docker:
-      - image: circleci/android:api-28-alpha
+      - image: circleci/android:api-29
     environment:
       JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
@@ -71,7 +71,7 @@ jobs:
           destination: reports
   build-play-apk:
     docker:
-      - image: circleci/android:api-28-alpha
+      - image: circleci/android:api-29
     environment:
       JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
@@ -108,7 +108,7 @@ jobs:
           destination: apks
   build-foss-apk:
     docker:
-      - image: circleci/android:api-28-alpha
+      - image: circleci/android:api-29
     environment:
       JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
