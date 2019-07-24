@@ -36,6 +36,7 @@ class ServersBottomSheetFragmentTest {
             loginIfUserIsLoggedOut()
             onView(withText(ORG_NAME)).perform(click())
         } catch (e: NoMatchingViewException) {
+            Thread.sleep(3000)
             onView(withText(ORG_NAME)).perform(click())
         }
     }

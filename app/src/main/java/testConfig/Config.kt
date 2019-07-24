@@ -14,6 +14,18 @@ class Config {
         const val NAME: String = "user121"
         const val EMAIL: String = "qasdf@gmail.com"
 
+        //Existing User
+        const val EXISTING_USER: String ="1marc"
+
+        //Non existing User
+        const val NON_EXISTING_USER: String = "**33##&&"
+
+        //Existing Channel
+        const val EXISTING_CHANNEL: String ="general"
+
+        //Non existing Channel
+        const val NON_EXISTING_CHANNEL: String = "**33##&&"
+
         const val CODE = "1234"
         const val USER_ID = "user_id"
         const val AUTH_TOKEN = "auth_token"
@@ -41,6 +53,8 @@ class Config {
         const val CHANNELS: String = "Channels"
         const val DIRECT_MESSAGES: String = "Direct Messages"
         const val FILES: String = "Files"
+        const val USERS: String = "Users"
+        const val DIRECTORY: String = "Directory"
         const val VERSION_NAME: String = BuildConfig.VERSION_NAME
         const val VERSION_CODE: Int = BuildConfig.VERSION_CODE
         const val APP_VERSION: String = "Version: $VERSION_NAME ($VERSION_CODE)"
