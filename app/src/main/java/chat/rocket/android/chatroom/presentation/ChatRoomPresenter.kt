@@ -408,6 +408,7 @@ class ChatRoomPresenter @Inject constructor(
                                 RoomUiModel(roles = chatRoles, isBroadcast = chatIsBroadcast)
                             ), false
                         )
+                        clearDraftMessage()
                         client.sendMessage(id, chatRoomId, text)
                         messagesRepository.save(newMessage.copy(synced = true))
                         analyticsManager.logMessageSent(newMessage.type.toString(), currentServer)
@@ -428,14 +429,13 @@ class ChatRoomPresenter @Inject constructor(
                         }
                     }
                 } else {
+                    clearDraftMessage()
                     client.updateMessage(chatRoomId, messageId, text)
                 }
-                clearDraftMessage()
             } catch (ex: Exception) {
                 Timber.e(ex, "Error sending message...")
                 jobSchedulerInteractor.scheduleSendingMessages()
             } finally {
-                view.clearMessageComposition(true)
                 view.enableSendMessageButton()
             }
         }
@@ -1334,6 +1334,7 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     fun clearDraftMessage() {
+        view.clearMessageComposition(true)
         localRepository.clear(draftKey)
     }
     /**
