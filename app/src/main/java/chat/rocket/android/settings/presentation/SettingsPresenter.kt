@@ -67,6 +67,7 @@ class SettingsPresenter @Inject constructor(
     fun setupView() {
         launchUI(strategy) {
             try {
+                view.showLoading()
                 currentServer?.let {
                     val serverInfo = retryIO(description = "serverInfo", times = 5) {
                         rocketChatClientFactory.get(it).serverInfo()
@@ -84,6 +85,7 @@ class SettingsPresenter @Inject constructor(
                         )
                     }
                 }
+                view.hideLoading()
             } catch (exception: Exception) {
                 Timber.d(exception, "Error getting server info")
                 exception.message?.let {
@@ -91,6 +93,7 @@ class SettingsPresenter @Inject constructor(
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }
+                view.hideLoading()
             }
         }
     }
