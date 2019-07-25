@@ -35,7 +35,6 @@ class MentionsFragmentTest {
         try {
             loginIfUserIsLoggedOut()
         } catch (e: NoMatchingViewException) {
-            Thread.sleep(3000)
         }
     }
 

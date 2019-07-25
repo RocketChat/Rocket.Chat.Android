@@ -36,6 +36,7 @@ class SettingsFragmentTest {
             loginIfUserIsLoggedOut()
             navigateToSettings()
         } catch (e: NoMatchingViewException) {
+            Thread.sleep(3000)
             navigateToSettings()
         }
     }

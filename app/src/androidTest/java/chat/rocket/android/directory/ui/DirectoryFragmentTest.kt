@@ -77,6 +77,7 @@ class DirectoryFragmentTest {
     fun search_an_existing_channel() {
         onView(withId(R.id.action_search)).perform(click())
         onView(isAssignableFrom(AutoCompleteTextView::class.java)).perform(
+            clearText(),
             typeText(EXISTING_CHANNEL),
             closeSoftKeyboard()
         )
@@ -88,6 +89,7 @@ class DirectoryFragmentTest {
     fun search_a_non_existing_channel() {
         onView(withId(R.id.action_search)).perform(click())
         onView(isAssignableFrom(AutoCompleteTextView::class.java)).perform(
+            clearText(),
             typeText(NON_EXISTING_CHANNEL),
             closeSoftKeyboard()
         )
@@ -102,6 +104,7 @@ class DirectoryFragmentTest {
         Espresso.pressBack()
         onView(withId(R.id.action_search)).perform(click())
         onView(isAssignableFrom(AutoCompleteTextView::class.java)).perform(
+            clearText(),
             typeText(EXISTING_USER),
             closeSoftKeyboard()
         )
@@ -115,6 +118,7 @@ class DirectoryFragmentTest {
         onView(withId(R.id.action_search)).perform(click())
         Thread.sleep(3000)
         onView(isAssignableFrom(AutoCompleteTextView::class.java)).perform(
+            clearText(),
             typeText(NON_EXISTING_USER),
             closeSoftKeyboard()
         )

@@ -60,6 +60,7 @@ fun clickChildViewWithId(id: Int): ViewAction {
     }
 }
 
+//Matches an element with id as a childView
 fun withTextInChild(id: Int, text: String): ViewAction {
     return object : ViewAction {
         override fun getConstraints(): Matcher<View> {
@@ -74,8 +75,25 @@ fun withTextInChild(id: Int, text: String): ViewAction {
         }
 
         override fun perform(uiController: UiController, view: View) {
-            val v = view?.findViewById<TextView>(id)
+            val v = view.findViewById<TextView>(id)
             v?.text = text
+        }
+    }
+}
+
+//Matches an element with an id at a particular index
+fun withIndex(matcher: Matcher<View>, index: Int): Matcher<View> {
+    return object : TypeSafeMatcher<View>() {
+        var currentIndex = 0
+
+        override fun describeTo(description: Description) {
+            description.appendText("with index: ")
+            description.appendValue(index)
+            matcher.describeTo(description)
+        }
+
+        public override fun matchesSafely(view: View): Boolean {
+            return matcher.matches(view) && currentIndex++ == index
         }
     }
 }

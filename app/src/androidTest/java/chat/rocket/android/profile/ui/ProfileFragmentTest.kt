@@ -40,7 +40,7 @@ class ProfileFragmentTest {
             loginIfUserIsLoggedOut()
             navigateToProfileFragment()
         } catch (e: NoMatchingViewException) {
-            Thread.sleep(3000)
+            Thread.sleep(4000)
             navigateToProfileFragment()
         }
     }
