@@ -47,6 +47,7 @@ import chat.rocket.common.model.UserStatus
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.setTypingStatus
+import chat.rocket.core.internal.realtime.socket.connect
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.realtime.subscribeRoomMessages
 import chat.rocket.core.internal.realtime.subscribeTypingStatus
@@ -356,6 +357,9 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 view.disableSendMessageButton()
+                if(client.state is State.Disconnected || client.state is State.Waiting){
+                    client.connect()
+                }
                 // ignore message for now, will receive it on the stream
                 if (messageId == null) {
                     val id = UUID.randomUUID().toString()
