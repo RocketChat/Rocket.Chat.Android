@@ -38,6 +38,8 @@ dependencies {
 
     implementation libraries.rxBinding
 
+    implementation libraries.threeTenABP
+
     // TODO This is a dependency from the core module, but the util module are unable to get that dependencies. Check why it is occurring since transitive is enable by default
     implementation libraries.lifecycleExtensions
     kapt libraries.lifecycleCompiler
