@@ -41,9 +41,15 @@ class AnalyticsManager @Inject constructor(
         }
     }
 
-    fun logMessageSent(event: SubscriptionTypeEvent) {
+    fun logMessageSent(messageType: String, serverUrl: String) {
         if (analyticsTrackingInteractor.get() && serverUrl != null) {
-            analytics.forEach { it.logMessageSent(event, serverUrl) }
+            analytics.forEach { it.logMessageSent(messageType, serverUrl) }
+        }
+    }
+
+    fun logSendMessageException(countToSend: Int, exceptionDescription: String, serverUrl: String) {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logSendMessageException(countToSend, exceptionDescription, serverUrl) }
         }
     }
 
