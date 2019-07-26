@@ -50,6 +50,7 @@
     <string name="action_drawing">绘画</string>
     <string name="action_save_to_gallery">保存到图库</string>
     <string name="action_select_photo_from_gallery">从图库选照片</string>
+    <string name="action_view_profile_photo">View profile photo</string> <!-- TODO Add translation -->
     <string name="action_take_a_photo">拍照</string>
     <string name="action_reset_avatar">重置头像</string>
     <string name="action_connect_server">连接到服务器</string>

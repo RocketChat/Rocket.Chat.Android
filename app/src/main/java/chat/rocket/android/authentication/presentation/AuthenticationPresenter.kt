@@ -1,5 +1,6 @@
 package chat.rocket.android.authentication.presentation
 
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetAccountInteractor
@@ -52,5 +53,14 @@ class AuthenticationPresenter @Inject constructor(
     fun privacyPolicy(toolbarTitle: String) =
         serverInteractor.get()?.let { navigator.toWebPage(it.privacyPolicyUrl(), toolbarTitle) }
 
+    fun toOnBoarding() = navigator.toOnBoarding()
+
+    fun toSignInToYourServer(deepLinkInfo: DeepLinkInfo? = null) =
+        navigator.toSignInToYourServer(deepLinkInfo, false)
+
+    fun saveDeepLinkInfo(deepLinkInfo: DeepLinkInfo) = navigator.saveDeepLinkInfo(deepLinkInfo)
+
     fun toChatList() = navigator.toChatList()
+
+    fun toChatList(deepLinkInfo: DeepLinkInfo) = navigator.toChatList(deepLinkInfo)
 }

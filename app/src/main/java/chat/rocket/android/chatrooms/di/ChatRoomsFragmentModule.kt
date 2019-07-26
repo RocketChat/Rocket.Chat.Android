@@ -42,9 +42,9 @@ class ChatRoomsFragmentModule {
     @PerFragment
     fun provideRocketChatClient(
         factory: RocketChatClientFactory,
-        @Named("currentServer") currentServer: String
+        @Named("currentServer") currentServer: String?
     ): RocketChatClient {
-        return factory.get(currentServer)
+        return currentServer?.let { factory.get(it) }!!
     }
 
     @Provides
@@ -59,9 +59,9 @@ class ChatRoomsFragmentModule {
     @PerFragment
     fun provideConnectionManager(
         factory: ConnectionManagerFactory,
-        @Named("currentServer") currentServer: String
+        @Named("currentServer") currentServer: String?
     ): ConnectionManager {
-        return factory.create(currentServer)
+        return currentServer?.let { factory.create(it) }!!
     }
 
     @Provides
@@ -77,9 +77,9 @@ class ChatRoomsFragmentModule {
     @PerFragment
     fun providePublicSettings(
         repository: SettingsRepository,
-        @Named("currentServer") currentServer: String
+        @Named("currentServer") currentServer: String?
     ): PublicSettings {
-        return repository.get(currentServer)
+        return currentServer?.let { repository.get(it) }!!
     }
 
     @Provides
@@ -89,26 +89,28 @@ class ChatRoomsFragmentModule {
         settingsRepository: SettingsRepository,
         userInteractor: GetCurrentUserInteractor,
         tokenRepository: TokenRepository,
-        @Named("currentServer") serverUrl: String,
+        @Named("currentServer") currentServer: String?,
         permissionsInteractor: PermissionsInteractor
     ): RoomUiModelMapper {
-        return RoomUiModelMapper(
-            context,
-            settingsRepository.get(serverUrl),
-            userInteractor,
-            tokenRepository,
-            serverUrl,
-            permissionsInteractor
-        )
+        return currentServer?.let {
+            RoomUiModelMapper(
+                context,
+                settingsRepository.get(it),
+                userInteractor,
+                tokenRepository,
+                it,
+                permissionsInteractor
+            )
+        }!!
     }
 
     @Provides
     @PerFragment
     fun provideGetCurrentUserInteractor(
         tokenRepository: TokenRepository,
-        @Named("currentServer") serverUrl: String,
+        @Named("currentServer") currentServer: String?,
         userDao: UserDao
     ): GetCurrentUserInteractor {
-        return GetCurrentUserInteractor(tokenRepository, serverUrl, userDao)
+        return currentServer?.let { GetCurrentUserInteractor(tokenRepository, it, userDao) }!!
     }
 }

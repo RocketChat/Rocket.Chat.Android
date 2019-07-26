@@ -25,14 +25,14 @@ class ChatDetailsPresenter @Inject constructor(
 ) {
     private val currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
-    private val client = manager.client
+    private val client = manager?.client
 
     fun toggleFavoriteChatRoom(roomId: String, isFavorite: Boolean) {
         launchUI(strategy) {
             try {
                 // Note: If it is favorite then the user wants to remove the favorite - and vice versa.
                 retryIO("favorite($roomId, ${!isFavorite})") {
-                    client.favorite(roomId, !isFavorite)
+                    client?.favorite(roomId, !isFavorite)
                 }
                 view.showFavoriteIcon(!isFavorite)
             } catch (e: RocketChatException) {
@@ -55,10 +55,11 @@ class ChatDetailsPresenter @Inject constructor(
     fun getDetails(chatRoomId: String, chatRoomType: String) {
         launchUI(strategy) {
             try {
-                val room = retryIO("getInfo($chatRoomId, null, $chatRoomType") {
-                    client.getInfo(chatRoomId, null, roomTypeOf(chatRoomType))
+                retryIO("getInfo($chatRoomId, null, $chatRoomType") {
+                    client?.getInfo(chatRoomId, null, roomTypeOf(chatRoomType))?.let { room ->
+                        view.displayDetails(roomToChatDetails(room))
+                    }
                 }
-                view.displayDetails(roomToChatDetails(room))
             } catch (exception: Exception) {
                 Timber.e(exception)
                 exception.message?.let {

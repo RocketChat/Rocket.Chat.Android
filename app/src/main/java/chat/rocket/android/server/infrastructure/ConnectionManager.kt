@@ -2,13 +2,10 @@ package chat.rocket.android.server.infrastructure
 
 import androidx.lifecycle.MutableLiveData
 import chat.rocket.android.db.DatabaseManager
-import chat.rocket.common.model.BaseMessage
+import chat.rocket.android.util.extension.orZero
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.User
-import chat.rocket.common.model.UserStatus
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.realtime.setDefaultStatus
-import chat.rocket.core.internal.realtime.setTemporaryStatus
 import chat.rocket.core.internal.realtime.socket.connect
 import chat.rocket.core.internal.realtime.socket.disconnect
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -18,11 +15,8 @@ import chat.rocket.core.internal.realtime.subscribeActiveUsers
 import chat.rocket.core.internal.realtime.subscribeRoomMessages
 import chat.rocket.core.internal.realtime.subscribeRooms
 import chat.rocket.core.internal.realtime.subscribeSubscriptions
-import chat.rocket.core.internal.realtime.subscribeUserData
 import chat.rocket.core.internal.realtime.unsubscribe
-import chat.rocket.core.internal.rest.chatRooms
 import chat.rocket.core.model.Message
-import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,104 +36,76 @@ class ConnectionManager(
     internal val client: RocketChatClient,
     private val dbManager: DatabaseManager
 ) : CoroutineScope {
-    private var connectJob : Job? = null
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO
 
-    val statusLiveData = MutableLiveData<State>()
-    private val statusChannelList = CopyOnWriteArrayList<Channel<State>>()
-    private val statusChannel = Channel<State>(Channel.CONFLATED)
-
-    private val roomMessagesChannels = LinkedHashMap<String, Channel<Message>>()
-    private val userDataChannels = ArrayList<Channel<Myself>>()
-    private val roomsChannels = LinkedHashMap<String, Channel<Room>>()
-    private val subscriptionIdMap = HashMap<String, String>()
-
-    private var subscriptionId: String? = null
-    private var roomsId: String? = null
-    private var userDataId: String? = null
-    private var activeUserId: String? = null
-    private var temporaryStatus: UserStatus? = null
-
+    private var connectJob: Job? = null
     private val activeUsersContext = newSingleThreadContext("activeUsersContext")
     private val roomsContext = newSingleThreadContext("roomsContext")
-    private val messagesContext = newSingleThreadContext("messagesContext")
+
+    val stateLiveData = MutableLiveData<State>()
+    private val stateChannel = Channel<State>()
+    private val stateChannelList = CopyOnWriteArrayList<Channel<State>>()
+
+    private val roomsChannels = LinkedHashMap<String, Channel<Room>>()
 
     fun connect() {
-        if (connectJob?.isActive == true && state !is State.Disconnected) {
-            Timber.d("Already connected, just returning...")
+        if (connectJob?.isActive == true && client.state !is State.Disconnected) {
+            Timber.d("Already connected")
             return
         }
 
-        // cleanup first
-        client.removeStateChannel(statusChannel)
-        client.disconnect()
-        connectJob?.cancel()
+        // Cleanup first
+        disconnect()
 
-        // Connect and setup
-        client.addStateChannel(statusChannel)
+        // Setup and connect
+        client.addStateChannel(stateChannel)
         connectJob = launch {
-            for (status in statusChannel) {
-                Timber.d("Changing status to: $status")
-                when (status) {
-                    is State.Connected -> {
-                        dbManager.clearUsersStatus()
+            for (state in stateChannel) {
+                Timber.d("Changing state to: $state")
 
-                        client.subscribeSubscriptions { _, id ->
-                            Timber.d("Subscribed to subscriptions: $id")
-                            subscriptionId = id
-                        }
-
-                        client.subscribeRooms { _, id ->
-                            Timber.d("Subscribed to rooms: $id")
-                            roomsId = id
-                        }
-
-                        client.subscribeUserData { _, id ->
-                            Timber.d("Subscribed to the userData id: $id")
-                            userDataId = id
-                        }
-
-                        client.subscribeActiveUsers { _, id ->
-                            Timber.d("Subscribed to the activeUser id: $id")
-                            activeUserId = id
-                        }
-
-                        resubscribeRooms()
-                        temporaryStatus?.let { client.setTemporaryStatus(it) }
-
-                    }
-                    is State.Waiting -> Timber.d("Connection in: ${status.seconds}")
+                if (state is State.Connected) {
+                    client.subscribeSubscriptions { _, _ -> }
+                    client.subscribeRooms { _, _ -> }
+                    client.subscribeActiveUsers { _, _ -> }
                 }
 
-                statusLiveData.postValue(status)
-
-                for (channel in statusChannelList) {
-                    Timber.d("Sending status: $status to $channel")
-                    channel.offer(status)
-                }
+                stateLiveData.postValue(state)
+                stateChannelList.forEach { it.offer(state) }
             }
         }
 
-        var totalBatchedUsers = 0
-        val userActor = createBatchActor<User>(
-            activeUsersContext, parent = connectJob, maxSize = 500, maxTime = 1000
-        ) { users ->
-            totalBatchedUsers += users.size
-            Timber.d("Processing Users batch: ${users.size} - $totalBatchedUsers")
+        addElementsIntoChannel()
+        client.connect()
+    }
 
-            // TODO - move this to an Interactor
-            dbManager.processUsersBatch(users)
+    fun disconnect() {
+        Timber.d("Disconnecting")
+        connectJob?.cancel()
+        with(client) {
+            removeStateChannel(stateChannel)
+            disconnect()
         }
+        Timber.d("Disconnected")
+    }
 
+    fun resetReconnectionTimer() {
+        // if we're waiting to reconnect immediately try to reconnect and reset the reconnection counter.
+        if (client.state is State.Waiting) {
+            client.connect(resetCounter = true)
+        }
+    }
+
+    private fun addElementsIntoChannel() {
         val roomsActor = createBatchActor<StreamMessage<BaseRoom>>(
-            roomsContext, parent = connectJob, maxSize = 10
+            roomsContext,
+            maxSize = 10
         ) { batch ->
-            Timber.d("processing Stream batch: ${batch.size} - $batch")
+            Timber.d("Processing stream batch: ${batch.size} - $batch")
             dbManager.processChatRoomsBatch(batch)
 
             batch.forEach {
-                //TODO - Do we need to handle Type.Removed and Type.Inserted here?
+                // TODO - Do we need to handle Type.Removed and Type.Inserted here?
                 if (it.type == Type.Updated) {
                     if (it.data is Room) {
                         val room = it.data as Room
@@ -149,154 +115,46 @@ class ConnectionManager(
             }
         }
 
-        val messagesActor = createBatchActor<Message>(
-            messagesContext, parent = connectJob, maxSize = 100, maxTime = 500
-        ) { messages ->
-            Timber.d("Processing Messages batch: ${messages.size}")
-            dbManager.processMessagesBatch(messages.distinctBy { it.id })
-
-            launch {
-                messages.forEach { message ->
-                    val channel = roomMessagesChannels[message.roomId]
-                    channel?.send(message)
-                }
-            }
+        var totalBatchedUsers = 0
+        val userActor = createBatchActor<User>(
+            activeUsersContext,
+            maxSize = 500,
+            maxTime = 1000
+        ) { users ->
+            totalBatchedUsers += users.size
+            Timber.d("Processing users batch: ${users.size} - $totalBatchedUsers")
+            dbManager.processUsersBatch(users)
         }
 
-        // stream-notify-user - ${userId}/rooms-changed
         launch {
             for (room in client.roomsChannel) {
-                Timber.d("GOT Room streamed")
+                Timber.d("Got room streamed")
                 roomsActor.send(room)
-                if (room.type != Type.Removed) {
-                    room.data.lastMessage?.let {
-                        // FIXME Do we really need to send it to messagesActor?
-//                        messagesActor.send(it as Message)
-                    }
-                }
             }
-        }
 
-        // stream-notify-user - ${userId}/subscriptions-changed
-        launch {
             for (subscription in client.subscriptionsChannel) {
-                Timber.d("GOT Subscription streamed")
+                Timber.d("Got subscription streamed")
                 roomsActor.send(subscription)
             }
-        }
 
-        // stream-room-messages - $roomId
-        launch {
-            for (message in client.messagesChannel) {
-                Timber.d("Received new Message for room ${message.roomId}")
-                messagesActor.send(message)
-            }
-        }
-
-        // userData
-        launch {
-            for (myself in client.userDataChannel) {
-                Timber.d("Got userData")
-                dbManager.updateSelfUser(myself)
-                for (channel in userDataChannels) {
-                    channel.send(myself)
-                }
-            }
-        }
-
-        // activeUsers
-        launch {
             for (user in client.activeUsersChannel) {
                 userActor.send(user)
             }
         }
-
-        client.connect()
-
-        // Broadcast initial state...
-        val state = client.state
-        for (channel in statusChannelList) {
-            channel.offer(state)
-        }
     }
 
-    fun setDefaultStatus(userStatus: UserStatus) {
-        temporaryStatus = null
-        client.setDefaultStatus(userStatus)
-    }
+    fun addStateChannel(channel: Channel<State>) = stateChannelList.add(channel)
 
-    fun setTemporaryStatus(userStatus: UserStatus) {
-        temporaryStatus = userStatus
-        client.setTemporaryStatus(userStatus)
-    }
-
-    fun resetReconnectionTimer() {
-        // if we are waiting to reconnect, immediately try to reconnect
-        // and reset the reconnection counter
-        if (client.state is State.Waiting) {
-            client.connect(resetCounter = true)
-        }
-    }
-
-    private fun resubscribeRooms() {
-        roomMessagesChannels.toList().map { (roomId, _) ->
-            client.subscribeRoomMessages(roomId) { _, id ->
-                Timber.d("Subscribed to $roomId: $id")
-                subscriptionIdMap[roomId] = id
-            }
-        }
-    }
-
-    fun disconnect() {
-        Timber.d("ConnectionManager DISCONNECT")
-        client.removeStateChannel(statusChannel)
-        client.disconnect()
-        connectJob?.cancel()
-        temporaryStatus = null
-    }
-
-    fun addStatusChannel(channel: Channel<State>) = statusChannelList.add(channel)
-
-    fun removeStatusChannel(channel: Channel<State>) = statusChannelList.remove(channel)
-
-    fun addUserDataChannel(channel: Channel<Myself>) = userDataChannels.add(channel)
-
-    fun removeUserDataChannel(channel: Channel<Myself>) = userDataChannels.remove(channel)
+    fun removeStateChannel(channel: Channel<State>) = stateChannelList.remove(channel)
 
     fun addRoomChannel(roomId: String, channel: Channel<Room>) {
         roomsChannels[roomId] = channel
     }
 
-    fun removeRoomChannel(roomId: String) {
-        roomsChannels.remove(roomId)
-    }
-
-    fun subscribeRoomMessages(roomId: String, channel: Channel<Message>) {
-        val oldSub = roomMessagesChannels.put(roomId, channel)
-        if (oldSub != null) {
-            Timber.d("Room $roomId already subscribed...")
-            return
-        }
-
-        if (client.state is State.Connected) {
-            client.subscribeRoomMessages(roomId) { _, id ->
-                Timber.d("Subscribed to $roomId: $id")
-                subscriptionIdMap[roomId] = id
-            }
-        }
-    }
-
-    fun unsubscribeRoomMessages(roomId: String) {
-        val sub = roomMessagesChannels.remove(roomId)
-        if (sub != null) {
-            val id = subscriptionIdMap.remove(roomId)
-            id?.let { client.unsubscribe(it) }
-        }
-    }
+    fun removeRoomChannel(roomId: String) = roomsChannels.remove(roomId)
 
     private inline fun <T> createBatchActor(
         context: CoroutineContext = Dispatchers.IO,
-        parent: Job? = null,
         maxSize: Int = 100,
         maxTime: Int = 500,
         crossinline block: (List<T>) -> Unit
@@ -320,7 +178,6 @@ class ConnectionManager(
                     // when received -> add to batch
                     channel.onReceive {
                         batch.add(it)
-                        //Timber.d("Adding user to batch: ${batch.size}")
                         // init deadline on first item added to batch
                         if (batch.size == 1) deadline = System.currentTimeMillis() + maxTime
                     }
@@ -333,13 +190,3 @@ class ConnectionManager(
         }
     }
 }
-
-private fun Long.orZero(): Long {
-    return if (this < 0) 0 else this
-}
-
-suspend fun ConnectionManager.chatRooms(timestamp: Long = 0, filterCustom: Boolean = true) =
-    client.chatRooms(timestamp, filterCustom)
-
-val ConnectionManager.state: State
-    get() = client.state
