@@ -52,6 +52,7 @@
     <string name="action_select_photo_from_gallery">Escolher foto da galeria</string>
     <string name="action_take_a_photo">Tirar uma foto</string>
     <string name="action_reset_avatar">Resetar avatar</string>
+    <string name="action_view_profile_photo">View profile photo</string> <!-- TODO Add translation -->
     <string name="action_connect_server">Conectar com um servidor</string>
     <string name="action_join_community">Junte-se à comunidade</string>
     <string name="action_create_server">Criar um novo servidor</string>

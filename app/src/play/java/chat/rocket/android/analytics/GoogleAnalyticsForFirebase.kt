@@ -3,6 +3,7 @@ package chat.rocket.android.analytics
 import android.content.Context
 import android.os.Bundle
 import chat.rocket.android.analytics.event.AuthenticationEvent
+import chat.rocket.android.analytics.event.InviteType
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.analytics.event.SubscriptionTypeEvent
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -70,6 +71,12 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
         firebaseAnalytics.logEvent("video_conference", Bundle(2).apply {
             putString("subscription_type", event.subscriptionTypeName)
             putString("server", serverUrl)
+        })
+    }
+
+    override fun logInviteSent(inviteType: InviteType) {
+        firebaseAnalytics.logEvent("invite_sent", Bundle(1).apply {
+            putString("invite_type", inviteType.inviteTypeName)
         })
     }
 

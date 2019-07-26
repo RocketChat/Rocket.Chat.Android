@@ -23,4 +23,19 @@ interface UserDetailsView : LoadingView, MessageView {
         utcOffset: String?,
         isVideoCallAllowed: Boolean
     )
+
+    /**
+     * Show Remove User Button
+     **/
+    fun showRemoveUserButton()
+
+    /**
+     * Hide Remove User Button
+     **/
+    fun hideRemoveUserButton()
+
+    /**
+     * Show a message that user is successfully removed
+     **/
+    fun showUserRemovedMessage()
 }

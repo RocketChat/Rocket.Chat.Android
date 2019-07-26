@@ -8,20 +8,25 @@ import javax.inject.Singleton
 @Singleton
 class ConnectionManagerFactory @Inject constructor(
     private val factory: RocketChatClientFactory,
-    private val dbFactory: DatabaseManagerFactory
+    private val dbFactory: DatabaseManagerFactory?
 ) {
     private val cache = HashMap<String, ConnectionManager>()
 
-    fun create(url: String): ConnectionManager {
+    fun create(url: String): ConnectionManager? {
         cache[url]?.let {
             Timber.d("Returning CACHED Manager for: $url")
             return it
         }
 
-        Timber.d("Returning FRESH Manager for: $url")
-        val manager = ConnectionManager(factory.get(url), dbFactory.create(url))
-        cache[url] = manager
-        return manager
+        dbFactory?.create(url)?.let { databaseManager ->
+            ConnectionManager(factory.get(url), databaseManager).apply {
+                cache[url] = this
+                Timber.d("Returning FRESH Manager for: $url")
+                return this
+            }
+        }
+
+        return null
     }
 
     fun get(url: String) = cache[url]

@@ -233,7 +233,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
             }
 
         val inviteMembersDisposable = text_invite_members.asObservable()
-            .debounce(500, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+            .debounce(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
             .filter { t -> t.isNotBlank() }
             .subscribe {
                 if (it.length >= 3) {
@@ -265,7 +265,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
             showMessage(getString(R.string.msg_member_already_added))
         } else {
             view_member_suggestion.isVisible = false
-            text_invite_members.setText("")
+            text_invite_members.text.clear()
             addMember(username)
             addChip(username)
             chip_group_member.isVisible = true

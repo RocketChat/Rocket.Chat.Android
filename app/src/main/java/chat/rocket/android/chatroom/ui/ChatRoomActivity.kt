@@ -71,7 +71,7 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         // Workaround for when we are coming to the app via the recents app and the app was killed.
         val serverUrl = serverInteractor.get()
         if (serverUrl != null) {
-            managerFactory.create(serverUrl).connect()
+            managerFactory.create(serverUrl)?.connect()
         } else {
             navigator.toNewServer()
             return

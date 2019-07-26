@@ -1,6 +1,6 @@
 package chat.rocket.android.authentication.server.presentation
 
-import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
@@ -15,6 +15,7 @@ import chat.rocket.android.util.extensions.isValidUrl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Named
 
 class ServerPresenter @Inject constructor(
     private val view: ServerView,
@@ -24,10 +25,12 @@ class ServerPresenter @Inject constructor(
     private val refreshSettingsInteractor: RefreshSettingsInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
     val settingsInteractor: GetSettingsInteractor,
-    val factory: RocketChatClientFactory
+    val factory: RocketChatClientFactory,
+    @Named("currentServer") private val currentServer: String?
 ) : CheckServerPresenter(
     strategy = strategy,
     factory = factory,
+    currentSavedServer = currentServer,
     settingsInteractor = settingsInteractor,
     versionCheckView = view,
     refreshSettingsInteractor = refreshSettingsInteractor
@@ -79,7 +82,7 @@ class ServerPresenter @Inject constructor(
         }
     }
 
-    fun deepLink(deepLinkInfo: LoginDeepLinkInfo) {
+    fun deepLink(deepLinkInfo: DeepLinkInfo) {
         connectToServer(deepLinkInfo.url) {
             navigator.toLoginOptions(deepLinkInfo.url, deepLinkInfo = deepLinkInfo)
         }

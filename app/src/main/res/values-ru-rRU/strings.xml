@@ -54,6 +54,7 @@
     <string name="action_reset_avatar">Восстановить аватар</string>
     <string name="action_connect_server">Соединиться с сервером</string>
     <string name="action_join_community">Сообщество</string>
+    <string name="action_view_profile_photo">View profile photo</string> <!-- TODO Add translation -->
     <string name="action_create_server">Создать новый сервер</string>
     <string name="action_register">Зарегистрировать</string>
     <string name="action_confirm">Подтвердить</string>
