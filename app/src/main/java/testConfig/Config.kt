@@ -15,13 +15,14 @@ class Config {
         const val EMAIL: String = "qasdf@gmail.com"
 
         //Existing User
-        const val EXISTING_USER: String ="1marc"
+        const val EXISTING_USER: String ="dfcxc"
 
         //Non existing User
         const val NON_EXISTING_USER: String = "**33##&&"
 
         //Existing Channel
         const val EXISTING_CHANNEL: String ="general"
+        const val SANDBOX: String ="sandbox"
 
         //Non existing Channel
         const val NON_EXISTING_CHANNEL: String = "**33##&&"
@@ -58,6 +59,8 @@ class Config {
         const val VERSION_CODE: Int = BuildConfig.VERSION_CODE
         const val APP_VERSION: String = "Version: $VERSION_NAME ($VERSION_CODE)"
         const val FAVORITE_MESSAGES: String = "Favorite Messages"
+        const val PINNED_MESSAGES: String = "Pinned Messages"
         const val MENTIONS: String = "Mentions"
+        const val TEST_MESSAGE: String = "This is a test message"
     }
 }

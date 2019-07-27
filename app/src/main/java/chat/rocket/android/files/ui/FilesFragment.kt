@@ -104,7 +104,7 @@ class FilesFragment : Fragment(), FilesView {
 
     override fun openImage(url: String, name: String) {
         ui {
-            ImageHelper.openImage(root_layout.context, url, name)
+            ImageHelper.openImage(files_layout.context, url, name)
         }
     }
 
