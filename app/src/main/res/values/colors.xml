@@ -9,7 +9,7 @@
     <!-- Misc colors -->
     <color name="colorDivider">#1F000000</color>
     <color name="colorBottomSheetFragmentHeading">@color/colorPrimary</color>
-    <color name="colorBottomSheetFragmentText">#FF9EA2A8</color>
+    <color name="colorBottomSheetFragmentText">#77000000</color>
     <color name="colorChatComponentBackground">#f3f4f5</color>
     <color name="colorSubHeaderBackground">#54585e</color>
 
@@ -27,7 +27,7 @@
     <color name="colorChannelTitle">#FF0C0D0F</color>
     <color name="colorControlText">#54585e</color>
     <color name="colorSubHeaderText">#FFCBCED1</color>
-    <color name="colorDescriptiveText">#FF9EA2A8</color>
+    <color name="colorDescriptiveText">#88000000</color>
     <color name="colorChatText">#54585e</color>
 
     <!-- User status colors -->
@@ -43,9 +43,9 @@
     <color name="whitesmoke">#FFf1f1f1</color> <!--review-->
 
     <!-- Authentication colors -->
-    <color name="colorAuthenticationButtonBorderAndDivider">#FFE1E5E8</color>
-    <color name="colorAuthenticationButtonDisabled">#FFE1E5E8</color>
-    <color name="colorAuthenticationChevronAndExpandIcon">#FFCBCED1</color> <!--review-->
+    <color name="colorAuthenticationButtonBorderAndDivider">#22000000</color>
+    <color name="colorAuthenticationButtonDisabled">#22000000</color>
+    <color name="colorAuthenticationChevronAndExpandIcon">#22000000</color> <!--review-->
     <color name="colorTextHintEditText">#66000000</color> <!-- colorAuxiliaryText from stylesheet-->
     <color name="colorTextHintToolbar">#88ffffff</color> <!-- colorAuxiliaryText from stylesheet-->
     <color name="colorAuxiliaryText">#FF9CA2A8</color>

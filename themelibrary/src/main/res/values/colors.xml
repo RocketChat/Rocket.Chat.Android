@@ -10,8 +10,9 @@
     <color name="darkColorSettingsSecondaryBackground">#0b182c</color> <!--used in settings fragment-->
 
     <color name="darkColorTextHint">#77ffffff</color> <!-- colorAuxiliaryText -->
-    <color name="darkColorDescriptiveText">#FF9297a3</color> <!-- colorAuxiliaryText -->
-    <color name="darkColorBottomSheetFragmentText">#FF9297a3</color> <!-- darker text -->
+    <color name="darkColorDescriptiveText">#70FFFFFF</color> <!-- colorAuxiliaryText -->
+    <color name="darkColorBottomSheetFragmentText">#77ffffff</color> <!-- darker text -->
+    <!--<color name="darkColorBottomSheetFragmentText">#FF9297a3</color> &lt;!&ndash; darker text &ndash;&gt;-->
     <color name="darkColorDrawableSubtleTint">#FF9297a3</color>
     <color name="darkColorQuoteBar">#FF9297a3</color> <!--self defined, not in stylesheet-->
     <color name="darkColorAuthenticationSecondaryText">#FF9297a3</color> <!-- darker text -->
@@ -19,8 +20,8 @@
     <color name="darkColorSecondaryText">#FF9297a3</color> <!--Self Defined-->
 
     <color name="darkColorMutedAccent">#2b2b2d</color> <!--defined in stylesheet-->
-    <color name="darkColorDivider">#2b2b2d</color> <!--defined in stylesheet-->
-    <color name="darkColorAuthenticationButtonBorderAndDivider">#2b2b2d</color> <!--defined in stylesheet-->
+    <color name="darkColorDivider">#33FFFFFF</color> <!--defined in stylesheet-->
+    <color name="darkColorAuthenticationButtonBorderAndDivider">#33FFFFFF</color> <!--defined in stylesheet-->
     <color name="darkColorStatusInvisible">#2b2b2d</color> <!--self assigned-->
 
     <color name="darkColorTitleText">#ffffff</color> <!--defined in stylesheet, used for headings-->
@@ -40,7 +41,7 @@
     <color name="darkColorFloatingActionButtonBackground">#261d74f5</color> <!-- Picked from layouts -->
 
     <color name="darkColorFloatingActionButtonBorder">#4c1d74f5</color> <!-- Picked from layouts -->
-    <color name="darkColorAuthenticationButtonDisabled">#4c1d74f5</color> <!--self defined-->
+    <color name="darkColorAuthenticationButtonDisabled">#22FFFFFF</color> <!--self defined-->
 
     <color name="darkColorAccent">#1d74f5</color> <!--defined in stylesheet-->
     <color name="darkColorBackground">#030c1b</color> <!--defined in stylesheet-->
@@ -61,8 +62,9 @@
     <color name="blackColorSettingsSecondaryBackground">#FF0e0d0d</color> <!--used in settings fragment-->
 
     <color name="blackColorTextHint">#77ffffff</color> <!-- Picked from layouts -->
-    <color name="blackColorDescriptiveText">#FF9297a3</color> <!-- Picked from layouts -->
-    <color name="blackColorBottomSheetFragmentText">#FF9297a3</color> <!-- darker text -->
+    <color name="blackColorDescriptiveText">#70FFFFFF</color> <!-- Picked from layouts -->
+    <!--<color name="blackColorBottomSheetFragmentText">#FF9297a3</color> &lt;!&ndash; darker text &ndash;&gt;-->
+    <color name="blackColorBottomSheetFragmentText">#77ffffff</color> <!-- darker text -->
     <color name="blackColorDrawableSubtleTint">#FF9297a3</color>
     <color name="blackColorQuoteBar">#FF9297a3</color> <!--self defined, not in stylesheet-->
     <color name="blackColorAuthenticationSecondaryText">#FF9297a3</color> <!-- darker text -->
@@ -70,9 +72,9 @@
     <color name="blackColorSecondaryText">#FF9297a3</color> <!--Self Defined-->
 
     <color name="blackColorMutedAccent">#FF2b2b29</color> <!--defined in stylesheet-->
-    <color name="blackColorDivider">#FF2b2b29</color> <!--defined in stylesheet-->
-    <color name="blackColorAuthenticationButtonDisabled">#FF2b2b29</color> <!--defined in stylesheet-->
-    <color name="blackColorAuthenticationButtonBorderAndDivider">#FF2b2b29</color> <!--defined in stylesheet-->
+    <color name="blackColorDivider">#33FFFFFF</color> <!--defined in stylesheet-->
+    <color name="blackColorAuthenticationButtonDisabled">#22FFFFFF</color> <!--self defined-->
+    <color name="blackColorAuthenticationButtonBorderAndDivider">#33FFFFFF</color> <!--defined in stylesheet-->
     <color name="blackColorStatusInvisible">#FF2b2b29</color> <!--self assigned-->
 
     <color name="blackColorTitleText">#FFFAFAFA</color> <!--defined in stylesheet, used for headings-->
@@ -125,12 +127,15 @@
 
     <color name="Jet">#1A1A1A</color>
     <color name="BlackOlive">#1E1E1E</color>
+    <color name="Silver">#C0C0C0</color>
 
     <color name="DarkJungle">#142022</color>
     <color name="DarkGunMetal">#182628</color>
+    <color name="Ebony">#545C5E</color>
 
     <color name="EerieGreen">#131901</color>
     <color name="RaisinBlack">#21231A</color>
+    <color name="GraniteGray">#686C5D</color>
 
     <string-array name="DarkCustomBackground">
         <item>Default</item>

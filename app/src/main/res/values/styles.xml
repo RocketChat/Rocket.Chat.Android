@@ -371,6 +371,10 @@
         <item name="android:textColor">?colorPrimaryText</item>
     </style>
 
+    <style name="ItemTextAppearance">
+        <item name="android:textColor">?colorPrimaryText</item>
+    </style>
+
     <style name="DefaultAppThemeColorAccent">
         <item name="colorAccent">@color/colorAccent</item>
     </style>
