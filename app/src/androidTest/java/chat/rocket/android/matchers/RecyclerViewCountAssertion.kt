@@ -16,7 +16,7 @@ class RecyclerViewItemCountAssertion private constructor(private val matcher: Ma
             throw noViewFoundException
         }
         val recyclerView = view as RecyclerView
-        val adapter = recyclerView.getAdapter()
+        val adapter = recyclerView.adapter
         assertThat(adapter!!.itemCount, matcher)
     }
 

@@ -16,6 +16,7 @@ class Config {
 
         //Existing User
         const val EXISTING_USER: String ="dfcxc"
+        const val EXISTING_USER2: String ="govind.dixit"
 
         //Non existing User
         const val NON_EXISTING_USER: String = "**33##&&"
