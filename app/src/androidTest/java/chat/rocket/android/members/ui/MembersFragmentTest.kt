@@ -1,10 +1,8 @@
 package chat.rocket.android.members.ui
 
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.rule.ActivityTestRule
@@ -17,6 +15,7 @@ import org.hamcrest.Matchers.greaterThan
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import testConfig.Config.Companion.EXISTING_CHANNEL
 import testConfig.Config.Companion.MEMBERS
 import testConfig.Config.Companion.PASSWORD
 import testConfig.Config.Companion.SERVER_URL
@@ -62,13 +61,8 @@ class MembersFragmentTest {
     }
 
     private fun navigateToChannelDetails() {
-        Thread.sleep(5000)
-        onView(withId(R.id.recycler_view))
-            .perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0, click()
-                )
-            )
+        Thread.sleep(3000)
+        onView(withText(EXISTING_CHANNEL)).perform(click())
         Thread.sleep(2000)
         onView(withId(R.id.text_toolbar_title)).perform(click())
     }
