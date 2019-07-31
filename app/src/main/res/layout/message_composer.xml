@@ -69,6 +69,7 @@
 
             <chat.rocket.android.emoji.ComposerEditText
                 android:id="@+id/text_message"
+                android:theme = "?appTheme"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
