@@ -79,7 +79,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_chevron_right_black_24dp"
-                android:tint="@color/colorAuthenticationChevronAndExpandIcon"
+                android:tint="?colorAuthenticationButtonBorderAndDivider"
                 tools:ignore="ContentDescription" />
         </RelativeLayout>
 
@@ -131,7 +131,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_chevron_right_black_24dp"
-                android:tint="@color/colorAuthenticationChevronAndExpandIcon"
+                android:tint="?colorAuthenticationButtonBorderAndDivider"
                 tools:ignore="ContentDescription" />
         </RelativeLayout>
 

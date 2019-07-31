@@ -8,7 +8,6 @@
     android:paddingStart="16dp"
     android:paddingTop="16dp"
     android:paddingEnd="16dp">
-    <!--android:background="?selectableItemBackground"-->
 
     <ImageView
         android:id="@+id/image_server"

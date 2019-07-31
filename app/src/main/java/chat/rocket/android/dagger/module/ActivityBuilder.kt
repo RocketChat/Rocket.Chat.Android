@@ -46,6 +46,7 @@ import chat.rocket.android.videoconference.di.VideoConferenceModule
 import chat.rocket.android.videoconference.ui.VideoConferenceActivity
 import chat.rocket.android.webview.adminpanel.di.AdminPanelWebViewFragmentProvider
 import chat.rocket.android.webview.oauth.ui.OauthWebViewActivity
+import chat.rocket.android.webview.ui.WebViewActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -115,6 +116,10 @@ abstract class ActivityBuilder {
     @PerActivity
     @ContributesAndroidInjector(modules = [(BaseActivityModule::class)])
     abstract fun OauthWebViewActivity(): OauthWebViewActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = [(BaseActivityModule::class)])
+    abstract fun bindWebViewActivity(): WebViewActivity
 
     @PerActivity
     @ContributesAndroidInjector(modules = [PasswordFragmentProvider::class, BaseActivityModule::class])
