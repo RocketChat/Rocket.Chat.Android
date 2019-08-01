@@ -377,86 +377,107 @@
 
     <style name="DefaultAppThemeColorAccent">
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="appAccentStyle">@style/DefaultAppThemeColorAccent</item>
     </style>
 
     <style name="RedColorAccent">
         <item name="colorAccent">@color/Red</item>
+        <item name="appAccentStyle">@style/RedColorAccent</item>
     </style>
 
     <style name="LightPinkColorAccent">
         <item name="colorAccent">@color/LightPink</item>
+        <item name="appAccentStyle">@style/LightPinkColorAccent</item>
     </style>
 
     <style name="LightPurpleColorAccent">
         <item name="colorAccent">@color/LightPurple</item>
+        <item name="appAccentStyle">@style/LightPurpleColorAccent</item>
     </style>
 
     <style name="LightDeepPurpleColorAccent">
         <item name="colorAccent">@color/LightDeepPurple</item>
+        <item name="appAccentStyle">@style/LightDeepPurpleColorAccent</item>
     </style>
 
     <style name="BlueColorAccent">
         <item name="colorAccent">@color/Blue</item>
+        <item name="appAccentStyle">@style/BlueColorAccent</item>
     </style>
 
     <style name="VermilionColorAccent">
         <item name="colorAccent">@color/Vermilion</item>
+        <item name="appAccentStyle">@style/VermilionColorAccent</item>
     </style>
 
     <style name="TealColorAccent">
         <item name="colorAccent">@color/Teal</item>
+        <item name="appAccentStyle">@style/TealColorAccent</item>
     </style>
 
     <style name="GreenColorAccent">
         <item name="colorAccent">@color/GrassGreen</item>
+        <item name="appAccentStyle">@style/GreenColorAccent</item>
     </style>
 
     <style name="LimeColorAccent">
         <item name="colorAccent">@color/Lime</item>
+        <item name="appAccentStyle">@style/LimeColorAccent</item>
     </style>
 
     <style name="AmberColorAccent">
         <item name="colorAccent">@color/Amber</item>
+        <item name="appAccentStyle">@style/AmberColorAccent</item>
     </style>
 
     <style name="OrangeColorAccent">
         <item name="colorAccent">@color/Orange</item>
+        <item name="appAccentStyle">@style/OrangeColorAccent</item>
     </style>
 
     <style name="BrownColorAccent">
         <item name="colorAccent">@color/Brown</item>
+        <item name="appAccentStyle">@style/BrownColorAccent</item>
     </style>
 
     <style name="BlueGreyColorAccent">
         <item name="colorAccent">@color/BlueGrey</item>
+        <item name="appAccentStyle">@style/BlueGreyColorAccent</item>
     </style>
 
     <style name="GreyColorAccent">
         <item name="colorAccent">@color/Grey</item>
+        <item name="appAccentStyle">@style/GreyColorAccent</item>
     </style>
 
     <style name="CoralColorAccent">
         <item name="colorAccent">@color/Coral</item>
+        <item name="appAccentStyle">@style/CoralColorAccent</item>
     </style>
 
     <style name="CoconutColorAccent">
         <item name="colorAccent">@color/Coconut</item>
+        <item name="appAccentStyle">@style/CoconutColorAccent</item>
     </style>
 
     <style name="BurntUmberColorAccent">
         <item name="colorAccent">@color/BurntUmber</item>
+        <item name="appAccentStyle">@style/BurntUmberColorAccent</item>
     </style>
 
     <style name="TeaPinkColorAccent">
         <item name="colorAccent">@color/TeaPink</item>
+        <item name="appAccentStyle">@style/TeaPinkColorAccent</item>
     </style>
 
     <style name="BronzeColorAccent">
         <item name="colorAccent">@color/Bronze</item>
+        <item name="appAccentStyle">@style/BronzeColorAccent</item>
     </style>
 
     <style name="TurtleGreenColorAccent">
         <item name="colorAccent">@color/TurtleGreen</item>
+        <item name="appAccentStyle">@style/TurtleGreenColorAccent</item>
     </style>
 
     <style name="DefaultAppThemeColorToolbar">
