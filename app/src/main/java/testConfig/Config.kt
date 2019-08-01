@@ -60,6 +60,7 @@ class Config {
         const val APP_VERSION: String = "Version: $VERSION_NAME ($VERSION_CODE)"
         const val FAVORITE_MESSAGES: String = "Favorite Messages"
         const val MENTIONS: String = "Mentions"
+        const val CHAT_ROOM_ID: String = "abcd1234ABCD"
         const val OAUTH_TOKEN: String = "abcd1234ABCD"
         const val CAS_TOKEN: String = "abcd1234ABCD"
         const val SAML_TOKEN: String = "abcd1234ABCD"
