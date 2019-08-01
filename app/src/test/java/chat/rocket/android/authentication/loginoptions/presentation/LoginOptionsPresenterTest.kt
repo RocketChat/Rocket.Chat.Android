@@ -15,11 +15,12 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import testConfig.Config
 import testConfig.Config.Companion.CAS_TOKEN
 import testConfig.Config.Companion.OAUTH_SECRET
 import testConfig.Config.Companion.OAUTH_TOKEN
 import testConfig.Config.Companion.SAML_TOKEN
+import testConfig.Config.Companion.UPDATED_AVATAR
+import testConfig.Config.Companion.USERNAME
 import testConfig.Config.Companion.currentServer
 
 
@@ -46,7 +47,7 @@ class LoginOptionsPresenterTest {
 
     private val account = Account(
         currentServer, currentServer, null,
-        null, Config.USERNAME, Config.UPDATED_AVATAR
+        null, USERNAME, UPDATED_AVATAR
     )
 
     @Before
@@ -78,7 +79,7 @@ class LoginOptionsPresenterTest {
         val method = loginOptionsPresenter.javaClass.getDeclaredMethod("saveAccount", String::class.java)
         method.isAccessible = true
         val parameters = arrayOfNulls<Any>(1)
-        parameters[0] = Config.USERNAME
+        parameters[0] = USERNAME
         method.invoke(loginOptionsPresenter, *parameters)
         verify(saveAccountInteractor).save(account)
     }
