@@ -36,6 +36,7 @@
         android:gravity="center"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/message_time_text_size"
+        android:theme="?appAccentStyle"
         android:visibility="invisible"
         app:layout_anchor="@id/button_fab"
         app:layout_anchorGravity="end"
