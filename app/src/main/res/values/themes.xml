@@ -38,8 +38,8 @@
         <item name="colorPrimaryText">@color/colorPrimaryText</item>
         <item name="colorReactionBackground">@color/colorReactionBackground</item>
         <item name="colorReactionBorder">@color/colorReactionBorder</item>
-        <item name="colorFloatingActionButtonBackground">@color/colorFloatingActionButtonBackground</item>
-        <item name="colorFloatingActionButtonBorder">@color/colorFloatingActionButtonBorder</item>
+        <item name="colorFloatingActionButtonBackground">?android:colorBackground</item>
+        <item name="colorFloatingActionButtonBorder">?android:colorBackground</item>
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialogStyle</item>
         <item name="alertDialogTheme">@style/CustomAlertDialogTheme</item>
         <item name="android:statusBarColor">?colorPrimaryDark</item>
