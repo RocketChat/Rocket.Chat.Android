@@ -68,7 +68,6 @@
         <item name="colorSubHeaderBackground">@color/colorSettingsSecondaryBackground</item>
         <item name="colorSubHeaderText">@color/colorControlText</item>
         <item name="colorLoading">@color/colorControlText</item>
-        <item name="colorAccent">@color/colorControlText</item>
     </style>
 
     <style name="LightPeachAppTheme" parent="AppTheme">
@@ -79,7 +78,6 @@
         <item name="colorSubHeaderText">@color/Smoke</item>
         <item name="android:navigationBarColor">@color/Linen</item>
         <item name="colorLoading">@color/PeachOrange</item>
-        <item name="colorAccent">@color/DarkSalmon</item>
     </style>
 
     <style name="AlmondAppTheme" parent="AppTheme">
@@ -90,6 +88,5 @@
         <item name="colorSubHeaderText">@color/colorWhite</item>
         <item name="android:navigationBarColor">@color/Linen</item>
         <item name="colorLoading">@color/Taupe</item>
-        <item name="colorAccent">@color/Taupe</item>
     </style>
 </resources>
