@@ -15,13 +15,16 @@ class Config {
         const val EMAIL: String = "qasdf@gmail.com"
 
         //Existing User
-        const val EXISTING_USER: String ="1marc"
+        const val EXISTING_USER: String ="dfcxc"
+        const val EXISTING_USER2: String ="govind.dixit"
 
         //Non existing User
         const val NON_EXISTING_USER: String = "**33##&&"
 
         //Existing Channel
         const val EXISTING_CHANNEL: String ="general"
+        const val EXISTING_CHANNEL2: String ="dfcxc"
+        const val SANDBOX: String ="sandbox"
 
         //Non existing Channel
         const val NON_EXISTING_CHANNEL: String = "**33##&&"
@@ -29,10 +32,12 @@ class Config {
         const val CODE = "1234"
         const val USER_ID = "user_id"
         const val AUTH_TOKEN = "auth_token"
+        const val USER_TOKEN = "user_token"
 
         const val currentServer: String = "https://$SERVER"
         const val communityServerUrl: String = currentServer
         const val defaultTestServer: String = currentServer
+        const val adminPanelUrl: String = "https://$SERVER/admin/info?layout=embedded"
         const val userName: String = "userName"
         const val avatar: String = "serverUrl/avatar/userName?format=jpeg&rc_uid=null&rc_token=null"
         const val userAvatar: String = "$currentServer/avatar/userName?format=jpeg&rc_uid=null&rc_token=null"
@@ -58,6 +63,8 @@ class Config {
         const val VERSION_CODE: Int = BuildConfig.VERSION_CODE
         const val APP_VERSION: String = "Version: $VERSION_NAME ($VERSION_CODE)"
         const val FAVORITE_MESSAGES: String = "Favorite Messages"
+        const val PINNED_MESSAGES: String = "Pinned Messages"
         const val MENTIONS: String = "Mentions"
+        const val TEST_MESSAGE: String = "This is a test message"
     }
 }
