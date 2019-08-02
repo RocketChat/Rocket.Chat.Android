@@ -38,6 +38,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/ic_action_message_pin_24dp"
+        android:tint="?colorDescriptiveText"
         app:layout_constraintBottom_toTopOf="@id/tv_pin_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

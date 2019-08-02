@@ -1,12 +1,15 @@
 package chat.rocket.android.directory.ui
 
 import DrawableHelper
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import chat.rocket.android.R
 import chat.rocket.android.thememanager.util.ThemeUtil
@@ -67,6 +70,7 @@ class DirectorySortingBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tintTextViewStartDrawables()
+        tintCheckDrawable()
         setupView()
         setupListeners()
     }
@@ -135,6 +139,12 @@ class DirectorySortingBottomSheetFragment : BottomSheetDialogFragment() {
             val drawables = arrayOf(hashtagDrawable, userDrawable)
             DrawableHelper.wrapDrawables(drawables)
             DrawableHelper.tintDrawables(drawables, it, ThemeUtil.getThemeColorResource(R.attr.colorBottomSheetFragmentText))
+        }
+    }
+
+    private fun tintCheckDrawable() {
+        context?.let {
+            DrawableHelper.tintDrawable(checkDrawable, it, ThemeUtil.getThemeColorResource(R.attr.colorAccent))
         }
     }
 }

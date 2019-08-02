@@ -22,7 +22,8 @@
         <item name="colorBottomSheetFragmentHeading">@color/colorBottomSheetFragmentHeading</item>
         <item name="colorAuthenticationButtonBorderAndDivider">@color/colorAuthenticationButtonBorderAndDivider</item>
         <item name="colorRadioButton">@color/colorPrimary</item>
-        <item name="android:textColorHint">@color/colorTextHint</item>
+        <item name="android:textColorHint">@color/colorTextHintToolbar</item>
+        <item name="colorTextHintEditText">@color/colorTextHintEditText</item>
         <item name="colorButtonDisabled">@color/colorAuthenticationButtonDisabled</item>
         <item name="colorControlText">@color/colorControlText</item>
         <item name="colorControlNormal">@color/colorControlText</item>
@@ -37,11 +38,11 @@
         <item name="colorPrimaryText">@color/colorPrimaryText</item>
         <item name="colorReactionBackground">@color/colorReactionBackground</item>
         <item name="colorReactionBorder">@color/colorReactionBorder</item>
-        <item name="colorFloatingActionButtonBackground">@color/colorFloatingActionButtonBackground</item>
-        <item name="colorFloatingActionButtonBorder">@color/colorFloatingActionButtonBorder</item>
+        <item name="colorFloatingActionButtonBackground">?android:colorBackground</item>
+        <item name="colorFloatingActionButtonBorder">?android:colorBackground</item>
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialogStyle</item>
         <item name="alertDialogTheme">@style/CustomAlertDialogTheme</item>
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor">?colorPrimaryDark</item>
         <item name="colorLoading">@color/colorAuxiliaryTint</item>
         <item name="appTheme">@style/AppTheme</item>
         <item name="colorDrawableSubtleTint">@color/colorDrawableSubtleTint</item>
@@ -56,5 +57,36 @@
         <item name="buttonBarNegativeButtonStyle">@style/Alert.Button</item>
         <item name="buttonBarNeutralButtonStyle">@style/Alert.Button</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
+        <item name="android:editTextColor">@color/colorWhite</item>
+        <item name="android:itemTextAppearance">@style/ItemTextAppearance</item>
+    </style>
+
+    <style name="SnowAppTheme" parent="AppTheme">
+        <item name="appTheme">@style/SnowAppTheme</item>
+        <item name="android:colorBackground">@color/Snow</item>
+        <item name="colorSettingsSecondaryBackground">@color/colorSettingsSecondaryBackground</item>
+        <item name="colorSubHeaderBackground">@color/colorSettingsSecondaryBackground</item>
+        <item name="colorSubHeaderText">@color/colorControlText</item>
+        <item name="colorLoading">@color/colorControlText</item>
+    </style>
+
+    <style name="LightPeachAppTheme" parent="AppTheme">
+        <item name="appTheme">@style/LightPeachAppTheme</item>
+        <item name="android:colorBackground">@color/LightPeach</item>
+        <item name="colorSettingsSecondaryBackground">@color/SpanishPink</item>
+        <item name="colorSubHeaderBackground">@color/PeachOrange</item>
+        <item name="colorSubHeaderText">@color/Smoke</item>
+        <item name="android:navigationBarColor">@color/Linen</item>
+        <item name="colorLoading">@color/PeachOrange</item>
+    </style>
+
+    <style name="AlmondAppTheme" parent="AppTheme">
+        <item name="appTheme">@style/AlmondAppTheme</item>
+        <item name="android:colorBackground">@color/Almond</item>
+        <item name="colorSettingsSecondaryBackground">@color/PastelGray</item>
+        <item name="colorSubHeaderBackground">@color/Taupe</item>
+        <item name="colorSubHeaderText">@color/colorWhite</item>
+        <item name="android:navigationBarColor">@color/Linen</item>
+        <item name="colorLoading">@color/Taupe</item>
     </style>
 </resources>

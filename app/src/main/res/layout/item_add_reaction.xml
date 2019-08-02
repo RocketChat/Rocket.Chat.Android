@@ -9,4 +9,5 @@
     android:background="?android:colorBackground"
     android:paddingStart="4dp"
     android:paddingTop="2dp"
+    android:tint="?colorDescriptiveText"
     android:src="@drawable/ic_add_reaction" />

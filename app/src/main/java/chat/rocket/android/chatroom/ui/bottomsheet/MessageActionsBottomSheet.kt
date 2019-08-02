@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.ui.bottomsheet
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
+import chat.rocket.android.thememanager.util.ThemeUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.message_action_item.view.*
 import kotlinx.android.synthetic.main.message_bottomsheet.*
@@ -15,8 +17,15 @@ import kotlinx.android.synthetic.main.message_bottomsheet.*
 class MessageActionsBottomSheet : BottomSheetDialogFragment() {
 
     private val adapter = MessageActionAdapter()
+    private val addReactionDrawable by lazy {
+        DrawableHelper.getDrawableFromId(R.drawable.ic_add_reaction, requireContext())
+    }
+    private val pinDrawable by lazy {
+        DrawableHelper.getDrawableFromId(R.drawable.ic_action_message_pin_24dp, requireContext())
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        tintDrawable()
         return inflater.inflate(R.layout.message_bottomsheet, container, false)
     }
 
@@ -71,6 +80,13 @@ class MessageActionsBottomSheet : BottomSheetDialogFragment() {
                     itemClickListener.dismissAction.invoke()
                 }
             }
+        }
+    }
+
+    private fun tintDrawable() {
+        context?.let {
+            val drawables = arrayOf(addReactionDrawable, pinDrawable)
+            DrawableHelper.tintDrawables(drawables, it, ThemeUtil.getThemeColorResource(R.attr.colorDescriptiveText))
         }
     }
 }

@@ -5,8 +5,8 @@
     android:id="@+id/relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusableInTouchMode="true"
     android:background="?android:colorBackground"
+    android:focusableInTouchMode="true"
     tools:context=".profile.ui.ProfileFragment">
 
     <include
@@ -55,7 +55,8 @@
                 android:layout_width="match_parent"
                 android:drawableStart="@drawable/ic_person_black_20dp"
                 android:hint="@string/msg_profile_name_hint"
-                android:inputType="textCapWords" />
+                android:inputType="textCapWords"
+                android:textColorHint="?colorTextHintEditText" />
 
             <TextView
                 style="@style/Profile.TextView"
@@ -69,7 +70,8 @@
                 android:layout_width="match_parent"
                 android:drawableStart="@drawable/ic_at_black_20dp"
                 android:hint="@string/msg_profile_username_hint"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textColorHint="?colorTextHintEditText" />
 
             <TextView
                 style="@style/Profile.TextView"
@@ -84,7 +86,8 @@
                 android:layout_marginBottom="16dp"
                 android:drawableStart="@drawable/ic_email_black_20dp"
                 android:hint="@string/msg_profile_email_hint"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:textColorHint="?colorTextHintEditText" />
         </LinearLayout>
 
     </ScrollView>

@@ -7,10 +7,8 @@
     android:layout_height="wrap_content"
     android:background="?android:colorBackground"
     android:orientation="vertical"
-    android:paddingEnd="@dimen/screen_edge_left_and_right_margins"
-    android:paddingStart="72dp">
-    <!--android:background="?android:attr/selectableItemBackground"-->
-
+    android:paddingStart="72dp"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_margins">
 
     <TextView
         android:id="@+id/file_name"
@@ -21,9 +19,9 @@
 
     <TextView
         android:id="@+id/file_description"
-        android:textColor="?colorDim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="?colorDim"
         tools:text="Some description" />
 
     <com.facebook.drawee.view.SimpleDraweeView
@@ -51,9 +49,9 @@
 
     <TextView
         android:id="@+id/file_text"
-        android:textColor="?colorDim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="?colorDim"
         tools:text="Some text" />
 
     <include

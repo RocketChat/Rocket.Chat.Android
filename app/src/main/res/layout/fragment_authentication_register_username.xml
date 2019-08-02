@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/screen_edge_left_and_right_margins"
     android:background="?android:colorBackground"
+    android:padding="@dimen/screen_edge_left_and_right_margins"
     tools:context=".authentication.registerusername.ui.RegisterUsernameFragment">
 
     <TextView
@@ -23,6 +23,7 @@
         android:hint="@string/msg_username"
         android:imeOptions="actionDone"
         android:inputType="text"
+        android:textColorHint="?colorTextHintEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_sign_in_to_your_server" />

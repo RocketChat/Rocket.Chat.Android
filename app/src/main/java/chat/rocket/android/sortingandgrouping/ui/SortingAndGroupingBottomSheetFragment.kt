@@ -50,6 +50,9 @@ class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), Sorti
     private val groupByFavoritesDrawable by lazy {
         DrawableHelper.getDrawableFromId(R.drawable.ic_favorites_20dp, requireContext())
     }
+    private val checkDrawable by lazy {
+        DrawableHelper.getDrawableFromId(R.drawable.ic_check, requireContext())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +70,7 @@ class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), Sorti
         super.onViewCreated(view, savedInstanceState)
         presenter.getSortingAndGroupingPreferences()
         tintTextViewStartDrawables()
+        tintCheckDrawable()
         setupListeners()
     }
 
@@ -173,7 +177,7 @@ class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), Sorti
             DrawableHelper.compoundStartAndEndDrawable(
                 textView,
                 startDrawable,
-                DrawableHelper.getDrawableFromId(R.drawable.ic_check, it)
+                checkDrawable
             )
         }
     }
@@ -201,6 +205,12 @@ class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), Sorti
             val drawables = arrayOf(filterDrawable, activityDrawable, unreadOnTopDrawable, groupByTypeDrawable, groupByFavoritesDrawable)
             DrawableHelper.wrapDrawables(drawables)
             DrawableHelper.tintDrawables(drawables, it, ThemeUtil.getThemeColorResource(R.attr.colorBottomSheetFragmentText))
+        }
+    }
+
+    private fun tintCheckDrawable() {
+        context?.let {
+            DrawableHelper.tintDrawable(checkDrawable, it, ThemeUtil.getThemeColorResource(R.attr.colorAccent))
         }
     }
 }

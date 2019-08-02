@@ -188,6 +188,7 @@ dependencies {
     testImplementation libraries.truth
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoIntents
+    implementation 'com.google.code.gson:gson:2.8.5'
 }
 
 androidExtensions {

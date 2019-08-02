@@ -5,7 +5,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.R
 import chat.rocket.android.thememanager.BaseActivity
@@ -29,12 +28,12 @@ class ThemesActivity : BaseActivity() {
         setupListeners()
     }
 
-    private fun setDate(){
-        theme_last_changed.text = getString(R.string.last_changed,viewModel.getSavedDate())
+    private fun setDate() {
+        theme_last_changed.text = getString(R.string.last_changed, viewModel.getSavedDate())
     }
 
-    private fun setCurrentTheme(){
-        current_theme.text = viewModel.getCurrentTheme()
+    private fun setCurrentTheme() {
+        current_theme.text = viewModel.getCurrentThemeName()
     }
 
     private fun subscribeUi() {
@@ -43,7 +42,7 @@ class ThemesActivity : BaseActivity() {
         })
     }
 
-    private fun saveTheme(theme:Theme){
+    private fun saveTheme(theme: Theme) {
         viewModel.saveTheme(theme.toString())
         reloadActivity()
     }
@@ -69,8 +68,8 @@ class ThemesActivity : BaseActivity() {
         }
     }
 
-    private fun setupRecyclerView(themes : List<Theme>) {
-        adapter = ThemesAdapter(themes, listener = {theme:Theme -> saveTheme(theme)})
+    private fun setupRecyclerView(themes: List<Theme>) {
+        adapter = ThemesAdapter(themes, listener = { theme: Theme -> saveTheme(theme) })
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.adapter = adapter
     }
@@ -79,6 +78,9 @@ class ThemesActivity : BaseActivity() {
         revert_to_default.setOnClickListener {
             viewModel.saveTheme("AppTheme")
             reloadActivity()
+        }
+        create_custom_theme.setOnClickListener {
+            startActivity(Intent(this, CreateThemesActivity::class.java))
         }
     }
 }

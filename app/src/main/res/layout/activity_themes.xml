@@ -85,6 +85,7 @@
         android:id="@+id/text_other_themes"
         style="@style/ChangeTheme.TextView.Headline"
         android:paddingStart="@dimen/theme_screen_edge_left_and_right_padding"
+        android:paddingBottom="@dimen/theme_screen_edge_left_and_right_padding"
         android:paddingTop="@dimen/theme_screen_edge_top_padding"
         android:text="@string/other_themes"
         app:layout_constraintLeft_toLeftOf="parent"

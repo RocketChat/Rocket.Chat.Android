@@ -23,6 +23,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.text.bold
 import androidx.core.view.isVisible
@@ -72,6 +73,7 @@ import chat.rocket.android.helper.AndroidPermissionsHelper.getCameraPermission
 import chat.rocket.android.helper.AndroidPermissionsHelper.getWriteExternalStoragePermission
 import chat.rocket.android.helper.AndroidPermissionsHelper.hasCameraPermission
 import chat.rocket.android.helper.AndroidPermissionsHelper.hasWriteExternalStoragePermission
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.createImageFile
 import chat.rocket.android.util.extension.orFalse
@@ -1166,6 +1168,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             view?.let {this.clearInvisibleStatusBar(it)}
             this.setupToolbarTitle(toolbarTitle)
             toolbar.isVisible = true
+            toolbar.setBackgroundColor(ThemeUtil.getThemeColor(R.attr.colorPrimary))
         }
     }
 

@@ -81,6 +81,7 @@ class AttachmentViewHolder(
             text_author_name.isVisible = data.hasAuthorLink && data.hasAuthorName
             if (data.hasAuthorLink && data.hasAuthorName) {
                 bindAuthorLink(data)
+                text_author_name.setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
             }
 
             // If not media or message, show the text with quote bar

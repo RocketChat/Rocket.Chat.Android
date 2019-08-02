@@ -39,12 +39,14 @@ import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.sortingandgrouping.di.SortingAndGroupingBottomSheetFragmentProvider
 import chat.rocket.android.thememanager.BaseActivity
 import chat.rocket.android.thememanager.di.BaseActivityModule
+import chat.rocket.android.thememanager.ui.CreateThemesActivity
 import chat.rocket.android.thememanager.ui.ThemesActivity
 import chat.rocket.android.userdetails.di.UserDetailsFragmentProvider
 import chat.rocket.android.videoconference.di.VideoConferenceModule
 import chat.rocket.android.videoconference.ui.VideoConferenceActivity
 import chat.rocket.android.webview.adminpanel.di.AdminPanelWebViewFragmentProvider
 import chat.rocket.android.webview.oauth.ui.OauthWebViewActivity
+import chat.rocket.android.webview.ui.WebViewActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -109,7 +111,15 @@ abstract class ActivityBuilder {
 
     @PerActivity
     @ContributesAndroidInjector(modules = [(BaseActivityModule::class)])
+    abstract fun bindCreateThemesActivity(): CreateThemesActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = [(BaseActivityModule::class)])
     abstract fun OauthWebViewActivity(): OauthWebViewActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = [(BaseActivityModule::class)])
+    abstract fun bindWebViewActivity(): WebViewActivity
 
     @PerActivity
     @ContributesAndroidInjector(modules = [PasswordFragmentProvider::class, BaseActivityModule::class])
