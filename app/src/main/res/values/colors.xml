@@ -25,7 +25,7 @@
     <color name="colorTimestampText">#FF9DA2A9</color>
     <color name="colorTimestampTextUnread">#FF5699FF</color>
     <color name="colorChannelTitle">#FF0C0D0F</color>
-    <color name="colorControlText">#54585e</color>
+    <color name="colorControlText">#99000000</color>
     <color name="colorSubHeaderText">#FFCBCED1</color>
     <color name="colorDescriptiveText">#88000000</color>
     <color name="colorChatText">#54585e</color>

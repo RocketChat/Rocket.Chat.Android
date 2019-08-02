@@ -46,7 +46,7 @@
     <color name="darkColorAccent">#1d74f5</color> <!--defined in stylesheet-->
     <color name="darkColorBackground">#030c1b</color> <!--defined in stylesheet-->
     <color name="darkColorDim">#99ffffff</color> <!--review-->
-    <color name="darkColorControlText">#dadee6</color> <!--defined in stylesheet-->
+    <color name="darkColorControlText">#99ffffff</color> <!--self defined-->
 
     <color name="darkColorAuxiliaryBackground">#07101e</color> <!--defined in stylesheet, unused-->
     <color name="darkColorAuxiliaryTint">#cdcdcd</color> <!--used for loading-->
@@ -97,7 +97,7 @@
     <color name="blackColorAccent">#1d74f5</color> <!--defined in stylesheet-->
     <color name="blackColorBackground">#000000</color> <!--defined in stylesheet-->
     <color name="blackColorDim">#99ffffff</color> <!--review-->
-    <color name="blackColorControlText">#dadee6</color> <!--defined in stylesheet-->
+    <color name="blackColorControlText">#99ffffff</color> <!--self defined-->
 
     <color name="blackColorAuxiliaryBackground">#090909</color> <!--defined in stylesheet, unused-->
     <color name="blackColorAuxiliaryTint">#cdcdcd</color> <!--used for loading-->
