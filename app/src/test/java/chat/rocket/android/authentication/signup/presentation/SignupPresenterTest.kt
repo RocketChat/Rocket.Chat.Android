@@ -59,7 +59,9 @@ class SignupPresenterTest {
 
     @Test
     fun `check signup`() {
-        val result = signUpPresenter.signup(NAME, USERNAME, EMAIL, PASSWORD)
-        assertEquals(result, Unit)
+        kotlinx.coroutines.runBlocking {
+            val result = signUpPresenter.signup(NAME, USERNAME, EMAIL, PASSWORD)
+            assertEquals(result, Unit)
+        }
     }
 }

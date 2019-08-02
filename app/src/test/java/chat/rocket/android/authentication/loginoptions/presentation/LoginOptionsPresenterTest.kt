@@ -96,25 +96,33 @@ class LoginOptionsPresenterTest {
 
     @Test
     fun `authenticate user with Oauth`() {
-        val result = loginOptionsPresenter.authenticateWithOauth(OAUTH_TOKEN, OAUTH_SECRET)
-        assertEquals(result ,Unit)
+        kotlinx.coroutines.runBlocking {
+            val result = loginOptionsPresenter.authenticateWithOauth(OAUTH_TOKEN, OAUTH_SECRET)
+            assertEquals(result, Unit)
+        }
     }
 
     @Test
     fun `authenticate user with Cas`() {
-        val result = loginOptionsPresenter.authenticateWithCas(CAS_TOKEN)
-        assertEquals(result ,Unit)
+        kotlinx.coroutines.runBlocking {
+            val result = loginOptionsPresenter.authenticateWithCas(CAS_TOKEN)
+            assertEquals(result, Unit)
+        }
     }
 
     @Test
     fun `authenticate user with Saml`() {
-        val result = loginOptionsPresenter.authenticateWithSaml(SAML_TOKEN)
-        assertEquals(result ,Unit)
+        kotlinx.coroutines.runBlocking {
+            val result = loginOptionsPresenter.authenticateWithSaml(SAML_TOKEN)
+            assertEquals(result, Unit)
+        }
     }
 
     @Test
     fun `authenticate user with Deeplink`() {
-        val result = loginOptionsPresenter.authenticateWithDeepLink(deepLinkInfo)
-        assertEquals(result ,Unit)
+        kotlinx.coroutines.runBlocking {
+            val result = loginOptionsPresenter.authenticateWithDeepLink(deepLinkInfo)
+            assertEquals(result, Unit)
+        }
     }
 }

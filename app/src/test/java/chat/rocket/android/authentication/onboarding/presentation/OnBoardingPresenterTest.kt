@@ -54,7 +54,9 @@ class OnBoardingPresenterTest {
 
     @Test
     fun `connect to community server`() {
-        val result = onBoardingPresenter.connectToCommunityServer(communityServerUrl)
-        assertEquals(result, Unit)
+        kotlinx.coroutines.runBlocking {
+            val result = onBoardingPresenter.connectToCommunityServer(communityServerUrl)
+            assertEquals(result, Unit)
+        }
     }
 }

@@ -50,7 +50,9 @@ class ServersPresenterTest {
 
     @Test
     fun `get all servers`() {
-        val result = serversPresenter.getAllServers()
-        assertEquals(result, Unit)
+        kotlinx.coroutines.runBlocking {
+            val result = serversPresenter.getAllServers()
+            assertEquals(result, Unit)
+        }
     }
 }

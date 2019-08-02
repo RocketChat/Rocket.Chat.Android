@@ -57,7 +57,9 @@ class RegisterUsernamePresenterTest {
 
     @Test
     fun `register username`() {
-        val result = registerUsernamePresenter.registerUsername(USERNAME, USER_ID, OAUTH_TOKEN)
-        assertEquals(result, Unit)
+        kotlinx.coroutines.runBlocking {
+            val result = registerUsernamePresenter.registerUsername(USERNAME, USER_ID, OAUTH_TOKEN)
+            assertEquals(result, Unit)
+        }
     }
 }

@@ -47,10 +47,11 @@ class MainPresenterTest {
 
     @Test
     fun `return when chatroomId is null`() {
-        val result = mainPresenter.clearNotificationsForChatRoom(null)
-        assertEquals(result, Unit)
+        kotlinx.coroutines.runBlocking {
+            val result = mainPresenter.clearNotificationsForChatRoom(null)
+            assertEquals(result, Unit)
+        }
     }
-
 
     @Test
     fun `navigate to chatlist`(){

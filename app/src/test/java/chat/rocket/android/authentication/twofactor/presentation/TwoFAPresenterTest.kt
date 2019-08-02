@@ -47,7 +47,9 @@ class TwoFAPresenterTest {
 
     @Test
     fun `successful authentication`() {
-        val result  = twoFAPresenter.authenticate(EMAIL, PASSWORD, AUTHENTICATION_CODE)
-        assertEquals(result, Unit)
+        kotlinx.coroutines.runBlocking {
+            val result = twoFAPresenter.authenticate(EMAIL, PASSWORD, AUTHENTICATION_CODE)
+            assertEquals(result, Unit)
+        }
     }
 }

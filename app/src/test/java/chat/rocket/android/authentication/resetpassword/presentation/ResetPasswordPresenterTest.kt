@@ -35,7 +35,9 @@ class ResetPasswordPresenterTest {
 
     @Test
     fun `reset password`() {
-        val result = resetPasswordPresenter.resetPassword(EMAIL)
-        assertEquals(result, Unit)
+        kotlinx.coroutines.runBlocking {
+            val result = resetPasswordPresenter.resetPassword(EMAIL)
+            assertEquals(result, Unit)
+        }
     }
 }
