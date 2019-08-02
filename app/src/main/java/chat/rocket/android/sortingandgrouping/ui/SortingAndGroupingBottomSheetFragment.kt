@@ -174,8 +174,6 @@ class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), Sorti
 
     private fun checkSelection(textView: TextView, startDrawable: Drawable) {
         context?.let {
-//            val checkDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_check, it)
-//            DrawableHelper.tintDrawable(checkDrawable, it, ThemeUtil.getThemeColorResource(R.attr.colorAccent))
             DrawableHelper.compoundStartAndEndDrawable(
                 textView,
                 startDrawable,

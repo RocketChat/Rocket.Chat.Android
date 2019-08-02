@@ -2,8 +2,10 @@ package chat.rocket.android.chatroom.adapter
 
 import android.view.View
 import androidx.core.view.isVisible
+import chat.rocket.android.R
 import chat.rocket.android.chatroom.uimodel.UrlPreviewUiModel
 import chat.rocket.android.emoji.EmojiReactionListener
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.openTabbedUrl
 import kotlinx.android.synthetic.main.message_url_preview.view.*
@@ -29,6 +31,8 @@ class UrlPreviewViewHolder(
             text_host.content = data.hostname
             text_title.content = data.title
             text_description.content = data.description ?: ""
+
+            text_title.setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
 
             url_preview_layout.setOnClickListener(onClickListener)
             text_host.setOnClickListener(onClickListener)

@@ -54,6 +54,7 @@ class MessageViewHolder(
             }
 
             text_content.text_content.text = data.content
+            text_content.setLinkTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
 
             button_join_video_call.isVisible = data.message.type is MessageType.JitsiCallStarted
             button_join_video_call.setOnClickListener { joinVideoCallListener(it) }
