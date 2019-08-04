@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    >
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/custom_themes_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/theme_title_top_padding"
+        tools:itemCount="1"
+        tools:listitem="@layout/item_custom_theme_row" />
+</LinearLayout>
