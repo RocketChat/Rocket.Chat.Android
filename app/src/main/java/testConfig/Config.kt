@@ -61,6 +61,7 @@ class Config {
         const val FAVORITE_MESSAGES: String = "Favorite Messages"
         const val MENTIONS: String = "Mentions"
         const val CHAT_ROOM_ID: String = "abcd1234ABCD"
+        const val CHAT_ROOM_TYPE: String = "Public"
         const val OAUTH_TOKEN: String = "abcd1234ABCD"
         const val CAS_TOKEN: String = "abcd1234ABCD"
         const val SAML_TOKEN: String = "abcd1234ABCD"
