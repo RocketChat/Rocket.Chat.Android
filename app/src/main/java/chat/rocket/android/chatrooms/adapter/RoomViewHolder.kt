@@ -9,6 +9,7 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.adapter.model.RoomUiModel
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.setTextViewAppearance
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.UserStatus
@@ -43,7 +44,9 @@ class RoomViewHolder(itemView: View, private val listener: (RoomUiModel) -> Unit
             } else if (room.status != null && room.type is RoomType.DirectMessage) {
                 image_chat_icon.setImageDrawable(getStatusDrawable(room.status))
             } else {
-                image_chat_icon.setImageDrawable(getRoomDrawable(room.type))
+                val drawable = getRoomDrawable(room.type)
+                DrawableHelper.tintDrawable(drawable!!, context, ThemeUtil.getThemeColorResource(R.attr.colorDescriptiveText))
+                image_chat_icon.setImageDrawable(drawable)
             }
 
             if (room.lastMessage != null) {

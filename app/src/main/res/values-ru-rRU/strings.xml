@@ -375,7 +375,7 @@
     <string name="last_changed">Last Changed %s</string><!-- TODO Translate -->
     <string name="revert_to_default">Revert to Default</string><!-- TODO Translate -->
     <string name="create_custom_theme">Create Custom Theme</string><!-- TODO Translate -->
-    <string name="other_themes">Other Themes</string><!-- TODO Translate -->
+    <string name="app_themes">App Themes</string><!-- TODO Translate -->
     <string name="custom_themes">Custom Themes</string><!-- TODO Translate -->
     <string name="add_theme">Add Theme</string><!-- TODO Translate -->
 </resources>

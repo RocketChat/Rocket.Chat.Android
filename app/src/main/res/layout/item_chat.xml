@@ -27,7 +27,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/text_chat_name"
         app:layout_constraintStart_toEndOf="@+id/image_avatar"
         app:layout_constraintTop_toTopOf="@+id/text_chat_name"
-        android:tint="?colorDescriptiveText"
         tools:src="@drawable/ic_hashtag_12dp" />
 
     <TextView

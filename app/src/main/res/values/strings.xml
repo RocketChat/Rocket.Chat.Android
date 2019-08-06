@@ -398,7 +398,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="last_changed">Last Changed %s</string>
     <string name="revert_to_default">Revert to Default</string>
     <string name="create_custom_theme">Create Custom Theme</string>
-    <string name="other_themes">Other Themes</string>
+    <string name="app_themes">App Themes</string>
     <string name="custom_themes">Custom Themes</string>
     <string name="add_theme">Add Theme</string>
 </resources>
