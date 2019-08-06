@@ -18,4 +18,5 @@ class ThemesViewModel @Inject constructor(private val themesRepository: ThemesRe
     fun removeCustomTheme(position: Int) = themesRepository.removeCustomTheme(position)
     fun editCustomTheme(colorType: String, themeIndex: Int, color: Int) = themesRepository.editCustomTheme(colorType, themeIndex, color)
     fun getCurrentThemeName() = themesRepository.getCurrentThemeName()
+    fun getIsCustom() = themesRepository.getIsCustom()
 }

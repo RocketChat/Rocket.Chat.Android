@@ -248,7 +248,7 @@
     </style>
 
     <style name="ThemeTag.TextView" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:textColor">?colorDescriptiveText</item>
         <item name="android:fontFamily">"sans-serif"</item>
         <item name="android:textStyle">normal</item>
@@ -256,9 +256,11 @@
     </style>
 
     <style name="ChangeTheme.TextView.Headline" parent="TextAppearance.AppCompat">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">30sp</item>
+        <item name="android:paddingStart">@dimen/theme_screen_edge_left_and_right_padding</item>
+        <item name="android:paddingTop">@dimen/theme_title_top_padding</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textColor">?colorHeadings</item>
         <item name="android:textStyle">normal</item>
