@@ -23,6 +23,9 @@ class MessageActionsBottomSheet : BottomSheetDialogFragment() {
     private val pinDrawable by lazy {
         DrawableHelper.getDrawableFromId(R.drawable.ic_action_message_pin_24dp, requireContext())
     }
+    private val infoDrawable by lazy {
+        DrawableHelper.getDrawableFromId(R.drawable.ic_action_message_info_outline_24dp, requireContext())
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         tintDrawable()
@@ -85,7 +88,7 @@ class MessageActionsBottomSheet : BottomSheetDialogFragment() {
 
     private fun tintDrawable() {
         context?.let {
-            val drawables = arrayOf(addReactionDrawable, pinDrawable)
+            val drawables = arrayOf(addReactionDrawable, pinDrawable, infoDrawable)
             DrawableHelper.tintDrawables(drawables, it, ThemeUtil.getThemeColorResource(R.attr.colorDescriptiveText))
         }
     }
