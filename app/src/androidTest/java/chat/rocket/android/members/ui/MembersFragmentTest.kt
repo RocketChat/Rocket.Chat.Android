@@ -38,7 +38,7 @@ class MembersFragmentTest {
             navigateToChannelDetails()
         } catch (e: NoMatchingViewException) {
             Thread.sleep(3000)
-            navigate_to_channel_details()
+            navigateToChannelDetails()
         }
     }
 
