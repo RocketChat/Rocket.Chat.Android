@@ -36,6 +36,7 @@ class MembersFragmentTest {
             loginIfUserIsLoggedOut()
             navigateToChannelDetails()
         } catch (e: NoMatchingViewException) {
+            Thread.sleep(3000)
             navigateToChannelDetails()
         }
     }
