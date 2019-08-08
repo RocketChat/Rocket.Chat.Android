@@ -11,7 +11,8 @@ import androidx.test.rule.ActivityTestRule
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.matchers.RecyclerViewItemCountAssertion.Companion.withItemCount
+import chat.rocket.android.util.RecyclerViewItemCountAssertion.Companion.withItemCount
+import chat.rocket.android.util.loginUserToTheApp
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.greaterThan
@@ -24,9 +25,7 @@ import testConfig.Config.Companion.EXISTING_CHANNEL
 import testConfig.Config.Companion.EXISTING_USER
 import testConfig.Config.Companion.NON_EXISTING_CHANNEL
 import testConfig.Config.Companion.NON_EXISTING_USER
-import testConfig.Config.Companion.PASSWORD
 import testConfig.Config.Companion.SERVER_URL
-import testConfig.Config.Companion.USERNAME
 import testConfig.Config.Companion.USERS
 
 class DirectoryFragmentTest {
@@ -40,7 +39,10 @@ class DirectoryFragmentTest {
     @Before
     fun setUp() {
         try {
-            loginIfUserIsLoggedOut()
+            rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
+                    chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
+                }
+            loginUserToTheApp()
             navigateToDirectory()
         } catch (e: NoMatchingViewException) {
             Thread.sleep(3000)
@@ -57,7 +59,7 @@ class DirectoryFragmentTest {
 
     @Test
     fun channels_should_be_greater_than_zero() {
-        Thread.sleep(3000)
+        Thread.sleep(5000)
         onView(withId(R.id.recycler_view)).check(withItemCount(greaterThan(0)))
     }
 
@@ -81,7 +83,7 @@ class DirectoryFragmentTest {
             typeText(EXISTING_CHANNEL),
             closeSoftKeyboard()
         )
-        Thread.sleep(3000)
+        Thread.sleep(8000)
         onView(withId(R.id.recycler_view)).check(withItemCount(greaterThan(0)))
     }
 
@@ -93,7 +95,7 @@ class DirectoryFragmentTest {
             typeText(NON_EXISTING_CHANNEL),
             closeSoftKeyboard()
         )
-        Thread.sleep(5000)
+        Thread.sleep(8000)
         onView(withId(R.id.recycler_view)).check(withItemCount(equalTo(0)))
     }
 
@@ -109,7 +111,7 @@ class DirectoryFragmentTest {
             closeSoftKeyboard()
         )
         Espresso.pressBack()
-        Thread.sleep(3000)
+        Thread.sleep(5000)
         onView(withId(R.id.recycler_view)).check(withItemCount(greaterThan(0)))
     }
 
@@ -125,18 +127,6 @@ class DirectoryFragmentTest {
         Espresso.pressBack()
         Thread.sleep(3000)
         onView(withId(R.id.recycler_view)).check(withItemCount(equalTo(0)))
-    }
-
-    private fun loginIfUserIsLoggedOut() {
-        rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
-            chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
-        }
-        onView(withId(R.id.text_username_or_email)).perform(
-            typeText(USERNAME), closeSoftKeyboard()
-        )
-        onView(withId(R.id.text_password)).perform(typeText(PASSWORD), closeSoftKeyboard())
-        onView(withId(R.id.button_log_in)).perform(click())
-        Thread.sleep(12000)
     }
 
     private fun navigateToDirectory() {

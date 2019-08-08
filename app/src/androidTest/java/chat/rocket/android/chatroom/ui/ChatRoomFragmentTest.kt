@@ -12,19 +12,18 @@ import androidx.test.rule.ActivityTestRule
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.matchers.ScrollToTop
-import chat.rocket.android.matchers.clickChildViewWithId
+import chat.rocket.android.util.ScrollToTop
+import chat.rocket.android.util.clickChildViewWithId
+import chat.rocket.android.util.loginUserToTheApp
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import testConfig.Config.Companion.EXISTING_USER
 import testConfig.Config.Companion.EXISTING_USER2
-import testConfig.Config.Companion.PASSWORD
 import testConfig.Config.Companion.SANDBOX
 import testConfig.Config.Companion.SERVER_URL
 import testConfig.Config.Companion.TEST_MESSAGE
-import testConfig.Config.Companion.USERNAME
 
 @LargeTest
 class ChatRoomFragmentTest {
@@ -38,7 +37,10 @@ class ChatRoomFragmentTest {
     @Before
     fun setUp() {
         try {
-            loginIfUserIsLoggedOut()
+            rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
+                chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
+            }
+            loginUserToTheApp()
         } catch (e: NoMatchingViewException) {
             Thread.sleep(3000)
         }
@@ -131,20 +133,6 @@ class ChatRoomFragmentTest {
             )
         )
         onView(withId(R.id.user_details_layout)).check(matches(isDisplayed()))
-    }
-
-    private fun loginIfUserIsLoggedOut() {
-        rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
-            chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
-        }
-        onView(withId(R.id.text_username_or_email)).perform(
-            typeText(USERNAME),
-            closeSoftKeyboard()
-        )
-        onView(withId(R.id.text_password))
-            .perform(typeText(PASSWORD),closeSoftKeyboard())
-        onView(withId(R.id.button_log_in)).perform(click())
-        Thread.sleep(12000)
     }
 
     private fun navigateToExistingChannel() {

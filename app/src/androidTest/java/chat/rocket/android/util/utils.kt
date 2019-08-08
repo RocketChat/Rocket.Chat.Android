@@ -1,19 +1,30 @@
-package chat.rocket.android.matchers
+package chat.rocket.android.util
 
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.ViewAssertion
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.matcher.BoundedMatcher
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import chat.rocket.android.R
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.hamcrest.MatcherAssert
 import org.hamcrest.TypeSafeMatcher
+import testConfig.Config.Companion.PASSWORD
+import testConfig.Config.Companion.USERNAME
 
 
 fun withHint(expectedHint: String): Matcher<View> {
@@ -131,5 +142,36 @@ class ScrollToTop : ViewAction {
         val recyclerView = view as RecyclerView
         recyclerView.scrollToPosition(0)
         uiController?.loopMainThreadUntilIdle()
+    }
+}
+
+fun loginUserToTheApp() {
+    onView(ViewMatchers.withId(R.id.text_username_or_email)).perform(
+        ViewActions.typeText(USERNAME),
+        closeSoftKeyboard()
+    )
+    onView(ViewMatchers.withId(R.id.text_password))
+        .perform(ViewActions.typeText(PASSWORD), closeSoftKeyboard())
+    onView(ViewMatchers.withId(R.id.button_log_in)).perform(click())
+    Thread.sleep(12000)
+}
+
+class RecyclerViewItemCountAssertion private constructor(private val matcher: Matcher<Int>) :
+    ViewAssertion {
+
+    override fun check(view: View, noViewFoundException: NoMatchingViewException?) {
+        if (noViewFoundException != null) {
+            throw noViewFoundException
+        }
+        val recyclerView = view as RecyclerView
+        val adapter = recyclerView.adapter
+        MatcherAssert.assertThat(adapter!!.itemCount, matcher)
+    }
+
+    companion object {
+
+        fun withItemCount(matcher: Matcher<Int>): RecyclerViewItemCountAssertion {
+            return RecyclerViewItemCountAssertion(matcher)
+        }
     }
 }

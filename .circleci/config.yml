@@ -57,9 +57,9 @@ jobs:
             - ~/.gradle/caches
             - ~/.gradle/wrapper
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum "player/build.gradle" }}-{{ checksum "core/build.gradle" }}-{{ checksum "util/build.gradle" }}-{{ checksum "draw/build.gradle" }}-{{ checksum "emoji/build.gradle" }}-{{ checksum "suggestions/build.gradle" }}
-      - run:
-          name: Run Lint #, Checkstyles, PMD, Findbugs...
-          command: ./gradlew --no-daemon lint
+#      - run:
+#          name: Run Lint #, Checkstyles, PMD, Findbugs...
+#          command: ./gradlew --no-daemon lint
       - run:
           name: Run Unit test
           command: ./gradlew --no-daemon testPlayDebugUnitTest

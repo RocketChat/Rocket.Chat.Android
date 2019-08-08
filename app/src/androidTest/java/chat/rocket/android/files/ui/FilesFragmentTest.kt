@@ -2,23 +2,22 @@ package chat.rocket.android.files.ui
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.matchers.RecyclerViewItemCountAssertion.Companion.withItemCount
+import chat.rocket.android.util.RecyclerViewItemCountAssertion.Companion.withItemCount
+import chat.rocket.android.util.loginUserToTheApp
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import org.hamcrest.Matchers.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import testConfig.Config.Companion.FILES
-import testConfig.Config.Companion.PASSWORD
 import testConfig.Config.Companion.SERVER_URL
-import testConfig.Config.Companion.USERNAME
 
 class FilesFragmentTest {
 
@@ -31,7 +30,10 @@ class FilesFragmentTest {
     @Before
     fun setUp() {
         try {
-            loginIfUserIsLoggedOut()
+            rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
+                chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
+            }
+            loginUserToTheApp()
         } catch (e: NoMatchingViewException) {
         }
     }
@@ -64,22 +66,6 @@ class FilesFragmentTest {
         onView(withId(R.id.image_file)).check(matches(not(isDisplayed())))
         onView(withId(R.id.text_no_file)).check(matches(not(isDisplayed())))
         onView(withId(R.id.text_all_files_appear_here)).check(matches(not(isDisplayed())))
-    }
-
-    private fun loginIfUserIsLoggedOut() {
-        rule().activity.addFragmentBackStack(
-            ScreenViewEvent.Login.screenName,
-            R.id.fragment_container
-        ) {
-            chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
-        }
-        onView(withId(R.id.text_username_or_email)).perform(
-            typeText(USERNAME),
-            closeSoftKeyboard()
-        )
-        onView(withId(R.id.text_password)).perform(typeText(PASSWORD), closeSoftKeyboard())
-        onView(withId(R.id.button_log_in)).perform(click())
-        Thread.sleep(12000)
     }
 
     private fun navigateToGeneralChannelDetails() {

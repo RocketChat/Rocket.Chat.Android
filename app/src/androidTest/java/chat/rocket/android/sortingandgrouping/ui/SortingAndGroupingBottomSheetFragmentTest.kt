@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -12,9 +12,10 @@ import androidx.test.rule.ActivityTestRule
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.matchers.RecyclerViewItemCountAssertion
-import chat.rocket.android.matchers.clickChildViewWithId
-import chat.rocket.android.matchers.withTextInChild
+import chat.rocket.android.util.RecyclerViewItemCountAssertion
+import chat.rocket.android.util.clickChildViewWithId
+import chat.rocket.android.util.loginUserToTheApp
+import chat.rocket.android.util.withTextInChild
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import org.hamcrest.Matchers.greaterThan
 import org.junit.Before
@@ -22,9 +23,7 @@ import org.junit.Rule
 import org.junit.Test
 import testConfig.Config.Companion.CHANNELS
 import testConfig.Config.Companion.DIRECT_MESSAGES
-import testConfig.Config.Companion.PASSWORD
 import testConfig.Config.Companion.SERVER_URL
-import testConfig.Config.Companion.USERNAME
 
 class SortingAndGroupingBottomSheetFragmentTest {
 
@@ -37,7 +36,10 @@ class SortingAndGroupingBottomSheetFragmentTest {
     @Before
     fun setUp() {
         try {
-            loginIfUserIsLoggedOut()
+            rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
+                chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
+            }
+            loginUserToTheApp()
             onView(withId(R.id.text_sort_by)).perform(click())
         } catch (e: NoMatchingViewException) {
             onView(withId(R.id.text_sort_by)).perform(click())
@@ -95,17 +97,5 @@ class SortingAndGroupingBottomSheetFragmentTest {
         onView(withId(R.id.text_sort_by)).perform(click())
         onView(withId(R.id.text_group_by_type)).perform(click())
         Espresso.pressBack()
-    }
-
-    private fun loginIfUserIsLoggedOut() {
-        rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
-            chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
-        }
-        onView(withId(R.id.text_username_or_email)).perform(
-            typeText(USERNAME), closeSoftKeyboard()
-        )
-        onView(withId(R.id.text_password)).perform(typeText(PASSWORD), closeSoftKeyboard())
-        onView(withId(R.id.button_log_in)).perform(click())
-        Thread.sleep(12000)
     }
 }

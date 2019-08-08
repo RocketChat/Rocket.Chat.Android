@@ -39,7 +39,6 @@
 //            loginIfUserIsLoggedOut()
 //            navigateToSettings()
 //        } catch (e: NoMatchingViewException) {
-//            Thread.sleep(5000)
 //            navigateToSettings()
 //        }
 //    }
