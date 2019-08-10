@@ -12,7 +12,6 @@
     <color name="darkColorTextHint">#77ffffff</color> <!-- colorAuxiliaryText -->
     <color name="darkColorDescriptiveText">#70FFFFFF</color> <!-- self defined -->
     <color name="darkColorBottomSheetFragmentText">#77ffffff</color> <!-- darker text -->
-    <color name="darkColorDrawableSubtleTint">#FF9297a3</color>
     <color name="darkColorQuoteBar">#FF9297a3</color> <!--self defined, not in stylesheet-->
     <color name="darkColorAuthenticationSecondaryText">#FF9297a3</color> <!-- darker text -->
     <color name="darkColorSubHeaderText">#FF9297a3</color> <!-- used for channel and directory subHeader -->
@@ -63,7 +62,6 @@
     <color name="blackColorTextHint">#77ffffff</color> <!-- Picked from layouts -->
     <color name="blackColorDescriptiveText">#70FFFFFF</color> <!-- self defined -->
     <color name="blackColorBottomSheetFragmentText">#77ffffff</color> <!-- darker text -->
-    <color name="blackColorDrawableSubtleTint">#FF9297a3</color>
     <color name="blackColorQuoteBar">#FF9297a3</color> <!--self defined, not in stylesheet-->
     <color name="blackColorAuthenticationSecondaryText">#FF9297a3</color> <!-- darker text -->
     <color name="blackColorSubHeaderText">#FF9297a3</color> <!-- used for channel and directory subHeader -->

@@ -14,7 +14,6 @@
     <color name="colorSubHeaderBackground">#54585e</color>
 
     <color name="ic_launcher_background">@color/colorWhite</color>
-    <color name="colorDrawableSubtleTint">#FF9EA2A8</color>
     <color name="colorLightTheme">#FBFBFB</color>
     <color name="colorDim">#99000000</color>
     <color name="colorQuoteBar">#A0A0A0</color>

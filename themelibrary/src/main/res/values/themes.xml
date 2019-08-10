@@ -33,7 +33,6 @@
         <item name="android:navigationBarColor">@color/darkColorPrimaryDark</item>
         <item name="colorLoading">@color/darkColorAuxiliaryTint</item>
         <item name="appTheme">@style/DarkTheme</item>
-        <item name="colorDrawableSubtleTint">@color/darkColorDrawableSubtleTint</item>
         <item name="colorQuoteBar">@color/darkColorQuoteBar</item>
         <item name="colorSecondaryText">@color/darkColorSecondaryText</item>
         <item name="colorDrawableStrongTint">@color/darkColorSecondaryText</item>
@@ -75,7 +74,6 @@
         <item name="android:navigationBarColor">@color/blackColorPrimaryDark</item>
         <item name="colorLoading">@color/blackColorAuxiliaryTint</item>
         <item name="appTheme">@style/BlackTheme</item>
-        <item name="colorDrawableSubtleTint">@color/blackColorDrawableSubtleTint</item>
         <item name="colorQuoteBar">@color/blackColorQuoteBar</item>
         <item name="colorSecondaryText">@color/blackColorSecondaryText</item>
         <item name="colorDrawableStrongTint">@color/blackColorSecondaryText</item>

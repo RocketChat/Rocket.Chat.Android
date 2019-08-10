@@ -269,7 +269,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
             val drawables = arrayOf(personDrawable, atDrawable, emailDrawable)
             DrawableHelper.wrapDrawables(drawables)
-            DrawableHelper.tintDrawables(drawables, this, ThemeUtil.getThemeColorResource(R.attr.colorDrawableSubtleTint))
+            DrawableHelper.tintDrawables(drawables, this, ThemeUtil.getThemeColorResource(R.attr.colorDrawableStrongTint))
             DrawableHelper.compoundDrawables(
                 arrayOf(text_name, text_username, text_email), drawables
             )
