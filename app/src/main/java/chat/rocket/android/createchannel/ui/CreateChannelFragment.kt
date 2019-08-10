@@ -20,6 +20,7 @@ import chat.rocket.android.createchannel.presentation.CreateChannelPresenter
 import chat.rocket.android.createchannel.presentation.CreateChannelView
 import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.uimodel.MemberUiModel
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
@@ -284,7 +285,8 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         val chip = Chip(context)
         chip.text = chipText
         chip.isCloseIconVisible = true
-        chip.setChipBackgroundColorResource(R.color.icon_grey)
+        chip.setChipBackgroundColorResource(ThemeUtil.getThemeColorResource(R.attr.colorButtonDisabled))
+        chip.setTextColor(ThemeUtil.getThemeColor(R.attr.colorPrimaryText))
         setupChipOnCloseIconClickListener(chip)
         chip_group_member.addView(chip)
     }

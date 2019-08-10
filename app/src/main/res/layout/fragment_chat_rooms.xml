@@ -11,7 +11,6 @@
         layout="@layout/app_bar_chat_rooms"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--review-->
     <TextView
         android:id="@+id/text_directory"
         android:layout_width="match_parent"
