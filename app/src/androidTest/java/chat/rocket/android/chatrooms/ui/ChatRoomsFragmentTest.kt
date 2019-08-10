@@ -1,4 +1,4 @@
-package chat.rocket.android.servers.ui
+package chat.rocket.android.chatrooms.ui
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
@@ -9,17 +9,16 @@ import androidx.test.rule.ActivityTestRule
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.util.RecyclerViewItemCountAssertion
 import chat.rocket.android.util.loginUserToTheApp
+import chat.rocket.android.util.withIndex
 import chat.rocket.android.util.extensions.addFragmentBackStack
-import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import testConfig.Config.Companion.ORG_NAME
+import testConfig.Config.Companion.EXISTING_CHANNEL
 import testConfig.Config.Companion.SERVER_URL
 
-class ServersBottomSheetFragmentTest {
+class ChatRoomsFragmentTest {
 
     @JvmField
     var activityRule = ActivityTestRule(AuthenticationActivity::class.java, true, true)
@@ -34,26 +33,26 @@ class ServersBottomSheetFragmentTest {
                 chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
             }
             loginUserToTheApp()
-            onView(withText(ORG_NAME)).perform(click())
         } catch (e: NoMatchingViewException) {
             Thread.sleep(3000)
-            onView(withText(ORG_NAME)).perform(click())
         }
     }
 
     @Test
     fun check_UI_elements() {
-        onView(withId(R.id.text_server)).check(matches(withText("Server")))
-        onView(withId(R.id.view_divider)).check(matches(isDisplayed()))
         onView(withId(R.id.recycler_view)).check(matches(isDisplayed()))
+        onView(withIndex(withId(R.id.image_avatar), 0)).check(matches(isDisplayed()))
+        onView(withIndex(withId(R.id.image_chat_icon), 0)).check(matches(isDisplayed()))
+        onView(withIndex(withId(R.id.text_last_message), 0)).check(matches(isDisplayed()))
+        onView(withIndex(withId(R.id.text_timestamp), 0)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_sort_by)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun no_of_available_server_should_be_greater_than_zero() {
-        onView(withId(R.id.recycler_view)).check(
-            RecyclerViewItemCountAssertion.withItemCount(
-                Matchers.greaterThan(0)
-            )
-        )
+    fun clicking_channel_should_open_chatroom() {
+        onView(withText(EXISTING_CHANNEL)).perform(click())
+        Thread.sleep(2000)
+        onView(withId(R.id.text_toolbar_title)).check(matches(withText(EXISTING_CHANNEL)))
+        onView(withId(R.id.message_list_container)).check(matches(isDisplayed()))
     }
 }

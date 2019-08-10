@@ -9,6 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/user_details_layout"
         android:background="@android:color/white"
         android:paddingBottom="@dimen/screen_edge_left_and_right_margins">
 
