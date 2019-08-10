@@ -9,7 +9,7 @@ import androidx.test.rule.ActivityTestRule
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.matchers.withHint
+import chat.rocket.android.util.withHint
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import org.hamcrest.Matchers.not
 import org.junit.Before
