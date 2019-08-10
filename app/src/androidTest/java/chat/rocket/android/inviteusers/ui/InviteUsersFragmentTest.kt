@@ -9,14 +9,14 @@ import androidx.test.rule.ActivityTestRule
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.matchers.RecyclerViewItemCountAssertion
+import chat.rocket.android.util.RecyclerViewItemCountAssertion
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.greaterThan
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import testConfig.Config.Companion.EXISTING_CHANNEL2
+import testConfig.Config.Companion.EXISTING_CHANNEL3
 import testConfig.Config.Companion.EXISTING_USER2
 import testConfig.Config.Companion.MEMBERS
 import testConfig.Config.Companion.NON_EXISTING_USER
@@ -45,7 +45,7 @@ class InviteUsersFragmentTest {
     }
 
     private fun navigateToInviteUser() {
-        onView(withText(EXISTING_CHANNEL2)).perform(click())
+        onView(withText(EXISTING_CHANNEL3)).perform(click())
         Thread.sleep(2000)
         onView(withId(R.id.text_toolbar_title)).perform(click())
         onView(withText(MEMBERS)).perform(click())
