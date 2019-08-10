@@ -14,14 +14,14 @@ import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.util.ScrollToTop
 import chat.rocket.android.util.clickChildViewWithId
-import chat.rocket.android.util.loginUserToTheApp
 import chat.rocket.android.util.extensions.addFragmentBackStack
+import chat.rocket.android.util.loginUserToTheApp
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import testConfig.Config.Companion.EXISTING_CHANNEL2
 import testConfig.Config.Companion.EXISTING_USER
 import testConfig.Config.Companion.EXISTING_USER2
-import testConfig.Config.Companion.SANDBOX
 import testConfig.Config.Companion.SERVER_URL
 import testConfig.Config.Companion.TEST_MESSAGE
 
@@ -136,7 +136,7 @@ class ChatRoomFragmentTest {
     }
 
     private fun navigateToExistingChannel() {
-        onView(withText(SANDBOX)).perform(click())
+        onView(withText(EXISTING_CHANNEL2)).perform(click())
         Thread.sleep(2000)
     }
 

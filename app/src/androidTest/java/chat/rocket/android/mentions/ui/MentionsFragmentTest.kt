@@ -17,6 +17,8 @@ import org.hamcrest.Matchers.greaterThan
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import testConfig.Config.Companion.EXISTING_CHANNEL
+import testConfig.Config.Companion.EXISTING_CHANNEL2
 import testConfig.Config.Companion.MENTIONS
 import testConfig.Config.Companion.SERVER_URL
 
@@ -58,14 +60,14 @@ class MentionsFragmentTest {
 
     private fun navigateToSandboxChannelDetails() {
         Thread.sleep(3000)
-        onView(withText("sandbox")).perform(click())
+        onView(withText(EXISTING_CHANNEL2)).perform(click())
         Thread.sleep(2000)
         onView(withId(R.id.text_toolbar_title)).perform(click())
     }
 
     private fun navigateToGeneralChannelDetails() {
         Thread.sleep(3000)
-        onView(withText("general")).perform(click())
+        onView(withText(EXISTING_CHANNEL)).perform(click())
         Thread.sleep(2000)
         onView(withId(R.id.text_toolbar_title)).perform(click())
     }

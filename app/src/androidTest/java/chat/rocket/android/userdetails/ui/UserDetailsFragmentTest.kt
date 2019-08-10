@@ -35,12 +35,12 @@ class UserDetailsFragmentTest {
                 clickChildViewWithId(R.id.image_avatar)
             )
         )
-        Thread.sleep(2000)
+        Thread.sleep(4000)
     }
 
     @Test
     fun check_UI_elements() {
-        Thread.sleep(5000)
+        Thread.sleep(8000)
         onView(withId(R.id.image_avatar)).check(matches(isDisplayed()))
         onView(withId(R.id.image_blur)).check(matches(isDisplayed()))
         onView(withId(R.id.image_arrow_back)).check(matches(isDisplayed()))

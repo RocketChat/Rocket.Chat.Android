@@ -20,6 +20,7 @@ option in device settings.
 
 
 ###  Any organization that forks RC can run tests against their own server
-1. For tests to pass, Organisations must create a user before hand using details mentioned in UITestConfig file.
-2. Also they need to customise the links according to their server requirements.
+1. For tests to work properly, Organisations must create a user before hand using details mentioned in Config file.
+2. They have to create additional channels as mentioned in the config file.
+3. Also they need to customise the links present in the config file according to their server requirements.
 

@@ -22,8 +22,10 @@ class Config {
         const val NON_EXISTING_USER: String = "**33##&&"
 
         //Existing Channel
+        // For RC there are already two default channels, for other organisation they have to create
+        // two channels before testing
         const val EXISTING_CHANNEL: String ="general"
-        const val SANDBOX: String ="sandbox"
+        const val EXISTING_CHANNEL2: String ="sandbox"
 
         //Non existing Channel
         const val NON_EXISTING_CHANNEL: String = "**33##&&"

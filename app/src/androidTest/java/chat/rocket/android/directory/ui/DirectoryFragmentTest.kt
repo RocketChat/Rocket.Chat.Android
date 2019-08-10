@@ -68,7 +68,7 @@ class DirectoryFragmentTest {
         onView(withId(R.id.text_sort_by)).perform(click())
         onView(withText(USERS)).perform(click())
         Espresso.pressBack()
-        Thread.sleep(3000)
+        Thread.sleep(8000)
         onView(withId(R.id.recycler_view)).check(withItemCount(greaterThan(0)))
         onView(withId(R.id.text_sort_by)).perform(click())
         onView(withText(CHANNELS)).perform(click())
