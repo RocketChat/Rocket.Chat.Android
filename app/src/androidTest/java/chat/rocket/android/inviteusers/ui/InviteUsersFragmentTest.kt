@@ -16,12 +16,12 @@ import org.hamcrest.Matchers.greaterThan
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import testConfig.Config.Companion.EXISTING_CHANNEL3
-import testConfig.Config.Companion.EXISTING_USER2
 import testConfig.Config.Companion.MEMBERS
 import testConfig.Config.Companion.NON_EXISTING_USER
 import testConfig.Config.Companion.PASSWORD
 import testConfig.Config.Companion.SERVER_URL
+import testConfig.Config.Companion.TEST_CHANNEL3
+import testConfig.Config.Companion.TEST_USER2
 import testConfig.Config.Companion.USERNAME
 
 
@@ -45,7 +45,7 @@ class InviteUsersFragmentTest {
     }
 
     private fun navigateToInviteUser() {
-        onView(withText(EXISTING_CHANNEL3)).perform(click())
+        onView(withText(TEST_CHANNEL3)).perform(click())
         Thread.sleep(2000)
         onView(withId(R.id.text_toolbar_title)).perform(click())
         onView(withText(MEMBERS)).perform(click())
@@ -63,13 +63,13 @@ class InviteUsersFragmentTest {
     @Test
     fun search_an_existing_user() {
         onView(withId(R.id.text_invite_users)).perform(
-            typeText(EXISTING_USER2), closeSoftKeyboard()
+            typeText(TEST_USER2), closeSoftKeyboard()
         )
         Thread.sleep(2000)
         onView(withId(R.id.recycler_view)).check(
             RecyclerViewItemCountAssertion.withItemCount(greaterThan(0))
         )
-        onView(withId(R.id.text_member)).check(matches(withText(EXISTING_USER2)))
+        onView(withId(R.id.text_member)).check(matches(withText(TEST_USER2)))
     }
 
     @Test

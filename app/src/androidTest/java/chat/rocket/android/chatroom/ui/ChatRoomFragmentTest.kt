@@ -19,11 +19,11 @@ import chat.rocket.android.util.loginUserToTheApp
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import testConfig.Config.Companion.EXISTING_CHANNEL2
-import testConfig.Config.Companion.EXISTING_USER
-import testConfig.Config.Companion.EXISTING_USER2
 import testConfig.Config.Companion.SERVER_URL
+import testConfig.Config.Companion.TEST_CHANNEL2
 import testConfig.Config.Companion.TEST_MESSAGE
+import testConfig.Config.Companion.TEST_USER
+import testConfig.Config.Companion.TEST_USER2
 
 @LargeTest
 class ChatRoomFragmentTest {
@@ -136,17 +136,17 @@ class ChatRoomFragmentTest {
     }
 
     private fun navigateToExistingChannel() {
-        onView(withText(EXISTING_CHANNEL2)).perform(click())
+        onView(withText(TEST_CHANNEL2)).perform(click())
         Thread.sleep(2000)
     }
 
     private fun navigateToExistingUser1() {
-        onView(withText(EXISTING_USER)).perform(click())
+        onView(withText(TEST_USER)).perform(click())
         Thread.sleep(2000)
     }
 
     private fun navigateToExistingUser2() {
-        onView(withText(EXISTING_USER2)).perform(click())
+        onView(withText(TEST_USER2)).perform(click())
         Thread.sleep(2000)
     }
 }

@@ -11,20 +11,20 @@ import androidx.test.rule.ActivityTestRule
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
+import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.loginUserToTheApp
 import chat.rocket.android.util.withTextInChild
-import chat.rocket.android.util.extensions.addFragmentBackStack
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import testConfig.Config.Companion.EXISTING_CHANNEL
-import testConfig.Config.Companion.EXISTING_USER
 import testConfig.Config.Companion.FAVORITE_MESSAGES
 import testConfig.Config.Companion.FILES
 import testConfig.Config.Companion.MEMBERS
 import testConfig.Config.Companion.MENTIONS
 import testConfig.Config.Companion.PINNED_MESSAGES
 import testConfig.Config.Companion.SERVER_URL
+import testConfig.Config.Companion.TEST_CHANNEL
+import testConfig.Config.Companion.TEST_USER
 
 class ChatDetailsFragmentTest {
 
@@ -122,14 +122,14 @@ class ChatDetailsFragmentTest {
 
     private fun navigateToExistingDMDetails() {
         Thread.sleep(5000)
-        onView(withText(EXISTING_USER)).perform(click())
+        onView(withText(TEST_USER)).perform(click())
         Thread.sleep(2000)
         onView(withId(R.id.text_toolbar_title)).perform(click())
     }
 
     private fun navigateToExistingChannelDetails() {
         Thread.sleep(5000)
-        onView(withText(EXISTING_CHANNEL)).perform(click())
+        onView(withText(TEST_CHANNEL)).perform(click())
         Thread.sleep(2000)
         onView(withId(R.id.text_toolbar_title)).perform(click())
     }

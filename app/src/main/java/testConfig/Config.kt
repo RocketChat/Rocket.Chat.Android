@@ -15,18 +15,17 @@ class Config {
         const val EMAIL: String = "qasdf@gmail.com"
 
         //Existing User
-        const val EXISTING_USER: String ="dfcxc"
-        const val EXISTING_USER2: String ="govind.dixit"
+        const val TEST_USER: String ="dfcxc"
+        const val TEST_USER2: String ="govind.dixit"
 
         //Non existing User
         const val NON_EXISTING_USER: String = "**33##&&"
 
         //Existing Channel
-        // For RC there are already two default channels, for other organisation they have to create
-        // two channels before testing
-        const val EXISTING_CHANNEL: String ="general"
-        const val EXISTING_CHANNEL2: String ="sandbox"
-        const val EXISTING_CHANNEL3: String ="dfcxc"
+        // Other organisation have to create channels before testing
+        const val TEST_CHANNEL: String ="general"
+        const val TEST_CHANNEL2: String ="sandbox"
+        const val TEST_CHANNEL3: String ="dfcxc"
 
 
         //Non existing Channel

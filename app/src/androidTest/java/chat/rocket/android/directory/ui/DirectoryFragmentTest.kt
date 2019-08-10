@@ -12,8 +12,8 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.util.RecyclerViewItemCountAssertion.Companion.withItemCount
-import chat.rocket.android.util.loginUserToTheApp
 import chat.rocket.android.util.extensions.addFragmentBackStack
+import chat.rocket.android.util.loginUserToTheApp
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.greaterThan
 import org.junit.Before
@@ -21,11 +21,11 @@ import org.junit.Rule
 import org.junit.Test
 import testConfig.Config.Companion.CHANNELS
 import testConfig.Config.Companion.DIRECTORY
-import testConfig.Config.Companion.EXISTING_CHANNEL
-import testConfig.Config.Companion.EXISTING_USER
 import testConfig.Config.Companion.NON_EXISTING_CHANNEL
 import testConfig.Config.Companion.NON_EXISTING_USER
 import testConfig.Config.Companion.SERVER_URL
+import testConfig.Config.Companion.TEST_CHANNEL
+import testConfig.Config.Companion.TEST_USER
 import testConfig.Config.Companion.USERS
 
 class DirectoryFragmentTest {
@@ -80,7 +80,7 @@ class DirectoryFragmentTest {
         onView(withId(R.id.action_search)).perform(click())
         onView(isAssignableFrom(AutoCompleteTextView::class.java)).perform(
             clearText(),
-            typeText(EXISTING_CHANNEL),
+            typeText(TEST_CHANNEL),
             closeSoftKeyboard()
         )
         Thread.sleep(8000)
@@ -107,7 +107,7 @@ class DirectoryFragmentTest {
         onView(withId(R.id.action_search)).perform(click())
         onView(isAssignableFrom(AutoCompleteTextView::class.java)).perform(
             clearText(),
-            typeText(EXISTING_USER),
+            typeText(TEST_USER),
             closeSoftKeyboard()
         )
         Espresso.pressBack()
