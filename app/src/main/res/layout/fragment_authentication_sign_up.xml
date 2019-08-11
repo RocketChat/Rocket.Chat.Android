@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
     android:padding="@dimen/screen_edge_left_and_right_margins"
     tools:context=".authentication.signup.ui.SignupFragment">
 
@@ -26,6 +25,7 @@
             android:hint="@string/msg_name"
             android:imeOptions="actionNext"
             android:inputType="textCapWords"
+            android:textColorHint="?colorTextHintEditText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_sign_up" />
@@ -38,6 +38,7 @@
             android:hint="@string/msg_username"
             android:imeOptions="actionNext"
             android:inputType="text"
+            android:textColorHint="?colorTextHintEditText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_name" />
@@ -50,6 +51,7 @@
             android:hint="@string/msg_password"
             android:imeOptions="actionNext"
             android:inputType="textPassword"
+            android:textColorHint="?colorTextHintEditText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_username" />
@@ -62,6 +64,7 @@
             android:hint="@string/msg_email"
             android:imeOptions="actionDone"
             android:inputType="textEmailAddress"
+            android:textColorHint="?colorTextHintEditText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_password" />
@@ -70,7 +73,6 @@
             android:id="@+id/button_register"
             style="@style/Authentication.Button"
             android:layout_marginTop="20dp"
-            android:backgroundTint="@color/colorAuthenticationButtonDisabled"
             android:enabled="false"
             android:text="@string/action_register"
             app:layout_constraintEnd_toEndOf="parent"

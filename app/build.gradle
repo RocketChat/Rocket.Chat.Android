@@ -105,6 +105,7 @@ dependencies {
     implementation project(':util')
     implementation project(':core')
     implementation project(':suggestions')
+    implementation project(':themelibrary')
 
     implementation libraries.kotlin
     implementation libraries.coroutinesCore
@@ -121,6 +122,9 @@ dependencies {
 
     implementation libraries.dagger
     implementation libraries.daggerSupport
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     kapt libraries.daggerProcessor
     kapt libraries.daggerAndroidApt
 
@@ -180,6 +184,7 @@ dependencies {
     testImplementation libraries.truth
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoIntents
+    implementation 'com.google.code.gson:gson:2.8.5'
 }
 
 androidExtensions {

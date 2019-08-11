@@ -14,10 +14,7 @@ import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.userdetails.presentation.UserDetailsPresenter
 import chat.rocket.android.userdetails.presentation.UserDetailsView
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.setLightStatusBar
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -155,7 +152,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         handler.postDelayed({
             with(activity as ChatRoomActivity) {
                 view?.let {
-                    setLightStatusBar(
+                    setInvisibleStatusBar(
                         it,
                         ContextCompat.getColor(this, R.color.whitesmoke)
                     )

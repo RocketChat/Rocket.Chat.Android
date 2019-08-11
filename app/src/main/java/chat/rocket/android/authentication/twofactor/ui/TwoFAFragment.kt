@@ -15,6 +15,7 @@ import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAPresenter
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
@@ -86,7 +87,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
     override fun enableButtonConfirm() {
         context?.let {
             ViewCompat.setBackgroundTintList(
-                button_confirm, ContextCompat.getColorStateList(it, R.color.colorAccent)
+                button_confirm, ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorAccent))
             )
             button_confirm.isEnabled = true
         }
@@ -96,7 +97,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
         context?.let {
             ViewCompat.setBackgroundTintList(
                 button_confirm,
-                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+                ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorButtonDisabled))
             )
             button_confirm.isEnabled = false
         }

@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="?android:colorBackground"
     android:paddingBottom="@dimen/member_item_top_and_bottom_padding"
     android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
     android:paddingStart="@dimen/screen_edge_left_and_right_padding"
     android:paddingTop="@dimen/member_item_top_and_bottom_padding">
+    <!--android:background="?android:attr/selectableItemBackground"-->
 
     <LinearLayout
         android:id="@+id/image_container"
@@ -41,7 +42,7 @@
         android:layout_marginStart="16dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/colorPrimaryText"
+        android:textColor="?colorPrimaryText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_container"
         app:layout_constraintTop_toTopOf="@+id/image_container"
@@ -54,7 +55,7 @@
         android:layout_marginStart="16dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/colorSecondaryText"
+        android:textColor="?colorSecondaryText"
         app:layout_constraintBottom_toTopOf="@+id/text_upload_date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_container"
@@ -65,7 +66,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:textColor="@color/colorSecondaryTextLight"
+        android:textColor="?colorDescriptiveText"
         app:layout_constraintBottom_toBottomOf="@+id/image_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_container"

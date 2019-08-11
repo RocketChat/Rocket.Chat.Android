@@ -25,15 +25,9 @@ import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.helper.KeyboardHelper
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
-import chat.rocket.android.util.extensions.hintContent
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.isValidUrl
-import chat.rocket.android.util.extensions.sanitize
-import chat.rocket.android.util.extensions.setLightStatusBar
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.textContent
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
@@ -113,17 +107,19 @@ class ServerFragment : Fragment(), ServerView {
 
     private fun setupToolbar() {
         with(activity as AuthenticationActivity) {
-            view?.let { setLightStatusBar(it) }
+            view?.let { setInvisibleStatusBar(it) }
             toolbar.isVisible = false
         }
     }
 
     private fun setupSpinner() {
         context?.let {
-            spinner_server_protocol.adapter = ArrayAdapter<String>(
-                it,
-                android.R.layout.simple_dropdown_item_1line, arrayOf("https://", "http://")
+            val adapter = ArrayAdapter<String>(
+                    it,
+                    android.R.layout.simple_dropdown_item_1line, arrayOf("https://", "http://")
             )
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+            spinner_server_protocol.adapter = adapter
 
             spinner_server_protocol.onItemSelectedListener =
                     object : AdapterView.OnItemSelectedListener {
@@ -159,7 +155,7 @@ class ServerFragment : Fragment(), ServerView {
     override fun enableButtonConnect() {
         context?.let {
             ViewCompat.setBackgroundTintList(
-                button_connect, ContextCompat.getColorStateList(it, R.color.colorAccent)
+                button_connect, ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorAccent))
             )
             button_connect.isEnabled = true
         }
@@ -169,7 +165,7 @@ class ServerFragment : Fragment(), ServerView {
         context?.let {
             ViewCompat.setBackgroundTintList(
                 button_connect,
-                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+                ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorButtonDisabled))
             )
             button_connect.isEnabled = false
         }
@@ -282,7 +278,7 @@ class ServerFragment : Fragment(), ServerView {
     private fun addDomain() {
         val cursorPosition = text_server_url.length()
         text_server_url.append(SpannableStringBuilder()
-            .color(R.color.colorAuthenticationSecondaryText) { append("rocket.chat") })
+            .color(ThemeUtil.getThemeColorResource(R.attr.colorDescriptiveText)) { append("rocket.chat") })
         text_server_url.setSelection(cursorPosition)
         appendedText = text_server_url.text.toString()
         isDomainAppended = true

@@ -27,6 +27,7 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="title_settings">Settings</string>
     <string name="title_preferences">Preferences</string>
     <string name="title_change_password">Change Password</string>
+    <string name="title_change_theme">Change Theme</string>
     <string name="title_rate_us">Rate Us</string>
     <string name="title_admin_panel">Admin panel</string>
     <string name="title_password">Change Password</string>
@@ -75,6 +76,9 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
 
     <!-- Settings messages -->
     <string name="msg_contact_us">Contact us</string>
+    //-------------------------------------------------
+    <string name="msg_change_theme">Change Theme</string>
+    //------------------------------------------------
     <string name="msg_language">Language</string>
     <string name="msg_review_this_app">Review this app</string>
     <string name="msg_share_this_app">Share this app</string>
@@ -396,4 +400,15 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="submit">Submit</string>
     <string name="required">*required</string>
     <string name="report_sent">Your report has been sent!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Themes -->
+    <string name="last_changed">Last Changed %s</string>
+    <string name="revert_to_default">Revert to Default</string>
+    <string name="create_custom_theme">Create Custom Theme</string>
+    <string name="app_themes">App Themes</string>
+    <string name="custom_themes">Custom Themes</string>
+    <string name="add_theme">Add Theme</string>
 </resources>

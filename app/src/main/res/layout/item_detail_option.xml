@@ -5,8 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
+    android:background="?android:colorBackground"
     android:padding="20dp">
+
     <ImageView
         android:id="@+id/icon"
         android:layout_width="24dp"

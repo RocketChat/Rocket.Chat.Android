@@ -3,7 +3,7 @@ package chat.rocket.android.videoconference.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import chat.rocket.android.thememanager.BaseActivity
 import chat.rocket.android.videoconference.presenter.JitsiVideoConferenceView
 import chat.rocket.android.videoconference.presenter.VideoConferencePresenter
 import dagger.android.AndroidInjection

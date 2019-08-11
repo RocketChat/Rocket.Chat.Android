@@ -31,6 +31,7 @@ import chat.rocket.android.chatrooms.viewmodel.LoadingState
 import chat.rocket.android.chatrooms.viewmodel.Query
 import chat.rocket.android.servers.ui.ServersBottomSheetFragment
 import chat.rocket.android.sortingandgrouping.ui.SortingAndGroupingBottomSheetFragment
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.onQueryTextListener
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
@@ -111,6 +112,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         viewModel = ViewModelProviders.of(this, factory).get(ChatRoomsViewModel::class.java)
         subscribeUi()
+        tintSortByDrawable()
 
         deepLinkInfo?.let {
             processDeepLink(it)
@@ -120,6 +122,15 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         setupListeners()
 
         analyticsManager.logScreenView(ScreenViewEvent.ChatRooms)
+    }
+
+    private fun tintSortByDrawable() {
+        ui {
+            val sortByDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_group_by_type_20dp, it)
+            DrawableHelper.wrapDrawable(sortByDrawable)
+            DrawableHelper.tintDrawable(sortByDrawable, it, ThemeUtil.getThemeColorResource(R.attr.colorSubHeaderText))
+            DrawableHelper.compoundEndDrawable(text_sort_by, sortByDrawable)
+        }
     }
 
     override fun setupToolbar(serverName: String) {

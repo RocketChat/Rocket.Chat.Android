@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:indicatorColor="@color/colorBlack"
+        app:indicatorColor="?colorLoading"
         app:indicatorName="BallPulseIndicator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,24 +26,22 @@
 
     <TextView
         android:id="@+id/text_channel_type"
+        style="@style/ChatDetails.Title.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/msg_public_channel"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_app_bar" />
 
     <TextView
         android:id="@+id/text_channel_type_description"
+        style="@style/ChatDetails.Content.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="@string/msg_public_channel_description"
-        android:textColor="@color/colorSecondaryText"
-        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_channel_type" />
 
@@ -58,26 +56,22 @@
 
     <TextView
         android:id="@+id/text_read_only"
+        style="@style/ChatDetails.Title.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-
         android:layout_marginTop="16dp"
         android:text="@string/msg_ready_only_channel"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_channel_type_description" />
 
     <TextView
         android:id="@+id/text_read_only_description"
+        style="@style/ChatDetails.Content.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_marginStart="16dp"
         android:text="@string/msg_ready_only_channel_description"
-        android:textColor="@color/colorSecondaryText"
-        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_read_only" />
 
@@ -99,6 +93,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="22dp"
         android:src="@drawable/ic_hashtag_black_12dp"
+        android:tint="?colorHeadings"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_read_only_description" />
 
@@ -108,12 +103,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/colorDim"
+        android:backgroundTint="?attr/colorDim"
         android:hint="@string/msg_channel_name"
         android:inputType="text"
         android:maxLines="1"
         android:paddingStart="24dp"
         android:paddingEnd="10dp"
+        android:textColor="?colorPrimaryText"
+        android:textColorHint="?colorTextHintEditText"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/image_channel_icon"
         app:layout_constraintEnd_toEndOf="parent"
@@ -127,6 +124,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_at_black_20dp"
+        android:tint="?colorHeadings"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_channel_name" />
 
@@ -136,12 +134,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/colorDim"
+        android:backgroundTint="?attr/colorDim"
         android:hint="@string/msg_invite_members"
         android:inputType="text"
         android:maxLines="1"
         android:paddingStart="24dp"
         android:paddingEnd="10dp"
+        android:textColor="?colorPrimaryText"
+        android:textColorHint="?colorTextHintEditText"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/image_invite_member"
         app:layout_constraintEnd_toEndOf="parent"
@@ -154,7 +154,7 @@
         android:layout_height="100dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
-        android:background="@color/colorWhite"
+        android:background="?android:colorBackground"
         android:elevation="2dp"
         android:orientation="vertical"
         android:visibility="gone"
@@ -177,7 +177,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:indicatorColor="@color/colorBlack"
+            app:indicatorColor="?colorLoading"
             app:indicatorName="BallPulseIndicator"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -189,6 +189,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/msg_member_not_found"
+            android:textColor="?colorPrimaryText"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

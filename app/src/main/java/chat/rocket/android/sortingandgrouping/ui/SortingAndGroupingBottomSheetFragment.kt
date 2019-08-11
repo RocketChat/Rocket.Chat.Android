@@ -2,6 +2,7 @@ package chat.rocket.android.sortingandgrouping.ui
 
 import DrawableHelper
 import android.content.DialogInterface
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,8 @@ import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
 import chat.rocket.android.sortingandgrouping.presentation.SortingAndGroupingPresenter
 import chat.rocket.android.sortingandgrouping.presentation.SortingAndGroupingView
+import chat.rocket.android.thememanager.util.ThemeUtil
+import chat.rocket.android.util.extensions.ui
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -32,11 +35,24 @@ class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), Sorti
     private val chatRoomFragment by lazy {
         activity?.supportFragmentManager?.findFragmentByTag(TAG_CHAT_ROOMS_FRAGMENT) as ChatRoomsFragment
     }
-    private val filterDrawable by lazy { R.drawable.ic_filter_20dp }
-    private val activityDrawable by lazy { R.drawable.ic_activity_20dp }
-    private val unreadOnTopDrawable by lazy { R.drawable.ic_unread_20dp }
-    private val groupByTypeDrawable by lazy { R.drawable.ic_group_by_type_20dp }
-    private val groupByFavoritesDrawable by lazy { R.drawable.ic_favorites_20dp }
+    private val filterDrawable by lazy {
+        DrawableHelper.getDrawableFromId(R.drawable.ic_filter_20dp, requireContext())
+    }
+    private val activityDrawable by lazy {
+        DrawableHelper.getDrawableFromId(R.drawable.ic_activity_20dp, requireContext())
+    }
+    private val unreadOnTopDrawable by lazy {
+        DrawableHelper.getDrawableFromId(R.drawable.ic_unread_20dp, requireContext())
+    }
+    private val groupByTypeDrawable by lazy {
+        DrawableHelper.getDrawableFromId(R.drawable.ic_group_by_type_20dp, requireContext())
+    }
+    private val groupByFavoritesDrawable by lazy {
+        DrawableHelper.getDrawableFromId(R.drawable.ic_favorites_20dp, requireContext())
+    }
+    private val checkDrawable by lazy {
+        DrawableHelper.getDrawableFromId(R.drawable.ic_check, requireContext())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +69,8 @@ class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), Sorti
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.getSortingAndGroupingPreferences()
+        tintTextViewStartDrawables()
+        tintCheckDrawable()
         setupListeners()
     }
 
@@ -154,21 +172,21 @@ class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), Sorti
         text_sort_by.text = getString(R.string.msg_sort_by_placeholder, text.toLowerCase())
     }
 
-    private fun checkSelection(textView: TextView, @DrawableRes startDrawable: Int) {
+    private fun checkSelection(textView: TextView, startDrawable: Drawable) {
         context?.let {
             DrawableHelper.compoundStartAndEndDrawable(
                 textView,
-                DrawableHelper.getDrawableFromId(startDrawable, it),
-                DrawableHelper.getDrawableFromId(R.drawable.ic_check, it)
+                startDrawable,
+                checkDrawable
             )
         }
     }
 
-    private fun uncheckSelection(textView: TextView, @DrawableRes startDrawable: Int) {
+    private fun uncheckSelection(textView: TextView, startDrawable: Drawable) {
         context?.let {
             DrawableHelper.compoundStartDrawable(
                 textView,
-                DrawableHelper.getDrawableFromId(startDrawable, it)
+                startDrawable
             )
         }
     }
@@ -180,5 +198,19 @@ class SortingAndGroupingBottomSheetFragment : BottomSheetDialogFragment(), Sorti
             isGroupByType,
             isGroupByFavorites
         )
+    }
+
+    private fun tintTextViewStartDrawables(){
+        ui{
+            val drawables = arrayOf(filterDrawable, activityDrawable, unreadOnTopDrawable, groupByTypeDrawable, groupByFavoritesDrawable)
+            DrawableHelper.wrapDrawables(drawables)
+            DrawableHelper.tintDrawables(drawables, it, ThemeUtil.getThemeColorResource(R.attr.colorBottomSheetFragmentText))
+        }
+    }
+
+    private fun tintCheckDrawable() {
+        context?.let {
+            DrawableHelper.tintDrawable(checkDrawable, it, ThemeUtil.getThemeColorResource(R.attr.colorAccent))
+        }
     }
 }

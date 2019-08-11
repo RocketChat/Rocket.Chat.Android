@@ -5,20 +5,21 @@
     android:id="@+id/file_attachment_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="?android:colorBackground"
     android:clickable="true"
     android:focusable="true"
     android:paddingBottom="@dimen/message_item_top_and_bottom_padding"
     android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
     android:paddingStart="@dimen/screen_edge_left_and_right_padding">
 
+    <!--android:background="?android:attr/selectableItemBackground"-->
 
     <TextView
         android:id="@+id/text_file_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="56dp"
-        android:textColor="@color/colorAccent"
+        android:textColor="?colorAccent"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:drawableStart="@drawable/ic_files_24dp"
         android:drawablePadding="6dp"

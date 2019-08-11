@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     tools:context=".pinnedmessages.ui.PinnedMessagesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -24,7 +25,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:visibility="gone"
-        app:indicatorColor="@color/colorBlack"
+        app:indicatorColor="?colorLoading"
         app:indicatorName="BallPulseIndicator"
         app:layout_constraintBottom_toBottomOf="@+id/recycler_view_pinned"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +38,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/ic_action_message_pin_24dp"
-        android:tint="@color/icon_grey"
+        android:tint="?colorDescriptiveText"
         app:layout_constraintBottom_toTopOf="@id/tv_pin_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/no_pinned_messages"
-        android:textColor="@color/colorSecondaryText"
+        android:textColor="?colorDescriptiveText"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/tv_pin_description"
@@ -65,7 +66,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/no_pinned_description"
         android:textAlignment="center"
-        android:textColor="@color/colorSecondaryTextLight"
+        android:textColor="?colorDescriptiveText"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

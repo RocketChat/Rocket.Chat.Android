@@ -28,6 +28,7 @@ import chat.rocket.android.helper.AndroidPermissionsHelper.hasCameraPermission
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.dispatchImageSelection
 import chat.rocket.android.util.extension.dispatchTakePicture
@@ -86,9 +87,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar()
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             tintEditTextDrawableStart()
-        }
+//        }
 
         presenter.loadUserProfile()
         setupListeners()
@@ -273,7 +274,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
             val drawables = arrayOf(personDrawable, atDrawable, emailDrawable)
             DrawableHelper.wrapDrawables(drawables)
-            DrawableHelper.tintDrawables(drawables, this, R.color.colorDrawableTintGrey)
+            DrawableHelper.tintDrawables(drawables, this, ThemeUtil.getThemeColorResource(R.attr.colorDrawableSubtleTint))
             DrawableHelper.compoundDrawables(
                 arrayOf(text_name, text_username, text_email), drawables
             )
@@ -341,14 +342,16 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
 
         context?.let {
-            AlertDialog.Builder(it)
+            val dialog = AlertDialog.Builder(it)
                 .setView(dialogLayout)
                 .setPositiveButton(R.string.msg_change_status) { dialog, _ ->
                     presenter.updateStatus(newStatus)
                     text_status.text = getString(R.string.status, newStatus.toString().capitalize())
                     this.currentStatus = newStatus.toString()
                     dialog.dismiss()
-                }.show()
+                }.create()
+            dialog.show()
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
         }
     }
 

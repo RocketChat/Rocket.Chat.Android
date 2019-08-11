@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".thememanager.ui.ThemesActivity">
+
+    <include
+        android:id="@+id/layout_app_bar"
+        layout="@layout/app_bar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/item_theme_info"
+        layout="@layout/item_theme_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_app_bar" />
+
+    <TextView
+        android:id="@+id/revert_to_default"
+        style="@style/ChangeTheme.Content.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/theme_screen_edge_left_and_right_padding"
+        android:paddingTop="@dimen/theme_screen_edge_top_padding"
+        android:text="@string/revert_to_default"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_theme_info" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/layout_item_add_theme"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/revert_to_default">
+
+        <TextView
+            android:id="@+id/text_app_themes"
+            style="@style/ChangeTheme.TextView.Headline"
+            android:text="@string/app_themes" />
+
+        <View
+            android:id="@+id/view_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/text_app_themes"
+            android:layout_marginTop="16dp"
+            android:background="?colorDivider" />
+
+        <include
+            android:id="@+id/item_themes_recycler"
+            layout="@layout/item_themes_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_divider" />
+
+        <TextView
+            android:id="@+id/text_custom_themes"
+            style="@style/ChangeTheme.TextView.Headline"
+            android:layout_below="@+id/item_themes_recycler"
+            android:text="@string/custom_themes" />
+
+        <ImageView
+            android:id="@+id/tooltip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_themes_recycler"
+            android:layout_alignEnd="@+id/text_custom_themes"
+            android:paddingStart="@dimen/theme_screen_edge_left_and_right_padding"
+            android:paddingTop="@dimen/theme_title_top_padding"
+            android:paddingEnd="@dimen/theme_screen_edge_left_and_right_padding"
+            android:src="@drawable/ic_action_message_info_outline_24dp"
+            android:tint="?colorAccent" />
+
+        <View
+            android:id="@+id/view_divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/text_custom_themes"
+            android:layout_marginTop="16dp"
+            android:background="?colorDivider" />
+
+        <include
+            android:id="@+id/item_custom_themes_recycler"
+            layout="@layout/item_custom_themes_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_divider2" />
+
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/layout_item_add_theme"
+        layout="@layout/item_add_theme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

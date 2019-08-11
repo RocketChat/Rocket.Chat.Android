@@ -23,6 +23,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.text.bold
 import androidx.core.view.isVisible
@@ -72,20 +73,11 @@ import chat.rocket.android.helper.AndroidPermissionsHelper.getCameraPermission
 import chat.rocket.android.helper.AndroidPermissionsHelper.getWriteExternalStoragePermission
 import chat.rocket.android.helper.AndroidPermissionsHelper.hasCameraPermission
 import chat.rocket.android.helper.AndroidPermissionsHelper.hasWriteExternalStoragePermission
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.createImageFile
 import chat.rocket.android.util.extension.orFalse
-import chat.rocket.android.util.extensions.circularRevealOrUnreveal
-import chat.rocket.android.util.extensions.clearLightStatusBar
-import chat.rocket.android.util.extensions.fadeIn
-import chat.rocket.android.util.extensions.fadeOut
-import chat.rocket.android.util.extensions.hideKeyboard
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.isNotNullNorEmpty
-import chat.rocket.android.util.extensions.rotateBy
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.textContent
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -1169,9 +1161,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupToolbar(toolbarTitle: String) {
         with(activity as ChatRoomActivity) {
-            this.clearLightStatusBar()
+            view?.let {this.clearInvisibleStatusBar(it)}
             this.setupToolbarTitle(toolbarTitle)
             toolbar.isVisible = true
+            toolbar.setBackgroundColor(ThemeUtil.getThemeColor(R.attr.colorPrimary))
         }
     }
 

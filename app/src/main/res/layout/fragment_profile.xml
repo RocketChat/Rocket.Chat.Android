@@ -5,6 +5,7 @@
     android:id="@+id/relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     android:focusableInTouchMode="true"
     tools:context=".profile.ui.ProfileFragment">
 
@@ -54,7 +55,8 @@
                 android:layout_width="match_parent"
                 android:drawableStart="@drawable/ic_person_black_20dp"
                 android:hint="@string/msg_profile_name_hint"
-                android:inputType="textCapWords" />
+                android:inputType="textCapWords"
+                android:textColorHint="?colorTextHintEditText" />
 
             <TextView
                 style="@style/Profile.TextView"
@@ -68,7 +70,8 @@
                 android:layout_width="match_parent"
                 android:drawableStart="@drawable/ic_at_black_20dp"
                 android:hint="@string/msg_profile_username_hint"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textColorHint="?colorTextHintEditText" />
 
             <TextView
                 style="@style/Profile.TextView"
@@ -83,7 +86,8 @@
                 android:layout_marginBottom="16dp"
                 android:drawableStart="@drawable/ic_email_black_20dp"
                 android:hint="@string/msg_profile_email_hint"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:textColorHint="?colorTextHintEditText" />
         </LinearLayout>
 
     </ScrollView>
@@ -93,14 +97,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        app:indicatorColor="@color/colorBlack"
+        app:indicatorColor="?colorLoading"
         app:indicatorName="BallPulseIndicator" />
 
     <View
         android:id="@+id/view_dim"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorDim"
+        android:background="?attr/colorDim"
         android:visibility="gone" />
 
     <include

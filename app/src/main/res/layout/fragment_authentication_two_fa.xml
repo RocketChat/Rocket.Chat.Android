@@ -28,7 +28,6 @@
         android:id="@+id/button_confirm"
         style="@style/Authentication.Button"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/colorAuthenticationButtonDisabled"
         android:enabled="false"
         android:text="@string/action_confirm"
         app:layout_constraintEnd_toEndOf="parent"

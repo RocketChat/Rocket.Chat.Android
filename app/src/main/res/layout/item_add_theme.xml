@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="?android:colorBackground"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/text_add_theme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_add_new_server_48dp"
+        android:drawablePadding="12dp"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:text="@string/add_theme"
+        android:textColor="?colorDescriptiveText"
+        android:textSize="16sp"
+        android:textStyle="normal"/>
+
+</LinearLayout>

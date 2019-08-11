@@ -12,6 +12,7 @@
 
         <RadioButton
             android:id="@+id/radio_button_online"
+            style="@style/RadioButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
@@ -20,6 +21,7 @@
 
         <RadioButton
             android:id="@+id/radio_button_away"
+            style="@style/RadioButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
@@ -28,6 +30,7 @@
 
         <RadioButton
             android:id="@+id/radio_button_busy"
+            style="@style/RadioButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
@@ -36,6 +39,7 @@
 
         <RadioButton
             android:id="@+id/radio_button_invisible"
+            style="@style/RadioButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"

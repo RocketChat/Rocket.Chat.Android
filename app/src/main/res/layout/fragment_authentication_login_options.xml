@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
     android:padding="@dimen/screen_edge_left_and_right_margins"
     tools:context="authentication.loginoptions.ui.LoginOptionsFragment">
 
@@ -34,7 +33,7 @@
                 android:paddingEnd="16dp"
                 android:text="@string/msg_continue_with_facebook"
                 android:textAllCaps="false"
-                android:textColor="@color/colorPrimary"
+                android:textColor="?colorHeadings"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -53,7 +52,7 @@
                 android:paddingEnd="16dp"
                 android:text="@string/msg_continue_with_github"
                 android:textAllCaps="false"
-                android:textColor="@color/colorPrimary"
+                android:textColor="?colorHeadings"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -72,7 +71,7 @@
                 android:paddingEnd="16dp"
                 android:text="@string/msg_continue_with_google"
                 android:textAllCaps="false"
-                android:textColor="@color/colorPrimary"
+                android:textColor="?colorHeadings"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -91,7 +90,7 @@
                 android:paddingEnd="16dp"
                 android:text="@string/msg_continue_with_linkedin"
                 android:textAllCaps="false"
-                android:textColor="@color/colorPrimary"
+                android:textColor="?colorHeadings"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -110,7 +109,7 @@
                 android:paddingEnd="16dp"
                 android:text="@string/msg_continue_with_gitlab"
                 android:textAllCaps="false"
-                android:textColor="@color/colorPrimary"
+                android:textColor="?colorHeadings"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -129,7 +128,7 @@
                 android:paddingEnd="16dp"
                 android:text="@string/msg_continue_with_wordpress"
                 android:textAllCaps="false"
-                android:textColor="@color/colorPrimary"
+                android:textColor="?colorHeadings"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -153,16 +152,17 @@
                 android:background="@drawable/circle_background_grey"
                 android:contentDescription="@string/msg_content_description_show_more_login_options"
                 android:src="@drawable/ic_expand_more_black_24dp"
-                android:tint="@color/colorWhite"
+                android:tint="?android:colorBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+                <!--android:tint="@color/colorWhite"-->
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginEnd="8dp"
-                android:background="@color/colorAuthenticationButtonBorderAndDivider"
+                android:background="?colorAuthenticationButtonBorderAndDivider"
                 app:layout_constraintBottom_toBottomOf="@+id/button_expand_collapse_accounts"
                 app:layout_constraintEnd_toStartOf="@+id/button_expand_collapse_accounts"
                 app:layout_constraintStart_toStartOf="parent"
@@ -172,7 +172,7 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginStart="8dp"
-                android:background="@color/colorAuthenticationButtonBorderAndDivider"
+                android:background="?colorAuthenticationButtonBorderAndDivider"
                 app:layout_constraintBottom_toBottomOf="@+id/button_expand_collapse_accounts"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/button_expand_collapse_accounts"

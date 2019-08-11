@@ -5,11 +5,10 @@
     android:id="@+id/attachment_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="?android:colorBackground"
     android:orientation="vertical"
-    android:paddingEnd="@dimen/screen_edge_left_and_right_margins"
-    android:paddingStart="72dp">
-
+    android:paddingStart="72dp"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_margins">
 
     <TextView
         android:id="@+id/file_name"
@@ -22,6 +21,7 @@
         android:id="@+id/file_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="?colorDim"
         tools:text="Some description" />
 
     <com.facebook.drawee.view.SimpleDraweeView
@@ -36,7 +36,7 @@
         android:id="@+id/audio_video_attachment"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:background="@color/colorBlack"
+        android:background="?android:colorBackground"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -51,6 +51,7 @@
         android:id="@+id/file_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="?colorDim"
         tools:text="Some text" />
 
     <include

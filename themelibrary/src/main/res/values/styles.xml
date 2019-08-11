@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DefaultDarkThemeColorToolbar">
+        <item name="colorPrimary">@color/darkColorPrimary</item>
+        <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
+    </style>
+
+    <style name="DefaultBlackThemeColorToolbar">
+        <item name="colorPrimary">@color/blackColorPrimary</item>
+        <item name="colorPrimaryDark">@color/blackColorPrimaryDark</item>
+    </style>
+
+    <style name="DefaultDarkThemeColorAccent">
+        <item name="colorAccent">@color/darkColorAccent</item>
+    </style>
+
+    <style name="DefaultBlackThemeColorAccent">
+        <item name="colorAccent">@color/blackColorAccent</item>
+    </style>
+</resources>

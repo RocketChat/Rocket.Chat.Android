@@ -60,6 +60,7 @@ import chat.rocket.android.server.infrastructure.SharedPrefsBasicAuthRepository
 import chat.rocket.android.server.infrastructure.SharedPrefsConnectingServerRepository
 import chat.rocket.android.server.infrastructure.SharedPrefsCurrentServerRepository
 import chat.rocket.android.server.infrastructure.SharedPrefsSortingAndGroupingRepository
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.AppJsonAdapterFactory
 import chat.rocket.android.util.BasicAuthenticatorInterceptor
 import chat.rocket.android.util.HttpLoggingInterceptor
@@ -293,7 +294,7 @@ class AppModule {
             .theme(
                 SpannableTheme.builder()
                     .blockMargin(0)
-                    .linkColor(res.getColor(R.color.colorAccent))
+                    .linkColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
                     .build()
             )
             .build()

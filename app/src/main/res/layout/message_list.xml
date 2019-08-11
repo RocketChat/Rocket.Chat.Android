@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="?android:colorBackground">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
@@ -15,29 +16,31 @@
         android:id="@+id/button_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
+        android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
+        android:backgroundTint="?colorFloatingActionButtonBackground"
         android:src="@drawable/ic_arrow_downward_24dp"
-        android:theme="@style/Theme.AppCompat"
-        android:tint="@color/actionMenuColor"
-        app:backgroundTint="@color/colorWhite"
-        tools:visibility="visible"
-        android:layout_gravity="end|bottom" />
+        android:theme="?appAccentStyle"
+        android:tint="?colorAccent"
+        android:visibility="invisible"
+        app:backgroundTint="?colorFloatingActionButtonBorder"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/text_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/round_textview"
         android:elevation="6dp"
         android:gravity="center"
         android:textColor="@color/colorWhite"
-        android:visibility="invisible"
         android:textSize="@dimen/message_time_text_size"
-        android:background="@drawable/round_textview"
-        tools:visibility="visible"
-        tools:text="1"
-        android:layout_gravity="center_vertical"
+        android:theme="?appAccentStyle"
+        android:visibility="invisible"
         app:layout_anchor="@id/button_fab"
-        app:layout_anchorGravity="end" />
+        app:layout_anchorGravity="end"
+        tools:text="1"
+        tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

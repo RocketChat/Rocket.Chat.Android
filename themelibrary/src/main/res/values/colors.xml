@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--DARK THEME-->
+    <color name="darkColorBodyText">#FFe8ebed</color> <!--used for radioButtons and chat messages-->
+
+    <color name="darkColorPrimary">#0b182c</color> <!--action bar color-->
+    <color name="darkColorPrimaryDark">#0b182c</color> <!--status and navigation bar color-->
+    <color name="darkColorFocusedBackground">#0b182c</color> <!--defined in stylesheet but unused directly-->
+    <color name="darkColorSubHeaderBackground">#0b182c</color> <!--used for channel and directory subHeader-->
+    <color name="darkColorSettingsSecondaryBackground">#0b182c</color> <!--used in settings fragment-->
+
+    <color name="darkColorTextHint">#77ffffff</color> <!-- colorAuxiliaryText -->
+    <color name="darkColorDescriptiveText">#70FFFFFF</color> <!-- self defined -->
+    <color name="darkColorBottomSheetFragmentText">#77ffffff</color> <!-- darker text -->
+    <color name="darkColorDrawableSubtleTint">#FF9297a3</color>
+    <color name="darkColorQuoteBar">#FF9297a3</color> <!--self defined, not in stylesheet-->
+    <color name="darkColorAuthenticationSecondaryText">#FF9297a3</color> <!-- darker text -->
+    <color name="darkColorSubHeaderText">#FF9297a3</color> <!-- used for channel and directory subHeader -->
+    <color name="darkColorSecondaryText">#FF9297a3</color> <!--Self Defined-->
+
+    <color name="darkColorMutedAccent">#2b2b2d</color> <!--defined in stylesheet-->
+    <color name="darkColorDivider">#33FFFFFF</color> <!--defined in stylesheet-->
+    <color name="darkColorAuthenticationButtonBorderAndDivider">#33FFFFFF</color> <!--defined in stylesheet-->
+    <color name="darkColorStatusInvisible">#2b2b2d</color> <!--self assigned-->
+
+    <color name="darkColorTitleText">#ffffff</color> <!--defined in stylesheet, used for headings-->
+    <color name="darkColorPrimaryText">#ffffff</color> <!--used for text items, not headings-->
+    <color name="darkColorBottomSheetFragmentHeading">#ffffff</color> <!--defined in stylesheet-->
+    <color name="darkColorChannelTitle">#ffffff</color> <!--defined in stylesheet-->
+
+    <color name="darkColorTimestampText">#99FFFFFF</color> <!-- self defined -->
+    <color name="darkColorChatText">#FFb2b8c6</color>
+
+    <color name="darkColorChatComponentBackground">#1a2232</color> <!--defined in stylesheet-->
+    <color name="darkColorReactionBackground">#1a2232</color> <!--defined in stylesheet-->
+
+    <color name="darkColorBannerBackground">#0e1f38</color> <!--defined in stylesheet but unused directly-->
+    <color name="darkColorReactionBorder">#0e1f38</color> <!-- Picked from layouts -->
+
+    <color name="darkColorFloatingActionButtonBackground">#261d74f5</color> <!-- Picked from layouts -->
+
+    <color name="darkColorFloatingActionButtonBorder">#4c1d74f5</color> <!-- Picked from layouts -->
+    <color name="darkColorAuthenticationButtonDisabled">#22FFFFFF</color> <!--self defined-->
+
+    <color name="darkColorAccent">#1d74f5</color> <!--defined in stylesheet-->
+    <color name="darkColorBackground">#030c1b</color> <!--defined in stylesheet-->
+    <color name="darkColorDim">#99ffffff</color> <!--review-->
+    <color name="darkColorControlText">#99ffffff</color> <!--self defined-->
+
+    <color name="darkColorAuxiliaryBackground">#07101e</color> <!--defined in stylesheet, unused-->
+    <color name="darkColorAuxiliaryTint">#cdcdcd</color> <!--used for loading-->
+
+    <!--BLACK THEME-->
+    <color name="blackColorBodyText">#FFe8ebed</color> <!--used for radioButtons and chat messages-->
+    <!--<color name="blackColorPrimary">#FFe8ebed</color>-->
+
+    <color name="blackColorPrimary">#FF0e0d0d</color> <!--action bar color-->
+    <color name="blackColorPrimaryDark">#FF0e0d0d</color> <!--status and navigation bar color-->
+    <color name="blackColorFocusedBackground">#FF0e0d0d</color> <!--defined in stylesheet but unused directly-->
+    <color name="blackColorSubHeaderBackground">#FF0e0d0d</color> <!--used for channel and directory subHeader-->
+    <color name="blackColorSettingsSecondaryBackground">#FF0e0d0d</color> <!--used in settings fragment-->
+
+    <color name="blackColorTextHint">#77ffffff</color> <!-- Picked from layouts -->
+    <color name="blackColorDescriptiveText">#70FFFFFF</color> <!-- self defined -->
+    <color name="blackColorBottomSheetFragmentText">#77ffffff</color> <!-- darker text -->
+    <color name="blackColorDrawableSubtleTint">#FF9297a3</color>
+    <color name="blackColorQuoteBar">#FF9297a3</color> <!--self defined, not in stylesheet-->
+    <color name="blackColorAuthenticationSecondaryText">#FF9297a3</color> <!-- darker text -->
+    <color name="blackColorSubHeaderText">#FF9297a3</color> <!-- used for channel and directory subHeader -->
+    <color name="blackColorSecondaryText">#FF9297a3</color> <!--Self Defined-->
+
+    <color name="blackColorMutedAccent">#FF2b2b29</color> <!--defined in stylesheet-->
+    <color name="blackColorDivider">#33FFFFFF</color> <!--defined in stylesheet-->
+    <color name="blackColorAuthenticationButtonDisabled">#22FFFFFF</color> <!--self defined-->
+    <color name="blackColorAuthenticationButtonBorderAndDivider">#33FFFFFF</color> <!--defined in stylesheet-->
+    <color name="blackColorStatusInvisible">#FF2b2b29</color> <!--self assigned-->
+
+    <color name="blackColorTitleText">#FFFAFAFA</color> <!--defined in stylesheet, used for headings-->
+    <color name="blackColorPrimaryText">#FFFAFAFA</color>  <!--used for text items, not headings-->
+    <color name="blackColorBottomSheetFragmentHeading">#FFFAFAFA</color> <!--defined in stylesheet-->
+    <color name="blackColorChannelTitle">#FFFAFAFA</color> <!--defined in stylesheet-->
+
+    <color name="blackColorTimestampText">#99FFFFFF</color> <!-- self defined -->
+
+    <color name="blackColorChatComponentBackground">#17181a</color> <!--defined in stylesheet-->
+    <color name="blackColorReactionBackground">#17181a</color> <!--defined in stylesheet-->
+
+    <color name="blackColorBannerBackground">#1f2329</color> <!--defined in stylesheet but unused directly-->
+    <color name="blackColorReactionBorder">#1f2329</color> <!-- Picked from layouts -->
+
+    <color name="blackColorFloatingActionButtonBackground">#261d74f5</color> <!-- Picked from layouts -->
+
+    <color name="blackColorFloatingActionButtonBorder">#4c1d74f5</color> <!-- Picked from layouts -->
+
+    <color name="blackColorAccent">#1d74f5</color> <!--defined in stylesheet-->
+    <color name="blackColorBackground">#000000</color> <!--defined in stylesheet-->
+    <color name="blackColorDim">#99ffffff</color> <!--review-->
+    <color name="blackColorControlText">#99ffffff</color> <!--self defined-->
+
+    <color name="blackColorAuxiliaryBackground">#090909</color> <!--defined in stylesheet, unused-->
+    <color name="blackColorAuxiliaryTint">#cdcdcd</color> <!--used for loading-->
+
+    <color name="blackColorChatText">#FFb2b8c6</color>
+    <bool name="isDark">true</bool>
+
+
+    <integer-array name="DarkThemePreview">
+        <item>@color/darkColorAccent</item>
+        <item>@color/darkColorPrimaryText</item>
+        <item>@color/darkColorPrimary</item>
+        <item>@color/darkColorDescriptiveText</item>
+        <item>@color/darkColorBackground</item>
+    </integer-array>
+
+    <integer-array name="BlackThemePreview">
+        <item>@color/blackColorAccent</item>
+        <item>@color/blackColorPrimaryText</item>
+        <item>@color/blackColorPrimary</item>
+        <item>@color/blackColorDescriptiveText</item>
+        <item>@color/blackColorBackground</item>
+    </integer-array>
+
+    <!--Dark Background Colors-->
+    <color name="Charcoal">#000000</color>
+
+    <color name="Jet">#1A1A1A</color>
+    <color name="BlackOlive">#1E1E1E</color>
+    <color name="Silver">#C0C0C0</color>
+
+    <color name="DarkJungle">#142022</color>
+    <color name="DarkGunMetal">#182628</color>
+    <color name="Ebony">#545C5E</color>
+
+    <color name="EerieGreen">#131901</color>
+    <color name="RaisinBlack">#21231A</color>
+    <color name="GraniteGray">#686C5D</color>
+
+    <string-array name="DarkCustomBackground">
+        <item>Default</item>
+        <item>Charcoal</item>
+        <item>Jet</item>
+        <item>DarkJungle</item>
+        <item>EerieGreen</item>
+        <item>DarkBlue</item>
+    </string-array>
+</resources>

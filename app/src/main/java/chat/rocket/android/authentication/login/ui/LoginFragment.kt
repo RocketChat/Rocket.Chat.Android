@@ -20,17 +20,15 @@ import chat.rocket.android.helper.getCredentials
 import chat.rocket.android.helper.hasCredentialsSupport
 import chat.rocket.android.helper.requestStoredCredentials
 import chat.rocket.android.helper.saveCredentials
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
-import chat.rocket.android.util.extensions.clearLightStatusBar
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.textContent
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
+import kotlinx.android.synthetic.main.fragment_authentication_log_in.view_loading
 import javax.inject.Inject
 
 private const val SERVER_NAME = "server_name"
@@ -73,6 +71,11 @@ class LoginFragment : Fragment(), LoginView {
         setupToolbar()
         presenter.setupView()
         subscribeEditTexts()
+
+//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            tintEditTextDrawableStart()
+//        }
+
         setupOnClickListener()
         analyticsManager.logScreenView(ScreenViewEvent.Login)
     }
@@ -111,7 +114,7 @@ class LoginFragment : Fragment(), LoginView {
 
     private fun setupToolbar() {
         with(activity as AuthenticationActivity) {
-            this.clearLightStatusBar()
+            view?.let {this.clearInvisibleStatusBar(it)}
             toolbar.isVisible = true
             toolbar.title = serverName?.replace(getString(R.string.default_protocol), "")
         }
@@ -167,7 +170,7 @@ class LoginFragment : Fragment(), LoginView {
     override fun enableButtonLogin() {
         context?.let {
             ViewCompat.setBackgroundTintList(
-                button_log_in, ContextCompat.getColorStateList(it, R.color.colorAccent)
+                button_log_in, ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorAccent))
             )
             button_log_in.isEnabled = true
         }
@@ -178,7 +181,7 @@ class LoginFragment : Fragment(), LoginView {
         context?.let {
             ViewCompat.setBackgroundTintList(
                 button_log_in,
-                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+                ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorButtonDisabled))
             )
             button_log_in.isEnabled = false
         }
@@ -187,9 +190,7 @@ class LoginFragment : Fragment(), LoginView {
     override fun enableButtonForgetPassword() {
         context?.let {
             button_forgot_your_password.isEnabled = true
-            button_forgot_your_password.setTextColor(
-                ContextCompat.getColorStateList(it, R.color.colorAccent)
-            )
+            button_forgot_your_password.setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
         }
     }
 
@@ -197,7 +198,7 @@ class LoginFragment : Fragment(), LoginView {
         context?.let {
             button_forgot_your_password.isEnabled = false
             button_forgot_your_password.setTextColor(
-                ContextCompat.getColorStateList(it, R.color.colorAuthenticationButtonDisabled)
+                ContextCompat.getColorStateList(it, ThemeUtil.getThemeColorResource(R.attr.colorButtonDisabled))
             )
         }
     }
@@ -251,6 +252,17 @@ class LoginFragment : Fragment(), LoginView {
             disableButtonForgetPassword()
             text_username_or_email.isEnabled = false
             text_password.isEnabled = false
+        }
+    }
+
+    private fun tintEditTextDrawableStart() {
+        ui {
+            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_20dp, it)
+            val keyDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_key_black_20dp, it)
+            val drawables = arrayOf(atDrawable, keyDrawable)
+            DrawableHelper.wrapDrawables(drawables)
+            DrawableHelper.tintDrawables(drawables, it, ThemeUtil.getThemeColorResource(R.attr.colorDrawableStrongTint))
+            DrawableHelper.compoundDrawables( arrayOf(text_username_or_email, text_password), drawables)
         }
     }
 }

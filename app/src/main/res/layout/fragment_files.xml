@@ -5,6 +5,7 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     tools:context=".files.ui.FilesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -22,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:indicatorColor="@color/colorBlack"
+        app:indicatorColor="?colorHeadings"
         app:indicatorName="BallPulseIndicator"
         app:layout_constraintBottom_toBottomOf="@+id/recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,7 +35,6 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/ic_insert_drive_file_black_24dp"
-        android:tint="@color/icon_grey"
         app:layout_constraintBottom_toTopOf="@+id/text_no_file"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/msg_no_files"
-        android:textColor="@color/colorSecondaryText"
+        android:textColor="?colorDescriptiveText"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/text_all_files_appear_here"
@@ -61,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/msg_all_files_appear_here"
-        android:textColor="@color/colorSecondaryTextLight"
+        android:textColor="?colorDescriptiveText"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
