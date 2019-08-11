@@ -87,9 +87,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar()
-//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-            tintEditTextDrawableStart()
-//        }
+        tintEditTextDrawableStart()
 
         presenter.loadUserProfile()
         setupListeners()
