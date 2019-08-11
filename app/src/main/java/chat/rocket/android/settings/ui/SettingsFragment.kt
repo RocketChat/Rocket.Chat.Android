@@ -145,6 +145,8 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
         text_contact_us.setOnClickListener { contactSupport() }
 
+        text_change_theme.setOnClickListener { presenter.toChangeTheme() }
+
         text_language.setOnClickListener { changeLanguage() }
 
         text_review_this_app.setOnClickListener { showAppOnStore() }
@@ -260,7 +262,10 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
     private fun showDeleteAccountDialog() {
         context?.let {
-             val dialog = AlertDialog.Builder(it)
+            val dialogLayout = layoutInflater.inflate(R.layout.dialog_delete_account, null)
+            val editText = dialogLayout.findViewById<EditText>(R.id.text_password)
+
+            val dialog = AlertDialog.Builder(it)
                 .setView(dialogLayout)
                 .setPositiveButton(R.string.msg_delete_account) { _, _ ->
                     presenter.deleteAccount(editText.text.toString())
@@ -272,7 +277,7 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
              val keyDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_key_black_20dp, it)
              DrawableHelper.wrapDrawable(keyDrawable)
              DrawableHelper.tintDrawable(keyDrawable, it, ThemeUtil.getThemeColorResource(R.attr.colorDrawableStrongTint))
-             DrawableHelper.compoundStartDrawable(dialog.text_delete_account_password, keyDrawable)
+             DrawableHelper.compoundStartDrawable(dialog.text_password, keyDrawable)
         }
     }
 }

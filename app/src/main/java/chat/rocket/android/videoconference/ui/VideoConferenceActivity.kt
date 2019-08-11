@@ -23,7 +23,7 @@ fun Context.videoConferenceIntent(chatRoomId: String, chatRoomType: String): Int
 private const val INTENT_CHAT_ROOM_ID = "chat_room_id"
 private const val INTENT_CHAT_ROOM_TYPE = "chat_room_type"
 
-class VideoConferenceActivity : AppCompatActivity(), JitsiVideoConferenceView,
+class VideoConferenceActivity : BaseActivity(), JitsiVideoConferenceView,
     JitsiMeetViewListener {
     @Inject lateinit var presenter: VideoConferencePresenter
     private lateinit var chatRoomId: String
