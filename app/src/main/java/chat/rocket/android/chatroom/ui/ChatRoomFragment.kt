@@ -173,8 +173,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private var playComposeMessageButtonsAnimation = true
 
     internal var isSearchTermQueried = false
-
-    private val dismissStatus = { text_connection_status.fadeOut() }
+    private val dismissConnectionState by lazy { text_connection_status.fadeOut() }
 
     // For reveal and unreveal anim.
     private val hypotenuse by lazy {
@@ -453,7 +452,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun onRoomUpdated(roomUiModel: RoomUiModel) {
         // TODO: We should rely solely on the user being able to post, but we cannot guarantee
-        // that the "(channels|groups).roles" endpoint is supported by the server in use.
+        // that the "(channels|groups).getPermissionRoles" endpoint is supported by the server in use.
         ui {
             setupToolbar(roomUiModel.name.toString())
             setupMessageComposer(roomUiModel)
@@ -766,10 +765,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showConnectionState(state: State) {
         ui {
             text_connection_status.fadeIn()
-            handler.removeCallbacks(dismissStatus)
+            handler.removeCallbacks { dismissConnectionState }
             text_connection_status.text = when (state) {
                 is State.Connected -> {
-                    handler.postDelayed(dismissStatus, 2000)
+                    handler.postDelayed({ dismissConnectionState }, 2000)
                     getString(R.string.status_connected)
                 }
                 is State.Disconnected -> getString(R.string.status_disconnected)
@@ -777,10 +776,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 is State.Authenticating -> getString(R.string.status_authenticating)
                 is State.Disconnecting -> getString(R.string.status_disconnecting)
                 is State.Waiting -> getString(R.string.status_waiting, state.seconds)
-                else -> {
-                    handler.postDelayed(dismissStatus, 500)
-                    ""
-                }
+                else -> "" // Show nothing
             }
         }
     }
@@ -1172,15 +1168,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun unscheduleDrawable(who: Drawable?, what: Runnable?) {
+    override fun unscheduleDrawable(who: Drawable, what: Runnable) {
         text_message?.removeCallbacks(what)
     }
 
-    override fun invalidateDrawable(who: Drawable?) {
+    override fun invalidateDrawable(who: Drawable) {
         text_message?.invalidate()
     }
 
-    override fun scheduleDrawable(who: Drawable?, what: Runnable?, `when`: Long) {
+    override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
         text_message?.postDelayed(what, `when`)
     }
 

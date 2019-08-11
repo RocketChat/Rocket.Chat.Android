@@ -7,6 +7,16 @@
     android:orientation="vertical">
 
     <android.widget.Button
+        android:id="@+id/button_view_profile_photo"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_account_circle_black_24dp"
+        android:drawablePadding="20dp"
+        android:gravity="start|center"
+        android:text="@string/action_view_profile_photo" />
+
+    <android.widget.Button
         android:id="@+id/button_open_gallery"
         style="?android:attr/borderlessButtonStyle"
         android:textColor="?colorPrimaryText"

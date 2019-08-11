@@ -1,7 +1,5 @@
 package chat.rocket.android.chatroom.presentation
 
-import android.os.Build
-import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.chatdetails.ui.TAG_CHAT_DETAILS_FRAGMENT
 import chat.rocket.android.chatinformation.ui.messageInformationIntent
@@ -10,9 +8,11 @@ import chat.rocket.android.chatroom.ui.bottomsheet.WebUrlBottomSheet
 import chat.rocket.android.chatroom.ui.chatRoomIntent
 import chat.rocket.android.favoritemessages.ui.TAG_FAVORITE_MESSAGES_FRAGMENT
 import chat.rocket.android.files.ui.TAG_FILES_FRAGMENT
+import chat.rocket.android.inviteusers.ui.TAG_INVITE_USERS_FRAGMENT
 import chat.rocket.android.members.ui.TAG_MEMBERS_FRAGMENT
 import chat.rocket.android.mentions.ui.TAG_MENTIONS_FRAGMENT
 import chat.rocket.android.pinnedmessages.ui.TAG_PINNED_MESSAGES_FRAGMENT
+import chat.rocket.android.profile.ui.TAG_IMAGE_DIALOG_FRAGMENT
 import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.userdetails.ui.TAG_USER_DETAILS_FRAGMENT
 import chat.rocket.android.util.extensions.addFragmentBackStack
@@ -21,23 +21,14 @@ import chat.rocket.android.webview.ui.webViewIntent
 
 class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
 
-    fun toUserDetails(userId: String) {
+    fun toUserDetails(userId: String, chatRoomId: String) {
         activity.addFragmentBackStack(TAG_USER_DETAILS_FRAGMENT, R.id.fragment_container) {
-            chat.rocket.android.userdetails.ui.newInstance(userId)
+            chat.rocket.android.userdetails.ui.newInstance(userId, chatRoomId)
         }
     }
 
     fun toVideoConference(chatRoomId: String, chatRoomType: String) {
-        // TODO: Jitsi isn't working with Android M- version. We need to remove the condition bellow after it's solved. (https://github.com/jitsi/jitsi-meet/pull/3967)/
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            activity.startActivity(activity.videoConferenceIntent(chatRoomId, chatRoomType))
-        } else {
-            Toast.makeText(
-                activity,
-                "Sorry, unable to open the video conference due to device configuration",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        activity.startActivity(activity.videoConferenceIntent(chatRoomId, chatRoomType))
     }
 
     fun toChatRoom(
@@ -89,9 +80,15 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         }
     }
 
-    fun toMemberDetails(userId: String) {
+    fun toInviteUsers(chatRoomId: String) {
+        activity.addFragmentBackStack(TAG_INVITE_USERS_FRAGMENT, R.id.fragment_container) {
+            chat.rocket.android.inviteusers.ui.newInstance(chatRoomId)
+        }
+    }
+
+    fun toMemberDetails(userId: String, chatRoomId: String) {
         activity.addFragmentBackStack(TAG_USER_DETAILS_FRAGMENT, R.id.fragment_container) {
-            chat.rocket.android.userdetails.ui.newInstance(userId)
+            chat.rocket.android.userdetails.ui.newInstance(userId, chatRoomId)
         }
     }
 
@@ -154,6 +151,12 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
     fun toMessageInformation(messageId: String) {
         activity.startActivity(activity.messageInformationIntent(messageId = messageId))
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
+    }
+
+    fun toProfileImage(avatarUrl: String) {
+        activity.addFragmentBackStack(TAG_IMAGE_DIALOG_FRAGMENT, R.id.fragment_container) {
+            chat.rocket.android.profile.ui.newInstance(avatarUrl)
+        }
     }
 
     fun toFullWebPage(roomId: String, url: String) {

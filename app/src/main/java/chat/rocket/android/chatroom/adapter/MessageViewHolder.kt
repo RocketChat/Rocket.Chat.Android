@@ -89,19 +89,19 @@ class MessageViewHolder(
         }
     }
 
-    override fun unscheduleDrawable(who: Drawable?, what: Runnable?) {
+    override fun unscheduleDrawable(who: Drawable, what: Runnable) {
         with(itemView) {
             text_content.removeCallbacks(what)
         }
     }
 
-    override fun invalidateDrawable(p0: Drawable?) {
+    override fun invalidateDrawable(p0: Drawable) {
         with(itemView) {
             text_content.invalidate()
         }
     }
 
-    override fun scheduleDrawable(who: Drawable?, what: Runnable?, w: Long) {
+    override fun scheduleDrawable(who: Drawable, what: Runnable, w: Long) {
         with(itemView) {
             text_content.postDelayed(what, w)
         }

@@ -53,6 +53,7 @@
     <string name="action_select_photo_from_gallery">Galeriden resim seç</string>
     <string name="action_take_a_photo">Fotoğraf çek</string>
     <string name="action_reset_avatar">Avatarı kaldır</string>
+    <string name="action_view_profile_photo">View profile photo</string> <!-- TODO Add translation -->
     <string name="action_connect_server">Connect with a server</string> <!-- TODO Add translation -->
     <string name="action_join_community">Join in the community</string> <!-- TODO Add translation -->
     <string name="action_create_server">Create a new server</string> <!-- TODO Add translation -->

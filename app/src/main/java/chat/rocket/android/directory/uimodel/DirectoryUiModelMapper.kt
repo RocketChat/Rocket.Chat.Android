@@ -10,12 +10,13 @@ import javax.inject.Named
 
 class DirectoryUiModelMapper @Inject constructor(
     getSettingsInteractor: GetSettingsInteractor,
-    @Named("currentServer") private val currentServer: String,
+    @Named("currentServer") private val currentServer: String?,
     tokenRepository: TokenRepository
 ) {
-    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(currentServer)
-    private val baseUrl = settings.baseUrl()
-    private val token = tokenRepository.get(currentServer)
+    private var settings: Map<String, Value<Any>>? =
+        currentServer?.let { getSettingsInteractor.get(it) }
+    private val baseUrl = settings?.baseUrl()
+    private val token = currentServer?.let { tokenRepository.get(it) }
 
     fun mapToUiModelList(directoryList: List<DirectoryResult>): List<DirectoryUiModel> {
         return directoryList.map { DirectoryUiModel(it, baseUrl, token) }

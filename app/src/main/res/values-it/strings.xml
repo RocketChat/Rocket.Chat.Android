@@ -49,6 +49,7 @@
     <string name="msg_busy">Occupato</string>
     <string name="msg_invisible">Invisibile</string>
     <string name="action_drawing">Disegno</string>
+    <string name="action_view_profile_photo">View profile photo</string> <!-- TODO Add translation -->
     <string name="action_save_to_gallery">Salva in galleria</string>
     <string name="action_select_photo_from_gallery">Seleziona foto dalla galleria</string>
     <string name="action_take_a_photo">Scatta una foto</string>

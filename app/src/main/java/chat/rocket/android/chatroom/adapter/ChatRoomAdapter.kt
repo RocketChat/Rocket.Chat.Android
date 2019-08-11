@@ -50,7 +50,11 @@ class ChatRoomAdapter(
                     view,
                     actionsListener,
                     reactionListener,
-                    { userId -> navigator?.toUserDetails(userId) },
+                    {
+                        if (roomId != null) {
+                            navigator?.toUserDetails(it, roomId)
+                        }
+                    },
                     {
                         if (roomId != null && roomType != null) {
                             navigator?.toVideoConference(roomId, roomType)
@@ -190,7 +194,8 @@ class ChatRoomAdapter(
                     }
 
                     if (ind > 0 &&
-                        dataSet[ind].message.timestamp > dataSet[ind - 1].message.timestamp) {
+                        dataSet[ind].message.timestamp > dataSet[ind - 1].message.timestamp
+                    ) {
                         return 2
                     } else {
                         notifyItemChanged(ind)
@@ -226,10 +231,18 @@ class ChatRoomAdapter(
             if (temp.url != null && temp.isWebView != null) {
                 if (temp.isWebView == true) {
                     //Open in a configurable sizable WebView
-                    when(temp.webViewHeightRatio){
+                    when (temp.webViewHeightRatio) {
                         FULL_CONFIGURATION -> openFullWebPage(temp, roomId)
-                        COMPACT_CONFIGURATION -> openConfigurableWebPage(temp, roomId, FULL_CONFIGURATION)
-                        TALL_CONFIGURATION -> openConfigurableWebPage(temp, roomId, TALL_CONFIGURATION)
+                        COMPACT_CONFIGURATION -> openConfigurableWebPage(
+                            temp,
+                            roomId,
+                            FULL_CONFIGURATION
+                        )
+                        TALL_CONFIGURATION -> openConfigurableWebPage(
+                            temp,
+                            roomId,
+                            TALL_CONFIGURATION
+                        )
                         else -> Unit
                     }
                     Timber.d("Open in a configurable sizable webview")
@@ -252,9 +265,13 @@ class ChatRoomAdapter(
             }
         }
 
-        private fun openConfigurableWebPage(temp: ButtonAction, roomId: String?, heightRatio: String) {
+        private fun openConfigurableWebPage(
+            temp: ButtonAction,
+            roomId: String?,
+            heightRatio: String
+        ) {
             temp.url?.let {
-                if(roomId != null){
+                if (roomId != null) {
                     actionSelectListener?.openConfigurableWebPage(roomId, it, heightRatio)
                 }
             }
@@ -262,7 +279,7 @@ class ChatRoomAdapter(
 
         private fun openFullWebPage(temp: ButtonAction, roomId: String?) {
             temp.url?.let {
-                if(roomId != null){
+                if (roomId != null) {
                     actionSelectListener?.openFullWebPage(roomId, it)
                 }
             }
