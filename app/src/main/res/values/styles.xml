@@ -174,7 +174,6 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">?colorDescriptiveText</item>
     </style>
-    <!--<item name="android:textColor">@color/colorUserDetailsUsernameText</item>-->
 
     <style name="UserDetails.TextView.Actions" parent="TextAppearance.AppCompat">
         <item name="android:textSize">16sp</item>
@@ -375,6 +374,15 @@
 
     <style name="ItemTextAppearance">
         <item name="android:textColor">?colorPrimaryText</item>
+    </style>
+
+    <style name="Widget.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">?colorPrimary</item>
+        <item name="titleTextStyle">@style/ActionModeTitleTextStyle</item>
+    </style>
+
+    <style name="ActionModeTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="DefaultAppThemeColorAccent">

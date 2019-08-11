@@ -195,7 +195,7 @@ class SignupFragment : Fragment(), SignupView {
 
             val drawables = arrayOf(personDrawable, atDrawable, keyDrawable, emailDrawable)
             DrawableHelper.wrapDrawables(drawables)
-            DrawableHelper.tintDrawables(drawables, this, ThemeUtil.getThemeColorResource(R.attr.colorDrawableSubtleTint))
+            DrawableHelper.tintDrawables(drawables, this, ThemeUtil.getThemeColorResource(R.attr.colorDrawableStrongTint))
             DrawableHelper.compoundDrawables(
                     arrayOf(text_name, text_username, text_password, text_email), drawables
             )

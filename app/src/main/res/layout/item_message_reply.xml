@@ -11,7 +11,6 @@
     android:paddingTop="@dimen/message_item_top_and_bottom_padding"
     android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
     android:paddingBottom="@dimen/message_item_top_and_bottom_padding">
-    <!--android:background="?android:attr/selectableItemBackground"-->
 
     <android.widget.Button
         android:id="@+id/button_message_reply"

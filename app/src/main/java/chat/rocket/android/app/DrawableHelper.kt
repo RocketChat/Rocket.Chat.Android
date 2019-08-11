@@ -143,6 +143,16 @@ object DrawableHelper {
         }
 
     /**
+     * Compounds a Drawable (to appear on top of a text) into a TextView.
+     *
+     * @param textView The TextView.
+     * @param drawable The Drawable.
+     * @see compoundDrawables
+     */
+    fun compoundTopDrawable(textView: TextView, drawable: Drawable) =
+            textView.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)
+
+    /**
      * Returns the user status drawable.
      *
      * @param userStatus The user status.

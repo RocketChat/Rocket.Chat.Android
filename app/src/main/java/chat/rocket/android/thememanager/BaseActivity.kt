@@ -21,14 +21,13 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
-        super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, factory).get(ThemesViewModel::class.java)
         currentTheme = viewModel.getCurrentTheme().name
         currentAccentStyle = viewModel.getCurrentTheme().getCustomAccentStyle(resources, this.packageName)
         currentToolbarStyle = viewModel.getCurrentTheme().getCustomToolbarStyle(resources, this.packageName)
         currentBackgroundStyle = viewModel.getCurrentTheme().getCustomBackgroundStyle(resources, this.packageName)
         applyTheme(currentTheme, currentAccentStyle, currentToolbarStyle, currentBackgroundStyle)
-        ThemeUtil.setTheme(theme, viewModel.getCurrentTheme())
+        super.onCreate(savedInstanceState)
     }
 
     override fun onResume() {
@@ -46,6 +45,7 @@ open class BaseActivity : AppCompatActivity() {
 
     private fun applyTheme(currentTheme: String, currentAccentStyle: Int, currentToolbarStyle: Int, currentBackgroundStyle: Int) {
         setTheme(resources.getIdentifier(currentTheme, "style", this.packageName))
+        ThemeUtil.setTheme(theme, viewModel.getCurrentTheme())
         if (currentBackgroundStyle != 0) {
             setTheme(currentBackgroundStyle)
         }
