@@ -21,6 +21,7 @@
     <string name="title_password">Змінити пароль</string>
     <string name="title_update_profile">Оновити профіль</string>
     <string name="title_create_channel">Створити новий канал</string>
+    <string name="action_view_profile_photo">View profile photo</string> <!-- TODO Add translation -->
     <string name="title_choose_language">Choose Language</string> <!-- TODO Add translation -->
     <string name="title_license">License</string> <!-- TODO Add translation -->
     <string name="title_are_you_sure">Are you sure?</string> <!-- TODO Add translation -->

@@ -19,6 +19,7 @@ import chat.rocket.android.dagger.qualifier.ForAuthentication
 import chat.rocket.android.dagger.qualifier.ForMessages
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.DatabaseManagerFactory
+import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPreferencesLocalRepository
@@ -379,22 +380,28 @@ class AppModule {
 
     @Provides
     @Named("currentServer")
-    fun provideCurrentServer(currentServerInteractor: GetCurrentServerInteractor): String {
-        return currentServerInteractor.get()!!
+    fun provideCurrentServer(currentServerInteractor: GetCurrentServerInteractor): String? {
+        return currentServerInteractor.get()
     }
 
     @Provides
     fun provideDatabaseManager(
-        factory: DatabaseManagerFactory,
-        @Named("currentServer") currentServer: String
+        factory: DatabaseManagerFactory?,
+        @Named("currentServer") currentServer: String?
     ): DatabaseManager {
-        return factory.create(currentServer)
+        return currentServer?.let { factory?.create(it) } !!
     }
 
     @Provides
     @Singleton
     fun provideAnswersAnalytics(): AnswersAnalytics {
         return AnswersAnalytics()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDynamicLinkForFirebase(context: Application): DynamicLinksForFirebase {
+        return DynamicLinksForFirebase(context)
     }
 
     @Provides

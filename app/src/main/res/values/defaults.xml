@@ -7,4 +7,6 @@
     <string name="play_store_link" translatable="false">https://play.google.com/store/apps/details?id=chat.rocket.android</string>
     <string name="market_link" translatable="false">market://details?id=chat.rocket.android</string>
     <string name="license_url" translatable="false">https://github.com/RocketChat/Rocket.Chat.Android/blob/develop/LICENSE</string>
+    <string name="dynamic_link_host_url" translatable="false">rocketchat.page.link</string>
+    <string name="server_url" translatable="false"></string>
 </resources>
