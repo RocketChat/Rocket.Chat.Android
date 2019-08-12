@@ -9,7 +9,7 @@ import androidx.test.rule.ActivityTestRule
 import testConfig.Config.Companion.EMAIL
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.matchers.withHint
+import chat.rocket.android.util.withHint
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import org.junit.Before
@@ -44,7 +44,7 @@ class ResetPasswordFragmentTest {
             typeText(EMAIL), closeSoftKeyboard()
         )
         onView(withId(R.id.button_reset_password)).perform(click())
-        Thread.sleep(5000)
+        Thread.sleep(6000)
         onView(withId(R.id.image_on_boarding)).check(matches(isDisplayed()))
     }
 }
