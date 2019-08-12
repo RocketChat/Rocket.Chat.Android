@@ -34,18 +34,18 @@ class Config {
         const val USER_ID = "user_id"
         const val AUTH_TOKEN = "auth_token"
 
-        const val currentServer: String = "https://$SERVER"
-        const val communityServerUrl: String = currentServer
-        const val defaultTestServer: String = currentServer
-        const val userName: String = "userName"
-        const val avatar: String = "serverUrl/avatar/userName?format=jpeg&rc_uid=null&rc_token=null"
-        const val userAvatar: String = "$currentServer/avatar/userName?format=jpeg&rc_uid=null&rc_token=null"
-        const val UPDATED_AVATAR: String = "$currentServer/avatar/$USERNAME?format=jpeg&rc_uid=null&rc_token=null"
+        const val CURRENT_SERVER: String = "https://$SERVER"
+        const val COMMUNTIY_SERVER: String = CURRENT_SERVER
+        const val DEFAULT_TEST_URL: String = CURRENT_SERVER
+        const val USER_NAME: String = "userName"
+        const val AVATAR_URL: String = "serverUrl/avatar/userName?format=jpeg&rc_uid=null&rc_token=null"
+        const val USER_AVATAR: String = "$CURRENT_SERVER/avatar/userName?format=jpeg&rc_uid=null&rc_token=null"
+        const val UPDATED_AVATAR: String = "$CURRENT_SERVER/avatar/$USERNAME?format=jpeg&rc_uid=null&rc_token=null"
         const val TERMS_OF_SERVICE: String = "Terms of Service"
         const val PRIVACY_POLICY: String = "Privacy Policy"
-        const val termsOfServiceUrl: String = "$currentServer/terms-of-service"
-        const val privacyPolicyUrl: String = "$currentServer/privacy-policy"
-        const val ADMIN_PANEL_URL = "$currentServer/admin/info?layout=embedded"
+        const val TERMS_OF_SERVICE_URL: String = "$CURRENT_SERVER/terms-of-service"
+        const val PRIVACY_POLICY_URL: String = "$CURRENT_SERVER/privacy-policy"
+        const val ADMIN_PANEL_URL = "$CURRENT_SERVER/admin/info?layout=embedded"
         const val LICENSE_URL = "https://github.com/RocketChat/Rocket.Chat.Android/blob/develop/LICENSE"
         const val LICENSE = "LICENSE"
         const val CHANGE_STATUS: String = "CHANGE STATUS"

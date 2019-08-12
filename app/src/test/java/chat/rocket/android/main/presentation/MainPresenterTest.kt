@@ -6,7 +6,6 @@ import chat.rocket.android.server.domain.GetCurrentLanguageInteractor
 import chat.rocket.android.server.domain.RefreshPermissionsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
 import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
-import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
@@ -14,7 +13,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import testConfig.Config.Companion.CHAT_ROOM_ID
-import testConfig.Config.Companion.currentServer
+import testConfig.Config.Companion.CURRENT_SERVER
 
 
 class MainPresenterTest {
@@ -32,7 +31,7 @@ class MainPresenterTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         mainPresenter = MainPresenter(
-            currentServer, mainNavigator, appLanguageView, refreshSettingsInteractor,
+            CURRENT_SERVER, mainNavigator, appLanguageView, refreshSettingsInteractor,
             refreshPermissionsInteractor, connectionManagerFactory, getLanguageInteractor, groupedPush
         )
     }
@@ -40,17 +39,9 @@ class MainPresenterTest {
     @Test
     fun connect() {
         mainPresenter.connect()
-        verify(refreshSettingsInteractor).refreshAsync(currentServer)
-        verify(refreshPermissionsInteractor).refreshAsync(currentServer)
-        verify(connectionManagerFactory).create(currentServer)?.connect()
-    }
-
-    @Test
-    fun `return when chatroomId is null`() {
-        kotlinx.coroutines.runBlocking {
-            val result = mainPresenter.clearNotificationsForChatRoom(null)
-            assertEquals(result, Unit)
-        }
+        verify(refreshSettingsInteractor).refreshAsync(CURRENT_SERVER)
+        verify(refreshPermissionsInteractor).refreshAsync(CURRENT_SERVER)
+        verify(connectionManagerFactory).create(CURRENT_SERVER)?.connect()
     }
 
     @Test

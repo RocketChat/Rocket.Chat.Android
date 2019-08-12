@@ -15,10 +15,10 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
+import testConfig.Config.Companion.CURRENT_SERVER
 import testConfig.Config.Companion.PASSWORD
 import testConfig.Config.Companion.UPDATED_AVATAR
 import testConfig.Config.Companion.USERNAME
-import testConfig.Config.Companion.currentServer
 
 class LoginPresenterTest {
 
@@ -38,7 +38,7 @@ class LoginPresenterTest {
     private val token = mock(Token::class.java)
 
     private val account = Account(
-        currentServer, currentServer, null,
+        CURRENT_SERVER, CURRENT_SERVER, null,
         null, USERNAME, UPDATED_AVATAR
     )
 
@@ -46,7 +46,7 @@ class LoginPresenterTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         `when`(strategy.isTest).thenReturn(true)
-        `when`(serverInteractor.get()).thenReturn(currentServer)
+        `when`(serverInteractor.get()).thenReturn(CURRENT_SERVER)
         loginPresenter = LoginPresenter(
             view, strategy, navigator, tokenRepository, localRepository, settingsInteractor,
             analyticsManager, saveCurrentServer, saveAccountInteractor, factory, serverInteractor
@@ -65,13 +65,6 @@ class LoginPresenterTest {
     }
 
     @Test
-    fun `authenticate user Successfully`() = runBlocking {
-        loginPresenter.setupView()
-        val result = loginPresenter.authenticateWithUserAndPassword(USERNAME, PASSWORD)
-        assertEquals(result, Unit)
-    }
-
-    @Test
     fun `view should not be null`() {
         loginPresenter.setupView()
         assertNotNull(view)
@@ -85,7 +78,7 @@ class LoginPresenterTest {
         val parameters = arrayOfNulls<Any>(1)
         parameters[0] = token
         method.invoke(loginPresenter, *parameters)
-        verify(tokenRepository).save(currentServer, token)
+        verify(tokenRepository).save(CURRENT_SERVER, token)
     }
 
     @Test

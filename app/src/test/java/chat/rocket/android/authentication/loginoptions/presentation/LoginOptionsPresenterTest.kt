@@ -1,7 +1,6 @@
 package chat.rocket.android.authentication.loginoptions.presentation
 
 import chat.rocket.android.analytics.AnalyticsManager
-import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
@@ -15,13 +14,9 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import testConfig.Config.Companion.CAS_TOKEN
-import testConfig.Config.Companion.OAUTH_SECRET
-import testConfig.Config.Companion.OAUTH_TOKEN
-import testConfig.Config.Companion.SAML_TOKEN
+import testConfig.Config.Companion.CURRENT_SERVER
 import testConfig.Config.Companion.UPDATED_AVATAR
 import testConfig.Config.Companion.USERNAME
-import testConfig.Config.Companion.currentServer
 
 
 class LoginOptionsPresenterTest {
@@ -40,21 +35,15 @@ class LoginOptionsPresenterTest {
 
     lateinit var loginOptionsPresenter: LoginOptionsPresenter
 
-    private val deepLinkInfo = DeepLinkInfo(
-        "www.abc.com", "UserId", "token",
-        "rId", "public", "abc"
-    )
-
     private val account = Account(
-        currentServer, currentServer, null,
+        CURRENT_SERVER, CURRENT_SERVER, null,
         null, USERNAME, UPDATED_AVATAR
     )
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        `when`(strategy.isTest).thenReturn(true)
-        `when`(serverInteractor.get()).thenReturn(currentServer)
+        `when`(serverInteractor.get()).thenReturn(CURRENT_SERVER)
         loginOptionsPresenter = LoginOptionsPresenter(
             view, strategy, factory, navigator, settingsInteractor, localRepository, saveCurrentServerInteractor,
             saveAccountInteractor, analyticsManager, tokenRepository, serverInteractor
@@ -70,12 +59,16 @@ class LoginOptionsPresenterTest {
     @Test
     fun `navigate to login with email`() {
         loginOptionsPresenter.toLoginWithEmail()
-        verify(navigator).toLogin(currentServer)
+        verify(navigator).toLogin(CURRENT_SERVER)
     }
 
     @Test
     fun `check account is saved`() {
-        loginOptionsPresenter.authenticateWithOauth(OAUTH_TOKEN, OAUTH_SECRET)
+        val method1 = loginOptionsPresenter.javaClass.getDeclaredMethod("setupConnectionInfo", String::class.java)
+        method1.isAccessible = true
+        val parameters1 = arrayOfNulls<Any>(1)
+        parameters1[0] = CURRENT_SERVER
+        method1.invoke(loginOptionsPresenter, *parameters1)
         val method = loginOptionsPresenter.javaClass.getDeclaredMethod("saveAccount", String::class.java)
         method.isAccessible = true
         val parameters = arrayOfNulls<Any>(1)
@@ -89,40 +82,8 @@ class LoginOptionsPresenterTest {
         val method = loginOptionsPresenter.javaClass.getDeclaredMethod("setupConnectionInfo", String::class.java)
         method.isAccessible = true
         val parameters = arrayOfNulls<Any>(1)
-        parameters[0] = currentServer
+        parameters[0] = CURRENT_SERVER
         method.invoke(loginOptionsPresenter, *parameters)
-        assertEquals(parameters[0], currentServer)
-    }
-
-    @Test
-    fun `authenticate user with Oauth`() {
-        kotlinx.coroutines.runBlocking {
-            val result = loginOptionsPresenter.authenticateWithOauth(OAUTH_TOKEN, OAUTH_SECRET)
-            assertEquals(result, Unit)
-        }
-    }
-
-    @Test
-    fun `authenticate user with Cas`() {
-        kotlinx.coroutines.runBlocking {
-            val result = loginOptionsPresenter.authenticateWithCas(CAS_TOKEN)
-            assertEquals(result, Unit)
-        }
-    }
-
-    @Test
-    fun `authenticate user with Saml`() {
-        kotlinx.coroutines.runBlocking {
-            val result = loginOptionsPresenter.authenticateWithSaml(SAML_TOKEN)
-            assertEquals(result, Unit)
-        }
-    }
-
-    @Test
-    fun `authenticate user with Deeplink`() {
-        kotlinx.coroutines.runBlocking {
-            val result = loginOptionsPresenter.authenticateWithDeepLink(deepLinkInfo)
-            assertEquals(result, Unit)
-        }
+        assertEquals(parameters[0], CURRENT_SERVER)
     }
 }

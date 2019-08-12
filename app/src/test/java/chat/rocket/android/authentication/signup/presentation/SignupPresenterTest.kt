@@ -6,18 +6,13 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-import testConfig.Config.Companion.EMAIL
-import testConfig.Config.Companion.NAME
-import testConfig.Config.Companion.PASSWORD
-import testConfig.Config.Companion.USERNAME
-import testConfig.Config.Companion.currentServer
-import testConfig.Config.Companion.privacyPolicyUrl
-import testConfig.Config.Companion.termsOfServiceUrl
+import testConfig.Config.Companion.CURRENT_SERVER
+import testConfig.Config.Companion.PRIVACY_POLICY_URL
+import testConfig.Config.Companion.TERMS_OF_SERVICE_URL
 
 
 class SignupPresenterTest {
@@ -39,8 +34,7 @@ class SignupPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        `when`(strategy.isTest).thenReturn(true)
-        `when`(serverInteractor.get()).thenReturn(currentServer)
+        `when`(serverInteractor.get()).thenReturn(CURRENT_SERVER)
         signUpPresenter = SignupPresenter(view, strategy, navigator, localRepository, serverInteractor, saveCurrentServerInteractor,
             analyticsManager, factory, saveAccountInteractor, tokenRepository, settingsInteractor)
     }
@@ -48,20 +42,12 @@ class SignupPresenterTest {
     @Test
     fun `navigate to tos web page`() {
         signUpPresenter.termsOfService()
-        verify(navigator).toWebPage(termsOfServiceUrl)
+        verify(navigator).toWebPage(TERMS_OF_SERVICE_URL)
     }
 
     @Test
     fun `navigate to privacy policy web page`() {
         signUpPresenter.privacyPolicy()
-        verify(navigator).toWebPage(privacyPolicyUrl)
-    }
-
-    @Test
-    fun `check signup`() {
-        kotlinx.coroutines.runBlocking {
-            val result = signUpPresenter.signup(NAME, USERNAME, EMAIL, PASSWORD)
-            assertEquals(result, Unit)
-        }
+        verify(navigator).toWebPage(PRIVACY_POLICY_URL)
     }
 }

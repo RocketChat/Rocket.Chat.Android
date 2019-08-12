@@ -10,11 +10,11 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
+import testConfig.Config.Companion.CURRENT_SERVER
 import testConfig.Config.Companion.PRIVACY_POLICY
+import testConfig.Config.Companion.PRIVACY_POLICY_URL
 import testConfig.Config.Companion.TERMS_OF_SERVICE
-import testConfig.Config.Companion.currentServer
-import testConfig.Config.Companion.privacyPolicyUrl
-import testConfig.Config.Companion.termsOfServiceUrl
+import testConfig.Config.Companion.TERMS_OF_SERVICE_URL
 
 
 class AuthenticationPresenterTest {
@@ -38,8 +38,7 @@ class AuthenticationPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        `when`(strategy.isTest).thenReturn(true)
-        `when`(serverInteractor.get()).thenReturn(currentServer)
+        `when`(serverInteractor.get()).thenReturn(CURRENT_SERVER)
         authenticationPresenter = AuthenticationPresenter(
             strategy, navigator, getCurrentServer, getAccountInteractor, settingsRepository,
             localRepository, tokenRepository, serverInteractor
@@ -49,19 +48,13 @@ class AuthenticationPresenterTest {
     @Test
     fun `navigate to tos web page`() {
         authenticationPresenter.termsOfService(TERMS_OF_SERVICE)
-        verify(navigator).toWebPage(termsOfServiceUrl, TERMS_OF_SERVICE)
+        verify(navigator).toWebPage(TERMS_OF_SERVICE_URL, TERMS_OF_SERVICE)
     }
 
     @Test
     fun `navigate to privacy policy web page`() {
         authenticationPresenter.privacyPolicy(PRIVACY_POLICY)
-        verify(navigator).toWebPage(privacyPolicyUrl, PRIVACY_POLICY)
-    }
-
-    @Test
-    fun `navigate to Onboarding`() {
-        authenticationPresenter.toOnBoarding()
-        verify(navigator).toOnBoarding()
+        verify(navigator).toWebPage(PRIVACY_POLICY_URL, PRIVACY_POLICY)
     }
 
     @Test

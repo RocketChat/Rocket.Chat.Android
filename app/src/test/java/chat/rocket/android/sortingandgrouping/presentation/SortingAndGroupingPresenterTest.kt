@@ -6,7 +6,7 @@ import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import testConfig.Config.Companion.currentServer
+import testConfig.Config.Companion.CURRENT_SERVER
 
 class SortingAndGroupingPresenterTest {
 
@@ -20,7 +20,7 @@ class SortingAndGroupingPresenterTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         sortingAndGroupingPresenter = SortingAndGroupingPresenter(
-            view, sortingAndGroupingInteractor, currentServer
+            view, sortingAndGroupingInteractor, CURRENT_SERVER
         )
     }
 
@@ -28,16 +28,16 @@ class SortingAndGroupingPresenterTest {
     fun `get sorting and grouping preferences`() {
         sortingAndGroupingPresenter.getSortingAndGroupingPreferences()
         verify(view).showSortingAndGroupingPreferences(
-            sortingAndGroupingInteractor.getSortByName(currentServer),
-            sortingAndGroupingInteractor.getUnreadOnTop(currentServer),
-            sortingAndGroupingInteractor.getGroupByType(currentServer),
-            sortingAndGroupingInteractor.getGroupByFavorites(currentServer)
+            sortingAndGroupingInteractor.getSortByName(CURRENT_SERVER),
+            sortingAndGroupingInteractor.getUnreadOnTop(CURRENT_SERVER),
+            sortingAndGroupingInteractor.getGroupByType(CURRENT_SERVER),
+            sortingAndGroupingInteractor.getGroupByFavorites(CURRENT_SERVER)
         )
     }
 
     @Test
     fun `save sorting and grouping preferences`() {
         sortingAndGroupingPresenter.saveSortingAndGroupingPreferences(true, false, false, false)
-        verify(sortingAndGroupingInteractor).save(currentServer, true, false, false, false)
+        verify(sortingAndGroupingInteractor).save(CURRENT_SERVER, true, false, false, false)
     }
 }

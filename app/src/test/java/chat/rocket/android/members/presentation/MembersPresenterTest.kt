@@ -8,13 +8,12 @@ import chat.rocket.android.members.uimodel.MemberUiModelMapper
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import testConfig.Config.Companion.currentServer
+import testConfig.Config.Companion.CURRENT_SERVER
 
 class MembersPresenterTest {
 
@@ -35,7 +34,7 @@ class MembersPresenterTest {
         Mockito.`when`(strategy.isTest).thenReturn(true)
         membersPresenter = MembersPresenter(
             view, navigator, dbManager, permissionsInteractor,
-            currentServer, strategy, mapper, factory, userHelper
+            CURRENT_SERVER, strategy, mapper, factory, userHelper
         )
     }
 
@@ -49,11 +48,5 @@ class MembersPresenterTest {
     fun `navigate to invite user`() {
         membersPresenter.toInviteUsers("123")
         verify(navigator).toInviteUsers("123")
-    }
-
-    @Test
-    fun `check invite user permission`() = runBlocking {
-        val result = membersPresenter.checkInviteUserPermission("123")
-        assertEquals(result, Unit)
     }
 }

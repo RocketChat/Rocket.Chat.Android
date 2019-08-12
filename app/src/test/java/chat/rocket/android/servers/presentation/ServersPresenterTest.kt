@@ -3,13 +3,12 @@ package chat.rocket.android.servers.presentation
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.GetAccountsInteractor
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import testConfig.Config.Companion.currentServer
+import testConfig.Config.Companion.CURRENT_SERVER
 
 
 class ServersPresenterTest {
@@ -26,7 +25,7 @@ class ServersPresenterTest {
         MockitoAnnotations.initMocks(this)
         Mockito.`when`(strategy.isTest).thenReturn(true)
         serversPresenter = ServersPresenter(
-            view, navigator, strategy, getAccountsInteractor, currentServer
+            view, navigator, strategy, getAccountsInteractor, CURRENT_SERVER
         )
     }
 
@@ -38,7 +37,7 @@ class ServersPresenterTest {
 
     @Test
     fun `hide server view if serverUrl equal curentServer`() {
-        serversPresenter.changeServer(currentServer)
+        serversPresenter.changeServer(CURRENT_SERVER)
         verify(view).hideServerView()
     }
 
@@ -46,13 +45,5 @@ class ServersPresenterTest {
     fun `switch Or add new server if serverUrl not equal curentServer`() {
         serversPresenter.changeServer("")
         verify(navigator).switchOrAddNewServer("")
-    }
-
-    @Test
-    fun `get all servers`() {
-        kotlinx.coroutines.runBlocking {
-            val result = serversPresenter.getAllServers()
-            assertEquals(result, Unit)
-        }
     }
 }

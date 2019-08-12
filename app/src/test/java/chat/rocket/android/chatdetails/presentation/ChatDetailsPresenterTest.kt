@@ -4,16 +4,14 @@ import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
-import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import testConfig.Config
 import testConfig.Config.Companion.CHAT_ROOM_ID
 import testConfig.Config.Companion.CHAT_ROOM_TYPE
+import testConfig.Config.Companion.CURRENT_SERVER
 
 
 class ChatDetailsPresenterTest {
@@ -29,23 +27,10 @@ class ChatDetailsPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        Mockito.`when`(strategy.isTest).thenReturn(true)
-        Mockito.`when`(serverInteractor.get()).thenReturn(Config.currentServer)
+        Mockito.`when`(serverInteractor.get()).thenReturn(CURRENT_SERVER)
         chatDetailsPresenter = ChatDetailsPresenter(
             view, navigator, strategy, serverInteractor, factory
         )
-    }
-
-    @Test
-    fun `toggle favorite chat room`() = runBlocking {
-        val result = chatDetailsPresenter.toggleFavoriteChatRoom(CHAT_ROOM_ID, true)
-        assertEquals(result, Unit)
-    }
-
-    @Test
-    fun `get chat details`() = runBlocking {
-        val result = chatDetailsPresenter.getDetails(CHAT_ROOM_ID, CHAT_ROOM_TYPE)
-        assertEquals(result, Unit)
     }
 
     @Test
@@ -82,10 +67,5 @@ class ChatDetailsPresenterTest {
     fun `naviagate to favorites`() {
         chatDetailsPresenter.toFavorites(CHAT_ROOM_ID)
         verify(navigator).toFavoriteMessageList(CHAT_ROOM_ID)
-    }
-
-    @Test
-    fun `room to chat details`() {
-        //To be done
     }
 }
