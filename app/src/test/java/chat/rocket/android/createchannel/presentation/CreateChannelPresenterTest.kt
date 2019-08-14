@@ -26,7 +26,6 @@ class CreateChannelPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        `when`(strategy.isTest).thenReturn(true)
         `when`(serverInteractor.get()).thenReturn(CURRENT_SERVER)
         createChannelPresenter = CreateChannelPresenter(
             view, strategy, mapper, navigator, serverInteractor, factory

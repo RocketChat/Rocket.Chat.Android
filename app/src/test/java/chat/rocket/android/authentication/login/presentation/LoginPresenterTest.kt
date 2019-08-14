@@ -45,7 +45,6 @@ class LoginPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        `when`(strategy.isTest).thenReturn(true)
         `when`(serverInteractor.get()).thenReturn(CURRENT_SERVER)
         loginPresenter = LoginPresenter(
             view, strategy, navigator, tokenRepository, localRepository, settingsInteractor,

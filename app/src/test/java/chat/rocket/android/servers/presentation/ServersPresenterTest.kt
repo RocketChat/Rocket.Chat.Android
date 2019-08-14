@@ -23,7 +23,6 @@ class ServersPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        Mockito.`when`(strategy.isTest).thenReturn(true)
         serversPresenter = ServersPresenter(
             view, navigator, strategy, getAccountsInteractor, CURRENT_SERVER
         )

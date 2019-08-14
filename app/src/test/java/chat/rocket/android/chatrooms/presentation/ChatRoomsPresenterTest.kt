@@ -34,7 +34,6 @@ class ChatRoomsPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        Mockito.`when`(strategy.isTest).thenReturn(true)
         chatRoomsPresenter = ChatRoomsPresenter(
             view, strategy, navigator, CURRENT_SERVER, sortingAndGroupingInteractor, dbManager,
             manager, localRepository, userHelper, settingsRepository
