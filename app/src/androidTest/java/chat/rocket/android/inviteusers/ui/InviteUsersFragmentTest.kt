@@ -11,6 +11,7 @@ import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.util.RecyclerViewItemCountAssertion
 import chat.rocket.android.util.extensions.addFragmentBackStack
+import chat.rocket.android.util.loginUserToTheApp
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.greaterThan
 import org.junit.Before
@@ -18,11 +19,9 @@ import org.junit.Rule
 import org.junit.Test
 import testConfig.Config.Companion.MEMBERS
 import testConfig.Config.Companion.NON_EXISTING_USER
-import testConfig.Config.Companion.PASSWORD
 import testConfig.Config.Companion.SERVER_URL
 import testConfig.Config.Companion.TEST_CHANNEL3
 import testConfig.Config.Companion.TEST_USER2
-import testConfig.Config.Companion.USERNAME
 
 
 class InviteUsersFragmentTest {
@@ -36,7 +35,10 @@ class InviteUsersFragmentTest {
     @Before
     fun setUp() {
         try {
-            loginIfUserIsLoggedOut()
+            rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
+                chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
+            }
+            loginUserToTheApp()
             navigateToInviteUser()
         } catch (e: NoMatchingViewException) {
             Thread.sleep(3000)
@@ -82,17 +84,5 @@ class InviteUsersFragmentTest {
             RecyclerViewItemCountAssertion.withItemCount(equalTo(0))
         )
         onView(withId(R.id.text_member_not_found)).check(matches(isDisplayed()))
-    }
-
-    private fun loginIfUserIsLoggedOut() {
-        rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
-            chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
-        }
-        onView(withId(R.id.text_username_or_email)).perform(
-            typeText(USERNAME), closeSoftKeyboard()
-        )
-        onView(withId(R.id.text_password)).perform(typeText(PASSWORD), closeSoftKeyboard())
-        onView(withId(R.id.button_log_in)).perform(click())
-        Thread.sleep(12000)
     }
 }
