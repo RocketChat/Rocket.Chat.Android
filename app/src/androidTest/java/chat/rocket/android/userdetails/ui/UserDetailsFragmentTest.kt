@@ -14,7 +14,7 @@ import chat.rocket.android.util.clickChildViewWithId
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import testConfig.Config.Companion.EXISTING_USER2
+import testConfig.Config.Companion.TEST_USER2
 
 class UserDetailsFragmentTest {
 
@@ -27,7 +27,7 @@ class UserDetailsFragmentTest {
     @Before
     fun setUp() {
         Thread.sleep(5000)
-        onView(withText(EXISTING_USER2)).perform(click())
+        onView(withText(TEST_USER2)).perform(click())
         Thread.sleep(5000)
         onView(withId(R.id.recycler_view)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
