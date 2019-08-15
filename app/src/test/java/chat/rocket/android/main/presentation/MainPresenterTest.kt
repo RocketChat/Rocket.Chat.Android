@@ -6,6 +6,7 @@ import chat.rocket.android.server.domain.GetCurrentLanguageInteractor
 import chat.rocket.android.server.domain.RefreshPermissionsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
 import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
+import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
@@ -57,5 +58,11 @@ class MainPresenterTest {
         mainPresenter.getAppLanguage()
         verify(getLanguageInteractor).getLanguage()
         verify(appLanguageView).updateLanguage("hi", "rIN")
+    }
+
+    @Test
+    fun `clear chatroom notifications`() {
+        val result = mainPresenter.clearNotificationsForChatRoom(null)
+        assertEquals(result, Unit)
     }
 }

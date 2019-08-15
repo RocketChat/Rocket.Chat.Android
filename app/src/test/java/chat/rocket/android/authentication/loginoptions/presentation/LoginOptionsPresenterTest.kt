@@ -7,6 +7,7 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
+import chat.rocket.common.model.Token
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -14,9 +15,11 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
+import testConfig.Config.Companion.AUTH_TOKEN
 import testConfig.Config.Companion.CURRENT_SERVER
 import testConfig.Config.Companion.UPDATED_AVATAR
 import testConfig.Config.Companion.USERNAME
+import testConfig.Config.Companion.USER_ID
 
 
 class LoginOptionsPresenterTest {
@@ -38,6 +41,10 @@ class LoginOptionsPresenterTest {
     private val account = Account(
         CURRENT_SERVER, CURRENT_SERVER, null,
         null, USERNAME, UPDATED_AVATAR
+    )
+
+    private val token = Token(
+        AUTH_TOKEN, USER_ID
     )
 
     @Before
@@ -85,5 +92,15 @@ class LoginOptionsPresenterTest {
         parameters[0] = CURRENT_SERVER
         method.invoke(loginOptionsPresenter, *parameters)
         assertEquals(parameters[0], CURRENT_SERVER)
+    }
+
+    @Test
+    fun `check token is saved`() {
+        val method = loginOptionsPresenter.javaClass.getDeclaredMethod("saveToken", Token::class.java)
+        method.isAccessible = true
+        val parameters = arrayOfNulls<Any>(1)
+        parameters[0] = token
+        method.invoke(loginOptionsPresenter, *parameters)
+        verify(tokenRepository).save(CURRENT_SERVER, token)
     }
 }

@@ -13,6 +13,7 @@ import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
+import testConfig.Config.Companion.CHAT_ROOM_ID
 import testConfig.Config.Companion.CURRENT_SERVER
 
 class MembersPresenterTest {
@@ -40,13 +41,13 @@ class MembersPresenterTest {
 
     @Test
     fun `load chat room members`() {
-        val result = membersPresenter.loadChatRoomsMembers("123")
+        val result = membersPresenter.loadChatRoomsMembers(CHAT_ROOM_ID)
         assertEquals(result, Unit)
     }
 
     @Test
     fun `navigate to invite user`() {
-        membersPresenter.toInviteUsers("123")
-        verify(navigator).toInviteUsers("123")
+        membersPresenter.toInviteUsers(CHAT_ROOM_ID)
+        verify(navigator).toInviteUsers(CHAT_ROOM_ID)
     }
 }
