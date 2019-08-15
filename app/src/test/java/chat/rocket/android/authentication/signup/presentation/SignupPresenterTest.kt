@@ -14,7 +14,6 @@ import testConfig.Config.Companion.CURRENT_SERVER
 import testConfig.Config.Companion.PRIVACY_POLICY_URL
 import testConfig.Config.Companion.TERMS_OF_SERVICE_URL
 
-
 class SignupPresenterTest {
 
     private val view = mock(SignupView::class.java)

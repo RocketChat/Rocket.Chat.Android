@@ -22,7 +22,6 @@ class CreateChannelPresenterTest {
 
     private lateinit var createChannelPresenter: CreateChannelPresenter
 
-
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)

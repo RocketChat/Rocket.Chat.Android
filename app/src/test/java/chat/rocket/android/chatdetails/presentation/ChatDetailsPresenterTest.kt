@@ -13,7 +13,6 @@ import testConfig.Config.Companion.CHAT_ROOM_ID
 import testConfig.Config.Companion.CHAT_ROOM_TYPE
 import testConfig.Config.Companion.CURRENT_SERVER
 
-
 class ChatDetailsPresenterTest {
 
     private val view = Mockito.mock(ChatDetailsView::class.java)

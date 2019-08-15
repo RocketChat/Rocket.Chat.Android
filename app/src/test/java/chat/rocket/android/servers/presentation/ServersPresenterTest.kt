@@ -10,7 +10,6 @@ import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import testConfig.Config.Companion.CURRENT_SERVER
 
-
 class ServersPresenterTest {
 
     private val view = Mockito.mock(ServersView::class.java)

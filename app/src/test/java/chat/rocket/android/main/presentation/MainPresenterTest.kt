@@ -16,7 +16,6 @@ import org.mockito.MockitoAnnotations
 import testConfig.Config.Companion.CHAT_ROOM_ID
 import testConfig.Config.Companion.CURRENT_SERVER
 
-
 class MainPresenterTest {
     private val mainNavigator = Mockito.mock(MainNavigator::class.java)
     private val appLanguageView = Mockito.mock(AppLanguageView::class.java)

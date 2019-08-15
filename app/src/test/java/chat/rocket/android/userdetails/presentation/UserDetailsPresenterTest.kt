@@ -17,7 +17,6 @@ import org.mockito.MockitoAnnotations
 import testConfig.Config.Companion.AVATAR_URL
 import testConfig.Config.Companion.CURRENT_SERVER
 
-
 class UserDetailsPresenterTest {
 
     val view = mock(UserDetailsView::class.java)

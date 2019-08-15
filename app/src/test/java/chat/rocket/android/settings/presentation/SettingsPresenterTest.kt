@@ -1,6 +1,5 @@
 package chat.rocket.android.settings.presentation
 
-import android.content.Context
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
@@ -19,7 +18,6 @@ import testConfig.Config.Companion.ADMIN_PANEL_URL
 import testConfig.Config.Companion.CURRENT_SERVER
 import testConfig.Config.Companion.LICENSE
 import testConfig.Config.Companion.LICENSE_URL
-
 
 class SettingsPresenterTest {
 

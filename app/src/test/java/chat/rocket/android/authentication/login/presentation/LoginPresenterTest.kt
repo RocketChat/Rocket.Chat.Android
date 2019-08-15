@@ -8,15 +8,12 @@ import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.common.model.Token
-import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 import testConfig.Config.Companion.CURRENT_SERVER
-import testConfig.Config.Companion.PASSWORD
 import testConfig.Config.Companion.UPDATED_AVATAR
 import testConfig.Config.Companion.USERNAME
 
