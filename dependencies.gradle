@@ -65,7 +65,7 @@ ext {
             junit                 : '4.12',
             truth                 : '0.42',
             espresso              : '3.1.0-alpha4',
-            mockito               : '2.25.0',
+            mockito               : '3.0.0',
             roboelectric          : '1.0.0',
             runner                : '1.1.0',
             uiAutomator           : '2.2.0'

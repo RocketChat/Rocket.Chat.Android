@@ -8,6 +8,8 @@ import kotlinx.coroutines.Job
 
 class CancelStrategy(owner: LifecycleOwner, val jobs: Job) : LifecycleObserver {
 
+    var isTest: Boolean = false
+
     init {
         owner.lifecycle.addObserver(this)
     }

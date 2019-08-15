@@ -24,7 +24,7 @@ import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.updateOwnBasicInformation
-import testConfig.Config.Companion.defaultTestServer
+import testConfig.Config.Companion.DEFAULT_TEST_URL
 import javax.inject.Inject
 
 class RegisterUsernamePresenter @Inject constructor(
@@ -39,7 +39,7 @@ class RegisterUsernamePresenter @Inject constructor(
     val factory: RocketChatClientFactory,
     val settingsInteractor: GetSettingsInteractor
 ) {
-    private val currentServer = serverInteractor.get()?: defaultTestServer
+    private val currentServer = serverInteractor.get()?: DEFAULT_TEST_URL
     private val client: RocketChatClient = factory.get(currentServer)
     private var settings: PublicSettings = settingsInteractor.get(currentServer)
     private val token = tokenRepository.get(currentServer)

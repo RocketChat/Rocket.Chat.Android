@@ -10,10 +10,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-import testConfig.Config.Companion.currentServer
-import testConfig.Config.Companion.privacyPolicyUrl
-import testConfig.Config.Companion.termsOfServiceUrl
-
+import testConfig.Config.Companion.CURRENT_SERVER
+import testConfig.Config.Companion.PRIVACY_POLICY_URL
+import testConfig.Config.Companion.TERMS_OF_SERVICE_URL
 
 class SignupPresenterTest {
 
@@ -34,7 +33,7 @@ class SignupPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        `when`(serverInteractor.get()).thenReturn(currentServer)
+        `when`(serverInteractor.get()).thenReturn(CURRENT_SERVER)
         signUpPresenter = SignupPresenter(view, strategy, navigator, localRepository, serverInteractor, saveCurrentServerInteractor,
             analyticsManager, factory, saveAccountInteractor, tokenRepository, settingsInteractor)
     }
@@ -42,12 +41,12 @@ class SignupPresenterTest {
     @Test
     fun `navigate to tos web page`() {
         signUpPresenter.termsOfService()
-        verify(navigator).toWebPage(termsOfServiceUrl)
+        verify(navigator).toWebPage(TERMS_OF_SERVICE_URL)
     }
 
     @Test
     fun `navigate to privacy policy web page`() {
         signUpPresenter.privacyPolicy()
-        verify(navigator).toWebPage(privacyPolicyUrl)
+        verify(navigator).toWebPage(PRIVACY_POLICY_URL)
     }
 }

@@ -12,8 +12,8 @@ import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import testConfig.Config.Companion.communityServerUrl
-import testConfig.Config.Companion.currentServer
+import testConfig.Config.Companion.COMMUNTIY_SERVER
+import testConfig.Config.Companion.CURRENT_SERVER
 
 
 class OnBoardingPresenterTest {
@@ -34,7 +34,7 @@ class OnBoardingPresenterTest {
         MockitoAnnotations.initMocks(this)
         onBoardingPresenter = OnBoardingPresenter(
             view, strategy, navigator, serverInteractor, refreshSettingsInteractor,
-            getAccountsInteractor, settingsInteractor, factory, currentServer
+            getAccountsInteractor, settingsInteractor, factory, CURRENT_SERVER
         )
     }
 
@@ -46,7 +46,7 @@ class OnBoardingPresenterTest {
 
     @Test
     fun `navigate to web page if new server is created`() {
-        onBoardingPresenter.toCreateANewServer(communityServerUrl)
-        verify(navigator).toWebPage(communityServerUrl)
+        onBoardingPresenter.toCreateANewServer(COMMUNTIY_SERVER)
+        verify(navigator).toWebPage(COMMUNTIY_SERVER)
     }
 }
