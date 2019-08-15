@@ -2,7 +2,7 @@ package chat.rocket.android.favoritemessages.ui
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.rule.ActivityTestRule
@@ -10,17 +10,17 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.util.RecyclerViewItemCountAssertion.Companion.withItemCount
-import chat.rocket.android.util.loginUserToTheApp
 import chat.rocket.android.util.extensions.addFragmentBackStack
+import chat.rocket.android.util.loginUserToTheApp
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.greaterThan
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import testConfig.Config.Companion.EXISTING_CHANNEL
-import testConfig.Config.Companion.EXISTING_CHANNEL2
 import testConfig.Config.Companion.FAVORITE_MESSAGES
 import testConfig.Config.Companion.SERVER_URL
+import testConfig.Config.Companion.TEST_CHANNEL
+import testConfig.Config.Companion.TEST_CHANNEL2
 
 
 class FavoriteMessagesFragmentTest {
@@ -60,14 +60,14 @@ class FavoriteMessagesFragmentTest {
 
     private fun navigateToSandboxChannelDetails() {
         Thread.sleep(5000)
-        onView(withText(EXISTING_CHANNEL2)).perform(click())
+        onView(withText(TEST_CHANNEL2)).perform(click())
         Thread.sleep(2000)
         onView(withId(R.id.text_toolbar_title)).perform(click())
     }
 
     private fun navigateToGeneralChannelDetails() {
         Thread.sleep(5000)
-        onView(withText(EXISTING_CHANNEL)).perform(click())
+        onView(withText(TEST_CHANNEL)).perform(click())
         Thread.sleep(2000)
         onView(withId(R.id.text_toolbar_title)).perform(click())
     }

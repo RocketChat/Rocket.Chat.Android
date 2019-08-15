@@ -9,14 +9,14 @@ import androidx.test.rule.ActivityTestRule
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
+import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.loginUserToTheApp
 import chat.rocket.android.util.withIndex
-import chat.rocket.android.util.extensions.addFragmentBackStack
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import testConfig.Config.Companion.EXISTING_CHANNEL
 import testConfig.Config.Companion.SERVER_URL
+import testConfig.Config.Companion.TEST_CHANNEL
 
 class ChatRoomsFragmentTest {
 
@@ -50,9 +50,9 @@ class ChatRoomsFragmentTest {
 
     @Test
     fun clicking_channel_should_open_chatroom() {
-        onView(withText(EXISTING_CHANNEL)).perform(click())
+        onView(withText(TEST_CHANNEL)).perform(click())
         Thread.sleep(2000)
-        onView(withId(R.id.text_toolbar_title)).check(matches(withText(EXISTING_CHANNEL)))
+        onView(withId(R.id.text_toolbar_title)).check(matches(withText(TEST_CHANNEL)))
         onView(withId(R.id.message_list_container)).check(matches(isDisplayed()))
     }
 }
