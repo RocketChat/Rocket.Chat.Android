@@ -27,6 +27,7 @@ class ThemesRepository @Inject constructor(private val preferences: SharedPrefer
 
     private var storedList = mutableListOf<Map<String, Any>>()
     private val themeNamesArray = arrayListOf<String>()
+    private val baseThemeNamesArray = arrayListOf<String>()
 
     private val simpleDateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
     private lateinit var currentDate: Date
@@ -38,6 +39,9 @@ class ThemesRepository @Inject constructor(private val preferences: SharedPrefer
         themeList.add(theme1)
         themeList.add(theme2)
         themeList.add(theme3)
+        baseThemeNamesArray.add(theme1.name)
+        baseThemeNamesArray.add(theme2.name)
+        baseThemeNamesArray.add(theme3.name)
         val iterator = themeList.listIterator()
         for (theme in iterator) {
             themeNamesArray.add(theme.name)
@@ -215,7 +219,7 @@ class ThemesRepository @Inject constructor(private val preferences: SharedPrefer
         return ""
     }
 
-    fun getThemeNames(): ArrayList<String> {
-        return themeNamesArray
+    fun getBaseThemeNames(): ArrayList<String> {
+        return baseThemeNamesArray
     }
 }

@@ -41,7 +41,7 @@ class ThemesActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_themes)
 
-        baseThemesArray = viewModel.getThemeNames()
+        baseThemesArray = viewModel.getBaseThemeNames()
         baseThemesAdapter = ArrayAdapter(
                 this, R.layout.item_alert_dialog_single_choice, baseThemesArray)
 

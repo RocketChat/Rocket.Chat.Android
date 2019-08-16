@@ -8,7 +8,7 @@ class ThemesViewModel @Inject constructor(private val themesRepository: ThemesRe
     : ViewModel() {
 
     fun getThemes() = themesRepository.getThemes()
-    fun getThemeNames() = themesRepository.getThemeNames()
+    fun getBaseThemeNames() = themesRepository.getBaseThemeNames()
     fun saveTheme(theme: String) = themesRepository.saveTheme(theme)
     fun getCurrentTheme() = themesRepository.getCurrentTheme()
     fun addCustomTheme(baseThemeIndex: Int, name: String) = themesRepository.addCustomTheme(baseThemeIndex, name)
