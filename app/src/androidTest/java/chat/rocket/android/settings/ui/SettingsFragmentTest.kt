@@ -6,6 +6,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
@@ -13,12 +14,15 @@ import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.loginUserToTheApp
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import testConfig.Config.Companion.APP_VERSION
 import testConfig.Config.Companion.SERVER_URL
 import testConfig.Config.Companion.USERNAME
 
+@Ignore("Run Separately")
+@LargeTest
 class SettingsFragmentTest {
 
     @JvmField
