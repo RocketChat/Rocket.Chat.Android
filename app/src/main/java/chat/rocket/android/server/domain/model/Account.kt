@@ -9,5 +9,7 @@ data class Account(
     val serverLogo: String?,
     val serverBg: String?,
     val userName: String,
-    val avatar: String?
+    val avatar: String?,
+    val authToken: String?,
+    val userId: String?
 )
