@@ -6,10 +6,10 @@ import se.ansman.kotshi.JsonSerializable
 data class Account(
     val serverName: String?,
     val serverUrl: String,
-    val serverLogo: String?,
-    val serverBg: String?,
+    val serverLogoUrl: String?,
+    val serverBackgroundImageUrl: String?,
     val userName: String,
-    val avatar: String?,
+    val userAvatarUrl: String?,
     val authToken: String?,
     val userId: String?
 )
