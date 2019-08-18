@@ -28,7 +28,7 @@
         <item name="colorPrimaryText">@color/darkColorPrimaryText</item>
         <item name="colorReactionBackground">@color/darkColorReactionBackground</item>
         <item name="colorReactionBorder">@color/darkColorReactionBorder</item>
-        <item name="colorFloatingActionButtonBackground">@color/darkColorFloatingActionButtonBackground</item>
+        <item name="colorFloatingActionButtonBackground">?colorSubHeaderBackground</item>
         <item name="colorFloatingActionButtonBorder">@color/darkColorFloatingActionButtonBorder</item>
         <item name="android:navigationBarColor">@color/darkColorPrimaryDark</item>
         <item name="colorLoading">@color/darkColorAuxiliaryTint</item>
@@ -69,7 +69,7 @@
         <item name="colorPrimaryText">@color/blackColorPrimaryText</item>
         <item name="colorReactionBackground">@color/blackColorReactionBackground</item>
         <item name="colorReactionBorder">@color/blackColorReactionBorder</item>
-        <item name="colorFloatingActionButtonBackground">@color/blackColorFloatingActionButtonBackground</item>
+        <item name="colorFloatingActionButtonBackground">?colorSubHeaderBackground</item>
         <item name="colorFloatingActionButtonBorder">@color/blackColorFloatingActionButtonBorder</item>
         <item name="android:navigationBarColor">@color/blackColorPrimaryDark</item>
         <item name="colorLoading">@color/blackColorAuxiliaryTint</item>
