@@ -36,10 +36,7 @@
     <color name="darkColorBannerBackground">#0e1f38</color>
     <color name="darkColorReactionBorder">#0e1f38</color>
 
-    <color name="darkColorFloatingActionButtonBackground">#261d74f5</color>
-
-    <color name="darkColorFloatingActionButtonBorder">#4c1d74f5</color>
-
+    <color name="darkColorFloatingActionButtonBorder">#22FFFFFF</color>
     <color name="darkColorAuthenticationButtonDisabled">#22FFFFFF</color>
 
     <color name="darkColorAccent">#1d74f5</color>
@@ -89,9 +86,7 @@
     <color name="blackColorBannerBackground">#1f2329</color>
     <color name="blackColorReactionBorder">#1f2329</color>
 
-    <color name="blackColorFloatingActionButtonBackground">#261d74f5</color>
-
-    <color name="blackColorFloatingActionButtonBorder">#4c1d74f5</color>
+    <color name="blackColorFloatingActionButtonBorder">#22FFFFFF</color>
 
     <color name="blackColorAccent">#1d74f5</color>
 

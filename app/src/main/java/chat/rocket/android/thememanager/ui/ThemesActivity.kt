@@ -188,14 +188,15 @@ class ThemesActivity : BaseActivity() {
 
     private fun addCustomTheme(baseThemeIndex: Int, customName: String) {
         val saved = viewModel.addCustomTheme(baseThemeIndex, customName)
-        if (!saved) {
+        if (saved) {
             let {
-                AlertDialog.Builder(it)
+                val dialog = AlertDialog.Builder(it)
                         .setTitle("Invalid Name")
                         .setMessage(ThemeUtil.getTintedString("Custom theme \"$customName\" already exists. Please choose a different name for your theme.", R.attr.colorPrimaryText))
                         .setPositiveButton(android.R.string.yes) { dialog, _ -> dialog.dismiss() }
                         .create()
-                        .show()
+                dialog.show()
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
             }
         }
         custom_themes_recycler_view.visibility = View.VISIBLE
@@ -213,7 +214,7 @@ class ThemesActivity : BaseActivity() {
         val adapter = ArrayAdapter(
                 this, R.layout.item_alert_dialog_single_choice, customColorsArray)
         let {
-            AlertDialog.Builder(it)
+            val dialog = AlertDialog.Builder(it)
                     .setTitle(title)
                     .setSingleChoiceItems(
                             adapter, 0
@@ -223,7 +224,8 @@ class ThemesActivity : BaseActivity() {
                     }
                     .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.cancel() }
                     .create()
-                    .show()
+            dialog.show()
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
         }
     }
 

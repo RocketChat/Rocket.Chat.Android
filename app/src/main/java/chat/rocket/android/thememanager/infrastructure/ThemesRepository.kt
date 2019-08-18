@@ -114,7 +114,7 @@ class ThemesRepository @Inject constructor(private val preferences: SharedPrefer
 
     fun addCustomTheme(baseThemeIndex: Int, customName: String): Boolean {
         if (customName in customThemeNamesArray) {
-            return false
+            return true
         } else {
             val customTheme = themeList[baseThemeIndex]
             val mapCustom = mapOf(
@@ -128,7 +128,7 @@ class ThemesRepository @Inject constructor(private val preferences: SharedPrefer
             preferences.edit().putString(CUSTOM_THEMES, Gson().toJson(storedList)).apply()
             getCustomThemes()
         }
-        return true
+        return false
     }
 
     fun editCustomTheme(colorType: String, themeIndex: Int, color: Int): Boolean {
@@ -172,6 +172,7 @@ class ThemesRepository @Inject constructor(private val preferences: SharedPrefer
         if (preferences.contains(CUSTOM_THEMES)) {
             storedList = Gson().fromJson(preferences.getString(CUSTOM_THEMES, ""), mutableListOf<Map<String, Any>>()::class.java)
             customThemeList.clear()
+            customThemeNamesArray.clear()
             for (i in 0 until storedList.size) {
                 val baseThemeIndex = storedList[i]["BaseThemeIndex"] as Double
                 val customTheme = themeList[baseThemeIndex.toInt()].copy()
