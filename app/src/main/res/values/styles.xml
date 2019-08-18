@@ -241,14 +241,14 @@
 
     <style name="ThemeName.TextView" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">?colorDim</item>
+        <item name="android:textColor">?colorChatText</item>
         <item name="android:fontFamily">"sans-serif"</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="ThemeTag.TextView" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">11sp</item>
-        <item name="android:textColor">?colorDescriptiveText</item>
+        <item name="android:textColor">?colorChatText</item>
         <item name="android:fontFamily">"sans-serif"</item>
         <item name="android:textStyle">normal</item>
         <item name="android:paddingTop">8dp</item>
