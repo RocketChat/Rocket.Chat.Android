@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:colorBackground"
     android:paddingStart="@dimen/theme_screen_edge_left_and_right_padding"
     android:paddingBottom="20dp"
     android:paddingEnd="@dimen/theme_screen_edge_left_and_right_padding">

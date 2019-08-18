@@ -51,13 +51,13 @@
 
     <!--BLACK THEME-->
     <color name="blackColorBodyText">#FFe8ebed</color> <!--used for radioButtons and chat messages-->
-    <!--<color name="blackColorPrimary">#FFe8ebed</color>-->
 
     <color name="blackColorPrimary">#FF0e0d0d</color> <!--action bar color-->
     <color name="blackColorPrimaryDark">#FF0e0d0d</color> <!--status and navigation bar color-->
     <color name="blackColorFocusedBackground">#FF0e0d0d</color> <!--defined in stylesheet but unused directly-->
     <color name="blackColorSubHeaderBackground">#FF0e0d0d</color> <!--used for channel and directory subHeader-->
-    <color name="blackColorSettingsSecondaryBackground">#FF0e0d0d</color> <!--used in settings fragment-->
+
+    <color name="blackColorSettingsSecondaryBackground">#FF191717</color> <!--used in settings fragment-->
 
     <color name="blackColorTextHint">#77ffffff</color> <!-- Picked from layouts -->
     <color name="blackColorDescriptiveText">#70FFFFFF</color> <!-- self defined -->
