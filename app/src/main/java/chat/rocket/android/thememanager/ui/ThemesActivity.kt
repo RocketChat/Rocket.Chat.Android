@@ -188,7 +188,7 @@ class ThemesActivity : BaseActivity() {
 
     private fun addCustomTheme(baseThemeIndex: Int, customName: String) {
         val saved = viewModel.addCustomTheme(baseThemeIndex, customName)
-        if (!saved) {
+        if (saved) {
             let {
                 AlertDialog.Builder(it)
                         .setTitle("Invalid Name")
