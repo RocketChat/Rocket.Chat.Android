@@ -98,7 +98,7 @@ class ProfilePresenter @Inject constructor(
                             username = username
                         )
                     }
-                    view.showProfileUpdateSuccessfullyMessage()
+                    view.onProfileUpdatedSuccessfully(email, name, username)
                     view.showProfile(
                         user.status.toString(),
                         serverUrl.avatarUrl(user.username!!, token?.userId, token?.authToken),

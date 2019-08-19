@@ -149,7 +149,10 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         image_avatar.setImageURI(avatarUrl)
     }
 
-    override fun showProfileUpdateSuccessfullyMessage() {
+    override fun onProfileUpdatedSuccessfully(updatedEmail: String, updatedName: String, updatedUserName: String) {
+        currentEmail = updatedEmail
+        currentName = updatedName
+        currentUsername = updatedUserName
         showMessage(getString(R.string.msg_profile_updated_successfully))
     }
 
@@ -194,18 +197,17 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                 mode.finish()
                 true
             }
-            else -> {
-                false
-            }
+            else -> false
         }
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
         actionMode = null
         if (text_email.textContent != currentEmail
-                || text_username.textContent != currentUsername
-                || text_name.textContent != currentName) {
-            showSaveDiscardDialog()
+            || text_username.textContent != currentUsername
+            || text_name.textContent != currentName
+        ) {
+            showChangesNotSavedDialog()
         }
     }
 
@@ -288,8 +290,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             text_email.asObservable()
         ) { text_name, text_username, text_email ->
             return@combineLatest (text_name.toString() != currentName ||
-                text_username.toString() != currentUsername ||
-                text_email.toString() != currentEmail)
+                    text_username.toString() != currentUsername ||
+                    text_email.toString() != currentEmail)
         }.subscribe { isValid ->
             activity?.invalidateOptionsMenu()
             if (isValid) {
@@ -377,33 +379,29 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
     }
 
-    fun showSaveDiscardDialog() {
+    private fun showChangesNotSavedDialog() {
         context?.let {
             val builder = AlertDialog.Builder(it)
-            builder.setMessage("Your changes have not been saved")
-                    .setPositiveButton("Save") { _, _ ->
-                        updateProfile()
-                    }
-                    .setNegativeButton("Cancel") { _, _ ->
-                        text_email.setText(currentEmail)
-                        text_username.setText(currentUsername)
-                        text_name.setText(currentName)
-                    }
-                    .create()
-                    .show()
+            builder.setMessage(R.string.msg_changes_not_saved)
+                .setPositiveButton(R.string.msg_save) { _, _ ->
+                    updateProfile()
+                }
+                .setNegativeButton(android.R.string.cancel) { _, _ ->
+                    text_email.setText(currentEmail)
+                    text_username.setText(currentUsername)
+                    text_name.setText(currentName)
+                }
+                .create()
+                .show()
         }
 
     }
 
-    fun updateProfile() {
+    private fun updateProfile() {
         presenter.updateUserProfile(
-                text_email.textContent,
-                text_name.textContent,
-                text_username.textContent
+            text_email.textContent,
+            text_name.textContent,
+            text_username.textContent
         )
-
-        currentEmail = text_email.textContent
-        currentName = text_name.textContent
-        currentUsername = text_username.textContent
     }
 }
