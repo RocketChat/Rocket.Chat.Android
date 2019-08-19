@@ -85,7 +85,6 @@ class SettingsPresenter @Inject constructor(
                         )
                     }
                 }
-                view.hideLoading()
             } catch (exception: Exception) {
                 Timber.d(exception, "Error getting server info")
                 exception.message?.let {
@@ -93,6 +92,7 @@ class SettingsPresenter @Inject constructor(
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }
+            } finally {
                 view.hideLoading()
             }
         }
