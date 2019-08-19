@@ -116,7 +116,7 @@
         android:id="@+id/view_dim"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="?colorDim"
+        android:background="@color/colorDim"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/layout_message_composer_container"
         app:layout_constraintEnd_toEndOf="parent"
