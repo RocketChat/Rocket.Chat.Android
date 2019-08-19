@@ -5,7 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
+import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
+import chat.rocket.android.chatroom.ui.bottomsheet.COMPACT_CONFIGURATION
+import chat.rocket.android.chatroom.ui.bottomsheet.FULL_CONFIGURATION
+import chat.rocket.android.chatroom.ui.bottomsheet.TALL_CONFIGURATION
 import chat.rocket.android.chatroom.uimodel.AttachmentUiModel
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.chatroom.uimodel.MessageReplyUiModel
@@ -29,7 +33,8 @@ class ChatRoomAdapter(
     private val actionSelectListener: OnActionSelected? = null,
     private val enableActions: Boolean = true,
     private val reactionListener: EmojiReactionListener? = null,
-    private val navigator: ChatRoomNavigator? = null
+    private val navigator: ChatRoomNavigator? = null,
+    private val analyticsManager: AnalyticsManager? = null
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
     private val dataSet = ArrayList<BaseUiModel<*>>()
 
@@ -44,8 +49,18 @@ class ChatRoomAdapter(
                 MessageViewHolder(
                     view,
                     actionsListener,
-                    reactionListener
-                ) { userId -> navigator?.toUserDetails(userId) }
+                    reactionListener,
+                    {
+                        if (roomId != null) {
+                            navigator?.toUserDetails(it, roomId)
+                        }
+                    },
+                    {
+                        if (roomId != null && roomType != null) {
+                            navigator?.toVideoConference(roomId, roomType)
+                        }
+                    }
+                )
             }
             BaseUiModel.ViewType.URL_PREVIEW -> {
                 val view = parent.inflate(R.layout.message_url_preview)
@@ -76,13 +91,9 @@ class ChatRoomAdapter(
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return dataSet[position].viewType
-    }
+    override fun getItemViewType(position: Int): Int = dataSet[position].viewType
 
-    override fun getItemCount(): Int {
-        return dataSet.size
-    }
+    override fun getItemCount(): Int = dataSet.size
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         if (holder !is MessageViewHolder) {
@@ -105,8 +116,9 @@ class ChatRoomAdapter(
         when (holder) {
             is MessageViewHolder ->
                 holder.bind(dataSet[position] as MessageUiModel)
-            is UrlPreviewViewHolder ->
+            is UrlPreviewViewHolder -> {
                 holder.bind(dataSet[position] as UrlPreviewUiModel)
+            }
             is MessageReplyViewHolder ->
                 holder.bind(dataSet[position] as MessageReplyUiModel)
             is AttachmentViewHolder ->
@@ -168,18 +180,26 @@ class ChatRoomAdapter(
         notifyDataSetChanged()
     }
 
-    fun updateItem(message: BaseUiModel<*>): Boolean {
+    // FIXME What's 0,1 and 2 means for here?
+    fun updateItem(message: BaseUiModel<*>): Int {
         val index = dataSet.indexOfLast { it.messageId == message.messageId }
         val indexOfNext = dataSet.indexOfFirst { it.messageId == message.messageId }
         Timber.d("index: $index")
         if (index > -1) {
             dataSet[index] = message
-            dataSet.forEachIndexed { index, viewModel ->
+            dataSet.forEachIndexed { ind, viewModel ->
                 if (viewModel.messageId == message.messageId) {
                     if (viewModel.nextDownStreamMessage == null) {
                         viewModel.reactions = message.reactions
                     }
-                    notifyItemChanged(index)
+
+                    if (ind > 0 &&
+                        dataSet[ind].message.timestamp > dataSet[ind - 1].message.timestamp
+                    ) {
+                        return 2
+                    } else {
+                        notifyItemChanged(ind)
+                    }
                 }
             }
             // Delete message only if current is a system message update, i.e.: Message Removed
@@ -187,9 +207,9 @@ class ChatRoomAdapter(
                 dataSet.removeAt(indexOfNext)
                 notifyItemRemoved(indexOfNext)
             }
-            return true
+            return 0
         }
-        return false
+        return 1
     }
 
     fun removeItem(messageId: String) {
@@ -205,11 +225,26 @@ class ChatRoomAdapter(
     }
 
     private val actionAttachmentOnClickListener = object : ActionAttachmentOnClickListener {
+
         override fun onActionClicked(view: View, action: Action) {
             val temp = action as ButtonAction
             if (temp.url != null && temp.isWebView != null) {
                 if (temp.isWebView == true) {
-                    //TODO: Open in a configurable sizable webview
+                    //Open in a configurable sizable WebView
+                    when (temp.webViewHeightRatio) {
+                        FULL_CONFIGURATION -> openFullWebPage(temp, roomId)
+                        COMPACT_CONFIGURATION -> openConfigurableWebPage(
+                            temp,
+                            roomId,
+                            FULL_CONFIGURATION
+                        )
+                        TALL_CONFIGURATION -> openConfigurableWebPage(
+                            temp,
+                            roomId,
+                            TALL_CONFIGURATION
+                        )
+                        else -> Unit
+                    }
                     Timber.d("Open in a configurable sizable webview")
                 } else {
                     //Open in chrome custom tab
@@ -229,6 +264,26 @@ class ChatRoomAdapter(
                 }
             }
         }
+
+        private fun openConfigurableWebPage(
+            temp: ButtonAction,
+            roomId: String?,
+            heightRatio: String
+        ) {
+            temp.url?.let {
+                if (roomId != null) {
+                    actionSelectListener?.openConfigurableWebPage(roomId, it, heightRatio)
+                }
+            }
+        }
+
+        private fun openFullWebPage(temp: ButtonAction, roomId: String?) {
+            temp.url?.let {
+                if (roomId != null) {
+                    actionSelectListener?.openFullWebPage(roomId, it)
+                }
+            }
+        }
     }
 
     private val actionsListener = object : BaseViewHolder.ActionsListener {
@@ -236,47 +291,63 @@ class ChatRoomAdapter(
         override fun isActionsEnabled(): Boolean = enableActions
 
         override fun onActionSelected(item: MenuItem, message: Message) {
-            message.apply {
-                when (item.itemId) {
-                    R.id.action_message_info -> {
-                        actionSelectListener?.showMessageInfo(id)
-                    }
-                    R.id.action_message_reply -> {
-                        if (roomName != null && roomType != null) {
-                            actionSelectListener?.citeMessage(roomName, roomType, id, true)
+            if (analyticsManager != null && roomName != null && roomType != null && actionSelectListener != null) {
+                with(message) {
+                    when (item.itemId) {
+                        R.id.action_info -> {
+                            actionSelectListener.showMessageInfo(id)
+                            analyticsManager.logMessageActionInfo()
                         }
-                    }
-                    R.id.action_message_quote -> {
-                        if (roomName != null && roomType != null) {
-                            actionSelectListener?.citeMessage(roomName, roomType, id, false)
+
+                        R.id.action_reply -> {
+                            actionSelectListener.citeMessage(roomName, roomType, id, true)
+                            analyticsManager.logMessageActionReply()
                         }
-                    }
-                    R.id.action_message_copy -> {
-                        actionSelectListener?.copyMessage(id)
-                    }
-                    R.id.action_message_edit -> {
-                        actionSelectListener?.editMessage(roomId, id, message.message)
-                    }
-                    R.id.action_message_star -> {
-                        actionSelectListener?.toogleStar(id, !item.isChecked)
-                    }
-                    R.id.action_message_unpin -> {
-                        actionSelectListener?.tooglePin(id, !item.isChecked)
-                    }
-                    R.id.action_message_delete -> {
-                        actionSelectListener?.deleteMessage(roomId, id)
-                    }
-                    R.id.action_menu_msg_react -> {
-                        actionSelectListener?.showReactions(id)
-                    }
-                    R.id.action_message_permalink -> {
-                        actionSelectListener?.copyPermalink(id)
-                    }
-                    R.id.action_message_report -> {
-                        actionSelectListener?.reportMessage(id)
-                    }
-                    else -> {
-                        TODO("Not implemented")
+
+                        R.id.action_quote -> {
+                            actionSelectListener.citeMessage(roomName, roomType, id, false)
+                            analyticsManager.logMessageActionQuote()
+                        }
+
+                        R.id.action_copy -> {
+                            actionSelectListener.copyMessage(id)
+                            analyticsManager.logMessageActionCopy()
+                        }
+
+                        R.id.action_edit -> {
+                            actionSelectListener.editMessage(roomId, id, this.message)
+                            analyticsManager.logMessageActionEdit()
+                        }
+
+                        R.id.action_star -> {
+                            actionSelectListener.toggleStar(id, !item.isChecked)
+                            analyticsManager.logMessageActionStar()
+                        }
+
+                        R.id.action_pin -> {
+                            actionSelectListener.togglePin(id, !item.isChecked)
+                            analyticsManager.logMessageActionPin()
+                        }
+
+                        R.id.action_delete -> {
+                            actionSelectListener.deleteMessage(roomId, id)
+                            analyticsManager.logMessageActionDelete()
+                        }
+
+                        R.id.action_add_reaction -> {
+                            actionSelectListener.showReactions(id)
+                            analyticsManager.logMessageActionAddReaction()
+                        }
+
+                        R.id.action_permalink -> {
+                            actionSelectListener.copyPermalink(id)
+                            analyticsManager.logMessageActionPermalink()
+                        }
+
+                        R.id.action_report -> {
+                            actionSelectListener.reportMessage(id)
+                            analyticsManager.logMessageActionReport()
+                        }
                     }
                 }
             }
@@ -298,9 +369,9 @@ class ChatRoomAdapter(
 
         fun editMessage(roomId: String, messageId: String, text: String)
 
-        fun toogleStar(id: String, star: Boolean)
+        fun toggleStar(id: String, star: Boolean)
 
-        fun tooglePin(id: String, pin: Boolean)
+        fun togglePin(id: String, pin: Boolean)
 
         fun deleteMessage(roomId: String, id: String)
 
@@ -313,5 +384,9 @@ class ChatRoomAdapter(
         fun copyPermalink(id: String)
 
         fun reportMessage(id: String)
+
+        fun openFullWebPage(roomId: String, url: String)
+
+        fun openConfigurableWebPage(roomId: String, url: String, heightRatio: String)
     }
 }

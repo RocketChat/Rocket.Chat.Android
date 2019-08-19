@@ -20,6 +20,7 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -29,35 +30,33 @@ import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_user_details.*
 import javax.inject.Inject
 
-fun newInstance(userId: String): Fragment {
-    return UserDetailsFragment().apply {
-        arguments = Bundle(1).apply {
-            putString(BUNDLE_USER_ID, userId)
-        }
+fun newInstance(userId: String, chatRoomId: String): Fragment = UserDetailsFragment().apply {
+    arguments = Bundle(2).apply {
+        putString(BUNDLE_USER_ID, userId)
+        putString(BUNDLE_USER_CHATROOM_ID, chatRoomId)
     }
 }
 
 internal const val TAG_USER_DETAILS_FRAGMENT = "UserDetailsFragment"
 private const val BUNDLE_USER_ID = "user_id"
+private const val BUNDLE_USER_CHATROOM_ID = "user_chatroom_id"
 
 class UserDetailsFragment : Fragment(), UserDetailsView {
-    @Inject
-    lateinit var presenter: UserDetailsPresenter
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
+    @Inject lateinit var presenter: UserDetailsPresenter
+    @Inject lateinit var analyticsManager: AnalyticsManager
     private lateinit var userId: String
+    private lateinit var chatRoomId: String
     private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        val bundle = arguments
-        if (bundle != null) {
-            userId = bundle.getString(BUNDLE_USER_ID)
-        } else {
-            requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
+        arguments?.run {
+            userId = getString(BUNDLE_USER_ID, "")
+            chatRoomId = getString(BUNDLE_USER_CHATROOM_ID, "")
         }
+            ?: requireNotNull(arguments) { "no arguments supplied when the fragment was instantiated" }
     }
 
     override fun onCreateView(
@@ -71,6 +70,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
         setupToolbar()
         setupListeners()
+        presenter.checkRemoveUserPermission(chatRoomId)
         presenter.loadUserDetails(userId)
 
         analyticsManager.logScreenView(ScreenViewEvent.UserDetails)
@@ -81,14 +81,18 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         super.onDestroyView()
     }
 
-    override fun showUserDetails(
-        avatarUrl: String,
-        name: String,
-        username: String,
-        status: String,
-        utcOffset: String
+    override fun showUserDetailsAndActions(
+        avatarUrl: String?,
+        name: String?,
+        username: String?,
+        status: String?,
+        utcOffset: String?,
+        isVideoCallAllowed: Boolean
     ) {
-        val requestBuilder = Glide.with(this).load(avatarUrl)
+        val requestBuilder = Glide.with(this)
+            .load(avatarUrl)
+            .apply(RequestOptions.skipMemoryCacheOf(true))
+            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
 
         requestBuilder.apply(
             RequestOptions.bitmapTransform(MultiTransformation(BlurTransformation(), CenterCrop()))
@@ -97,23 +101,44 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         requestBuilder.apply(RequestOptions.bitmapTransform(RoundedCorners(14)))
             .into(image_avatar)
 
-        text_name.text = name
-        text_username.text = username
-        text_description_status.text = status.substring(0, 1).toUpperCase() + status.substring(1)
-        text_description_timezone.text = utcOffset
+        text_name.text = name ?: getString(R.string.msg_unknown)
+        text_username.text = username ?: getString(R.string.msg_unknown)
+
+        text_description_status.text = status?.capitalize() ?: getString(R.string.msg_unknown)
+
+        text_description_timezone.text = utcOffset ?: getString(R.string.msg_unknown)
+
+        text_video_call.isVisible = isVideoCallAllowed
 
         // We should also setup the user details listeners.
-        text_message.setOnClickListener { presenter.createDirectMessage(username) }
+        username?.run {
+            text_message.setOnClickListener { presenter.createDirectMessage(this) }
+            if (isVideoCallAllowed) {
+                text_video_call.setOnClickListener { presenter.toVideoConference(this) }
+            }
+        }
+    }
+
+    override fun showRemoveUserButton() {
+        button_remove_user?.isVisible = true
+    }
+
+    override fun hideRemoveUserButton() {
+        button_remove_user?.isVisible = false
+    }
+
+    override fun showUserRemovedMessage() {
+        activity?.onBackPressed()
+        showMessage(R.string.msg_user_removed_successfully)
     }
 
     override fun showLoading() {
-        group_user_details.isVisible = false
-        view_loading.isVisible = true
+        view_loading?.isVisible = true
     }
 
     override fun hideLoading() {
-        group_user_details.isVisible = true
-        view_loading.isVisible = false
+        view_loading?.isVisible = false
+        group_user_details?.isVisible = true
     }
 
     override fun showMessage(resId: Int) {
@@ -142,5 +167,7 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
 
     private fun setupListeners() {
         image_arrow_back.setOnClickListener { activity?.onBackPressed() }
+        image_avatar.setOnClickListener { with(presenter) { toProfileImage(getImageUri()) } }
+        button_remove_user.setOnClickListener { presenter.removeUser(userId, chatRoomId) }
     }
 }

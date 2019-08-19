@@ -31,12 +31,14 @@ dependencies {
     implementation project(':core')
 
     implementation libraries.kotlin
-    implementation libraries.coroutines
+    implementation libraries.coroutinesCore
     implementation libraries.coroutinesAndroid
 
     implementation libraries.appCompat
 
     implementation libraries.rxBinding
+
+    implementation libraries.threeTenABP
 
     // TODO This is a dependency from the core module, but the util module are unable to get that dependencies. Check why it is occurring since transitive is enable by default
     implementation libraries.lifecycleExtensions

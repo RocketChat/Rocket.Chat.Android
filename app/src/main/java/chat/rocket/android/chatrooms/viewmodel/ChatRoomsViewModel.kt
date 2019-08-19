@@ -9,10 +9,11 @@ import chat.rocket.android.chatrooms.adapter.LoadingItemHolder
 import chat.rocket.android.chatrooms.adapter.RoomUiModelMapper
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.chatrooms.infrastructure.ChatRoomsRepository
-import chat.rocket.android.server.infraestructure.ConnectionManager
+import chat.rocket.android.server.infrastructure.ConnectionManager
 import chat.rocket.android.util.livedata.transform
 import chat.rocket.android.util.livedata.wrap
 import chat.rocket.android.util.retryIO
+import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.rest.spotlight
@@ -20,16 +21,18 @@ import chat.rocket.core.model.SpotlightResult
 import com.shopify.livedataktx.distinct
 import com.shopify.livedataktx.map
 import com.shopify.livedataktx.nonNull
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.isActive
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.newSingleThreadContext
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.async
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.lang.IllegalArgumentException
-import kotlin.coroutines.experimental.coroutineContext
-
+import kotlin.coroutines.coroutineContext
 
 class ChatRoomsViewModel(
     private val connectionManager: ConnectionManager,
@@ -88,6 +91,20 @@ class ChatRoomsViewModel(
         }
     }
 
+    fun getUsersRoomListLocal(string: String): List<ItemHolder<*>> {
+        val rooms = GlobalScope.async(Dispatchers.IO) {
+            return@async repository.search(string).let { mapper.map(it, showLastMessage = showLastMessage) }
+        }
+        return runBlocking { rooms.await() }
+    }
+
+    fun getUsersRoomListSpotlight(string: String): List<ItemHolder<*>>? {
+        val rooms = GlobalScope.async(Dispatchers.IO) {
+            return@async spotlight(string)?.let { mapper.map(it, showLastMessage = showLastMessage) }
+        }
+        return runBlocking { rooms.await() }
+    }
+
     private suspend fun spotlight(query: String): SpotlightResult? {
         return try {
             retryIO { client.spotlight(query) }
@@ -98,16 +115,14 @@ class ChatRoomsViewModel(
     }
 
     fun getStatus(): MutableLiveData<State> {
-        return connectionManager.statusLiveData.nonNull().distinct().map { state ->
-            if (state is State.Connected) {
-                fetchRooms()
-            }
+        return connectionManager.stateLiveData.nonNull().distinct().map { state ->
+            if (state is State.Connected) fetchRooms()
             state
         }
     }
 
     private fun fetchRooms() {
-        launch {
+        GlobalScope.launch {
             setLoadingState(LoadingState.Loading(repository.count()))
             try {
                 interactor.refreshChatRooms()
@@ -115,7 +130,12 @@ class ChatRoomsViewModel(
                 loaded = true
             } catch (ex: Exception) {
                 Timber.d(ex, "Error refreshing chatrooms")
-                setLoadingState(LoadingState.Error(repository.count()))
+                Timber.d(ex, "Message: $ex")
+                if (ex is RocketChatAuthException) {
+                    setLoadingState(LoadingState.AuthError)
+                } else {
+                    setLoadingState(LoadingState.Error(repository.count()))
+                }
             }
         }
     }
@@ -125,7 +145,7 @@ class ChatRoomsViewModel(
     }
 
     private suspend fun setLoadingState(state: LoadingState) {
-        withContext(UI) {
+        withContext(Dispatchers.Main) {
             loadingState.value = state
         }
     }
@@ -137,11 +157,14 @@ sealed class LoadingState {
     data class Loading(val count: Long) : LoadingState()
     data class Loaded(val count: Long) : LoadingState()
     data class Error(val count: Long) : LoadingState()
+    object AuthError : LoadingState()
 }
 
 sealed class Query {
-    data class ByActivity(val grouped: Boolean = false) : Query()
-    data class ByName(val grouped: Boolean = false) : Query()
+
+    data class ByActivity(val grouped: Boolean = false, val unreadOnTop: Boolean = false) : Query()
+    data class ByName(val grouped: Boolean = false, val unreadOnTop: Boolean = false ) : Query()
+
     data class Search(val query: String) : Query()
 }
 
@@ -155,19 +178,41 @@ fun Query.isGrouped(): Boolean {
     }
 }
 
+fun Query.isUnreadOnTop(): Boolean {
+    return when(this) {
+        is Query.Search -> false
+        is Query.ByName -> unreadOnTop
+        is Query.ByActivity -> unreadOnTop
+    }
+}
+
 fun Query.asSortingOrder(): ChatRoomsRepository.Order {
     return when(this) {
         is Query.ByName -> {
-            if (grouped) {
+            if (grouped  && !unreadOnTop) {
                 ChatRoomsRepository.Order.GROUPED_NAME
-            } else {
+            }
+            else if(unreadOnTop && !grouped){
+                ChatRoomsRepository.Order.UNREAD_ON_TOP_NAME
+            }
+            else if(unreadOnTop && grouped){
+                ChatRoomsRepository.Order.UNREAD_ON_TOP_GROUPED_NAME
+            }
+            else {
                 ChatRoomsRepository.Order.NAME
             }
         }
         is Query.ByActivity -> {
-            if (grouped) {
+            if (grouped && !unreadOnTop) {
                 ChatRoomsRepository.Order.GROUPED_ACTIVITY
-            } else {
+            }
+            else if(unreadOnTop && !grouped){
+                ChatRoomsRepository.Order.UNREAD_ON_TOP_ACTIVITY
+            }
+            else if(unreadOnTop && grouped){
+                ChatRoomsRepository.Order.UNREAD_ON_TOP_GROUPED_ACTIVITY
+            }
+            else {
                 ChatRoomsRepository.Order.ACTIVITY
             }
         }

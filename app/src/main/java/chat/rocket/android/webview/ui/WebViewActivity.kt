@@ -31,8 +31,8 @@ class WebViewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_web_view)
 
         webPageUrl = intent.getStringExtra(INTENT_WEB_PAGE_URL)
-        toolbarTitle = intent.getStringExtra(TOOLBAR_TITLE)
         requireNotNull(webPageUrl) { "no web_page_url provided in Intent extras" }
+        toolbarTitle = intent.getStringExtra(TOOLBAR_TITLE)
 
         setupToolbar()
     }
@@ -61,6 +61,7 @@ class WebViewActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
         web_view.settings.javaScriptEnabled = true
+        web_view.settings.domStorageEnabled = true
         web_view.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)

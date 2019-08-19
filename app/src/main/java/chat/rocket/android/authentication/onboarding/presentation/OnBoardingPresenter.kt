@@ -7,25 +7,28 @@ import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
 import chat.rocket.android.server.domain.SaveConnectingServerInteractor
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extension.launchUI
-import kotlinx.coroutines.experimental.DefaultDispatcher
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Named
 
 class OnBoardingPresenter @Inject constructor(
     private val view: OnBoardingView,
     private val strategy: CancelStrategy,
     private val navigator: AuthenticationNavigator,
     private val serverInteractor: SaveConnectingServerInteractor,
-    private val refreshSettingsInteractor: RefreshSettingsInteractor,
+    refreshSettingsInteractor: RefreshSettingsInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
     val settingsInteractor: GetSettingsInteractor,
-    val factory: RocketChatClientFactory
+    val factory: RocketChatClientFactory,
+    @Named("currentServer") private val currentServer: String?
 ) : CheckServerPresenter(
     strategy = strategy,
     factory = factory,
+    currentSavedServer = currentServer,
     settingsInteractor = settingsInteractor,
     refreshSettingsInteractor = refreshSettingsInteractor
 ) {
@@ -80,7 +83,7 @@ class OnBoardingPresenter @Inject constructor(
             }
             view.showLoading()
             try {
-                withContext(DefaultDispatcher) {
+                withContext(Dispatchers.Default) {
                     setupConnectionInfo(serverUrl)
 
                     // preparing next fragment before showing it

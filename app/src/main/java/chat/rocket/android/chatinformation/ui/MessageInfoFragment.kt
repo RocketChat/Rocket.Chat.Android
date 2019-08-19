@@ -34,17 +34,14 @@ internal const val TAG_MESSAGE_INFO_FRAGMENT = "MessageInfoFragment"
 private const val BUNDLE_MESSAGE_ID = "message_id"
 
 class MessageInfoFragment : Fragment(), MessageInfoView {
-    @Inject
-    lateinit var presenter: MessageInfoPresenter
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
+    @Inject lateinit var presenter: MessageInfoPresenter
+    @Inject lateinit var analyticsManager: AnalyticsManager
     private lateinit var adapter: ReadReceiptAdapter
     private lateinit var messageId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        setHasOptionsMenu(true)
 
         val bundle = arguments
         if (bundle != null) {
@@ -52,6 +49,8 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
+
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(

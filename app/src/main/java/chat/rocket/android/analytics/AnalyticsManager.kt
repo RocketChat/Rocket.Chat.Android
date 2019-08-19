@@ -1,6 +1,7 @@
 package chat.rocket.android.analytics
 
 import chat.rocket.android.analytics.event.AuthenticationEvent
+import chat.rocket.android.analytics.event.InviteType
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.analytics.event.SubscriptionTypeEvent
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
@@ -74,6 +75,84 @@ class AnalyticsManager @Inject constructor(
     fun logResetPassword(resetPasswordSucceeded: Boolean) {
         if (analyticsTrackingInteractor.get()) {
             analytics.forEach { it.logResetPassword(resetPasswordSucceeded) }
+        }
+    }
+
+    fun logVideoConference(event: SubscriptionTypeEvent) {
+        if (analyticsTrackingInteractor.get() && serverUrl != null) {
+            analytics.forEach { it.logVideoConference(event, serverUrl) }
+        }
+    }
+
+    fun logInviteSent(inviteType: InviteType) {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logInviteSent(inviteType)}
+        }
+    }
+
+    fun logMessageActionAddReaction() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionAddReaction() }
+        }
+    }
+
+    fun logMessageActionReply() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionReply() }
+        }
+    }
+
+    fun logMessageActionQuote() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionQuote() }
+        }
+    }
+
+    fun logMessageActionPermalink() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionPermalink() }
+        }
+    }
+
+    fun logMessageActionCopy() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionCopy() }
+        }
+    }
+
+    fun logMessageActionEdit() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionEdit() }
+        }
+    }
+
+    fun logMessageActionInfo() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionInfo() }
+        }
+    }
+
+    fun logMessageActionStar() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionStar() }
+        }
+    }
+
+    fun logMessageActionPin() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionPin() }
+        }
+    }
+
+    fun logMessageActionReport() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionReport() }
+        }
+    }
+
+    fun logMessageActionDelete() {
+        if (analyticsTrackingInteractor.get()) {
+            analytics.forEach { it.logMessageActionDelete() }
         }
     }
 }

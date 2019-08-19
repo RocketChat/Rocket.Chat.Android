@@ -5,14 +5,13 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion versions.compileSdk
-    buildToolsVersion '28.0.3'
+    buildToolsVersion versions.buildTools
 
     defaultConfig {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode 1
-        versionName "0.1"
-
+        versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -28,28 +27,27 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
-    implementation libraries.androidKtx
-    implementation libraries.appCompat
     implementation libraries.kotlin
-    implementation libraries.coroutines
+    implementation libraries.coroutinesCore
     implementation libraries.coroutinesAndroid
-    implementation libraries.constraintlayout
+
+    implementation libraries.appCompat
     implementation libraries.recyclerview
+    implementation libraries.constraintlayout
+    implementation libraries.androidKtx
+
     implementation libraries.material
     implementation libraries.glide
-    kapt libraries.glideProcessor
+
+    implementation libraries.timber
+
     implementation libraries.room
     kapt libraries.roomProcessor
-}
 
-kotlin {
-    experimental {
-        coroutines "enable"
-    }
+    implementation libraries.glide
 }
 
 androidExtensions {
