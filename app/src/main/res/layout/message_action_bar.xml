@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="?android:colorBackground"
     android:layout_width="match_parent"
+    android:theme="?appAccentStyle"
     android:layout_height="wrap_content">
 
     <View
@@ -14,6 +15,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/quote_vertical_blue_bar"
+        android:backgroundTint="?colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_view_action_cancel_quote"
         app:layout_constraintTop_toTopOf="parent" />
