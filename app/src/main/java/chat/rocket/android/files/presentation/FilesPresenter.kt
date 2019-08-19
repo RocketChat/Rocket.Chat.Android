@@ -5,9 +5,8 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.files.uimodel.FileUiModel
 import chat.rocket.android.files.uimodel.FileUiModelMapper
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.extension.launchUI
-import chat.rocket.android.util.retryDB
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
@@ -21,11 +20,11 @@ class FilesPresenter @Inject constructor(
     private val view: FilesView,
     private val strategy: CancelStrategy,
     private val dbManager: DatabaseManager,
-    @Named("currentServer") private val currentServer: String,
+    @Named("currentServer") private val currentServer: String?,
     private val mapper: FileUiModelMapper,
     val factory: RocketChatClientFactory
 ) {
-    private val client: RocketChatClient = factory.create(currentServer)
+    private val client: RocketChatClient? = currentServer?.let { factory.get(it) }
     private var offset: Int = 0
 
     /**
@@ -38,10 +37,11 @@ class FilesPresenter @Inject constructor(
             try {
                 view.showLoading()
                 dbManager.getRoom(roomId)?.let {
-                    val files = client.getFiles(roomId, roomTypeOf(it.chatRoom.type), offset)
-                    val filesUiModel = mapper.mapToUiModelList(files.result)
-                    view.showFiles(filesUiModel, files.total)
-                    offset += 1 * 30
+                    client?.getFiles(roomId, roomTypeOf(it.chatRoom.type), offset)?.let { files ->
+                        val filesUiModel = mapper.mapToUiModelList(files.result)
+                        view.showFiles(filesUiModel, files.total)
+                        offset += 1 * 30
+                    }
                 }.ifNull {
                     Timber.e("Couldn't find a room with id: $roomId at current server.")
                 }

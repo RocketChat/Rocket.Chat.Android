@@ -46,7 +46,9 @@ fun ViewGroup.inflate(@LayoutRes resource: Int, attachToRoot: Boolean = false): 
     LayoutInflater.from(context).inflate(resource, this, attachToRoot)
 
 fun AppCompatActivity.addFragment(
-    tag: String, layoutId: Int, allowStateLoss: Boolean = false,
+    tag: String,
+    layoutId: Int,
+    allowStateLoss: Boolean = false,
     newInstance: () -> Fragment
 ) {
     val fragment = supportFragmentManager.findFragmentByTag(tag) ?: newInstance()
@@ -80,12 +82,10 @@ fun AppCompatActivity.toPreviousView() {
 }
 
 fun Activity.hideKeyboard() {
-    if (currentFocus != null) {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(
-            currentFocus.windowToken,
-            InputMethodManager.RESULT_UNCHANGED_SHOWN
-        )
+    currentFocus?.run {
+        (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).also {
+            it.hideSoftInputFromWindow(windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
+        }
     }
 }
 

@@ -5,9 +5,10 @@ import androidx.lifecycle.ViewModelProvider
 import chat.rocket.android.db.ChatRoomDao
 import javax.inject.Inject
 
-class ChatDetailsViewModelFactory @Inject constructor(private val chatRoomDao: ChatRoomDao) : ViewModelProvider.NewInstanceFactory() {
+class ChatDetailsViewModelFactory @Inject constructor(
+    private val chatRoomDao: ChatRoomDao
+) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>) =
-            ChatDetailsViewModel(chatRoomDao) as T
+    override fun <T : ViewModel?> create(modelClass: Class<T>) = ChatDetailsViewModel(chatRoomDao) as T
 }

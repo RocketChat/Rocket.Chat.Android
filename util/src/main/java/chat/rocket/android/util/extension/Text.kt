@@ -1,20 +1,22 @@
 package chat.rocket.android.util.extension
 
-import java.math.BigInteger
 import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 
 /**
- * Returns a SHA-256 hash for a string.
+ * Returns hash for a string.
+ *
+ * @param hashType The type of the hash.
+ * @see HashType
  */
-@Throws(NoSuchAlgorithmException::class)
-fun String.gethash(): ByteArray {
-    val digest = MessageDigest.getInstance("SHA-256")
-    digest.reset()
-    return digest.digest(this.toByteArray())
+fun String.hash(hashType: HashType): String = MessageDigest
+    .getInstance(hashType.method)
+    .digest(this.toByteArray())
+    .joinToString(separator = "") {
+        String.format("%02X", it)
+    }
+
+enum class HashType(val method: String) {
+    Sha512("SHA-512"),
+    Sha256("SHA-256"),
+    Sha1("SHA-1")
 }
-
-/**
- * Return the hex of a [ByteArray].
- */
-fun ByteArray.toHex(): String = String.format("%0" + this.size * 2 + "X", BigInteger(1, this))

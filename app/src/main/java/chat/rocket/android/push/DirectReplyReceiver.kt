@@ -4,15 +4,15 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.core.app.RemoteInput
 import android.widget.Toast
+import androidx.core.app.RemoteInput
 import chat.rocket.android.R
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
+import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.common.RocketChatException
 import chat.rocket.core.internal.rest.sendMessage
 import dagger.android.AndroidInjection
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -21,22 +21,17 @@ import javax.inject.Inject
  * BroadcastReceiver for direct reply on notifications.
  */
 class DirectReplyReceiver : BroadcastReceiver() {
-
-    @Inject
-    lateinit var factory: ConnectionManagerFactory
-    @Inject
-    lateinit var groupedPushes: GroupedPush
-    @Inject
-    lateinit var pushManager: PushManager
-    @Inject
-    lateinit var manager: NotificationManager
+    @Inject lateinit var factory: ConnectionManagerFactory
+    @Inject lateinit var groupedPushes: GroupedPush
+    @Inject lateinit var pushManager: PushManager
+    @Inject lateinit var manager: NotificationManager
 
     override fun onReceive(context: Context, intent: Intent) {
         AndroidInjection.inject(this, context)
         if (ACTION_REPLY == intent.action) {
             val message = intent.getParcelableExtra<PushMessage>(EXTRA_PUSH_MESSAGE)
             message?.let {
-                launch(UI) {
+                MainScope().launch {
                     val notificationId = it.notificationId.toInt()
                     val hostname = it.info.host
                     try {
@@ -62,9 +57,9 @@ class DirectReplyReceiver : BroadcastReceiver() {
             val currentServer = message.info.hostname
             val roomId = message.info.roomId
             val connectionManager = factory.create(currentServer)
-            val client = connectionManager.client
+            val client = connectionManager?.client
             val id = UUID.randomUUID().toString()
-            client.sendMessage(id, roomId, reply.toString())
+            client?.sendMessage(id, roomId, reply.toString())
             // Do we need to disconnect here?
         }
     }

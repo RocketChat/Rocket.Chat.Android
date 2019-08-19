@@ -20,7 +20,7 @@ import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
-import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
+import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.authentication.ui.AuthenticationActivity
@@ -42,16 +42,21 @@ import kotlinx.android.synthetic.main.fragment_authentication_server.*
 import okhttp3.HttpUrl
 import javax.inject.Inject
 
-fun newInstance() = ServerFragment()
-
-private const val DEEP_LINK_INFO = "DeepLinkInfo"
+fun newInstance(deepLinkInfo: DeepLinkInfo?): Fragment = ServerFragment().apply {
+    arguments = Bundle(1).apply {
+        putParcelable(
+            chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY,
+            deepLinkInfo
+        )
+    }
+}
 
 class ServerFragment : Fragment(), ServerView {
     @Inject
     lateinit var presenter: ServerPresenter
     @Inject
     lateinit var analyticsManager: AnalyticsManager
-    private var deepLinkInfo: LoginDeepLinkInfo? = null
+    private var deepLinkInfo: DeepLinkInfo? = null
     private var protocol = "https://"
     private var isDomainAppended = false
     private var appendedText = ""
@@ -66,7 +71,8 @@ class ServerFragment : Fragment(), ServerView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        deepLinkInfo = arguments?.getParcelable(DEEP_LINK_INFO)
+        deepLinkInfo =
+            arguments?.getParcelable(chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY)
     }
 
     override fun onCreateView(
@@ -86,6 +92,12 @@ class ServerFragment : Fragment(), ServerView {
         deepLinkInfo?.let {
             it.url.toUri().host?.let { host -> text_server_url.hintContent = host }
             presenter.deepLink(it)
+        }.ifNull {
+            val serverUrl = getString(R.string.server_url)
+            if (serverUrl.isNotEmpty()) {
+                text_server_url.textContent = serverUrl
+                button_connect.performClick()
+            }
         }
 
         analyticsManager.logScreenView(ScreenViewEvent.Server)

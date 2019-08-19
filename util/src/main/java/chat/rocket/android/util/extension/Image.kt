@@ -6,15 +6,14 @@ import android.os.Environment
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import kotlinx.coroutines.experimental.DefaultDispatcher
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.IOException
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
+import org.threeten.bp.LocalDateTime
 
 /**
  * Compress a [Bitmap] image.
@@ -25,11 +24,10 @@ import java.util.*
 suspend fun Bitmap.compressImageAndGetInputStream(mimeType: String): InputStream? {
     var inputStream: InputStream? = null
 
-    withContext(DefaultDispatcher) {
+    withContext(Dispatchers.Default) {
         val byteArrayOutputStream = ByteArrayOutputStream()
         // TODO: Add an option the the app to the user be able to select the quality of the compressed image
-        val isCompressed =
-            this.compress(mimeType.getCompressFormat(), 70, byteArrayOutputStream)
+        val isCompressed = compress(mimeType.getCompressFormat(), 70, byteArrayOutputStream)
         if (isCompressed) {
             inputStream = ByteArrayInputStream(byteArrayOutputStream.toByteArray())
         }
@@ -74,10 +72,9 @@ suspend fun Bitmap.getByteArray(
 suspend fun Bitmap.compressImageAndGetByteArray(mimeType: String, quality: Int = 100): ByteArray? {
     var byteArray: ByteArray? = null
 
-    withContext(DefaultDispatcher) {
+    withContext(Dispatchers.Default) {
         val byteArrayOutputStream = ByteArrayOutputStream()
-        val isCompressed =
-            this.compress(mimeType.getCompressFormat(), quality, byteArrayOutputStream)
+        val isCompressed = compress(mimeType.getCompressFormat(), quality, byteArrayOutputStream)
         if (isCompressed) {
             byteArray = byteArrayOutputStream.toByteArray()
         }
@@ -106,20 +103,19 @@ fun Fragment.dispatchImageSelection(requestCode: Int) {
 }
 
 fun Fragment.dispatchTakePicture(requestCode: Int) {
-    val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-    if (takePictureIntent.resolveActivity(context?.packageManager) != null) {
-        startActivityForResult(takePictureIntent, requestCode)
+    context?.packageManager?.let { packageManager ->
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(packageManager) != null) {
+            startActivityForResult(takePictureIntent, requestCode)
+        }
     }
 }
 
 @Throws(IOException::class)
 fun FragmentActivity.createImageFile(): File {
-    // Create an image file name
-    val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-    val storageDir: File =  getExternalFilesDir(Environment.DIRECTORY_PICTURES)
     return File.createTempFile(
-        "PNG_${timeStamp}_", /* prefix */
-        ".png", /* suffix */
-        storageDir /* directory */
+        "${LocalDateTime.now()}_",
+        ".png",
+        getExternalFilesDir(Environment.DIRECTORY_PICTURES)
     )
 }
