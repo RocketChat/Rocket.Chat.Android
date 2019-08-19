@@ -929,10 +929,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
 
             button_send.setOnClickListener {
-                var textMessage = citation ?: ""
-                if(!text_message.textContent.isBlank()) {
-                    textMessage += text_message.textContent
-                    sendMessage(textMessage)
+                text_message.textContent.run {
+                    if(this.isNotBlank()) {
+                        sendMessage(citation ?: "" + this)
+                    }
                 }
             }
 
