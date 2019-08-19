@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -91,6 +90,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
         presenter.loadUserProfile()
         setupListeners()
+        tintAvatarOptionsDrawables()
         subscribeEditTexts()
 
         analyticsManager.logScreenView(ScreenViewEvent.Profile)
@@ -374,6 +374,21 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                 }
                 return
             }
+        }
+    }
+
+    private fun tintAvatarOptionsDrawables(){
+        (activity as MainActivity).apply {
+            val accountDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_account_circle_black_24dp, this)
+            val imageDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_image_black_24dp, this)
+            val cameraDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_photo_camera_black_24dp, this)
+            val closeDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_close_black_24dp, this)
+            val drawables = arrayOf(accountDrawable, imageDrawable, cameraDrawable, closeDrawable)
+            DrawableHelper.wrapDrawables(drawables)
+            DrawableHelper.tintDrawables(drawables, this, ThemeUtil.getThemeColorResource(R.attr.colorPrimaryText))
+            DrawableHelper.compoundDrawables(
+                    arrayOf(button_view_profile_photo, button_open_gallery, button_take_a_photo, button_reset_avatar), drawables
+            )
         }
     }
 }

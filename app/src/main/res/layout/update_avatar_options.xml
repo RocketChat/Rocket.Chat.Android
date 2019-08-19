@@ -9,6 +9,7 @@
     <android.widget.Button
         android:id="@+id/button_view_profile_photo"
         style="?android:attr/borderlessButtonStyle"
+        android:textColor="?colorPrimaryText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_account_circle_black_24dp"
