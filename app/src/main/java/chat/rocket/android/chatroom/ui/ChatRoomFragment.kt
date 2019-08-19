@@ -73,6 +73,7 @@ import chat.rocket.android.helper.AndroidPermissionsHelper.getCameraPermission
 import chat.rocket.android.helper.AndroidPermissionsHelper.getWriteExternalStoragePermission
 import chat.rocket.android.helper.AndroidPermissionsHelper.hasCameraPermission
 import chat.rocket.android.helper.AndroidPermissionsHelper.hasWriteExternalStoragePermission
+import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.createImageFile
@@ -326,8 +327,22 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
         getDraftMessage()
         subscribeComposeTextMessage()
-
+        tintMessageAttachmentOptionDrawables()
         analyticsManager.logScreenView(ScreenViewEvent.ChatRoom)
+    }
+
+    private fun tintMessageAttachmentOptionDrawables() {
+        (activity as ChatRoomActivity).apply {
+            val cameraDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_camera_24dp, this)
+            val filesDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_files_24dp, this)
+            val drawingDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_gesture_black_24dp, this)
+            val drawables = arrayOf(cameraDrawable, filesDrawable, drawingDrawable)
+            DrawableHelper.wrapDrawables(drawables)
+            DrawableHelper.tintDrawables(drawables, this, ThemeUtil.getThemeColorResource(R.attr.colorAccent))
+            DrawableHelper.compoundDrawables(
+                    arrayOf(button_take_a_photo, button_attach_a_file, button_drawing), drawables
+            )
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
