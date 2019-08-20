@@ -22,15 +22,13 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.User
 import chat.rocket.common.model.roomTypeOf
-import chat.rocket.core.internal.realtime.createDirectMessage
+import chat.rocket.core.internal.rest.createDirectMessage
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.show
 import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class ChatRoomsPresenter @Inject constructor(
     private val view: ChatRoomsView,
@@ -140,8 +138,11 @@ class ChatRoomsPresenter @Inject constructor(
                     } else {
                         retryIO("createDirectMessage($name)") {
                             withTimeout(10000) {
-                                createDirectMessage(name)
-                                FetchChatRoomsInteractor(client, dbManager).refreshChatRooms()
+                                try {
+                                    client.createDirectMessage(name)
+                                } catch (ex: Exception) {
+                                    Timber.e(ex)
+                                }
                             }
                         }
                         val fromTo = mutableListOf(myself.id, id).apply {
@@ -152,6 +153,8 @@ class ChatRoomsPresenter @Inject constructor(
                 } else {
                     id
                 }
+
+                FetchChatRoomsInteractor(client, dbManager).refreshChatRooms()
 
                 navigator.toChatRoom(
                     chatRoomId = id,
@@ -189,11 +192,5 @@ class ChatRoomsPresenter @Inject constructor(
             Timber.e(ex)
         }
         return null
-    }
-
-    private suspend fun createDirectMessage(name: String): Boolean = suspendCoroutine { cont ->
-        client.createDirectMessage(name) { success, _ ->
-            cont.resume(success)
-        }
     }
 }
