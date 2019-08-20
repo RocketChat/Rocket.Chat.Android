@@ -4,12 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:colorBackground"
     android:paddingStart="@dimen/screen_edge_left_and_right_padding"
     android:paddingTop="8dp"
     android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
     android:paddingBottom="8dp">
-    <!--android:background="?android:attr/selectableItemBackground"-->
 
     <ImageView
         android:id="@+id/image_avatar"
