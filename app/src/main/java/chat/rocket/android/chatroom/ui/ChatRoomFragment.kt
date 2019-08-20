@@ -746,8 +746,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun setReactionButtonIcon(@DrawableRes drawableId: Int) {
-        button_add_reaction_or_show_keyboard.setImageResource(drawableId)
-        button_add_reaction_or_show_keyboard.tag = drawableId
+        button_add_reaction_or_show_keyboard?.setImageResource(drawableId)
+        button_add_reaction_or_show_keyboard?.tag = drawableId
     }
 
     override fun showFileSelection(filter: Array<String>?) {
