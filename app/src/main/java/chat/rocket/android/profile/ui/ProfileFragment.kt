@@ -380,7 +380,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
     }
 
-    private fun tintAvatarOptionsDrawables(){
+    private fun tintAvatarOptionsDrawables() {
         (activity as MainActivity).apply {
             val accountDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_account_circle_black_24dp, this)
             val imageDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_image_black_24dp, this)
@@ -393,6 +393,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                     arrayOf(button_view_profile_photo, button_open_gallery, button_take_a_photo, button_reset_avatar), drawables
             )
         }
+    }
       
     private fun showChangesNotSavedDialog() {
         context?.let {
