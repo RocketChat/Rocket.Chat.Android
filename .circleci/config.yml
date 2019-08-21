@@ -66,7 +66,7 @@ jobs:
       - store_artifacts:
           path: app/build/reports/
           destination: reports
-  build-play-apk:
+  build-play-aab:
     docker:
       - image: circleci/android:api-29
     environment:
@@ -154,7 +154,7 @@ workflows:
                 - develop
                 - develop-2.x
                 - master
-      - build-play-apk:
+      - build-play-aab:
           requires:
             - build-kotlin-sdk
       - build-foss-apk:
