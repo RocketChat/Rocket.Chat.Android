@@ -20,7 +20,7 @@ fun ChatRoomFragment.showFileAttachmentDialog(uri: Uri) {
     var bitmap: Bitmap? = null
 
     activity?.let { context ->
-        uri.getMimeType(context).let {
+        uri.getMimeType(context)?.let {
             mimeType = it
             description.text.clear()
             when {
