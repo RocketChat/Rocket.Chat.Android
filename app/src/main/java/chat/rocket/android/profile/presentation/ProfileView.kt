@@ -31,7 +31,11 @@ interface ProfileView : TokenView, LoadingView, MessageView {
     fun reloadUserAvatar(avatarUrl: String)
 
     /**
-     * Shows a profile update successfully message
+     * It is called when the user profile was updated successfully.
      */
-    fun showProfileUpdateSuccessfullyMessage()
+    fun onProfileUpdatedSuccessfully(
+        updatedEmail: String,
+        updatedName: String,
+        updatedUserName: String
+    )
 }

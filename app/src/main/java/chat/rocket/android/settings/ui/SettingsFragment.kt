@@ -11,6 +11,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import chat.rocket.android.BuildConfig
@@ -123,11 +124,13 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
     override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
 
     override fun showLoading() {
-        view_loading.isVisible = true
+        view_loading?.isVisible = true
+        group_settings?.isInvisible = true
     }
 
     override fun hideLoading() {
-        view_loading.isVisible = false
+        view_loading?.isVisible = false
+        group_settings?.isInvisible = false
     }
 
     override fun showMessage(resId: Int) {

@@ -48,6 +48,8 @@ class MainActivity : BaseActivity(), HasActivityInjector,
         with(presenter) {
             connect()
             getAppLanguage()
+            removeOldAccount()
+            saveNewAccount()
             intent.getStringExtra(INTENT_CHAT_ROOM_ID).let {
                 clearNotificationsForChatRoom(it)
                 showChatList(it, deepLinkInfo)

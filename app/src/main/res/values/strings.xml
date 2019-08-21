@@ -227,6 +227,8 @@ https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md#strin
     <string name="msg_server">Server</string>
     <string name="msg_add_new_server">Add New Server</string>
     <string name="msg_directory">Directory</string>
+    <string name="msg_changes_not_saved" translatable="false">Your changes have not been saved. Do you want to save them?</string> <!-- TODO Make translatable and add translations -->
+    <string name="msg_save" translatable="false">Save</string> <!-- TODO Make translatable and add translations -->
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Private</string>

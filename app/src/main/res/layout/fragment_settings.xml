@@ -344,6 +344,12 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible" />
 
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/group_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="profile_container, text_contact_us, text_language, text_review_this_app, text_share_this_app, text_administration, text_license, text_app_version, text_server_version, send_analytics_container, text_logout, text_delete_account" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
