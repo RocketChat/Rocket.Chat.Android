@@ -15,6 +15,7 @@ import chat.rocket.android.util.withIndex
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import testConfig.Config.Companion.ORG_NAME
 import testConfig.Config.Companion.SERVER_URL
 import testConfig.Config.Companion.TEST_CHANNEL
 
@@ -54,5 +55,10 @@ class ChatRoomsFragmentTest {
         Thread.sleep(2000)
         onView(withId(R.id.text_toolbar_title)).check(matches(withText(TEST_CHANNEL)))
         onView(withId(R.id.message_list_container)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun org_name_is_displayed() {
+        onView(withText(ORG_NAME)).check(matches(isDisplayed()))
     }
 }

@@ -13,6 +13,7 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.util.ScrollToTop
+import chat.rocket.android.util.ToastMatcher.Companion.isToast
 import chat.rocket.android.util.clickChildViewWithId
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.loginUserToTheApp
@@ -121,6 +122,42 @@ class ChatRoomFragmentTest {
         onView(withText(R.string.action_msg_copy)).check(matches(isDisplayed()))
         onView(withText(R.string.action_msg_edit)).check(matches(isDisplayed()))
         onView(withText(R.string.action_info)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun emoji_picker_popup_should_display() {
+        navigateToExistingUser2()
+        onView(withId(R.id.recycler_view)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0, click()
+            )
+        )
+        onView(withText(R.string.action_msg_add_reaction)).perform(click())
+        onView(withId(R.id.picker_container)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun copy_the_message() {
+        navigateToExistingUser2()
+        onView(withId(R.id.recycler_view)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0, click()
+            )
+        )
+        onView(withText(R.string.action_msg_copy)).perform(click())
+        onView(withText(R.string.msg_message_copied)).inRoot(isToast()).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun copy_the_permalink() {
+        navigateToExistingUser2()
+        onView(withId(R.id.recycler_view)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0, click()
+            )
+        )
+        onView(withText(R.string.action_msg_permalink)).perform(click())
+        onView(withText(R.string.msg_permalink_copied)).inRoot(isToast()).check(matches(isDisplayed()))
     }
 
     @Test

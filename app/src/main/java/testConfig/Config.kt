@@ -18,7 +18,6 @@ class Config {
         const val TEST_USER: String ="dfcxc"
         const val TEST_USER2: String ="govind.dixit"
 
-        //Non existing User
         const val NON_EXISTING_USER: String = "**33##&&"
 
         //Existing Channel
@@ -27,7 +26,6 @@ class Config {
         const val TEST_CHANNEL2: String ="sandbox"
         const val TEST_CHANNEL3: String ="dfcxc"
 
-        //Non existing Channel
         const val NON_EXISTING_CHANNEL: String = "**33##&&"
 
         const val CODE = "1234"
@@ -68,11 +66,6 @@ class Config {
         const val MENTIONS: String = "Mentions"
         const val CHAT_ROOM_ID: String = "abcd1234ABCD"
         const val CHAT_ROOM_TYPE: String = "Public"
-        const val OAUTH_TOKEN: String = "abcd1234ABCD"
-        const val CAS_TOKEN: String = "abcd1234ABCD"
-        const val SAML_TOKEN: String = "abcd1234ABCD"
-        const val OAUTH_SECRET: String = "abcd1234ABCD"
-        const val AUTHENTICATION_CODE: String = "abcd1234ABCD"
         const val TEST_MESSAGE: String = "This is a test message"
     }
 }

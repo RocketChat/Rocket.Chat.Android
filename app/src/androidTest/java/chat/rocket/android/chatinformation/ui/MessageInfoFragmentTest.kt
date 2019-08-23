@@ -1,7 +1,6 @@
-package chat.rocket.android.userdetails.ui
+package chat.rocket.android.chatinformation.ui
 
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.action.ViewActions.click
@@ -12,16 +11,19 @@ import androidx.test.rule.ActivityTestRule
 import chat.rocket.android.R
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.util.clickChildViewWithId
+import chat.rocket.android.util.RecyclerViewItemCountAssertion.Companion.withItemCount
+import chat.rocket.android.util.ScrollToTop
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.loginUserToTheApp
+import org.hamcrest.CoreMatchers.equalTo
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import testConfig.Config
 import testConfig.Config.Companion.TEST_USER2
 
-class UserDetailsFragmentTest {
+
+class MessageInfoFragmentTest {
 
     @JvmField
     var activityRule = ActivityTestRule(AuthenticationActivity::class.java, true, true)
@@ -36,41 +38,47 @@ class UserDetailsFragmentTest {
                 chat.rocket.android.authentication.login.ui.newInstance(Config.SERVER_URL)
             }
             loginUserToTheApp()
-            navigateToUserDetail()
+            navigateToTestUser()
         } catch (e: NoMatchingViewException) {
-            Thread.sleep(5000)
-            navigateToUserDetail()
+            Thread.sleep(3000)
+            navigateToTestUser()
         }
     }
 
     @Test
     fun check_UI_elements() {
-        onView(withId(R.id.image_avatar)).check(matches(isDisplayed()))
-        onView(withId(R.id.image_blur)).check(matches(isDisplayed()))
-        onView(withId(R.id.image_arrow_back)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_message)).check(matches(withText("Message")))
-        onView(withId(R.id.text_video_call)).check(matches(withText("Video call")))
-        onView(withId(R.id.text_title_status)).check(matches(withText("Status")))
-        onView(withId(R.id.text_title_timezone)).check(matches(withText("Timezone")))
-        onView(withId(R.id.text_description_timezone)).check(matches(isDisplayed()))
-        onView(withId(R.id.button_remove_user)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_toolbar_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.root_layout)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun click_back_and_move_to_chatList() {
-        Espresso.pressBack()
-        onView(withId(R.id.message_list_container)).check(matches(isDisplayed()))
-    }
-
-    private fun navigateToUserDetail() {
-        onView(withText(TEST_USER2)).perform(click())
-        Thread.sleep(5000)
+    fun receipt_list_is_displayed() {
+        onView(withId(R.id.recycler_view)).perform(ScrollToTop())
         onView(withId(R.id.recycler_view)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                0,
-                clickChildViewWithId(R.id.image_avatar)
+                0, click()
             )
         )
-        Thread.sleep(4000)
+        onView(withText(R.string.action_info)).perform(click())
+        Thread.sleep(3000)
+        onView(withId(R.id.receipt_list)).check(withItemCount(equalTo(0)))
+    }
+
+    @Test
+    fun check_toolbar_title() {
+        onView(withId(R.id.recycler_view)).perform(ScrollToTop())
+        onView(withId(R.id.recycler_view)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0, click()
+            )
+        )
+        onView(withText(R.string.action_info)).check(matches(isDisplayed()))
+            .perform(click())
+        onView(withId(R.id.text_toolbar_title)).check(matches(withText(R.string.message_information_title)))
+    }
+
+    private fun navigateToTestUser() {
+        onView(withText(TEST_USER2)).perform(click())
+        Thread.sleep(2000)
     }
 }
