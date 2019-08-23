@@ -19,8 +19,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 2073
-        versionName "3.5.0"
+        versionCode 2075
+        versionName "3.5.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -195,17 +195,17 @@ dependencies {
     implementation libraries.glide
     implementation libraries.glideTransformations
 
-    implementation(libraries.jitsi) { transitive = true }
+    implementation (libraries.jitsi) { transitive = true }
 
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
     // Proprietary libraries
     playImplementation libraries.fcm
     playImplementation libraries.firebaseAnalytics
+    playImplementation (libraries.firebaseCrashlytics) { transitive = true }
+    playImplementation (libraries.firebaseAnswers) { transitive = true }
     playImplementation libraries.dynamiclinks
     playImplementation libraries.playServicesAuth
-    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.8@aar') { transitive = true }
-    playImplementation('com.crashlytics.sdk.android:answers:1.4.6@aar') { transitive = true }
 
     testImplementation libraries.junit
     testImplementation libraries.truth

@@ -18,10 +18,15 @@
 
         <TextView
             android:id="@+id/text_toolbar_title"
+            android:scrollbars="horizontal"
+            android:singleLine="true"
+            android:ellipsize="none"
+            android:maxWidth="200dp"
             style="@style/ChatRoom.ChatName.TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Product Team" />
+
     </androidx.appcompat.widget.Toolbar>
 
 </com.google.android.material.appbar.AppBarLayout>

@@ -746,8 +746,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun setReactionButtonIcon(@DrawableRes drawableId: Int) {
-        button_add_reaction_or_show_keyboard.setImageResource(drawableId)
-        button_add_reaction_or_show_keyboard.tag = drawableId
+        button_add_reaction_or_show_keyboard?.setImageResource(drawableId)
+        button_add_reaction_or_show_keyboard?.tag = drawableId
     }
 
     override fun showFileSelection(filter: Array<String>?) {
@@ -929,9 +929,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
 
             button_send.setOnClickListener {
-                var textMessage = citation ?: ""
-                textMessage += text_message.textContent
-                sendMessage(textMessage)
+                text_message.textContent.run {
+                    if(this.isNotBlank()) {
+                        sendMessage(citation ?: "" + this)
+                    }
+                }
             }
 
             button_show_attachment_options.setOnClickListener {
@@ -1175,15 +1177,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun unscheduleDrawable(who: Drawable?, what: Runnable?) {
+    override fun unscheduleDrawable(who: Drawable, what: Runnable) {
         text_message?.removeCallbacks(what)
     }
 
-    override fun invalidateDrawable(who: Drawable?) {
+    override fun invalidateDrawable(who: Drawable) {
         text_message?.invalidate()
     }
 
-    override fun scheduleDrawable(who: Drawable?, what: Runnable?, `when`: Long) {
+    override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
         text_message?.postDelayed(what, `when`)
     }
 

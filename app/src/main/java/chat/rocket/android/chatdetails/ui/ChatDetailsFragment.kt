@@ -77,8 +77,8 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
         AndroidSupportInjection.inject(this)
 
         arguments?.run {
-            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID)
-            chatRoomType = getString(BUNDLE_CHAT_ROOM_TYPE)
+            chatRoomId = getString(BUNDLE_CHAT_ROOM_ID, "")
+            chatRoomType = getString(BUNDLE_CHAT_ROOM_TYPE, "")
             isSubscribed = getBoolean(BUNDLE_IS_SUBSCRIBED)
             isFavorite = getBoolean(BUNDLE_IS_FAVORITE)
             disableMenu = getBoolean(BUNDLE_DISABLE_MENU)

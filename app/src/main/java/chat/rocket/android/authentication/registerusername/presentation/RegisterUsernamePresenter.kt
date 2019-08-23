@@ -89,7 +89,9 @@ class RegisterUsernamePresenter @Inject constructor(
             icon,
             logo,
             username,
-            thumb
+            thumb,
+            token?.userId,
+            token?.authToken
         )
         saveAccountInteractor.save(account)
     }

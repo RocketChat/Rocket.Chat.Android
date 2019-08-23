@@ -110,7 +110,9 @@ class SignupPresenter @Inject constructor(
             icon,
             logo,
             me.username!!,
-            thumb
+            thumb,
+            token?.userId,
+            token?.authToken
         )
         saveAccountInteractor.save(account)
     }

@@ -1,11 +1,8 @@
 version: 2
-build:
-  machine:
-    java: oraclejdk8
 jobs:
   build-kotlin-sdk:
     docker:
-      - image: circleci/android:api-28-alpha
+      - image: circleci/android:api-29
     environment:
       JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
@@ -34,7 +31,7 @@ jobs:
           destination: libs
   run-unit-tests:
     docker:
-      - image: circleci/android:api-28-alpha
+      - image: circleci/android:api-29
     environment:
       JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
@@ -74,7 +71,7 @@ jobs:
           destination: reports
   build-play-apk:
     docker:
-      - image: circleci/android:api-28-alpha
+      - image: circleci/android:api-29
     environment:
       JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
@@ -111,7 +108,7 @@ jobs:
           destination: apks
   build-foss-apk:
     docker:
-      - image: circleci/android:api-28-alpha
+      - image: circleci/android:api-29
     environment:
       JAVA_TOOL_OPTIONS: -Xmx5024m
     steps:
@@ -146,7 +143,6 @@ jobs:
       - store_artifacts:
           path: app/build/outputs/apk
           destination: apks
-
 workflows:
   version: 2
   build-deploy:

@@ -8,12 +8,11 @@ import chat.rocket.common.model.Token
 import com.squareup.moshi.Moshi
 import timber.log.Timber
 
-
 class SharedPreferencesTokenRepository(private val prefs: SharedPreferences, moshi: Moshi) : TokenRepository {
-    private var servers = prefs.getStringSet(KEY_SERVERS, emptySet()).toMutableSet()
+    private var servers = prefs.getStringSet(KEY_SERVERS, emptySet())?.toMutableSet()
     private var currentUrl: String? = null
     private var currentToken: Token? = null
-    private val adapter = moshi.adapter<TokenModel>(TokenModel::class.java)
+    private val adapter = moshi.adapter(TokenModel::class.java)
 
     override fun get(url: String): Token? {
         if (currentToken != null && url == currentUrl) {
@@ -42,7 +41,7 @@ class SharedPreferencesTokenRepository(private val prefs: SharedPreferences, mos
             val model = TokenModel(token.userId, token.authToken)
             val str = adapter.toJson(model)
 
-            servers.add(url)
+            servers?.add(url)
 
             prefs.edit {
                 putString(tokenKey(url), str)
@@ -58,7 +57,7 @@ class SharedPreferencesTokenRepository(private val prefs: SharedPreferences, mos
     }
 
     override fun remove(url: String) {
-        servers.remove(url)
+        servers?.remove(url)
         prefs.edit {
             remove(url)
             putStringSet(KEY_SERVERS, servers)
@@ -66,10 +65,10 @@ class SharedPreferencesTokenRepository(private val prefs: SharedPreferences, mos
     }
 
     override fun clear() {
-        servers.forEach { server ->
+        servers?.forEach { server ->
             prefs.edit { remove(server) }
         }
-        servers.clear()
+        servers?.clear()
         prefs.edit {
             remove(KEY_SERVERS)
         }
