@@ -639,8 +639,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun copyToClipboard(message: String) {
         ui {
-            val clipboard = it.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            clipboard.primaryClip = ClipData.newPlainText("", message)
+            (it.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).apply {
+                setPrimaryClip(ClipData.newPlainText("", message))
+            }
         }
     }
 

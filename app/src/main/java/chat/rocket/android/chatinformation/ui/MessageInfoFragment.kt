@@ -45,7 +45,7 @@ class MessageInfoFragment : Fragment(), MessageInfoView {
 
         val bundle = arguments
         if (bundle != null) {
-            messageId = bundle.getString(BUNDLE_MESSAGE_ID)
+            messageId = bundle.getString(BUNDLE_MESSAGE_ID, "")
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }

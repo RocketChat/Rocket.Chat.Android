@@ -53,7 +53,7 @@ fun Uri.getFileSize(context: Context): Int {
     return fileSize?.toIntOrNull() ?: -1
 }
 
-fun Uri.getMimeType(context: Context): String {
+fun Uri.getMimeType(context: Context): String? {
     return if (scheme == ContentResolver.SCHEME_CONTENT) {
         context.contentResolver?.getType(this) ?: ""
     } else {
@@ -121,7 +121,7 @@ fun Uri.getDeepLinkInfo(context: Context): DeepLinkInfo? {
     return when {
         isAuthenticationDeepLink(context) -> {
             val host = getQueryParameter("host")
-            val url = if (host.startsWith("http")) host else "https://$host"
+            val url = if (host?.startsWith("http") == true) host else "https://$host"
             val userId = getQueryParameter("userId")
             val token = getQueryParameter("token")
             try {
@@ -133,12 +133,12 @@ fun Uri.getDeepLinkInfo(context: Context): DeepLinkInfo? {
         }
         isCustomSchemeRoomLink() -> {
             val hostValue = getQueryParameter("host")
-            val url = if (hostValue.startsWith("http")) hostValue else "https://$hostValue"
+            val url = if (hostValue?.startsWith("http") == true) hostValue else "https://$hostValue"
             val rid = getQueryParameter("rid")
             val pathValue = getQueryParameter("path")
-            val pathSplit = pathValue.split("/")
-            val roomType = pathSplit[0]
-            val roomName = pathSplit[1]
+            val pathSplit = pathValue?.split("/")
+            val roomType = pathSplit?.get(0)
+            val roomName = pathSplit?.get(1)
             try {
                 DeepLinkInfo(url, null, null, rid, roomType, roomName)
             } catch (ex: Exception) {
@@ -148,9 +148,9 @@ fun Uri.getDeepLinkInfo(context: Context): DeepLinkInfo? {
         }
         isWebSchemeRoomLink() -> {
             val url = "https://$host"
-            val pathSplit = path.split("/")
-            val roomType = pathSplit[1]
-            val roomName = pathSplit[2]
+            val pathSplit = path?.split("/")
+            val roomType = pathSplit?.get(1)
+            val roomName = pathSplit?.get(2)
             try {
                 DeepLinkInfo(url, null, null, null, roomType, roomName)
             } catch (ex: Exception) {
@@ -163,7 +163,7 @@ fun Uri.getDeepLinkInfo(context: Context): DeepLinkInfo? {
 }
 
 fun Uri.isDynamicLink(activity: Activity): Boolean {
-    return (host != null && host.contains(activity.getString(R.string.dynamic_link_host_url)))
+    return (host != null && host?.contains(activity.getString(R.string.dynamic_link_host_url)) == true)
 }
 
 // Authentication deep link defined here: https://rocket.chat/docs/developer-guides/deeplink/#authentication
@@ -177,17 +177,11 @@ fun Uri.isAuthenticationDeepLink(context: Context): Boolean {
 
 // Custom scheme room deep link defined here: https://rocket.chat/docs/developer-guides/deeplink/#channel--group--dm
 fun Uri.isCustomSchemeRoomLink(): Boolean {
-    if (scheme.startsWith("rocketchat") &&
-            host == "room")
-        return true
-    return false
+    return (scheme?.startsWith("rocketchat")) == true && host == "room"
 }
 
 // http(s) scheme deep link not yet documented. Ex: https://open.rocket.chat/direct/testuser1
 fun Uri.isWebSchemeRoomLink(): Boolean {
-    val roomType = path.split("/")[1]
-    if (scheme.startsWith("http") &&
-            (roomType == "channel" || roomType == "group" || roomType == "direct"))
-        return true
-    return false
+    val roomType = path?.split("/")?.get(1)
+    return (scheme?.startsWith("http")) == true && (roomType == "channel" || roomType == "group" || roomType == "direct")
 }
