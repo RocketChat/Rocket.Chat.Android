@@ -30,8 +30,8 @@ class RegisterUsernamePresenterTest {
     private lateinit var registerUsernamePresenter: RegisterUsernamePresenter
 
     private val account = Account(
-        CURRENT_SERVER, CURRENT_SERVER, null,
-        null, USER_NAME, USER_AVATAR
+        CURRENT_SERVER, CURRENT_SERVER, null, null,
+        USER_NAME, USER_AVATAR, null, null
     )
 
     @Before

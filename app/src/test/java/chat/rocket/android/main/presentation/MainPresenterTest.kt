@@ -1,10 +1,9 @@
 package chat.rocket.android.main.presentation
 
 import chat.rocket.android.core.behaviours.AppLanguageView
+import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.push.GroupedPush
-import chat.rocket.android.server.domain.GetCurrentLanguageInteractor
-import chat.rocket.android.server.domain.RefreshPermissionsInteractor
-import chat.rocket.android.server.domain.RefreshSettingsInteractor
+import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import junit.framework.Assert.assertEquals
 import org.junit.Before
@@ -20,10 +19,16 @@ class MainPresenterTest {
     private val mainNavigator = Mockito.mock(MainNavigator::class.java)
     private val appLanguageView = Mockito.mock(AppLanguageView::class.java)
     private val refreshSettingsInteractor = Mockito.mock(RefreshSettingsInteractor::class.java)
-    private val refreshPermissionsInteractor = Mockito.mock(RefreshPermissionsInteractor::class.java)
+    private val refreshPermissionsInteractor =
+        Mockito.mock(RefreshPermissionsInteractor::class.java)
     private val connectionManagerFactory = Mockito.mock(ConnectionManagerFactory::class.java)
     private val getLanguageInteractor = Mockito.mock(GetCurrentLanguageInteractor::class.java)
     private val groupedPush = Mockito.mock(GroupedPush::class.java)
+    private val tokenRepository = Mockito.mock(TokenRepository::class.java)
+    private val getSettingsInteractor = Mockito.mock(GetSettingsInteractor::class.java)
+    private val userHelper = Mockito.mock(UserHelper::class.java)
+    private val saveAccountInteractor = Mockito.mock(SaveAccountInteractor::class.java)
+    private val removeAccountInteractor = Mockito.mock(RemoveAccountInteractor::class.java)
 
     lateinit var mainPresenter: MainPresenter
 
@@ -32,7 +37,9 @@ class MainPresenterTest {
         MockitoAnnotations.initMocks(this)
         mainPresenter = MainPresenter(
             CURRENT_SERVER, mainNavigator, appLanguageView, refreshSettingsInteractor,
-            refreshPermissionsInteractor, connectionManagerFactory, getLanguageInteractor, groupedPush
+            refreshPermissionsInteractor, getSettingsInteractor, connectionManagerFactory,
+            getLanguageInteractor, groupedPush, tokenRepository, userHelper, saveAccountInteractor,
+            removeAccountInteractor
         )
     }
 
@@ -45,7 +52,7 @@ class MainPresenterTest {
     }
 
     @Test
-    fun `navigate to chatlist`(){
+    fun `navigate to chatlist`() {
         mainPresenter.showChatList(CHAT_ROOM_ID, null)
         verify(mainNavigator).toChatList(CHAT_ROOM_ID, null)
     }

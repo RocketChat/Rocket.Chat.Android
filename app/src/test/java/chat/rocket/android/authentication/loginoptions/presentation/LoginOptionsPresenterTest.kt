@@ -39,8 +39,8 @@ class LoginOptionsPresenterTest {
     lateinit var loginOptionsPresenter: LoginOptionsPresenter
 
     private val account = Account(
-        CURRENT_SERVER, CURRENT_SERVER, null,
-        null, USERNAME, UPDATED_AVATAR
+        CURRENT_SERVER, CURRENT_SERVER, null, null,
+        USERNAME, UPDATED_AVATAR, null, null
     )
 
     private val token = Token(

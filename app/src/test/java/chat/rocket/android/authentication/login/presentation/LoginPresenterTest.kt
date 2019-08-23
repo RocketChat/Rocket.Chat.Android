@@ -35,8 +35,8 @@ class LoginPresenterTest {
     private val token = mock(Token::class.java)
 
     private val account = Account(
-        CURRENT_SERVER, CURRENT_SERVER, null,
-        null, USERNAME, UPDATED_AVATAR
+        CURRENT_SERVER, CURRENT_SERVER, null, null,
+        USERNAME, UPDATED_AVATAR, null, null
     )
 
     @Before
