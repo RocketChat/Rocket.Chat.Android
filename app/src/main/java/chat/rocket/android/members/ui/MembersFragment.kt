@@ -18,10 +18,7 @@ import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.presentation.MembersPresenter
 import chat.rocket.android.members.presentation.MembersView
 import chat.rocket.android.members.uimodel.MemberUiModel
-import chat.rocket.android.util.extensions.clearLightStatusBar
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import kotlinx.android.synthetic.main.fragment_members.*
@@ -136,7 +133,7 @@ class MembersFragment : Fragment(), MembersView {
             } else {
                 setupToolbarTitle((getString(R.string.title_members)))
             }
-            this.clearLightStatusBar()
+            view?.let {this.clearInvisibleStatusBar(it)}
             toolbar.isVisible = true
         }
     }

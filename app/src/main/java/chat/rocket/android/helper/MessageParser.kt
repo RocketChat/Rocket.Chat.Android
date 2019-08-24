@@ -19,6 +19,7 @@ import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.emoji.EmojiTypefaceSpan
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.useRealName
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extensions.openTabbedUrl
 import chat.rocket.common.model.SimpleUser
 import chat.rocket.core.model.Message
@@ -142,10 +143,10 @@ class MessageParser @Inject constructor(
         private val currentUser: String?
     ) : AbstractVisitor() {
 
-        private val othersTextColor = ResourcesCompat.getColor(context.resources, R.color.colorAccent, context.theme)
+        private val othersTextColor = ThemeUtil.getThemeColor(R.attr.colorAccent)
         private val othersBackgroundColor = ResourcesCompat.getColor(context.resources, android.R.color.transparent, context.theme)
-        private val myselfTextColor = ResourcesCompat.getColor(context.resources, R.color.colorWhite, context.theme)
-        private val myselfBackgroundColor = ResourcesCompat.getColor(context.resources, R.color.colorAccent, context.theme)
+        private val myselfTextColor = ThemeUtil.getThemeColor(android.R.attr.colorBackground)
+        private val myselfBackgroundColor = ThemeUtil.getThemeColor(R.attr.colorAccent)
         private val padding = context.resources.getDimensionPixelSize(R.dimen.padding_mention).toFloat()
         private val radius = context.resources.getDimensionPixelSize(R.dimen.radius_mention).toFloat()
 

@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
     android:padding="@dimen/screen_edge_left_and_right_margins"
+    android:background="?android:colorBackground"
     tools:context="authentication.onboarding.ui.OnBoardingFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,7 +59,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="20dp"
                 android:src="@drawable/ic_connect_with_a_server_black_30dp"
-                android:tint="@color/colorAccent"
+                android:tint="?colorAccent"
                 tools:ignore="ContentDescription" />
 
             <TextView
@@ -79,7 +79,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_chevron_right_black_24dp"
-                android:tint="@color/colorAuthenticationChevronAndExpandIcon"
+                android:tint="?colorAuthenticationButtonBorderAndDivider"
                 tools:ignore="ContentDescription" />
         </RelativeLayout>
 
@@ -131,7 +131,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_chevron_right_black_24dp"
-                android:tint="@color/colorAuthenticationChevronAndExpandIcon"
+                android:tint="?colorAuthenticationButtonBorderAndDivider"
                 tools:ignore="ContentDescription" />
         </RelativeLayout>
 

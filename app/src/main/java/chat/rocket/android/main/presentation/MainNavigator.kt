@@ -13,10 +13,12 @@ import chat.rocket.android.profile.ui.TAG_IMAGE_DIALOG_FRAGMENT
 import chat.rocket.android.profile.ui.TAG_PROFILE_FRAGMENT
 import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.settings.ui.TAG_SETTINGS_FRAGMENT
+import chat.rocket.android.thememanager.ui.ThemesActivity
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.webview.adminpanel.ui.TAG_ADMIN_PANEL_WEB_VIEW_FRAGMENT
 import chat.rocket.android.webview.ui.webViewIntent
+
 
 class MainNavigator(internal val activity: MainActivity) {
 
@@ -50,6 +52,10 @@ class MainNavigator(internal val activity: MainActivity) {
         }
     }
 
+    fun toChangeTheme() {
+        activity.startActivity(Intent(activity, ThemesActivity::class.java))
+    }
+  
     fun toProfileImage(avatarUrl: String) {
         activity.addFragmentBackStack(TAG_IMAGE_DIALOG_FRAGMENT, R.id.fragment_container) {
             chat.rocket.android.profile.ui.newInstance(avatarUrl)

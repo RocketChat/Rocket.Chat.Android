@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--DARK THEME-->
+    <color name="darkColorBodyText">#FFe8ebed</color>
+
+    <color name="darkColorPrimary">#0b182c</color>
+    <color name="darkColorPrimaryDark">#0b182c</color>
+    <color name="darkColorFocusedBackground">#0b182c</color>
+    <color name="darkColorSubHeaderBackground">#0b182c</color>
+
+    <color name="darkColorSettingsSecondaryBackground">#071223</color>
+
+    <color name="darkColorTextHint">#77ffffff</color>
+    <color name="darkColorDescriptiveText">#77FFFFFF</color>
+    <color name="darkColorBottomSheetFragmentText">#77ffffff</color>
+    <color name="darkColorQuoteBar">#77ffffff</color>
+    <color name="darkColorAuthenticationSecondaryText">#77ffffff</color>
+    <color name="darkColorSubHeaderText">#77ffffff</color>
+    <color name="darkColorSecondaryText">#77ffffff</color>
+
+    <color name="darkColorMutedAccent">#33FFFFFF</color>
+    <color name="darkColorDivider">#33FFFFFF</color>
+    <color name="darkColorAuthenticationButtonBorderAndDivider">#33FFFFFF</color>
+    <color name="darkColorStatusInvisible">#33FFFFFF</color>
+
+    <color name="darkColorTitleText">#ffffff</color>
+    <color name="darkColorPrimaryText">#ffffff</color>
+    <color name="darkColorBottomSheetFragmentHeading">#ffffff</color>
+    <color name="darkColorChannelTitle">#ffffff</color>
+
+    <color name="darkColorTimestampText">#99FFFFFF</color>
+    <color name="darkColorChatText">#99FFFFFF</color>
+
+    <color name="darkColorChatComponentBackground">#1a2232</color>
+    <color name="darkColorReactionBackground">#1a2232</color>
+
+    <color name="darkColorBannerBackground">#0e1f38</color>
+    <color name="darkColorReactionBorder">#0e1f38</color>
+
+    <color name="darkColorFloatingActionButtonBorder">#22FFFFFF</color>
+    <color name="darkColorAuthenticationButtonDisabled">#22FFFFFF</color>
+
+    <color name="darkColorAccent">#1d74f5</color>
+
+    <color name="darkColorBackground">#030c1b</color>
+
+    <color name="darkColorDim">#99ffffff</color>
+    <color name="darkColorControlText">#99ffffff</color>
+
+    <color name="darkColorAuxiliaryBackground">#07101e</color>
+    <color name="darkColorAuxiliaryTint">#cdcdcd</color>
+
+    <!--BLACK THEME-->
+    <color name="blackColorBodyText">#FFe8ebed</color>
+
+    <color name="blackColorPrimary">#FF0e0d0d</color>
+    <color name="blackColorPrimaryDark">#FF0e0d0d</color>
+    <color name="blackColorFocusedBackground">#FF0e0d0d</color>
+    <color name="blackColorSubHeaderBackground">#FF0e0d0d</color>
+
+    <color name="blackColorSettingsSecondaryBackground">#FF191717</color>
+
+    <color name="blackColorTextHint">#77ffffff</color>
+    <color name="blackColorDescriptiveText">#77FFFFFF</color>
+    <color name="blackColorBottomSheetFragmentText">#77ffffff</color>
+    <color name="blackColorQuoteBar">#77ffffff</color>
+    <color name="blackColorAuthenticationSecondaryText">#77ffffff</color>
+    <color name="blackColorSubHeaderText">#77ffffff</color>
+    <color name="blackColorSecondaryText">#77ffffff</color>
+
+    <color name="blackColorMutedAccent">#33FFFFFF</color>
+    <color name="blackColorDivider">#33FFFFFF</color>
+    <color name="blackColorAuthenticationButtonDisabled">#33FFFFFF</color>
+    <color name="blackColorAuthenticationButtonBorderAndDivider">#33FFFFFF</color>
+    <color name="blackColorStatusInvisible">#33FFFFFF</color>
+
+    <color name="blackColorTitleText">#FFFAFAFA</color>
+    <color name="blackColorPrimaryText">#FFFAFAFA</color>
+    <color name="blackColorBottomSheetFragmentHeading">#FFFAFAFA</color>
+    <color name="blackColorChannelTitle">#FFFAFAFA</color>
+
+    <color name="blackColorTimestampText">#99FFFFFF</color>
+
+    <color name="blackColorChatComponentBackground">#17181a</color>
+    <color name="blackColorReactionBackground">#17181a</color>
+
+    <color name="blackColorBannerBackground">#1f2329</color>
+    <color name="blackColorReactionBorder">#1f2329</color>
+
+    <color name="blackColorFloatingActionButtonBorder">#22FFFFFF</color>
+
+    <color name="blackColorAccent">#1d74f5</color>
+
+    <color name="blackColorBackground">#000000</color>
+
+    <color name="blackColorDim">#99ffffff</color>
+    <color name="blackColorControlText">#99ffffff</color>
+
+    <color name="blackColorAuxiliaryBackground">#090909</color>
+
+    <color name="blackColorAuxiliaryTint">#cdcdcd</color>
+
+    <color name="blackColorChatText">#FFb2b8c6</color>
+    <bool name="isDark">true</bool>
+
+
+    <integer-array name="DarkThemePreview">
+        <item>@color/darkColorAccent</item>
+        <item>@color/darkColorPrimaryText</item>
+        <item>@color/darkColorPrimary</item>
+        <item>@color/darkColorDescriptiveText</item>
+        <item>@color/darkColorBackground</item>
+    </integer-array>
+
+    <integer-array name="BlackThemePreview">
+        <item>@color/blackColorAccent</item>
+        <item>@color/blackColorPrimaryText</item>
+        <item>@color/blackColorPrimary</item>
+        <item>@color/blackColorDescriptiveText</item>
+        <item>@color/blackColorBackground</item>
+    </integer-array>
+
+    <!--Dark Background Colors-->
+    <color name="Charcoal">#000000</color>
+
+    <color name="Jet">#1A1A1A</color>
+    <color name="BlackOlive">#1E1E1E</color>
+    <color name="Silver">#C0C0C0</color>
+
+    <color name="DarkJungle">#142022</color>
+    <color name="DarkGunMetal">#182628</color>
+    <color name="Ebony">#545C5E</color>
+
+    <color name="EerieGreen">#131901</color>
+    <color name="RaisinBlack">#21231A</color>
+    <color name="GraniteGray">#686C5D</color>
+
+    <color name="Plum">#19071D</color>
+    <color name="DarkPurple">#2E123B</color>
+    <color name="MediumPlum">#27172B</color>
+
+    <string-array name="DarkCustomBackground">
+        <item>Default</item>
+        <item>Charcoal</item>
+        <item>DarkBlue</item>
+        <item>Jet</item>
+        <item>DarkJungle</item>
+        <item>EerieGreen</item>
+        <item>Plum</item>
+    </string-array>
+</resources>

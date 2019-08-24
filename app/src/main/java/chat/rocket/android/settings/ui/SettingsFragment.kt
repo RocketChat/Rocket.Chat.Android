@@ -23,8 +23,10 @@ import chat.rocket.android.core.behaviours.AppLanguageView
 import chat.rocket.android.helper.TextHelper.getDeviceAndAppInformation
 import chat.rocket.android.settings.presentation.SettingsPresenter
 import chat.rocket.android.settings.presentation.SettingsView
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.util.invalidateFirebaseToken
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
@@ -32,6 +34,10 @@ import kotlinx.android.synthetic.main.dialog_delete_account.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import timber.log.Timber
 import javax.inject.Inject
+import android.widget.ArrayAdapter
+
+
+
 
 internal const val TAG_SETTINGS_FRAGMENT = "SettingsFragment"
 
@@ -142,6 +148,8 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
         text_contact_us.setOnClickListener { contactSupport() }
 
+        text_change_theme.setOnClickListener { presenter.toChangeTheme() }
+
         text_language.setOnClickListener { changeLanguage() }
 
         text_review_this_app.setOnClickListener { showAppOnStore() }
@@ -208,10 +216,12 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
                     }
                 }
             }
+            val adapter = ArrayAdapter<CharSequence>(
+                    activity, R.layout.item_alert_dialog_single_choice, resources.getStringArray(R.array.languages))
             AlertDialog.Builder(it)
                 .setTitle(R.string.title_choose_language)
                 .setSingleChoiceItems(
-                    resources.getStringArray(R.array.languages), localeIndex
+                        adapter, localeIndex
                 ) { dialog, option ->
                     val array = locales[option].split(",")
                     if (array.size > 1) {
@@ -242,12 +252,14 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
 
     private fun showLogoutDialog() {
         context?.let {
-            val builder = AlertDialog.Builder(it)
-            builder.setTitle(R.string.title_are_you_sure)
+            val dialog = AlertDialog.Builder(it)
+                .setTitle(R.string.title_are_you_sure)
                 .setPositiveButton(R.string.action_logout) { _, _ -> presenter.logout() }
                 .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
                 .create()
-                .show()
+            dialog.show()
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
         }
     }
 
@@ -256,13 +268,19 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
             val dialogLayout = layoutInflater.inflate(R.layout.dialog_delete_account, null)
             val editText = dialogLayout.findViewById<EditText>(R.id.text_password)
 
-            AlertDialog.Builder(it)
+            val dialog = AlertDialog.Builder(it)
                 .setView(dialogLayout)
                 .setPositiveButton(R.string.msg_delete_account) { _, _ ->
                     presenter.deleteAccount(editText.text.toString())
                 }.setNegativeButton(android.R.string.no) { dialog, _ -> dialog.cancel() }
                 .create()
-                .show()
+             dialog.show()
+             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
+             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
+             val keyDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_key_black_20dp, it)
+             DrawableHelper.wrapDrawable(keyDrawable)
+             DrawableHelper.tintDrawable(keyDrawable, it, ThemeUtil.getThemeColorResource(R.attr.colorDrawableStrongTint))
+             DrawableHelper.compoundStartDrawable(dialog.text_password, keyDrawable)
         }
     }
 }

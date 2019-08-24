@@ -3,6 +3,7 @@ package chat.rocket.android.util.extensions
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.Menu
@@ -22,23 +23,28 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import chat.rocket.android.R
+import chat.rocket.android.thememanager.util.ThemeUtil
 
-fun FragmentActivity.setLightStatusBar(view: View, @ColorInt color: Int = 0) {
+fun FragmentActivity.setInvisibleStatusBar(view: View, @ColorInt color: Int = 0) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val isDark = ThemeUtil.getIsDark(applicationContext)
         var flags = view.systemUiVisibility
-        flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        view.systemUiVisibility = flags
+        window.decorView.systemUiVisibility = (if (isDark){
+            flags and (View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR).inv()}else{
+            flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR})
         window.statusBarColor = if (color == 0) {
-            ContextCompat.getColor(this, R.color.colorWhite)
+            ThemeUtil.getThemeColor(android.R.attr.colorBackground)
         } else {
             color
         }
     }
 }
 
-fun FragmentActivity.clearLightStatusBar() {
+fun FragmentActivity.clearInvisibleStatusBar(view: View) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+        val flags = view.systemUiVisibility
+        window.decorView.systemUiVisibility = flags and (View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR).inv()
+        window.statusBarColor = ThemeUtil.getThemeColor(R.attr.colorPrimaryDark)
     }
 }
 

@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.DeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
+import chat.rocket.android.thememanager.BaseActivity
+import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
 import chat.rocket.android.util.extensions.getDeepLinkInfo
 import chat.rocket.android.util.extensions.isDynamicLink
@@ -23,7 +25,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.app_bar.*
 import javax.inject.Inject
 
-class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class AuthenticationActivity : BaseActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject

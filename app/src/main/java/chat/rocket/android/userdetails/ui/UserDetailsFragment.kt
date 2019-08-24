@@ -12,12 +12,10 @@ import chat.rocket.android.R
 import chat.rocket.android.analytics.AnalyticsManager
 import chat.rocket.android.analytics.event.ScreenViewEvent
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.userdetails.presentation.UserDetailsPresenter
 import chat.rocket.android.userdetails.presentation.UserDetailsView
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.setLightStatusBar
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -69,6 +67,8 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar()
+        tintText()
+        tintDrawables()
         setupListeners()
         presenter.checkRemoveUserPermission(chatRoomId)
         presenter.loadUserDetails(userId)
@@ -155,9 +155,9 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         handler.postDelayed({
             with(activity as ChatRoomActivity) {
                 view?.let {
-                    setLightStatusBar(
+                    setInvisibleStatusBar(
                         it,
-                        ContextCompat.getColor(this, R.color.whitesmoke)
+                        ThemeUtil.getThemeColor(R.attr.colorSettingsSecondaryBackground)
                     )
                 }
                 toolbar.isVisible = false
@@ -169,5 +169,21 @@ class UserDetailsFragment : Fragment(), UserDetailsView {
         image_arrow_back.setOnClickListener { activity?.onBackPressed() }
         image_avatar.setOnClickListener { with(presenter) { toProfileImage(getImageUri()) } }
         button_remove_user.setOnClickListener { presenter.removeUser(userId, chatRoomId) }
+    }
+
+    private fun tintText(){
+        text_message.setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
+        text_video_call.setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
+    }
+
+    private fun tintDrawables(){
+        ui{
+            val drawableMessage = DrawableHelper.getDrawableFromId(R.drawable.ic_message_24dp, it)
+            val drawableVideo = DrawableHelper.getDrawableFromId(R.drawable.ic_video_24dp, it)
+            val drawables = arrayOf(drawableMessage, drawableVideo)
+            DrawableHelper.tintDrawables(drawables, it, ThemeUtil.getThemeColorResource(R.attr.colorAccent))
+            DrawableHelper.compoundTopDrawable(text_message,drawableMessage)
+            DrawableHelper.compoundTopDrawable(text_video_call,drawableVideo)
+        }
     }
 }

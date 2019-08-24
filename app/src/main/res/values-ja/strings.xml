@@ -15,6 +15,7 @@
     <string name="title_settings">設定</string>
     <string name="title_preferences">環境設定</string>
     <string name="title_change_password">パスワードの変更</string>
+    <string name="title_change_theme">Change Theme</string> <!-- TODO Translate -->
     <string name="title_rate_us">私たちを評価してください</string>
     <string name="title_admin_panel">管理パネル</string>
     <string name="title_password">パスワードの変更</string>
@@ -63,6 +64,9 @@
 
     <!-- Settings messages -->
     <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    //--------------------------------------------------------------------------------------------
+    <string name="msg_change_theme">Change Theme</string> <!-- TODO Translate -->
+    //--------------------------------------------------------------------------------------------
     <string name="msg_language">Language</string> <!-- TODO Translate -->
     <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
     <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
@@ -370,4 +374,12 @@
     <string name="submit">Submit</string> <!--TODO - Add proper translation-->
     <string name="required">*required</string> <!--TODO - Add proper translation-->
     <string name="report_sent">Your report has been sent!</string> <!--TODO - Add proper translation-->
+
+    <!-- Themes -->
+    <string name="last_changed">Last Changed %s</string><!-- TODO Translate -->
+    <string name="revert_to_default">Revert to Default</string><!-- TODO Translate -->
+    <string name="create_custom_theme">Create Custom Theme</string><!-- TODO Translate -->
+    <string name="app_themes">App Themes</string><!-- TODO Translate -->
+    <string name="custom_themes">Custom Themes</string><!-- TODO Translate -->
+    <string name="add_theme">Add Theme</string><!-- TODO Translate -->
 </resources>

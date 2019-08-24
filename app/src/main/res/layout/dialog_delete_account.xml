@@ -20,6 +20,7 @@
         android:hint="@string/msg_password"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
+        android:textColorHint="?colorTextHintEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_are_you_sure" />

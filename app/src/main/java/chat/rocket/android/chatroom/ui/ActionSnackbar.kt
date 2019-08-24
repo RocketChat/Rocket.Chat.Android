@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.setPadding
 import chat.rocket.android.R
 import chat.rocket.android.helper.MessageParser
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extensions.content
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import kotlinx.android.synthetic.main.message_action_bar.view.*
@@ -28,7 +29,7 @@ class ActionSnackbar private constructor(
             val actionSnackbar = ActionSnackbar(parentViewGroup, view, CallbackImpl(view))
             with(view) {
                 actionSnackbar.getView().setPadding(0)
-                actionSnackbar.getView().setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
+                actionSnackbar.getView().setBackgroundColor(ThemeUtil.getThemeColor(android.R.attr.colorBackground))
                 actionSnackbar.parser = parser
                 actionSnackbar.messageTextView = text_view_action_text
                 actionSnackbar.titleTextView = text_view_action_title

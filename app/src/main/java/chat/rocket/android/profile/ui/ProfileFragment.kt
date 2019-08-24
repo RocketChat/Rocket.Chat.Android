@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -28,6 +27,7 @@ import chat.rocket.android.helper.AndroidPermissionsHelper.hasCameraPermission
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.android.util.extension.asObservable
 import chat.rocket.android.util.extension.dispatchImageSelection
 import chat.rocket.android.util.extension.dispatchTakePicture
@@ -86,12 +86,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar()
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-            tintEditTextDrawableStart()
-        }
+        tintEditTextDrawableStart()
 
         presenter.loadUserProfile()
         setupListeners()
+        tintAvatarOptionsDrawables()
         subscribeEditTexts()
 
         analyticsManager.logScreenView(ScreenViewEvent.Profile)
@@ -276,7 +275,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
             val drawables = arrayOf(personDrawable, atDrawable, emailDrawable)
             DrawableHelper.wrapDrawables(drawables)
-            DrawableHelper.tintDrawables(drawables, this, R.color.colorDrawableTintGrey)
+            DrawableHelper.tintDrawables(drawables, this, ThemeUtil.getThemeColorResource(R.attr.colorDrawableStrongTint))
             DrawableHelper.compoundDrawables(
                 arrayOf(text_name, text_username, text_email), drawables
             )
@@ -344,14 +343,16 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
 
         context?.let {
-            AlertDialog.Builder(it)
+            val dialog = AlertDialog.Builder(it)
                 .setView(dialogLayout)
                 .setPositiveButton(R.string.msg_change_status) { dialog, _ ->
                     presenter.updateStatus(newStatus)
                     text_status.text = getString(R.string.status, newStatus.toString().capitalize())
                     this.currentStatus = newStatus.toString()
                     dialog.dismiss()
-                }.show()
+                }.create()
+            dialog.show()
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
         }
     }
 
@@ -379,6 +380,21 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         }
     }
 
+    private fun tintAvatarOptionsDrawables() {
+        (activity as MainActivity).apply {
+            val accountDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_account_circle_black_24dp, this)
+            val imageDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_image_black_24dp, this)
+            val cameraDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_photo_camera_black_24dp, this)
+            val closeDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_close_black_24dp, this)
+            val drawables = arrayOf(accountDrawable, imageDrawable, cameraDrawable, closeDrawable)
+            DrawableHelper.wrapDrawables(drawables)
+            DrawableHelper.tintDrawables(drawables, this, ThemeUtil.getThemeColorResource(R.attr.colorPrimaryText))
+            DrawableHelper.compoundDrawables(
+                    arrayOf(button_view_profile_photo, button_open_gallery, button_take_a_photo, button_reset_avatar), drawables
+            )
+        }
+    }
+      
     private fun showChangesNotSavedDialog() {
         context?.let {
             val builder = AlertDialog.Builder(it)
@@ -394,7 +410,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                 .create()
                 .show()
         }
-
     }
 
     private fun updateProfile() {

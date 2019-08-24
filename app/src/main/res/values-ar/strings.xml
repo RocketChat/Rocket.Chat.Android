@@ -15,6 +15,7 @@
     <string name="title_settings">الإعدادات</string>
     <string name="title_preferences">تفضيلات</string>
     <string name="title_change_password">تغيير كلمة السر</string>
+    <string name="title_change_theme">Change Theme</string> <!-- TODO Translate -->
     <string name="title_rate_us">قيمنا</string>
     <string name="title_admin_panel">لوحة الإدارة</string>
     <string name="title_password">تغيير كلمة السر</string>
@@ -63,6 +64,7 @@
 
     <!-- Settings messages -->
     <string name="msg_contact_us">اتصل بنا</string>
+    <string name="msg_change_theme">Change Theme</string> <!-- TODO Translate -->
     <string name="msg_language">تغيير اللغة</string>
     <string name="msg_review_this_app">قيم هذا التطبيق</string>
     <string name="msg_share_this_app">شارك هذا التطبيق</string>
@@ -370,4 +372,12 @@
     <string name="submit">تأكيد</string>
     <string name="required">*مطلوب</string>
     <string name="report_sent">تم إرسال تقريرك!</string>
+
+    <!-- Themes -->
+    <string name="last_changed">Last Changed %s</string><!-- TODO Translate -->
+    <string name="revert_to_default">Revert to Default</string><!-- TODO Translate -->
+    <string name="create_custom_theme">Create Custom Theme</string><!-- TODO Translate -->
+    <string name="app_themes">App Themes</string><!-- TODO Translate -->
+    <string name="custom_themes">Custom Themes</string><!-- TODO Translate -->
+    <string name="add_theme">Add Theme</string><!-- TODO Translate -->
 </resources>

@@ -16,6 +16,7 @@
     <string name="title_preferences">Préférences</string>
     <string name="title_choose_language">Langues</string>
     <string name="title_change_password">Changer le mot de passe</string>
+    <string name="title_change_theme">Change Theme</string> <!-- TODO Translate -->
     <string name="title_rate_us">Evaluez nous</string>
     <string name="title_admin_panel">Administration</string>
     <string name="title_password">Changer le mot de passe</string>
@@ -63,6 +64,7 @@
 
     <!-- Settings messages -->
     <string name="msg_contact_us">Nous contacter</string>
+    <string name="msg_change_theme">Change Theme</string> <!-- TODO Translate -->
     <string name="msg_language">Langue</string>
     <string name="msg_review_this_app">Notez cette application</string>
     <string name="msg_share_this_app">Partagez cette application</string>
@@ -369,4 +371,12 @@
     <string name="submit">Soumettre</string>
     <string name="required">*Obligatoire</string>
     <string name="report_sent">Votre rapport a été envoyé!</string>
+
+    <!-- Themes -->
+    <string name="last_changed">Last Changed %s</string><!-- TODO Translate -->
+    <string name="revert_to_default">Revert to Default</string><!-- TODO Translate -->
+    <string name="create_custom_theme">Create Custom Theme</string><!-- TODO Translate -->
+    <string name="app_themes">App Themes</string><!-- TODO Translate -->
+    <string name="custom_themes">Custom Themes</string><!-- TODO Translate -->
+    <string name="add_theme">Add Theme</string><!-- TODO Translate -->
 </resources>

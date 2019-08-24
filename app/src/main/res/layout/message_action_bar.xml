@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/colorWhite">
+    android:theme="?appAccentStyle"
+    android:layout_height="wrap_content">
 
     <View
         android:id="@+id/quote_bar"
@@ -14,6 +14,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/quote_vertical_blue_bar"
+        android:backgroundTint="?colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_view_action_cancel_quote"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,7 +28,7 @@
         android:layout_marginBottom="8dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/actionMenuColor"
+        android:textColor="?colorDescriptiveText"
         android:textSize="14sp"
         android:typeface="normal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -57,7 +58,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:textColor="@color/colorAccent"
+        android:textColor="?colorAccent"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/text_view_action_text"
         app:layout_constraintEnd_toEndOf="parent"

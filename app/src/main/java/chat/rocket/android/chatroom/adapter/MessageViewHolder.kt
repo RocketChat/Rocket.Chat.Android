@@ -6,10 +6,12 @@ import android.text.Spannable
 import android.text.method.LinkMovementMethod
 import android.text.style.ImageSpan
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.emoji.EmojiReactionListener
+import chat.rocket.android.thememanager.util.ThemeUtil
 import chat.rocket.core.model.MessageType
 import chat.rocket.core.model.isSystemMessage
 import com.bumptech.glide.load.resource.gif.GifDrawable
@@ -52,12 +54,14 @@ class MessageViewHolder(
             }
 
             text_content.text_content.text = data.content
+            text_content.setLinkTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
 
             button_join_video_call.isVisible = data.message.type is MessageType.JitsiCallStarted
             button_join_video_call.setOnClickListener { joinVideoCallListener(it) }
 
             image_avatar.setImageURI(data.avatar)
-            text_content.setTextColor(if (data.isTemporary) Color.GRAY else Color.BLACK)
+            text_content.setTextColor(if (data.isTemporary) ThemeUtil.getThemeColor(R.attr.colorControlText)
+            else ThemeUtil.getThemeColor(R.attr.colorPrimaryText))
 
             data.message.let {
                 text_edit_indicator.isVisible = !it.isSystemMessage() && it.editedBy != null

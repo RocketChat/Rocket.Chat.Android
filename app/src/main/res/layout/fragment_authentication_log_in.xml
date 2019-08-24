@@ -23,6 +23,7 @@
         android:hint="@string/msg_username_or_email"
         android:imeOptions="actionNext"
         android:inputType="textEmailAddress|text"
+        android:textColorHint="?colorTextHintEditText"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_login" />
@@ -35,6 +36,7 @@
         android:hint="@string/msg_password"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
+        android:textColorHint="?colorTextHintEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_username_or_email" />
@@ -43,7 +45,6 @@
         android:id="@+id/button_log_in"
         style="@style/Authentication.Button"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/colorAuthenticationButtonDisabled"
         android:enabled="false"
         android:text="@string/title_log_in"
         app:layout_constraintEnd_toEndOf="parent"

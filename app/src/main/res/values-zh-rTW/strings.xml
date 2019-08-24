@@ -15,6 +15,7 @@
     <string name="title_settings">設定</string>
     <string name="title_preferences">選項</string>
     <string name="title_change_password">修改密碼</string>
+    <string name="title_change_theme">Change Theme</string> <!-- TODO Translate -->
     <string name="title_rate_us">給我們評價</string>
     <string name="title_admin_panel">管理面板</string>
     <string name="title_password">修改密碼</string>
@@ -62,6 +63,9 @@
 
     <!-- Settings messages -->
     <string name="msg_contact_us">Contact us</string> <!-- TODO Translate -->
+    //--------------------------------------------------------------------------------------------
+    <string name="msg_change_theme">Change Theme</string> <!-- TODO Translate -->
+    //--------------------------------------------------------------------------------------------
     <string name="msg_language">Language</string> <!-- TODO Translate -->
     <string name="msg_review_this_app">Review this app</string> <!-- TODO Translate -->
     <string name="msg_share_this_app">Share this app</string> <!-- TODO Translate -->
@@ -346,4 +350,12 @@
     <string name="submit">提交</string>
     <string name="required">*必須輸入</string>
     <string name="report_sent">您的報告已經提交!</string>
+
+    <!-- Themes -->
+    <string name="last_changed">Last Changed %s</string><!-- TODO Translate -->
+    <string name="revert_to_default">Revert to Default</string><!-- TODO Translate -->
+    <string name="create_custom_theme">Create Custom Theme</string><!-- TODO Translate -->
+    <string name="app_themes">App Themes</string><!-- TODO Translate -->
+    <string name="custom_themes">Custom Themes</string><!-- TODO Translate -->
+    <string name="add_theme">Add Theme</string><!-- TODO Translate -->
 </resources>

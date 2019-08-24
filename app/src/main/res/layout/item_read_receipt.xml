@@ -8,6 +8,7 @@
 
     <TextView
         android:id="@+id/receipt_name"
+        android:textColor="?colorDescriptiveText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -30,6 +31,7 @@
 
     <TextView
         android:id="@+id/receipt_time"
+        android:textColor="?colorDescriptiveText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

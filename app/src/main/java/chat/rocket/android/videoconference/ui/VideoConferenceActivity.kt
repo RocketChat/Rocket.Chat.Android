@@ -3,7 +3,7 @@ package chat.rocket.android.videoconference.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import chat.rocket.android.thememanager.BaseActivity
 import chat.rocket.android.videoconference.presenter.JitsiVideoConferenceView
 import chat.rocket.android.videoconference.presenter.VideoConferencePresenter
 import dagger.android.AndroidInjection
@@ -23,7 +23,7 @@ fun Context.videoConferenceIntent(chatRoomId: String, chatRoomType: String): Int
 private const val INTENT_CHAT_ROOM_ID = "chat_room_id"
 private const val INTENT_CHAT_ROOM_TYPE = "chat_room_type"
 
-class VideoConferenceActivity : AppCompatActivity(), JitsiVideoConferenceView,
+class VideoConferenceActivity : BaseActivity(), JitsiVideoConferenceView,
     JitsiMeetViewListener {
     @Inject lateinit var presenter: VideoConferencePresenter
     private lateinit var chatRoomId: String

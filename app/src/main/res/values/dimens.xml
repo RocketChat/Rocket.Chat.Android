@@ -48,4 +48,10 @@
 
     <dimen name="quote_collapsed_height">32dp</dimen>
 
+    <!-- Theme -->
+    <dimen name="theme_screen_edge_left_and_right_padding">20dp</dimen>
+    <dimen name="theme_screen_edge_top_padding">25dp</dimen>
+    <dimen name="theme_title_top_padding">20dp</dimen>
+
+
 </resources>

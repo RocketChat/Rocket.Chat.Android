@@ -14,6 +14,7 @@ import chat.rocket.android.emoji.EmojiKeyboardListener
 import chat.rocket.android.emoji.EmojiPickerPopup
 import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.android.thememanager.util.ThemeUtil
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_reaction.view.*
 import java.util.concurrent.CopyOnWriteArrayList
@@ -114,7 +115,7 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
                 val myself = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
                 if (reaction.usernames.contains(myself)) {
                     val context = itemView.context
-                    text_count.setTextColor(ContextCompat.getColor(context, R.color.colorAccent))
+                    text_count.setTextColor(ThemeUtil.getThemeColor(R.attr.colorAccent))
                 }
 
                 text_count.text = reaction.count.toString()
