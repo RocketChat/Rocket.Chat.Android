@@ -18,7 +18,6 @@
         <item name="android:textColor">?colorControlText</item>
         <item name="android:textStyle">normal</item>
     </style>
-    <!--<item name="android:textColor">#FF54585E</item>-->
 
     <style name="Authentication.Button.Title" parent="TextAppearance.AppCompat">
         <item name="android:textSize">17sp</item>
@@ -395,19 +394,24 @@
         <item name="appAccentStyle">@style/RedColorAccent</item>
     </style>
 
-    <style name="LightPinkColorAccent">
-        <item name="colorAccent">@color/LightPink</item>
-        <item name="appAccentStyle">@style/LightPinkColorAccent</item>
+    <style name="PeachColorAccent">
+        <item name="colorAccent">@color/Peach</item>
+        <item name="appAccentStyle">@style/PeachColorAccent</item>
     </style>
 
-    <style name="LightPurpleColorAccent">
-        <item name="colorAccent">@color/LightPurple</item>
-        <item name="appAccentStyle">@style/LightPurpleColorAccent</item>
+    <style name="PastelPinkColorAccent">
+        <item name="colorAccent">@color/PastelPink</item>
+        <item name="appAccentStyle">@style/PastelPinkColorAccent</item>
     </style>
 
-    <style name="LightDeepPurpleColorAccent">
-        <item name="colorAccent">@color/LightDeepPurple</item>
-        <item name="appAccentStyle">@style/LightDeepPurpleColorAccent</item>
+    <style name="PurpleColorAccent">
+        <item name="colorAccent">@color/Purple</item>
+        <item name="appAccentStyle">@style/PurpleColorAccent</item>
+    </style>
+
+    <style name="DeepPurpleColorAccent">
+        <item name="colorAccent">@color/DeepPurple</item>
+        <item name="appAccentStyle">@style/DeepPurpleColorAccent</item>
     </style>
 
     <style name="BlueColorAccent">
@@ -415,19 +419,9 @@
         <item name="appAccentStyle">@style/BlueColorAccent</item>
     </style>
 
-    <style name="VermilionColorAccent">
-        <item name="colorAccent">@color/Vermilion</item>
-        <item name="appAccentStyle">@style/VermilionColorAccent</item>
-    </style>
-
     <style name="TealColorAccent">
         <item name="colorAccent">@color/Teal</item>
         <item name="appAccentStyle">@style/TealColorAccent</item>
-    </style>
-
-    <style name="GreenColorAccent">
-        <item name="colorAccent">@color/GrassGreen</item>
-        <item name="appAccentStyle">@style/GreenColorAccent</item>
     </style>
 
     <style name="LimeColorAccent">
@@ -443,6 +437,11 @@
     <style name="OrangeColorAccent">
         <item name="colorAccent">@color/Orange</item>
         <item name="appAccentStyle">@style/OrangeColorAccent</item>
+    </style>
+
+    <style name="DeepOrangeColorAccent">
+        <item name="colorAccent">@color/DeepOrange</item>
+        <item name="appAccentStyle">@style/DeepOrangeColorAccent</item>
     </style>
 
     <style name="BrownColorAccent">
@@ -480,14 +479,9 @@
         <item name="appAccentStyle">@style/TeaPinkColorAccent</item>
     </style>
 
-    <style name="BronzeColorAccent">
-        <item name="colorAccent">@color/Bronze</item>
-        <item name="appAccentStyle">@style/BronzeColorAccent</item>
-    </style>
-
-    <style name="TurtleGreenColorAccent">
-        <item name="colorAccent">@color/TurtleGreen</item>
-        <item name="appAccentStyle">@style/TurtleGreenColorAccent</item>
+    <style name="WheatColorAccent">
+        <item name="colorAccent">@color/Wheat</item>
+        <item name="appAccentStyle">@style/WheatColorAccent</item>
     </style>
 
     <style name="DefaultAppThemeColorToolbar">
@@ -513,11 +507,6 @@
     <style name="ChocolateColorToolbar">
         <item name="colorPrimary">@color/Chocolate</item>
         <item name="colorPrimaryDark">@color/DarkChocolate</item>
-    </style>
-
-    <style name="FreshGreenColorToolbar">
-        <item name="colorPrimary">@color/FreshGreen</item>
-        <item name="colorPrimaryDark">@color/Green</item>
     </style>
 
     <style name="GoldColorToolbar">
@@ -553,5 +542,35 @@
     <style name="ForestGreenColorToolbar">
         <item name="colorPrimary">@color/ForestGreen</item>
         <item name="colorPrimaryDark">@color/DarkGreen</item>
+    </style>
+
+    <style name="BlueGreyColorToolbar">
+        <item name="colorPrimary">@color/BlueGrey</item>
+        <item name="colorPrimaryDark">@color/DarkBlueGrey</item>
+    </style>
+
+    <style name="BrickRedColorToolbar">
+        <item name="colorPrimary">@color/Ruby</item>
+        <item name="colorPrimaryDark">@color/BrickRed</item>
+    </style>
+
+    <style name="PurpleColorToolbar">
+        <item name="colorPrimary">@color/Purple</item>
+        <item name="colorPrimaryDark">@color/RoyalPurple</item>
+    </style>
+
+    <style name="LilacColorToolbar">
+        <item name="colorPrimary">@color/Lilac</item>
+        <item name="colorPrimaryDark">@color/DarkLilac</item>
+    </style>
+
+    <style name="PeachColorToolbar">
+        <item name="colorPrimary">@color/Peach</item>
+        <item name="colorPrimaryDark">@color/DarkSalmon</item>
+    </style>
+
+    <style name="WheatColorToolbar">
+        <item name="colorPrimary">@color/Wheat</item>
+        <item name="colorPrimaryDark">@color/DarkWheat</item>
     </style>
 </resources>

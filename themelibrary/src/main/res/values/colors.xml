@@ -7,7 +7,8 @@
     <color name="darkColorPrimaryDark">#0b182c</color>
     <color name="darkColorFocusedBackground">#0b182c</color>
     <color name="darkColorSubHeaderBackground">#0b182c</color>
-    <color name="darkColorSettingsSecondaryBackground">#0b182c</color>
+
+    <color name="darkColorSettingsSecondaryBackground">#071223</color>
 
     <color name="darkColorTextHint">#77ffffff</color>
     <color name="darkColorDescriptiveText">#77FFFFFF</color>
@@ -134,12 +135,17 @@
     <color name="RaisinBlack">#21231A</color>
     <color name="GraniteGray">#686C5D</color>
 
+    <color name="Plum">#19071D</color>
+    <color name="DarkPurple">#2E123B</color>
+    <color name="MediumPlum">#27172B</color>
+
     <string-array name="DarkCustomBackground">
         <item>Default</item>
         <item>Charcoal</item>
+        <item>DarkBlue</item>
         <item>Jet</item>
         <item>DarkJungle</item>
         <item>EerieGreen</item>
-        <item>DarkBlue</item>
+        <item>Plum</item>
     </string-array>
 </resources>

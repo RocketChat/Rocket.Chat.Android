@@ -88,4 +88,24 @@
         <item name="android:navigationBarColor">@color/Linen</item>
         <item name="colorLoading">@color/Taupe</item>
     </style>
+
+    <style name="LavenderAppTheme" parent="AppTheme">
+        <item name="appTheme">@style/LavenderAppTheme</item>
+        <item name="android:colorBackground">@color/Lavender</item>
+        <item name="colorSettingsSecondaryBackground">@color/LavenderMist</item>
+        <item name="colorSubHeaderBackground">@color/Lilac</item>
+        <item name="colorSubHeaderText">@color/colorWhite</item>
+        <item name="android:navigationBarColor">@color/LavenderGray</item>
+        <item name="colorLoading">@color/Lilac</item>
+    </style>
+
+    <style name="MintAppTheme" parent="AppTheme">
+        <item name="appTheme">@style/MintAppTheme</item>
+        <item name="android:colorBackground">@color/Mint</item>
+        <item name="colorSettingsSecondaryBackground">@color/AzureWhite</item>
+        <item name="colorSubHeaderBackground">@color/SeaFoamGreen</item>
+        <item name="colorSubHeaderText">@color/colorWhite</item>
+        <item name="android:navigationBarColor">@color/MintGray</item>
+        <item name="colorLoading">@color/SeaFoamGreen</item>
+    </style>
 </resources>

@@ -127,6 +127,15 @@
         <item name="colorLoading">@color/darkColorAuxiliaryTint</item>
     </style>
 
+    <style name="PlumBlackTheme" parent="BlackTheme">
+        <item name="appTheme">@style/PlumBlackTheme</item>
+        <item name="android:colorBackground">@color/Plum</item>
+        <item name="colorSettingsSecondaryBackground">@color/MediumPlum</item>
+        <item name="colorSubHeaderBackground">@color/DarkPurple</item>
+        <item name="android:navigationBarColor">@color/MediumPlum</item>
+        <item name="colorLoading">@color/DarkPurple</item>
+    </style>
+
     <style name="CharcoalDarkTheme" parent="DarkTheme">
         <item name="appTheme">@style/CharcoalDarkTheme</item>
         <item name="android:colorBackground">@color/Charcoal</item>
@@ -170,5 +179,14 @@
         <item name="colorSubHeaderBackground">@color/darkColorSettingsSecondaryBackground</item>
         <item name="android:navigationBarColor">@color/darkColorPrimaryDark</item>
         <item name="colorLoading">@color/darkColorAuxiliaryTint</item>
+    </style>
+
+    <style name="PlumDarkTheme" parent="DarkTheme">
+        <item name="appTheme">@style/PlumDarkTheme</item>
+        <item name="android:colorBackground">@color/Plum</item>
+        <item name="colorSettingsSecondaryBackground">@color/MediumPlum</item>
+        <item name="colorSubHeaderBackground">@color/DarkPurple</item>
+        <item name="android:navigationBarColor">@color/MediumPlum</item>
+        <item name="colorLoading">@color/DarkPurple</item>
     </style>
 </resources>

@@ -71,52 +71,48 @@
         <item>@color/colorBackground</item>
     </integer-array>
 
-    <color name="Red">#f44336</color>
-    <color name="LightPink">#f43688</color>
-    <color name="LightPurple">#E040FB</color>
-    <color name="LightDeepPurple">#7c4dff</color>
-    <color name="Blue">#4d77ff</color>
+    <color name="BlueGrey">#607D8B</color>
+    <color name="Blue">#40A4C4</color>
     <color name="Teal">#FF009688</color>
-    <color name="GrassGreen">#FF4CAF50</color>
+    <color name="Purple">#805BC4</color>
+    <color name="DeepPurple">#7c4dff</color>
     <color name="Lime">#FFCDDC39</color>
     <color name="Amber">#FFFFC107</color>
+    <color name="Red">#eb3434</color>
+    <color name="Coral">#D75344</color>
     <color name="Orange">#FC8A10</color>
     <color name="DeepOrange">#FF5722</color>
-    <color name="Vermilion">#d41900</color>
-    <color name="Brown">#FF795548</color>
-    <color name="BlueGrey">#607D8B</color>
-    <color name="Grey">#FF9E9E9E</color>
-    <color name="Coral">#D75344</color>
-    <color name="Coconut">#A45838</color>
-    <color name="BurntUmber">#8B2D2D</color>
+    <color name="Peach">#EB9772</color>
     <color name="TeaPink">#B56969</color>
-    <color name="Bronze">#A98740</color>
-    <color name="TurtleGreen">#909F4A</color>
+    <color name="PastelPink">#DFA2C1</color>
+    <color name="Grey">#FF9E9E9E</color>
+    <color name="Wheat">#BCABA4</color>
+    <color name="BurntUmber">#8B2D2D</color>
+    <color name="Brown">#FF795548</color>
+    <color name="Coconut">#A45838</color>
 
     <!--Accent Colors-->
     <string-array name="CustomAccent">
         <item>Default</item>
-        <item>Red</item>
-        <item>LightPink</item>
-        <item>LightPurple</item>
-        <item>LightDeepPurple</item>
+        <item>BlueGrey</item>
         <item>Blue</item>
         <item>Teal</item>
-        <item>Green</item>
+        <item>Purple</item>
+        <item>DeepPurple</item>
         <item>Lime</item>
         <item>Amber</item>
-        <item>DeepOrange</item>
-        <item>Orange</item>
-        <item>Vermilion</item>
-        <item>Brown</item>
-        <item>BlueGrey</item>
-        <item>Grey</item>
+        <item>Red</item>
         <item>Coral</item>
-        <item>Coconut</item>
-        <item>BurntUmber</item>
+        <item>Orange</item>
+        <item>DeepOrange</item>
+        <item>Peach</item>
         <item>TeaPink</item>
-        <item>Bronze</item>
-        <item>TurtleGreen</item>
+        <item>PastelPink</item>
+        <item>Grey</item>
+        <item>Wheat</item>
+        <item>BurntUmber</item>
+        <item>Brown</item>
+        <item>Coconut</item>
     </string-array>
 
     <!--Light Toolbar Colors-->
@@ -124,8 +120,6 @@
     <color name="SkyBlue">#40A4C4</color>
     <color name="Chocolate">#562B22</color>
     <color name="DarkChocolate">#4A251C</color>
-    <color name="FreshGreen">#0AC775</color>
-    <color name="Green">#08A963</color>
     <color name="Gold">#FFB901</color>
     <color name="Harvest">#D89D01</color>
     <color name="GunMetal">#273238</color>
@@ -142,21 +136,33 @@
     <color name="DarkGreen">#013415</color>
     <color name="Black">#000000</color>
     <color name="DarkBlue">@color/darkColorPrimary</color>
+    <color name="DarkBlueGrey">#526A76</color>
+    <color name="Ruby">#84282D</color>
+    <color name="BrickRed">#712227</color>
+    <color name="RoyalPurple">#6B4DA5</color>
+    <color name="DarkWheat">#9F908B</color>
+    <color name="DarkLilac">#9E8AAD</color>
+    <color name="DarkSalmon">#C78060</color>
 
     <string-array name="LightCustomToolbar">
         <item>Default</item>
         <item>Black</item>
         <item>DarkBlue</item>
-        <item>Blue</item>
-        <item>Chocolate</item>
-        <item>FreshGreen</item>
-        <item>Gold</item>
         <item>GunMetal</item>
+        <item>Blue</item>
         <item>CobaltBlue</item>
-        <item>Taupe</item>
+        <item>Purple</item>
+        <item>Lilac</item>
+        <item>Peach</item>
+        <item>BlueGrey</item>
         <item>FadedTeal</item>
         <item>BottleGreen</item>
         <item>ForestGreen</item>
+        <item>Gold</item>
+        <item>Taupe</item>
+        <item>Chocolate</item>
+        <item>Wheat</item>
+        <item>BrickRed</item>
     </string-array>
 
     <!--Dark Toolbar Colors-->
@@ -164,16 +170,21 @@
         <item>Default</item>
         <item>Black</item>
         <item>DarkBlue</item>
-        <item>Blue</item>
-        <item>Chocolate</item>
-        <item>FreshGreen</item>
-        <item>Gold</item>
         <item>GunMetal</item>
+        <item>Blue</item>
         <item>CobaltBlue</item>
-        <item>Taupe</item>
+        <item>Purple</item>
+        <item>Lilac</item>
+        <item>Peach</item>
+        <item>BlueGrey</item>
         <item>FadedTeal</item>
         <item>BottleGreen</item>
         <item>ForestGreen</item>
+        <item>Gold</item>
+        <item>Taupe</item>
+        <item>Chocolate</item>
+        <item>Wheat</item>
+        <item>BrickRed</item>
     </string-array>
 
     <!--Light Background Colors-->
@@ -184,16 +195,28 @@
     <color name="Linen">#F9EFE9</color>
     <color name="Smoke">#41464E</color>
     <color name="PeachOrange">#F8BE9C</color>
-    <color name="DarkSalmon">#E89768</color>
+    <color name="Salmon">#E89768</color>
 
     <color name="Almond">#EEDFD8</color>
     <color name="PastelGray">#D9CBC5</color>
     <color name="Taupe">#A89790</color>
 
+    <color name="Lavender">#F1E7F9</color>
+    <color name="LavenderMist">#ECDEF8</color>
+    <color name="Lilac">#BAA3CC</color>
+    <color name="LavenderGray">#DFD5E7</color>
+
+    <color name="Mint">#E8F8F0</color>
+    <color name="AzureWhite">#DCF2EC</color>
+    <color name="SeaFoamGreen">#A3D1C9</color>
+    <color name="MintGray">#D5EAE6</color>
+
     <string-array name="LightCustomBackground">
         <item>Default</item>
         <item>Snow</item>
-        <item>LightPeach</item>
         <item>Almond</item>
+        <item>Mint</item>
+        <item>Lavender</item>
+        <item>LightPeach</item>
     </string-array>
 </resources>
