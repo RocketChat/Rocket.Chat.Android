@@ -15,7 +15,7 @@ class UriInteractor @Inject constructor(private val context: Context) {
     /**
      * Returns the MimeType from the [Uri].
      */
-    fun getMimeType(uri: Uri): String = uri.getMimeType(context)
+    fun getMimeType(uri: Uri): String = uri.getMimeType(context) ?: ".png"
 
     /**
      * Returns the file size from the [Uri].

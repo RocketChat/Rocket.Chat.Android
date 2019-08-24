@@ -90,7 +90,7 @@ class MainActivity : BaseActivity(), HasActivityInjector,
         val config = Configuration()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            config.locales = LocaleList(locale)
+            config.setLocales(LocaleList(locale))
         } else {
             config.locale = locale
         }
