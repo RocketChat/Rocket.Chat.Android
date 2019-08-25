@@ -3,8 +3,8 @@ ext {
             // For project configuration
             java                  : JavaVersion.VERSION_1_8,
             minSdk                : 21,
-            compileSdk            : 28,
-            targetSdk             : 28,
+            compileSdk            : 29,
+            targetSdk             : 29,
             buildTools            : '29.0.1',
             dokka                 : '0.9.16',
 
