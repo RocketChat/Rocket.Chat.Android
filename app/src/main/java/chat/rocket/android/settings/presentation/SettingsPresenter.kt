@@ -8,7 +8,9 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
 import chat.rocket.android.helper.UserHelper
+import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.presentation.MainNavigator
+import chat.rocket.android.push.retrieveCurrentPushNotificationToken
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.PermissionsInteractor
@@ -17,15 +19,17 @@ import chat.rocket.android.server.domain.SaveCurrentLanguageInteractor
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
-import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extension.HashType
 import chat.rocket.android.util.extension.hash
 import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.adminPanelUrl
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.invalidateFirebaseToken
 import chat.rocket.android.util.retryIO
+import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.deleteOwnAccount
+import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.serverInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -46,21 +50,11 @@ class SettingsPresenter @Inject constructor(
     private val rocketChatClientFactory: RocketChatClientFactory,
     private val dynamicLinksManager: DynamicLinksForFirebase,
     private val saveLanguageInteractor: SaveCurrentLanguageInteractor,
-    getCurrentServerInteractor: GetCurrentServerInteractor,
-    removeAccountInteractor: RemoveAccountInteractor,
-    databaseManagerFactory: DatabaseManagerFactory?,
-    connectionManagerFactory: ConnectionManagerFactory
-) : CheckServerPresenter(
-    strategy = strategy,
-    factory = rocketChatClientFactory,
-    currentSavedServer = currentServer,
-    serverInteractor = getCurrentServerInteractor,
-    removeAccountInteractor = removeAccountInteractor,
-    tokenRepository = tokenRepository,
-    dbManagerFactory = databaseManagerFactory,
-    managerFactory = connectionManagerFactory,
-    tokenView = view,
-    navigator = navigator
+    private val serverInteractor: GetCurrentServerInteractor,
+    private val localRepository: LocalRepository,
+    private val connectionManagerFactory: ConnectionManagerFactory,
+    private val removeAccountInteractor: RemoveAccountInteractor,
+    private val dbManagerFactory: DatabaseManagerFactory
 ) {
     private val token = currentServer?.let { tokenRepository.get(it) }
 
@@ -106,15 +100,12 @@ class SettingsPresenter @Inject constructor(
         launchUI(strategy) {
             view.showLoading()
             try {
-                currentServer?.let {
+                currentServer?.let { currentServer ->
                     withContext(Dispatchers.Default) {
                         // REMARK: Backend API is only working with a lowercase hash.
                         // https://github.com/RocketChat/Rocket.Chat/issues/12573
-                        retryIO {
-                            rocketChatClientFactory.get(it)
-                                .deleteOwnAccount(password.hash(HashType.Sha256).toLowerCase())
-                        }
-                        setupConnectionInfo(it)
+                        rocketChatClientFactory.get(currentServer)
+                            .deleteOwnAccount(password.hash(HashType.Sha256).toLowerCase())
                         logout()
                     }
                 }
@@ -178,4 +169,34 @@ class SettingsPresenter @Inject constructor(
     }
 
     fun recreateActivity() = navigator.recreateActivity()
+
+    /**
+     * Logout the user from the current server.
+     */
+    fun logout() {
+        launchUI(strategy) {
+            try {
+                currentServer?.let { currentServer ->
+                    rocketChatClientFactory.get(currentServer).let { client ->
+                        retrieveCurrentPushNotificationToken(client, true)
+                        tokenRepository.remove(currentServer)
+
+                        serverInteractor.clear()
+                        localRepository.clearAllFromServer(currentServer)
+                        removeAccountInteractor.remove(currentServer)
+
+                        withContext(Dispatchers.IO) {
+                            invalidateFirebaseToken()
+                            dbManagerFactory.create(currentServer)?.logout()
+                        }
+                        connectionManagerFactory.create(currentServer)?.disconnect()
+                        client.logout()
+                        navigator.switchOrAddNewServer()
+                    }
+                }
+            } catch (exception: RocketChatException) {
+                Timber.e(exception, "Error while trying to logout")
+            }
+        }
+    }
 }

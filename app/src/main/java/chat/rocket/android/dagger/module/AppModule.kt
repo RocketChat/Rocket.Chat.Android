@@ -342,7 +342,8 @@ class AppModule {
         manager: NotificationManager,
         moshi: Moshi,
         getAccountInteractor: GetAccountInteractor,
-        getSettingsInteractor: GetSettingsInteractor
+        getSettingsInteractor: GetSettingsInteractor,
+        currentServerInteractor: GetCurrentServerInteractor
     ): PushManager {
         return PushManager(
             groupedPushes,
@@ -350,7 +351,8 @@ class AppModule {
             moshi,
             getAccountInteractor,
             getSettingsInteractor,
-            context
+            context,
+            currentServerInteractor
         )
     }
 

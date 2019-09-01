@@ -109,15 +109,6 @@
             android:name=".settings.password.ui.PasswordActivity"
             android:theme="@style/AppTheme" />
 
-        <receiver
-            android:name=".push.DirectReplyReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="chat.rocket.android.ACTION_REPLY" />
-            </intent-filter>
-        </receiver>
-
         <service
             android:name=".chatroom.service.MessageService"
             android:exported="true"

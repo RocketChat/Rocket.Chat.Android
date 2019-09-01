@@ -15,7 +15,6 @@ import chat.rocket.android.util.extensions.isValidUrl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import javax.inject.Named
 
 class ServerPresenter @Inject constructor(
     private val view: ServerView,
@@ -25,12 +24,10 @@ class ServerPresenter @Inject constructor(
     private val refreshSettingsInteractor: RefreshSettingsInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
     val settingsInteractor: GetSettingsInteractor,
-    val factory: RocketChatClientFactory,
-    @Named("currentServer") private val currentServer: String?
+    val factory: RocketChatClientFactory
 ) : CheckServerPresenter(
     strategy = strategy,
     factory = factory,
-    currentSavedServer = currentServer,
     settingsInteractor = settingsInteractor,
     versionCheckView = view,
     refreshSettingsInteractor = refreshSettingsInteractor
