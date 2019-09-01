@@ -56,7 +56,7 @@ ext {
             jitsi                 : '2.2.2',
 
             // Proprietary libraries
-            firebaseCloudMessage  : '19.0.1',
+            firebaseCloudMessage  : '20.0.0',
             firebaseAnalytics     : '17.0.0',
             firebaseCrashlytics   : '2.10.1@aar',
             firebaseAnswers       : '1.4.7@aar',

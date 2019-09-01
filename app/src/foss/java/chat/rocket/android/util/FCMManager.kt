@@ -1,5 +1,5 @@
 package chat.rocket.android.util
 
-fun invalidateFirebaseToken(token: String) {
+fun invalidateFirebaseToken() {
     //Do absolutely nothing
 }

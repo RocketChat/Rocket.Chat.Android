@@ -25,10 +25,8 @@ import chat.rocket.android.settings.presentation.SettingsPresenter
 import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.invalidateFirebaseToken
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
-import kotlinx.android.synthetic.main.dialog_delete_account.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -114,8 +112,6 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
         presenter.saveLocale(language, country)
         presenter.recreateActivity()
     }
-
-    override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
 
     override fun showLoading() {
         view_loading?.isVisible = true

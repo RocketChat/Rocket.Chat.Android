@@ -7,6 +7,7 @@ import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.common.model.UserStatus
 import chat.rocket.core.internal.realtime.setTemporaryStatus
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -19,17 +20,15 @@ class AppLifecycleObserver @Inject constructor(
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onEnterForeground() {
         changeTemporaryStatus(UserStatus.Online())
-        currentServer?.let {
-            connectionManagerFactory.create(it)?.resetReconnectionTimer()
-        }
+        currentServer?.let { connectionManagerFactory.create(it)?.resetReconnectionTimer() }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onEnterBackground() =
-        changeTemporaryStatus(UserStatus.Away())
+    fun onEnterBackground() = changeTemporaryStatus(UserStatus.Away())
 
     private fun changeTemporaryStatus(userStatus: UserStatus) = currentServer?.let {
         rocketChatClientFactory.get(it).setTemporaryStatus(userStatus)
+        Timber.d("Changed temporary status to $userStatus")
     }
 
 }

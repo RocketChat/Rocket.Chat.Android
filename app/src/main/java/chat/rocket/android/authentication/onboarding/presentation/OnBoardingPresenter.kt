@@ -13,7 +13,6 @@ import chat.rocket.android.util.extension.launchUI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import javax.inject.Named
 
 class OnBoardingPresenter @Inject constructor(
     private val view: OnBoardingView,
@@ -23,12 +22,10 @@ class OnBoardingPresenter @Inject constructor(
     refreshSettingsInteractor: RefreshSettingsInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
     val settingsInteractor: GetSettingsInteractor,
-    val factory: RocketChatClientFactory,
-    @Named("currentServer") private val currentServer: String?
+    val factory: RocketChatClientFactory
 ) : CheckServerPresenter(
     strategy = strategy,
     factory = factory,
-    currentSavedServer = currentServer,
     settingsInteractor = settingsInteractor,
     refreshSettingsInteractor = refreshSettingsInteractor
 ) {
