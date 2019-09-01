@@ -10,7 +10,7 @@ import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.presentation.MainNavigator
-import chat.rocket.android.push.retrieveCurrentPushToken
+import chat.rocket.android.push.retrieveCurrentPushNotificationToken
 import chat.rocket.android.server.domain.AnalyticsTrackingInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.PermissionsInteractor
@@ -31,7 +31,6 @@ import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.deleteOwnAccount
 import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.serverInfo
-import chat.rocket.core.internal.rest.unregisterPushToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -179,9 +178,7 @@ class SettingsPresenter @Inject constructor(
             try {
                 currentServer?.let { currentServer ->
                     rocketChatClientFactory.get(currentServer).let { client ->
-                        retrieveCurrentPushToken()?.let { currentPushToken ->
-                            client.unregisterPushToken(currentPushToken)
-                        }
+                        retrieveCurrentPushNotificationToken(client, true)
                         tokenRepository.remove(currentServer)
 
                         serverInteractor.clear()

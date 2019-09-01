@@ -6,7 +6,7 @@ import com.google.firebase.messaging.RemoteMessage
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
-class RocketChatMessagingService: FirebaseMessagingService() {
+class RocketChatMessagingService : FirebaseMessagingService() {
     @Inject lateinit var pushManager: PushManager
 
     override fun onCreate() {
@@ -21,5 +21,7 @@ class RocketChatMessagingService: FirebaseMessagingService() {
         }
     }
 
-    override fun onNewToken(token: String) = pushManager.registerPushNotificationToken(token)
+    override fun onNewToken(token: String) {
+        pushManager.registerPushNotificationToken(token)
+    }
 }

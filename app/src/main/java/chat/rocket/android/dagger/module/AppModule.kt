@@ -343,7 +343,7 @@ class AppModule {
         moshi: Moshi,
         getAccountInteractor: GetAccountInteractor,
         getSettingsInteractor: GetSettingsInteractor,
-        @Named("currentServer") currentServer: String?
+        currentServerInteractor: GetCurrentServerInteractor
     ): PushManager {
         return PushManager(
             groupedPushes,
@@ -352,7 +352,7 @@ class AppModule {
             getAccountInteractor,
             getSettingsInteractor,
             context,
-            currentServer
+            currentServerInteractor
         )
     }
 

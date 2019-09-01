@@ -16,7 +16,6 @@ import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
 import chat.rocket.android.core.behaviours.AppLanguageView
 import chat.rocket.android.main.presentation.MainPresenter
-import chat.rocket.android.push.retrieveCurrentPushToken
 import chat.rocket.android.server.ui.INTENT_CHAT_ROOM_ID
 import chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY
 import dagger.android.AndroidInjection
@@ -48,7 +47,7 @@ class MainActivity : AppCompatActivity(), HasActivityInjector,
             getAppLanguage()
             removeOldAccount()
             saveNewAccount()
-            retrieveCurrentPushToken()?.let { token -> registerPushNotificationToken(token) }
+            registerPushNotificationToken()
             intent.getStringExtra(INTENT_CHAT_ROOM_ID).let {
                 clearNotificationsForChatRoom(it)
                 showChatList(it, deepLinkInfo)

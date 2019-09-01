@@ -19,13 +19,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import chat.rocket.android.R
 import chat.rocket.android.server.domain.GetAccountInteractor
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.siteName
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
-import chat.rocket.core.internal.rest.registerPushToken
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -35,7 +35,6 @@ import timber.log.Timber
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
-import javax.inject.Named
 
 class PushManager @Inject constructor(
     private val groupedPushes: GroupedPush,
@@ -44,21 +43,14 @@ class PushManager @Inject constructor(
     private val getAccountInteractor: GetAccountInteractor,
     private val getSettingsInteractor: GetSettingsInteractor,
     private val context: Context,
-    @Named("currentServer") private val currentServer: String?
+    private val serverInteractor: GetCurrentServerInteractor
 ) {
     @Inject lateinit var factory: RocketChatClientFactory
     private val random = Random()
 
-    fun registerPushNotificationToken(token: String) {
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                currentServer?.let {
-                    factory.get(it).registerPushToken(token)
-                    Timber.d("Registered push notification token: $token")
-                }
-            } catch (exception: Exception) {
-                Timber.e("Unable to register push notification: $exception")
-            }
+    fun registerPushNotificationToken(token: String) = GlobalScope.launch(Dispatchers.IO) {
+        serverInteractor.get()?.let { currentServer ->
+            registerPushNotificationToken(factory.get(currentServer), token)
         }
     }
 

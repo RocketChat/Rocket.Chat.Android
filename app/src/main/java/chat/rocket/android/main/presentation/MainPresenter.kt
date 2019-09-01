@@ -5,6 +5,7 @@ import chat.rocket.android.core.behaviours.AppLanguageView
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.push.GroupedPush
+import chat.rocket.android.push.retrieveCurrentPushNotificationToken
 import chat.rocket.android.server.domain.GetCurrentLanguageInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.RefreshPermissionsInteractor
@@ -18,13 +19,9 @@ import chat.rocket.android.server.domain.siteName
 import chat.rocket.android.server.domain.wideTile
 import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
+import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.serverLogoUrl
-import chat.rocket.core.internal.rest.registerPushToken
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -102,20 +99,10 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    fun registerPushNotificationToken(token: String) {
-        GlobalScope.launch(Dispatchers.IO + strategy.jobs) {
-            try {
-                currentServer?.let { currentServer ->
-                    factory.get(currentServer).registerPushToken(token)
-                    Timber.d("Registered push notification token: $token")
-                }
-            } catch (exception: Exception) {
-                Timber.e("Unable to register push notification: $exception")
-            }
-        }
+    fun registerPushNotificationToken() = launchUI(strategy) {
+        currentServer?.let { retrieveCurrentPushNotificationToken(factory.get(it)) }
     }
 
     fun showChatList(chatRoomId: String? = null, deepLinkInfo: DeepLinkInfo? = null) =
         mainNavigator.toChatList(chatRoomId, deepLinkInfo)
-
 }
