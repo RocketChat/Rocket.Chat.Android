@@ -50,6 +50,7 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
         "hi,IN",
         "it",
         "ja",
+        "pl",
         "pt,BR",
         "pt,PT",
         "ru,RU",
