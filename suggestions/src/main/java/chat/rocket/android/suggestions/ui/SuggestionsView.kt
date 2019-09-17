@@ -196,9 +196,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
     }
 
     fun addSuggestionProviderAction(token: String, provider: (query: String) -> Unit): SuggestionsView {
-        if (adaptersByToken[token] == null) {
-            throw IllegalStateException("token \"$token\" suggestion provider added without adapter")
-        }
+        checkNotNull(adaptersByToken[token]) { "token \"$token\" suggestion provider added without adapter" }
         externalProvidersByToken.getOrPut(token, { provider })
         return this
     }
