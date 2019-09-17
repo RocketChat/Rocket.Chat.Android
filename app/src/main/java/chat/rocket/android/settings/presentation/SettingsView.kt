@@ -25,4 +25,6 @@ interface SettingsView : LoadingView, MessageView {
         isDeleteAccountEnabled: Boolean,
         serverVersion: String
     )
+
+    fun openShareApp(link: String?)
 }
