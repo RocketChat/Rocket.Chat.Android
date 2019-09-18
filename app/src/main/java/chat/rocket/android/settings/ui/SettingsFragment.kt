@@ -109,6 +109,20 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
         text_delete_account.isVisible = isDeleteAccountEnabled
     }
 
+    override fun openShareApp(link: String?) {
+        with(Intent(Intent.ACTION_SEND)) {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, context?.getString(R.string.msg_check_this_out))
+            putExtra(Intent.EXTRA_TEXT, link ?: getString(R.string.play_store_link))
+            context?.startActivity(
+                Intent.createChooser(
+                    this,
+                    getString(R.string.msg_share_using)
+                )
+            )
+        }
+    }
+
     override fun updateLanguage(language: String, country: String?) {
         presenter.saveLocale(language, country)
         presenter.recreateActivity()
@@ -234,7 +248,7 @@ class SettingsFragment : Fragment(), SettingsView, AppLanguageView {
     private fun shareApp() {
         // We can't know for sure at this point that the invitation was sent successfully since they will now be outside our app
         analyticsManager.logInviteSent(InviteType.ViaApp)
-        presenter.shareViaApp(context)
+        presenter.prepareShareApp()
     }
 
     private fun showLogoutDialog() {

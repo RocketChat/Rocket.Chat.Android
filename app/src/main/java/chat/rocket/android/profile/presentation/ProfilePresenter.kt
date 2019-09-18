@@ -46,7 +46,7 @@ class ProfilePresenter @Inject constructor(
         launchUI(strategy) {
             view.showLoading()
             try {
-                val me = retryIO(description = "serverInfo", times = 5) {
+                val me = retryIO(description = "me", times = 5) {
                     client.me()
                 }
 
