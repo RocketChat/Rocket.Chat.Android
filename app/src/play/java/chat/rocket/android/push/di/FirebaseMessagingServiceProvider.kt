@@ -9,5 +9,5 @@ import dagger.android.ContributesAndroidInjector
 abstract class FirebaseMessagingServiceProvider {
 
     @ContributesAndroidInjector(modules = [AppModule::class])
-    abstract fun provideFirebaseMessagingService(): RocketChatMessagingService
+    abstract fun provideRocketChatMessagingService(): RocketChatMessagingService
 }
