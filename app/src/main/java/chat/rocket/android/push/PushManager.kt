@@ -43,9 +43,9 @@ class PushManager @Inject constructor(
     private val getAccountInteractor: GetAccountInteractor,
     private val getSettingsInteractor: GetSettingsInteractor,
     private val context: Context,
-    private val serverInteractor: GetCurrentServerInteractor
+    private val serverInteractor: GetCurrentServerInteractor,
+    private val factory: RocketChatClientFactory
 ) {
-    @Inject lateinit var factory: RocketChatClientFactory
     private val random = Random()
 
     fun registerPushNotificationToken(token: String) = GlobalScope.launch(Dispatchers.IO) {
