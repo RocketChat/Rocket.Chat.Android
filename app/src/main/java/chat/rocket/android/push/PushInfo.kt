@@ -3,10 +3,9 @@ package chat.rocket.android.push
 import chat.rocket.common.model.RoomType
 import com.squareup.moshi.Json
 import se.ansman.kotshi.JsonSerializable
-import se.ansman.kotshi.KotshiConstructor
 
 @JsonSerializable
-data class PushInfo @KotshiConstructor constructor(
+data class PushInfo constructor(
     @Json(name = "host") val hostname: String,
     @Json(name = "rid") val roomId: String,
     val type: RoomType,

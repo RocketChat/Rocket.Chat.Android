@@ -47,6 +47,7 @@ import chat.rocket.core.model.url.Url
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.security.InvalidParameterException
 import java.util.*
 import java.util.Collections.emptyList
@@ -415,9 +416,9 @@ class UiModelMapper @Inject constructor(
         title?.let { return it }
 
         url.filterNotNull().forEach {
-            val fileUrl = HttpUrl.parse(it)
+            val fileUrl = it.toHttpUrlOrNull()
             fileUrl?.let { httpUrl ->
-                return httpUrl.pathSegments().last()
+                return httpUrl.pathSegments.last()
             }
         }
 
@@ -429,7 +430,7 @@ class UiModelMapper @Inject constructor(
         if (url.startsWith("http")) return url
 
         val fullUrl = "$baseUrl$url"
-        val httpUrl = HttpUrl.parse(fullUrl)
+        val httpUrl = fullUrl.toHttpUrlOrNull()
         httpUrl?.let {
             return it.newBuilder().apply {
                 addQueryParameter("rc_uid", token?.userId)

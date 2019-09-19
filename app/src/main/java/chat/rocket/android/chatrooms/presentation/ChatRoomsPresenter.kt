@@ -128,7 +128,7 @@ class ChatRoomsPresenter @Inject constructor(
             if (myself?.username == null) {
                 view.showMessage(R.string.msg_generic_error)
             } else {
-                val id = if (isDirectMessage && !open) {
+                val id = if (isDirectMessage && open == false) {
                     // If from local database, we already have the roomId, no need to concatenate
                     if (local) {
                         retryIO {

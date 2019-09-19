@@ -94,7 +94,7 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
     }
 
     suspend fun sendOperation(operation: Operation) {
-        Timber.d("writerChannel: $writeChannel, closedForSend: ${writeChannel.isClosedForSend}, closedForReceive: ${writeChannel.isClosedForReceive}, empty: ${writeChannel.isEmpty}, full: ${writeChannel.isFull}")
+        Timber.d("writerChannel: $writeChannel, closedForSend: ${writeChannel.isClosedForSend}, closedForReceive: ${writeChannel.isClosedForReceive}, empty: ${writeChannel.isEmpty}")
         writeChannel.send(operation)
     }
 
@@ -552,7 +552,7 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
                 subscriptionId = subscriptionId,
                 parentId = parentId,
                 type = type.toString(),
-                name = name,
+                name = name.toString(),
                 fullname = fullName,
                 userId = userId,
                 ownerId = user?.id,

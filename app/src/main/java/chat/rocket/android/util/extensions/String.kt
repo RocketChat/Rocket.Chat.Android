@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.util.Patterns
 import chat.rocket.common.model.Token
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import timber.log.Timber
 
 fun String.removeTrailingSlash(): String {
@@ -71,8 +72,8 @@ fun String.userId(userId: String?): String? {
     return userId?.let { this.replace(it, "") }
 }
 
-fun String.lowercaseUrl(): String? = HttpUrl.parse(this)?.run {
-    newBuilder().scheme(scheme().toLowerCase()).build().toString()
+fun String.lowercaseUrl(): String? = this.toHttpUrlOrNull()?.run {
+    newBuilder().scheme(scheme.toLowerCase()).build().toString()
 }
 
 fun String?.isNotNullNorEmpty(): Boolean = this != null && this.isNotEmpty()

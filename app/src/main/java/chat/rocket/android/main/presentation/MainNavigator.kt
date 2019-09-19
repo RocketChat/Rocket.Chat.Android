@@ -70,9 +70,9 @@ class MainNavigator(internal val activity: MainActivity) {
         chatRoomId: String,
         chatRoomName: String,
         chatRoomType: String,
-        isReadOnly: Boolean,
+        isReadOnly: Boolean?,
         chatRoomLastSeen: Long,
-        isSubscribed: Boolean,
+        isSubscribed: Boolean?,
         isCreator: Boolean,
         isFavorite: Boolean
     ) {

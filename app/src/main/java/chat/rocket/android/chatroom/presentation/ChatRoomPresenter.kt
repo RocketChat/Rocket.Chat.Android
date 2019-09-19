@@ -954,7 +954,7 @@ class ChatRoomPresenter @Inject constructor(
                         it.type is RoomType.DirectMessage || it.type is RoomType.LiveChat
                     }
                     .map { chatRoom ->
-                        val name = chatRoom.name
+                        val name = chatRoom.name ?: ""
                         val fullName = chatRoom.fullName ?: ""
                         ChatRoomSuggestionUiModel(
                             text = name,

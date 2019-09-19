@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5d591429a85289a5fe608ab2c4d77b0b",
+    "identityHash": "0b9c384faa4daef62de6f9b9f321696a",
     "entities": [
       {
         "tableName": "Emoji",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shortname` TEXT NOT NULL, `shortnameAlternates` TEXT NOT NULL, `unicode` TEXT NOT NULL, `category` TEXT NOT NULL, `count` INTEGER NOT NULL, `siblings` TEXT NOT NULL, `fitzpatrick` TEXT NOT NULL, `url` TEXT, `isDefault` INTEGER NOT NULL, PRIMARY KEY(`shortname`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shortname` TEXT NOT NULL, `shortnameAlternates` TEXT, `unicode` TEXT NOT NULL, `category` TEXT NOT NULL, `count` INTEGER NOT NULL, `siblings` TEXT NOT NULL, `fitzpatrick` TEXT NOT NULL, `url` TEXT, `isDefault` INTEGER NOT NULL, PRIMARY KEY(`shortname`))",
         "fields": [
           {
             "fieldPath": "shortname",
@@ -18,7 +18,7 @@
             "fieldPath": "shortnameAlternates",
             "columnName": "shortnameAlternates",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "unicode",
@@ -75,7 +75,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"5d591429a85289a5fe608ab2c4d77b0b\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0b9c384faa4daef62de6f9b9f321696a\")"
     ]
   }
 }
