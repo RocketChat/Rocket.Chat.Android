@@ -5,6 +5,7 @@ import chat.rocket.android.BuildConfig
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
+import chat.rocket.core.createRocketChatClient
 import okhttp3.OkHttpClient
 import timber.log.Timber
 import javax.inject.Inject
@@ -24,7 +25,7 @@ class RocketChatClientFactory @Inject constructor(
             return it
         }
 
-        val client = RocketChatClient.create {
+        val client = createRocketChatClient {
             httpClient = okHttpClient
             restUrl = url
             userAgent = "RC Mobile; Android ${Build.VERSION.RELEASE}; v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"

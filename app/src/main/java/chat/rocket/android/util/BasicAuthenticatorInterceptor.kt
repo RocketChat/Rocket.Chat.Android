@@ -43,12 +43,12 @@ class BasicAuthenticatorInterceptor @Inject constructor (
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        val url = request.url()
-        val host = url.host()
-        val username = url.username()
+        val url = request.url
+        val host = url.host
+        val username = url.username
 
         if (!username.isNullOrEmpty()) {
-            saveCredentials(host, Credentials.basic(username, url.password()))
+            saveCredentials(host, Credentials.basic(username, url.password))
             request = request.newBuilder().url(
                 url.newBuilder().username("").password("").build()
             ).build()

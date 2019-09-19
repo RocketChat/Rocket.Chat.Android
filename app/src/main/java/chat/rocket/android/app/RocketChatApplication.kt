@@ -22,7 +22,6 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.AccountsRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
-import chat.rocket.android.server.domain.SITE_URL
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.util.retryIO
@@ -37,8 +36,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.HasBroadcastReceiverInjector
 import dagger.android.HasServiceInjector
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -104,51 +102,8 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         setupFresco()
         setupTimber()
 
-        if (localRepository.needOldMessagesCleanUp()) {
-            messagesPrefs.edit {
-                clear()
-            }
-            localRepository.setOldMessagesCleanedUp()
-        }
-
-        // TODO - remove REALM files.
-        // TODO - remove this
-        checkCurrentServer()
-
         // TODO - FIXME - we need to properly inject and initialize the EmojiRepository
         loadEmojis()
-    }
-
-    private fun checkCurrentServer() {
-        val currentServer = getCurrentServerInteractor.get() ?: "<unknown>"
-
-        if (currentServer == "<unknown>") {
-            val message = "null currentServer"
-            Timber.d(IllegalStateException(message), message)
-        }
-
-        val settings = settingsInteractor.get(currentServer)
-        if (settings.isEmpty()) {
-            val message = "Empty settings for: $currentServer"
-            Timber.d(IllegalStateException(message), message)
-        }
-        val baseUrl = settings[SITE_URL]
-        if (baseUrl == null) {
-            val message = "Server $currentServer SITE_URL"
-            Timber.d(IllegalStateException(message), message)
-        }
-    }
-
-    private fun setupFresco() {
-        Fresco.initialize(this, imagePipelineConfig, draweeConfig)
-    }
-
-    private fun setupTimber() {
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        } else {
-            Timber.plant(CrashlyticsTree())
-        }
     }
 
     override fun activityInjector() = activityDispatchingAndroidInjector
@@ -161,10 +116,18 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
     companion object {
         var context: WeakReference<Context>? = null
-        fun getAppContext(): Context? {
-            return context?.get()
+    }
+
+    private fun setupFresco() = Fresco.initialize(this, imagePipelineConfig, draweeConfig)
+
+    private fun setupTimber() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        } else {
+            Timber.plant(CrashlyticsTree())
         }
     }
+
 
     // TODO - FIXME - This is a big Workaround
     /**
@@ -173,28 +136,32 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
      */
     fun loadEmojis() {
         EmojiRepository.init(this)
-        val currentServer = getCurrentServerInteractor.get()
-        currentServer?.let { server ->
-            GlobalScope.launch {
-                val client = factory.get(server)
+        runBlocking {
+            getCurrentServerInteractor.get()?.let { server ->
                 EmojiRepository.setCurrentServerUrl(server)
+                val customEmojis = retryIO("getCustomEmojis()") {
+                    factory.get(server).getCustomEmojis().update
+                }
                 val customEmojiList = mutableListOf<Emoji>()
                 try {
-                    for (customEmoji in retryIO("getCustomEmojis()") { client.getCustomEmojis() }) {
-                        customEmojiList.add(Emoji(
-                                shortname = ":${customEmoji.name}:",
-                                category = EmojiCategory.CUSTOM.name,
-                                url = "$currentServer/emoji-custom/${customEmoji.name}.${customEmoji.extension}",
-                                count = 0,
-                                fitzpatrick = Fitzpatrick.Default.type,
-                                keywords = customEmoji.aliases,
-                                shortnameAlternates = customEmoji.aliases,
-                                siblings = mutableListOf(),
-                                unicode = "",
-                                isDefault = true
-                        ))
+                    if (customEmojis != null) {
+                        for (customEmoji in customEmojis) {
+                            customEmojiList.add(
+                                Emoji(
+                                    shortname = ":${customEmoji.name}:",
+                                    category = EmojiCategory.CUSTOM.name,
+                                    url = "$server/emoji-custom/${customEmoji.name}.${customEmoji.extension}",
+                                    count = 0,
+                                    fitzpatrick = Fitzpatrick.Default.type,
+                                    keywords = customEmoji.aliases,
+                                    shortnameAlternates = customEmoji.aliases,
+                                    siblings = mutableListOf(),
+                                    unicode = "",
+                                    isDefault = true
+                                )
+                            )
+                        }
                     }
-
                     EmojiRepository.load(this@RocketChatApplication, customEmojis = customEmojiList)
                 } catch (ex: RocketChatException) {
                     Timber.e(ex)
@@ -204,8 +171,3 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         }
     }
 }
-
-private fun LocalRepository.needOldMessagesCleanUp() = getBoolean(CLEANUP_OLD_MESSAGES_NEEDED, true)
-private fun LocalRepository.setOldMessagesCleanedUp() = save(CLEANUP_OLD_MESSAGES_NEEDED, false)
-
-private const val CLEANUP_OLD_MESSAGES_NEEDED = "CLEANUP_OLD_MESSAGES_NEEDED"

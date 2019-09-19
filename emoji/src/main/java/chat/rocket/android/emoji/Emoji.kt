@@ -8,9 +8,9 @@ import androidx.room.PrimaryKey
 data class Emoji(
     @PrimaryKey
     var shortname: String = "",
-    var shortnameAlternates: List<String> = listOf(),
+    var shortnameAlternates: List<String>? = listOf(),
     var unicode: String = "",
-    @Ignore val keywords: List<String> = listOf(),
+    @Ignore val keywords: List<String>? = listOf(),
     var category: String = "",
     var count: Int = 0,
     var siblings: MutableList<String> = mutableListOf(), // Siblings are the same emoji with different skin tones.

@@ -25,7 +25,7 @@ class MainModule {
 
     @Provides
     @PerActivity
-    fun provideJob() = Job()
+    fun provideJob(): Job = Job()
 
     @Provides
     fun provideLifecycleOwner(activity: MainActivity): LifecycleOwner = activity
