@@ -83,14 +83,14 @@ class RegisterUsernamePresenter @Inject constructor(
         }
         val thumb = currentServer.avatarUrl(username, token?.userId, token?.authToken)
         val account = Account(
-            settings.siteName() ?: currentServer,
-            currentServer,
-            icon,
-            logo,
-            username,
-            thumb,
-            token?.userId,
-            token?.authToken
+            serverName = settings.siteName() ?: currentServer,
+            serverUrl = currentServer,
+            serverLogoUrl = icon,
+            serverBackgroundImageUrl = logo,
+            userName = username,
+            userAvatarUrl = thumb,
+            authToken = token?.authToken,
+            userId = token?.userId
         )
         saveAccountInteractor.save(account)
     }
