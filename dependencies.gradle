@@ -57,11 +57,11 @@ ext {
 
             // Proprietary libraries
             firebaseCloudMessage  : '20.0.0',
-            firebaseAnalytics     : '17.0.0',
-            firebaseCrashlytics   : '2.10.1@aar',
+            firebaseAnalytics     : '17.2.0',
+            firebaseCrashlytics   : '2.10.1',
+            firebaseDynamicLinks  : '19.0.0',
+            playServicesAuth      : '17.0.0',
             firebaseAnswers       : '1.4.7@aar',
-            firebaseDynamicLinks  : '18.0.0',
-            playServicesAuth      : '16.0.1',
 
             // For testing
             junit                 : '4.12',
@@ -134,11 +134,11 @@ ext {
 
             // Proprietary libraries
             fcm                   : "com.google.firebase:firebase-messaging:${versions.firebaseCloudMessage}",
-            firebaseAnalytics     : "com.google.firebase:firebase-core:${versions.firebaseAnalytics}",
-            firebaseCrashlytics   : "com.crashlytics.sdk.android:crashlytics:${versions.firebaseCrashlytics}",
-            firebaseAnswers       : "com.crashlytics.sdk.android:answers:${versions.firebaseAnswers}",
+            firebaseAnalytics     : "com.google.firebase:firebase-analytics:${versions.firebaseAnalytics}",
             dynamiclinks          : "com.google.firebase:firebase-dynamic-links:${versions.firebaseDynamicLinks}",
             playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServicesAuth}",
+            firebaseCrashlytics   : "com.crashlytics.sdk.android:crashlytics:${versions.firebaseCrashlytics}",
+            firebaseAnswers       : "com.crashlytics.sdk.android:answers:${versions.firebaseAnswers}",
 
             // For testing
             junit                 : "junit:junit:${versions.junit}",

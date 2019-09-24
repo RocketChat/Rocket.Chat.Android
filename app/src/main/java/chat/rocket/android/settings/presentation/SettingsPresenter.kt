@@ -153,8 +153,10 @@ class SettingsPresenter @Inject constructor(
                 view.openShareApp(returnedString)
             }
 
-            currentServer?.let {
-                dynamicLinksManager.createDynamicLink(me.username, it, deepLinkCallback)
+            currentServer?.let { currentServer ->
+                me.username?.let { username ->
+                    dynamicLinksManager.createDynamicLink(username, currentServer, deepLinkCallback)
+                }
             }
         }
     }
