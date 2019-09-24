@@ -85,15 +85,16 @@ class MainPresenter @Inject constructor(
                 )
 
                 val account = Account(
-                    siteName() ?: currentServer,
-                    currentServer,
-                    icon,
-                    logo,
-                    userHelper.username() ?: "",
-                    thumb,
-                    token?.userId,
-                    token?.authToken
+                    serverName = siteName() ?: currentServer,
+                    serverUrl = currentServer,
+                    serverLogoUrl = icon,
+                    serverBackgroundImageUrl = logo,
+                    userName = userHelper.username() ?: "",
+                    userAvatarUrl = thumb,
+                    authToken = token?.authToken,
+                    userId = token?.userId
                 )
+
                 saveAccountInteractor.save(account)
             }
         }
