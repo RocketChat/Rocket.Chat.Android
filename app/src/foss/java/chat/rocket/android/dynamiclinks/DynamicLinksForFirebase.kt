@@ -7,11 +7,15 @@ import javax.inject.Inject
 
 class DynamicLinksForFirebase @Inject constructor(private val context: Context) : DynamicLinks {
 
-    override fun getDynamicLink(intent: Intent, deepLinkCallback: (Uri?) -> Unit? ) {
+    override fun getDynamicLink(intent: Intent, deepLinkCallback: (Uri?) -> Unit?) {
         deepLinkCallback(null)
     }
 
-    override fun createDynamicLink(username: String?, server: String, deepLinkCallback: (String?) -> Unit?) {
+    override fun createDynamicLink(
+        username: String,
+        server: String,
+        deepLinkCallback: (String?) -> Unit?
+    ) {
         deepLinkCallback(null)
     }
 }
