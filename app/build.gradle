@@ -9,6 +9,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "com.github.ben-manes.versions"
+apply plugin: 'jacoco-android'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -36,6 +37,35 @@ android {
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
             targetCompatibility JavaVersion.VERSION_1_8
+        }
+    }
+
+    kapt {
+        useBuildCache true
+    }
+
+    dexOptions {
+        preDexLibraries true
+        jumboMode false
+    }
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+        unitTests{
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
+    }
+
+    tasks.withType(Test) {
+        testLogging {
+            exceptionFormat "full"
+            events "passed", "failed"
+            showStandardStreams true
         }
     }
 
@@ -69,6 +99,7 @@ android {
             buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.64.2"'
             signingConfig signingConfigs.debug
             applicationIdSuffix ".dev"
+            testCoverageEnabled true
         }
     }
 
@@ -180,6 +211,12 @@ dependencies {
     testImplementation libraries.truth
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoIntents
+    androidTestImplementation libraries.espressoContrib
+    androidTestImplementation libraries.uiAutomator
+    testImplementation libraries.mockito
+    testImplementation libraries.mockitoInline
+    androidTestImplementation libraries.mockitoAndroid
+    androidTestImplementation libraries.runner
 }
 
 androidExtensions {

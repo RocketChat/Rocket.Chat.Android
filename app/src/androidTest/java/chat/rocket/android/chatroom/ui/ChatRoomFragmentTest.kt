@@ -1,67 +1,189 @@
 package chat.rocket.android.chatroom.ui
 
-import android.content.Intent
-import androidx.test.espresso.intent.rule.IntentsTestRule
+import androidx.recyclerview.widget.RecyclerView
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
+import androidx.test.rule.ActivityTestRule
+import chat.rocket.android.R
+import chat.rocket.android.analytics.event.ScreenViewEvent
+import chat.rocket.android.authentication.ui.AuthenticationActivity
+import chat.rocket.android.util.ScrollToTop
+import chat.rocket.android.util.ToastMatcher.Companion.isToast
+import chat.rocket.android.util.clickChildViewWithId
+import chat.rocket.android.util.extensions.addFragmentBackStack
+import chat.rocket.android.util.loginUserToTheApp
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import android.app.Activity
-import android.app.Instrumentation.ActivityResult
-import androidx.test.InstrumentationRegistry
-import androidx.test.espresso.intent.Intents.intended
-import androidx.test.espresso.intent.Intents.intending
-import androidx.test.espresso.intent.matcher.IntentMatchers.*
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.not
-import org.junit.Before
+import testConfig.Config.Companion.SERVER_URL
+import testConfig.Config.Companion.TEST_CHANNEL2
+import testConfig.Config.Companion.TEST_MESSAGE
+import testConfig.Config.Companion.TEST_USER
+import testConfig.Config.Companion.TEST_USER2
 
 @LargeTest
 class ChatRoomFragmentTest {
 
     @JvmField
+    var activityRule = ActivityTestRule(AuthenticationActivity::class.java, true, true)
+
     @Rule
-    val activityRule = IntentsTestRule<ChatRoomActivity>(ChatRoomActivity::class.java, false, false)
+    fun rule() = activityRule
 
     @Before
-    fun stubAllExternalIntents() {
-        val activityIntent = InstrumentationRegistry.getTargetContext()
-            .chatRoomIntent("id", "name", "type", false, 0L)
-        activityRule.launchActivity(activityIntent)
-        intending(not(isInternal())).respondWith(ActivityResult(Activity.RESULT_OK, null))
+    fun setUp() {
+        try {
+            rule().activity.addFragmentBackStack(ScreenViewEvent.Login.screenName, R.id.fragment_container) {
+                chat.rocket.android.authentication.login.ui.newInstance(SERVER_URL)
+            }
+            loginUserToTheApp()
+        } catch (e: NoMatchingViewException) {
+            Thread.sleep(3000)
+        }
     }
 
     @Test
-    fun showFileSelection_nonNullFiltersAreApplied() {
-        val fragment =
-            activityRule.activity.supportFragmentManager.findFragmentByTag("ChatRoomFragment") as ChatRoomFragment
-
-        val filters = arrayOf("image/*")
-        fragment.showFileSelection(filters)
-
-        intended(
-            allOf(
-                hasAction(Intent.ACTION_GET_CONTENT),
-                hasType("*/*"),
-                hasCategories(setOf(Intent.CATEGORY_OPENABLE)),
-                hasExtra(Intent.EXTRA_MIME_TYPES, filters)
-            )
-        )
+    fun check_UI_elements_when_messages_are_present() {
+        navigateToExistingChannel()
+        onView(withId(R.id.message_list_container)).check(matches(isDisplayed()))
+        onView(withId(R.id.layout_message_list)).check(matches(isDisplayed()))
+        onView(withId(R.id.layout_message_composer)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun showFileSelection_nullFiltersAreNotApplied() {
-        val fragment =
-            activityRule.activity.supportFragmentManager.findFragmentByTag("ChatRoomFragment") as ChatRoomFragment
+    fun check_UI_elements_when_no_messages_is_present() {
+        navigateToExistingUser1()
+        onView(withId(R.id.layout_message_list)).check(matches(isDisplayed()))
+        onView(withId(R.id.message_list_container)).check(matches(isDisplayed()))
+        onView(withId(R.id.layout_message_composer)).check(matches(isDisplayed()))
+        onView(withId(R.id.image_chat_icon)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_chat_title)).check(matches(withText(R.string.msg_no_chat_title)))
+        onView(withId(R.id.text_chat_description)).check(matches(withText(R.string.msg_no_chat_description)))
+    }
 
-        fragment.showFileSelection(null)
+    @Test
+    fun check_UI_elements_of_message_composer() {
+        navigateToExistingChannel()
+        onView(withId(R.id.button_add_reaction_or_show_keyboard)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_message)).check(matches(isDisplayed()))
+        onView(withId(R.id.button_show_attachment_options)).check(matches(isDisplayed()))
+    }
 
-        intended(
-            allOf(
-                hasAction(Intent.ACTION_GET_CONTENT),
-                hasType("*/*"),
-                hasCategories(setOf(Intent.CATEGORY_OPENABLE)),
-                not(hasExtraWithKey(Intent.EXTRA_MIME_TYPES))
+    @Test
+    fun check_UI_elements_of_message_item() {
+        navigateToExistingUser2()
+        onView(withId(R.id.message_list_container)).check(matches(isDisplayed()))
+        onView(withId(R.id.image_avatar)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_sender)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_message_time)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_content)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_content)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun show_attachment_options() {
+        navigateToExistingChannel()
+        onView(withId(R.id.button_show_attachment_options)).perform(click())
+        onView(withId(R.id.button_take_a_photo)).check(matches(isDisplayed()))
+        onView(withId(R.id.button_attach_a_file)).check(matches(isDisplayed()))
+        onView(withId(R.id.button_drawing)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_message)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun send_text_message() {
+        navigateToExistingChannel()
+        onView(withId(R.id.text_message)).check(matches(withHint(R.string.msg_message)))
+            .perform(
+            typeText(TEST_MESSAGE), closeSoftKeyboard()
+        )
+        onView(withId(R.id.button_send)).check(matches(isDisplayed()))
+            .perform(click())
+        onView(withId(R.id.text_message)).perform(clearText())
+    }
+
+    @Test
+    fun check_message_action_bottom_sheet() {
+        navigateToExistingUser2()
+        onView(withId(R.id.recycler_view)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0, click()
             )
         )
+        onView(withText(R.string.action_msg_add_reaction)).check(matches(isDisplayed()))
+        onView(withText(R.string.action_msg_reply)).check(matches(isDisplayed()))
+        onView(withText(R.string.action_msg_quote)).check(matches(isDisplayed()))
+        onView(withText(R.string.action_msg_permalink)).check(matches(isDisplayed()))
+        onView(withText(R.string.action_msg_copy)).check(matches(isDisplayed()))
+        onView(withText(R.string.action_msg_edit)).check(matches(isDisplayed()))
+        onView(withText(R.string.action_info)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun emoji_picker_popup_should_display() {
+        navigateToExistingUser2()
+        onView(withId(R.id.recycler_view)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0, click()
+            )
+        )
+        onView(withText(R.string.action_msg_add_reaction)).perform(click())
+        onView(withId(R.id.picker_container)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun copy_the_message() {
+        navigateToExistingUser2()
+        onView(withId(R.id.recycler_view)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0, click()
+            )
+        )
+        onView(withText(R.string.action_msg_copy)).perform(click())
+        onView(withText(R.string.msg_message_copied)).inRoot(isToast()).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun copy_the_permalink() {
+        navigateToExistingUser2()
+        onView(withId(R.id.recycler_view)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0, click()
+            )
+        )
+        onView(withText(R.string.action_msg_permalink)).perform(click())
+        onView(withText(R.string.msg_permalink_copied)).inRoot(isToast()).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun clicking_user_avatar_should_open_his_details(){
+        navigateToExistingUser2()
+        onView(withId(R.id.recycler_view)).perform(ScrollToTop())
+        onView(withId(R.id.recycler_view)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0, clickChildViewWithId(R.id.image_avatar)
+            )
+        )
+        onView(withId(R.id.user_details_layout)).check(matches(isDisplayed()))
+    }
+
+    private fun navigateToExistingChannel() {
+        onView(withText(TEST_CHANNEL2)).perform(click())
+        Thread.sleep(2000)
+    }
+
+    private fun navigateToExistingUser1() {
+        onView(withText(TEST_USER)).perform(click())
+        Thread.sleep(2000)
+    }
+
+    private fun navigateToExistingUser2() {
+        onView(withText(TEST_USER2)).perform(click())
+        Thread.sleep(2000)
     }
 }

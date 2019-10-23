@@ -233,7 +233,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 handler.removeCallbacks { dismissConnectionState }
                 text_connection_status.text = when (state) {
                     is State.Connected -> {
-                        handler.postDelayed({ dismissConnectionState }, 2000)
+                        handler.postDelayed({ dismissConnectionState }, 1000)
                         getString(R.string.status_connected)
                     }
                     is State.Disconnected -> getString(R.string.status_disconnected)

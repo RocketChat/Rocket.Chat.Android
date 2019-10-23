@@ -11,6 +11,7 @@ import chat.rocket.common.RocketChatInvalidResponseException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.forgotPassword
+import testConfig.Config.Companion.DEFAULT_TEST_URL
 import javax.inject.Inject
 
 class ResetPasswordPresenter @Inject constructor(
@@ -20,7 +21,7 @@ class ResetPasswordPresenter @Inject constructor(
     factory: RocketChatClientFactory,
     serverInteractor: GetConnectingServerInteractor
 ) {
-    private val currentServer = serverInteractor.get()!!
+    private val currentServer = serverInteractor.get()?: DEFAULT_TEST_URL
     private val client: RocketChatClient = factory.get(currentServer)
 
     fun resetPassword(email: String) {
