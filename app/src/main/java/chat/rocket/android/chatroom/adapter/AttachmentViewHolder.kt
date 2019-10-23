@@ -65,6 +65,14 @@ class AttachmentViewHolder(
                 data.hasFile -> bindFile(data)
             }
 
+            file_info.isVisible = data.hasAudioOrVideo || data.hasImage
+
+            when {
+                data.hasVideo -> file_info.text = data.rawData.videoSize?.toDataSize()
+                data.hasAudio -> file_info.text = data.rawData.audioSize?.toDataSize()
+                data.hasImage -> file_info.text = data.rawData.imageSize?.toDataSize()
+            }
+
             // File description - self describing
             file_description.isVisible = data.hasDescription
             file_description.text = data.description
@@ -130,9 +138,9 @@ class AttachmentViewHolder(
             image_attachment.controller = controller
             image_attachment.setOnClickListener {
                 ImageHelper.openImage(
-                        context,
-                        data.imageUrl!!,
-                        data.title?.toString()
+                    context,
+                    data.imageUrl!!,
+                    data.title?.toString()
                 )
             }
 
@@ -283,10 +291,10 @@ class AttachmentViewHolder(
             attachment_text.isVisible = data.hasText
             attachment_text.text = data.text
             actions_list.layoutManager = LinearLayoutManager(itemView.context,
-                    when (alignment) {
-                        "horizontal" -> LinearLayoutManager.HORIZONTAL
-                        else -> LinearLayoutManager.VERTICAL //Default
-                    }, false)
+                when (alignment) {
+                    "horizontal" -> LinearLayoutManager.HORIZONTAL
+                    else -> LinearLayoutManager.VERTICAL //Default
+                }, false)
             actions_list.adapter = ActionsListAdapter(actions, actionAttachmentOnClickListener)
         }
     }
@@ -297,6 +305,25 @@ class AttachmentViewHolder(
             return lp.height == ViewGroup.LayoutParams.WRAP_CONTENT
         }
     }
+}
+
+object DataMeasure {
+    const val BYTE = 1
+    const val KILOBYTE = 1024
+    const val MEGABYTE = KILOBYTE * 1024
+    const val GIGABYTE = MEGABYTE * 1024
+}
+
+private fun Long.toDataSize(): String {
+    val size = this.toFloat()
+
+    return when {
+        size > DataMeasure.GIGABYTE -> String.format("%.2f Gb", size / DataMeasure.GIGABYTE)
+        size > DataMeasure.MEGABYTE -> String.format("%.2f Mb", size / DataMeasure.MEGABYTE)
+        size > DataMeasure.KILOBYTE -> String.format("%.2f Kb", size / DataMeasure.KILOBYTE)
+        else -> "$this b"
+    }
+
 }
 
 interface ActionAttachmentOnClickListener {
