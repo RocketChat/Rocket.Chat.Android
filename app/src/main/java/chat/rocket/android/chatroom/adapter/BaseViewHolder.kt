@@ -29,13 +29,15 @@ abstract class BaseViewHolder<T : BaseUiModel<*>>(
 ) : RecyclerView.ViewHolder(itemView),
     MenuItem.OnMenuItemClickListener {
     var data: T? = null
+    var groupMessage = false
 
     init {
         setupActionMenu(itemView)
     }
 
-    fun bind(data: T) {
+    fun bind(data: T, groupMessage: Boolean = false) {
         this.data = data
+        this.groupMessage = groupMessage
         bindViews(data)
         bindReactions()
     }

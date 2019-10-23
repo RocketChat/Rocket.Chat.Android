@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.adapter
 
+import android.content.res.Resources
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,9 @@ import chat.rocket.core.model.attachment.actions.ButtonAction
 import chat.rocket.core.model.isSystemMessage
 import timber.log.Timber
 import java.security.InvalidParameterException
+import java.util.Calendar
+import kotlin.Comparator
+import kotlin.collections.ArrayList
 
 class ChatRoomAdapter(
     private val roomId: String? = null,
@@ -113,9 +117,24 @@ class ChatRoomAdapter(
             }
         }
 
+        var groupMessage = false
+
+        if (position + 1 < dataSet.size) {
+            val a = dataSet[position].message
+            val b = dataSet[position + 1].message
+
+            groupMessage = shouldGroupMessage(a, b)
+
+            a.attachments?.let {
+                if (it.any { a -> a.type != null }) { // check if message media attachment.
+                    groupMessage = false
+                }
+            }
+        }
+
         when (holder) {
             is MessageViewHolder ->
-                holder.bind(dataSet[position] as MessageUiModel)
+                holder.bind(dataSet[position] as MessageUiModel, groupMessage)
             is UrlPreviewViewHolder -> {
                 holder.bind(dataSet[position] as UrlPreviewUiModel)
             }
@@ -124,6 +143,19 @@ class ChatRoomAdapter(
             is AttachmentViewHolder ->
                 holder.bind(dataSet[position] as AttachmentUiModel)
         }
+    }
+
+
+    private fun shouldGroupMessage(a: Message, b: Message): Boolean {
+        if (a.senderAlias == b.senderAlias) {
+            val date1 = a.getDate()
+            val date2 = b.getDate()
+
+            if (date1.isSameDay(date2) && date1.timeInMillis - date2.timeInMillis <= 900000) // this should be depend on settings.
+                return true
+        }
+
+        return false
     }
 
     override fun getItemId(position: Int): Long {
@@ -390,3 +422,18 @@ class ChatRoomAdapter(
         fun openConfigurableWebPage(roomId: String, url: String, heightRatio: String)
     }
 }
+
+fun Message.getDate(): Calendar {
+    return Calendar.getInstance().apply {
+        timeInMillis = this@getDate.timestamp
+    }
+}
+
+fun Calendar.isSameDay(other: Calendar): Boolean {
+    return this.get(Calendar.YEAR) == other.get(Calendar.YEAR) &&
+            this.get(Calendar.MONTH) == other.get(Calendar.MONTH) &&
+            this.get(Calendar.DAY_OF_MONTH) == other.get(Calendar.DAY_OF_MONTH)
+}
+
+val Int.toPx: Float
+    get() = (this * Resources.getSystem().displayMetrics.density)
