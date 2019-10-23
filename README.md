@@ -1,12 +1,16 @@
 ![Rocket.Chat logo](https://raw.githubusercontent.com/RocketChat/Rocket.Chat.Artwork/master/Logos/logo-dark.svg?sanitize=true)
 
-# Rocket.Chat Android native application
+# IMPORTANT:   PLEASE READ THIS FIRST
+
+Rocket.Chat mobile is [moving to React Native](https://rocket.chat/2019/10/11/moving-mobile-apps-to-react/).   Development on this repository by Rocket.Chat has now ceased.   If your team is interested in taking over and maintaining this Android native client repository then please [contact us](https://rocket.chat/contact).
+
+# Legacy Rocket.Chat Android native application
 
 [![CircleCI](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop.svg?style=shield)](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a81156a8682e4649994270d3670c3c83)](https://www.codacy.com/app/matheusjardimb/Rocket.Chat.Android)
 
 ## Get it from the stores
 
-[![](https://user-images.githubusercontent.com/551004/48210434-74c07100-e35e-11e8-8eee-3ba84ffa74d7.png)](https://play.google.com/store/apps/details?id=chat.rocket.android) [![](https://user-images.githubusercontent.com/551004/48210349-50649480-e35e-11e8-97d9-74a4331faf3a.png)](https://f-droid.org/en/packages/chat.rocket.android/)
+[![](https://user-images.githubusercontent.com/551004/48210349-50649480-e35e-11e8-97d9-74a4331faf3a.png)](https://f-droid.org/en/packages/chat.rocket.android/)
 
 ## Description
 
