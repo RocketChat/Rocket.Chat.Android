@@ -41,6 +41,9 @@ abstract class  MessageDao {
     abstract fun insert(field: AttachmentFieldEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insert(field: AttachmentActionEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insert(reaction: ReactionEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -74,6 +77,7 @@ abstract class  MessageDao {
             is MessageChannels -> insert(entity)
             is AttachmentEntity -> insert(entity)
             is AttachmentFieldEntity -> insert(entity)
+            is AttachmentActionEntity -> insert(entity)
             is ReactionEntity -> insert(entity)
             is UrlEntity -> insert(entity)
         }
