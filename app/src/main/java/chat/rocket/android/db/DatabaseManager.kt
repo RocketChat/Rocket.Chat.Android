@@ -19,7 +19,6 @@ import chat.rocket.android.db.model.asEntity
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.exhaustive
 import chat.rocket.android.util.extensions.removeTrailingSlash
-import chat.rocket.android.util.extensions.toEntity
 import chat.rocket.android.util.extensions.userId
 import chat.rocket.android.util.retryDB
 import chat.rocket.common.model.BaseRoom
@@ -35,6 +34,7 @@ import chat.rocket.core.model.LastMessage
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
+import chat.rocket.core.model.asString
 import chat.rocket.core.model.userId
 import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.coroutines.GlobalScope
@@ -94,7 +94,7 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
     }
 
     suspend fun sendOperation(operation: Operation) {
-        Timber.d("writerChannel: $writeChannel, closedForSend: ${writeChannel.isClosedForSend}, closedForReceive: ${writeChannel.isClosedForReceive}, empty: ${writeChannel.isEmpty}, full: ${writeChannel.isFull}")
+        Timber.d("writerChannel: $writeChannel, closedForSend: ${writeChannel.isClosedForSend}, closedForReceive: ${writeChannel.isClosedForReceive}, empty: ${writeChannel.isEmpty}")
         writeChannel.send(operation)
     }
 
@@ -229,7 +229,25 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
     }
 
     private suspend fun createMessageEntities(message: Message): Pair<MessageEntity, List<BaseMessageEntity>> {
-        val messageEntity = message.toEntity()
+        val messageEntity = MessageEntity(
+            id = message.id,
+            roomId = message.roomId,
+            message = message.message,
+            timestamp = message.timestamp,
+            senderId = message.sender?.id,
+            updatedAt = message.updatedAt,
+            editedAt = message.editedAt,
+            editedBy = message.editedBy?.id,
+            senderAlias = message.senderAlias,
+            avatar = message.avatar,
+            type = message.type.asString(),
+            groupable = message.groupable,
+            parseUrls = message.parseUrls,
+            pinned = message.pinned,
+            role = message.role,
+            synced = message.synced
+        )
+
         val list = mutableListOf<BaseMessageEntity>()
         createAttachments(message)?.let { list.addAll(it) }
         createFavoriteRelations(message)?.let { list.addAll(it) }
@@ -534,7 +552,7 @@ class DatabaseManager(val context: Application, val serverUrl: String, val token
                 subscriptionId = subscriptionId,
                 parentId = parentId,
                 type = type.toString(),
-                name = name,
+                name = name.toString(),
                 fullname = fullName,
                 userId = userId,
                 ownerId = user?.id,

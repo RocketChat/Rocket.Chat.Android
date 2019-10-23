@@ -1,18 +1,40 @@
 package chat.rocket.android.push
 
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import chat.rocket.android.push.worker.TokenRegistrationWorker
+import chat.rocket.core.RocketChatClient
+import chat.rocket.core.internal.rest.registerPushToken
+import chat.rocket.core.internal.rest.unregisterPushToken
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
+import kotlinx.coroutines.runBlocking
+import timber.log.Timber
 
-fun refreshPushToken() {
-    val constraint =
-            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-    val work = OneTimeWorkRequestBuilder<TokenRegistrationWorker>()
-            .setConstraints(constraint)
-            .build()
+fun retrieveCurrentPushNotificationToken(
+    rocketChatClient: RocketChatClient,
+    shouldUnregister: Boolean = false
+) =
+    FirebaseInstanceId.getInstance().instanceId
+        .addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Timber.w("Unable to retrieve the current push notification token")
+                return@OnCompleteListener
+            }
 
-    // Schedule a job since we are using network...
-    WorkManager.getInstance().enqueue(work)
+            task.result?.token?.let {
+                Timber.d("Retrieve the current push notification token: $it")
+
+                if (shouldUnregister) {
+                    unregisterPushNotificationToken(rocketChatClient, it)
+                } else {
+                    registerPushNotificationToken(rocketChatClient, it)
+                }
+
+            }
+        })
+
+fun registerPushNotificationToken(rocketChatClient: RocketChatClient, token: String) {
+    runBlocking { rocketChatClient.registerPushToken(token) }
+}
+
+private fun unregisterPushNotificationToken(rocketChatClient: RocketChatClient, token: String) {
+    runBlocking { rocketChatClient.unregisterPushToken(token) }
 }

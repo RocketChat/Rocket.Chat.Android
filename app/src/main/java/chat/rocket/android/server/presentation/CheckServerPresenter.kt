@@ -6,10 +6,9 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.helper.OauthHelper
-import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.RefreshSettingsInteractor
 import chat.rocket.android.server.domain.casLoginUrl
 import chat.rocket.android.server.domain.gitlabUrl
 import chat.rocket.android.server.domain.isCasAuthenticationEnabled
@@ -22,10 +21,6 @@ import chat.rocket.android.server.domain.isLoginFormEnabled
 import chat.rocket.android.server.domain.isRegistrationEnabledForNewUsers
 import chat.rocket.android.server.domain.isWordpressAuthenticationEnabled
 import chat.rocket.android.server.domain.wordpressUrl
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import chat.rocket.android.server.domain.RemoveAccountInteractor
-import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.domain.RefreshSettingsInteractor
 import chat.rocket.android.server.infrastructure.ConnectionManager
 import chat.rocket.android.server.infrastructure.ConnectionManagerFactory
 import chat.rocket.android.server.infrastructure.RocketChatClientFactory
@@ -40,17 +35,10 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatInvalidProtocolException
 import chat.rocket.common.model.ServerInfo
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.serverInfo
 import chat.rocket.core.internal.rest.settingsOauth
-import chat.rocket.core.internal.rest.unregisterPushToken
-import chat.rocket.core.model.Myself
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.withContext
 import timber.log.Timber
-import javax.inject.Named
 
 private const val SERVICE_NAME_FACEBOOK = "facebook"
 private const val SERVICE_NAME_GITHUB = "github"
@@ -62,17 +50,10 @@ private const val SERVICE_NAME_WORDPRESS = "wordpress"
 abstract class CheckServerPresenter constructor(
     private val strategy: CancelStrategy,
     private val factory: RocketChatClientFactory,
-    @Named("currentServer") private val currentSavedServer: String?,
     private val settingsInteractor: GetSettingsInteractor? = null,
-    private val serverInteractor: GetCurrentServerInteractor? = null,
-    private val localRepository: LocalRepository? = null,
-    private val removeAccountInteractor: RemoveAccountInteractor? = null,
-    private val tokenRepository: TokenRepository? = null,
     private val managerFactory: ConnectionManagerFactory? = null,
     private val dbManagerFactory: DatabaseManagerFactory? = null,
     private val versionCheckView: VersionCheckView? = null,
-    private val tokenView: TokenView? = null,
-    private val navigator: MainNavigator? = null,
     private val refreshSettingsInteractor: RefreshSettingsInteractor? = null
 ) {
     private lateinit var currentServer: String
@@ -200,46 +181,6 @@ abstract class CheckServerPresenter constructor(
         } catch (exception: RocketChatException) {
             Timber.e(exception)
         }
-    }
-
-    /**
-     * Logout the user from the current server.
-     */
-    internal fun logout() {
-        launchUI(strategy) {
-            try {
-                clearTokens()
-                retryIO("logout") { client?.logout() }
-            } catch (exception: RocketChatException) {
-                Timber.e(exception, "Error calling logout")
-            }
-
-            try {
-                connectionManager?.disconnect()
-                currentSavedServer?.let {
-                    removeAccountInteractor?.remove(it)
-                    tokenRepository?.remove(it)
-                }
-                withContext(Dispatchers.IO) { dbManager?.logout() }
-                navigator?.switchOrAddNewServer()
-            } catch (ex: Exception) {
-                Timber.e(ex, "Error cleaning up the session...")
-            }
-        }
-    }
-
-    private suspend fun clearTokens() {
-        serverInteractor?.clear()
-        val pushToken = localRepository?.get(LocalRepository.KEY_PUSH_TOKEN)
-        if (pushToken != null) {
-            try {
-                retryIO("unregisterPushToken") { client?.unregisterPushToken(pushToken) }
-                tokenView?.invalidateToken(pushToken)
-            } catch (ex: Exception) {
-                Timber.e(ex, "Error unregistering push token")
-            }
-        }
-        localRepository?.clearAllFromServer(currentServer)
     }
 
     private fun checkEnabledOauthAccounts(services: List<Map<String,Any>>, serverUrl: String) {

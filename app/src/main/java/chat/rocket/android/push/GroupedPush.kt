@@ -1,7 +1,6 @@
 package chat.rocket.android.push
 
 import java.util.concurrent.atomic.AtomicInteger
-import javax.inject.Singleton
 
 typealias TupleGroupIdMessageCount = Pair<Int, AtomicInteger>
 

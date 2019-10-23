@@ -30,7 +30,7 @@ class AnswersAnalytics : Analytics {
 
     override fun logScreenView(event: ScreenViewEvent) =
         Answers.getInstance()
-            .logCustom(CustomEvent("screen_view").putCustomAttribute("screen", event.screenName))
+            .logCustom(CustomEvent("screen_visualization").putCustomAttribute("screen", event.screenName))
 
 
     override fun logMessageSent(event: SubscriptionTypeEvent, serverUrl: String) =

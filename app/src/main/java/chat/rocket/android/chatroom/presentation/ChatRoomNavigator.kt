@@ -37,7 +37,7 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         chatRoomType: String,
         isReadOnly: Boolean,
         chatRoomLastSeen: Long,
-        isSubscribed: Boolean,
+        isSubscribed: Boolean?,
         isCreator: Boolean,
         isFavorite: Boolean
     ) {
@@ -127,7 +127,7 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         chatRoomType: String,
         isChatRoomReadOnly: Boolean,
         chatRoomLastSeen: Long,
-        isChatRoomSubscribed: Boolean,
+        isChatRoomSubscribed: Boolean?,
         isChatRoomCreator: Boolean,
         isChatRoomFavorite: Boolean,
         chatRoomMessage: String

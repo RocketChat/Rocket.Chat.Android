@@ -16,8 +16,8 @@ import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.chatrooms.ui.TAG_CHAT_ROOMS_FRAGMENT
 import chat.rocket.android.core.behaviours.AppLanguageView
 import chat.rocket.android.main.presentation.MainPresenter
-import chat.rocket.android.push.refreshPushToken
 import chat.rocket.android.server.ui.INTENT_CHAT_ROOM_ID
+import chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -40,15 +40,14 @@ class MainActivity : AppCompatActivity(), HasActivityInjector,
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        refreshPushToken()
-        deepLinkInfo =
-            intent.getParcelableExtra(chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY)
+        deepLinkInfo = intent.getParcelableExtra(DEEP_LINK_INFO_KEY)
 
         with(presenter) {
             connect()
             getAppLanguage()
             removeOldAccount()
             saveNewAccount()
+            registerPushNotificationToken()
             intent.getStringExtra(INTENT_CHAT_ROOM_ID).let {
                 clearNotificationsForChatRoom(it)
                 showChatList(it, deepLinkInfo)
@@ -58,9 +57,7 @@ class MainActivity : AppCompatActivity(), HasActivityInjector,
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        intent?.getParcelableExtra<DeepLinkInfo>(
-            chat.rocket.android.authentication.domain.model.DEEP_LINK_INFO_KEY
-        )?.let { deepLinkInfo ->
+        intent?.getParcelableExtra<DeepLinkInfo>(DEEP_LINK_INFO_KEY)?.let { deepLinkInfo ->
             (supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOMS_FRAGMENT) as? ChatRoomsFragment)
                 ?.processDeepLink(deepLinkInfo)
         }

@@ -134,7 +134,7 @@ class EmojiParser {
             if (it.shortname == text) {
                 return true
             } else {
-                it.shortnameAlternates.forEach {
+                it.shortnameAlternates?.forEach {
                     if (":$it:" == text) {
                         return true
                     }

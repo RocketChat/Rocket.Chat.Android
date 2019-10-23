@@ -30,7 +30,7 @@ class ChatRoomsInteractor @Inject constructor(private val repository: ChatRoomsR
                 return@withContext allChatRooms
             }
             return@withContext allChatRooms.filter {
-                it.name.contains(name, true)
+                it.name?.contains(name, true) == true
             }
         }
 

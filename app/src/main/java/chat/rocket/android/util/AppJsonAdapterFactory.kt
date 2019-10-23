@@ -6,6 +6,6 @@ import se.ansman.kotshi.KotshiJsonAdapterFactory
 @KotshiJsonAdapterFactory
 abstract class AppJsonAdapterFactory : JsonAdapter.Factory {
     companion object {
-        val INSTANCE: AppJsonAdapterFactory = KotshiAppJsonAdapterFactory()
+        val INSTANCE: AppJsonAdapterFactory = KotshiAppJsonAdapterFactory
     }
 }

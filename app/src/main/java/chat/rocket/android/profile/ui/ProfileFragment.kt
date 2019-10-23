@@ -35,7 +35,6 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.util.invalidateFirebaseToken
 import chat.rocket.common.model.UserStatus
 import chat.rocket.common.model.userStatusOf
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -46,8 +45,6 @@ import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.avatar_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
-import kotlinx.android.synthetic.main.fragment_profile.view_dim
-import kotlinx.android.synthetic.main.fragment_profile.view_loading
 import kotlinx.android.synthetic.main.update_avatar_options.*
 import javax.inject.Inject
 
@@ -149,14 +146,16 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         image_avatar?.setImageURI(avatarUrl)
     }
 
-    override fun onProfileUpdatedSuccessfully(updatedEmail: String, updatedName: String, updatedUserName: String) {
+    override fun onProfileUpdatedSuccessfully(
+        updatedEmail: String,
+        updatedName: String,
+        updatedUserName: String
+    ) {
         currentEmail = updatedEmail
         currentName = updatedName
         currentUsername = updatedUserName
         showMessage(getString(R.string.msg_profile_updated_successfully))
     }
-
-    override fun invalidateToken(token: String) = invalidateFirebaseToken(token)
 
     override fun showLoading() {
         enableUserInput(false)

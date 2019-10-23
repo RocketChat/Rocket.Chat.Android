@@ -9,7 +9,7 @@ data class RoomUiModel(
     val type: RoomType,
     val name: CharSequence,
     val avatar: String,
-    val open: Boolean = false,
+    val open: Boolean? = false,
     val date: CharSequence? = null,
     val unread: String? = null,
     val alert: Boolean = false,

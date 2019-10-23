@@ -110,7 +110,7 @@ object EmojiRepository {
 
                 shortNameToUnicode.apply {
                     put(emoji.shortname, unicode)
-                    emoji.shortnameAlternates.forEach { alternate -> put(alternate, unicode) }
+                    emoji.shortnameAlternates?.forEach { alternate -> put(alternate, unicode) }
                 }
             }
 

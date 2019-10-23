@@ -14,12 +14,14 @@ import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.date
+import chat.rocket.android.util.extensions.isGreaterThan
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
 import chat.rocket.android.util.extensions.localDateTime
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.User
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.model.userStatusOf
+import chat.rocket.common.util.ifNull
 import chat.rocket.core.model.Room
 import chat.rocket.core.model.SpotlightResult
 import ru.noties.markwon.Markwon
@@ -101,7 +103,7 @@ class RoomUiModelMapper(
         RoomUiModel(
                 id = id,
                 name = name!!,
-                type = type,
+                type = type!!,
                 avatar = serverUrl.avatarUrl(name!!, token?.userId, token?.authToken, isGroupOrChannel = true),
                 lastMessage = if (showLastMessage) {
                     mapLastMessage(
@@ -121,7 +123,7 @@ class RoomUiModelMapper(
 
     fun map(chatRoom: ChatRoom, showLastMessage: Boolean = true): RoomUiModel =
         with(chatRoom.chatRoom) {
-            val isUnread = alert || unread > 0
+            val isUnread = alert == true || unread.isGreaterThan(0)
             val type = roomTypeOf(type)
             val status = chatRoom.status?.let { userStatusOf(it) }
             val roomName = mapName(name, fullname)
@@ -133,7 +135,7 @@ class RoomUiModelMapper(
                 } else {
                     serverUrl.avatarUrl(name, token?.userId, token?.authToken, isGroupOrChannel = true)
                 }
-            val unread = mapUnread(unread)
+            val unread = unread?.let { mapUnread(it) }
             val lastMessage = if (showLastMessage) {
                 mapLastMessage(
                     lastMessageUserId,
@@ -146,7 +148,6 @@ class RoomUiModelMapper(
                 null
             }
             val hasMentions = mapMentions(userMentions, groupMentions)
-            val open = open
             val lastMessageMarkdown =
                 lastMessage?.let { Markwon.markdown(context, it.toString()).toString() }
 

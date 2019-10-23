@@ -236,13 +236,13 @@ class ServerFragment : Fragment(), ServerView {
 
     override fun updateServerUrl(url: HttpUrl) {
         ui {
-            if (url.scheme() == "https") {
+            if (url.scheme == "https") {
                 spinner_server_protocol.setSelection(0)
             } else {
                 spinner_server_protocol.setSelection(1)
             }
 
-            protocol = "${url.scheme()}://"
+            protocol = "${url.scheme}://"
             text_server_url.textContent = url.toString().removePrefix(protocol)
         }
     }

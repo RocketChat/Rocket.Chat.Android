@@ -126,22 +126,13 @@ class ConnectionManager(
             dbManager.processUsersBatch(users)
         }
 
-        launch {
-            for (room in client.roomsChannel) {
-                Timber.d("Got room streamed")
-                roomsActor.send(room)
-            }
+        launch { for (room in client.roomsChannel) roomsActor.send(room) }
 
-            for (subscription in client.subscriptionsChannel) {
-                Timber.d("Got subscription streamed")
-                roomsActor.send(subscription)
-            }
+        launch { for (subscription in client.subscriptionsChannel) roomsActor.send(subscription) }
 
-            for (user in client.activeUsersChannel) {
-                userActor.send(user)
-            }
-        }
+        launch { for (user in client.activeUsersChannel) userActor.send(user) }
     }
+
 
     fun addStateChannel(channel: Channel<State>) = stateChannelList.add(channel)
 

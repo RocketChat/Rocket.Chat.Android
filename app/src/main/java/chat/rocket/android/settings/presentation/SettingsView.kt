@@ -2,9 +2,8 @@ package chat.rocket.android.settings.presentation
 
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
-import chat.rocket.android.server.presentation.TokenView
 
-interface SettingsView : TokenView, LoadingView, MessageView {
+interface SettingsView : LoadingView, MessageView {
 
     /**
      * Setups the settings view.
@@ -26,4 +25,6 @@ interface SettingsView : TokenView, LoadingView, MessageView {
         isDeleteAccountEnabled: Boolean,
         serverVersion: String
     )
+
+    fun openShareApp(link: String?)
 }

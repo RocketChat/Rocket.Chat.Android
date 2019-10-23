@@ -17,6 +17,7 @@ import chat.rocket.android.authentication.infrastructure.SharedPreferencesTokenR
 import chat.rocket.android.chatroom.service.MessageService
 import chat.rocket.android.dagger.qualifier.ForAuthentication
 import chat.rocket.android.dagger.qualifier.ForMessages
+import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.DatabaseManagerFactory
 import chat.rocket.android.dynamiclinks.DynamicLinksForFirebase
@@ -52,6 +53,7 @@ import chat.rocket.android.server.infrastructure.DatabaseMessagesRepository
 import chat.rocket.android.server.infrastructure.JobSchedulerInteractorImpl
 import chat.rocket.android.server.infrastructure.MemoryChatRoomsRepository
 import chat.rocket.android.server.infrastructure.MemoryUsersRepository
+import chat.rocket.android.server.infrastructure.RocketChatClientFactory
 import chat.rocket.android.server.infrastructure.SharedPreferencesAccountsRepository
 import chat.rocket.android.server.infrastructure.SharedPreferencesPermissionsRepository
 import chat.rocket.android.server.infrastructure.SharedPreferencesSettingsRepository
@@ -70,6 +72,7 @@ import chat.rocket.common.model.TimestampAdapter
 import chat.rocket.common.util.CalendarISO8601Converter
 import chat.rocket.common.util.NoOpLogger
 import chat.rocket.common.util.PlatformLogger
+import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.AttachmentAdapterFactory
 import chat.rocket.core.internal.ReactionsAdapter
 import com.facebook.drawee.backends.pipeline.DraweeConfig
@@ -342,7 +345,9 @@ class AppModule {
         manager: NotificationManager,
         moshi: Moshi,
         getAccountInteractor: GetAccountInteractor,
-        getSettingsInteractor: GetSettingsInteractor
+        getSettingsInteractor: GetSettingsInteractor,
+        currentServerInteractor: GetCurrentServerInteractor,
+        factory: RocketChatClientFactory
     ): PushManager {
         return PushManager(
             groupedPushes,
@@ -350,7 +355,9 @@ class AppModule {
             moshi,
             getAccountInteractor,
             getSettingsInteractor,
-            context
+            context,
+            currentServerInteractor,
+            factory
         )
     }
 

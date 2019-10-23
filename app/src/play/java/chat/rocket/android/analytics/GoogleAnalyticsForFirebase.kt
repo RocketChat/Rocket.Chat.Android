@@ -28,7 +28,7 @@ class GoogleAnalyticsForFirebase @Inject constructor(val context: Context) :
     }
 
     override fun logScreenView(event: ScreenViewEvent) {
-        firebaseAnalytics.logEvent("screen_view", Bundle(1).apply {
+        firebaseAnalytics.logEvent("screen_visualization", Bundle(1).apply {
             putString("screen", event.screenName)
         })
     }

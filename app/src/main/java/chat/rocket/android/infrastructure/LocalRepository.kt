@@ -22,7 +22,6 @@ interface LocalRepository {
     fun getLastChatroomsRefresh(url: String): Long
 
     companion object {
-        const val KEY_PUSH_TOKEN = "KEY_PUSH_TOKEN"
         const val TOKEN_KEY = "token_"
         const val SETTINGS_KEY = "settings_"
         const val PERMISSIONS_KEY = "permissions_"
@@ -32,7 +31,4 @@ interface LocalRepository {
         const val LAST_CHATROOMS_REFRESH = "_chatrooms_refresh"
     }
 }
-
-// FIXME - we are saving the user full name here when the server is UI_Use_Real_Name true
-fun LocalRepository.checkIfMyself(username: String) = username() == username
 fun LocalRepository.username() = get(LocalRepository.CURRENT_USERNAME_KEY)

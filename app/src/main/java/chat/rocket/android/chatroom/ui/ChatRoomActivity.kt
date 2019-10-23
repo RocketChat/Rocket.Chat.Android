@@ -25,9 +25,9 @@ fun Context.chatRoomIntent(
     chatRoomId: String,
     chatRoomName: String,
     chatRoomType: String,
-    isReadOnly: Boolean,
+    isReadOnly: Boolean?,
     chatRoomLastSeen: Long,
-    isSubscribed: Boolean = true,
+    isSubscribed: Boolean? = true,
     isCreator: Boolean = false,
     isFavorite: Boolean = false,
     chatRoomMessage: String? = null

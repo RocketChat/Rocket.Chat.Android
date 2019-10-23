@@ -474,12 +474,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun sendMessage(text: String) {
         ui {
             if (!text.isBlank()) {
-                if (text.startsWith("/")) {
-                    presenter.runCommand(text, chatRoomId)
-                } else if (text.startsWith("+")) {
-                    presenter.reactToLastMessage(text, chatRoomId)
-                } else {
-                    presenter.sendMessage(chatRoomId, text, editingMessageId)
+                when {
+                    text.startsWith("/") -> presenter.runCommand(text, chatRoomId)
+                    text.startsWith("+") -> presenter.reactToLastMessage(text, chatRoomId)
+                    else -> presenter.sendMessage(chatRoomId, text, editingMessageId)
                 }
             }
         }
@@ -932,7 +930,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_send.setOnClickListener {
                 text_message.textContent.run {
                     if(this.isNotBlank()) {
-                        sendMessage(citation ?: "" + this)
+                        sendMessage((citation ?: "") + this)
                     }
                 }
             }
