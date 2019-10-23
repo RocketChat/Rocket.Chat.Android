@@ -1,7 +1,13 @@
 package chat.rocket.android.chatdetails.ui
 
 import DrawableHelper
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ClickableSpan
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -123,11 +129,23 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
             name.text = text
             bindImage(chatRoomType)
             content_topic.text =
-                    if (room.topic.isNullOrEmpty()) getString(R.string.msg_no_topic) else room.topic
+                if (room.topic.isNullOrEmpty()) {
+                    getString(R.string.msg_no_topic)
+                } else {
+                    room.topic
+                }
             content_announcement.text =
-                    if (room.announcement.isNullOrEmpty()) getString(R.string.msg_no_announcement) else room.announcement
+                if (room.announcement.isNullOrEmpty()) {
+                    getString(R.string.msg_no_announcement)
+                } else {
+                    room.announcement
+                }
             content_description.text =
-                    if (room.description.isNullOrEmpty()) getString(R.string.msg_no_description) else room.description
+                if (room.description.isNullOrEmpty()) {
+                    getString(R.string.msg_no_description)
+                } else {
+                    getClickableSpan(room.description)
+                }
         }
     }
 
@@ -236,5 +254,32 @@ class ChatDetailsFragment : Fragment(), ChatDetailsView {
             hideExpandMoreForToolbar()
             setupToolbarTitle(getString(R.string.title_channel_details))
         }
+    }
+
+    private fun getClickableSpan(description: String): CharSequence {
+        val spannableContent = SpannableStringBuilder(description)
+        val clickableUrlList = getUrlList(description)
+        if (clickableUrlList != null) {
+            for (clickableUrl in clickableUrlList) {
+                val clickableSpan = object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        Intent(Intent.ACTION_VIEW, Uri.parse(clickableUrl))
+                    }
+                }
+                val clickableUrlStart = description.indexOf(clickableUrl)
+                spannableContent.setSpan(
+                        clickableSpan,
+                        clickableUrlStart,
+                        clickableUrlStart + clickableUrl.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+        }
+        return spannableContent
+    }
+
+    private fun getUrlList(description: String): List<String>? {
+        // Extract all urls from the room description and return a list with them.
+        val urlRegex = Patterns.WEB_URL.toRegex()
+        return urlRegex.findAll(description).map { it.value }.toList()
     }
 }
